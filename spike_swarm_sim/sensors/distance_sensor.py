@@ -65,7 +65,7 @@ class DistanceSensor3D(DistanceSensor):
             my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0,0,0.15])
             
             ray_res = p.rayTest(my_pos, kwargs['obj'].position * np.array([1, 1, 0.0])  + np.array([0,0,0.11]),)
-            print(rho,ray_res[0][0], )
+            # print(rho,ray_res[0][0], )
             if ray_res[0][0] == kwargs['obj'].id:
                 signal_strength = self.propagation(rho, phi)
                 if signal_strength > direction_reading:

@@ -20,7 +20,7 @@ class JointActuator(Actuator):
             p.changeDynamics(self.actuator_owner.id, j, linearDamping=0, angularDamping=0)
     
     def step(self, action):
-        print(action)
+        # print(action)
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
