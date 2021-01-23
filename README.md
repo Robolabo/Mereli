@@ -3,7 +3,7 @@
 ## Installation
 Clone this repository:
 ```
-git clone https://github.com/r-sendra/SpikeSwarmSim.git
+git clone https://github.com/Robolabo/SpikeSwarmSim.git
 cd SpikeSwarmSim
 ```
 Download the simulator requirements:
