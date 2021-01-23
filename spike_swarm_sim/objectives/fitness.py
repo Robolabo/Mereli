@@ -209,8 +209,9 @@ class ObstacleAvoidance:
         for _, (states_t, pos)  in enumerate(zip(states, robot_positions)):
             fA = np.mean([1 - st['distance_sensor3D'] for st in states_t])
             distances = [LA.norm(pos_i - np.mean(pos, 0)) for pos_i in pos]
-            fB = np.mean([ np.clip(1 - dist / 100, a_min=0, a_max=1) for dist in distances])
+            fB = np.mean([ np.clip(1 - dist / 1, a_min=0, a_max=1) for dist in distances])
             fitness += fA * fB
+            import pdb; pdb.set_trace()
         fitness /= len(states)
         return fitness + 1e-5
 
