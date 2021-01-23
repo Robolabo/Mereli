@@ -1,0 +1,65 @@
+{
+    "checkpoint_file" : "chk_obstacle_avoidance_3D",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "I1" : {"n" : 8, "sensor" : "distance_sensor3D"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "H1" : {"n" : 10, "params" : {}},
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
+            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "SNES",
+        "evolvable_object" : "robotA",
+        "population_size" : 60,
+        "generations" : 1000,
+        "evaluation_steps" : 1000,
+        "num_evaluations" : 5,
+        "fitness_function" : "obstacle_avoidance",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "max_vals" : [3,  1.5, 0.75, 5],
+                "min_vals" : [-3, -1.5, -1, 0.05],
+                "params" : {"encoding" : "real"}
+            }          
+        }
+    },
+    "world":{
+        "world_delay" : 1,
+        "render_connections":true,
+        "height":1000,
+        "width": 1000,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 10,
+                "controller" : "neural_controller",
+                "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 0.9}},
+                "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
+                "initializers" : {
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad":100, "initial_pos" : [500, 500]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+        }
+    }
+}

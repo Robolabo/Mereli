@@ -1,0 +1,97 @@
+{
+    "checkpoint_file" : "chk_experimentA_SNES_ctrnn",
+    "num_processes" : 1,
+    "render" : false,
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "I1" : {"n" : 2, "sensor" : "wireless_receiver:msg"},
+            "I2" : {"n" : 1, "sensor" : "wireless_receiver:state"},
+            "I3" : {"n" : 2, "sensor" : "wireless_receiver:receiving_direction"}
+        },
+        "encoding" : {
+            "I1" : {"scheme" : "IdentityEncoding"},
+            "I2" : {"scheme" : "IdentityEncoding"},
+            "I3" : {"scheme" : "IdentityEncoding"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "H1" : {"n" : 10, "params" : {}},
+            "H2" : {"n" : 10, "params" : {}},
+            "OUT_COMM" : {"n" : 2, "params" : {}},
+            "OUT_COMM_STATE" : {"n" : 1, "params" : {}},
+            "OUT_LED" : {"n" : 1, "params" : {}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_LED", "actuator" : "led_actuator", "enc": "cat"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+        },
+        "synapses" :  {
+            "I1-c" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-c" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-c" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+
+            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.7},
+            "H2-H2" : {"pre":"H2","post":"H2", "trainable":true, "p":0.7},
+            "H1-H2" : {"pre":"H1","post":"H2", "trainable":true, "p":1.0},
+
+            "H1-LED" : {"pre":"H1","post":"OUT_LED", "trainable":true, "p":1.0},
+            "H2-COM" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "H2-ST" : {"pre":"H2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+
+            "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":0.85},
+            "LED-H1" : {"pre":"OUT_LED","post":"H1", "trainable":true, "p":0.85},
+            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":0.85},
+
+            "COMM-COMM" : {"pre":"OUT_COMM", "post":"OUT_COMM", "trainable":true, "p":1.0},
+            "COMM-ST" : {"pre":"OUT_COMM", "post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "ST-COMM" : {"pre":"OUT_COMM_STATE","post":"OUT_COMM", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true, "stochastic":true}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "SNES",
+        "evolvable_object" : "robotA",
+        "population_size" : 100,
+        "generations" : 1000,
+        "evaluation_steps" : 300,
+        "num_evaluations" : 5,
+        "fitness_function" : "identify_leader",
+        "populations" : {
+            "p4" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "max_vals" : [3,  1.5, 0.75, 5],
+                "min_vals" : [-3, -1.5, -1, 0.05],
+                "params" : {"encoding" : "real"}
+            }          
+        }
+    },
+    "world":{
+        "world_delay" : 1,
+        "render_connections":false,
+        "height":1000,
+        "width": 1000,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 10,
+                "controller" : "neural_controller",
+                "sensors" : {"wireless_receiver" : {"n_sectors" : 4, "range" : 100, "msg_length" : 2}},
+                "actuators" : {"led_actuator" : {}, "wireless_transmitter" : {"quantize": true, "range" : 100, "msg_length":2}},
+                "initializers" : {
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad":100, "initial_pos" : [500, 500]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {"leader_failure" : {"time_to_failure": 50}},
+                "params" : {"trainable" : true}
+            }
+        }
+    }
+}

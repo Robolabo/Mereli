@@ -1,0 +1,111 @@
+{
+    "checkpoint_file" : "chk_experimentD_SNES_ctrnn",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "I1" : {"n" : 2, "sensor" : "wireless_receiver:msg"},
+            "I2" : {"n" : 2, "sensor" : "wireless_receiver:receiving_direction"},
+            "I3" : {"n" : 1, "sensor" : "wireless_receiver:signal"},
+            "I4" : {"n" : 1, "sensor" : "wireless_receiver:state"},
+            "I5" : {"n" : 6, "sensor" : "light_sensor"}
+        },
+        "encoding" : {
+            "I1" :{"scheme" : "IdentityEncoding"},
+            "I2" :{"scheme" : "IdentityEncoding"},
+            "I3" :{"scheme" : "IdentityEncoding"},
+            "I4" :{"scheme" : "IdentityEncoding"},
+            "I5" :{"scheme" : "IdentityEncoding"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "H1" : {"n" : 10, "params" : {}},
+            "H2" : {"n" : 10, "params" : {}},
+            "OUT_COMM" : {"n" : 2, "params" : {}},
+            "OUT_COMM_ST" : {"n" : 1, "params" : {}},
+            "OUT_MOT" : {"n" : 2, "params" : {}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+        },
+        "synapses" :  {
+            "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
+            "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
+            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.8},
+            "H2-H2" : {"pre":"H2","post":"H2", "trainable":true, "p":0.8},
+            "H1-H2" : {"pre":"H1","post":"H2", "trainable":true, "p":0.8},
+            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "H2-COM" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "H2-ST" : {"pre":"H2","post":"OUT_COMM_ST", "trainable":true, "p":1.0},
+            "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
+            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
+            "ST-H1" : {"pre":"OUT_COMM_ST","post":"H1", "trainable":true, "p":1.0},
+            "COMM-COMM" : {"pre":"OUT_COMM", "post":"OUT_COMM", "trainable":true, "p":1.0},
+            "COMM-ST" : {"pre":"OUT_COMM", "post":"OUT_COMM_ST", "trainable":true, "p":1.0},
+            "ST-COMM" : {"pre":"OUT_COMM_ST","post":"OUT_COMM", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "SNES",
+        "evolvable_object" : "robotA",
+        "population_size" : 100,
+        "generations" : 1000,
+        "evaluation_steps" : 1000,
+        "num_evaluations" : 5,
+        "fitness_function" : "goto_light",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "max_vals" : [3,  1.5, 0.75, 5],
+                "min_vals" : [-3, -1.5, -1, 0.05],
+                "params": {"encoding" : "real"}
+            }
+        }
+    }, 
+    "world" : {
+        "world_delay" : 1,
+        "render_connections" :true,
+        "height" : 1000,
+        "width" :  1000,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 10,
+                "controller" : "neural_controller",
+                "sensors" : {
+                    "wireless_receiver" : {"n_sectors" : 4, "range" : 100,  "msg_length" : 2}, 
+                    "light_sensor" : {"n_sectors" : 6}
+                },
+                "actuators" : {
+                    "wheel_actuator" : {}, 
+                    "wireless_transmitter" : {"quantize":true, "range" : 100, "msg_length" : 2}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low":400, "high" : 600, "size":2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 8, "stimuli" : "light_sensor"}},
+                "params" : {"trainable" : true}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "controller" : "light_orbit_controller",
+                "positions" : "random",
+                "initializers" : {"positions" : {"name" : "random_circumference", "params" : {"radius": 1, "center" : [500, 500]}}},
+                "params" : {"range" : 80, "color" : "red"}
+            }
+        }
+    }
+}
