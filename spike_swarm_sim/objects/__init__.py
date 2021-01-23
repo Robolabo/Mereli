@@ -1,5 +1,6 @@
-from .world_object import WorldObject
+from .world_object import WorldObject, WorldObject3D
 from .light_source import LightSource, FoodArea, Nest
 from .robot import Robot
+from .robot_3D import Robot3D
 from .wall import Wall
 

@@ -1,11 +1,13 @@
 import numpy as np
+from .base_actuator import Actuator
 from spike_swarm_sim.register import actuator_registry
 
 @actuator_registry(name='wheel_actuator')
-class WheelActuator:
+class WheelActuator(Actuator):
     """ Robot wheel actuator using a differential drive system. 
     """
-    def __init__(self, robot_radius, dt=1.65, min_thresh=0.0):
+    def __init__(self, *args, robot_radius=11, dt=1.65, min_thresh=0.0, **kwargs):
+        super(WheelActuator, self).__init__(*args, **kwargs)
         self.robot_radius = robot_radius
         self.dt = dt
         self.delta_pos = np.zeros(2)

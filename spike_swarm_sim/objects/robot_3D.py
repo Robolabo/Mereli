@@ -1,29 +1,27 @@
 import numpy as np
 from shapely.geometry import Point
-from spike_swarm_sim.objects import WorldObject
+from spike_swarm_sim.objects import WorldObject3D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
-@world_object_registry(name='robot')
-class Robot(WorldObject):
+
+
+
+@world_object_registry(name='robot_3D')
+class Robot3D(WorldObject3D):
     """
     Base class for the robot world object.
     """
-    def __init__(self, position, *args, orientation=0, **kwargs):
-        super(Robot, self).__init__(position, static=False, luminous=False,\
-                        tangible=True, shape='circular', *args, **kwargs)
-        self._init_theta = orientation
-        # self.theta = 0 # initialized in reset      
-        self.theta = orientation
-
-        self.radius = 11
+    def __init__(self, position, orientation, *args, **kwargs):
+        super(Robot3D, self).__init__('epuck', position, orientation,\
+                        static=False, luminous=False, tangible=True, \
+                        *args, **kwargs)
         self._food = False
 
         #* Initialize sensors and actuators according to controller requirements
         self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
                             for k, s in sensors.items()\
                             if k in self.controller.enabled_sensors.keys()}
-        self.actuators = {k : k == 'wheel_actuator' and a(self, robot_radius=self.radius, **self.controller.enabled_actuators[k])\
-                            or a(self, **self.controller.enabled_actuators[k])\
+        self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
                             for k, a in actuators.items()\
                             if k in self.controller.enabled_actuators.keys()}
 
@@ -62,36 +60,26 @@ class Robot(WorldObject):
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
+
+        # if False or any(state['distance_sensor3D'] > 0.0):
+        #     actions['joint_actuator'] = [1, -1]
+        # else: 
+        # actions['joint_actuator'] = [1, 1]
+
         #* Plan actions for future execution
         self.plan_actions(actions)
-
         # #* Handle robot food pickup
         # if 'food_area_sensor' in state.keys() and bool(state['food_area_sensor'][0]):
         #     self.food = True
         # if 'nest_sensor' in state.keys() and bool(state['nest_sensor'][0]):
         #     self.food = False
 
-        #* Render robot LED
-        self.update_colors(state, actions)
         return state, actions
 
-    def update_colors(self, state, action):
-        colors = ['black', 'red', 'yellow', 'blue']
-        if 'wireless_transmitter' in self.actuators.keys():
-            for k, msg in enumerate(action['wireless_transmitter']['msg']):
-                symbol = np.argmin([np.abs(sym - msg) for sym in [0, 0.33, 0.66, 1]])
-                if k == 0:
-                    self.colorA = colors[symbol]
-                if k == 1:
-                    self.colorB = colors[symbol]
-    
-        if 'led_actuator' in self.actuators.keys():
-            self.color2 = ('green', 'white', 'red')[action['led_actuator']] #[actions['wireless_transmitter']['state']]#
-      
     def plan_actions(self, actions):
         for actuator, action in actions.items():
             self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
-                    and [action, self.position, self.theta]  or [action]
+                    and [action, self.position, self.orientation]  or [action]
 
     def actuate(self):
         """
@@ -102,11 +90,9 @@ class Robot(WorldObject):
         =====================
         """
         for actuator_name, actuator in self.actuators.items():
-            # if actuator_name not in self.planned_actions:
-            #     raise Exception('Error: Actuator does not have corresponding planned action.')
             actuator.step(*iter(self.planned_actions[actuator_name]))
-        if 'wheel_actuator' in self.controller.enabled_actuators.keys() or 'target_pos_actuator' in self.controller.enabled_actuators.keys():
-            self._move(validated=True)
+        # if 'wheel_actuator' in self.controller.enabled_actuators.keys() or 'target_pos_actuator' in self.controller.enabled_actuators.keys():
+        #     self._move(validated=True)
 
     def perceive(self, neighborhood):
         """
@@ -121,22 +107,15 @@ class Robot(WorldObject):
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
 
-    def _move(self, validated=False):
-        """
-        
-        =====================
-        - Args:
-            validated [bool] -> flag indicating if the planned movement is valid 
-                        (for example with no collisions). 
-        - Returns: None
-        =====================
-        """
-        self.position += self.actuators['wheel_actuator'].delta_pos.astype(float) * float(validated)
-        self.theta += self.actuators['wheel_actuator'].delta_theta * float(validated)
-        # control angle range in (-pi,pi]
-        self.theta = self.theta % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
-        self.actuators['wheel_actuator'].delta_pos = np.zeros(2)
-        self.actuators['wheel_actuator'].delta_theta = 0.0
+    # def _move(self, phyiscsClient):
+    #     """
+    #     """
+    #     self.pos += self.actuators['wheel_actuator'].delta_pos.astype(float) * float(validated)
+    #     self.theta += self.actuators['wheel_actuator'].delta_theta * float(validated)
+    #     # control angle range in (-pi,pi]
+    #     self.theta = self.theta % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
+    #     self.actuators['wheel_actuator'].delta_pos = np.zeros(2)
+    #     self.actuators['wheel_actuator'].delta_theta = 0.0
 
 
     def reset(self):
@@ -149,8 +128,6 @@ class Robot(WorldObject):
         - Returns: None
         =====================
         """
-        self.delta_pos = np.zeros(2)
-        self.delta_theta = 0.0
         self._food = False
         #* Reset Controller
         if self.controller is not None:
@@ -176,10 +153,20 @@ class Robot(WorldObject):
         """
         self._food = hasfood
 
+    @property
+    def bounding_box(self):
+        return Point(self.pos[0], self.pos[1]).buffer(self.radius).boundary
     
+    def intersect(self, g):
+        inters = self.bounding_box.intersection(g)
+        if not inters: return []
+        if isinstance(inters, Point):
+            return np.array(inters.coords)
+        else:
+            return [np.array(v.coords[0]) for v in inters.geoms]
         
     def initialize_render(self, canvas):
-        x, y = tuple(self.position)
+        x, y = tuple(self.pos)
         contour_id = canvas.create_oval(x-self.radius-2, y-self.radius-2,\
                 x + self.radius+2, y + self.radius+2, fill=self.color2)
         # body_id = canvas.create_oval(x-self.radius, y-self.radius,\
@@ -204,7 +191,7 @@ class Robot(WorldObject):
         """
         Renders the robot in a 2D tkinter canvas.
         """
-        x, y = tuple(self.position)
+        x, y = tuple(self.pos)
         canvas.coords(self.render_dict['contour'],\
                 x-self.radius, y-self.radius,\
                 x + self.radius, y + self.radius)

@@ -1,20 +1,17 @@
 import numpy as np
 from spike_swarm_sim.register import initializer_registry
-from spike_swarm_sim.utils import tanh, compute_angle
+from spike_swarm_sim.utils import tanh, compute_angle, isinstance_of_any
 
-class Initializer:
-    def __init__(self):
-        pass
-    def __call__(self):
-        pass
 
 @initializer_registry(name='fixed')
 class FixedInitializer:
-    def __init__(self, values=[]):
-        self.values = values
+    def __init__(self, num_points, fixed_values=None):
+        self.fixed_values = fixed_values
+        if not isinstance_of_any(fixed_values[0], [list, np.ndarray]):
+            self.fixed_values = [[val] for val in self.fixed_values]
 
     def __call__(self):
-        return self.values
+        return [np.array(val) for val in self.fixed_values]
 
 
 
@@ -35,7 +32,7 @@ class RandomUniformInitializer:
 class RandomCircumference:
     """
     Class for randomly initializing objects embedded in a circumference.
-    It uniformily samples a random angle and computes the cartesian position within 
+    It uniformly samples a random angle and computes the cartesian position within 
     a circumference of a given radius and center.
     =================================
     - Args:

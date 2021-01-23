@@ -1,9 +1,10 @@
 import numpy as np
+from .base_actuator import Actuator
 from spike_swarm_sim.register import actuator_registry
 from spike_swarm_sim.utils import softmax
 
 @actuator_registry(name='wireless_transmitter')
-class CommunicationTransmitter:
+class CommunicationTransmitter(Actuator):
     """ Communication transmitter actuator. It isotropically transmits a 
     frame with a message and its context. The propagation simulation is 
     implemented at the receiver side, this class only updates the transmitted 
@@ -15,7 +16,8 @@ class CommunicationTransmitter:
         quantize [bool] : whether to quantize the message to a set of possible 
                 symbols or not.
     """
-    def __init__(self, range=120, msg_length=1, quantize=True):
+    def __init__(self, *args, range=120, msg_length=1, quantize=True, **kwargs):
+        super(CommunicationTransmitter, self).__init__(*args, **kwargs)
         self.channel = 0
         self.msg_length = msg_length
         self.range = range

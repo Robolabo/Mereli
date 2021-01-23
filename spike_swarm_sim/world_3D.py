@@ -1,34 +1,36 @@
 import logging
+import time
 from collections import deque
-import tkinter as tk
 import numpy as np
-from spike_swarm_sim.objects import  Robot, LightSource
+import pybullet as p
+import pybullet_data
+from spike_swarm_sim.objects import  Robot3D, LightSource, Wall
 from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit
 from spike_swarm_sim.globals import global_states
 
-WORLD_MODES = ['EVOLUTION', 'EVALUATION', 'DEBUGING']
-class World(object):
-    def __init__(self, height=1000, width=1000, render_connections=True, world_delay=1):
+
+#! OJO implementar p.disconnect(). Ctx manager?
+class World3D(object):
+    def __init__(self, height=1000, width=1000, world_delay=1):
         self.height = height
         self.width = width
-        self.render_connections = render_connections
         self.world_delay = world_delay
         self.render = global_states.RENDER
-        if global_states.RENDER:
-            self.root = tk.Tk(className='SpikeSwarmSim')
-            self.root.geometry(str(width) + 'x' + str(height))
-            self.canvas = tk.Canvas(self.root, height=self.height, width=self.width, bg='grey')
-            self.canvas.pack(side='left')
-            frame = tk.Frame(self.root)
-            frame.pack(side='right')
-            # Create limiting walls
-            self.canvas.create_rectangle(0, 0, 20, height, fill='black')
-            self.canvas.create_rectangle(0, 0, width, 20, fill='black')
-            self.canvas.create_rectangle(width - 20, 0, width, height, fill='black')
-            self.canvas.create_rectangle(0, height - 20, width, height, fill='black')
-        #* Dict storing all objects
+
+        self.physicsClient = p.connect(p.GUI if global_states.RENDER else p.DIRECT)
+        p.setAdditionalSearchPath(pybullet_data.getDataPath())
+        p.setGravity(0, 0, -9.8)
+        planeId = p.loadURDF("plane.urdf")
+        self.gui_params = {}
+        if self.render:
+            self.gui_params['robot_focus'] = p.addUserDebugParameter('Robot focus', 1, -1, 1)
+            p.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
+                    cameraPitch=-60, cameraTargetPosition=[0,0,0])
+
+       
+         #* Dict storing all objects
         self.hierarchy = {}
         #* Dict mapping object names to object groups
         self.groups = {}
@@ -36,12 +38,18 @@ class World(object):
         self.initializers = {}
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
-        if render_connections and global_states.RENDER:
-            self.connection_graph = {}
+        #* Add world limits
+        self.add_limiting_walls()
 
-        self.reward_generator = GoToLightReward()
+    
+        # self.reward_generator = GoToLightReward()
         self.t = 0
         self.aux = 0
+
+    def add_limiting_walls(self):
+        for pos, orient, side in zip ([[11, 0, 1], [-11, 0, 1], [0, 11, 1], [0, -11, 1]],\
+            [[0, 0, np.pi/2], [0, 0, np.pi/2], [0, 0, 0], [0, 0, 0]], ['up', 'bottom', 'left', 'right']):
+            self.add('wall_side_'+ side, Wall(pos, orient), group='side_wall')
 
     @increase_time
     @mov_average_timeit
@@ -61,7 +69,7 @@ class World(object):
         reward = 0.0
         #* Step controllers
         for idx, (n, obj) in enumerate(self.controllable_objects.items()):
-            if not isinstance(obj, Robot):
+            if not isinstance(obj, Robot3D):
                 obj.step(self.neighborhood(obj))
                 continue
             rew = 0
@@ -74,30 +82,34 @@ class World(object):
             actions.append(action_obj)
         states = np.stack(states)
         actions = np.stack(actions)
-
+        
         #* Apply environmental perturbations (Postprocessing)
         if len(self.env_perturbations) > 0:
             for perturbation in tuple(self.env_perturbations.values())[0]:
                 if perturbation.postprocessing:
                     states, actions = perturbation(states, actions, self.robots)
 
-        #* Actuate
+        #! Actuate
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate()
-            if self.render:
-                self.canvas = obj.render(self.canvas)
-        #* Apply mirror
-        for robot in self.hierarchy.values(): #! OJO fall en las esquinas
-            if  robot.controllable:
-                robot.position[robot.position > 1000+15] = 20
-                robot.position[robot.position < -13] = 1000-20
-        #* Render step
+
+        # #* Apply mirror
+        # for robot in self.hierarchy.values(): #! OJO fall en las esquinas
+        #     if  robot.controllable:
+        #         robot.pos[robot.pos > 1000+15] = 20
+        #         robot.pos[robot.pos < -13] = 1000-20
+
+        #* Render and physics step.
         if self.render:
-            if self.render_connections:
-                self.draw_connections()
-            self.canvas.update()
-            self.root.after(self.world_delay)
+            # print(p.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
+            if p.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
+                p.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
+                    cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
+
+        p.stepSimulation()
+        if self.render:
+            time.sleep(1/100.)
         return states, actions
     
     def add(self, name, obj, group=None):
@@ -112,10 +124,10 @@ class World(object):
         - Returns: None
         ============================
         """
-        obj_id = np.random.randint(1000)
-        while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
-            obj_id = np.random.randint(1, 1000)
-        obj.id = obj_id
+        # obj_id = np.random.randint(1000)
+        # while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
+        #     obj_id = np.random.randint(1, 1000)
+        # obj.id = obj_id
         self.hierarchy.update({name : obj})
         #* Register group element
         if group is None:
@@ -124,9 +136,8 @@ class World(object):
             self.groups[group].append(name)
         else:
             self.groups[group] = [name]
-
-        if self.render:
-            self.canvas = obj.initialize_render(self.canvas)
+        # if self.render:
+        #     self.canvas = obj.initialize_render(self.canvas)
     
     def build_from_dict(self, world_dict, ann_topology=None):
         """ Initialize all objects and add them into the world using a dictionary structure.
@@ -144,8 +155,10 @@ class World(object):
                         for key, value in obj['initializers'].items()
             }
             if obj['type'] == 'robot':
-                robot_positions = self.initializers[obj_name]['positions']()
-                robot_orientations = self.initializers[obj_name]['orientations']()
+                robot_positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.),\
+                                    self.initializers[obj_name]['positions']())
+                robot_orientations = map(lambda x: (0., 0., x[0]), self.initializers[obj_name]['orientations']())
+                
                 #* Add robots one by one at their position and orientation
                 for i, (position, orientation) in enumerate(zip(robot_positions, robot_orientations)):
                     if obj['controller'] is not None:
@@ -156,7 +169,7 @@ class World(object):
                             controller = controller_cls(obj['sensors'], obj['actuators'])
                     else:
                         controller = None
-                    robot = Robot(position, orientation=orientation[0], controller=controller, **obj['params'])
+                    robot = Robot3D(position, orientation, controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
@@ -197,19 +210,21 @@ class World(object):
                 #* Initialize positions
                 if 'positions' in group_initializer.keys():
                     positions = group_initializer['positions']()
+                    positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.), positions) 
                     for pos, obj in zip(positions, group_elements):
                         obj.position = pos
                 #* Initialize orientations
                 if 'orientations' in group_initializer.keys():
                     orientations = group_initializer['orientations']()
+                    orientations = map(lambda x: (0., 0., x[0]), orientations)
                     for orientation, obj in zip(orientations, group_elements):
-                        obj.theta = orientation[0]
+                        obj.orientation = orientation
         np.random.seed()
 
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initalizes
-        the dynamics (position, orientation, ...) of objects.
+        the dynamics (pos, orientation, ...) of objects.
         ================================================================
         - Args:
             seed [int] -> seed to initialize at some known random state.
@@ -223,8 +238,8 @@ class World(object):
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset()
-            if self.render:
-                self.canvas = obj.render(self.canvas)
+            # if self.render:
+            #     self.canvas = obj.render(self.canvas)
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
@@ -246,16 +261,16 @@ class World(object):
         neighbors = []
         if isinstance(robot, LightSource):
             return self.robots.values()
-        if not isinstance(robot, Robot) or len(self.hierarchy) == 1:
+        if not isinstance(robot, Robot3D) or len(self.hierarchy) == 1:
             return neighbors
         max_robot_dist = None
         if len(self.robots) > 1:
             max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['wireless_receiver', 'distance_sensor'] \
+                            for sensor in ['wireless_receiver', 'distance_sensor3D'] \
                             if sensor in robot.sensors.keys()])
         #* Robots
         for obj in self.hierarchy.values():
-            if isinstance(obj, Robot) and obj.id != robot.id:
+            if isinstance(obj, Robot3D) and obj.id != robot.id:
                 if max_robot_dist is not None and obj.id != robot.id:
                     if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
                         neighbors.append(obj)
@@ -281,7 +296,7 @@ class World(object):
         """ Dict with all robots.
         """
         return {name : obj for name, obj in self.hierarchy.items()\
-                if type(obj).__name__ == 'Robot'}
+                if type(obj).__name__ == 'Robot3D'}
     @property
     def lights(self):
         """ Dict with all light sources.
@@ -327,24 +342,3 @@ class World(object):
         """ Dict with all luminous objects.
         """
         return {name : obj for name, obj in self.hierarchy.items() if obj.luminous}
-
-    def draw_connections(self):
-        """
-        Renders a line between robots iif both robots share a communication channel.
-        That is, if the distance between robots is less than the comm range.
-        """
-        nodes = [obj for obj in self.controllable_objects.values() if obj.tangible]
-        any(self.canvas.delete(item_id) for item_id in self.connection_graph.values())
-        for i, nodeA in enumerate(nodes):
-            for j, nodeB in enumerate(nodes):
-                if i != j and np.linalg.norm(nodeA.position - nodeB.position) <= nodeB.actuators['wireless_transmitter'].range: #nodeA.sensors['wireless_transmitter'].range:
-                    self.connection_graph[str(i)+'-'+str(j)] = self.canvas.create_line(nodeA.position[0], nodeA.position[1],\
-                            nodeB.position[0], nodeB.position[1], fill='black', width=.7)
-
-    def draw_node_coords(self):
-        """
-        Renders a text with the position in the world of each robot.
-        """
-        any([self.canvas.create_text(int(obj.position[0]), int(obj.position[1]-20), font="Purisa",
-                    text=str(int(obj.position[0]))+','+str(int(obj.position[1])))\
-                    for obj in self.controllable_objects.values()])

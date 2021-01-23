@@ -186,6 +186,32 @@ class Grouping:
         fitness /= len(robot_positions)
         return fitness + 1e-5
 
+@fitness_func_registry(name='obstacle_avoidance')
+class ObstacleAvoidance:
+    """Fitness function for the Obstacle Avoidance task."""
+    def __init__(self):
+        self.required_info = ()
+
+    def __call__(self, actions, states, info=None):
+        """Computes the fitness function based on trial actions and states. 
+        Additionally, other useful variables can be used from info dict (if specified in init).
+        =======================================================================================
+        - Args:
+            actions [list of dicts]: list of dictionaries with actuator names and the 
+                    corresponding action.
+            states [list of dicts]: list of dictionaries with sensor names and the 
+                    corresponding measured states.
+            info [dict or None]: dict of additional information.
+        =======================================================================================
+        """
+        fitness = 0
+        for _, (states_t)  in enumerate(states):
+            fitness += np.mean([1 - st['distance_sensor3D'] for st in states_t])
+        fitness /= len(states)
+        return fitness + 1e-5
+
+
+
 # @fitness_func_registry(name='line_formation')
 # class LineFormation:
 #     def __init__(self, eval_steps):
