@@ -1,0 +1,10 @@
+*/**/__pycache__
+__pycache__
+.vscode
+.pytest_cache
+# spike_swarm_sim/config/*.json
+# spike_swarm_sim/checkpoints/populations/*.pickle
+spike_swarm_sim/logs/data/*
+scripts
+examples
+*.sh
