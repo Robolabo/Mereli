@@ -26,7 +26,7 @@ class World3D(object):
         self.gui_params = {}
         if self.render:
             self.gui_params['robot_focus'] = p.addUserDebugParameter('Robot focus', 1, -1, 1)
-            p.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
+            p.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
                     cameraPitch=-60, cameraTargetPosition=[0,0,0])
 
        
@@ -109,7 +109,7 @@ class World3D(object):
 
         p.stepSimulation()
         if self.render:
-            time.sleep(1/100.)
+            time.sleep(1/50.)
         return states, actions
     
     def add(self, name, obj, group=None):

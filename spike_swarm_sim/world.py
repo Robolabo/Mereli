@@ -98,6 +98,7 @@ class World(object):
                 self.draw_connections()
             self.canvas.update()
             self.root.after(self.world_delay)
+        
         return states, actions
     
     def add(self, name, obj, group=None):

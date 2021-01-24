@@ -94,10 +94,12 @@ class DirectionalSensor(Sensor):
                             if self._target_filter(obj) and obj.id != self.sensor_owner.id]
         for obj in featured_objects:
             if issubclass(type(obj), WorldObject3D):
-                closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, \
-                                200, linkIndexA=0, linkIndexB=-1)
+                closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200, linkIndexA=-1, linkIndexB=-1)
                 v = np.array(closest_points[0][6]) - self.sensor_owner.position
                 orientation = self.sensor_owner.orientation[-1]
+                # if type(obj).__name__ == 'Robot3D':
+                #     cc = p.getClosestPoints(self.sensor_owner.id, obj.id, 200, linkIndexA=0, )
+                #     import pdb; pdb.set_trace()
             else:
                 v = toroidal_difference(obj.position, self.sensor_owner.position)
             rho = LA.norm(v)

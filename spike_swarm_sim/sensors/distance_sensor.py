@@ -62,10 +62,10 @@ class DistanceSensor3D(DistanceSensor):
 
         if condition:
             # tar_pos = self.sensor_owner.position + kwargs['diff_vector']  + np.array([0,0,0.1])
-            my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0,0,0.15])
+            my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0, 0, 0.13])
             
-            ray_res = p.rayTest(my_pos, kwargs['obj'].position * np.array([1, 1, 0.0])  + np.array([0, 0, 0.11]),)
-            # print(rho,ray_res[0][0], )
+            ray_res = p.rayTest(my_pos, kwargs['obj'].position * np.array([1, 1, 0.0])  + np.array([0, 0, 0.08]),)
+            # print(rho, ray_res[0][0], )
             if ray_res[0][0] == kwargs['obj'].id:
                 signal_strength = self.propagation(rho, phi)
                 if signal_strength > direction_reading:
@@ -75,7 +75,7 @@ class DistanceSensor3D(DistanceSensor):
         return direction_reading
     
     def get_positions(self):
-        return [self.sensor_owner.position + 0.012 * np.r_[np.cos(ang), np.sin(ang), 0.0]\
+        return [self.sensor_owner.position + 0.2 * np.r_[np.cos(ang), np.sin(ang), 0.0]\
             for ang in self.directions(self.sensor_owner.orientation[-1])]
 
     #TODO QUITAR DE AQUI

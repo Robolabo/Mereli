@@ -15,9 +15,10 @@ class JointActuator(Actuator):
             'position' : p.POSITION_CONTROL,
             'velocity' : p.VELOCITY_CONTROL
         }[control]
-        self.max_velocity = 40.0
-        for j in self.joint_ids:
-            p.changeDynamics(self.actuator_owner.id, j, linearDamping=0, angularDamping=0)
+        self.max_velocity = 30.0
+        # for j in range(p.getNumJoints(self.actuator_owner.id)):
+        #     p.changeDynamics(self.actuator_owner.id, j,\
+        #         linearDamping=0, angularDamping=0,)
     
     def step(self, action):
         # print(action)
@@ -25,5 +26,5 @@ class JointActuator(Actuator):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
         for ac, joint in zip(action, self.joint_ids):
-            p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=ac * self.max_velocity, force=500,\
+            p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=ac * self.max_velocity,\
                 controlMode=p.VELOCITY_CONTROL,)
