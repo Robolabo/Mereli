@@ -30,7 +30,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 1000,
-        "evaluation_steps" : 300,
+        "evaluation_steps" : 1300,
         "num_evaluations" : 1,
         "fitness_function" : "obstacle_avoidance",
         "populations" : {

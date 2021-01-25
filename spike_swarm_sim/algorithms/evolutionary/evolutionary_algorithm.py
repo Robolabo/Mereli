@@ -60,12 +60,14 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     """
     if isinstance(worlds, MultiWorldWrapper):
         rank = multiprocessing.current_process()._identity[0] #! ojo mpi
-        print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1)
         world = worlds.all[(rank - 1) % worlds.n_cpu + 1]
+        #print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1, world.connected)
+        #print([w.connected for w in worlds.all])
         try:
             world.connect()
-        except:
-            print('-----------------', rank)
+        except Exception as e:
+            print(e)
+            print('-----------------', rank, world.connected)
     else:
         world = worlds
     # print(env_id, world.physics_client._client)
@@ -77,7 +79,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     # world.connect()
     world.reset()
     
-
     robots = [robot for robot in world.robots.values()]
     interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
@@ -114,8 +115,8 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     fitness = (fitness / num_evaluations)
 
     if isinstance(worlds, MultiWorldWrapper):
-        print(rank, ' disconnecting ', env_id)
-        world.physics_client.disconnect()
+        world.disconnect()
+        print(rank, ' disconnecting ', env_id, world.connected)
     return (env_id, fitness)
 
 class EvolutionaryAlgorithm:
@@ -170,8 +171,8 @@ class EvolutionaryAlgorithm:
             if not use_mpi and self.n_processes > 1:
                 # worlds = [self.world.all[idx % self.n_processes] for idx in range(self.population_size)]
                 with multiprocessing.Pool(processes=self.n_processes) as pool:
-                    pool_args = zip(range(self.population_size), *[map(lambda x: copy.deepcopy(x), repeat(v))\
-                                for v in iter([self.world, self.populations, self.eval_steps, self.num_evaluations,\
+                    pool_args = zip(range(self.population_size),[self.world for _ in range(self.population_size)], *[map(lambda x: copy.deepcopy(x), repeat(v))\
+                                for v in iter([self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k])])
                     evaluation_res = pool.starmap(_run_worker, pool_args)
                     self.fitness = [v for _, v in sorted(evaluation_res, key=lambda x: x[0])]

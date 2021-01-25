@@ -61,7 +61,7 @@ class World3D(object):
 
         #* Add world limits
         self.add_limiting_walls()
-    
+        self.connected = True 
         # self.reward_generator = GoToLightReward()
         self.t = 0
         self.aux = 0
@@ -259,7 +259,12 @@ class World3D(object):
             for pert in group_pert:
                 pert.reset()
 
+    def disconnect(self):
+        self.physics_client.disconnect()
+        self.connected = False
+
     def connect(self):
+        self.connected = True
         self.physics_client = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.physics_client.setGravity(0, 0, -9.8)
