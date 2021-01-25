@@ -77,37 +77,49 @@ class WorldObject3D(object):
         trainable [bool]: whether the object controoler can be trained. (#!CHECK)
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation, static=True,
-                controller=None, tangible=True, luminous=False,
+    def __init__(self, urdf_file, position, orientation, physics_client=None,
+                static=True, controller=None, tangible=True, luminous=False,
                 trainable=False):
-        urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
-        self._id = p.loadURDF(urdf_file, position, p.getQuaternionFromEuler(orientation))        
-        self.init_position, self.init_orientation = p.getBasePositionAndOrientation(self._id) 
+        self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
+        self.physics_client = physics_client
+        self._id = self.physics_client.loadURDF(self.urdf_file, position, self.physics_client.getQuaternionFromEuler(orientation),\
+                            physicsClientId=self.physics_client._client)
+        self.init_position, self.init_orientation = self.physics_client.getBasePositionAndOrientation(self._id,\
+                            physicsClientId=self.physics_client._client)
         self.static = static
         self.controller = controller
         self.tangible = tangible
         self.luminous = luminous
         self.trainable = trainable
+    
+    def add_physics(self, physics_client):
+        self.physics_client = physics_client
+        self._id = self.physics_client.loadURDF(self.urdf_file, self.init_position,\
+            self.init_orientation, physicsClientId=self.physics_client._client)
 
     @property
     def position(self):
-        return np.array(p.getBasePositionAndOrientation(self._id)[0])
-
+        return np.array(self.physics_client.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client._client)[0])
+    
     @property
     def orientation(self):
-        return np.array(p.getEulerFromQuaternion(p.getBasePositionAndOrientation(self._id)[1]))
+        quaternion_orientation = self.physics_client.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client._client)[1]
+        
+        return np.array(p.getEulerFromQuaternion(quaternion_orientation, physicsClientId=self.physics_client._client))
 
     @position.setter
     def position(self, new_position):
         """ Setter of the position. """
-        p.resetBasePositionAndOrientation(self.id, new_position, p.getQuaternionFromEuler(self.orientation))
+        p.resetBasePositionAndOrientation(self.id, new_position,\
+            p.getQuaternionFromEuler(self.orientation), physicsClientId=self.physics_client._client)
     
     @orientation.setter
     def orientation(self, new_orientation):
         """ Setter of the orientation. """
         if len(new_orientation) == 1:
             new_orientation = [0., 0., new_orientation]
-        p.resetBasePositionAndOrientation(self.id, self.position, p.getQuaternionFromEuler(new_orientation))
+        p.resetBasePositionAndOrientation(self.id, self.position,\
+                p.getQuaternionFromEuler(new_orientation), physicsClientId=self.physics_client._client)
 
     @property
     def id(self):

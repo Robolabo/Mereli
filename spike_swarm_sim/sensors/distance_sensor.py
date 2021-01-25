@@ -64,7 +64,8 @@ class DistanceSensor3D(DistanceSensor):
             # tar_pos = self.sensor_owner.position + kwargs['diff_vector']  + np.array([0,0,0.1])
             my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0, 0, 0.13])
             
-            ray_res = p.rayTest(my_pos, kwargs['obj'].position * np.array([1, 1, 0.0])  + np.array([0, 0, 0.08]),)
+            ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
+            physicsClientId=self.sensor_owner.physics_client._client)
             # print(rho, ray_res[0][0], )
             if ray_res[0][0] == kwargs['obj'].id:
                 signal_strength = self.propagation(rho, phi)
