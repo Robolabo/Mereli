@@ -60,8 +60,8 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     """
     if isinstance(worlds, MultiWorldWrapper):
         rank = multiprocessing.current_process()._identity[0] #! ojo mpi
-        # print(rank)
-        world = worlds.all[rank]
+        # print(multiprocessing.current_process()._identity, )
+        world = worlds.all[(rank - 1) % worlds.n_cpu + 1]
         world.connect()
     else:
         world = worlds
