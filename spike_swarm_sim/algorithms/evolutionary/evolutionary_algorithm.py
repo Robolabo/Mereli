@@ -60,9 +60,12 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     """
     if isinstance(worlds, MultiWorldWrapper):
         rank = multiprocessing.current_process()._identity[0] #! ojo mpi
-        # print(multiprocessing.current_process()._identity, )
+        print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1)
         world = worlds.all[(rank - 1) % worlds.n_cpu + 1]
-        world.connect()
+        try:
+            world.connect()
+        except:
+            print('-----------------', rank)
     else:
         world = worlds
     # print(env_id, world.physics_client._client)
@@ -111,7 +114,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     fitness = (fitness / num_evaluations)
 
     if isinstance(worlds, MultiWorldWrapper):
-        # print(rank, ' disconnecting')
+        print(rank, ' disconnecting ', env_id)
         world.physics_client.disconnect()
     return (env_id, fitness)
 
