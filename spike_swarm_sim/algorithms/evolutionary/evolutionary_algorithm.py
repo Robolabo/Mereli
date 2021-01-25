@@ -216,6 +216,7 @@ class EvolutionaryAlgorithm:
     def evolve(self):
         for pop in self.populations.values():
             pop.step(self.fitness)
+        import pdb; pdb.set_trace()
         mean_fitness = np.mean(self.fitness)
         max_fitness = np.max(self.fitness)
         min_fitness = np.min(self.fitness)
