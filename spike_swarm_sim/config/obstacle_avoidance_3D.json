@@ -18,7 +18,8 @@
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
-            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0}
+            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
@@ -29,7 +30,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 1000,
-        "evaluation_steps" : 2000,
+        "evaluation_steps" : 1300,
         "num_evaluations" : 1,
         "fitness_function" : "obstacle_avoidance",
         "populations" : {

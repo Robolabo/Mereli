@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 from .world import World
-from .world_3D import World3D
+from .world_3D import World3D, MultiWorldWrapper
 from .env_perturbations import *
 from .algorithms import *
 from .objects import *

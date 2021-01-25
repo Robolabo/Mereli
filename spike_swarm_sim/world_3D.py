@@ -4,11 +4,31 @@ from collections import deque
 import numpy as np
 import pybullet as p
 import pybullet_data
+import pybullet_utils.bullet_client as bc
+
+
 from spike_swarm_sim.objects import  Robot3D, LightSource, Wall
 from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit
 from spike_swarm_sim.globals import global_states
+
+
+class MultiWorldWrapper:
+    def __init__(self, n_cpu, height=1000, width=1000, world_delay=1):
+        self.n_cpu = n_cpu
+        self._worlds = [World3D(height=1000, width=1000, world_delay=1) for _ in range(n_cpu+1)]
+
+    def build_from_dict(self, world_dict, ann_topology=None):
+        for world in self._worlds:
+            world.build_from_dict(world_dict, ann_topology=ann_topology)
+
+    @property
+    def all(self):
+        return self._worlds 
+    
+    def get_world(self, idx):
+        return self._worlds[idx]
 
 
 #! OJO implementar p.disconnect(). Ctx manager?
@@ -19,18 +39,8 @@ class World3D(object):
         self.world_delay = world_delay
         self.render = global_states.RENDER
 
-        self.physicsClient = p.connect(p.GUI if global_states.RENDER else p.DIRECT)
-        p.setAdditionalSearchPath(pybullet_data.getDataPath())
-        p.setGravity(0, 0, -9.8)
-        planeId = p.loadURDF("plane.urdf")
-        self.gui_params = {}
-        if self.render:
-            self.gui_params['robot_focus'] = p.addUserDebugParameter('Robot focus', 1, -1, 1)
-            p.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-                    cameraPitch=-60, cameraTargetPosition=[0,0,0])
-
        
-         #* Dict storing all objects
+        #* Dict storing all objects
         self.hierarchy = {}
         #* Dict mapping object names to object groups
         self.groups = {}
@@ -38,9 +48,19 @@ class World3D(object):
         self.initializers = {}
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
+
+        self.physics_client = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
+        self.physics_client.setGravity(0, 0, -9.8)
+        self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.physics_client._client)
+        self.gui_params = {}
+        if self.render:
+            self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
+            self.physics_client.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
+                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
+
         #* Add world limits
         self.add_limiting_walls()
-
     
         # self.reward_generator = GoToLightReward()
         self.t = 0
@@ -49,7 +69,7 @@ class World3D(object):
     def add_limiting_walls(self):
         for pos, orient, side in zip ([[11, 0, 1], [-11, 0, 1], [0, 11, 1], [0, -11, 1]],\
             [[0, 0, np.pi/2], [0, 0, np.pi/2], [0, 0, 0], [0, 0, 0]], ['up', 'bottom', 'left', 'right']):
-            self.add('wall_side_'+ side, Wall(pos, orient), group='side_wall')
+            self.add('wall_side_'+ side, Wall(pos, orient, physics_client=self.physics_client._client), group='side_wall')
 
     @increase_time
     @mov_average_timeit
@@ -63,6 +83,7 @@ class World3D(object):
             A tuple with state and action dicts.
         ======================================================
         """
+        # print('STEP ----------------------', self.physics_client._client)
         states = deque()
         actions = deque()
         pre_perturbations = []
@@ -101,13 +122,13 @@ class World3D(object):
         #         robot.pos[robot.pos < -13] = 1000-20
 
         #* Render and physics step.
-        if self.render:
-            # print(p.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
-            if p.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
-                p.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
-                    cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
+        # if self.render:
+        #     # print(self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
+        #     if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
+        #         self.physics_client.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
+        #             cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
 
-        p.stepSimulation()
+        self.physics_client.stepSimulation()
         if self.render:
             time.sleep(1/50.)
         return states, actions
@@ -124,10 +145,6 @@ class World3D(object):
         - Returns: None
         ============================
         """
-        # obj_id = np.random.randint(1000)
-        # while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
-        #     obj_id = np.random.randint(1, 1000)
-        # obj.id = obj_id
         self.hierarchy.update({name : obj})
         #* Register group element
         if group is None:
@@ -136,8 +153,7 @@ class World3D(object):
             self.groups[group].append(name)
         else:
             self.groups[group] = [name]
-        # if self.render:
-        #     self.canvas = obj.initialize_render(self.canvas)
+
     
     def build_from_dict(self, world_dict, ann_topology=None):
         """ Initialize all objects and add them into the world using a dictionary structure.
@@ -169,7 +185,7 @@ class World3D(object):
                             controller = controller_cls(obj['sensors'], obj['actuators'])
                     else:
                         controller = None
-                    robot = Robot3D(position, orientation, controller=controller, **obj['params'])
+                    robot = Robot3D(position, orientation, controller=controller, physics_client=self.physics_client._client, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
@@ -178,7 +194,7 @@ class World3D(object):
                 positions = self.initializers[obj_name]['positions']()
                 controller = controllers[obj['controller']]() if obj['controller'] is not None else None
                 for position in positions:
-                    world_obj = world_objects[obj['type']](position, controller=controller, **obj['params'])
+                    world_obj = world_objects[obj['type']](position, controller=controller, physics_client=self.physics_client, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -210,7 +226,7 @@ class World3D(object):
                 #* Initialize positions
                 if 'positions' in group_initializer.keys():
                     positions = group_initializer['positions']()
-                    positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.), positions) 
+                    positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.), positions)
                     for pos, obj in zip(positions, group_elements):
                         obj.position = pos
                 #* Initialize orientations
@@ -238,11 +254,24 @@ class World3D(object):
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset()
-            # if self.render:
-            #     self.canvas = obj.render(self.canvas)
+           
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
+
+    def connect(self):
+        self.physics_client = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
+        self.physics_client.setGravity(0, 0, -9.8)
+        self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.physics_client._client)
+        self.gui_params = {}
+        if self.render:
+            self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
+            self.physics_client.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
+                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
+        for obj in self.hierarchy.values():
+            obj.add_physics(self.physics_client._client)
+
 
     def neighborhood(self, robot):
         """ Method that returns the list of neighboring world objects of a robot.

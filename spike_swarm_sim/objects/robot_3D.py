@@ -107,16 +107,6 @@ class Robot3D(WorldObject3D):
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
 
-    # def _move(self, phyiscsClient):
-    #     """
-    #     """
-    #     self.pos += self.actuators['wheel_actuator'].delta_pos.astype(float) * float(validated)
-    #     self.theta += self.actuators['wheel_actuator'].delta_theta * float(validated)
-    #     # control angle range in (-pi,pi]
-    #     self.theta = self.theta % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
-    #     self.actuators['wheel_actuator'].delta_pos = np.zeros(2)
-    #     self.actuators['wheel_actuator'].delta_theta = 0.0
-
 
     def reset(self):
         """
@@ -152,59 +142,3 @@ class Robot3D(WorldObject3D):
         """Setter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         self._food = hasfood
-
-    @property
-    def bounding_box(self):
-        return Point(self.pos[0], self.pos[1]).buffer(self.radius).boundary
-    
-    def intersect(self, g):
-        inters = self.bounding_box.intersection(g)
-        if not inters: return []
-        if isinstance(inters, Point):
-            return np.array(inters.coords)
-        else:
-            return [np.array(v.coords[0]) for v in inters.geoms]
-        
-    def initialize_render(self, canvas):
-        x, y = tuple(self.pos)
-        contour_id = canvas.create_oval(x-self.radius-2, y-self.radius-2,\
-                x + self.radius+2, y + self.radius+2, fill=self.color2)
-        # body_id = canvas.create_oval(x-self.radius, y-self.radius,\
-        #         x + self.radius, y + self.radius, fill=self.color)
-        bodyA_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.theta), extent=180, fill="black")
-        bodyB_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.theta)+180, extent=180, fill="black")
-        orient_id = canvas.create_line(x, y,\
-                x + self.radius * 2 * np.cos(self.theta),\
-                y + self.radius * 2 * np.sin(self.theta),\
-                fill='black', width=2)
-        self.render_dict = {
-            'contour' : contour_id,
-            'bodyA' : bodyA_id,
-            'bodyB' : bodyB_id,
-            'orient' : orient_id,
-        }
-        return canvas
-    
-    def render(self, canvas):
-        """
-        Renders the robot in a 2D tkinter canvas.
-        """
-        x, y = tuple(self.pos)
-        canvas.coords(self.render_dict['contour'],\
-                x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius)
-        canvas.coords(self.render_dict['bodyA'],\
-                x-self.radius+3, y-self.radius+3,\
-                x + self.radius-3, y + self.radius-3)
-        canvas.coords(self.render_dict['bodyB'],\
-                x-self.radius+3, y-self.radius+3,\
-                x + self.radius-3, y + self.radius-3)
-        canvas.itemconfig(self.render_dict['contour'], fill=self.color2)
-        canvas.itemconfig(self.render_dict['bodyA'], start=0, extent=180, fill=self.colorA)
-        canvas.itemconfig(self.render_dict['bodyB'], start=180, extent=180, fill=self.colorB)
-        canvas.coords(self.render_dict['orient'], x, y,\
-                x + self.radius * 2 * np.cos(self.theta),\
-                y + self.radius * 2 * np.sin(self.theta))
-        return canvas

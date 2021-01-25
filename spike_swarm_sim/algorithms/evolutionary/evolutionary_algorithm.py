@@ -18,6 +18,7 @@ from spike_swarm_sim.utils import flatten_dict, DataLogger, without_duplicates
 from  spike_swarm_sim.sensors.utils import list_sensors
 from  spike_swarm_sim.actuators.utils import list_actuators     
 from spike_swarm_sim.globals import global_states          
+from spike_swarm_sim import MultiWorldWrapper, World3D
 
 def get_info(name, robots, world,):
     """
@@ -36,7 +37,9 @@ def get_info(name, robots, world,):
         'light_positions' : np.array([light.position for light in world.lights.values()])
     }[name]
 
-def _run_worker(env_id, populations, world, eval_steps, \
+
+#!
+def _run_worker(env_id, worlds, populations, eval_steps, \
                 num_evaluations, fitness_fn, seed, generation):
     """
     Worker function to evaluate an individual of the EA population and
@@ -55,7 +58,23 @@ def _run_worker(env_id, populations, world, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
+    if isinstance(worlds, MultiWorldWrapper):
+        rank = multiprocessing.current_process()._identity[0] #! ojo mpi
+        # print(rank)
+        world = worlds.all[rank]
+        world.connect()
+    else:
+        world = worlds
+    # print(env_id, world.physics_client._client)
+    # try:
+    #     world.connect()
+    # except:
+    #     print('a2 ', rank,  world.physics_client._client)
+    # world.physics_client.disconnect()
+    # world.connect()
     world.reset()
+    
+
     robots = [robot for robot in world.robots.values()]
     interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
@@ -76,6 +95,7 @@ def _run_worker(env_id, populations, world, eval_steps, \
         survival_time = 0
         done = False
         while (not done and survival_time <= eval_steps):
+            #! print(rank, ' iter: ', survival_time)
             states, actions = world.step()
             for key, val in info.items():
                 if isinstance(val, deque):
@@ -89,6 +109,10 @@ def _run_worker(env_id, populations, world, eval_steps, \
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
     fitness = (fitness / num_evaluations)
+
+    if isinstance(worlds, MultiWorldWrapper):
+        # print(rank, ' disconnecting')
+        world.physics_client.disconnect()
     return (env_id, fitness)
 
 class EvolutionaryAlgorithm:
@@ -120,45 +144,43 @@ class EvolutionaryAlgorithm:
         if resume:
             self.load_population()
         else:
-            robots = [copy.deepcopy(robot) for robot in world.robots.values()]
+            robots = [copy.deepcopy(robot) for robot in world.robots.values()]\
+                        if not isinstance(world, MultiWorldWrapper) else\
+                        [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
             for pop in self.populations.values():
                 pop.initialize(GeneticInterface(robots[0].controller.neural_network))
 
     def run(self):
-        """
-        Run method common to all evolutionary computation algs. It parallelizes the 
+        """ Run method common to all evolutionary computation algs. It parallelizes the 
         genotype evaluation to obtain the fitness and performs the evolution step. 
         The precise method evolve has to be defined in the population class of the 
         precise algorithm that inherits from this class. 
         The method does not return any data. Instead, it saves all the required 
         information to resume the evolution periodically.
-        ===============================================================
-        - Args: None
-        - Returns: None
-        =============================================================== 
         """
         use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
         for k in range(self.init_generation, self.n_generations):
             fitness = []
             t0 = time.time()
             seed = (k) * self.num_evaluations 
-           
             #* MULTIPROCESSING Parallelization
             if not use_mpi and self.n_processes > 1:
+                # worlds = [self.world.all[idx % self.n_processes] for idx in range(self.population_size)]
                 with multiprocessing.Pool(processes=self.n_processes) as pool:
                     pool_args = zip(range(self.population_size), *[map(lambda x: copy.deepcopy(x), repeat(v))\
-                                for v in iter([self.populations, self.world, self.eval_steps, self.num_evaluations,\
+                                for v in iter([self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k])])
                     evaluation_res = pool.starmap(_run_worker, pool_args)
                     self.fitness = [v for _, v in sorted(evaluation_res, key=lambda x: x[0])]
+
             #* MPI Parallelization
-            elif use_mpi:
+            elif use_mpi: #! TODO Multi world
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
                 comm.Barrier()
                 indiv_per_core = (self.population_size // size) #!+ (rank == 0) * (self.population_size % size)
-                my_individuals = np.arange(indiv_per_core*rank, indiv_per_core*(rank+1))
+                my_individuals = np.arange(indiv_per_core * rank, indiv_per_core*(rank+1))
                 my_fitness = [_run_worker(ii, self.populations, self.world, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k) for ii in my_individuals]
                 comm.Barrier()
@@ -168,7 +190,7 @@ class EvolutionaryAlgorithm:
                     self.fitness = [f_val for _, f_val in sorted(fitness, key=lambda x: x[0])]
                 comm.Barrier()
             else:
-                eval_result = [_run_worker(i, self.populations, self.world, self.eval_steps, \
+                eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
                                 self.num_evaluations, self.fitness_fn, seed, k)\
                                 for i in range(self.population_size)]
                 self.fitness = [v for _, v in eval_result]
@@ -190,6 +212,7 @@ class EvolutionaryAlgorithm:
     def evolve(self):
         for pop in self.populations.values():
             pop.step(self.fitness)
+        import pdb; pdb.set_trace()
         mean_fitness = np.mean(self.fitness)
         max_fitness = np.max(self.fitness)
         min_fitness = np.min(self.fitness)

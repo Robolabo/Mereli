@@ -1,6 +1,6 @@
 import click
 import logging
-from spike_swarm_sim import World, World3D
+from spike_swarm_sim import World, World3D, MultiWorldWrapper
 from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm, CMA_ES, xNES
 from spike_swarm_sim.register import fitness_functions
 from spike_swarm_sim.config_parser import json_parser
@@ -32,8 +32,12 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     #             world_delay=cfg_dict['world']["world_delay"],\
     #             render_connections=cfg_dict['world']["render_connections"])
     # world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
-    world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-                world_delay=cfg_dict['world']["world_delay"])
+    if ncpu > 1:
+        world = MultiWorldWrapper(ncpu, height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
+                    world_delay=cfg_dict['world']["world_delay"])
+    else:
+        world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
+                        world_delay=cfg_dict['world']["world_delay"],)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
 
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
@@ -50,11 +54,11 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         else:
             #* Evaluate after evolution
             opt_alg.evaluate()
-    else:
-        world.reset()
-        # world.draw_node_coords()
-        while(True):
-            state, action = world.step()
+    # else:
+    #     world.reset()
+    #     # world.draw_node_coords()
+    #     while(True):
+    #         state, action = world.step()
 
 if __name__ == "__main__":
     main()
