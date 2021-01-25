@@ -94,7 +94,6 @@ class DirectionalSensor(Sensor):
                             if self._target_filter(obj) and obj.id != self.sensor_owner.id]
         for obj in featured_objects:
             if issubclass(type(obj), WorldObject3D):
-                
                 closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
                         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
                 v = np.array(closest_points[0][6]) - self.sensor_owner.position
