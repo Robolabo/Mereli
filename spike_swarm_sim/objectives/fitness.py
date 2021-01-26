@@ -214,7 +214,7 @@ class ObstacleAvoidance:
                                 for j, pos_j in enumerate(pos) if i != j]
             fB = np.mean([np.clip(1 - dist / 1, a_min=0, a_max=1) for dist in distances])
             fC = np.min(distances_robots) > 0.25
-            fitness += fB
+            fitness += fA * fB * fC
         fitness /= len(states)
         return fitness + 1e-5
 
