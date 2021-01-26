@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_experimentB_GA_ctrnn",
+    "checkpoint_file" : "chk_border_GA_final",
     "num_processes" : 1,
     "render" : false,
     "topology" : {

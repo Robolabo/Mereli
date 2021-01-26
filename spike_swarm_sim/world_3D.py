@@ -293,6 +293,7 @@ class World3D(object):
         =========================================================================================================
         """
         neighbors = []
+        #!
         if isinstance(robot, LightSource):
             return self.robots.values()
         if not isinstance(robot, Robot3D) or len(self.hierarchy) == 1:
@@ -304,6 +305,7 @@ class World3D(object):
                             if sensor in robot.sensors.keys()])
         #* Robots
         for obj in self.hierarchy.values():
+            #!
             if isinstance(obj, Robot3D) and obj.id != robot.id:
                 if max_robot_dist is not None and obj.id != robot.id:
                     if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:

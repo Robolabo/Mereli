@@ -1,8 +1,8 @@
 {
-    "checkpoint_file" : "chk_obstacle_avoidance_3D",
+    "checkpoint_file" : "chk_border_SNES_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
             "I1" : {"n" : 8, "sensor" : "distance_sensor3D"}
         },
@@ -10,10 +10,10 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "H1" : {"n" : 10, "params" : {}},
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+            "OUT_MOT" : {"n" : 1, "params" : {}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_actuator", "enc": "real"}
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "led_actuator_3D", "enc": "cat"}
         },
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
@@ -22,7 +22,7 @@
             "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outA" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
         } 
     },
     "algorithm" : {
@@ -32,7 +32,7 @@
         "generations" : 1000,
         "evaluation_steps" : 1300,
         "num_evaluations" : 1,
-        "fitness_function" : "obstacle_avoidance",
+        "fitness_function" : "identify_borderline",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
@@ -51,10 +51,10 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 10,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
-                "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 10}},
-                "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
+                "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 0.9}},
+                "actuators" : {"led_actuator_3D" : {"color_on" : "yellow", "color_off" : "white"}},
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":100, "initial_pos" : [500, 500]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}

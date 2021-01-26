@@ -89,6 +89,7 @@ def any_duplicates(iterable):
     return False
 
 def isinstance_of_any(var, list_types):
+    """ Checks if var is instance of any of the classes in the list. """
     return any([isinstance(var, type_elem) for type_elem in list_types])
 
 def save_pickle(dc, filename):

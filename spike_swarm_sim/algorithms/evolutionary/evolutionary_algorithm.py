@@ -270,7 +270,7 @@ class EvolutionaryAlgorithm:
                     re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
                     st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])
                     ac = np.hstack([action[a] for a in without_duplicates(map(re_split, actuator_names)) if a in action.keys()])
-                    row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position, robot[1].theta, st, ac)))
+                    row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position, robot[1].orientation, st, ac)))
                     row_dict = {key: val for key, val in zip(fieldnames, row_values)}
                     data_logger.update(row_dict)
         data_logger.save(self.checkpoint_name, len(robots))

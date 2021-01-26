@@ -1,32 +1,27 @@
 import numpy as np
 import pybullet as p
-# from shapely.geometry import LineString, Point, box, Polygon
+
 
 class WorldObject(object):
     """ 
-    Base class for world objects (robots, lights, walls, and so on). 
+    Base class for abstract world objects. This class is the most basic class of
+    world entities and only implements abstract properties of objects. It does not 
+    implement positions, orientations, and so on. 
     This class must not be directly instantiated and all world objects have to
-    inherit from it.
+    inherit from it indirectly.
     ====================================================================================
     - Params:
-        position [np.ndarray or list]: position vector of the object.
         static [bool]: whether the object is static or can move.
-        shape []
         controller [Controller or None] : controller, if any, defining object behavior.
-        tangible [bool]:
+        tangible [bool]: whether the object could have collisions or not. #!(usefulness to be checked).
         luminous [bool]: whether the object emits light or not.
         trainable [bool]: whether the object controoler can be trained. (#!CHECK)
     ====================================================================================
     """
-    def __init__(self, position, static, shape,
-                controller=None, tangible=True, luminous=False,
-                trainable=False):
+    def __init__(self, static=True, controller=None, tangible=True,\
+                    luminous=False, trainable=False):
         self._id = None
-        self.position = position.astype(float) if isinstance(position, np.ndarray) else position
-        self.init_pos = self.position.copy() if isinstance(position, np.ndarray) else position
-        
         self.static = static
-        self._shape = shape if tangible else None
         self.controller = controller
         self.tangible = tangible
         self.luminous = luminous
@@ -59,39 +54,58 @@ class WorldObject(object):
     def reset(self):
         raise NotImplementedError
 
-
-
-class WorldObject3D(object):
-    """ 
-    Base class for world objects (robots, lights, walls, and so on). 
-    This class must not be directly instantiated and all world objects have to
+class WorldObject2D(WorldObject):
+    """
+    Base class for 2D world objects (robots, lights, walls, and so on). 
+    This class must not be directly instantiated and all 2D world objects have to
     inherit from it.
     ====================================================================================
     - Params:
-        pos [np.ndarray or list]: position vector of the object.
-        static [bool]: whether the object is static or can move.
-        shape []
-        controller [Controller or None] : controller, if any, defining object behavior.
-        tangible [bool]:
-        luminous [bool]: whether the object emits light or not.
-        trainable [bool]: whether the object controoler can be trained. (#!CHECK)
+        position [np.ndarray or list]: position vector of the object.
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation, physics_client=None,
-                static=True, controller=None, tangible=True, luminous=False,
-                trainable=False):
+    def __init__(self, position, *args, **kwargs):
+        super(WorldObject2D, self).__init__(*args, **kwargs)
+        self.position = position.astype(float) if isinstance(position, np.ndarray) else position
+        # self.init_pos = self.position.copy() if isinstance(position, np.ndarray) else position
+
+    def step(self):
+        raise NotImplementedError
+
+    def render(self, canvas):
+        raise NotImplementedError
+    
+    def reset(self):
+        raise NotImplementedError
+
+class WorldObject3D(WorldObject):
+    """ Base class for 3D world objects (robots, lights, walls, and so on). 
+    This class must not be directly instantiated and all 3D world objects have to
+    inherit from it.
+    ====================================================================================
+    - Params:
+        urdf_file [str]: extension less name of the URDF file defining the object.
+        position [np.ndarray or list]: position 3D vector of the object.
+        orientation [np.ndarray or list]: 3D Euler orientation vector.
+        physics_client [int]: identifier of the pybullet physics server.
+    ====================================================================================
+    """
+    def __init__(self, urdf_file, position, orientation, physics_client=None, *args, **kwargs):
+        super(WorldObject3D, self).__init__(*args, **kwargs)
         self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
         self.physics_client = physics_client
         self._id = p.loadURDF(self.urdf_file, position, p.getQuaternionFromEuler(orientation),\
                             physicsClientId=self.physics_client,)
         self.init_position, self.init_orientation = p.getBasePositionAndOrientation(self._id,\
                             physicsClientId=self.physics_client)
-        self.static = static
-        self.controller = controller
-        self.tangible = tangible
-        self.luminous = luminous
-        self.trainable = trainable
+
+    def step(self):
+        raise NotImplementedError
     
+    def reset(self):
+        raise NotImplementedError
+
+
     def add_physics(self, physics_client):
         self.physics_client = physics_client
         self._id = p.loadURDF(self.urdf_file, self.init_position,\
@@ -104,7 +118,6 @@ class WorldObject3D(object):
     @property
     def orientation(self):
         quaternion_orientation = p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[1]
-        
         return np.array(p.getEulerFromQuaternion(quaternion_orientation, physicsClientId=self.physics_client))
 
     @position.setter
@@ -120,27 +133,3 @@ class WorldObject3D(object):
             new_orientation = [0., 0., new_orientation]
         p.resetBasePositionAndOrientation(self.id, self.position,\
                 p.getQuaternionFromEuler(new_orientation), physicsClientId=self.physics_client)
-
-    @property
-    def id(self):
-        """ Getter of the unique object id."""
-        return self._id
-
-    @id.setter
-    def id(self, new_id):
-        """ Setter of the unique object id."""
-        self._id = new_id
-
-    @property
-    def controllable(self):
-        """
-        Getter of flag denoting whether the object 
-        can be controlled or not.
-        """
-        return self.controller is not None
-
-    def step(self):
-        raise NotImplementedError
-    
-    def reset(self):
-        raise NotImplementedError

@@ -1,10 +1,10 @@
 import numpy as np            
 from matplotlib import colors
 import matplotlib.pyplot as plot
-from spike_swarm_sim.objects import WorldObject
+from spike_swarm_sim.objects import WorldObject2D
 from spike_swarm_sim.register import world_object_registry
 
-class IsotropicEmitter(WorldObject):
+class IsotropicEmitter(WorldObject2D):
     def __init__(self, pos, color='red', range=150, static=False, controller=None):
         super(IsotropicEmitter, self).__init__(pos=pos,
             static=static, tangible=False, luminous=True, controller=controller,

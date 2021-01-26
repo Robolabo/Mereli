@@ -40,7 +40,7 @@ class CommunicationReceiver(DirectionalSensor):
             signal_strength = self.propagation(rho, phi)#np.exp(-((rho/100)**2) / 0.4)
             if signal_strength > direction_reading['signal']:
                 sending_direction = np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi)\
-                                for sdir in self.directions(obj.theta)])
+                                for sdir in self.directions(obj.orientation)])
                 sending_angle = self.directions(0.)[sending_direction]
                 receiving_angle = self.directions(0.)[direction]
                 direction_reading['sending_direction'] = np.r_[np.cos(sending_angle), np.sin(sending_angle)]

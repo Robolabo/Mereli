@@ -1,10 +1,10 @@
 import numpy as np
 from shapely.geometry import Point
-from spike_swarm_sim.objects import WorldObject
+from spike_swarm_sim.objects import WorldObject2D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
 @world_object_registry(name='robot')
-class Robot(WorldObject):
+class Robot(WorldObject2D):
     """
     Base class for the robot world object.
     """
@@ -12,8 +12,7 @@ class Robot(WorldObject):
         super(Robot, self).__init__(position, static=False, luminous=False,\
                         tangible=True, shape='circular', *args, **kwargs)
         self._init_theta = orientation
-        # self.theta = 0 # initialized in reset      
-        self.theta = orientation
+        self.orientation = orientation
 
         self.radius = 11
         self._food = False
@@ -64,7 +63,6 @@ class Robot(WorldObject):
         actions = self.controller.step(state, reward=reward)
         #* Plan actions for future execution
         self.plan_actions(actions)
-
         # #* Handle robot food pickup
         # if 'food_area_sensor' in state.keys() and bool(state['food_area_sensor'][0]):
         #     self.food = True
@@ -91,7 +89,7 @@ class Robot(WorldObject):
     def plan_actions(self, actions):
         for actuator, action in actions.items():
             self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
-                    and [action, self.position, self.theta]  or [action]
+                and [action, self.position, self.orientation]  or [action]
 
     def actuate(self):
         """
@@ -132,9 +130,9 @@ class Robot(WorldObject):
         =====================
         """
         self.position += self.actuators['wheel_actuator'].delta_pos.astype(float) * float(validated)
-        self.theta += self.actuators['wheel_actuator'].delta_theta * float(validated)
+        self.orientation += self.actuators['wheel_actuator'].delta_theta * float(validated)
         # control angle range in (-pi,pi]
-        self.theta = self.theta % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
+        self.orientation = self.orientation % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
         self.actuators['wheel_actuator'].delta_pos = np.zeros(2)
         self.actuators['wheel_actuator'].delta_theta = 0.0
 
@@ -185,12 +183,12 @@ class Robot(WorldObject):
         # body_id = canvas.create_oval(x-self.radius, y-self.radius,\
         #         x + self.radius, y + self.radius, fill=self.color)
         bodyA_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.theta), extent=180, fill="black")
+                x + self.radius, y + self.radius, start=np.degrees(self.orientation), extent=180, fill="black")
         bodyB_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.theta)+180, extent=180, fill="black")
+                x + self.radius, y + self.radius, start=np.degrees(self.orientation) + 180, extent=180, fill="black")
         orient_id = canvas.create_line(x, y,\
-                x + self.radius * 2 * np.cos(self.theta),\
-                y + self.radius * 2 * np.sin(self.theta),\
+                x + self.radius * 2 * np.cos(self.orientation),\
+                y + self.radius * 2 * np.sin(self.orientation),\
                 fill='black', width=2)
         self.render_dict = {
             'contour' : contour_id,
@@ -218,6 +216,6 @@ class Robot(WorldObject):
         canvas.itemconfig(self.render_dict['bodyA'], start=0, extent=180, fill=self.colorA)
         canvas.itemconfig(self.render_dict['bodyB'], start=180, extent=180, fill=self.colorB)
         canvas.coords(self.render_dict['orient'], x, y,\
-                x + self.radius * 2 * np.cos(self.theta),\
-                y + self.radius * 2 * np.sin(self.theta))
+                x + self.radius * 2 * np.cos(self.orientation),\
+                y + self.radius * 2 * np.sin(self.orientation))
         return canvas

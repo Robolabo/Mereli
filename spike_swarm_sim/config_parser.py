@@ -160,6 +160,8 @@ def config_autocompletion(cfg_dict):
 
     #* Autocomplete World config
     world_dict = cfg_dict['world']
+    if 'engine' not in world_dict:
+        world_dict['engine'] = '2D'
     # Autocomplete world paramters to their defaults.
     for var, default in zip(['world_delay', 'render_connections', 'height', 'width'], [1, False, 1000, 1000]):
         if var not in world_dict.keys() or world_dict[var] is None:

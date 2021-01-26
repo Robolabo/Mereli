@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.linalg as LA
 import pybullet as p
-from spike_swarm_sim.objects import WorldObject, WorldObject3D
+from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, toroidal_difference
 
 class Sensor:

@@ -3,9 +3,7 @@ from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject3D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
-
-
-
+    
 @world_object_registry(name='robot_3D')
 class Robot3D(WorldObject3D):
     """
@@ -73,7 +71,6 @@ class Robot3D(WorldObject3D):
         #     self.food = True
         # if 'nest_sensor' in state.keys() and bool(state['nest_sensor'][0]):
         #     self.food = False
-
         return state, actions
 
     def plan_actions(self, actions):

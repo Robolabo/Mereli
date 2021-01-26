@@ -14,6 +14,6 @@ class NeighborhoodPositionSensor(Sensor):
         neighborhood_pos = []
         for obj in neighborhood: 
             if self.sensor_owner.id != obj.id and obj.controllable:
-                dist = LA.norm(obj.pos - self.sensor_owner.pos)
-                neighborhood_pos.append(np.hstack((obj.pos, obj.theta)))
+                dist = LA.norm(obj.position - self.sensor_owner.position)
+                neighborhood_pos.append(np.hstack((obj.position, obj.orientation)))
         return np.array(neighborhood_pos)

@@ -28,16 +28,15 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     elif verbose:
         logging.getLogger().level = logging.INFO
         logging.getLogger().info('Executing in VERBOSE mode.')
-    # world = World(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-    #             world_delay=cfg_dict['world']["world_delay"],\
-    #             render_connections=cfg_dict['world']["render_connections"])
-    # world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
     if ncpu > 1:
         world = MultiWorldWrapper(ncpu, height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
                     world_delay=cfg_dict['world']["world_delay"])
     else:
-        world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-                        world_delay=cfg_dict['world']["world_delay"],)
+        world_cls = {'2D' : World, '3D' : World3D}[cfg_dict['world']['engine']]
+        world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
+             world_delay=cfg_dict['world']["world_delay"])#!, render_connections=cfg_dict['world']["render_connections"])
+        # world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
+        #                 world_delay=cfg_dict['world']["world_delay"],)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
 
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):

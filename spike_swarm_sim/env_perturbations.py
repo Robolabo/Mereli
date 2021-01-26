@@ -86,7 +86,7 @@ class UncontrollableRotation(PostProcessingPerturbation):
             for i in self.affected_robots:
                 tuple(robots.values())[i].color2 = 'red'
                 tuple(robots.values())[i].planned_actions['wheel_actuator'][0] = np.array([.3, -.3])
-                if angle_diff(tuple(robots.values())[i].theta, np.radians([270, 90, 15, 180][self.t // 600])) < .15:
+                if angle_diff(tuple(robots.values())[i].orientation, np.radians([270, 90, 15, 180][self.t // 600])) < .15:
                     actions[i]['wheel_actuator'] = np.array([0., 0.])
                     tuple(robots.values())[i].planned_actions['wheel_actuator'][0] = np.array([.0, 0.])
         return (states, actions)
