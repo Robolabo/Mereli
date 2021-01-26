@@ -102,7 +102,8 @@ class DirectionalSensor(Sensor):
                 v = toroidal_difference(obj.position, self.sensor_owner.position)
             rho = LA.norm(v)
             # Angle difference between sensor directions and ang(v)
-            phi_values = np.array([angle_diff(compute_angle(v[:2]), direction) for direction in self.directions(orientation)])
+            phi_values = np.array([angle_diff(compute_angle(v[:2]), direction)\
+                    for direction in self.directions(orientation)])
             featured_sensors = np.where(phi_values <= self.aperture)[0]
             phi_values = phi_values[featured_sensors]
 

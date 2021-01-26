@@ -48,6 +48,7 @@ class DistanceSensor3D(DistanceSensor):
     """
     def __init__(self, *args, **kwargs):
         super(DistanceSensor3D, self).__init__(*args, **kwargs)
+        self.propagation = ExpDecayPropagation(rho_att=1/200, phi_att=1)
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
@@ -62,8 +63,8 @@ class DistanceSensor3D(DistanceSensor):
 
         if condition:
             signal_strength = self.propagation(rho, phi)
-            if signal_strength > direction_reading:               
-                my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0, 0, 0.13])
+            if signal_strength > direction_reading:             
+                my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
                 ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
                                 physicsClientId=self.sensor_owner.physics_client)
                 # print(rho, ray_res[0][0], )
