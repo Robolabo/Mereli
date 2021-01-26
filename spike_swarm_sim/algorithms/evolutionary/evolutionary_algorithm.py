@@ -60,8 +60,8 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     """
     if isinstance(worlds, MultiWorldWrapper):
         rank = multiprocessing.current_process()._identity[0] #! ojo mpi
-        world = worlds.all[(rank - 1) % worlds.n_cpu + 1]
-        #print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1, world.connected)
+        world = copy.deepcopy(worlds.all[(rank - 1) % worlds.n_cpu + 1])
+        print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1, world.connected)
         #print([w.connected for w in worlds.all])
         try:
             world.connect()
@@ -78,7 +78,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     # world.physics_client.disconnect()
     # world.connect()
     world.reset()
-    
     robots = [robot for robot in world.robots.values()]
     interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
@@ -88,10 +87,13 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
+    #import pybullet as p
+    #print(p.getDynamicsInfo(robots[0].id, 1, physicsClientId=world.physics_client._client))
     # Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
         world.reset(seed=seed)
+        print(env_id, robots[0].position)
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}
@@ -112,8 +114,10 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
+    print(env_id, [robots[i].position for i in range(len(robots))])
+    #print(np.stack(info['robot_positions'])[-1])
     fitness = (fitness / num_evaluations)
-
+    
     if isinstance(worlds, MultiWorldWrapper):
         world.disconnect()
         print(rank, ' disconnecting ', env_id, world.connected)
@@ -295,5 +299,3 @@ class EvolutionaryAlgorithm:
         plot.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color='blue', alpha=.1)
         plot.xlabel('Generation')
         plot.ylabel('Fitness')
-        # plot.ylim([0, 1])
-        plot.show()

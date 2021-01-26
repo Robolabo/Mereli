@@ -50,7 +50,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 10,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 0.9}},
                 "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},

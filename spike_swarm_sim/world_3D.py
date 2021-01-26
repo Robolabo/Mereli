@@ -128,7 +128,7 @@ class World3D(object):
         #         self.physics_client.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
         #             cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
 
-        self.physics_client.stepSimulation()
+        self.physics_client.stepSimulation(physicsClientId=self.physics_client._client)
         if self.render:
             time.sleep(1/50.)
         return states, actions
