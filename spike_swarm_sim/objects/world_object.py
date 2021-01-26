@@ -83,7 +83,7 @@ class WorldObject3D(object):
         self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
         self.physics_client = physics_client
         self._id = p.loadURDF(self.urdf_file, position, p.getQuaternionFromEuler(orientation),\
-                            physicsClientId=self.physics_client, flags=p.URDF_USE_INERTIA_FROM_FILE)
+                            physicsClientId=self.physics_client, )
         if urdf_file == 'epuck':
             print(p.getDynamicsInfo(self._id, 0, physicsClientId=self.physics_client))
         self.init_position, self.init_orientation = p.getBasePositionAndOrientation(self._id,\
