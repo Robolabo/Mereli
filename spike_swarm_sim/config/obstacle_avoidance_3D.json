@@ -53,7 +53,7 @@
                 "type" : "robot",
                 "num_instances" : 10,
                 "controller" : "neural_controller",
-                "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 10}},
+                "sensors" : {"distance_sensor3D" : {"n_sectors" : 8, "range" : 4}},
                 "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":100, "initial_pos" : [500, 500]}},
