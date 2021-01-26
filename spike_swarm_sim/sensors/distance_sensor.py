@@ -61,23 +61,22 @@ class DistanceSensor3D(DistanceSensor):
             direction_reading = 0.0
 
         if condition:
-            # tar_pos = self.sensor_owner.position + kwargs['diff_vector']  + np.array([0,0,0.1])
-            my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0, 0, 0.13])
-            
-            ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
-            physicsClientId=self.sensor_owner.physics_client)
-            # print(rho, ray_res[0][0], )
-            if ray_res[0][0] == kwargs['obj'].id:
-                signal_strength = self.propagation(rho, phi)
-                if signal_strength > direction_reading:
+            signal_strength = self.propagation(rho, phi)
+            if signal_strength > direction_reading:               
+                my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0])  + np.array([0, 0, 0.13])
+                ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
+                                physicsClientId=self.sensor_owner.physics_client)
+                # print(rho, ray_res[0][0], )
+                if ray_res[0][0] == kwargs['obj'].id:
                     direction_reading = signal_strength
             # else:
             #     import pdb; pdb.set_trace()
         return direction_reading
     
     def get_positions(self):
-        return [self.sensor_owner.position + 0.2 * np.r_[np.cos(ang), np.sin(ang), 0.0]\
-            for ang in self.directions(self.sensor_owner.orientation[-1])]
+        pos = self.sensor_owner.position
+        return [pos + 0.2 * np.r_[np.cos(ang), np.sin(ang), 0.0]\
+                for ang in self.directions(self.sensor_owner.orientation[-1])]
 
     #TODO QUITAR DE AQUI
     def directions(self, theta):
