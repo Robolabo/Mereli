@@ -87,13 +87,14 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
-    #import pybullet as p
-    #print(p.getDynamicsInfo(robots[0].id, 1, physicsClientId=world.physics_client._client))
+    import pybullet as p
+
+    print(p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_client._client))
     # Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
         world.reset(seed=seed)
-        print(env_id, robots[0].position)
+        print(env_id, robots[1].position)
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}
@@ -101,7 +102,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         survival_time = 0
         done = False
         while (not done and survival_time <= eval_steps):
-            #! print(rank, ' iter: ', survival_time)
+            # print(rank, ' iter: ', survival_time)
             states, actions = world.step()
             for key, val in info.items():
                 if isinstance(val, deque):
