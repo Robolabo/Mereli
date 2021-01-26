@@ -89,12 +89,12 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     mean_survival_time = 0
     import pybullet as p
 
-    print(p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_client._client))
+    print('a ', p.getDynamicsInfo(robots[0].id, -1, physicsClientId=world.physics_client._client)) 
     # Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
         world.reset(seed=seed)
-        print(env_id, robots[1].position)
+        # print(env_id, robots[1].position)
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}
