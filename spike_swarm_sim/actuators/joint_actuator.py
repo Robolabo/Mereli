@@ -24,7 +24,6 @@ class JointActuator(Actuator):
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-        action = [1, 1]
         for ac, joint in zip(action, self.joint_ids):
             p.setJointMotorControl2(self.actuator_owner.id,joint, targetVelocity=ac * self.max_velocity,\
                 controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client, )
