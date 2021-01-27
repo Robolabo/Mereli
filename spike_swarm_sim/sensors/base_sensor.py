@@ -17,6 +17,7 @@ class Sensor:
         self.sensor_owner = sensor_owner
         self.noise_sigma = noise_sigma
         self.range = range
+        # self.sensor_idx = {}#!
 
     def step(self, neighborhood):
         raise NotImplementedError

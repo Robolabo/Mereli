@@ -122,12 +122,12 @@ class World3D(object):
         #         robot.pos[robot.pos < -13] = 1000-20
 
         #* Render and physics step.
-        # if self.render:
-        #     # print(self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
-        #     if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
-        #         self.physics_client.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
-        #             cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-
+        if self.render:
+            # print(self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
+            if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
+                self.physics_client.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
+                    cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
+        # print(states)
         self.physics_client.stepSimulation(physicsClientId=self.physics_client._client)
         if self.render:
             time.sleep(1/50.)

@@ -41,7 +41,7 @@ class DistanceSensor(DirectionalSensor):
 
 
 @sensor_registry(name='distance_sensor3D')
-class DistanceSensor3D(DistanceSensor):
+class DistanceSensor3D(DirectionalSensor):
     """ Directional distance sensor class. It mimics the IR distance sensor. 
     The sensor is partitioned into multiple sector that provide measurements 
     solely of their sector coverage.
@@ -50,6 +50,14 @@ class DistanceSensor3D(DistanceSensor):
         super(DistanceSensor3D, self).__init__(*args, **kwargs)
         self.propagation = ExpDecayPropagation(rho_att=1/200, phi_att=1)
 
+        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
+            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
+
+        self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
+                for i in range(self.n_sectors)}
+
+        self.aperture = 2 * np.pi / self.n_sectors
+
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
         this method see DirectionalSensor._step_direction.
@@ -57,35 +65,28 @@ class DistanceSensor3D(DistanceSensor):
         
         condition = (kwargs['obj'] is not None\
                     and rho <= self.range\
-                    and phi <= np.pi / self.n_sectors + 0.001)
+                    and phi <= self.aperture)
         if direction_reading is None:
             direction_reading = 0.0
-
         if condition:
             signal_strength = self.propagation(rho, phi)
-            if signal_strength > direction_reading:             
-                my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
-                ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
-                                physicsClientId=self.sensor_owner.physics_client)
-                # print(rho, ray_res[0][0], )
+            if signal_strength > direction_reading:
+                # my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
+                # ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
+                #                 physicsClientId=self.sensor_owner.physics_client)
+                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.array([0., 0, -0.02])
+                ray_res = p.rayTest(my_pos, kwargs['obj'].position,\
+                            physicsClientId=self.sensor_owner.physics_client)
+                # print(rho, ray_res[0][0], 'IR'+str(args[0]))
                 if ray_res[0][0] == kwargs['obj'].id:
                     direction_reading = signal_strength
             # else:
             #     import pdb; pdb.set_trace()
         return direction_reading
     
-    def get_positions(self):
-        pos = self.sensor_owner.position
-        return [pos + 0.2 * np.r_[np.cos(ang), np.sin(ang), 0.0]\
-                for ang in self.directions(self.sensor_owner.orientation[-1])]
-
-    #TODO QUITAR DE AQUI
-    def directions(self, theta):
-        """
-        Returns the vector of sensing directions of the sectors based on the robot orientation.
-        - Args:
-            theta [float] -> orientation of the robots using the sensor.
-        - Returns:
-            Numpy Array with the absolute directions of each sensor (starting from theta).
-        """
-        return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
+    def get_position(self, idx):
+        return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
+      
+    def _target_filter(self, obj):
+        """ Filtering of potential target WorldObjects. """
+        return obj.tangible

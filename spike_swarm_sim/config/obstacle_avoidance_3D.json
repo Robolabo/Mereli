@@ -51,13 +51,13 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 10,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
-                "sensors" : {"distance_sensor3D" : {"n_sectors" : 6, "range" : 2}},
+                "sensors" : {"distance_sensor3D" : {"n_sectors" : 6, "range" : 3}},
                 "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
                 "initializers" : {
-                    "positions" : {"name" : "random_graph", "params" : {"max_rad":50, "initial_pos" : [500, 500]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[970, 500]] }},
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values": [0]}}
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
