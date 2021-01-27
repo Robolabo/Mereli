@@ -180,7 +180,7 @@ class NeuralNetwork:
 
         #* --- Debugging stuff (DEBUG MODE) --- #
         if self.t == self.time_scale * 1000 and self.monitor is not None:
-            vv = np.stack(tuple(self.monitor.get('voltages').values()))
+            vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             # plot_spikes(self)
             import pdb; pdb.set_trace()
