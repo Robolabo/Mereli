@@ -65,4 +65,4 @@ class ExpDecayPropagation(Propagation):
         self.phi_att = phi_att
 
     def __call__(self, rho, phi):
-        return np.exp(- self.rho_att * rho ) * np.exp(-self.phi_att * phi)
+        return np.exp(- self.rho_att * rho) * np.exp(-self.phi_att * phi)

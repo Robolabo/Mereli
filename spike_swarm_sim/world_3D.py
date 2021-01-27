@@ -15,9 +15,9 @@ from spike_swarm_sim.globals import global_states
 
 
 class MultiWorldWrapper:
-    def __init__(self, n_cpu, height=1000, width=1000, world_delay=1):
+    def __init__(self, n_cpu, height=10, width=10, world_delay=1):
         self.n_cpu = n_cpu
-        self._worlds = [World3D(height=1000, width=1000, world_delay=1) for _ in range(n_cpu+1)]
+        self._worlds = [World3D(height=height, width=width, world_delay=1) for _ in range(n_cpu+1)]
 
     def build_from_dict(self, world_dict, ann_topology=None):
         for world in self._worlds:
@@ -33,7 +33,7 @@ class MultiWorldWrapper:
 
 #! OJO implementar p.disconnect(). Ctx manager?
 class World3D(object):
-    def __init__(self, height=1000, width=1000, world_delay=1):
+    def __init__(self, height=10, width=10, world_delay=1):
         self.height = height
         self.width = width
         self.world_delay = world_delay
@@ -67,9 +67,19 @@ class World3D(object):
         self.aux = 0
 
     def add_limiting_walls(self):
-        for pos, orient, side in zip ([[11, 0, 1], [-11, 0, 1], [0, 11, 1], [0, -11, 1]],\
-            [[0, 0, np.pi/2], [0, 0, np.pi/2], [0, 0, 0], [0, 0, 0]], ['up', 'bottom', 'left', 'right']):
-            self.add('wall_side_'+ side, Wall(pos, orient, physics_client=self.physics_client._client), group='side_wall')
+        self.add('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
+            width=self.width-1, physics_client=self.physics_client._client), group='side_wall')
+        self.add('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
+            width=self.width-1, physics_client=self.physics_client._client), group='side_wall')
+        self.add('wall_side_left', Wall([0, self.height/2, 1], [0, 0, 0], height=self.height+1,\
+             width=1, physics_client=self.physics_client._client), group='side_wall')
+        self.add('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, 0], height=self.height+1,\
+            width=1, physics_client=self.physics_client._client), group='side_wall')
+        # import pdb; pdb.set_trace()
+        # for pos, orient, side in zip ([[self.width/2, 0, 1], [-self.width/2, 0, 1], [0, self.height/2, 1], [0, -self.height/2, 1]],\
+        #         [[0, 0, np.pi/2], [0, 0, np.pi/2], [0, 0, 0], [0, 0, 0]], ['up', 'bottom', 'left', 'right']):
+        #     height = 
+        #     self.add('wall_side_'+ side, Wall(pos, orient, height=self.height, width=self.width, physics_client=self.physics_client._client), group='side_wall')
 
     @increase_time
     @mov_average_timeit
@@ -125,7 +135,7 @@ class World3D(object):
         if self.render:
             # print(self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
             if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
-                self.physics_client.resetDebugVisualizerCamera(cameraDistance=3, cameraYaw=30,\
+                self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
                     cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
         # print(states)
         self.physics_client.stepSimulation(physicsClientId=self.physics_client._client)
@@ -226,7 +236,7 @@ class World3D(object):
                 #* Initialize positions
                 if 'positions' in group_initializer.keys():
                     positions = group_initializer['positions']()
-                    positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.), positions)
+                    positions = map(lambda x: (x[0], x[1], 0.), positions)
                     for pos, obj in zip(positions, group_elements):
                         obj.position = pos
                 #* Initialize orientations

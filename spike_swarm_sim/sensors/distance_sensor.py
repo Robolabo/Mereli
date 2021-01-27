@@ -48,7 +48,7 @@ class DistanceSensor3D(DirectionalSensor):
     """
     def __init__(self, *args, **kwargs):
         super(DistanceSensor3D, self).__init__(*args, **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=1/200, phi_att=1)
+        self.propagation = ExpDecayPropagation(rho_att=1, phi_att=1.)
 
         joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
             for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
@@ -56,7 +56,7 @@ class DistanceSensor3D(DirectionalSensor):
         self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
                 for i in range(self.n_sectors)}
 
-        self.aperture = 2 * np.pi / self.n_sectors
+        self.aperture = 1.5 * np.pi / self.n_sectors
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
@@ -74,10 +74,10 @@ class DistanceSensor3D(DirectionalSensor):
                 # my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
                 # ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
                 #                 physicsClientId=self.sensor_owner.physics_client)
-                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.array([0., 0, -0.02])
-                ray_res = p.rayTest(my_pos, kwargs['obj'].position,\
-                            physicsClientId=self.sensor_owner.physics_client)
-                # print(rho, ray_res[0][0], 'IR'+str(args[0]))
+                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.015]
+                tar_post = kwargs['obj'].position + np.r_[0,0,my_pos[2]]
+                ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)
+                # print(rho, ray_res[0][0], 'IR'+str(args[0]), signal_strength)
                 if ray_res[0][0] == kwargs['obj'].id:
                     direction_reading = signal_strength
             # else:

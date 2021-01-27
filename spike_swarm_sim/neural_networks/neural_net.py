@@ -179,7 +179,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
 
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 500 and self.monitor is not None:
+        if self.t == self.time_scale * 1000 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             # plot_spikes(self)
