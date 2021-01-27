@@ -10,9 +10,9 @@ class Wall(WorldObject3D):
         super(Wall, self).__init__('wall', *args, static=True,\
             controller=None, tangible=True, luminous=False, **kwargs)
     
-    def add_physics(self, physics_client):
-        self.resize_wall()
-        super().add_physics(physics_client) #! NOT WORKING
+    #def add_physics(self, physics_client):
+    #    self.resize_wall()
+    #    super().add_physics(physics_client) #! NOT WORKING
 
     def resize_wall(self):
         tree = ET.parse("spike_swarm_sim/objects/urdf/wall.urdf")
