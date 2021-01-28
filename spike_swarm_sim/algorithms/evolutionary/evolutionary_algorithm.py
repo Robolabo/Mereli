@@ -86,9 +86,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
-    import pybullet as p
-    print('BASE ', p.getDynamicsInfo(robots[0].id, -1, physicsClientId=world.physics_engine.engine._client)) 
-    print('WHEEL ', p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_engine.engine._client)) 
     # Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
