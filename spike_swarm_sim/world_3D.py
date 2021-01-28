@@ -117,7 +117,7 @@ class World3D(object):
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-        print(states)
+        # print(states)
         return states, actions
     
     def add(self, name, obj, group=None):

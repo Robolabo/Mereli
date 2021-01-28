@@ -217,7 +217,6 @@ class ObstacleAvoidance:
             # fC = np.min(distances_robots) > 0.25
             fitness += (fA ** 2) * fB
         fitness /= len(states)
-        import pdb; pdb.set_trace()
         return fitness + 1e-5
 
 
