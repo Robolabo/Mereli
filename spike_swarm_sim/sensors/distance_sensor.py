@@ -74,7 +74,7 @@ class DistanceSensor3D(DirectionalSensor):
                 # my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
                 # ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
                 #                 physicsClientId=self.sensor_owner.physics_client)
-                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.015]
+                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.017]
                 tar_post = kwargs['obj'].position + np.r_[0,0,my_pos[2]]
                 ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)
                 # print(rho, ray_res[0][0], 'IR'+str(args[0]), signal_strength)

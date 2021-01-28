@@ -99,7 +99,7 @@ class World(object):
                 self.draw_connections()
             self.canvas.update()
             self.root.after(self.world_delay)
-    
+        print(states)
         return states, actions
     
     def assign_unique_id(self):
