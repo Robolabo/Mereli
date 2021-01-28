@@ -208,14 +208,14 @@ class ObstacleAvoidance:
         robot_positions = np.stack(info["robot_positions"]).copy()
         for _, (states_t, actions_t, pos)  in enumerate(zip(states, actions, robot_positions)):
             fA = np.mean([np.max(st['distance_sensor3D']) == 0.0 for st in states_t])
-            fB = np.mean([LA.norm(ac['joint_actuator']) * (1 - np.abs(np.diff(ac['joint_actuator']))/2) for ac in actions_t])
+            fB = np.mean([0.5*LA.norm(ac['joint_actuator'], ord=1) * (1 - np.abs(np.diff(ac['joint_actuator'])) / 2) ** 2 for ac in actions_t])
             # distances = [LA.norm(pos_i - np.mean(pos, 0)) for pos_i in pos]
             # distances_robots = [LA.norm(pos_i - pos_j)
             #                     for i, pos_i in enumerate(pos) 
             #                     for j, pos_j in enumerate(pos) if i != j]
             # fB = np.mean([np.clip(1 - dist / 1, a_min=0, a_max=1) for dist in distances])
             # fC = np.min(distances_robots) > 0.25
-            fitness += fA * fB
+            fitness += (fA ** 2) * fB
         fitness /= len(states)
         return fitness + 1e-5
 
