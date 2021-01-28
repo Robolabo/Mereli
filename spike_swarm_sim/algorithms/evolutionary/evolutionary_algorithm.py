@@ -111,7 +111,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
-    print(env_id, [robots[i].position for i in range(len(robots))])
+    # print(env_id, [robots[i].position for i in range(len(robots))])
     fitness = (fitness / num_evaluations)
     
     if isinstance(worlds, MultiWorldWrapper):

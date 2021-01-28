@@ -112,18 +112,12 @@ class World3D(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate()
-
-        # #* Apply mirror
-        # for robot in self.hierarchy.values(): #! OJO fall en las esquinas
-        #     if  robot.controllable:
-        #         robot.pos[robot.pos > 1000+15] = 20
-        #         robot.pos[robot.pos < -13] = 1000-20
-
-
+     
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
+        print(states)
         return states, actions
     
     def add(self, name, obj, group=None):
