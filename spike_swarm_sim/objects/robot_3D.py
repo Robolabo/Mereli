@@ -4,7 +4,7 @@ from spike_swarm_sim.objects import WorldObject3D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
     
-@world_object_registry(name='robot_3D')
+@world_object_registry(name='robot')
 class Robot3D(WorldObject3D):
     """
     Base class for the robot world object.
@@ -32,7 +32,6 @@ class Robot3D(WorldObject3D):
         self.color2 = ('skyblue3', 'green')[self.trainable]
         self.reset()
 
-    
     def step(self, neighborhood, reward=None, perturbations=None):
         """
         Firstly steps all the sensors in order to perceive the environment.

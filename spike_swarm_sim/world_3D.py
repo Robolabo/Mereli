@@ -12,7 +12,7 @@ from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit
 from spike_swarm_sim.globals import global_states
-
+from .physics_engine import PybulletEngine
 
 class MultiWorldWrapper:
     def __init__(self, n_cpu, height=10, width=10, world_delay=1):
@@ -38,7 +38,7 @@ class World3D(object):
         self.width = width
         self.world_delay = world_delay
         self.render = global_states.RENDER
-
+        
        
         #* Dict storing all objects
         self.hierarchy = {}
@@ -49,37 +49,26 @@ class World3D(object):
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
 
-        self.physics_client = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.physics_client.setGravity(0, 0, -9.8)
-        self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.physics_client._client)
-        self.gui_params = {}
-        if self.render:
-            self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.physics_client.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
+        #* Engine
+        self.physics_engine = PybulletEngine()
+      
 
         #* Add world limits
         self.add_limiting_walls()
-        self.connected = True 
         # self.reward_generator = GoToLightReward()
         self.t = 0
         self.aux = 0
 
     def add_limiting_walls(self):
         self.add('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1, physics_client=self.physics_client._client), group='side_wall')
+            width=self.width-1, physics_client=self.physics_engine.engine), group='side_wall')
         self.add('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1, physics_client=self.physics_client._client), group='side_wall')
+            width=self.width-1, physics_client=self.physics_engine.engine), group='side_wall')
         self.add('wall_side_left', Wall([0, self.height/2, 1], [0, 0, 0], height=self.height+1,\
-             width=1, physics_client=self.physics_client._client), group='side_wall')
+             width=1, physics_client=self.physics_engine.engine), group='side_wall')
         self.add('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, 0], height=self.height+1,\
-            width=1, physics_client=self.physics_client._client), group='side_wall')
-        # import pdb; pdb.set_trace()
-        # for pos, orient, side in zip ([[self.width/2, 0, 1], [-self.width/2, 0, 1], [0, self.height/2, 1], [0, -self.height/2, 1]],\
-        #         [[0, 0, np.pi/2], [0, 0, np.pi/2], [0, 0, 0], [0, 0, 0]], ['up', 'bottom', 'left', 'right']):
-        #     height = 
-        #     self.add('wall_side_'+ side, Wall(pos, orient, height=self.height, width=self.width, physics_client=self.physics_client._client), group='side_wall')
+            width=1, physics_client=self.physics_engine.engine), group='side_wall')
+        
 
     @increase_time
     @mov_average_timeit
@@ -93,7 +82,6 @@ class World3D(object):
             A tuple with state and action dicts.
         ======================================================
         """
-        # print('STEP ----------------------', self.physics_client._client)
         states = deque()
         actions = deque()
         pre_perturbations = []
@@ -131,16 +119,11 @@ class World3D(object):
         #         robot.pos[robot.pos > 1000+15] = 20
         #         robot.pos[robot.pos < -13] = 1000-20
 
+
         #* Render and physics step.
+        self.physics_engine.step_physics()
         if self.render:
-            # print(self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1)
-            if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
-                self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
-                    cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-        # print(states)
-        self.physics_client.stepSimulation(physicsClientId=self.physics_client._client)
-        if self.render:
-            time.sleep(1/50.)
+            self.physics_engine.step_render()
         return states, actions
     
     def add(self, name, obj, group=None):
@@ -174,6 +157,7 @@ class World3D(object):
         - Returns: None
         =========================================================================================
         """
+        engine = world_dict['engine']
         for obj_name, obj in world_dict['objects'].items():
             #* Create group intializer.
             self.initializers[obj_name] = {
@@ -181,8 +165,8 @@ class World3D(object):
                         for key, value in obj['initializers'].items()
             }
             if obj['type'] == 'robot':
-                robot_positions = map(lambda x: ((x[0] - 500) / 50, (x[1] - 500) / 50, 0.),\
-                                    self.initializers[obj_name]['positions']())
+                object_cls = world_objects[engine][obj['type']]
+                robot_positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
                 robot_orientations = map(lambda x: (0., 0., x[0]), self.initializers[obj_name]['orientations']())
                 
                 #* Add robots one by one at their position and orientation
@@ -195,7 +179,7 @@ class World3D(object):
                             controller = controller_cls(obj['sensors'], obj['actuators'])
                     else:
                         controller = None
-                    robot = Robot3D(position, orientation, controller=controller, physics_client=self.physics_client._client, **obj['params'])
+                    robot = object_cls(position, orientation, controller=controller, physics_client=self.physics_engine.engine, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
@@ -204,7 +188,8 @@ class World3D(object):
                 positions = self.initializers[obj_name]['positions']()
                 controller = controllers[obj['controller']]() if obj['controller'] is not None else None
                 for position in positions:
-                    world_obj = world_objects[obj['type']](position, controller=controller, physics_client=self.physics_client, **obj['params'])
+                    world_obj = object_cls(position, controller=controller,\
+                                    physics_client=self.physics_engine.engine, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -270,24 +255,11 @@ class World3D(object):
                 pert.reset()
 
     def disconnect(self):
-        self.physics_client.disconnect()
-        self.connected = False
+        self.physics_engine.disconnect
 
     def connect(self):
-        self.connected = True
-        self.physics_client = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        self.physics_client.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.physics_client.setGravity(0, 0, -9.8)
-        self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.physics_client._client)
-        self.gui_params = {}
-        if self.render:
-            self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.physics_client.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
-        for obj in self.hierarchy.values():
-            obj.add_physics(self.physics_client._client)
-
-
+        self.physics_engine.connect(self.hierarchy.values())
+       
     def neighborhood(self, robot):
         """ Method that returns the list of neighboring world objects of a robot.
         An object is considered to be in the vicinity if it is contained in the ball

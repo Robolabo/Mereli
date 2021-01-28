@@ -426,6 +426,7 @@ class World2D(World):
         - Returns: None
         =========================================================================================
         """
+        engine = world_dict['engine']
         for obj_name, obj in world_dict['objects'].items():
             #* Create group intializer.
             self.initializers[obj_name] = {

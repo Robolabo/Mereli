@@ -1,8 +1,10 @@
+from abc import ABC, abstractmethod, abstractproperty
 import numpy as np
 import pybullet as p
 
 
-class WorldObject(object):
+
+class WorldObject(ABC):
     """ 
     Base class for abstract world objects. This class is the most basic class of
     world entities and only implements abstract properties of objects. It does not 
@@ -39,21 +41,32 @@ class WorldObject(object):
 
     @property
     def controllable(self):
-        """
-        Getter of flag denoting whether the object 
+        """ Getter of flag denoting whether the object 
         can be controlled or not.
         """
         return self.controller is not None
 
+    @abstractmethod
     def step(self):
         raise NotImplementedError
-
-    def render(self, canvas):
-        raise NotImplementedError
     
+    @abstractmethod
+    def add_physics(self, engine):
+        raise NotImplementedError
+
+    @abstractmethod
     def reset(self):
         raise NotImplementedError
 
+    @abstractproperty
+    def position(self):
+        raise NotImplementedError
+    
+    @abstractproperty
+    def orientation(self):
+        raise NotImplementedError
+    
+  
 class WorldObject2D(WorldObject):
     """
     Base class for 2D world objects (robots, lights, walls, and so on). 
@@ -69,14 +82,22 @@ class WorldObject2D(WorldObject):
         self.position = position.astype(float) if isinstance(position, np.ndarray) else position
         # self.init_pos = self.position.copy() if isinstance(position, np.ndarray) else position
 
+    def add_physics(self, engine):
+        pass
+
     def step(self):
-        raise NotImplementedError
+        pass
 
     def render(self, canvas):
-        raise NotImplementedError
+        pass
+    @property
+    def position(self):
+        pass
     
-    def reset(self):
-        raise NotImplementedError
+    @property
+    def orientation(self):
+        pass
+
 
 class WorldObject3D(WorldObject):
     """ Base class for 3D world objects (robots, lights, walls, and so on). 
@@ -93,7 +114,7 @@ class WorldObject3D(WorldObject):
     def __init__(self, urdf_file, position, orientation, physics_client=None, *args, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
         self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
-        self.physics_client = physics_client
+        self.physics_client = physics_client._client
         self._id = p.loadURDF(self.urdf_file, position, p.getQuaternionFromEuler(orientation),\
                             physicsClientId=self.physics_client)
         self.init_position, self.init_orientation = p.getBasePositionAndOrientation(self._id,\

@@ -1,6 +1,8 @@
 from functools import wraps
+from spike_swarm_sim.objects import WorldObject3D
+
 # Set of registers for easing class and function automatic discovery
-world_objects = {}
+world_objects = {'2D' : {}, '3D' : {}}
 sensors = {}
 actuators = {}
 neuron_models = {}
@@ -19,7 +21,8 @@ receptive_fields = {}
 def world_object_registry(*args, **kwargs):
     def wrapper(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
-        world_objects[name] = cls
+        engine = '3D' if issubclass(cls, WorldObject3D) else '2D'
+        world_objects[engine][name] = cls
         return cls
     return wrapper
 
