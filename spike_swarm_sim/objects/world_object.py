@@ -111,14 +111,12 @@ class WorldObject3D(WorldObject):
         physics_client [int]: identifier of the pybullet physics server.
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation, physics_client=None, *args, **kwargs):
+    def __init__(self, urdf_file, position, orientation,  *args, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
         self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
-        self.physics_client = physics_client._client
-        self._id = p.loadURDF(self.urdf_file, position, p.getQuaternionFromEuler(orientation),\
-                            physicsClientId=self.physics_client)
-        self.init_position, self.init_orientation = p.getBasePositionAndOrientation(self._id,\
-                            physicsClientId=self.physics_client)
+        self.init_position = position
+        self.init_orientation = orientation
+        self._id = None
 
     def step(self):
         raise NotImplementedError
@@ -126,11 +124,13 @@ class WorldObject3D(WorldObject):
     def reset(self):
         raise NotImplementedError
 
-
     def add_physics(self, physics_client):
         self.physics_client = physics_client
         self._id = p.loadURDF(self.urdf_file, self.init_position,\
-                self.init_orientation, physicsClientId=self.physics_client)
+            p.getQuaternionFromEuler(self.init_orientation), physicsClientId=self.physics_client)
+        for i in range(2):
+            p.changeDynamics(self.id, i, lateralFriction=0.9, physicsClientId=self.physics_client,\
+                activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP )
 
     @property
     def position(self):

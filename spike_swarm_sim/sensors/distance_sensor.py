@@ -48,14 +48,8 @@ class DistanceSensor3D(DirectionalSensor):
     """
     def __init__(self, *args, **kwargs):
         super(DistanceSensor3D, self).__init__(*args, **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=1, phi_att=1.)
-
-        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
-            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
-
-        self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
-                for i in range(self.n_sectors)}
-
+        self.propagation = ExpDecayPropagation(rho_att=1, phi_att=1.)   
+        self.sensors_idx = None
         self.aperture = 1.5 * np.pi / self.n_sectors
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
@@ -84,6 +78,12 @@ class DistanceSensor3D(DirectionalSensor):
             #     import pdb; pdb.set_trace()
         return direction_reading
     
+    def reset(self):
+        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
+            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
+        self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
+                for i in range(self.n_sectors)}
+
     def get_position(self, idx):
         return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
       

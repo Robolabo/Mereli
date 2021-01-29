@@ -30,7 +30,7 @@ class Robot3D(WorldObject3D):
         self.colorA = 'black'
         self.colorB = 'black'
         self.color2 = ('skyblue3', 'green')[self.trainable]
-        self.reset()
+        # self.reset()
 
     def step(self, neighborhood, reward=None, perturbations=None):
         """
