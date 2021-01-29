@@ -55,19 +55,20 @@ class World3D(object):
 
         #* Add world limits
         self.add_limiting_walls()
+
         # self.reward_generator = GoToLightReward()
         self.t = 0
         self.aux = 0
 
     def add_limiting_walls(self):
         self.add('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1, physics_client=self.physics_engine.engine), group='side_wall')
+            width=self.width-1), group='side_wall')
         self.add('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1, physics_client=self.physics_engine.engine), group='side_wall')
-        self.add('wall_side_left', Wall([0, self.height/2, 1], [0, 0, 0], height=self.height+1,\
-             width=1, physics_client=self.physics_engine.engine), group='side_wall')
-        self.add('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, 0], height=self.height+1,\
-            width=1, physics_client=self.physics_engine.engine), group='side_wall')
+            width=self.width-1), group='side_wall')
+        self.add('wall_side_left', Wall([0, self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
+             width=1), group='side_wall')
+        self.add('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
+            width=1), group='side_wall')
         
 
     @increase_time
@@ -173,7 +174,7 @@ class World3D(object):
                             controller = controller_cls(obj['sensors'], obj['actuators'])
                     else:
                         controller = None
-                    robot = object_cls(position, orientation, controller=controller, physics_client=self.physics_engine.engine, **obj['params'])
+                    robot = object_cls(position, orientation, controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
@@ -183,7 +184,7 @@ class World3D(object):
                 controller = controllers[obj['controller']]() if obj['controller'] is not None else None
                 for position in positions:
                     world_obj = object_cls(position, controller=controller,\
-                                    physics_client=self.physics_engine.engine, **obj['params'])
+                                    **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -249,7 +250,7 @@ class World3D(object):
                 pert.reset()
 
     def disconnect(self):
-        self.physics_engine.disconnect
+        self.physics_engine.disconnect()
 
     def connect(self):
         self.physics_engine.connect(self.hierarchy.values())

@@ -61,62 +61,48 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     if isinstance(worlds, MultiWorldWrapper):
         rank = multiprocessing.current_process()._identity[0] #! ojo mpi
         world = copy.deepcopy(worlds.all[(rank - 1) % worlds.n_cpu + 1])
-        # print(multiprocessing.current_process()._identity, (rank - 1) % worlds.n_cpu + 1, world.connected)
-        try:
-            world.connect()
-        except Exception as e:
-            print(e)
-            print('-----------------', rank, world.connected)
     else:
         world = worlds
-    # print(env_id, world.physics_client._client)
-    # try:
-    #     world.connect()
-    # except:
-    #     print('a2 ', rank,  world.physics_client._client)
-    # world.physics_client.disconnect()
-    # world.connect()
-    world.reset()
+    world.connect()
+    world.reset(seed=seed)
     robots = [robot for robot in world.robots.values()]
     interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
         for pop in populations.values():
             genotype_segment = pop.population[env_id]
-            # import pdb; pdb.set_trace()
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
+    # import pybullet as p
+    # print(p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_engine.engine._client))
     # Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
         world.reset(seed=seed)
-        # print(env_id, robots[1].position)
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}
         info['generation'] = generation
         survival_time = 0
         done = False
+        # print('AA', [robots[i].position for i in [5,6]])
         while (not done and survival_time <= eval_steps):
-            # print(rank, ' iter: ', survival_time)
             states, actions = world.step()
             for key, val in info.items():
                 if isinstance(val, deque):
                     val.append(get_info(key, robots, world))
             actions_history.append(actions)
             states_history.append(states)
-            survival_time += 1
+            survival_time += 1      
             # if done:
             #     break
+        # print([robots[i].position for i in [7,9]])#range(len(robots))])
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
-    # print(env_id, [robots[i].position for i in range(len(robots))])
     fitness = (fitness / num_evaluations)
-    
-    if isinstance(worlds, MultiWorldWrapper):
-        world.disconnect()
-        # print(rank, ' disconnecting ', env_id, world.connected)
+    # if isinstance(worlds, MultiWorldWrapper):
+    world.disconnect()
     return (env_id, fitness)
 
 class EvolutionaryAlgorithm:
@@ -216,6 +202,7 @@ class EvolutionaryAlgorithm:
     def evolve(self):
         for pop in self.populations.values():
             pop.step(self.fitness)
+        import pdb; pdb.set_trace()
         mean_fitness = np.mean(self.fitness)
         max_fitness = np.max(self.fitness)
         min_fitness = np.min(self.fitness)

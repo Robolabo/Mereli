@@ -8,21 +8,22 @@ from spike_swarm_sim.objects import Wall
 
 class PybulletEngine:
     def __init__(self):
-        self.connected = True
+        self.connected = False
         self.render = global_states.RENDER
-        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.engine.setGravity(0, 0, -9.8)
-        self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
-        self.gui_params = {}
-        if self.render:
-            self.gui_params['robot_focus'] = self.engine.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
+        self.engine = None
+        # self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        # self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
+        # self.engine.setGravity(0, 0, -9.8)
+        # self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
+        # self.gui_params = {}
+        # if self.render:
+        #     self.gui_params['robot_focus'] = self.engine.addUserDebugParameter('Robot focus', 1, -1, 1)
+        #     self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
+        #             cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
     # def id(self):
 
     def step_physics(self):
-        self.engine.stepSimulation(physicsClientId=self.engine._client)
+        p.stepSimulation()
 
     def step_render(self):
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
@@ -30,12 +31,17 @@ class PybulletEngine:
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
         time.sleep(1/50.)
 
-    def connect(self, objects): #!
+    def connect(self, objects):
         self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
+        self.engine.setTimeStep(1/60.)
+        # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
+        # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         planeId = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
-        self.add_objects(objects)#!
+        # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
+        self.add_objects(objects)
         self.connected = True
         # self.gui_params = {}
         if self.render:
@@ -44,14 +50,13 @@ class PybulletEngine:
                     cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
         
     def disconnect(self):
+        # self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.disconnect()
         self.connected = False
 
     def add_objects(self, objects):
         for obj in objects:
             obj.add_physics(self.engine._client)
-
-
 
     #! USELESS?
     def initialize_render(self):
