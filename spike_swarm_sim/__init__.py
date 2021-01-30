@@ -5,7 +5,7 @@ from colorama import Fore, Style
 from pathlib import Path
 
 
-from .world import World
+from .world import World, World2D
 from .world_3D import World3D, MultiWorldWrapper
 from .physics_engine import *
 

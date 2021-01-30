@@ -7,28 +7,18 @@ from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit
 from spike_swarm_sim.globals import global_states
-
+from .physics_engine import Engine2D
 
 WORLD_MODES = ['EVOLUTION', 'EVALUATION', 'DEBUGING']
 class World(object):
-    def __init__(self, height=1000, width=1000, render_connections=True, world_delay=1):
+    def __init__(self, physics_engine, height=1000, width=1000, render_connections=True, world_delay=1):
         self.height = height
         self.width = width
         self.render_connections = render_connections
         self.world_delay = world_delay
         self.render = global_states.RENDER
-        if global_states.RENDER:
-            self.root = tk.Tk(className='SpikeSwarmSim')
-            self.root.geometry(str(width) + 'x' + str(height))
-            self.canvas = tk.Canvas(self.root, height=self.height, width=self.width, bg='grey')
-            self.canvas.pack(side='left')
-            frame = tk.Frame(self.root)
-            frame.pack(side='right')
-            # Create limiting walls
-            self.canvas.create_rectangle(0, 0, 20, height, fill='black')
-            self.canvas.create_rectangle(0, 0, width, 20, fill='black')
-            self.canvas.create_rectangle(width - 20, 0, width, height, fill='black')
-            self.canvas.create_rectangle(0, height - 20, width, height, fill='black')
+        self.physics_engine = physics_engine
+
         #* Dict storing all objects
         self.hierarchy = {}
         #* Dict mapping object names to object groups
@@ -37,12 +27,9 @@ class World(object):
         self.initializers = {}
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
-        if render_connections and global_states.RENDER:
-            self.connection_graph = {}
 
-        self.reward_generator = GoToLightReward()
+        # self.reward_generator = GoToLightReward()
         self.t = 0
-        self.aux = 0
 
     @increase_time
     @mov_average_timeit
@@ -86,20 +73,12 @@ class World(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate()
-            if self.render:
-                self.canvas = obj.render(self.canvas)
-        #* Apply mirror
-        for robot in self.hierarchy.values(): #! OJO fall en las esquinas
-            if  robot.controllable:
-                robot.position[robot.position > 1000+15] = 20
-                robot.position[robot.position < -13] = 1000-20
+
         #* Render step
+        self.physics_engine.step_physics()
         if self.render:
-            if self.render_connections:
-                self.draw_connections()
-            self.canvas.update()
-            self.root.after(self.world_delay)
-        print(states)
+            self.physics_engine.step_render()
+        # import pdb; pdb.set_trace()
         return states, actions
     
     def assign_unique_id(self):
@@ -131,9 +110,6 @@ class World(object):
             self.groups[group].append(name)
         else:
             self.groups[group] = [name]
-
-        if self.render:
-            self.canvas = obj.initialize_render(self.canvas)
     
     def build_from_dict(self, world_dict, ann_topology=None):
         """ Initialize all objects and add them into the world using a dictionary structure.
@@ -163,7 +139,7 @@ class World(object):
                             controller = controller_cls(obj['sensors'], obj['actuators'])
                     else:
                         controller = None
-                    robot = Robot(position, orientation=orientation[0], controller=controller, **obj['params'])
+                    robot = Robot(position, orientation[0], controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
@@ -172,7 +148,7 @@ class World(object):
                 positions = self.initializers[obj_name]['positions']()
                 controller = controllers[obj['controller']]() if obj['controller'] is not None else None
                 for position in positions:
-                    world_obj = world_objects[obj['type']](position, controller=controller, **obj['params'])
+                    world_obj = world_objects[obj['type']](position, 0, controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -210,9 +186,15 @@ class World(object):
                 if 'orientations' in group_initializer.keys():
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
+                        
                         obj.orientation = orientation[0]
         np.random.seed()
+    
+    def disconnect(self):
+        self.physics_engine.disconnect()
 
+    def connect(self):
+        self.physics_engine.connect(self.hierarchy.values())
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initalizes
@@ -224,14 +206,12 @@ class World(object):
         ================================================================
         """
         self.t = 0
-        self.aux = 0
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset()
-            if self.render:
-                self.canvas = obj.render(self.canvas)
+
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
@@ -339,193 +319,18 @@ class World(object):
 
 
 
-
 class World2D(World):
-    def __init__(self, *args, render_connections=True, world_delay=1, **kwargs):
-        super(World2D, self).__init__(*args, **kwargs)
-      
-        self.render_connections = render_connections
-        self.world_delay = world_delay
-        self.render = global_states.RENDER
-        if self.render:
-            self.root = tk.Tk(className='SpikeSwarmSim')
-            self.root.geometry(str(self.width) + 'x' + str(self.height))
-            self.canvas = tk.Canvas(self.root, height=self.height, width=self.width, bg='grey')
-            self.canvas.pack(side='left')
-            frame = tk.Frame(self.root)
-            frame.pack(side='right')
-            # Create limiting walls
-            self.canvas.create_rectangle(0, 0, 20, self.height, fill='black')
-            self.canvas.create_rectangle(0, 0, self.width, 20, fill='black')
-            self.canvas.create_rectangle(self.width - 20, 0, self.width, self.height, fill='black')
-            self.canvas.create_rectangle(0, self.height - 20, self.width, self.height, fill='black')
-        if render_connections and global_states.RENDER:
-            self.connection_graph = {}
+    def __init__(self, *args, **kwargs):
+        physics_engine = Engine2D()
+        super(World2D, self).__init__(physics_engine, *args, **kwargs)
 
-
+    @increase_time
+    @mov_average_timeit
     def step(self):
-        """ Step function of the world to run it one timestep.
-        Steps all objects are stores the state and actions.
-        It also renders new world.
-        ======================================================
-        - Args: None
-        - Returns:
-            A tuple with state and action dicts.
-        ======================================================
-        """
         states, actions = super().step()
-        #* Render step
-        if self.render:
-            if self.render_connections:
-                self.draw_connections()
-            self.canvas.update()
-            self.root.after(self.world_delay)
-        
+         #* Apply mirror
+        for robot in self.hierarchy.values(): #! OJO fall en las esquinas
+            if  robot.controllable:
+                robot.position[robot.position > 1000+15] = 20
+                robot.position[robot.position < -13] = 1000-20
         return states, actions
-    
-    def assign_unique_id(self):
-        """ Returns a unique identifier to be assigned to a new entity. """
-        obj_id = np.random.randint(1000)
-        while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
-            obj_id = np.random.randint(1, 1000)
-        return obj_id
-
-    def add(self, name, obj, group=None):
-        #! Move to parent (canvas only problem)
-        """ Adds an object to the world registry. Assigns a unique identifier to the object.
-        Additionally, if the object belongs to a group of world objects it also registers it.
-        ============================
-        - Args:
-            name [str] -> name of the object.
-            obj [WorldObject] -> instance of the world object to be added.
-            group [str] -> name of the group to which obj belong to. If none a new group is created with
-                           obj as unique element.
-        - Returns: None
-        ============================
-        """
-
-        obj.id = self.assign_unique_id()
-        self.hierarchy.update({name : obj})
-        #* Register group element
-        if group is None:
-            group = name
-        if group in self.groups.keys():
-            self.groups[group].append(name)
-        else:
-            self.groups[group] = [name]
-
-        if self.render:
-            self.canvas = obj.initialize_render(self.canvas)
-    
-    def build_from_dict(self, world_dict, ann_topology=None):
-        """ Initialize all objects and add them into the world using a dictionary structure.
-        =========================================================================================
-        - Args:
-            world_dict [dict] : configuration dict of the environment (parameters, objects, ...).
-            ann_topology [dict] :  configuration dict of the neural network.
-        - Returns: None
-        =========================================================================================
-        """
-        engine = world_dict['engine']
-        for obj_name, obj in world_dict['objects'].items():
-            #* Create group intializer.
-            self.initializers[obj_name] = {
-                key :  initializers[value['name']](obj['num_instances'], **value['params'])\
-                        for key, value in obj['initializers'].items()
-            }
-            if obj['type'] == 'robot':
-                robot_positions = self.initializers[obj_name]['positions']()
-                robot_orientations = self.initializers[obj_name]['orientations']()
-                #* Add robots one by one at their position and orientation
-                for i, (position, orientation) in enumerate(zip(robot_positions, robot_orientations)):
-                    if obj['controller'] is not None:
-                        controller_cls = controllers[obj['controller']]
-                        if obj['controller'] in ['neural_controller', 'cascade_controller']: # assuming only single ANN controller
-                            controller = controller_cls(ann_topology, obj['sensors'], obj['actuators'])
-                        else: # non-trainable robot controllers
-                            controller = controller_cls(obj['sensors'], obj['actuators'])
-                    else:
-                        controller = None
-                    robot = Robot(position, orientation=orientation[0], controller=controller, **obj['params'])
-                    self.add(obj_name + '_' + str(i), robot, group=obj_name)
-                if len(obj['perturbations']) > 0:
-                    self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
-                            for pert, pert_params in obj['perturbations'].items()]})
-            else: # Non robot objects
-                positions = self.initializers[obj_name]['positions']()
-                controller = controllers[obj['controller']]() if obj['controller'] is not None else None
-                for position in positions:
-                    world_obj = world_objects[obj['type']](position, controller=controller, **obj['params'])
-                    self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
-
-
-    def run_initializers(self, seed=None):
-        """ Executes the initialization procedures of each group of objects.
-        As all obj in a group are initialized jointly, initializers are associated to groups.
-        =====================================================================================
-        - Args:
-            seed [int] -> seed to initialize to a known random state.
-        - Returns: None
-        =====================================================================================
-        """
-        if seed is not None:
-            np.random.seed(seed)
-        for group in self.groups:
-            if group in self.initializers.keys():
-                group_initializer = self.initializers[group]
-                group_elements = self.group_objects(group)
-                #* Initialize positions
-                if 'positions' in group_initializer.keys():
-                    positions = group_initializer['positions']()
-                    for pos, obj in zip(positions, group_elements):
-                        obj.position = pos
-                #* Initialize orientations
-                if 'orientations' in group_initializer.keys():
-                    orientations = group_initializer['orientations']()
-                    for orientation, obj in zip(orientations, group_elements):
-                        obj.orientation = orientation[0]
-        np.random.seed()
-
-
-    def reset(self, seed=None):
-        """ Resets the world and all its objects. It also initalizes
-        the dynamics (position, orientation, ...) of objects.
-        ================================================================
-        - Args:
-            seed [int] -> seed to initialize at some known random state.
-        - Returns: None
-        ================================================================
-        """
-        self.t = 0
-        self.aux = 0
-        #* Initialize object dynamics.
-        self.run_initializers(seed=seed)
-        #* Reset objects
-        for obj in self.hierarchy.values():
-            obj.reset()
-            if self.render:
-                self.canvas = obj.render(self.canvas)
-        for group_pert in self.env_perturbations.values():
-            for pert in group_pert:
-                pert.reset()
-
-    def draw_connections(self):
-        """
-        Renders a line between robots iif both robots share a communication channel.
-        That is, if the distance between robots is less than the comm range.
-        """
-        nodes = [obj for obj in self.controllable_objects.values() if obj.tangible]
-        any(self.canvas.delete(item_id) for item_id in self.connection_graph.values())
-        for i, nodeA in enumerate(nodes):
-            for j, nodeB in enumerate(nodes):
-                if i != j and np.linalg.norm(nodeA.position - nodeB.position) <= nodeB.actuators['wireless_transmitter'].range: #nodeA.sensors['wireless_transmitter'].range:
-                    self.connection_graph[str(i)+'-'+str(j)] = self.canvas.create_line(nodeA.position[0], nodeA.position[1],\
-                            nodeB.position[0], nodeB.position[1], fill='black', width=.7)
-
-    def draw_node_coords(self):
-        """
-        Renders a text with the position in the world of each robot.
-        """
-        any([self.canvas.create_text(int(obj.position[0]), int(obj.position[1]-20), font="Purisa",
-                    text=str(int(obj.position[0]))+','+str(int(obj.position[1])))\
-                    for obj in self.controllable_objects.values()])

@@ -1,26 +1,22 @@
 import time
+import os
 import numpy as np
 import pybullet as p
 import pybullet_data
 import pybullet_utils.bullet_client as bc
+import pygame
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
+import pymunk
+import pymunk.pygame_util
+# from pygame.color import THECOLORS
+# from pymunk.vec2d import Vec2d
 from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.objects import Wall
 
 class PybulletEngine:
     def __init__(self):
         self.connected = False
         self.render = global_states.RENDER
         self.engine = None
-        # self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        # self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
-        # self.engine.setGravity(0, 0, -9.8)
-        # self.planeId = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
-        # self.gui_params = {}
-        # if self.render:
-        #     self.gui_params['robot_focus'] = self.engine.addUserDebugParameter('Robot focus', 1, -1, 1)
-        #     self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-        #             cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
-    # def id(self):
 
     def step_physics(self):
         p.stepSimulation()
@@ -46,9 +42,9 @@ class PybulletEngine:
         # self.gui_params = {}
         if self.render:
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-                    cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
-        
+            self.engine.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
+                    cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
+
     def disconnect(self):
         # self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.disconnect()
@@ -66,40 +62,64 @@ class PybulletEngine:
 
 
 
-# class Engine2D:
-#     def __init__(self, height=1000, width=1000):
-#         self.height = height
-#         self.width = width
-#         self.world_delay = 1 #! TO BE REMOVED
-#         self.render = global_states.RENDER
-#         if self.render:
-#             self.initialize_render()
-        
-#     def initialize_render(self):
-#         self.root = tk.Tk(className='SpikeSwarmSim')
-#         self.root.geometry(str(self.width) + 'x' + str(self.height))
-#         self.canvas = tk.Canvas(self.root, height=self.height, width=self.width, bg='grey')
-#         self.canvas.pack(side='left')
-#         frame = tk.Frame(self.root)
-#         frame.pack(side='right')
-#         # Create limiting walls
-#         self.canvas.create_rectangle(0, 0, 20, self.height, fill='black')
-#         self.canvas.create_rectangle(0, 0, self.width, 20, fill='black')
-#         self.canvas.create_rectangle(self.width - 20, 0, self.width, self.height, fill='black')
-#         self.canvas.create_rectangle(0, self.height - 20, self.width, self.height, fill='black')
+class Engine2D:
+    def __init__(self, height=1000, width=1000):
+        self.height = height
+        self.width = width
+        self.world_delay = 1 #! TO BE REMOVED
+        self.render = global_states.RENDER
+        self.screen = None
+        self.engine = None
+        self.draw_options = None
+        self.objects = {}
+
+    def connect(self, objects):
+        self.engine = pymunk.Space()
+        self.engine.gravity = (0.0, 0.0)
+        self.add_objects(objects)
+        self.connected = True
+        if self.render:
+            pygame.init()
+            self.screen = pygame.display.set_mode((self.height, self.width))
+            self.draw_options = pymunk.pygame_util.DrawOptions(self.screen)
+            self.clock = pygame.time.Clock()
+
+    def add(self, identifier, bodies, shapes):
+        self.objects[identifier] = {'bodies' : bodies, 'shapes' : shapes}
+        self.engine.add(*bodies, *shapes)
+
+    def get_body_position(self, identifier, body_id):
+        return self.objects[identifier]['bodies'][body_id].position
+
+    def reset_body_position(self, identifier, body_id, position):
+        self.objects[identifier]['bodies'][body_id].position = position
 
 
-#     def step_physics(self):
-#         pass
+    def get_body_orientation(self, identifier, body_id):
+        return self.objects[identifier]['bodies'][body_id].angle
 
-#     def step_render(self):
-#         # if self.render_connections:
-#         #         self.draw_connections()
-#         self.canvas.update()
-#         self.root.after(self.world_delay)
+    def reset_body_orientation(self, identifier, body_id, orientation):
+        self.objects[identifier]['bodies'][body_id].angle = orientation
 
-#     def connect(self, objects): #!
+    def disconnect(self):
+        pass
 
-#     def disconnect(self):
+    def initialize_render(self):
+        pass
 
-#     def add_objects(self, objects):
+    def step_physics(self):
+        self.engine.step(1 / 60.0)
+
+    def step_render(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                import sys; sys.exit(0)
+        pygame.event.get()
+        self.screen.fill((255, 255, 255))
+        self.engine.debug_draw(self.draw_options)
+        pygame.display.flip()
+        self.clock.tick(50)
+
+    def add_objects(self, objects):
+        for obj in objects:
+            obj.add_physics(self)

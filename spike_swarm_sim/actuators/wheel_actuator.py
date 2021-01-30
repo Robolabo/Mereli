@@ -25,3 +25,10 @@ class WheelActuator(Actuator):
         transf_mat = lambda x: np.array([[np.cos(x), -np.sin(x)], [np.sin(x), np.cos(x)]])
         self.delta_pos = transf_mat(w * delta_t).dot(current_pos - icc) + icc - current_pos
         self.delta_theta = w * delta_t
+
+        new_pos = self.actuator_owner.position + self.delta_pos.astype(float)
+        self.actuator_owner.position = new_pos
+        self.actuator_owner.orientation = self.actuator_owner.orientation + self.delta_theta
+        self.actuator_owner.orientation = self.actuator_owner.orientation % (2 * np.pi)
+        self.delta_pos = np.zeros(2)
+        self.delta_theta = 0.0

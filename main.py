@@ -1,6 +1,6 @@
 import click
 import logging
-from spike_swarm_sim import World, World3D, MultiWorldWrapper
+from spike_swarm_sim import World2D, World3D, MultiWorldWrapper
 from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm, CMA_ES, xNES
 from spike_swarm_sim.register import fitness_functions
 from spike_swarm_sim.config_parser import json_parser
@@ -32,7 +32,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         world = MultiWorldWrapper(ncpu, height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
                     world_delay=cfg_dict['world']["world_delay"])
     else:
-        world_cls = {'2D' : World, '3D' : World3D}[cfg_dict['world']['engine']]
+        world_cls = {'2D' : World2D, '3D' : World3D}[cfg_dict['world']['engine']]
         world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
              world_delay=cfg_dict['world']["world_delay"])#!, render_connections=cfg_dict['world']["render_connections"])
         # world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\

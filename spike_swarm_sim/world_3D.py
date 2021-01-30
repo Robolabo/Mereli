@@ -58,7 +58,6 @@ class World3D(object):
 
         # self.reward_generator = GoToLightReward()
         self.t = 0
-        self.aux = 0
 
     def add_limiting_walls(self):
         self.add('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
@@ -161,9 +160,10 @@ class World3D(object):
             }
             if obj['type'] == 'robot':
                 object_cls = world_objects[engine][obj['type']]
+                #! ---
                 robot_positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
                 robot_orientations = map(lambda x: (0., 0., x[0]), self.initializers[obj_name]['orientations']())
-                
+                #! ---
                 #* Add robots one by one at their position and orientation
                 for i, (position, orientation) in enumerate(zip(robot_positions, robot_orientations)):
                     if obj['controller'] is not None:
@@ -224,7 +224,9 @@ class World3D(object):
                     orientations = group_initializer['orientations']()
                     orientations = map(lambda x: (0., 0., x[0]), orientations)
                     for orientation, obj in zip(orientations, group_elements):
+                        #! ---
                         obj.orientation = orientation
+                        #! ---
         np.random.seed()
 
 
@@ -238,7 +240,6 @@ class World3D(object):
         ================================================================
         """
         self.t = 0
-        self.aux = 0
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects
@@ -277,9 +278,11 @@ class World3D(object):
             return neighbors
         max_robot_dist = None
         if len(self.robots) > 1:
+            #! ---
             max_robot_dist = np.max([robot.sensors[sensor].range \
                             for sensor in ['wireless_receiver', 'distance_sensor3D'] \
                             if sensor in robot.sensors.keys()])
+            #! ---
         #* Robots
         for obj in self.hierarchy.values():
             #!

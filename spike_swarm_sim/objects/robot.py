@@ -1,5 +1,7 @@
 import numpy as np
-from shapely.geometry import Point
+import pymunk
+from pygame.color import THECOLORS
+# from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject2D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
@@ -8,12 +10,9 @@ class Robot(WorldObject2D):
     """
     Base class for the robot world object.
     """
-    def __init__(self, position, *args, orientation=0, **kwargs):
-        super(Robot, self).__init__(position, static=False, luminous=False,\
-                        tangible=True, shape='circular', *args, **kwargs)
-        self._init_theta = orientation
-        self.orientation = orientation
-
+    def __init__(self, position, orientation, *args, **kwargs):
+        super(Robot, self).__init__(position, orientation, static=False, luminous=False,\
+                        tangible=True, *args, **kwargs)
         self.radius = 11
         self._food = False
 
@@ -29,19 +28,31 @@ class Robot(WorldObject2D):
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
 
-        #* Rendering colors (TO BE MOVED TO RENDER FILE IN THE FUTURE)
-        self.colorA = 'black'
-        self.colorB = 'black'
-        self.color2 = ('skyblue3', 'green')[self.trainable]
+
         self.reset()
 
-    
+    def add_physics(self, engine):
+        super().add_physics(engine)
+        mass = 1
+        inertia = pymunk.moment_for_circle(mass, 0, self.radius, (0, 0))
+        body = pymunk.Body(mass, inertia)
+        body.position = tuple(self.init_position * 100 + 500)
+        body.orientation = self.init_orientation
+        shape = pymunk.Circle(body, self.radius, (0, 0))
+        # shape_ori = pymunk.Segment(body, (0, 0), \
+        #     (self.radius * np.cos(body.orientation), self.radius * np.sin(body.orientation)), 2)
+        shape.friction = 1
+        shape.color = THECOLORS['green']
+        # shape_ori.color = THECOLORS['black']
+        engine.add(self.id, [body], [shape,])
+
+
     def step(self, neighborhood, reward=None, perturbations=None):
         """
         Firstly steps all the sensors in order to perceive the environment.
         Secondly, the robot executes its controller in order to compute the
         actions based on the sensory information.
-        Lasty, the actionas are stored as planned actions to be eventually executed.
+        Lastly, the actions are stored as planned actions to be eventually executed.
         =====================
         - Args:
             neighborhood [list] -> list filled with the neighboring world objects.
@@ -63,14 +74,10 @@ class Robot(WorldObject2D):
         actions = self.controller.step(state, reward=reward)
         #* Plan actions for future execution
         self.plan_actions(actions)
-        # #* Handle robot food pickup
-        # if 'food_area_sensor' in state.keys() and bool(state['food_area_sensor'][0]):
-        #     self.food = True
-        # if 'nest_sensor' in state.keys() and bool(state['nest_sensor'][0]):
-        #     self.food = False
 
-        #* Render robot LED
-        self.update_colors(state, actions)
+        # #* Render robot LED
+        # self.update_colors(state, actions)
+        # print(self.orientation)
         return state, actions
 
     def update_colors(self, state, action):
@@ -103,8 +110,6 @@ class Robot(WorldObject2D):
             # if actuator_name not in self.planned_actions:
             #     raise Exception('Error: Actuator does not have corresponding planned action.')
             actuator.step(*iter(self.planned_actions[actuator_name]))
-        if 'wheel_actuator' in self.controller.enabled_actuators.keys() or 'target_pos_actuator' in self.controller.enabled_actuators.keys():
-            self._move(validated=True)
 
     def perceive(self, neighborhood):
         """
@@ -118,24 +123,6 @@ class Robot(WorldObject2D):
         """
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
-
-    def _move(self, validated=False):
-        """
-        
-        =====================
-        - Args:
-            validated [bool] -> flag indicating if the planned movement is valid 
-                        (for example with no collisions). 
-        - Returns: None
-        =====================
-        """
-        self.position += self.actuators['wheel_actuator'].delta_pos.astype(float) * float(validated)
-        self.orientation += self.actuators['wheel_actuator'].delta_theta * float(validated)
-        # control angle range in (-pi,pi]
-        self.orientation = self.orientation % (2*np.pi) #(self.theta, self.theta + 2*np.pi)[self.theta < 0]
-        self.actuators['wheel_actuator'].delta_pos = np.zeros(2)
-        self.actuators['wheel_actuator'].delta_theta = 0.0
-
 
     def reset(self):
         """
@@ -173,49 +160,3 @@ class Robot(WorldObject2D):
         """Setter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         self._food = hasfood
-
-    
-        
-    def initialize_render(self, canvas):
-        x, y = tuple(self.position)
-        contour_id = canvas.create_oval(x-self.radius-2, y-self.radius-2,\
-                x + self.radius+2, y + self.radius+2, fill=self.color2)
-        # body_id = canvas.create_oval(x-self.radius, y-self.radius,\
-        #         x + self.radius, y + self.radius, fill=self.color)
-        bodyA_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.orientation), extent=180, fill="black")
-        bodyB_id = canvas.create_arc(x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius, start=np.degrees(self.orientation) + 180, extent=180, fill="black")
-        orient_id = canvas.create_line(x, y,\
-                x + self.radius * 2 * np.cos(self.orientation),\
-                y + self.radius * 2 * np.sin(self.orientation),\
-                fill='black', width=2)
-        self.render_dict = {
-            'contour' : contour_id,
-            'bodyA' : bodyA_id,
-            'bodyB' : bodyB_id,
-            'orient' : orient_id,
-        }
-        return canvas
-    
-    def render(self, canvas):
-        """
-        Renders the robot in a 2D tkinter canvas.
-        """
-        x, y = tuple(self.position)
-        canvas.coords(self.render_dict['contour'],\
-                x-self.radius, y-self.radius,\
-                x + self.radius, y + self.radius)
-        canvas.coords(self.render_dict['bodyA'],\
-                x-self.radius+3, y-self.radius+3,\
-                x + self.radius-3, y + self.radius-3)
-        canvas.coords(self.render_dict['bodyB'],\
-                x-self.radius+3, y-self.radius+3,\
-                x + self.radius-3, y + self.radius-3)
-        canvas.itemconfig(self.render_dict['contour'], fill=self.color2)
-        canvas.itemconfig(self.render_dict['bodyA'], start=0, extent=180, fill=self.colorA)
-        canvas.itemconfig(self.render_dict['bodyB'], start=180, extent=180, fill=self.colorB)
-        canvas.coords(self.render_dict['orient'], x, y,\
-                x + self.radius * 2 * np.cos(self.orientation),\
-                y + self.radius * 2 * np.sin(self.orientation))
-        return canvas

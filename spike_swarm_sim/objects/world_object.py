@@ -77,26 +77,40 @@ class WorldObject2D(WorldObject):
         position [np.ndarray or list]: position vector of the object.
     ====================================================================================
     """
-    def __init__(self, position, *args, **kwargs):
+    def __init__(self, position, orientation, *args, **kwargs):
         super(WorldObject2D, self).__init__(*args, **kwargs)
-        self.position = position.astype(float) if isinstance(position, np.ndarray) else position
-        # self.init_pos = self.position.copy() if isinstance(position, np.ndarray) else position
+        self.init_position = position.astype(float) if isinstance(position, np.ndarray) else position
+        self.init_orientation = orientation
+        self.physics_client = None
 
     def add_physics(self, engine):
-        pass
+        self.physics_client = engine
+        #! HACER XML PARSER
 
     def step(self):
         pass
 
-    def render(self, canvas):
-        pass
     @property
     def position(self):
-        pass
+        pos = self.physics_client.get_body_position(self.id, 0)
+        # import pdb; pdb.set_trace()
+        return (np.array([pos.x, pos.y]) - 500) / 100 
     
     @property
     def orientation(self):
-        pass
+        return self.physics_client.get_body_orientation(self.id, 0)
+
+    @position.setter
+    def position(self, new_position):
+        """ Setter of the position. """
+        new_position = new_position * 100 + 500
+        # if any(new_position > 1000):import pdb; pdb.set_trace()
+        self.physics_client.reset_body_position(self.id, 0, tuple(new_position))
+    
+    @orientation.setter
+    def orientation(self, new_orientation):
+        """ Setter of the orientation. """
+        self.physics_client.reset_body_orientation(self.id, 0, new_orientation)
 
 
 class WorldObject3D(WorldObject):
@@ -117,6 +131,7 @@ class WorldObject3D(WorldObject):
         self.init_position = position
         self.init_orientation = orientation
         self._id = None
+        self.physics_client = None
 
     def step(self):
         raise NotImplementedError
@@ -130,7 +145,7 @@ class WorldObject3D(WorldObject):
             p.getQuaternionFromEuler(self.init_orientation), physicsClientId=self.physics_client)
         for i in range(2):
             p.changeDynamics(self.id, i, lateralFriction=0.9, physicsClientId=self.physics_client,\
-                activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP )
+                activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
 
     @property
     def position(self):

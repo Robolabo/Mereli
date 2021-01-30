@@ -229,6 +229,7 @@ class EvolutionaryAlgorithm:
         """
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
+        world.connect()
         world.reset()
         interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
