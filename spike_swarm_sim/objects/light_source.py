@@ -1,8 +1,66 @@
 import numpy as np            
 from matplotlib import colors
 import matplotlib.pyplot as plot
-from spike_swarm_sim.objects import WorldObject2D
+import pybullet as p
+from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
 from spike_swarm_sim.register import world_object_registry
+
+
+@world_object_registry(name='light_source')
+class LightSource3D(WorldObject3D):
+    def __init__(self, position, orientation, *args, color='red', range=1., **kwargs):
+        super(LightSource3D, self).__init__('light', position, orientation, z_offset=0.8,\
+                        static=False, luminous=True, tangible=False, \
+                        *args, **kwargs)
+        self.range = range
+        self.color = color
+        self.shadow_id = None
+        self.reset()
+
+    def add_physics(self, physics_client):
+        super().add_physics(physics_client)
+        color = list(colors.to_rgb(self.color)) + [0.8]
+        p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
+    
+    # def set_color(self):
+
+    def step(self, world_dict):
+        if self.controllable:
+            if type(self.controller).__name__ == 'PreyController':
+                robot_pos = [robot.position for robot in world_dict]
+                self.position = self.controller.step(self.position, robot_pos)
+            else:
+                self.position = self.controller.step(self.position)
+        return (0, 0)
+
+    def reset(self):
+        self.shadow_id = None
+        if self.controller is not None:
+            self.controller.reset()
+
+    def show_coverage(self):
+        if self.shadow_id is None:
+            self.shadow_id = p.loadURDF('spike_swarm_sim/objects/urdf/shadow.urdf', self.position,\
+                p.getQuaternionFromEuler(self.orientation), physicsClientId=self.physics_client, globalScaling=self.range)
+            color = list(colors.to_rgb(self.color)) + [0.3]
+            # import pdb; pdb.set_trace()
+            # p.resetBasePositionAndOrientation(self.shadow_id, p.getBasePositionAndOrientation(\
+            #     self.id, physicsClientId=self.physics_client)[0], [0,0,0,0], physicsClientId=self.physics_client)
+            p.changeVisualShape(self.shadow_id, -1, rgbaColor=color, physicsClientId=self.physics_client)
+        # else:
+        #     p.resetBasePositionAndOrientation(self.shadow_id, p.getBasePositionAndOrientation(\
+        #         self.id, physicsClientId=self.physics_client)[0], [0,0,0,0], physicsClientId=self.physics_client)
+
+    def hide_coverage(self):
+        if self.shadow_id is not None:
+            p.removeBody(self.shadow_id, physicsClientId=self.physics_client)
+            self.shadow_id = None
+
+
+
+
+
+
 
 class IsotropicEmitter(WorldObject2D):
     def __init__(self, pos, color='red', range=150, static=False, controller=None):

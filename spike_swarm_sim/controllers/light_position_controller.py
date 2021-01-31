@@ -15,12 +15,15 @@ class LightOrbitController(Controller):
 
     @increase_time
     def step(self, pos):
-        new_pos = pos.copy()
-        self.dir = np.random.choice([self.dir, -self.dir], p=[0.99, 0.01])
-        current_angle = compute_angle(new_pos - np.array([500, 500]))
-        new_angle = current_angle + self.dir * 0.013 #0.012 #0.01
-        new_rad = min(np.linalg.norm(new_pos - np.array([500, 500])) + 1, 200)
-        new_pos = new_rad*np.r_[np.cos(new_angle), np.sin(new_angle)] + np.array([500, 500])
+        new_pos = pos[:1].copy()
+        # self.dir = np.random.choice([self.dir, -self.dir], p=[0.99, 0.01])
+        current_angle = compute_angle(new_pos - np.array([0, 0]))
+        new_angle = current_angle + self.dir * 0.01 #0.012 #0.01
+        new_rad = min(np.linalg.norm(new_pos - np.array([0, 0])) + 0.01, 1)
+        new_pos = new_rad * np.r_[np.cos(new_angle), np.sin(new_angle)] + np.array([0, 0])
+        print(new_pos)
+        if len(pos) == 3:
+            new_pos = np.r_[new_pos, pos[-1]]
         return new_pos
 
     def reset(self):
@@ -35,19 +38,21 @@ class LightRndPositionController(Controller):
     """
     def __init__(self):
         self.t = 1
-        self.tar_pos = np.random.uniform(400, 600, size=2)
+        self.tar_pos = np.random.uniform(-1, 1, size=2)
 
     @increase_time
     def step(self, pos):
-        new_pos = pos.copy()
-        if self.t % 50 == 0:
-            self.tar_pos = np.random.uniform(400, 600, size=2)
-        new_pos = pos + 3 * normalize(self.tar_pos - pos)
+        new_pos = pos[:1].copy()
+        if self.t % 100 == 0:
+            self.tar_pos = np.random.uniform(-1, 1, size=2)
+        new_pos = new_pos + 0.03 * normalize(self.tar_pos - new_pos)
+        if len(pos) == 3:
+            new_pos = np.r_[new_pos, pos[-1]]
         return new_pos
 
     def reset(self):
         self.t = 1
-        self.tar_pos = np.random.uniform(400, 600, size=2)
+        self.tar_pos = np.random.uniform(-1, 1, size=2)
 
 @controller_registry(name='light_prey_controller')
 class PreyController(Controller):

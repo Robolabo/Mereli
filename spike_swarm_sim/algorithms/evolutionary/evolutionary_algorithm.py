@@ -216,7 +216,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=50, timesteps=1000):
+    def evaluate(self, trials=50, timesteps=5000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).

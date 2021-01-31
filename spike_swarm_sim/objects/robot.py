@@ -1,5 +1,7 @@
+import os
 import numpy as np
 import pymunk
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 from pygame.color import THECOLORS
 # from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject2D

@@ -112,7 +112,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 1" />
+                <color rgba="1 1 1 0.7" />
             </material>
         </visual>
         <collision>

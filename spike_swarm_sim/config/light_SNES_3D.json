@@ -1,10 +1,10 @@
 {
-    "checkpoint_file" : "chk_obstacle_avoidance_3D",
+    "checkpoint_file" : "chk_light_SNES_3D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 6, "sensor" : "distance_sensor3D"}
+            "I1" : {"n" : 6, "sensor" : "light_sensor3D"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -46,14 +46,14 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":7,
-        "width": 7,
+        "height":10,
+        "width": 10,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 5,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
-                "sensors" : {"distance_sensor3D" : {"n_sectors" : 6, "range" : 1}},
+                "sensors" : {"light_sensor3D" : {"n_sectors" : 6, "range" : 2}},
                 "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
@@ -61,6 +61,15 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "controller" : null,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
+                },
+                "params" : {"range" : 10, "color" : "red"}
             }
         }
     }

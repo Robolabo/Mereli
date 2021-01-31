@@ -123,13 +123,15 @@ class WorldObject3D(WorldObject):
         position [np.ndarray or list]: position 3D vector of the object.
         orientation [np.ndarray or list]: 3D Euler orientation vector.
         physics_client [int]: identifier of the pybullet physics server.
+        z_offset [float]
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation,  *args, **kwargs):
+    def __init__(self, urdf_file, position, orientation,  *args, z_offset=0, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
         self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
         self.init_position = position
         self.init_orientation = orientation
+        self.z_offset = z_offset
         self._id = None
         self.physics_client = None
 
@@ -149,8 +151,10 @@ class WorldObject3D(WorldObject):
 
     @property
     def position(self):
-        return np.array(p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[0])
-    
+        pos = np.array(p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[0])
+        pos[-1] += self.z_offset
+        return pos
+        
     @property
     def orientation(self):
         quaternion_orientation = p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[1]

@@ -12,16 +12,19 @@ import pymunk.pygame_util
 # from pymunk.vec2d import Vec2d
 from spike_swarm_sim.globals import global_states
 
+#! Inherit from Bullet??
 class PybulletEngine:
     def __init__(self):
         self.connected = False
         self.render = global_states.RENDER
         self.engine = None
+        self.gui_params = {}
 
     def step_physics(self):
         p.stepSimulation()
 
     def step_render(self):
+
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
@@ -41,6 +44,7 @@ class PybulletEngine:
         self.connected = True
         # self.gui_params = {}
         if self.render:
+            self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, -1)
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
             self.engine.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
                     cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
@@ -56,7 +60,7 @@ class PybulletEngine:
 
     #! USELESS?
     def initialize_render(self):
-        # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
+        self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, 1)
         self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
                     cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
 

@@ -117,6 +117,14 @@ class World3D(object):
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
+            #! ----
+            print( self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']))
+            for l in self.lights.values():
+                if self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']) % 2 == 0:
+                    l.show_coverage()
+                else:
+                    l.hide_coverage()
+            #! ----
         # print(states)
         return states, actions
     
@@ -158,8 +166,8 @@ class World3D(object):
                 key :  initializers[value['name']](obj['num_instances'], **value['params'])\
                         for key, value in obj['initializers'].items()
             }
+            object_cls = world_objects[engine][obj['type']]
             if obj['type'] == 'robot':
-                object_cls = world_objects[engine][obj['type']]
                 #! ---
                 robot_positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
                 robot_orientations = map(lambda x: (0., 0., x[0]), self.initializers[obj_name]['orientations']())
@@ -180,11 +188,10 @@ class World3D(object):
                     self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
                             for pert, pert_params in obj['perturbations'].items()]})
             else: # Non robot objects
-                positions = self.initializers[obj_name]['positions']()
+                positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
                 controller = controllers[obj['controller']]() if obj['controller'] is not None else None
-                for position in positions:
-                    world_obj = object_cls(position, controller=controller,\
-                                    **obj['params'])
+                for i, position in enumerate(positions):
+                    world_obj = object_cls(position, [0,0,0], controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -318,7 +325,7 @@ class World3D(object):
         """ Dict with all light sources.
         """
         return {name : obj for name, obj in self.hierarchy.items()\
-                if type(obj).__name__ == 'LightSource'}
+                if type(obj).__name__ in ['LightSource', 'LightSource3D']}
     @property
     def controllable_objects(self):
         """ Dict with all controllable objects (ie with a controller).

@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.linalg as LA
 import pybullet as p
-from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
+from spike_swarm_sim.objects import WorldObject2D, WorldObject3D, LightSource3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, toroidal_difference
 
 class Sensor:
@@ -93,11 +93,16 @@ class DirectionalSensor(Sensor):
         orientation = self.sensor_owner.orientation
         featured_objects = [obj for obj in neighborhood \
                             if self._target_filter(obj) and obj.id != self.sensor_owner.id]
+        #! Improve
         for obj in featured_objects:
             if issubclass(type(obj), WorldObject3D):
-                closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-                        linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
-                v = np.array(closest_points[0][6]) - self.sensor_owner.position
+                if not isinstance(obj, LightSource3D):
+                    closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
+                            linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
+                    v = np.array(closest_points[0][6]) - self.sensor_owner.position     
+                else:
+                    v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
+                    aa = p.getBodyInfo(obj.id,physicsClientId=self.sensor_owner.physics_client)
                 orientation = self.sensor_owner.orientation[-1]
             else:
                 v = toroidal_difference(obj.position, self.sensor_owner.position)
