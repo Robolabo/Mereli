@@ -9,5 +9,6 @@ class OwnOrientationSensor(Sensor):
         super(OwnOrientationSensor, self).__init__(*args, **kwargs)
 
     def step(self, neighborhood):
-        ang = (self.sensor_owner.orientation, self.sensor_owner.orientation + 2 * np.pi)[self.sensor_owner.orientation < 0] 
+        # ang = (self.sensor_owner.orientation, self.sensor_owner.orientation + 2 * np.pi)[self.sensor_owner.orientation < 0]
+        ang = self.sensor_owner.orientation
         return ang / (2*np.pi)

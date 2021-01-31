@@ -6,4 +6,5 @@ from .own_position_sensor import OwnPositionSensor
 from .own_orientation_sensor import OwnOrientationSensor
 from .neighborhood_position_sensor import NeighborhoodPositionSensor
 from .food_sensor import FoodSensor, FoodAreaSensor, NestSensor
+from .joint_sensor import JointPositionSensor, JointVelocitySensor
 from .utils import *

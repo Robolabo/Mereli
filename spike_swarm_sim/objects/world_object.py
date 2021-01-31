@@ -128,7 +128,9 @@ class WorldObject3D(WorldObject):
     """
     def __init__(self, urdf_file, position, orientation,  *args, z_offset=0, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
-        self.urdf_file = "spike_swarm_sim/objects/urdf/" + urdf_file + ".urdf"
+        self.urdf_file = urdf_file + ".urdf"
+        if len(urdf_file.split('/')) < 2 or 'tmp' in urdf_file:
+            self.urdf_file = "spike_swarm_sim/objects/urdf/" + self.urdf_file
         self.init_position = position
         self.init_orientation = orientation
         self.z_offset = z_offset

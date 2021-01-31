@@ -7,10 +7,10 @@ import pybullet_data
 import pybullet_utils.bullet_client as bc
 
 
-from spike_swarm_sim.objects import  Robot3D, LightSource, Wall
+from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, Wall
 from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
-from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit
+from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit, isinstance_of_any
 from spike_swarm_sim.globals import global_states
 from .physics_engine import PybulletEngine
 
@@ -54,7 +54,7 @@ class World3D(object):
       
 
         #* Add world limits
-        self.add_limiting_walls()
+        #!self.add_limiting_walls()
 
         # self.reward_generator = GoToLightReward()
         self.t = 0
@@ -167,7 +167,7 @@ class World3D(object):
                         for key, value in obj['initializers'].items()
             }
             object_cls = world_objects[engine][obj['type']]
-            if obj['type'] == 'robot':
+            if issubclass(object_cls, Robot) or issubclass(object_cls, Robot3D):
                 #! ---
                 robot_positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
                 robot_orientations = map(lambda x: (0., 0., x[0]), self.initializers[obj_name]['orientations']())
@@ -176,6 +176,7 @@ class World3D(object):
                 for i, (position, orientation) in enumerate(zip(robot_positions, robot_orientations)):
                     if obj['controller'] is not None:
                         controller_cls = controllers[obj['controller']]
+                        
                         if obj['controller'] in ['neural_controller', 'cascade_controller']: # assuming only single ANN controller
                             controller = controller_cls(ann_topology, obj['sensors'], obj['actuators'])
                         else: # non-trainable robot controllers
@@ -319,7 +320,7 @@ class World3D(object):
         """ Dict with all robots.
         """
         return {name : obj for name, obj in self.hierarchy.items()\
-                if type(obj).__name__ == 'Robot3D'}
+            if issubclass(type(obj), Robot) or issubclass(type(obj), Robot3D)}
     @property
     def lights(self):
         """ Dict with all light sources.

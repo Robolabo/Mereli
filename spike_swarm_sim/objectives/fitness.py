@@ -220,7 +220,28 @@ class ObstacleAvoidance:
         fitness /= len(states)
         return fitness + 1e-5
 
+@fitness_func_registry(name='obstacle_avoidance')
+class Walking:
+    """Fitness function for the Obstacle Avoidance task."""
+    def __init__(self):
+        self.required_info = ("robot_positions",)
 
+    def __call__(self, actions, states, info=None):
+        """Computes the fitness function based on trial actions and states. 
+        Additionally, other useful variables can be used from info dict (if specified in init).
+        =======================================================================================
+        - Args:
+            actions [list of dicts]: list of dictionaries with actuator names and the 
+                    corresponding action.
+            states [list of dicts]: list of dictionaries with sensor names and the 
+                    corresponding measured states.
+            info [dict or None]: dict of additional information.
+        =======================================================================================
+        """
+        fitness = 0
+        robot_positions = np.stack(info["robot_positions"]).copy()
+        fitness = np.linalg.norm(robot_positions[-1][0] - robot_positions[0][0])/10
+        return fitness + 1e-5
 
 # @fitness_func_registry(name='line_formation')
 # class LineFormation:

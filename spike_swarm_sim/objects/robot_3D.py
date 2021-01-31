@@ -3,14 +3,15 @@ from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject3D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
-    
+
+
 @world_object_registry(name='robot')
 class Robot3D(WorldObject3D):
     """
     Base class for the robot world object.
     """
-    def __init__(self, position, orientation, *args, **kwargs):
-        super(Robot3D, self).__init__('epuck', position, orientation,\
+    def __init__(self, position, orientation,  *args, urdf_file='epuck', **kwargs):
+        super(Robot3D, self).__init__(urdf_file, position, orientation,\
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
         self._food = False
@@ -138,3 +139,16 @@ class Robot3D(WorldObject3D):
         """Setter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         self._food = hasfood
+
+
+
+
+@world_object_registry(name='minitaur')
+class Minitaur(Robot3D):
+    def __init__(self, *args, **kwargs):
+        super(Minitaur, self).__init__(*args, urdf_file='quadruped/minitaur', z_offset=0.5,**kwargs)
+
+@world_object_registry(name='epuck')
+class Epuck3D(Robot3D):
+    def __init__(self, *args, **kwargs):
+        super(Epuck3D, self).__init__( *args, urdf_file='epuck', **kwargs)

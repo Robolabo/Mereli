@@ -4,17 +4,13 @@ import numpy as np
 from .base_actuator import Actuator
 from spike_swarm_sim.register import actuator_registry
 
-@actuator_registry(name='joint_actuator')
-class JointActuator(Actuator):
+@actuator_registry(name='joint_velocity_actuator')
+class JointVelocityActuator(Actuator):
     """ Robot wheel actuator using a differential drive system. 
     """
-    def __init__(self, *args, joint_ids=[0], control='velocity', **kwargs):
-        super(JointActuator, self).__init__(*args, **kwargs)
+    def __init__(self, *args, joint_ids=[0], **kwargs):
+        super(JointVelocityActuator, self).__init__(*args, **kwargs)
         self.joint_ids = joint_ids
-        self.control = {
-            'position' : p.POSITION_CONTROL,
-            'velocity' : p.VELOCITY_CONTROL
-        }[control]
         self.max_velocity = 10.0
          
     def step(self, action):
@@ -30,3 +26,28 @@ class JointActuator(Actuator):
         for joint in self.joint_ids:
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
                 controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client)
+
+
+@actuator_registry(name='joint_position_actuator')
+class JointPositionActuator(Actuator):
+    """ Robot wheel actuator using a differential drive system. 
+    """
+    def __init__(self, *args, joint_ids=[0], **kwargs):
+        super(JointPositionActuator, self).__init__(*args, **kwargs)
+        self.joint_ids = joint_ids
+        self.max_velocity = 1.
+         
+    def step(self, action):
+        if len(action) != len(self.joint_ids):
+            raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
+            	'the number of controllable joints.'))
+        # action = [0.3, 0.3]
+        for ac, joint in zip(action, self.joint_ids):
+            p.setJointMotorControl2(self.actuator_owner.id, joint, targetPosition=ac * np.pi,\
+                controlMode=p.POSITION_CONTROL, physicsClientId=self.actuator_owner.physics_client,\
+                positionGain=1.1, velocityGain=1.1, maxVelocity=self.max_velocity)
+    
+    # def reset(self,):
+    #     for joint in self.joint_ids:
+    #         p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
+    #             controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client)
