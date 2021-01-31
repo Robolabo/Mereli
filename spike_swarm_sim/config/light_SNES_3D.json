@@ -32,7 +32,7 @@
         "generations" : 1000,
         "evaluation_steps" : 700,
         "num_evaluations" : 1,
-        "fitness_function" : "obstacle_avoidance",
+        "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
