@@ -153,7 +153,6 @@ class NeuralNetwork:
         """
         if hasattr(self.neurons, 'tau'):
             self.neurons.tau[-np.sum([self.subpop_neurons[kk] for kk in self.output_neurons]):] = 0.5 #!
-
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))

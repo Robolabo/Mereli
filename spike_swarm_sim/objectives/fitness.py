@@ -220,7 +220,7 @@ class ObstacleAvoidance:
         fitness /= len(states)
         return fitness + 1e-5
 
-@fitness_func_registry(name='obstacle_avoidance')
+@fitness_func_registry(name='walking')
 class Walking:
     """Fitness function for the Obstacle Avoidance task."""
     def __init__(self):
@@ -240,8 +240,9 @@ class Walking:
         """
         fitness = 0
         robot_positions = np.stack(info["robot_positions"]).copy()
-        fitness = np.linalg.norm(robot_positions[-1][0] - robot_positions[0][0])/10
-        return fitness + 1e-5
+        fA = np.linalg.norm(robot_positions[-1][0] - robot_positions[0][0])/10
+        fB = np.mean(robot_positions[:,:,-1] > 0.7)
+        return fA * fB + 1e-5
 
 # @fitness_func_registry(name='line_formation')
 # class LineFormation:

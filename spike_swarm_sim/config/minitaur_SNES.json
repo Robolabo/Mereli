@@ -32,11 +32,11 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
-        "generations" : 1000,
-        "evaluation_steps" : 2000,
+        "population_size" : 100,
+        "generations" : 5000,
+        "evaluation_steps" : 3000,
         "num_evaluations" : 1,
-        "fitness_function" : "obstacle_avoidance",
+        "fitness_function" : "walking",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
