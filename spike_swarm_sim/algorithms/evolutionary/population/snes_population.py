@@ -86,4 +86,4 @@ class SNES_Population(Population):
         #* sample initial pop
         self.population, self.z_samples = self.sample()
         self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
-        self.sigma = np.ones(genotype_length) # 0.1 * np.ones(genotype_length)
+        self.sigma = 0.5 * np.ones(genotype_length) # 0.1 * np.ones(genotype_length)
