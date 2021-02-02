@@ -29,7 +29,6 @@ class DistanceSensor(DirectionalSensor):
         if direction_reading is None:
             direction_reading = 0.0
         if condition:
-            # signal_strength = np.exp(-rho/120)
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading:
                 direction_reading = signal_strength
@@ -65,14 +64,12 @@ class DistanceSensor3D(DirectionalSensor):
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading:
-                # my_pos = self.get_positions()[args[0]] * np.array([1, 1, 0.0]) + np.array([0, 0, 0.13])
-                # ray_res = p.rayTest(my_pos, kwargs['obj'].position*np.array([1, 1, 0.0])+ np.array([0, 0, 0.08]),\
-                #                 physicsClientId=self.sensor_owner.physics_client)
                 my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.017]
                 tar_post = kwargs['obj'].position + np.r_[0,0,my_pos[2]]
-                ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)
                 # print(rho, ray_res[0][0], 'IR'+str(args[0]), signal_strength)
-                if ray_res[0][0] == kwargs['obj'].id:
+                ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)[0][0]
+                # if self.sensor_owner.physics_engine.ray_cast(my_pos, tar_post) == kwargs['obj'].id:
+                if ray_res == kwargs['obj'].id:
                     direction_reading = signal_strength
             # else:
             #     import pdb; pdb.set_trace()

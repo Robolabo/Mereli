@@ -128,10 +128,10 @@ def config_checker(cfg_dict):
             for sens_name, sens_params in obj['sensors'].items():
                 check_sensor_cfg(sens_name, sens_params)
             # Check both comm. transmitter and receiver are created
-            if 'wireless_transmitter' in obj['actuators'].keys() and 'wireless_receiver' not in obj['sensors'].keys():
+            if 'wireless_transmitter' in obj['actuators'].keys() and 'IR_receiver' not in obj['sensors'].keys():
                 logging.warning('A communication transmitter was created '\
                     'but no communication receiver was specified. ')
-            if 'wireless_receiver' in obj['sensors'].keys() and 'wireless_transmitter' not in obj['actuators'].keys():
+            if 'IR_receiver' in obj['sensors'].keys() and 'wireless_transmitter' not in obj['actuators'].keys():
                 logging.warning('A communication receiver was created '\
                     'but no communication transmitter was specified. ')
     if 'topology' in cfg_dict.keys() and cfg_dict['topology'] is not None and len(cfg_dict['topology']):
@@ -178,11 +178,11 @@ def config_autocompletion(cfg_dict):
                     for act_name, act in obj['actuators'].items():
                         obj['actuators'][act_name] = autocomplete_actuator_cfg(act_name, act)
                 # Set TX and RX msgs to the same length
-                if 'wireless_receiver' in obj['sensors'].keys() and 'wireless_transmitter' in obj['actuators'].keys():
-                    if obj['sensors']['wireless_receiver']['msg_length'] != obj['actuators']['wireless_transmitter']['msg_length']:
-                        obj['actuators']['wireless_transmitter']['msg_length'] = obj['sensors']['wireless_receiver']['msg_length']
+                if 'IR_receiver' in obj['sensors'].keys() and 'wireless_transmitter' in obj['actuators'].keys():
+                    if obj['sensors']['IR_receiver']['msg_length'] != obj['actuators']['wireless_transmitter']['msg_length']:
+                        obj['actuators']['wireless_transmitter']['msg_length'] = obj['sensors']['IR_receiver']['msg_length']
                         logging.warning('The length of communication receiver and communication transmitter messages '\
-                            'was not the same. Fixing message to a length of {}'.format(obj['sensors']['wireless_receiver']['msg_length']))
+                            'was not the same. Fixing message to a length of {}'.format(obj['sensors']['IR_receiver']['msg_length']))
                 # Check robot env perturbations
                 if  obj['type'] == 'robot' and 'perturbations' not in obj.keys():
                     obj['perturbations'] = {}

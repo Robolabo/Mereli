@@ -7,8 +7,7 @@ from pathlib import Path
 
 from .world import World, World2D
 from .world_3D import World3D, MultiWorldWrapper
-from .physics_engine import *
-
+from .physics_engine import Engine2D, Engine3D
 
 from .env_perturbations import *
 from .algorithms import *

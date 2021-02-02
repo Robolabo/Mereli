@@ -102,7 +102,7 @@ class DirectionalSensor(Sensor):
                     v = np.array(closest_points[0][6]) - self.sensor_owner.position     
                 else:
                     v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
-                    aa = p.getBodyInfo(obj.id,physicsClientId=self.sensor_owner.physics_client)
+                    # aa = p.getBodyInfo(obj.id,physicsClientId=self.sensor_owner.physics_client)
                 orientation = self.sensor_owner.orientation[-1]
             else:
                 v = toroidal_difference(obj.position, self.sensor_owner.position)

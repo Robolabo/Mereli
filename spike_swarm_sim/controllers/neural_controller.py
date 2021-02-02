@@ -30,7 +30,7 @@ class NeuralController(RobotController):
     def step(self, state, reward=0.0):
         if len(state):
             state = flatten_dict(state)
-        state['wireless_receiver:state'] = np.array([self.comm_state])
+        state['IR_receiver:state'] = np.array([self.comm_state])
         raw_actions = self.neural_network.step(state, reward)
         actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
                    if 'wireless_transmitter' not in self.out_act_mapping[name]}
@@ -43,11 +43,11 @@ class NeuralController(RobotController):
                 self.comm_state = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter:state')]
 
             #* relay or bcast
-            msg = msg if self.comm_state else state['wireless_receiver:msg'].copy()
-            n_hops = state['wireless_receiver:n_hops'] + 1 if not self.comm_state else 1
-            destination = state['wireless_receiver:sender'].item() if is_response and state['wireless_receiver:sender'] > 0 else 0
-            actions['wireless_transmitter'] = {'destination': destination, 'sender' : state['wireless_receiver:sender'], 'priority':is_response, 'en' : 1, \
-                    'n_hops': n_hops, 'state' : self.comm_state, 'msg' : msg, 'sending_direction' : state['wireless_receiver:sending_direction']}
+            msg = msg if self.comm_state else state['IR_receiver:msg'].copy()
+            n_hops = state['IR_receiver:n_hops'] + 1 if not self.comm_state else 1
+            destination = state['IR_receiver:sender'].item() if is_response and state['IR_receiver:sender'] > 0 else 0
+            actions['wireless_transmitter'] = {'destination': destination, 'sender' : state['IR_receiver:sender'], 'priority':is_response, 'en' : 1, \
+                    'n_hops': n_hops, 'state' : self.comm_state, 'msg' : msg, 'sending_direction' : state['IR_receiver:sending_direction']}
             
         if 'wheel_actuator' in actions.keys():
             if type(actions['wheel_actuator']) in [int, bool]:

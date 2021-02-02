@@ -8,20 +8,25 @@ from spike_swarm_sim.register import actuator_registry
 class JointVelocityActuator(Actuator):
     """ Robot wheel actuator using a differential drive system. 
     """
-    def __init__(self, *args, joint_ids=[0], **kwargs):
+    def __init__(self, *args, joint_ids=[0], inverse_mirrored=None, **kwargs):
         super(JointVelocityActuator, self).__init__(*args, **kwargs)
         self.joint_ids = joint_ids
         self.max_velocity = 10.0
-         
+        self.inverse_mirrored = inverse_mirrored
+
     def step(self, action):
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-        # action = [0.3, 0.3]
+        action = [-0.3, 0.3]
         for ac, joint in zip(action, self.joint_ids):
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=ac * self.max_velocity,\
                 controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client, velocityGain=1.1)
-    
+        if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
+            p.setJointMotorControl2(self.actuator_owner.id, self.inverse_mirrored,\
+                targetVelocity=-action[0] * self.max_velocity, controlMode=p.VELOCITY_CONTROL,\
+                physicsClientId=self.actuator_owner.physics_client, velocityGain=1.1)
+
     def reset(self,):
         for joint in self.joint_ids:
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
@@ -41,7 +46,7 @@ class JointPositionActuator(Actuator):
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-        # action = [0.3, 0.3]
+
         for ac, joint in zip(action, self.joint_ids):
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetPosition=ac * np.pi,\
                 controlMode=p.POSITION_CONTROL, physicsClientId=self.actuator_owner.physics_client,\

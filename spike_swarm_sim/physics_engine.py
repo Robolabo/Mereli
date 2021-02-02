@@ -13,7 +13,7 @@ import pymunk.pygame_util
 from spike_swarm_sim.globals import global_states
 
 #! Inherit from Bullet??
-class PybulletEngine:
+class Engine3D:
     def __init__(self):
         self.connected = False
         self.render = global_states.RENDER
@@ -24,7 +24,6 @@ class PybulletEngine:
         p.stepSimulation()
 
     def step_render(self):
-
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
@@ -57,6 +56,10 @@ class PybulletEngine:
     def add_objects(self, objects):
         for obj in objects:
             obj.add_physics(self.engine._client)
+
+    def ray_cast(self, origin, destination):
+        ray_res = p.rayTest(origin, destination, physicsClientId=self.engine._client)
+        return ray_res[0][0]
 
     #! USELESS?
     def initialize_render(self):
@@ -127,3 +130,15 @@ class Engine2D:
     def add_objects(self, objects):
         for obj in objects:
             obj.add_physics(self)
+    
+    def ray_cast(self, origin, destination):
+        if len(origin) == 3:
+            origin = origin[:2]
+        if len(destination) == 3:
+            destination = destination[:2]
+        ray_res = self.engine.segment_query_first(origin, destination, 1, pymunk.ShapeFilter())
+        if ray_res is not None:
+            # Find ID of body
+            ray_res.shape.body
+        #* 
+        return ray_res[0][0]

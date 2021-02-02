@@ -51,12 +51,14 @@ class LeaderFailure(PostProcessingPerturbation):
     @increase_time
     def __call__(self, states, actions, robots):
         for idx in self.blacklist:
-            actions[idx]['led_actuator'] = 0
+            #! actions[idx]['led_actuator'] = 0
+            actions[idx]['led_actuator_3D'] = 0
             # Impose relay mode 
-            actions[idx]['wireless_transmitter']['msg'] = states[idx]['wireless_receiver']['msg']
-            tuple(robots.values())[idx].update_colors(states[idx], actions[idx])
-            tuple(robots.values())[idx].color2 = 'red'
-        leds = [ac['led_actuator'] for ac in actions]
+            actions[idx]['wireless_transmitter']['msg'] = states[idx]['IR_receiver']['msg']
+            tuple(robots.values())[idx].actuators['led_actuator_3D'].fault = True
+            #! tuple(robots.values())[idx].update_colors(states[idx], actions[idx])
+            #! tuple(robots.values())[idx].color2 = 'red'
+        leds = [ac['led_actuator_3D'] for ac in actions]#!
         if np.sum(leds) == 1:
             leader = np.argmax(leds)
             self.leaders_consec[leader] += 1

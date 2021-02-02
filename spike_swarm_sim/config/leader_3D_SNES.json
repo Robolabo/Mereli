@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_border_GA_final",
+    "checkpoint_file" : "chk_leader_SNES_final",
     "num_processes" : 1,
     "render" : false,
     "topology" : {
@@ -11,9 +11,9 @@
             "W4" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"}
         },
         "encoding" : {
-            "W1" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
-            "W3" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
-            "W4" :{"scheme" : "IdentityEncoding", "receptive_field" : {}}
+            "W1" : {"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "W3" : {"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "W4" : {"scheme" : "IdentityEncoding", "receptive_field" : {}}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -32,9 +32,7 @@
             "W1-c" : {"pre":"W1","post":"C", "trainable":true, "p":1.0},
             "W3-c" : {"pre":"W3","post":"C", "trainable":true, "p":1.0},
             "W4-c" : {"pre":"W4","post":"C", "trainable":true, "p":1.0},
-        
-            "c-c" : {"pre":"C","post":"C", "trainable":true, "p":1.0},
-
+            "c-c" : {"pre":"C","post":"C", "trainable":true, "p" : 1.0},
             "fast-comm" : {"pre":"C","post":"OUT_COMM", "trainable":true, "p":1.0},
             "fast-mot" : {"pre":"C","post":"OUT_LED", "trainable":true, "p":1.0},
             "c-st" : {"pre":"C","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
@@ -48,7 +46,7 @@
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
-            "outB" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true, "stochastic":false}}
+            "outB" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true, "stochastic":true}}
         } 
     },
     "algorithm" : {
@@ -58,7 +56,7 @@
         "generations" : 5000,
         "evaluation_steps" : 200,
         "num_evaluations" : 1,
-        "fitness_function" : "identify_borderline",
+        "fitness_function" : "identify_leader",
         "populations" : {
             "p4" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -70,7 +68,8 @@
     },
     "world":{
         "engine" : "3D",
-        "world_delay" : 30,
+        "world_delay" : 1,
+        "render_connections":false,
         "height":10,
         "width": 10,
         "objects" : {
@@ -84,6 +83,7 @@
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":0.5, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
+                "perturbations" : {"leader_failure" : {"time_to_failure": 50}},
                 "params" : {"trainable" : true}
             }
         }

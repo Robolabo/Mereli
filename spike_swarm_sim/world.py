@@ -238,7 +238,7 @@ class World(object):
         max_robot_dist = None
         if len(self.robots) > 1:
             max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['wireless_receiver', 'distance_sensor'] \
+                            for sensor in ['IR_receiver', 'distance_sensor'] \
                             if sensor in robot.sensors.keys()])
         #* Robots
         for obj in self.hierarchy.values():

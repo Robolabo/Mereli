@@ -151,4 +151,4 @@ class Minitaur(Robot3D):
 @world_object_registry(name='epuck')
 class Epuck3D(Robot3D):
     def __init__(self, *args, **kwargs):
-        super(Epuck3D, self).__init__( *args, urdf_file='epuck', **kwargs)
+        super(Epuck3D, self).__init__(*args, urdf_file='epuck', **kwargs)

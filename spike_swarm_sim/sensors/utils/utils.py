@@ -5,11 +5,11 @@ from spike_swarm_sim.sensors import DirectionalSensor
 def list_sensors(robot):
     sensor_list = []
     for name, sens in robot.sensors.items():
-        if name == 'wireless_receiver':
+        if name == 'IR_receiver':
             comm_info = ['msg_' + str(i) for i in range(sens.msg_length)]\
                 + ['signal', 'sending_direction_x', 'sending_direction_y',\
                 'receiving_direction_x', 'receiving_direction_y']
-            sensor_list.extend(['wireless_receiver:' + str(key) for key in comm_info])
+            sensor_list.extend(['IR_receiver:' + str(key) for key in comm_info])
         else:
             if hasattr(sens, 'n_sectors'):
                 sensor_list.extend([name + '_' + str(i) for i in range(sens.n_sectors)])
@@ -31,7 +31,7 @@ def check_sensor_cfg(sensor_name, sensor_params):
 
 
 def autocomplete_sensor_cfg(sensor_name, sensor_params):
-    if sensor_name == 'wireless_receiver':
+    if sensor_name == 'IR_receiver':
         for var, default in zip(['msg_length', 'range'], [2, 100]):
             if var not in sensor_params.keys():
                 sensor_params[var] = default

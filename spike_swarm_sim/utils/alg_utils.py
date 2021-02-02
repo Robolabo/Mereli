@@ -52,3 +52,8 @@ def toroidal_difference(v, u):
     # (-1, 1)[v_diff[abs_diff > 500] > 0] # Correct sign
     # import pdb; pdb.set_trace()
     return res
+
+#! PASAR A DISTANCES
+def circle_distance(alpha, beta):
+    #! Check that |alpha - beta| <= 2pi
+    return min(np.abs(alpha - beta), 2*np.pi - np.abs(alpha - beta))

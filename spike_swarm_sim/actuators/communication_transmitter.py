@@ -33,12 +33,7 @@ class CommunicationTransmitter(Actuator):
     def step(self, action):
         #* Select cluster using softmax on distances to clusters
         if self.quantize:
-            dists = np.linalg.norm(action['msg'] - self.clusters, axis=1)
-            # Max. dist in hypercube is sqrt(dim(x))
-            max_distance = np.sqrt(len(action['msg']))
-            probs = softmax(1 - dists / max_distance, tau=1e-2)
-            cluster = np.random.choice(range(len(self.clusters)), p=probs)
-            action['msg'] = self.clusters[cluster]
+            action['msg'] = self.quantize_fn(action['msg'])
         self.frame['msg'] = action['msg']
         self.frame['priority'] = action['priority']
         self.frame['sender'] = action['sender']
@@ -49,6 +44,15 @@ class CommunicationTransmitter(Actuator):
         self.frame['n_hops'] = action['n_hops']
         self.frame['state'] = action['state']
         self.frame['sending_direction'] = action['sending_direction']
+
+
+    def quantize_fn(self, msg, tau=0.01):
+        dists = np.linalg.norm(msg - self.clusters, axis=1)
+        # Max. dist in hypercube is sqrt(dim(x))
+        max_distance = np.sqrt(len(msg))
+        probs = softmax(1 - dists / max_distance, tau=tau)
+        cluster = np.random.choice(range(len(self.clusters)), p=probs)
+        return self.clusters[cluster]
 
     def reset(self):
         self.frame = {

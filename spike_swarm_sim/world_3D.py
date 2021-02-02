@@ -12,7 +12,7 @@ from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit, isinstance_of_any
 from spike_swarm_sim.globals import global_states
-from .physics_engine import PybulletEngine
+from .physics_engine import Engine3D
 
 class MultiWorldWrapper:
     def __init__(self, n_cpu, height=10, width=10, world_delay=1):
@@ -50,7 +50,7 @@ class World3D(object):
         self.env_perturbations = {}
 
         #* Engine
-        self.physics_engine = PybulletEngine()
+        self.physics_engine = Engine3D()
       
 
         #* Add world limits
@@ -118,7 +118,6 @@ class World3D(object):
         if self.render:
             self.physics_engine.step_render()
             #! ----
-            print( self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']))
             for l in self.lights.values():
                 if self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']) % 2 == 0:
                     l.show_coverage()
@@ -288,7 +287,7 @@ class World3D(object):
         if len(self.robots) > 1:
             #! ---
             max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['wireless_receiver', 'distance_sensor3D'] \
+                            for sensor in ['IR_receiver', 'distance_sensor3D'] \
                             if sensor in robot.sensors.keys()])
             #! ---
         #* Robots
