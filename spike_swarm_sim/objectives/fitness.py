@@ -241,8 +241,8 @@ class Walking:
         fitness = 0
         robot_positions = np.stack(info["robot_positions"]).copy()
         fA = np.linalg.norm(robot_positions[-1][0] - robot_positions[0][0])/10
-        fB = np.mean(robot_positions[:,:,-1] > 0.7)
-        return fA * fB + 1e-5
+        # fB = np.mean(robot_positions[:,:,-1] > 0.7)
+        return fA + 1e-5
 
 # @fitness_func_registry(name='line_formation')
 # class LineFormation:

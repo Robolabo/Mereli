@@ -32,7 +32,7 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 100,
         "generations" : 5000,
         "evaluation_steps" : 2000,
         "num_evaluations" : 1,
