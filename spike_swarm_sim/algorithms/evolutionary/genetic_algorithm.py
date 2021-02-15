@@ -41,17 +41,14 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         """
         checkpoint = load_pickle('spike_swarm_sim/checkpoints/populations/' + self.checkpoint_name)
         logging.info('Resuming GA evolution using checkpoint ' +  self.checkpoint_name)
-        if 'population' in checkpoint.keys(): # old version support
-            key = tuple(self.populations.keys())[0]
-            self.populations[key].population = [v.copy() for v in checkpoint['population']]
-            self.populations[key].mutatation_prob = checkpoint['mutation_prob']
-        else:
-            for name, pop in checkpoint['populations'].items():
-                self.populations[name].population = [v.copy() for v in checkpoint['populations'][name]]
-                self.populations[name].mutatation_prob = checkpoint['mutation_prob'][name]
-                robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
-                interface = GeneticInterface(robots[0].controller.neural_network)
-                self.populations[name].segment_lengths = [interface.submit_query(query, primitive='LEN')\
-                                                for query in self.populations[name].objects]
+        #! for robot in self.world.robots:
+        #!    robot.controller.neural_net.graph = checkpoint['ann_graph']
+        for name, pop in checkpoint['populations'].items():
+            self.populations[name].population = [v.copy() for v in checkpoint['populations'][name]]
+            self.populations[name].mutatation_prob = checkpoint['mutation_prob'][name]
+            robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
+            interface = GeneticInterface(robots[0].controller.neural_network)
+            self.populations[name].segment_lengths = [interface.submit_query(query, primitive='LEN')\
+                                            for query in self.populations[name].objects]
         self.init_generation = checkpoint['generation']
         self.evolution_history = checkpoint['evolution_hist']

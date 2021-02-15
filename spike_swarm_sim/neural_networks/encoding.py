@@ -14,30 +14,39 @@ class EncodingWrapper:
     - Params:
         topology [dict] : configuration dict of the overall topology.
     """
-    def __init__(self, topology=None):
+    def __init__(self, time_scale=1):
+        self.time_scale = time_scale
         self._encoders = {}
-        if topology is not None:
-            self.build(topology)
-        else:
-            logging.warning('No topology config. provided to the encoder wrapper.')
+        # if topology is not None:
+        #     self.build(topology)
+        # else:
+        #     logging.warning('No topology config. provided to the encoder wrapper.')
 
     def step(self, stimuli):
         """ Steps all the encoders with the corresponding stimulus. """
         return np.hstack([self._encoders[key].step(stim)\
                 for key, stim in stimuli.items()])
 
-    def build(self, topology):
-        """ Builds the encoders using the topology config. dict. """
-        for name, enc in topology['encoding'].items():
-            receptive_field = None
-            if 'receptive_field' in enc and enc['receptive_field'] is not None and\
-                len(enc['receptive_field']) > 0:
-                receptive_field_cls = receptive_fields[enc['receptive_field']['name']]
-                receptive_field = receptive_field_cls(n_inputs=topology['stimuli'][name]['n'],\
-                            **enc['receptive_field']['params'])
-            self._encoders.update({topology['stimuli'][name]['sensor'] :
-                    encoders[enc['scheme']](topology['stimuli'][name]['n'],\
-                    topology['time_scale'], receptive_field, dt=1e-3)})
+    def add(self, scheme, sensor, stimuli_dim, receptive_field=None, receptive_field_params={}):
+        if receptive_field is not None:
+            rf_cls = receptive_fields[receptive_field]
+            receptive_field = rf_cls(n_inputs=stimuli_dim, **receptive_field_params)
+        self._encoders.update({sensor : encoders[scheme](stimuli_dim,\
+                self.time_scale, receptive_field, dt=1e-3)})
+
+
+    # def build(self, topology):
+    #     """ Builds the encoders using the topology config. dict. """
+    #     for name, enc in topology['encoding'].items():
+    #         receptive_field = None
+    #         if 'receptive_field' in enc and enc['receptive_field'] is not None and\
+    #             len(enc['receptive_field']) > 0:
+    #             receptive_field_cls = receptive_fields[enc['receptive_field']['name']]
+    #             receptive_field = receptive_field_cls(n_inputs=topology['stimuli'][name]['n'],\
+    #                         **enc['receptive_field']['params'])
+    #         self._encoders.update({topology['stimuli'][name]['sensor'] :
+    #                 encoders[enc['scheme']](topology['stimuli'][name]['n'],\
+    #                 topology['time_scale'], receptive_field, dt=1e-3)})
 
     def reset(self):
         """ Resets all the encoders. """
@@ -198,7 +207,13 @@ class LIF_Encoding(Encoder):
     """
     def __init__(self, *args, **kwargs):
         super(LIF_Encoding, self).__init__(*args)
-        self.lif_model = LIFModel(1., self.n_stimuli * self.receptive_field.n_neurons)
+        self.lif_model = None
+        self.create_lif(self.n_stimuli * self.receptive_field.n_neurons)
+
+    def create_lif(self, num_neurons):
+        self.lif_model = LIFModel(1.)
+        for n in range(num_neurons):
+            self.lif_model.add()
 
     @increase_time
     def step(self, stimuli):
@@ -219,14 +234,14 @@ class LIF_Encoding(Encoder):
         self.lif_model.reset()
 
     def stim_rate_curve(self):
-        self.lif_model = LIFModel(1., self.receptive_field.n_neurons)
+        self.create_lif(self.receptive_field.n_neurons)
         super().stim_rate_curve()
-        self.lif_model = LIFModel(1., self.n_stimuli * self.receptive_field.n_neurons)
+        self.create_lif(self.n_stimuli * self.receptive_field.n_neurons)
 
     def plot(self, stimuli):
-        self.lif_model = LIFModel(1., self.receptive_field.n_neurons)
+        self.create_lif(self.receptive_field.n_neurons)
         super().plot(stimuli)
-        self.lif_model = LIFModel(1., self.n_stimuli * self.receptive_field.n_neurons)
+        self.create_lif(self.n_stimuli * self.receptive_field.n_neurons)
 
 @encoding_registry
 class PoissonRateCoding(Encoder):

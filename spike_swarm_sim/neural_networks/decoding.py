@@ -68,14 +68,14 @@ class DecodingWrapper:
             decoder.reset()
 
     @GET('decoders:weights')
-    def get_decoding_weights(self, dec_name, min_val=0., max_val=1., only_trainable=True):
+    def get_decoding_weights(self, dec_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         if dec_name == 'all':
             weights = np.hstack([decoder.w.copy() for decoder in self._decoders.values() if decoder.trainable])
             return (weights - min_val) / (max_val - min_val)
         return (self._decoders[dec_name].w.copy() - min_val) / (max_val - min_val)
 
     @SET('decoders:weights')
-    def set_decoding_weights(self, dec_name, data, min_val=0., max_val=1.):
+    def set_decoding_weights(self, dec_name, ann_graph, data, min_val=0., max_val=1.):
         data = min_val + data * (max_val - min_val)
         if dec_name == 'all':
             pointer = 0
@@ -85,16 +85,17 @@ class DecodingWrapper:
                     pointer += decoder.w.shape[0]
         else:
             self._decoders[dec_name].w = data.copy()
+        return ann_graph#!
 
     @INIT('decoders:weights')
-    def init_decoding_weights(self, dec_name, min_val=0., max_val=1., only_trainable=True):
-        weights_len = self.len_decoding_weights(dec_name)
+    def init_decoding_weights(self, dec_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+        weights_len = self.len_decoding_weights(dec_name, ann_graph)
         random_weights = np.random.random(size=weights_len)
-        self.set_decoding_weights(dec_name, random_weights, min_val=min_val, max_val=max_val)
+        return self.set_decoding_weights(dec_name, ann_graph, random_weights, min_val=min_val, max_val=max_val)
 
     @LEN('decoders:weights')
-    def len_decoding_weights(self, conn_name, only_trainable=True):
-        return self.get_decoding_weights(conn_name, only_trainable=True).shape[0]
+    def len_decoding_weights(self, conn_name, ann_graph, only_trainable=True):
+        return len(self.get_decoding_weights(conn_name, ann_graph, only_trainable=True))
 
 
 class Decoder:

@@ -1,5 +1,6 @@
 import copy
 import logging
+import itertools
 from functools import wraps
 import numpy as np
 import matplotlib.pyplot as plt
@@ -71,52 +72,157 @@ class NeuralNetwork:
         action_decoding [dict] :  dict of action_name : Decoding object storing all the neural decoders.
     ==========================================================================================================
     """
-    def __init__(self, topology):
-        self.dt = topology['dt']
-        self.t = 0
-        self.time_scale = topology['time_scale'] #* ANN steps per world step.
+    def __init__(self, dt, neuron_model='rate_model', synapse_model='static_synapse', time_scale=1):
+        self.t = 0 
+        self.dt = dt #* Euler Step
+        self.time_scale = time_scale #* ANN steps per world step.
+        self.neuron_model = neuron_model
+        self.synapse_model = synapse_model
 
-        #* --- Create and build Synapses ---
-        if topology['synapse_model'] == 'dynamic_synapse' and \
-            issubclass(neuron_models[topology['neuron_model']], NonSpikingNeuronModel):
+        #* Flag indicating if the ANN is built and functional. 
+        #* The ANN cannot be used if this flag is False.
+        self.is_built = False #! 
+
+        #* Submodules of the neural network distributing its functioning
+        #* and computations. 
+        if synapse_model == 'dynamic_synapse' and issubclass(neuron_models[neuron_model], NonSpikingNeuronModel):
             raise Exception(logging.error('The combination of dynamic synapses and '\
                 'non-spiking neuron models is not currently implemented.'))
-        self.synapses = synapse_models[topology['synapse_model']](self.dt)
-
-        #* --- Create and build Encoders ---
-        self.encoders = EncodingWrapper(topology)
-      
-        #* --- Create and Build Topology ---
-        #* pointers point to the index of the last neuron of subpopulations
-        #* in the weight matrix (includes inputs)
-        self.pointers, self.subpop_neurons, self.n_inputs = self.build(topology.copy())
-        self.stimuli_order = [v['sensor'] for v in topology['stimuli'].values()]
-
-        #* --- Create and build Neurons ---
-        self.neurons = neuron_models[topology['neuron_model']](self.dt,\
-                sum([ens['n'] for ens in topology['ensembles'].values()]),\
-                **merge_dicts([{param : ens['n'] * [val]\
-                for param, val in ens['params'].items()}\
-                for ens in topology['ensembles'].values()]))
-
+        self.synapses = synapse_models[self.synapse_model](self.dt)
+        self.neurons = neuron_models[self.neuron_model](self.dt)
+        self.encoders = EncodingWrapper(self.time_scale)
+        self.decoders = None
         #TODO --- Create Learning Rule ---
         self.update_rule = BufferedHebb()
+        #* Monitor that, if in DEBUG mode, will store all the relevant neural 
+        #* variables.
+        self.monitor = None
 
-        #* --- Create Monitor (DEBUG MODE) ---
-        self.output_neurons = remove_duplicates([out['ensemble'] for out in topology['outputs'].values()])
+        #* Overall ANN directed graph description.
+        self.graph = {'inputs' : {}, 'neurons' : {}, 'synapses' : {}}
+        self.ensemble_names = []
+        self.input_ensemble_names = []
+        self.motor_ensemble_names = []
+        #* Ordered list of stimuli names (not input nodes)
+        self.stimuli_names = []
+        #* Variables storing the previous stim and spikes.
+        self.stimuli, self.spikes = None, None
+
+    def build(self):
+        self.synapses.build(self.graph)
+        #TODO --- Create Monitor (DEBUG MODE) ---
+        # self.output_neurons = remove_duplicates([out['ensemble'] for out in topology['outputs'].values()])
         if logging.root.level == logging.DEBUG:
-            self.monitor = NeuralNetMonitor({key : val['n'] for key, val in topology['ensembles'].items()},\
-                        {val['sensor'] : val['n'] for val in topology['stimuli'].values()},\
-                        {key : self.subpop_neurons[key] for key in topology['stimuli'].keys()}, self.output_neurons)
+            self.monitor = NeuralNetMonitor({ens : self.num_ensemble_neurons(ens)\
+                        for ens in self.ensemble_names},\
+                        {name : self.encoders.get(name).n_stimuli for name in self.stimuli_names},\
+                        {name : self.num_input_nodes(name) for name in self.input_ensemble_names},\
+                        self.motor_ensemble_names)
         else:
             self.monitor = None
-
-        #* --- Create and build Decoders ---
-        self.decoders = DecodingWrapper(topology)
-        #* Aux vars of current stim. and spikes.
-        self.stimuli, self.spikes = None, None
         #* --- Reset dynamics ---
         self.reset()
+
+    def build_from_dict(self, topology):
+        #* Add neurons
+        for name, ensemble in topology['ensembles'].items():
+            self.add_ensemble(name, ensemble['n'], **ensemble['params'])
+        #* Add stimuli
+        for name, stim in topology['stimuli'].items():
+            self.add_stimuli(name, stim['n'], stim['sensor'])
+        #* Add motor ensembles
+        for out in topology['outputs'].values():
+            self.set_motor(out['ensemble'])
+        #* Add encoders
+        for input_name, encoder in topology['encoding'].items():
+            self.add_encoder(encoder['scheme'], topology['stimuli'][input_name]['sensor'],\
+                receptive_field=encoder['receptive_field']['name'], receptive_field_params=encoder['receptive_field']['params'])
+        #* Add Synapses
+        for name, syn in topology['synapses'].items():
+            syn_params = {key : val for key, val in syn.items()\
+                    if key not in ['pre', 'post', 'p', 'trainable']}
+            self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], **syn_params)
+         #* Add Decoders
+        self.decoders = DecodingWrapper(topology)
+        self.build()
+
+    def set_motor(self, ensemble_name):
+        if ensemble_name not in self.ensemble_names:
+            raise Exception(logging.error('Ensemble "{}" does not exist').format(ensemble_name))
+        if ensemble_name in self.motor_ensemble_names:
+            return
+        self.motor_ensemble_names.append(ensemble_name)
+        for neuron in self.graph['neurons'].values():
+            if neuron['ensemble'] == ensemble_name:
+                neuron['is_motor'] = True
+
+    def add_stimuli(self, name, num_nodes, sensor):
+        for n in range(num_nodes):
+            self.graph['inputs'].update({
+                '{}_{}'.format(name, n) : {'ensemble' : name, 'sensor' : sensor, 'idx': len(self.graph['inputs'])}
+            })
+        self.input_ensemble_names.append(name)
+        self.stimuli_names.append(sensor)
+
+    def add_ensemble(self, name, num_neurons, **kwargs):
+        for n in range(num_neurons):
+            self.add_neuron('{}_{}'.format(name, n), ensemble=name, **kwargs)
+        self.ensemble_names.append(name)
+
+    def add_neuron(self, name, ensemble=None, **kwargs):
+        self.neurons.add(**kwargs)#!
+        ensemble = ensemble if ensemble is not None else name
+        self.graph['neurons'].update({name : merge_dicts([{'ensemble' : ensemble,
+                'idx' : len(self.neurons)-1, 'is_motor' : False}, kwargs])})
+
+    def add_synapse(self, name, pre, post, weight=1., conn_prob=1., trainable=True, **kwargs):
+        """ Adds synapses between pre and post ensembles. """
+        if post in self.graph['inputs'] or post in self.input_ensemble_names:
+            raise Exception(logging.error('An input node or ensemble cannot be '\
+                'a postsynaptic neuron or ensemble.'))
+        #* Check if pre is neuron or ensemble.
+        if pre not in merge_dicts([self.graph['inputs'], self.graph['neurons']]):
+            if pre not in self.input_ensemble_names + self.ensemble_names:
+                raise Exception(logging.error('Connection presynaptic neuron or ensemble '\
+                    '"{}" does not exist').format(pre))
+            pre = [name for name, node in merge_dicts([self.graph['inputs'], self.graph['neurons']]).items() if node['ensemble'] == pre]
+        else:
+            pre = [pre]
+        #* Check if post is neuron or ensemble.
+        if post not in merge_dicts([self.graph['inputs'], self.graph['neurons']]):
+            if post not in self.input_ensemble_names + self.ensemble_names:
+                raise Exception(logging.error('Connection postsynaptic neuron or ensemble '\
+                    '"{}" does not exist').format(post))
+            post = [name for name, node in merge_dicts([self.graph['inputs'], self.graph['neurons']]).items() if node['ensemble'] == post]
+        else:
+            post = [post]
+        #* Add connections (note: not compatible with previous implementation checkpoints).
+        #! REVISAR SEED
+        np.random.seed(44+len(self.graph['synapses']))
+        for i, (pre_node, post_node) in enumerate(itertools.product(pre, post)):
+            if np.random.random() < conn_prob:
+                #! May be interesting to add the indices.
+                synapse_config = merge_dicts([{
+                    'pre' : pre_node, 'post' : post_node,
+                    'weight': weight, 'trainable' : trainable,
+                    'group' : name}, kwargs])
+                if self.synapse_model == 'dynamic_synapse':
+                    #! Add min and max possible delays?
+                    synapse_config.update({'delay' : np.random.randint(1, 10)})
+                self.graph['synapses'].update({"{}_{}".format(name, i) : synapse_config})
+        np.random.seed()
+
+    def add_encoder(self, scheme, sensor, receptive_field=None, receptive_field_params={}):
+        raw_inputs = [inp for inp in self.graph['inputs'].values() if inp['sensor'] == sensor]
+        self.encoders.add(scheme, sensor, len(raw_inputs), receptive_field=receptive_field,\
+                receptive_field_params=receptive_field_params)
+        if receptive_field is not None:
+            if 'n_neurons' in receptive_field_params and receptive_field_params['n_neurons'] > 1:
+                #* Correct the input nodes if the encoding augments their dimension.
+                ensemble_name = tuple(raw_inputs)[0]['ensemble']
+                for n in range(len(raw_inputs), receptive_field_params['n_neurons'] * len(raw_inputs)):
+                    self.graph['inputs'].update({'{}_{}'.format(ensemble_name, n) :\
+                        {'ensemble' : ensemble_name, 'sensor' : sensor, 'idx': n}})
 
     @increase_time
     @monitor
@@ -151,17 +257,14 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ======================================
         """
-        if hasattr(self.neurons, 'tau'):
-            self.neurons.tau[-np.sum([self.subpop_neurons[kk] for kk in self.output_neurons]):] = 0.5 #!
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
-        stimuli = {s : stimuli[s].copy() for s in self.stimuli_order}
+        stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
         self.stimuli = stimuli.copy()
         inputs = self.encoders.step(stimuli)
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-        
         #TODO --- Apply update rules to synapses ---
         # if self.update_rule is not None and reward is not None:
         #     self.synapses.weights += self.update_rule.step(inputs[-1], self.spikes, reward=0.01)
@@ -178,7 +281,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
 
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 1000 and self.monitor is not None:
+        if self.t == self.time_scale * 500 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             # plot_spikes(self)
@@ -188,19 +291,49 @@ class NeuralNetwork:
     @property
     def num_neurons(self):
         """ Number of neurons in the ANN (non-input). """
-        return self.voltages.shape[0]
+        return len(self.neurons)
+
+    @property
+    def num_inputs(self):
+        return len(self.graph['inputs'])
+    
+    @property
+    def num_motor(self):
+        return len(self.motor_neurons)
+    
+    @property
+    def num_hidden(self):
+        return self.num_neurons - self.num_motor
 
     @property
     def motor_neurons(self):
         """ Indices of motor neurons without counting input nodes. When addressing the 
         weight matrix or any kind of ANN adj. mat., the number of inputs MUST be added.
         """
-        return np.hstack([self.ensemble_indices(out) for out in self.output_neurons])
+        return np.hstack([self.ensemble_indices(motor) for motor in self.motor_ensemble_names])
     
-    def ensemble_indices(self, ens_name):
+    def num_ensemble_neurons(self, ensemble):
+        return len(self.ensemble_indices(ensemble))
+
+    def num_input_nodes(self, ensemble):
+        return len(self.input_ensemble_indices(ensemble))
+
+    def ensemble_indices(self, ens_name, consider_inputs=False):
         """ Indices of the neurons of the requested ensemble. """
-        return np.arange(self.pointers[ens_name] - self.subpop_neurons[ens_name] - self.n_inputs,\
-                self.pointers[ens_name] - self.n_inputs)
+        if ens_name not in self.ensemble_names:
+            raise Exception(logging.error('Requested ensemble "{}" does not exist.'.format(ens_name)))
+        
+        indices = np.array([neuron['idx'] for neuron in self.graph['neurons'].values() if neuron['ensemble'] == ens_name])
+        if consider_inputs:
+            indices += self.num_inputs #!
+        return indices
+
+    def input_ensemble_indices(self, input_name):
+        """ Indices of the neurons of the requested ensemble. """
+        if input_name not in self.input_ensemble_names:
+            raise Exception(logging.error('Requested input ensemble "{}" does not exist.'.format(input_name)))
+        indices = np.array([node['idx'] for node in self.graph['inputs'].values() if node['ensemble'] == input_name])
+        return indices
 
     @property
     def is_spiking(self):
@@ -218,9 +351,6 @@ class NeuralNetwork:
         "Getter of the numpy weight matrix."
         return self.synapses.weights
 
-    def build(self, topology):
-        """ Builder of the ANN topology. """
-        return self.synapses.build(copy.deepcopy(topology))
 
     def reset(self):
         """ Reset process of all the neural network dynamics. """

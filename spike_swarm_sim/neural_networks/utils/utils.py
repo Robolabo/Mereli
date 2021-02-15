@@ -16,8 +16,8 @@ def ensembles_checker(topology):
         if 'n' in ens and ens['n'] <= 0.:
             raise ConfigException('Ensemble neurons must be greater than 0. '\
                 'Error in ensemble {}'.format(name))
-        neuron_args = {key : val for key, val in inspect.getfullargspec(\
-                        reg.neuron_models[neuron_model]).kwonlydefaults.items()}
+        neurons_inspect = inspect.getfullargspec(reg.neuron_models[neuron_model].add)
+        neuron_args = {key : val for key, val in zip(neurons_inspect.args[1:], neurons_inspect.defaults)}
         if 'params' in ens:
             for p_name, param in ens['params'].items():
                 if p_name not in neuron_args:
@@ -190,8 +190,8 @@ def autocomplete_ensembles(topology):
                 'was not settled. Fixing 10 neurons.'.format(name))
         if 'params' not in ens:
             topology['ensembles'][name]['params'] = {}
-        neuron_args = {key : val for key, val in inspect.getfullargspec(\
-                reg.neuron_models[neuron_model]).kwonlydefaults.items()}
+        neurons_inspect = inspect.getfullargspec(reg.neuron_models[neuron_model].add)
+        neuron_args = {key : val for key, val in zip(neurons_inspect.args[1:], neurons_inspect.defaults)}
         for p_name, default_val in neuron_args.items():
             if p_name not in ens['params']:
                 topology['ensembles'][name]['params'][p_name] = default_val

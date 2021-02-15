@@ -20,7 +20,9 @@ class NeuralController(RobotController):
     """
     def __init__(self, topology, *args, **kwargs):
         super(NeuralController, self).__init__(*args, **kwargs)
-        self.neural_network = NeuralNetwork(topology)
+        self.neural_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
+                neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
+        self.neural_network.build_from_dict(topology)
         self.out_act_mapping = {out_name : snn_output['actuator'] \
                     for out_name, snn_output in topology['outputs'].items()}
         self.comm_state = 1 # Communication state (0 : RELAY, 1 : SEND)

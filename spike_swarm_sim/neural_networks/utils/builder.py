@@ -3,20 +3,28 @@ from itertools import chain, product
 from collections import deque
 import numpy as np
 
+
+
+
+
+
+
+
+
 class SynapsesBuilder(object):
     """
     Builder devoted to construct the ANN graph arch. from a config. dict.
     """
-    def __init__(self, topology):
-        self.topology = topology
-        self.stimuli = topology['stimuli']
+    #! NO ME GUSTA
+    def __init__(self, synapses, ensembles, stimuli, encoding=None):
+        # self.topology = topology
+        self.synapses = synapses
+        self.ensembles = ensembles
+        self.stimuli = stimuli
         for k in self.stimuli.keys():
             if 'encoding' in topology.keys():
                 if 'n_neurons' in topology['encoding'][k]['receptive_field']['params']:
                     self.stimuli[k]['n'] *= topology['encoding'][k]['receptive_field']['params']['n_neurons']
-                    # self.stimuli[k]['n'] = topology['encoding'][k]['receptive_field']['n_neurons']
-        self.synapses = topology['synapses']
-        self.ensembles = topology['ensembles']
         self.n_inputs = sum([stim['n'] for stim in self.stimuli.values()])
         self.n_neurons = sum([ens['n'] for ens in self.ensembles.values()])
         self.overall_topology = {name : v for name, v in chain(self.stimuli.items(), self.ensembles.items())}
@@ -52,7 +60,7 @@ class SynapsesBuilder(object):
     def build_neurotransmitters(self, mask):
         def _build_neurotransmitter(node_pre_indices, node_post_indices, synapse_params=None, neurotransmitter='AMPA', mask=None):
             submask = mask[range(*node_post_indices), :][:, range(*node_pre_indices)]
-            if 'ntx_fixed' in synapse_params.keys() and synapse_params['ntx_fixed']:
+            if 'ntx_fixed' in synapse_params and synapse_params['ntx_fixed']:
                 if neurotransmitter in synapse_params['neuroTX'].split('+'):
                     return submask.copy()
                 else:

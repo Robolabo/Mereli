@@ -105,22 +105,21 @@ class Alignment:
                     corresponding action.
             states [list of dicts]: list of dictionaries with sensor names and the 
                     corresponding measured states.
-            info [dict or None]: dict of additional information. 
+            info [dict or None]: dict of additional information.
         =======================================================================================
         """
         robot_orientations = np.stack(info["robot_orientations"]).copy()
         fitness = 0
-        initial_timestep = 100 # ignore previous timesteps for fitness computation
+        initial_timestep = 50 # ignore previous timesteps for fitness computation
         for t, (thetas, action) in enumerate(zip(robot_orientations[initial_timestep:], \
                         np.array(actions)[initial_timestep:]), start=initial_timestep):
-            angle_errs = np.max([angle_diff(th1, th2)
+            angle_errs = np.max([angle_diff(th1[-1], th2[-1])
                                 for j, th1 in enumerate(thetas)
                                 for i, th2 in enumerate(thetas) if i != j])
-
             fA = np.clip(1 - (angle_errs / (0.4*np.pi)), a_min=0, a_max=1)
-            fB = np.mean([np.clip(1 - np.abs(ac['wheel_actuator'][0]), a_min=0, a_max=1) for ac in action])
-            fitness += (fA*fB)
-        fitness /= (len(robot_orientations)-initial_timestep)
+            fB = np.mean([np.clip(1 - np.abs(ac['joint_velocity_actuator'][0]), a_min=0, a_max=1) for ac in action])
+            fitness += (fA * fB)
+        fitness /= (len(robot_orientations) - initial_timestep)
         return fitness + 1e-5
 
 @fitness_func_registry(name='goto_light')

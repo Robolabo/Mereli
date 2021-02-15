@@ -173,8 +173,6 @@ def plot_weights(neural_net):
     - Returns: None
     ===========================================================================
     """
-    if len(neural_net.monitor) < 1:
-        raise Exception(logging.error('No ANN data was recorded.'))
     y_labels = [n for ii, n in enumerate(neural_net.pointers.keys()) if ii > neural_net.n_inputs-1]
     x_labels = [n for i, n in enumerate(neural_net.pointers.keys())]
     y_ticks = [v - n//2 - neural_net.n_inputs for ii, (v, n) in enumerate(zip(\

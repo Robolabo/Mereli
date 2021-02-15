@@ -7,21 +7,28 @@ from spike_swarm_sim.utils import sigmoid, tanh, increase_time
 
 class BaseNeuronModel(ABC):
     """ Base abstract class for neuron models."""
-    def __init__(self, dt, num_neurons):
+    def __init__(self, dt):
         self.dt = dt
-        self.num_neurons = num_neurons
-        self.bias = np.zeros(num_neurons)
-        self._volt = None
+        self.bias = np.empty(0)
+        self._volt = np.empty(0)
 
     @abstractmethod
     def step(self, Isyn):
         pass
+    
+    def __len__(self):
+        return len(self._volt)
+
+    # @abstractmethod
+    # def add(self, Isyn):
+    #     pass
 
     def build(self, **kwargs):
         for var, val in kwargs.items():
             self.__dict__[var] = np.array(val) if isinstance(val, list) else val
             if isinstance(self.__dict__[var], float) or isinstance(self.__dict__[var], int):
-                self.__dict__[var] = np.repeat(self.__dict__[var], self.num_neurons)
+                self.__dict__[var] = np.repeat(self.__dict__[var], len(self))
+        self.reset()
 
     @abstractmethod
     def reset(self):
@@ -34,8 +41,8 @@ class BaseNeuronModel(ABC):
 class SpikingNeuronModel(BaseNeuronModel):
     def __init__(self, *args, **kwargs):
         super(SpikingNeuronModel, self).__init__(*args, **kwargs)
-        self._theta = None
-        self._recov = None
+        self._theta = np.empty(0)
+        self._recov = np.empty(0)
     
     @property
     def recovery(self):
@@ -48,27 +55,40 @@ class SpikingNeuronModel(BaseNeuronModel):
 class NonSpikingNeuronModel(BaseNeuronModel):
     def __init__(self, *args, **kwargs):
         super(NonSpikingNeuronModel, self).__init__(*args, **kwargs)
-        self.bias = np.zeros(self.num_neurons)
+        self.bias = np.empty(0)
         
     @GET('neurons:bias')
-    def get_bias(self, neuron_name, min_val=0, max_val=1):
-        return (self.bias.copy() - min_val) / (max_val - min_val)
+    def get_bias(self, neuron_name, ann_graph, min_val=0, max_val=1):
+        bias_vals = np.array({
+            'all' : [neuron['bias'] for neuron in ann_graph['neurons'].values()],
+            'hidden' : [neuron['bias'] for neuron in ann_graph['neurons'].values() if not neuron['is_motor']], 
+            'motor' : [neuron['bias'] for neuron in ann_graph['neurons'].values() if neuron['is_motor']]
+        }.get(neuron_name,  [neuron['bias'] for neuron in ann_graph['neurons'].values() \
+                if neuron['ensemble'] == neuron_name]))
+        return (bias_vals - min_val) / (max_val - min_val)
 
     @SET('neurons:bias')
-    def set_bias(self, neuron_name, data, min_val=0, max_val=1):
-        data = min_val + data.copy() * (max_val - min_val)
-        self.bias = data.copy()
+    def set_bias(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
+        neuron_iterable = {
+            'all' : ann_graph['neurons'].values(),
+            'hidden' : filter(lambda x: not x['is_motor'], ann_graph['neurons'].values()),
+            'motor' : filter(lambda x: x['is_motor'], ann_graph['neurons'].values())
+        }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
+        for bias, neuron in zip(data, neuron_iterable):
+            neuron['bias'] = bias * (max_val - min_val) + min_val
+            self.bias[neuron['idx']] = neuron['bias']
+        return ann_graph
     
     @LEN('neurons:bias')
-    def len_bias(self, neuron_name):
-        return self.get_bias(neuron_name, 0, 1).shape[0]
+    def len_bias(self, neuron_name, ann_graph):
+        return len(self.get_bias(neuron_name, ann_graph))
 
     @INIT('neurons:bias')
-    def init_bias(self, neuron_name, min_val=-1., max_val=1.):
-        biases_len = self.len_bias(neuron_name)
+    def init_bias(self, neuron_name, ann_graph, min_val=-1., max_val=1.):
+        biases_len = self.len_bias(neuron_name, ann_graph)
         random_biases = 0.5*np.random.randn(biases_len)*0.2
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
-        self.set_bias(neuron_name, random_biases,  min_val=min_val, max_val=max_val)
+        return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
 
 
 @neuron_model_registry(name='rate_model')
@@ -76,14 +96,14 @@ class RateModel(NonSpikingNeuronModel):
     """ Class for the Rate model or non spiking model mainly used as building block 
     of CTRNNs. 
     """
-    def __init__(self, *args, tau=1., gain=1., bias=0., activation='sigmoid'):
+    def __init__(self, *args):
         super(RateModel, self).__init__(*args)
-        self.tau = None
-        self.bias = None
-        self.gain = None
-        self.activation = None
-        self.build(tau=tau, gain=gain, bias=bias, activation=activation)
-        self.reset()
+        self.tau = np.empty(0)
+        self.bias = np.empty(0)
+        self.gain = np.empty(0)
+        self.activation = np.empty(0)
+        # self.build(tau=tau, gain=gain, bias=bias, activation=activation)
+        # self.reset()
         
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
@@ -92,74 +112,108 @@ class RateModel(NonSpikingNeuronModel):
         outputs[self.activation == 'tanh'] = tanh(outputs[self.activation == 'tanh'])
         return outputs, self._volt.copy()
 
+    #! pasarlo a base
+    def add(self, tau=1., gain=1., bias=0., activation='sigmoid'):
+        self._volt = np.hstack((self._volt, 0))
+        self.tau = np.hstack((self.tau, tau)) # np.insert(self.tau, index, values=tau, axis=0)
+        self.bias = np.hstack((self.bias, bias))
+        self.gain = np.hstack((self.gain, gain))
+        self.activation = np.hstack((self.activation, activation))
+
     def reset(self):
-        self._volt = np.zeros(self.num_neurons)
+        self._volt = np.zeros(len(self))
 
     def build(self, tau=1., gain=1., bias=0., activation='sigmoid'):
         super().build(tau=tau, gain=gain, bias=bias)
         self.activation = np.array(activation) if isinstance(activation, list) else activation
         if isinstance(activation, str):
-            self.activation = np.repeat(activation, self.num_neurons)
+            self.activation = np.repeat(activation, len(self))
      
     @GET('neurons:tau')
-    def get_tau(self, neuron_name, min_val=0, max_val=1):
-        return (np.log10(0.5*self.tau.copy()) - min_val) / (max_val - min_val)
-    
+    def get_tau(self, neuron_name, ann_graph, min_val=0, max_val=1):
+        tau_vals = np.array({
+            'all' : [neuron['tau'] for neuron in ann_graph['neurons'].values()],
+            'hidden' : [neuron['tau'] for neuron in ann_graph['neurons'].values() if not neuron['is_motor']], 
+            'motor' : [neuron['tau'] for neuron in ann_graph['neurons'].values() if neuron['is_motor']]
+        }.get(neuron_name,  [neuron['tau'] for neuron in ann_graph['neurons'].values() \
+                if neuron['ensemble'] == neuron_name]))
+        return (np.log10(0.5 * tau_vals) - min_val) / (max_val - min_val)
+
     @SET('neurons:tau')
-    def set_tau(self, neuron_name, data, min_val=0, max_val=1):
-        self.tau = 2 * 10 ** (data.copy() * (max_val - min_val) + min_val)
+    def set_tau(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
+        neuron_iterable = {
+            'all' : ann_graph['neurons'].values(),
+            'hidden' : filter(lambda x: not x['is_motor'], ann_graph['neurons'].values()),
+            'motor' : filter(lambda x: x['is_motor'], ann_graph['neurons'].values())
+        }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
+        for tau, neuron in zip(data, neuron_iterable):
+            neuron['tau'] = 2 * 10 ** (tau * (max_val - min_val) + min_val)
+            self.tau[neuron['idx']] = neuron['tau']
+        return ann_graph
 
     @LEN('neurons:tau')
-    def len_tau(self, neuron_name):
-        return self.tau.shape[0]
+    def len_tau(self, neuron_name, ann_graph):
+        return len(self.get_tau(neuron_name, ann_graph))
 
     @INIT('neurons:tau')
-    def init_tau(self, neuron_name, min_val, max_val):
-        tau_len = self.len_tau(neuron_name)
+    def init_tau(self, neuron_name, ann_graph, min_val, max_val):
+        tau_len = self.len_tau(neuron_name, ann_graph)
         random_taus = np.random.random(size=tau_len)
-        self.set_tau(neuron_name, random_taus, min_val=min_val, max_val=max_val)
+        return self.set_tau(neuron_name, ann_graph, random_taus, min_val=min_val, max_val=max_val)
 
     @GET('neurons:gain')
-    def get_gain(self, neuron_name, min_val=0, max_val=1):
-        return (self.gain.copy() - min_val) / (max_val - min_val)
+    def get_gain(self, neuron_name, ann_graph, min_val=0, max_val=1):
+        gain_vals = np.array({
+            'all' : [neuron['gain'] for neuron in ann_graph['neurons'].values()],
+            'hidden' : [neuron['gain'] for neuron in ann_graph['neurons'].values() if not neuron['is_motor']], 
+            'motor' : [neuron['gain'] for neuron in ann_graph['neurons'].values() if neuron['is_motor']]
+        }.get(neuron_name,  [neuron['gain'] for neuron in ann_graph['neurons'].values() \
+                if neuron['ensemble'] == neuron_name]))
+        return (gain_vals - min_val) / (max_val - min_val)
     
     @SET('neurons:gain')
-    def set_gain(self, neuron_name, data, min_val=0, max_val=1):
-        data = min_val + data.copy() * (max_val - min_val)
-        self.gain = data.copy()
+    def set_gain(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
+        neuron_iterable = {
+            'all' : ann_graph['neurons'].values(),
+            'hidden' : filter(lambda x: not x['is_motor'], ann_graph['neurons'].values()),
+            'motor' : filter(lambda x: x['is_motor'], ann_graph['neurons'].values())
+        }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
+        for gain, neuron in zip(data, neuron_iterable):
+            neuron['gain'] = gain * (max_val - min_val) + min_val
+            self.gain[neuron['idx']] = neuron['gain']
+        return ann_graph
 
     @LEN('neurons:gain')
-    def len_gain(self, neuron_name):
-        return self.gain.shape[0]
+    def len_gain(self, neuron_name, ann_graph):
+        return len(self.get_gain(neuron_name, ann_graph))
 
     @INIT('neurons:gain')
-    def init_gain(self, neuron_name, min_val, max_val):
-        gain_len = self.len_gain(neuron_name)
+    def init_gain(self, neuron_name, ann_graph, min_val, max_val):
+        gain_len = self.len_gain(neuron_name, ann_graph)
         random_gains = np.random.random(size=gain_len)
-        self.set_gain(neuron_name, random_gains,  min_val=min_val, max_val=max_val)
+        return self.set_gain(neuron_name, ann_graph, random_gains, min_val=min_val, max_val=max_val)
 
 @neuron_model_registry(name='adex')
 class AdExModel(SpikingNeuronModel):
     """ Class for the Adaptive Exponenitial LIF spiking neuron model. """
-    def __init__(self, *args, tau_m=10., tau_w=70., V_rest=-70.,
-                    V_reset=-55., A=0., B=5., theta_rest=-45., ):
+    def __init__(self, *args):
         super(AdExModel, self).__init__(*args)
-        self.tau_w = None
-        self.tau_m = None
-        self.V_rest = None
-        self.V_reset = None
-        self.A = None
-        self.B = None
-        self.theta_rest = None
+        self.tau_w = np.empty(0)
+        self.tau_m = np.empty(0)
+        self.V_rest = np.empty(0)
+        self.V_reset = np.empty(0)
+        self.A = np.empty(0)
+        self.B = np.empty(0)
+        self.theta_rest = np.empty(0)
         self.time_refrac = 10
         self.R = 1.
         self.refractoriness = None
-
-        #* --- Build Params ---
-        self.build(tau_m=tau_m, tau_w=tau_w, V_rest=V_rest,
-                    V_reset=V_reset, A=A, B=B, theta_rest=theta_rest)
-        self.reset()
         self.t = 0
+        #* --- Build Params ---
+        # self.build(tau_m=tau_m, tau_w=tau_w, V_rest=V_rest,
+        #             V_reset=V_reset, A=A, B=B, theta_rest=theta_rest)
+        # self.reset()
+        
 
     @increase_time
     def step(self, Isyn):
@@ -175,12 +229,24 @@ class AdExModel(SpikingNeuronModel):
         # self.refractoriness += self.time_refrac * spikes
         return spikes, out_voltage
 
+    #! pasarlo a base
+    def add(self, tau_m=10., tau_w=70., V_rest=-70.,
+                V_reset=-55., A=0., B=5., theta_rest=-45.,):
+        self._volt = np.hstack((self._volt, 0))
+        self.tau_m = np.hstack((self.tau_m, tau_m)) # np.insert(self.tau, index, values=tau, axis=0)
+        self.tau_w = np.hstack((self.tau_w, tau_w))
+        self.V_rest = np.hstack((self.V_rest, V_rest))
+        self.V_reset = np.hstack((self.V_reset, V_reset))
+        self.A = np.hstack((self.A, A))
+        self.B = np.hstack((self.B, B))
+        self.theta_rest = np.hstack((self.theta_rest, theta_rest))
+
     def reset(self):
         self.t = 0
-        self._volt = self.V_rest * np.ones(self.num_neurons)
+        self._volt = self.V_rest * np.ones(len(self))
         self._recov = self.A * (self._volt - self.V_rest)
         self.refractoriness = np.zeros_like(self._volt)
-        self._theta = self.theta_rest * np.ones(self.num_neurons)
+        self._theta = self.theta_rest * np.ones(len(self))
 
 
 @neuron_model_registry(name='izhikevich')
@@ -223,20 +289,19 @@ class IzhikevichModel(SpikingNeuronModel):
 @neuron_model_registry(name='lif')
 class LIFModel(SpikingNeuronModel):
     """ Class for the Leaky Integrate and Fire (LIF) spiking neuron model. """
-    def __init__(self, *args, tau=20., R=1., v_rest=-65.,
-                    thresh=-50., time_refrac=5.):
+    def __init__(self, *args):
         super(LIFModel, self).__init__(*args)
 
         # define vars, they are initialized in reset
-        self.tau = None
-        self.v_rest = None
-        self.thresh = None
-        self.time_refrac = None
-        self.R = None
+        self.tau = np.empty(0)
+        self.v_rest = np.empty(0)
+        self.thresh = np.empty(0)
+        self.time_refrac = np.empty(0)
+        self.R = np.empty(0)
         self.refractoriness = None
-        self.build(tau=tau, R=R, v_rest=v_rest, \
-                    thresh=thresh, time_refrac=time_refrac)
-        self.reset()
+        # self.build(tau=tau, R=R, v_rest=v_rest, \
+        #             thresh=thresh, time_refrac=time_refrac)
+        # self.reset()
     
     def step(self, Isyn):
         Isyn[self.refractoriness > 0] = 0.
@@ -247,6 +312,16 @@ class LIFModel(SpikingNeuronModel):
         self.refractoriness[self.refractoriness > 0] -= 1
         self.refractoriness[spikes.astype(bool)] = self.time_refrac[spikes.astype(bool)]
         return spikes.copy(), out_voltage
+
+    #! pasarlo a base
+    def add(self, tau=20., R=1., v_rest=-65., thresh=-50., time_refrac=5.):
+        self._volt = np.hstack((self._volt, 0))
+        self.tau = np.hstack((self.tau, tau)) # np.insert(self.tau, index, values=tau, axis=0)
+        self.R = np.hstack((self.R, R))
+        self.v_rest = np.hstack((self.v_rest, v_rest))
+        self.thresh = np.hstack((self.thresh, thresh))
+        self.time_refrac = np.hstack((self.time_refrac, time_refrac))
+
 
     @property
     def recovery(self):
@@ -259,7 +334,7 @@ class LIFModel(SpikingNeuronModel):
         return np.zeros_like(self._volt)
 
     def reset(self):
-        self._volt = self.v_rest * np.ones(self.num_neurons)
+        self._volt = self.v_rest * np.ones(len(self))
         self.refractoriness = np.zeros_like(self._volt)
 
 

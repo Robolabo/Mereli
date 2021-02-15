@@ -76,19 +76,19 @@
             }
     },
     "world":{
-        "world_delay": 10,
-        "render_connections" : false,
-        "height":1000,
-        "width": 1000,
+        "engine" : "3D",
+        "world_delay": 1,
+        "height":10,
+        "width": 10,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
                 "num_instances" : 1,
                 "controller" : "neural_controller",
-                "sensors" : {"light_sensor" : {"n_sectors" : 6, "range" : 300}},
+                "sensors" : {"light_sensor" : {"n_sectors" : 6, "range" : 3}},
                 "actuators" : {"wheel_actuator" : {}},
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":400, "high" : 600, "size":2}},
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size":2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "params" : {"trainable" : true}
@@ -96,11 +96,11 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
+                "controller" : null,
                 "initializers" : {
-                    "positions" : {"name" : "random_circumference", "params" : {"radius": 1, "center" : [500, 500]}}
+                    "positions" : {"name" : "random_circumference", "params" : {"radius": 1, "center" : [0, 0]}}
                 },
-                "params" : {"range" : 320, "color" : "red"}
+                "params" : {"range" : 5, "color" : "red"}
             }
         }
     }
