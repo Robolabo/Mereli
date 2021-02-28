@@ -13,7 +13,7 @@ except:
     logging.warning('MPI is not installed. Running without mpi4py.')
 import numpy as np
 import matplotlib.pyplot as plot
-from spike_swarm_sim.algorithms.interfaces import GeneticInterface
+from spike_swarm_sim.algorithms.interfaces import InterfaceFactory
 from spike_swarm_sim.utils import flatten_dict, DataLogger, without_duplicates
 from  spike_swarm_sim.sensors.utils import list_sensors
 from  spike_swarm_sim.actuators.utils import list_actuators     
@@ -40,7 +40,7 @@ def get_info(name, robots, world,):
 
 #!
 def _run_worker(env_id, worlds, populations, eval_steps, \
-                num_evaluations, fitness_fn, seed, generation):
+        num_evaluations, fitness_fn, seed, generation, algorithm):
     """
     Worker function to evaluate an individual of the EA population and
     compute its fitness.
@@ -66,7 +66,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     world.connect()
     world.reset(seed=seed)
     robots = [robot for robot in world.robots.values()]
-    interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
+    interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
         for pop in populations.values():
             genotype_segment = pop.population[env_id]
@@ -93,7 +93,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
                     val.append(get_info(key, robots, world))
             actions_history.append(actions)
             states_history.append(states)
-            survival_time += 1      
+            survival_time += 1
             # if done:
             #     break
         # print([robots[i].position for i in [7,9]])#range(len(robots))])
@@ -138,7 +138,7 @@ class EvolutionaryAlgorithm:
                         if not isinstance(world, MultiWorldWrapper) else\
                         [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
             for pop in self.populations.values():
-                pop.initialize(GeneticInterface(robots[0].controller.neural_network))
+                pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
@@ -149,6 +149,7 @@ class EvolutionaryAlgorithm:
         information to resume the evolution periodically.
         """
         use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+        alg_name = type(self).__name__
         for k in range(self.init_generation, self.n_generations):
             fitness = []
             t0 = time.time()
@@ -157,9 +158,10 @@ class EvolutionaryAlgorithm:
             if not use_mpi and self.n_processes > 1:
                 # worlds = [self.world.all[idx % self.n_processes] for idx in range(self.population_size)]
                 with multiprocessing.Pool(processes=self.n_processes) as pool:
-                    pool_args = zip(range(self.population_size),[self.world for _ in range(self.population_size)], *[map(lambda x: copy.deepcopy(x), repeat(v))\
-                                for v in iter([self.populations, self.eval_steps, self.num_evaluations,\
-                                self.fitness_fn, seed, k])])
+                    pool_args = zip(range(self.population_size), [self.world for _ in range(self.population_size)],\
+                        *[map(lambda x: copy.deepcopy(x), repeat(v))\
+                        for v in iter([self.populations, self.eval_steps, self.num_evaluations,\
+                        self.fitness_fn, seed, k, alg_name])])
                     evaluation_res = pool.starmap(_run_worker, pool_args)
                     self.fitness = [v for _, v in sorted(evaluation_res, key=lambda x: x[0])]
 
@@ -172,7 +174,7 @@ class EvolutionaryAlgorithm:
                 indiv_per_core = (self.population_size // size) #!+ (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core*(rank+1))
                 my_fitness = [_run_worker(ii, self.populations, self.world, self.eval_steps, self.num_evaluations,\
-                                self.fitness_fn, seed, k) for ii in my_individuals]
+                                self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
                 comm.Barrier()
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
@@ -181,7 +183,7 @@ class EvolutionaryAlgorithm:
                 comm.Barrier()
             else:
                 eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
-                                self.num_evaluations, self.fitness_fn, seed, k)\
+                                self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
                                 for i in range(self.population_size)]
                 self.fitness = [v for _, v in eval_result]
             #* No parallelization
@@ -231,7 +233,7 @@ class EvolutionaryAlgorithm:
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
         world.reset()
-        interfaces = [GeneticInterface(bot.controller.neural_network) for bot in robots]
+        interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
                 genotype_segment = pop.population[1]

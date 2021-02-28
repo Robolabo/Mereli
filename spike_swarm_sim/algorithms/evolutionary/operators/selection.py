@@ -1,5 +1,28 @@
+import copy
 import numpy as np
 from spike_swarm_sim.register import evo_operator_registry
+
+
+
+@evo_operator_registry(name='truncation_selection')
+def truncation_selection(population, fitness, n_sel):
+    """ Truncation selection operator of GA. The n_sel best individuals, 
+    according to the fitness scores, are selected as parents.
+    =========================================================================
+    - Args:
+        population [list]: list of genotypes from which parents are selected.
+        fitness [list]: evaluated fitness scores of the genotypes in population.
+        n_sel [int]: number of genotypes to be selected.
+    - Returns:
+        selected [list]: list of selected genotypes.
+        fitness_sel [list]: list of the fitness score corresponding to the 
+            selected genotypes (respecting the same order)
+    =========================================================================
+    """
+    f_order = np.argsort(fitness.copy())[::-1]
+    selected = [copy.deepcopy(population[i]) for i in f_order[:n_sel]]
+    fitness_sel = [fitness[i] for i in f_order[:n_sel]]
+    return selected, fitness_sel
 
 @evo_operator_registry(name='roulette_selection')
 def roulette_selection(population, fitness, n_sel):

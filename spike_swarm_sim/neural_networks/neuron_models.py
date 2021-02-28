@@ -120,6 +120,13 @@ class RateModel(NonSpikingNeuronModel):
         self.gain = np.hstack((self.gain, gain))
         self.activation = np.hstack((self.activation, activation))
 
+    def delete(self, index):
+        self._volt = np.delete(self._volt, index)
+        self.tau = np.delete(self.tau, index)
+        self.bias = np.delete(self.bias, index)
+        self.gain = np.delete(self.gain, index)
+        self.activation = np.delete(self.activation, index)
+        
     def reset(self):
         self._volt = np.zeros(len(self))
 
@@ -240,6 +247,16 @@ class AdExModel(SpikingNeuronModel):
         self.A = np.hstack((self.A, A))
         self.B = np.hstack((self.B, B))
         self.theta_rest = np.hstack((self.theta_rest, theta_rest))
+
+    def delete(self, index):
+        self._volt = np.delete(self._volt, index)
+        self.tau_m = np.delete(self.tau_m, index)
+        self.tau_w = np.delete(self.tau_w, index)
+        self.V_rest = np.delete(self.V_rest, index)
+        self.V_reset = np.delete(self.V_reset, index)
+        self.A = np.delete(self.A, index)
+        self.B = np.delete(self.B, index)
+        self.theta_rest = np.delete(self.theta_rest, index)
 
     def reset(self):
         self.t = 0

@@ -18,7 +18,7 @@ class NeuralNetMonitor:
         self.ensembles = ensembles
         self.stimuli = stimuli
         self.encoded_inputs = encoded_inputs
-        self.output_neurons = output_neuron_names[0]
+        self.output_neurons = output_neuron_names
         self.neuron_names = [name + '_' + str(i) for name, val in ensembles.items() for i in range(val)]
         self.stimuli_names = [name + '_' + str(i) for name, val in stimuli.items() for i in range(val)]
         self.encoded_input_names = [name + '_' + str(i) for name, val in encoded_inputs.items() for i in range(val)]

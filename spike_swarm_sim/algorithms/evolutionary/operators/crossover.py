@@ -1,6 +1,50 @@
+import copy
 import random 
 import numpy as np
 from spike_swarm_sim.register import evo_operator_registry
+
+def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75):
+    #! First version, to be optimized
+    offspring = []
+    if len(parents) % 2:
+        offspring.append(parents.pop(0))
+    for f1, f2, parent1, parent2 in zip(fitness_values[::2], fitness_values[1::2], parents[::2], parents[1::2]):
+        child_1 = {'species' : None, 'nodes': copy.deepcopy((parent1, parent2)[f2 >= f1]['nodes']), 'connections' : {}}
+        child_2 = copy.deepcopy(child_1)
+        innov_ids_1 = set([gene['innovation'] for gene in parent1['connections'].values()])
+        innov_ids_2 = set([gene['innovation'] for gene in parent2['connections'].values()])
+        common_genes = innov_ids_1.intersection(innov_ids_2)
+        random_mask = np.random.randint(2, size=len(common_genes))
+        #* Common genes
+        for rnd_val, gene_innovation in zip(random_mask, common_genes):
+            parent1_gene = {name : conn for name, conn in parent1['connections'].items()\
+                            if conn['innovation'] == gene_innovation}
+            parent2_gene = {name : conn for name, conn in parent2['connections'].items()\
+                            if conn['innovation'] == gene_innovation}
+            child1_genes = copy.deepcopy((parent1_gene, parent2_gene)[rnd_val])
+            child2_genes = copy.deepcopy((parent1_gene, parent2_gene)[1 - rnd_val])
+            if len(child1_genes) > 1 or len(child2_genes) > 1:
+                import pdb; pdb.set_trace()
+            assert len(child1_genes) == 1 and len(child2_genes) == 1
+            if not all([parent1_gene[tuple(parent1_gene.keys())[0]]['enabled'],\
+                        parent2_gene[tuple(parent2_gene.keys())[0]]['enabled']]):
+                child1_genes[tuple(child1_genes.keys())[0]]['enabled'] = np.random.random() > disable_prob
+                child2_genes[tuple(child2_genes.keys())[0]]['enabled'] = np.random.random() > disable_prob
+            child_1['connections'].update(child1_genes)
+            child_2['connections'].update(child2_genes)
+
+        
+        #* Disjoint and excess genes
+        for gene_innovation in (innov_ids_1, innov_ids_2)[f2 >= f1] - common_genes:
+            winner_gene = {name : conn.copy() for name, conn in (parent1, parent2)[f2 >= f1]['connections'].items()\
+                            if conn['innovation'] == gene_innovation}
+            assert len(child1_genes) == 1 and len(child2_genes) == 1
+            child_1['connections'].update(winner_gene)
+            child_2['connections'].update(winner_gene)
+        do_crossover = np.random.random() < crossover_prob
+        offspring.append((parent1, child_1)[do_crossover])
+        offspring.append((parent2, child_2)[do_crossover])
+    return offspring
 
 @evo_operator_registry(name='uniform_crossover')
 def uniform_crossover(parents, random_pairs=False, crossover_prob=1.):

@@ -1,6 +1,6 @@
 import copy
 import logging
-import itertools
+from itertools import product
 from functools import wraps
 import numpy as np
 import matplotlib.pyplot as plt
@@ -36,7 +36,7 @@ def monitor(func):
                     'spikes' : spikes.copy(),
                     'recovery' : self.neurons.recovery.copy(),
                     'neuron_theta' : self.neurons.theta.copy(),
-                    'activities' : tuple([v.activities.copy() for v in self.decoders.all.values()][0])#!
+                    'activities' : np.hstack([v.activities.copy() for v in self.decoders.all.values()])#!
                 })
             self.monitor.update(**monitor_vars)
         return spikes, Isynapses, voltages
@@ -73,7 +73,7 @@ class NeuralNetwork:
     ==========================================================================================================
     """
     def __init__(self, dt, neuron_model='rate_model', synapse_model='static_synapse', time_scale=1):
-        self.t = 0 
+        self.t = 0
         self.dt = dt #* Euler Step
         self.time_scale = time_scale #* ANN steps per world step.
         self.neuron_model = neuron_model
@@ -109,6 +109,7 @@ class NeuralNetwork:
         self.stimuli, self.spikes = None, None
 
     def build(self):
+        #! BUILD NEURONS
         self.synapses.build(self.graph)
         #TODO --- Create Monitor (DEBUG MODE) ---
         # self.output_neurons = remove_duplicates([out['ensemble'] for out in topology['outputs'].values()])
@@ -165,15 +166,35 @@ class NeuralNetwork:
         self.stimuli_names.append(sensor)
 
     def add_ensemble(self, name, num_neurons, **kwargs):
+        self.ensemble_names.append(name)
         for n in range(num_neurons):
             self.add_neuron('{}_{}'.format(name, n), ensemble=name, **kwargs)
-        self.ensemble_names.append(name)
+        
 
     def add_neuron(self, name, ensemble=None, **kwargs):
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
+        if ensemble not in self.ensemble_names:
+            self.ensemble_names.append(ensemble)
         self.graph['neurons'].update({name : merge_dicts([{'ensemble' : ensemble,
                 'idx' : len(self.neurons)-1, 'is_motor' : False}, kwargs])})
+
+    def delete_neuron(self, name):
+        neuron_index = self.graph['neurons'][name]['idx']
+        ensemble = self.graph['neurons'][name]['ensemble']
+        self.neurons.delete(neuron_index)
+        self.graph['neurons'].pop(name, None)
+        #! Ojo index of other neurons?
+        for neuron in self.graph['neurons'].values():
+            if neuron['idx'] >= neuron_index:
+                neuron['idx'] -= 1
+        #* Remove ensemble if neuron was the only unit.
+        if not any([neuron['ensemble'] == ensemble for neuron in self.graph['neurons'].values()]):
+            self.ensemble_names.remove(ensemble)
+        #* Remove any synapse with the neuron as pre or post
+        for syn_name, syn in [*self.graph['synapses'].items()]:
+            if syn['pre'] == name or syn['post'] == name:
+                self.delete_synapse(syn_name)
 
     def add_synapse(self, name, pre, post, weight=1., conn_prob=1., trainable=True, **kwargs):
         """ Adds synapses between pre and post ensembles. """
@@ -198,20 +219,23 @@ class NeuralNetwork:
             post = [post]
         #* Add connections (note: not compatible with previous implementation checkpoints).
         #! REVISAR SEED
-        np.random.seed(44+len(self.graph['synapses']))
-        for i, (pre_node, post_node) in enumerate(itertools.product(pre, post)):
+        np.random.seed(44 + len(self.graph['synapses']))
+        for i, (pre_node, post_node) in enumerate(product(pre, post)):
             if np.random.random() < conn_prob:
-                #! May be interesting to add the indices.
                 synapse_config = merge_dicts([{
                     'pre' : pre_node, 'post' : post_node,
                     'weight': weight, 'trainable' : trainable,
-                    'group' : name}, kwargs])
+                    'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}, kwargs])
                 if self.synapse_model == 'dynamic_synapse':
                     #! Add min and max possible delays?
                     synapse_config.update({'delay' : np.random.randint(1, 10)})
-                self.graph['synapses'].update({"{}_{}".format(name, i) : synapse_config})
+                syn_name = "{}_{}".format(name, i) if len(pre + post) > 2 else name
+                self.graph['synapses'].update({syn_name : synapse_config})
         np.random.seed()
 
+    def delete_synapse(self, name):
+        self.graph['synapses'].pop(name, None)
+        
     def add_encoder(self, scheme, sensor, receptive_field=None, receptive_field_params={}):
         raw_inputs = [inp for inp in self.graph['inputs'].values() if inp['sensor'] == sensor]
         self.encoders.add(scheme, sensor, len(raw_inputs), receptive_field=receptive_field,\
@@ -221,42 +245,44 @@ class NeuralNetwork:
                 #* Correct the input nodes if the encoding augments their dimension.
                 ensemble_name = tuple(raw_inputs)[0]['ensemble']
                 for n in range(len(raw_inputs), receptive_field_params['n_neurons'] * len(raw_inputs)):
+                    prev_idx = self.graph['inputs'][ensemble_name+'_'+str(n-1)]['idx']
+                    for inp_node in filter(lambda x: x['idx'] >= prev_idx + 1, self.graph['inputs'].values()):
+                        inp_node['idx'] += 1
                     self.graph['inputs'].update({'{}_{}'.format(ensemble_name, n) :\
-                        {'ensemble' : ensemble_name, 'sensor' : sensor, 'idx': n}})
-
+                        {'ensemble' : ensemble_name, 'sensor' : sensor, 'idx': prev_idx + 1}})
     @increase_time
     @monitor
     def _step(self, stimuli):
-        """
-        Private method devoted to step the synapses and neurons sequentially. 
-        ======================================
+        """ Private method devoted to step the synapses and neurons sequentially. 
+        ====================================================================================
         - Args:
             stimuli [dict]: dict mapping stimuli name and numpy array containing its values.
         - Returns:
             spikes [np.ndarray]: boolean vector with the generated spikes.
             soma_currents [np.ndarray]: vector of currents injected to the neurons.
             voltages [np.ndarray]: vector of membrane voltages after neurons step.
-        ======================================
+        ====================================================================================
         """
         soma_currents = self.synapses.step(np.r_[stimuli, self.spikes], self.voltages)
         spikes, voltages = self.neurons.step(soma_currents)
         return spikes, soma_currents, voltages
 
     def step(self, stimuli, reward=None):
-        """
-        Simulation step of the neural network.
+        """ Simulation step of the neural network.
         It is composed by four main steps:
             1) Encoding of stimuli to spikes (if SNN used).
             2) Synapses step.
             3) Neurons step.
             4) Decoding of spikes or activities into actions.
-        ======================================
+        ===============================================================
         - Args:
-            stimuli [dict]: dict mapping stimuli name and numpy array containing its values.
+            stimuli [dict]: dict mapping stimuli name and numpy array 
+                    containing its values.
         - Returns:
             actions [dict]: dict mapping output names and actions.
-        ======================================
+        ===============================================================
         """
+        # if self.t == 0: import pdb; pdb.set_trace()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))

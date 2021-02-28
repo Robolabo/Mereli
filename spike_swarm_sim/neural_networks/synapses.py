@@ -110,7 +110,7 @@ class Synapses(ABC):
         """
         """
         weights_len = self.len_weights(conn_name, ann_graph)
-        random_weights = 0.5 + np.random.randn(weights_len)*0.25 #between 0 and 1 (denormalized in set)
+        random_weights = 0.5 + np.random.randn(weights_len)*0.1 #between 0 and 1 (denormalized in set)
         random_weights = np.clip(random_weights, a_min=0, a_max=1)
         return self.set_weights(conn_name, ann_graph, random_weights,\
                             min_val=min_val, max_val=max_val)
@@ -196,7 +196,9 @@ class DynamicSynapses(Synapses):
         ampa_mask = mask.copy()
         gaba_mask = mask.copy()
         ndma_mask = mask.copy()
+        
         for name, node in ann_graph['neurons'].items():
+            #* List of input connections to node.
             in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
             for syn in in_connections:
                 pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\

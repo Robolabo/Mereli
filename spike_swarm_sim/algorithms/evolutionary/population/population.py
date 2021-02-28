@@ -41,7 +41,6 @@ class Population:
 
         #* --- Constrain values ---
         if self.encoding == 'real':
-            # offspring = [np.clip(v, a_min=self.min_vector, a_max=self.max_vector) for v in offspring]
             offspring = [np.clip(v, a_min=0, a_max=1) for v in offspring]
 
         #* --- Save elite based on highest fitness ---
@@ -69,10 +68,10 @@ class Population:
     
     @property
     def min_vector(self):
-        return np.hstack([min_val*np.ones(seg_len) for seg_len, min_val in zip(self.segment_lengths, self.min_vals)])
+        return np.hstack([min_val * np.ones(seg_len) for seg_len, min_val in zip(self.segment_lengths, self.min_vals)])
 
     @property
     def max_vector(self):
-        return  np.hstack([max_val*np.ones(seg_len) for seg_len, max_val in zip(self.segment_lengths, self.max_vals)])
+        return  np.hstack([max_val * np.ones(seg_len) for seg_len, max_val in zip(self.segment_lengths, self.max_vals)])
 
   

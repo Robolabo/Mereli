@@ -7,7 +7,18 @@ from matplotlib.animation import FuncAnimation
 import matplotlib.patches as mpatches
 import seaborn as sns
 from sklearn.decomposition import PCA
+import networkx as nx
 
+# def plot_ann_graph(neural_net):
+#     G_ann = nx.DiGraph()
+#     for input_node in neural_net.graph['inputs']:
+#         G_ann.add_node(input_node, input=True, motor=False, position=)
+#     for name, node in neural_net.graph['neurons'].items():
+#         G_ann.add_node(name, input=False, motor=node['is_motor'])
+#     for name, conn in neural_net.graph['synapses'].items():
+#         G_ann.add_edge(conn['pre'], conn['post'])
+#     for node in G_ann
+#     import pdb; pdb.set_trace()
 
 def plot_state_plane(neural_net, t_start=0, t_end=500,\
     n_pc=3, downsampled=False, fig=None):
@@ -69,7 +80,7 @@ def plot_state_plane(neural_net, t_start=0, t_end=500,\
 
 def plot_spikes(neural_net, show_inputs=True):
     """ Plots an eventplot of spikes of neurons x time steps. 
-    Can only be used if the neuron models are spiking. 
+    Can only be used if the neuron models are spiking.
     =====================================================================================
     - Args:
         neural_net [NeuralNetwork]: neural network instance with recorded data. 
@@ -82,25 +93,34 @@ def plot_spikes(neural_net, show_inputs=True):
     if not neural_net.is_spiking:
         raise Exception(logging.error('Visualization of spikes is only available in '\
             'spiking neural networks.'))
-    _, ax = plt.subplots(1)
+    f, ax = plt.subplots(1)
     encoded_inputs = np.stack(tuple(neural_net.monitor.get('encoded_inputs').values()))
     spikes = np.stack(tuple(neural_net.monitor.get('spikes').values()))
     values = np.vstack((encoded_inputs, spikes)) if show_inputs else spikes
-    colors = []
-    counter = 0
-    for _, ens_neurons in neural_net.subpop_neurons.items():
-        rgb_color = tuple([np.random.random() for _ in range(3)])
-        colors.extend([rgb_color for _ in range(ens_neurons)])
-        counter += ens_neurons
+    # colors = []
+    # counter = 0
+    # for _, ens_neurons in neural_net.subpop_neurons.items():
+    #     rgb_color = tuple([np.random.random() for _ in range(3)])
+    #     colors.extend([rgb_color for _ in range(ens_neurons)])
+    #     counter += ens_neurons
     ax.eventplot([np.where(v)[0] for v in values],\
                 lineoffsets=1, linelengths=.5, colors='k')
     # if self.time_scale > 1:
     #     for i in np.arange(0, values.shape[1], self.time_scale):
     #         ax.vlines(i, 0, values.shape[0], color='r')
+ 
+    y_labels = [*neural_net.graph['neurons']]
+    y_ticks = [i + 0.5 for i in range(neural_net.num_neurons)]
+    if show_inputs:
+        y_labels = [*neural_net.graph['inputs']] + y_labels
+        y_ticks = [i + 0.5 for i in range(neural_net.num_inputs + neural_net.num_neurons)]
+    ax.set_yticklabels(y_labels)
+    ax.set_yticks(y_ticks)
     ax.set_xlabel('Time')
     ax.set_ylabel('Neurons')
     ax.set_ylim((0, values.shape[0]))
     ax.set_xlim((0, values.shape[1]))
+    f.subplots_adjust(left=0.08, right=0.96, top=0.97, bottom=0.05)
     plt.show()
 
 def plot_neuron(neural_net, neuron):
@@ -156,7 +176,10 @@ def plot_activities(neural_net):
         raise Exception(logging.error('Visualization of activities is only available in '\
             'spiking neural networks.'))
     activities = neural_net.monitor.get('activities')
-    f, axes = plt.subplots(len(activities)//2, 2, figsize=(13, 13))
+    if len(activities) > 25:
+        logging.warning('Too many motor neurons to plot their activities (max. 25).')
+    f, axes = plt.subplots(int(np.ceil(len(activities) / np.sqrt(len(activities)))),\
+                int(np.floor(np.sqrt(len(activities)))), figsize=(13, 13))
     for ax, (name, activs) in zip(axes.flatten(), activities.items()):
         ax.plot(activs)
         ax.set_title('Activity of neuron {}'.format(name))
@@ -173,18 +196,20 @@ def plot_weights(neural_net):
     - Returns: None
     ===========================================================================
     """
-    y_labels = [n for ii, n in enumerate(neural_net.pointers.keys()) if ii > neural_net.n_inputs-1]
-    x_labels = [n for i, n in enumerate(neural_net.pointers.keys())]
-    y_ticks = [v - n//2 - neural_net.n_inputs for ii, (v, n) in enumerate(zip(\
-        neural_net.pointers.values(), neural_net.subpop_neurons.values()))\
-        if ii > neural_net.n_inputs-1]
-    x_ticks = [v - n//2 for ii, (v, n) in enumerate(zip(\
-        neural_net.pointers.values(), neural_net.subpop_neurons.values()))]
+    y_labels = neural_net.graph['neurons'].keys()
+    x_labels = [*neural_net.graph['inputs'].keys()] + [*neural_net.graph['neurons'].keys()]
+    y_ticks = [i + 0.5 for i in range(neural_net.num_neurons)]
+    x_ticks = [i + 0.5 for i in range(neural_net.num_inputs + neural_net.num_neurons)]
+    # y_ticks = [v - n//2 - neural_net.n_inputs for ii, (v, n) in enumerate(zip(\
+    #     neural_net.pointers.values(), neural_net.subpop_neurons.values()))\
+    #     if ii > neural_net.n_inputs-1]
+    # x_ticks = [v - n//2 for ii, (v, n) in enumerate(zip(\
+    #     neural_net.pointers.values(), neural_net.subpop_neurons.values()))]
     ax = sns.heatmap(neural_net.weights, cmap="vlag", annot=False, center=0.)
     ax.set_xticks(x_ticks)
     ax.set_yticks(y_ticks)
     ax.set_yticklabels(y_labels)
-    ax.set_xticklabels(x_labels)
+    ax.set_xticklabels(x_labels, rotation=90)
     plt.show()
 
 def plot_ntx(neural_net):
@@ -197,31 +222,27 @@ def plot_ntx(neural_net):
     - Returns: None
     ===========================================================================
     """
-    if len(neural_net.monitor) < 1:
-        raise Exception(logging.error('No ANN data was recorded.'))
     if not neural_net.is_spiking:
         raise Exception(logging.error('Visualization of synapse neurotransmitters '\
             'is only available in spiking neural networks.'))
-    y_labels = [n for ii, n in enumerate(neural_net.pointers.keys())\
-            if ii > neural_net.n_inputs-1]
-    x_labels = [n for i, n in enumerate(neural_net.pointers.keys())]
-    y_ticks = [v - n//2 - neural_net.n_inputs for ii, (v, n) in enumerate(zip(\
-        neural_net.pointers.values(), neural_net.subpop_neurons.values()))\
-        if ii > neural_net.n_inputs-1]
-    x_ticks = [v - n//2 for ii, (v, n) in enumerate(zip(\
-        neural_net.pointers.values(), neural_net.subpop_neurons.values()))]
-    _, ax = plt.subplots(1)
-    ntx = neural_net.synapses.ampa_mask + 2*neural_net.synapses.gaba_mask
+    y_labels = neural_net.graph['neurons'].keys()
+    x_labels = [*neural_net.graph['inputs'].keys()] + [*neural_net.graph['neurons'].keys()]
+    y_ticks = [i + 0.5 for i in range(neural_net.num_neurons)]
+    x_ticks = [i + 0.5 for i in range(neural_net.num_inputs + neural_net.num_neurons)]
+    f, ax = plt.subplots(1)
+    ntx = neural_net.synapses.ampa_mask + 2 * neural_net.synapses.gaba_mask
     im = plt.imshow(ntx, interpolation='none')
     values = np.unique(ntx.ravel())
     colors = [im.cmap(im.norm(value)) for value in values]
     labels = ['No Synapse', 'AMPA+NDMA', 'GABA']
     patches = [mpatches.Patch(color=colors[i], label=labels[i])\
                     for i in range(len(values))]
-    plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
+    # plt.legend(handles=patches, bbox_to_anchor=(.5, 1.2), ncol=3, loc='center', borderaxespad=0.)
+    plt.legend(handles=patches,)
     plt.subplots_adjust(left=.02, right=.85)
     ax.set_xticks(x_ticks)
     ax.set_yticks(y_ticks)
     ax.set_yticklabels(y_labels)
     ax.set_xticklabels(x_labels, rotation=90)
+    f.subplots_adjust(left=0.1, right=0.96, top=0.97, bottom=0.05)
     plt.show()

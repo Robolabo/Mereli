@@ -54,7 +54,7 @@ class World3D(object):
       
 
         #* Add world limits
-        #!self.add_limiting_walls()
+        self.add_limiting_walls()
 
         # self.reward_generator = GoToLightReward()
         self.t = 0

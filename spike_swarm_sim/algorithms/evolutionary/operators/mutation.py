@@ -1,6 +1,117 @@
+from itertools import product
 import numpy as np
 from spike_swarm_sim.register import evo_operator_registry
 from spike_swarm_sim.utils import ShapeMismatchException
+
+
+def assign_unique_key(keys, base_name):
+    new_key = '{}_{}'.format(base_name, len(keys))
+    while new_key in keys:
+        new_key = '{}_{}'.format(base_name, new_key.split('_')[1] + 1)
+    return new_key
+
+#! SIN decorator por ahora
+def add_node(genotype, current_innovation, innovation_history, **kwargs):
+    """ Add a new node inbetween an existing connection. The exisiting connection 
+    is disabled and two new synapses are included.
+    """
+    #! OJO RESTO DE PARAMETERS.
+    node_name = assign_unique_key(genotype['nodes'].keys(), 'Node')
+    genotype['nodes'].update({
+        node_name :{
+            'ensemble' : node_name,
+            'idx' : len(genotype['nodes']),
+            'is_motor' : False,
+        }
+    })
+    #* Randomly select an enabled connection
+    sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
+    genotype['connections'][sel_conn]['enabled'] = False
+    #* Add the new connections
+    genotype['connections'].update({
+        assign_unique_key(genotype['connections'].keys(), 'Conn') : {
+            'pre' : node_name,
+            'post' : genotype['connections'][sel_conn]['post'],
+            'weight': genotype['connections'][sel_conn]['weight'],
+            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'enabled' : True,
+            'trainable':True,
+            'innovation' : innovation_history.get((node_name,\
+                    genotype['connections'][sel_conn]['post']), current_innovation),
+            'idx' : len(genotype['connections']),#!
+            'p' : 1.}
+    })
+    if (node_name, genotype['connections'][sel_conn]['post']) not in innovation_history:
+        innovation_history.update({
+            (node_name, genotype['connections'][sel_conn]['post']): current_innovation
+        })
+        current_innovation += 1
+    genotype['connections'].update({
+        assign_unique_key(genotype['connections'].keys(), 'Conn') : {
+            'pre' : genotype['connections'][sel_conn]['pre'],
+            'post' : node_name,
+            'weight': 0.5, # Fixed weight
+            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'enabled' : True,
+            'trainable':True,
+            'innovation' : innovation_history.get((genotype['connections'][sel_conn]['pre'],\
+                    node_name), current_innovation),
+            'idx' : len(genotype['connections']),#!
+            'p' : 1.}
+    })
+    if (genotype['connections'][sel_conn]['pre'], node_name) not in innovation_history:
+        innovation_history.update({
+            (genotype['connections'][sel_conn]['pre'], node_name): current_innovation
+        })
+        current_innovation += 1
+    return genotype, current_innovation, innovation_history
+
+#! SIN decorator por ahora
+def add_connection(genotype, input_nodes, current_innovation, innovation_history, **kwargs):
+    """ Add a new gene connection to the genotype. The pre and post 
+    synaptic nodes are selected randomly (validating that the connection does not 
+    exist).
+    """
+    pos_conns = set([*product(input_nodes, genotype['nodes'].keys())] + [*product(genotype['nodes'].keys(), repeat=2)])
+    existing_conns = set([(conn['pre'], conn['post']) for conn in genotype['connections'].values()])
+    allowed_conns = list(pos_conns - existing_conns)
+    if len(allowed_conns) == 0:
+        return genotype 
+    new_conn = allowed_conns[np.random.choice(range(len(allowed_conns)))]
+    #! OJO RESTO DE PARAMETERS.
+    genotype['connections'].update({
+        'Connection_' + str(len(genotype['connections'])): {
+            'pre' : new_conn[0],
+            'post' : new_conn[1],
+            'weight': np.random.random(), # Random weight in [0,1] (denormalized later).
+            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'enabled' : True,
+            'trainable':True,
+            'innovation' : innovation_history.get((new_conn[0], new_conn[1]), current_innovation),
+            'idx' : len(genotype['connections']),#!
+            'p' : 1.}
+    })
+    if (new_conn[0], new_conn[1]) not in innovation_history:
+        innovation_history.update({(new_conn[0], new_conn[1]): current_innovation})
+        current_innovation += 1
+    return genotype, current_innovation, innovation_history
+
+def neat_mutation(population, input_nodes, current_innovation, innovation_history, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
+    #* Weight Mutations
+    for i, genotype in filter(lambda x: np.random.random() < p_weight_mut, enumerate(population)):
+        for conn in genotype['connections'].values(): #!optimize
+            if np.random.random() >= 0.9:
+                conn['weight'] = np.random.random()
+            else:
+                conn['weight'] += np.random.randn() * 0.1
+                conn['weight'] = np.clip(conn['weight'], a_min=0, a_max=1)
+    #* Connnections mutations
+    for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):
+        genotype, current_innovation, innovation_history = add_connection(genotype, input_nodes, current_innovation, innovation_history)
+    #* Node mutations
+    for i, genotype in filter(lambda x: np.random.random() < p_node_mut, enumerate(population)):
+        genotype, current_innovation, innovation_history = add_node(genotype, current_innovation, innovation_history)
+    return population, current_innovation, innovation_history
 
 @evo_operator_registry(name='gaussian_mutation')
 def gaussian_mutation(population, **kwargs):
