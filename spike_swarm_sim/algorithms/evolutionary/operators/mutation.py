@@ -5,10 +5,10 @@ from spike_swarm_sim.utils import ShapeMismatchException
 
 
 def assign_unique_key(keys, base_name):
-    new_key = '{}_{}'.format(base_name, len(keys))
-    while new_key in keys:
-        new_key = '{}_{}'.format(base_name, new_key.split('_')[1] + 1)
-    return new_key
+    unique_id = len(keys)
+    while '{}_{}'.format(base_name, unique_id) in keys:
+        unique_id += 1
+    return '{}_{}'.format(base_name, unique_id)
 
 #! SIN decorator por ahora
 def add_node(genotype, current_innovation, innovation_history, **kwargs):
