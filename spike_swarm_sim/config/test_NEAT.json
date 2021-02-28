@@ -28,7 +28,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 5000,
-        "evaluation_steps" : 400,
+        "evaluation_steps" : 1500,
         "num_evaluations" : 1,
         "fitness_function" : "walking",
         "populations" : {
@@ -44,8 +44,8 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":7,
-        "width": 7,
+        "height":20,
+        "width": 20,
         "objects" : {
             "robotA" : {
                 "type" : "minitaur",
