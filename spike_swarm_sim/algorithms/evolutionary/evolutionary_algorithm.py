@@ -69,8 +69,11 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
         for pop in populations.values():
-            genotype_segment = pop.population[env_id]
-            interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
+            try:
+                genotype_segment = pop.population[env_id]
+                interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
+            except:
+                import pdb; pdb.set_trace()
     fitness = 0
     mean_survival_time = 0
     # import pybullet as p

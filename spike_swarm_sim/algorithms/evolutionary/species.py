@@ -2,7 +2,7 @@ import logging
 import numpy as np
 
 class Species:
-    def __init__(self, id, compatib_thresh=2, c1=15., c2=15., c3=2.):
+    def __init__(self, id, compatib_thresh=3, c1=1, c2=1, c3=2.):
         self.id = id
         self.compatib_thresh = compatib_thresh
         self.c1 = c1
