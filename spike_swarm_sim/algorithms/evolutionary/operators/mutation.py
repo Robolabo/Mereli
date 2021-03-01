@@ -16,7 +16,9 @@ def add_node(genotype, current_innovation, innovation_history, **kwargs):
     is disabled and two new synapses are included.
     """
     #! OJO RESTO DE PARAMETERS.
-    node_name = assign_unique_key(genotype['nodes'].keys(), 'Node')
+    #* Make sure that node name does not exist.
+    pre_nodes, post_nodes = [*map(lambda x: set(x), zip(*innovation_history.keys()))]
+    node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
     genotype['nodes'].update({
         node_name :{
             'ensemble' : node_name,
@@ -28,12 +30,13 @@ def add_node(genotype, current_innovation, innovation_history, **kwargs):
     sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
     genotype['connections'][sel_conn]['enabled'] = False
     #* Add the new connections
+    conn_name = node_name + '-' + genotype['connections'][sel_conn]['post']
     genotype['connections'].update({
-        assign_unique_key(genotype['connections'].keys(), 'Conn') : {
+        conn_name : {
             'pre' : node_name,
             'post' : genotype['connections'][sel_conn]['post'],
             'weight': genotype['connections'][sel_conn]['weight'],
-            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'group' : conn_name,
             'enabled' : True,
             'trainable':True,
             'innovation' : innovation_history.get((node_name,\
@@ -46,12 +49,13 @@ def add_node(genotype, current_innovation, innovation_history, **kwargs):
             (node_name, genotype['connections'][sel_conn]['post']): current_innovation
         })
         current_innovation += 1
+    conn_name = genotype['connections'][sel_conn]['pre'] + '-' + node_name
     genotype['connections'].update({
-        assign_unique_key(genotype['connections'].keys(), 'Conn') : {
+        conn_name : {
             'pre' : genotype['connections'][sel_conn]['pre'],
             'post' : node_name,
             'weight': 0.5, # Fixed weight
-            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'group' : conn_name,
             'enabled' : True,
             'trainable':True,
             'innovation' : innovation_history.get((genotype['connections'][sel_conn]['pre'],\
@@ -78,13 +82,16 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     if len(allowed_conns) == 0:
         return genotype 
     new_conn = allowed_conns[np.random.choice(range(len(allowed_conns)))]
+
+    #* Name connection is "pre-post"    
+    conn_name = '-'.join(new_conn)
     #! OJO RESTO DE PARAMETERS.
     genotype['connections'].update({
-        'Connection_' + str(len(genotype['connections'])): {
+        conn_name : {
             'pre' : new_conn[0],
             'post' : new_conn[1],
             'weight': np.random.random(), # Random weight in [0,1] (denormalized later).
-            'group' : 'Connection_' + str(len(genotype['connections'])),
+            'group' : conn_name,
             'enabled' : True,
             'trainable':True,
             'innovation' : innovation_history.get((new_conn[0], new_conn[1]), current_innovation),

@@ -25,6 +25,7 @@ class LightSource3D(WorldObject3D):
     # def set_color(self):
 
     def step(self, world_dict):
+        import pdb; pdb.set_trace()
         if self.controllable:
             if type(self.controller).__name__ == 'PreyController':
                 robot_pos = [robot.position for robot in world_dict]

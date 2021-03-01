@@ -23,8 +23,6 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
                             if conn['innovation'] == gene_innovation}
             child1_genes = copy.deepcopy((parent1_gene, parent2_gene)[rnd_val])
             child2_genes = copy.deepcopy((parent1_gene, parent2_gene)[1 - rnd_val])
-            if len(child1_genes) > 1 or len(child2_genes) > 1:
-                import pdb; pdb.set_trace()
             assert len(child1_genes) == 1 and len(child2_genes) == 1
             if not all([parent1_gene[tuple(parent1_gene.keys())[0]]['enabled'],\
                         parent2_gene[tuple(parent2_gene.keys())[0]]['enabled']]):

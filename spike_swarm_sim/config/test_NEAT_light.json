@@ -1,0 +1,72 @@
+{
+    "checkpoint_file" : "chk_light_NEAT_3D",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 6, "sensor" : "light_sensor3D"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 100,
+        "generations" : 2000,
+        "evaluation_steps" : 700,
+        "num_evaluations" : 1,
+        "fitness_function" : "goto_light",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all"],
+                "max_vals" : [3],
+                "min_vals" : [-3],
+                "params" : {"encoding" : "real"}
+            }          
+        }
+    },
+    "world":{
+        "engine" : "3D",
+        "world_delay" : 1,
+        "render_connections":true,
+        "height":10,
+        "width": 10,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 1,
+                "controller" : "neural_controller",
+                "sensors" : {"light_sensor3D" : {"n_sectors" : 6, "range" : 2}},
+                "actuators" : {"joint_velocity_actuator" : {"joint_ids" : [0, 1]}},
+                "initializers" : {
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "controller" : null,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
+                },
+                "params" : {"range" : 10, "color" : "red"}
+            }
+        }
+    }
+}

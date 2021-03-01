@@ -9,16 +9,18 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 import networkx as nx
 
-# def plot_ann_graph(neural_net):
-#     G_ann = nx.DiGraph()
-#     for input_node in neural_net.graph['inputs']:
-#         G_ann.add_node(input_node, input=True, motor=False, position=)
-#     for name, node in neural_net.graph['neurons'].items():
-#         G_ann.add_node(name, input=False, motor=node['is_motor'])
-#     for name, conn in neural_net.graph['synapses'].items():
-#         G_ann.add_edge(conn['pre'], conn['post'])
-#     for node in G_ann
-#     import pdb; pdb.set_trace()
+def plot_ann_graph(neural_net):
+    G_ann = nx.DiGraph()
+    ens_dict = {key : i for i, key in enumerate(neural_net.input_ensemble_names + neural_net.ensemble_names)}
+    for name, node in neural_net.graph['inputs'].items():
+        G_ann.add_node(name, input=True, motor=False, ensemble=ens_dict[node['ensemble']])
+    for name, node in neural_net.graph['neurons'].items():
+        G_ann.add_node(name, input=False, motor=node['is_motor'], ensemble=ens_dict[node['ensemble']])
+    for name, conn in neural_net.graph['synapses'].items():
+        G_ann.add_edge(conn['pre'], conn['post'])
+    nodes_pos = nx.drawing.layout.multipartite_layout(G_ann, subset_key='ensemble')
+    nx.draw(G_ann, nodes_pos)
+    plt.show()
 
 def plot_state_plane(neural_net, t_start=0, t_end=500,\
     n_pc=3, downsampled=False, fig=None):

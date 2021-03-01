@@ -125,6 +125,7 @@ class World3D(object):
                     l.hide_coverage()
             #! ----
         # print(states)
+        
         return states, actions
     
     def add(self, name, obj, group=None):
