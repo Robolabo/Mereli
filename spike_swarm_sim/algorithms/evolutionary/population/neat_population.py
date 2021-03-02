@@ -28,7 +28,7 @@ class NEAT_Population(Population):
         #* Dict mapping (pre, post) tuple connections to innovation numbers.
         #* It is used for assigning same innovations to mutations already occured in 
         #* the evolution.
-        self.innovation_history = {} 
+        self.innovation_history = {}
       
     def step(self, fitness_vector):
         """ 

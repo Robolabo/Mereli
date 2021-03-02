@@ -56,6 +56,7 @@ class NEAT(EvolutionaryAlgorithm):
             self.populations[key].p_node_mut = checkpoint['p_node_mut'][key]
             self.populations[key].p_conn_mut = checkpoint['p_conn_mut'][key]
             self.populations[key].population = pop['genotypes']
+            import pdb; pdb.set_trace()
             self.populations[key].current_innovation = pop['current_innovation']
             self.populations[key].innovation_history = pop['innovation_history']
             self.populations[key].input_nodes = pop['input_nodes']
