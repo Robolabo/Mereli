@@ -55,11 +55,9 @@ class NEAT_Population(Population):
         for spc in self.species:
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             num_offspring = max(2, int(np.round(self.pop_size * sum(spc_fitness) / sum(fitness_vector))))
-            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
-                            if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
+            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring) if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
             species_offsprings.append(num_offspring)
-        species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
-                                for n_off in species_offsprings]     
+        species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings)))) for n_off in species_offsprings]
         if sum(species_offsprings) != self.pop_size:
             logging.error('Population Size altered (Before crossover).')
             import pdb; pdb.set_trace()
