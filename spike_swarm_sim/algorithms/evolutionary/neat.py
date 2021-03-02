@@ -7,6 +7,7 @@ from spike_swarm_sim.algorithms.interfaces import NEATInterface
 from spike_swarm_sim.register import algorithm_registry
 from spike_swarm_sim.globals import global_states
 from spike_swarm_sim.utils import save_pickle, load_pickle
+from .species import Species
 
 @algorithm_registry(name='NEAT')
 class NEAT(EvolutionaryAlgorithm):
@@ -60,13 +61,17 @@ class NEAT(EvolutionaryAlgorithm):
             self.populations[key].innovation_history = pop['innovation_history']
             self.populations[key].input_nodes = pop['input_nodes']
             self.populations[key].species_count = pop['species_count']
-            for spc_chk, spc in zip(pop['species'], self.populations[key].species):
-                spc.id = spc_chk['id']
+            self.populations[key].species = []
+            for spc_chk in pop['species']:
+                spc = Species(spc_chk['id'], compatib_thresh=spc_chk['thresh'], c1=spc_chk['c1'], c2=spc_chk['c2'], c3=spc_chk['c3'])
+                self.populations[key].species.append(spc)
+                #spc.id = spc_chk['id']
                 spc.representative = spc_chk['representative']
-                spc.thresh = spc_chk['thresh']
-                spc.c1 = spc_chk['c1']
-                spc.c2 = spc_chk['c2']
-                spc.c3 = spc_chk['c3']
+                spc.num_genotypes = np.sum([genotype['species'] == spc.id  for genotype in pop['genotypes']])
+                #spc.thresh = spc_chk['thresh']
+                #spc.c1 = spc_chk['c1']
+                #spc.c2 = spc_chk['c2']
+                #spc.c3 = spc_chk['c3']
             robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
             interface = NEATInterface(robots[0].controller.neural_network)
             # #!
