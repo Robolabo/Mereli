@@ -71,9 +71,9 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         for pop in populations.values():
             try:
                 genotype_segment = pop.population[env_id]
-                interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
             except:
                 import pdb; pdb.set_trace()
+            interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
     # import pybullet as p
