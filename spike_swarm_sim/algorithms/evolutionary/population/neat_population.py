@@ -11,6 +11,11 @@ from ..operators.crossover import *
 from ..operators.mutation import *
 from ..operators.selection import *
 
+
+def fitness_sharing(index, population, fitness):
+    pass    
+
+
 class NEAT_Population(Population):
     """  
     """
@@ -38,23 +43,30 @@ class NEAT_Population(Population):
         - Returns: None
         ==================================================================================
         """
-        #TODO self.segment_lengths = [interface.submit_query(query, primitive='LEN') for query in self.objects]
         #TODO adjusted_fitness = 
         offspring = []
-        #* Crossover in-between species individuals.
+        #* Compute the number of offspring for each species
+        species_offsprings = []
         for spc in self.species:
+            spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
+            num_offspring = max(2, int(np.round(self.pop_size * sum(spc_fitness) / sum(fitness_vector))))
+            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
+                            if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
+            species_offsprings.append(num_offspring)
+        species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
+                                for n_off in species_offsprings]     
+        if sum(species_offsprings) != self.pop_size:
+            logging.error('Population Size altered (Before crossover).')
+            import pdb; pdb.set_trace()
+        #* Crossover in-between species individuals.
+        for n_offspring, spc in zip(species_offsprings, self.species):
             #! OJO DEEPCOPY????
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             #* Truncate bests
             n_sel = max(2, int(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
-
-            #* Decide the number of species offspring
-            num_offspring = max(2, int(self.pop_size * sum(spc_fitness) / sum(fitness_vector)))
-            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
-                    if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
             #* Random Mating (OJO REPLACEMENT)
-            parents_mating = np.random.choice(n_sel, size=num_offspring)
+            parents_mating = np.random.choice(n_sel, size=n_offspring)
             parents = [parents[idx] for idx in parents_mating] # shuffle parents
             fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
@@ -95,13 +107,18 @@ class NEAT_Population(Population):
         #! Update species fitness statistics!!!
         #* Update popultation
         self.population = offspring
+        
+        if len(self.population) != self.pop_size:
+            logging.error('Population Size altered.')
+            import pdb; pdb.set_trace()
+        #!!!!!
         for pp in self.population:
             for x, xx in pp['connections'].items():
                 if xx['pre'] not in self.input_nodes + list(pp['nodes']):
                     import pdb; pdb.set_trace()
                 if xx['post'] not in list(pp['nodes']):
                     import pdb; pdb.set_trace()
-
+        #!!!!!
     @property
     def min_vector(self):
         raise NotImplementedError

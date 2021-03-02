@@ -69,7 +69,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
         for pop in populations.values():
-            import pdb; pdb.set_trace()
             try:
                 genotype_segment = pop.population[env_id]
             except:
