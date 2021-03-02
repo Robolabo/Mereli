@@ -46,9 +46,10 @@ class NEAT_Population(Population):
         ==================================================================================
         """
         offspring = []
+        raw_fitness = fitness_vector.copy()
         #* Adjust fitness scores according to the fitness sharing as defined in the NEAT paper.
-        adjusted_fitness = [f / [sp for sp in self.species if sp.id == genotype['species']][0].num_genotypes \
-                            for f, genotype in zip(fitness_vector, self.population)]           
+        fitness_vector = [f / [sp for sp in self.species if sp.id == genotype['species']][0].num_genotypes \
+                            for f, genotype in zip(fitness_vector, self.population)]
         
         #* Compute the number of offspring for each species
         species_offsprings = []
@@ -58,8 +59,10 @@ class NEAT_Population(Population):
             num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
                             if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
             species_offsprings.append(num_offspring)
-        species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
-                                for n_off in species_offsprings]     
+        #species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
+        #                       for n_off in species_offsprings]     
+        while(sum(species_offsprings) != self.pop_size):
+            species_offsprings[np.random.randint(len(self.species))] += (1, -1)[sum(species_offsprings) > self.pop_size]
         if sum(species_offsprings) != self.pop_size:
             logging.error('Population Size altered (Before crossover).')
             import pdb; pdb.set_trace()
@@ -114,7 +117,9 @@ class NEAT_Population(Population):
         #! Update species fitness statistics!!!
         #* Update popultation
         self.population = offspring
-        
+        #!
+        fitness_vector = raw_fitness
+
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
             import pdb; pdb.set_trace()
