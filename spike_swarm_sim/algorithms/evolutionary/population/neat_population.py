@@ -12,20 +12,22 @@ from ..operators.mutation import *
 from ..operators.selection import *
 
 
-def fitness_sharing(index, population, fitness):
-    pass    
-
-
 class NEAT_Population(Population):
     """  
-    """
-    def __init__(self, *args, **kwargs):
+    """ 
+    def __init__(self, *args, p_weight_mut=0.75, p_node_mut=0.08, p_conn_mut=0.1,
+                    compatib_thresh=2, c1=1, c2=1, c3=2, **kwargs):
         super(NEAT_Population, self).__init__(*args, **kwargs)
-        self.node_mut_prob = None
-        self.conn_mut_prob = None
-        self.weight_mut_prob = None
+        self.p_weight_mut = p_weight_mut
+        self.p_node_mut = p_node_mut
+        self.p_conn_mut = p_conn_mut
+        self.compatib_thresh = compatib_thresh
+        self.c1 = c1
+        self.c2 = c2
+        self.c3 = c3
         self.species_count = 1
-        self.species = [Species(self.species_count)] # list of existing species. 1 species at first.
+        # list of existing species. 1 species at first.
+        self.species = [Species(self.species_count, compatib_thresh=compatib_thresh, c1=c1, c2=c2, c3=c3)] 
         self.input_nodes = [] #* Cannot be altered by NEAT 
         self.population = []
         #* Global pointer of gene innovations
@@ -34,7 +36,7 @@ class NEAT_Population(Population):
         #* It is used for assigning same innovations to mutations already occured in 
         #* the evolution.
         self.innovation_history = {}
-      
+        
     def step(self, fitness_vector):
         """ 
         ==================================================================================
@@ -43,8 +45,11 @@ class NEAT_Population(Population):
         - Returns: None
         ==================================================================================
         """
-        #TODO adjusted_fitness = 
         offspring = []
+        #* Adjust fitness scores according to the fitness sharing as defined in the NEAT paper.
+        adjusted_fitness = [f / [sp for sp in self.species if sp.id == genotype['species']][0].num_genotypes \
+                            for f, genotype in zip(fitness_vector, self.population)]           
+        
         #* Compute the number of offspring for each species
         species_offsprings = []
         for spc in self.species:
@@ -75,7 +80,8 @@ class NEAT_Population(Population):
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
                         offspring, self.input_nodes, self.current_innovation,
-                        self.innovation_history, p_weight_mut=0.75, p_node_mut=0.08, p_conn_mut=0.1)
+                        self.innovation_history, p_weight_mut=self.p_weight_mut, 
+                        p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
 
         #* Assign Species. Use representatives from the previous generation.
         #* If a new species is created the current representative is the genotype 
@@ -86,7 +92,8 @@ class NEAT_Population(Population):
             compatible, distances = zip(*[species.compatibility(genotype) for species in self.species])
             if not any(compatible): #* create new species
                 self.species_count += 1
-                self.species.append(Species(self.species_count))
+                self.species.append(Species(self.species_count, compatib_thresh=self.compatib_thresh,
+                                        c1=self.c1, c2=self.c2, c3=self.c3))
                 self.species[-1].num_genotypes += 1
                 self.species[-1].representative = copy.deepcopy(genotype)
                 genotype['species'] = self.species[-1].id

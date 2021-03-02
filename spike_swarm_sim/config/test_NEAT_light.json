@@ -24,7 +24,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 200,
         "generations" : 2000,
         "evaluation_steps" : 700,
         "num_evaluations" : 1,
@@ -34,7 +34,16 @@
                 "objects" : ["synapses:weights:all"],
                 "max_vals" : [3],
                 "min_vals" : [-3],
-                "params" : {"encoding" : "real"}
+                "params" : {
+                    "encoding" : "real",
+                    "p_weight_mut" : 0.75,
+                    "p_node_mut" : 0.08,
+                    "p_conn_mut" : 0.1,
+                    "compatib_thresh" : 2,
+                    "c1" : 1,
+                    "c2" : 1, 
+                    "c3" : 2
+                }
             }          
         }
     },
