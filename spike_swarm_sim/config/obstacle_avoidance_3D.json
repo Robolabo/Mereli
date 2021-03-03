@@ -51,7 +51,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 10,
                 "controller" : "neural_controller",
                 "sensors" : {"distance_sensor3D" : {"n_sectors" : 6, "range" : 1}},
                 "actuators" : {"joint_velocity_actuator" : {"joint_ids" : [0, 1]}},

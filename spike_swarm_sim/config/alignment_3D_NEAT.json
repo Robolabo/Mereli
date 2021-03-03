@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_alignment_3D_SNES_final",
+    "checkpoint_file" : "chk_alignment_3D_NEAT_final",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 20,
@@ -16,8 +16,6 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H1" : {"n" : 10, "params" : {}},
-            "H2" : {"n" : 10, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 1, "params" : {"tau": 0.5, "activation":"tanh"}}
@@ -28,25 +26,9 @@
             "outB" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
         },
         "synapses" :  {
-            "I1-c" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
-            "I2-c" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
-            "I3-c" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
-
-            "h1-h1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.8},
-            "h2-h2" : {"pre":"H2","post":"H2", "trainable":true, "p":0.8},
-            "h1-h2" : {"pre":"H1","post":"H2", "trainable":true, "p":0.7},
-
-            "h1-mot" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "h2-comm" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "h2-st" : {"pre":"H2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-
-            "comm-h1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
-            "mot-h1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
-            "st-h1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0},
-
-            "comm-comm" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "comm-st" : {"pre":"OUT_COMM","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-            "st-comm" : {"pre":"OUT_COMM_STATE","post":"OUT_COMM", "trainable":true, "p":1.0}
+            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I2-COMM_ST" : {"pre":"I2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
@@ -55,19 +37,28 @@
         } 
     },
     "algorithm" : {
-        "name" : "SNES",
+        "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 200,
         "generations" : 5000,
         "evaluation_steps" : 600,
         "num_evaluations" : 1,
         "fitness_function" : "alignment",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:hidden", "neurons:gain:all"],
-                "max_vals" : [3,  0, 0.5, 4],
-                "min_vals" : [-3, -3, -1, 0.5],
-                "params" : {"encoding" : "real"}
+                "objects" : ["synapses:weights:all"],
+                "max_vals" : [3],
+                "min_vals" : [-3],
+                "params" : {
+                    "encoding" : "real",
+                    "p_weight_mut" : 0.75,
+                    "p_node_mut" : 0.08,
+                    "p_conn_mut" : 0.1,
+                    "compatib_thresh" : 2.5,
+                    "c1" : 4,
+                    "c2" : 2, 
+                    "c3" : 2
+                }
             }          
         }
     },
