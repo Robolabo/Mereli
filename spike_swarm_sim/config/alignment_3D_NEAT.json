@@ -39,7 +39,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 200,
+        "population_size" : 100,
         "generations" : 5000,
         "evaluation_steps" : 600,
         "num_evaluations" : 1,
@@ -71,7 +71,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 7,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {"IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2}},
                 "actuators" : {
