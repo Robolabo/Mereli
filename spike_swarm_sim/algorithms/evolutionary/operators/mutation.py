@@ -110,7 +110,7 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
             if np.random.random() >= 0.9:
                 conn['weight'] = np.random.random()
             else:
-                conn['weight'] += np.random.randn() * 0.1
+                conn['weight'] += np.random.randn() * 0.05
                 conn['weight'] = np.clip(conn['weight'], a_min=0, a_max=1)
     #* Connnections mutations
     for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):

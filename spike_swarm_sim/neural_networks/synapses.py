@@ -110,7 +110,7 @@ class Synapses(ABC):
         """
         """
         weights_len = self.len_weights(conn_name, ann_graph)
-        random_weights = 0.5 + np.random.randn(weights_len)*0.1 #between 0 and 1 (denormalized in set)
+        random_weights = 0.5 + np.random.randn(weights_len) * 0.07 #between 0 and 1 (denormalized in set)
         random_weights = np.clip(random_weights, a_min=0, a_max=1)
         return self.set_weights(conn_name, ann_graph, random_weights,\
                             min_val=min_val, max_val=max_val)
