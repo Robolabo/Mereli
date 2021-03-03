@@ -71,7 +71,6 @@ class NEAT_Population(Population):
         for n_offspring, spc in zip(species_offsprings, self.species):
             #! OJO DEEPCOPY????
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            import pdb; pdb.set_trace()
             #* Truncate bests
             n_sel = max(2, int(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
