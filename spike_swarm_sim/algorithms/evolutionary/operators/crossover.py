@@ -24,13 +24,12 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
             child1_genes = copy.deepcopy((parent1_gene, parent2_gene)[rnd_val])
             child2_genes = copy.deepcopy((parent1_gene, parent2_gene)[1 - rnd_val])
             assert len(child1_genes) == 1 and len(child2_genes) == 1
-            if not all([parent1_gene[tuple(parent1_gene.keys())[0]]['enabled'],\
-                        parent2_gene[tuple(parent2_gene.keys())[0]]['enabled']]):
-                child1_genes[tuple(child1_genes.keys())[0]]['enabled'] = np.random.random() > disable_prob
-                child2_genes[tuple(child2_genes.keys())[0]]['enabled'] = np.random.random() > disable_prob
+            if not all([[*parent1_gene.values()][0]['enabled'],\
+                        [*parent2_gene.values()][0]['enabled']]):
+                [*child1_genes.values()][0]['enabled'] = np.random.random() > disable_prob
+                [*child2_genes.values()][0]['enabled'] = np.random.random() > disable_prob
             child_1['connections'].update(child1_genes)
             child_2['connections'].update(child2_genes)
-
         
         #* Disjoint and excess genes
         for gene_innovation in (innov_ids_1, innov_ids_2)[f2 >= f1] - common_genes:

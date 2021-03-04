@@ -83,7 +83,7 @@ class NEAT_Population(Population):
             fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents, fitness_parents))
-        
+       
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
                         offspring, self.input_nodes, self.current_innovation,
@@ -122,7 +122,6 @@ class NEAT_Population(Population):
         #* Update popultation
         self.population = offspring
         fitness_vector = raw_fitness #!
-
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
             import pdb; pdb.set_trace()
