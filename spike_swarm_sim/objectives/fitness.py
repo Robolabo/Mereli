@@ -113,9 +113,13 @@ class Alignment:
         initial_timestep = 50 # ignore previous timesteps for fitness computation
         for t, (thetas, action) in enumerate(zip(robot_orientations[initial_timestep:], \
                         np.array(actions)[initial_timestep:]), start=initial_timestep):
-            angle_errs = np.max([angle_diff(th1[-1], th2[-1])
+            #angle_errs = np.max([angle_diff(th1[-1], th2[-1])
+            #                    for j, th1 in enumerate(thetas)
+            #                    for i, th2 in enumerate(thetas) if i != j])
+            angle_errs = np.mean([angle_diff(th1[-1], th2[-1])
                                 for j, th1 in enumerate(thetas)
                                 for i, th2 in enumerate(thetas) if i != j])
+            #import pdb; pdb.set_trace()
             fA = np.clip(1 - (angle_errs / (0.4*np.pi)), a_min=0, a_max=1)
             fB = np.mean([np.clip(1 - np.abs(ac['joint_velocity_actuator'][0]), a_min=0, a_max=1) for ac in action])
             fitness += (fA * fB)

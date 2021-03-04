@@ -26,7 +26,11 @@ class MultiWorldWrapper:
     @property
     def all(self):
         return self._worlds 
-    
+   
+    @property
+    def robots(self):
+        return self._worlds[0].robots
+
     def get_world(self, idx):
         return self._worlds[idx]
 
