@@ -93,7 +93,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
             'weight': np.random.random(), # Random weight in [0,1] (denormalized later).
             'group' : conn_name,
             'enabled' : True,
-            'trainable':True,
+            'trainable' : True,
             'innovation' : innovation_history.get((new_conn[0], new_conn[1]), current_innovation),
             'idx' : len(genotype['connections']),#!
             'p' : 1.}

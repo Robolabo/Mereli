@@ -43,11 +43,12 @@ class Synapses(ABC):
         for name, node in ann_graph['neurons'].items():
             in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
             for syn in in_connections:
-                pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\
-                            else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
-                mask[node['idx'], pre_idx] = True
-                trainable_mask[node['idx'], pre_idx] = True
-                weights[node['idx'], pre_idx] = syn['weight']
+                if syn['enabled']:
+                    pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\
+                                else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
+                    mask[node['idx'], pre_idx] = True
+                    trainable_mask[node['idx'], pre_idx] = True
+                    weights[node['idx'], pre_idx] = syn['weight']
         self.weights = weights
         self.mask = mask
         self.trainable_mask = trainable_mask
@@ -201,14 +202,15 @@ class DynamicSynapses(Synapses):
             #* List of input connections to node.
             in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
             for syn in in_connections:
-                pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\
-                        else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
-                mask[node['idx'], pre_idx] = True
-                trainable_mask[node['idx'], pre_idx] = True
-                weights[node['idx'], pre_idx] = syn['weight']
-                ampa_mask[node['idx'], pre_idx] = 'AMPA' in syn['neuroTX']
-                gaba_mask[node['idx'], pre_idx] = 'GABA' in syn['neuroTX']
-                ndma_mask[node['idx'], pre_idx] = 'NDMA' in syn['neuroTX']
+                if syn['enabled']:
+                    pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\
+                            else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
+                    mask[node['idx'], pre_idx] = True
+                    trainable_mask[node['idx'], pre_idx] = True
+                    weights[node['idx'], pre_idx] = syn['weight']
+                    ampa_mask[node['idx'], pre_idx] = 'AMPA' in syn['neuroTX']
+                    gaba_mask[node['idx'], pre_idx] = 'GABA' in syn['neuroTX']
+                    ndma_mask[node['idx'], pre_idx] = 'NDMA' in syn['neuroTX']
         self.weights = weights
         self.mask = mask
         self.trainable_mask = trainable_mask

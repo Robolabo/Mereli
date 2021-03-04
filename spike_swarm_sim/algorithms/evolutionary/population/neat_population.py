@@ -38,7 +38,7 @@ class NEAT_Population(Population):
         self.innovation_history = {}
         
     def step(self, fitness_vector, generation):
-        """ 
+        """
         ==================================================================================
         - Args:
             fitness_vector [np.ndarray or list]: array of computed fitness values.
@@ -57,8 +57,6 @@ class NEAT_Population(Population):
         for spc in self.species:
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             spc.update_stats(np.array(spc_fitness) * spc.num_genotypes)
-            if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
-                offspring.append(spc_genotypes[0])
             num_offspring = max(2, int(np.round(self.pop_size * sum(spc_fitness) / sum(fitness_vector))))
             num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
                             if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
@@ -74,6 +72,8 @@ class NEAT_Population(Population):
         for n_offspring, spc in zip(species_offsprings, self.species):
             #! OJO DEEPCOPY????
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
+            if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
+                offspring.append(spc_genotypes[0])
             #* Truncate bests
             n_sel = max(2, int(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
