@@ -110,7 +110,7 @@ class Alignment:
         """
         robot_orientations = np.stack(info["robot_orientations"]).copy()
         fitness = 0
-        initial_timestep = 50 # ignore previous timesteps for fitness computation
+        initial_timestep = 0 # ignore previous timesteps for fitness computation
         for t, (thetas, action) in enumerate(zip(robot_orientations[initial_timestep:], \
                         np.array(actions)[initial_timestep:]), start=initial_timestep):
             #angle_errs = np.max([angle_diff(th1[-1], th2[-1])

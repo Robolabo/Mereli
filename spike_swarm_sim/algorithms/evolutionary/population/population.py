@@ -11,6 +11,7 @@ class Population:
                  mating_operator='random', mutation_prob=0.05, crossover_prob=0.9, num_elite=5,):
         self.population = []
         self.segment_lengths = []
+        self.best = None
         self.objects = objects
         self.pop_size = pop_size
         self.max_vals = max_vals if isinstance(max_vals, list) else [max_vals for _ in objects]

@@ -2,7 +2,7 @@ import logging
 import numpy as np
 
 class Species:
-    def __init__(self, id, compatib_thresh=3, c1=1, c2=1, c3=2.):
+    def __init__(self, id, generation, compatib_thresh=3, c1=1, c2=1, c3=2.):
         self.id = id
         self.compatib_thresh = compatib_thresh
         self.c1 = c1
@@ -10,8 +10,13 @@ class Species:
         self.c3 = c3
         self.num_genotypes = 0
         self.representative = {}
-        self.mean_fitness = None
-        self.max_fitness = None
+        self.mean_fitness = {'raw' : 0, 'adjusted' : 0}
+        self.max_fitness = {'raw' : 0, 'adjusted' : 0}
+        self.min_fitness = {'raw' : 0, 'adjusted' : 0}
+        self.fitness_sum = {'raw' : 0, 'adjusted' : 0}
+        self.creation_generation = generation
+        self.history = {key : [] for key in ['num_genotypes', 'mean_fitness',
+                                        'max_fitness', 'min_fitness', 'sum_fitness']}
         self.last_improvement = 0
 
     def compatibility(self, genotype):
@@ -42,8 +47,30 @@ class Species:
                 + self.c3 * W_dist
         return dist < self.compatib_thresh, dist
 
-    def update(self):
-        pass
+    def update_stats(self, fitness_scores):
+        self.history['num_genotypes'].append(self.num_genotypes)
+        self.history['mean_fitness'].append(np.mean(fitness_scores))
+        self.history['max_fitness'].append(max(fitness_scores))
+        self.history['min_fitness'].append(min(fitness_scores))
+        self.history['sum_fitness'].append(sum(fitness_scores))
+
+        adj_fitness_scores = fitness_scores.copy() / self.num_genotypes
+        self.mean_fitness.update({
+            'raw' : np.mean(fitness_scores),
+            'adjusted': np.mean(adj_fitness_scores)
+        })
+        self.max_fitness.update({
+            'raw' : max(fitness_scores),
+            'adjusted': max(adj_fitness_scores)
+        })
+        self.min_fitness.update({
+            'raw' : min(fitness_scores),
+            'adjusted': min(adj_fitness_scores)
+        })
+        self.fitness_sum.update({
+            'raw' : sum(fitness_scores),
+            'adjusted': sum(adj_fitness_scores)
+        })
 
     #! OJO
     @property

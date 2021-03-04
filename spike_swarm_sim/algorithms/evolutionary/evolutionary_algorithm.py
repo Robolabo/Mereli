@@ -192,7 +192,7 @@ class EvolutionaryAlgorithm:
             #* No parallelization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
                 #* Evolve Population
-                mean_fitness, max_fitness, min_fitness = self.evolve()
+                mean_fitness, max_fitness, min_fitness = self.evolve(k)
                 
                 print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
                     .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
@@ -204,9 +204,9 @@ class EvolutionaryAlgorithm:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
 
-    def evolve(self):
+    def evolve(self, generation):
         for pop in self.populations.values():
-            pop.step(self.fitness)
+            pop.step(self.fitness, generation)
         # import pdb; pdb.set_trace()
         mean_fitness = np.mean(self.fitness)
         max_fitness = np.max(self.fitness)
@@ -239,7 +239,7 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                genotype_segment = pop.population[1]
+                genotype_segment = pop.best if pop.best is not None else pop.population[1]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}

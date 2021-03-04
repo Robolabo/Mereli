@@ -27,7 +27,7 @@ class NEAT_Population(Population):
         self.c3 = c3
         self.species_count = 1
         # list of existing species. 1 species at first.
-        self.species = [Species(self.species_count, compatib_thresh=compatib_thresh, c1=c1, c2=c2, c3=c3)] 
+        self.species = []
         self.input_nodes = [] #* Cannot be altered by NEAT 
         self.population = []
         #* Global pointer of gene innovations
@@ -37,7 +37,7 @@ class NEAT_Population(Population):
         #* the evolution.
         self.innovation_history = {}
         
-    def step(self, fitness_vector):
+    def step(self, fitness_vector, generation):
         """ 
         ==================================================================================
         - Args:
@@ -46,6 +46,7 @@ class NEAT_Population(Population):
         ==================================================================================
         """
         offspring = []
+        self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
         raw_fitness = fitness_vector.copy()
         #* Adjust fitness scores according to the fitness sharing as defined in the NEAT paper.
         fitness_vector = [f / [sp for sp in self.species if sp.id == genotype['species']][0].num_genotypes \
@@ -55,10 +56,12 @@ class NEAT_Population(Population):
         species_offsprings = []
         for spc in self.species:
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
+            spc.update_stats(np.array(spc_fitness) * spc.num_genotypes)
             if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
                 offspring.append(spc_genotypes[0])
             num_offspring = max(2, int(np.round(self.pop_size * sum(spc_fitness) / sum(fitness_vector))))
-            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring) if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
+            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
+                            if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
             species_offsprings.append(num_offspring)
         #species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
         #                       for n_off in species_offsprings]     
@@ -96,7 +99,7 @@ class NEAT_Population(Population):
             compatible, distances = zip(*[species.compatibility(genotype) for species in self.species])
             if not any(compatible): #* create new species
                 self.species_count += 1
-                self.species.append(Species(self.species_count, compatib_thresh=self.compatib_thresh,
+                self.species.append(Species(self.species_count, generation, compatib_thresh=self.compatib_thresh,
                                         c1=self.c1, c2=self.c2, c3=self.c3))
                 self.species[-1].num_genotypes += 1
                 self.species[-1].representative = copy.deepcopy(genotype)
@@ -118,20 +121,12 @@ class NEAT_Population(Population):
         #! Update species fitness statistics!!!
         #* Update popultation
         self.population = offspring
-        #!
-        fitness_vector = raw_fitness
+        fitness_vector = raw_fitness #!
 
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
             import pdb; pdb.set_trace()
-        #!!!!!
-        for pp in self.population:
-            for x, xx in pp['connections'].items():
-                if xx['pre'] not in self.input_nodes + list(pp['nodes']):
-                    import pdb; pdb.set_trace()
-                if xx['post'] not in list(pp['nodes']):
-                    import pdb; pdb.set_trace()
-        #!!!!!
+
     @property
     def min_vector(self):
         raise NotImplementedError
@@ -149,6 +144,8 @@ class NEAT_Population(Population):
         - Returns: None
         =====================================================================
         """
+        self.species = [Species(self.species_count, 0, compatib_thresh=self.compatib_thresh, 
+                            c1=self.c1, c2=self.c2, c3=self.c3)]
         self.input_nodes = [*interface.neural_net.graph['inputs'].keys()]
         #* Only initialize weights randomly, the structure is always the same.
         for n in range(self.pop_size):
@@ -168,10 +165,3 @@ class NEAT_Population(Population):
         #* Assign species representative. There is only 1 species.
         self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
         self.species[0].num_genotypes = self.pop_size
-        #* Segment lengths have to be updated in every generation.
-        self.segment_lengths = [interface.submit_query(query, primitive='LEN') for query in self.objects]
-
-        #* --- NEAT Hyperparams --- #
-        self.p_weight_mut = 0.8 #! NO del todo, mirar paper
-        self.p_node_mut = 0.03
-        self.p_conn_mut = 0.05
