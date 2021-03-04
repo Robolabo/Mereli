@@ -55,7 +55,7 @@
                     "p_node_mut" : 0.08,
                     "p_conn_mut" : 0.1,
                     "compatib_thresh" : 2.5,
-                    "c1" : 3,
+                    "c1" : 3.2,
                     "c2" : 2, 
                     "c3" : 2
                 }
