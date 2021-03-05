@@ -76,3 +76,10 @@ class Species:
     @property
     def is_extinct(self):
         return self.last_improvement >= 15
+
+
+    def plot_fitness_history(self):
+        import matplotlib.pyplot as plt
+        max_fitness_ts = self.history['max_fitness']
+        plt.plot(self.creation_generation + np.arange(len(max_fitness_ts)), max_fitness_ts)
+        

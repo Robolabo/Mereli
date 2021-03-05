@@ -30,7 +30,7 @@ class SNES_Population(Population):
         sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)), size=self.pop_size)
         return (self.mu + self.sigma * sample, sample)
 
-    def step(self, fitness_vector):
+    def step(self, fitness_vector, generation):
         """ SNES Evolution step applied at the end of each generation to update the population.
         ==================================================================================
         - Args:

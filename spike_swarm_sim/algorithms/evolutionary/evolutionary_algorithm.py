@@ -244,6 +244,7 @@ class EvolutionaryAlgorithm:
         # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}
         info['generation'] = 1
+        
         # eval_hist = {'actions': [], 'states': []}
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
         fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names
