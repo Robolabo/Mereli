@@ -146,18 +146,20 @@ class NEATInterface:
                 self.neural_net.add_synapse(key, syn['pre'], syn['post'], syn['weight'], conn_prob=1.)
             self.neural_net.graph['synapses'].update({key : genotype['connections'][key].copy()})
 
-        #* Update parameters.
-        #! OJO POR AHORA SOLO WEIGHTS!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        counter = 0
+        #* Update parameters (Decoders and encoders not supported yet).
+        # counter = 0
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
-            segment_len = self.submit_query(query, primitive='LEN')
-            genotype_segment = np.array([g['weight'] for g in [*genotype['connections'].values()][counter:counter+segment_len]])
+            # segment_len = self.submit_query(query, primitive='LEN')
+            gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[query.split(':')[0]]
+            variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
+            genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
+            # genotype_segment = np.array([g[variable] for g in [*genotype[gene_type].values()][counter:counter+segment_len]])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)
-            counter += segment_len
-        self.neural_net.build() #* Compile changes.
-        # if len(genotype['nodes']) == 17: import pdb; pdb.set_trace()
 
+            # counter += segment_len
+        self.neural_net.build() #* Compile changes.
+       
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.
