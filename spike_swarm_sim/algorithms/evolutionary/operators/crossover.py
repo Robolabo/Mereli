@@ -48,6 +48,7 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
                 child_2['nodes'][node_name] = (parent1, parent2)[not rnd_gene]['nodes'][node_name].copy()
             else:
                 child_1['nodes'][node_name] = (parent1, parent2)[f2 >= f1]['nodes'][node_name].copy()
+                child_2['nodes'][node_name] = (parent1, parent2)[f2 >= f1]['nodes'][node_name].copy()
 
         #* Formalize recombination
         do_crossover = np.random.random() < crossover_prob

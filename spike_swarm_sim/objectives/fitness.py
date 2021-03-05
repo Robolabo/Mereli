@@ -120,7 +120,7 @@ class Alignment:
                                 for j, th1 in enumerate(thetas)
                                 for i, th2 in enumerate(thetas) if i != j])
             #import pdb; pdb.set_trace()
-            fA = np.clip(1 - (angle_errs / np.pi), a_min=0, a_max=1)
+            fA = np.clip(1 - (angle_errs / (0.75 * np.pi)), a_min=0, a_max=1)
             fB = np.mean([np.clip(1 - np.abs(ac['joint_velocity_actuator'][0]), a_min=0, a_max=1) for ac in action])
             fitness += (fA * fB)
         fitness /= (len(robot_orientations) - initial_timestep)

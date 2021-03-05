@@ -39,9 +39,9 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 5000,
-        "evaluation_steps" : 500,
+        "evaluation_steps" : 50,
         "num_evaluations" : 1,
         "fitness_function" : "alignment",
         "populations" : {
@@ -57,7 +57,7 @@
                     "compatib_thresh" : 2.5,
                     "c1" : 3.2,
                     "c2" : 2, 
-                    "c3" : 2
+                    "c3" : 4
                 }
             }
         }
