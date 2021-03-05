@@ -41,8 +41,8 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 5000,
-        "evaluation_steps" : 50,
-        "num_evaluations" : 1,
+        "evaluation_steps" : 500,
+        "num_evaluations" : 100,
         "fitness_function" : "alignment",
         "populations" : {
             "p1" : {
