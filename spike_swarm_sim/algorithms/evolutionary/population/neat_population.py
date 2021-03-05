@@ -53,7 +53,7 @@ class NEAT_Population(Population):
                             for f, genotype in zip(fitness_vector, self.population)]
         #* Update species fitness statistics
         for spc in self.species:
-            spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id] 
+            spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id]
             spc.update_stats(np.array(spc_fitness) * spc.num_genotypes)
 
         #* Elites, 5 in total from most fit species with more than 5 genotypes.
@@ -61,7 +61,7 @@ class NEAT_Population(Population):
         for i, spc in sorted(enumerate(self.species), key=lambda x: x[1].fitness_sum['adjusted'])[::-1]:
             if spc.num_genotypes > 5 and sum(num_elites) < 5:
                 num_elites[i] += 1
-                fittest = [gt for _, gt in sorted(zip(fitness_vector, self.population), 
+                fittest = [gt for _, gt in sorted(zip(fitness_vector, self.population),
                             key=lambda x: x[0])[::-1] if gt['species'] == spc.id][0]
                 offspring.append(fittest)
 
@@ -88,15 +88,17 @@ class NEAT_Population(Population):
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)
-            parents = [parents[idx] for idx in parents_mating] # shuffle parents
-            fitness_parents = [fitness_parents[idx] for idx in parents_mating]
+            try:
+                parents = [parents[idx] for idx in parents_mating] # shuffle parents
+                fitness_parents = [fitness_parents[idx] for idx in parents_mating]
+            except:
+                import pdb; pdb.set_trace()
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents, fitness_parents))
-       
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
-                        offspring, self.input_nodes, self.current_innovation,
-                        self.innovation_history, p_weight_mut=self.p_weight_mut, 
+                        offspring, self.input_nodes, self.current_innovation, 
+                        self.innovation_history, self.objects, p_weight_mut=self.p_weight_mut,
                         p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
 
         #* Assign Species. Use representatives from the previous generation.
@@ -134,7 +136,7 @@ class NEAT_Population(Population):
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
             import pdb; pdb.set_trace()
-
+        
     @property
     def min_vector(self):
         raise NotImplementedError
@@ -158,11 +160,20 @@ class NEAT_Population(Population):
         #* Only initialize weights randomly, the structure is always the same.
         for n in range(self.pop_size):
             interface.initGenotype(self.objects, self.min_vals, self.max_vals)
+            #* Initialize genotype (ANN architectural traits)
             self.population.append({
                 'species' : self.species[0].id,
                 'nodes' : copy.deepcopy(interface.neural_net.graph['neurons']),
                 'connections' : copy.deepcopy(interface.neural_net.graph['synapses'])
             })
+            #* Initialize genotype (ANN parameters and weights traits)
+            for query, max_val, min_val in zip(self.objects, self.min_vals, self.max_vals):
+                gnt_segment = interface.toGenotype([query], [min_val], [max_val])
+                gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[query.split(':')[0]]
+                variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
+                for gene, value in zip(self.population[-1][gene_type].values(), gnt_segment):
+                    gene[variable] = value
+            #* Assign innovation numbers
             for i, conn in enumerate(self.population[-1]['connections'].values()):
                 if n == 0:
                     conn['innovation'] = self.current_innovation
@@ -173,6 +184,5 @@ class NEAT_Population(Population):
         #* Assign species representative. There is only 1 species.
         self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
         self.species[0].num_genotypes = self.pop_size
-
 
 

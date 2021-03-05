@@ -9,13 +9,14 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
     if len(parents) % 2:
         offspring.append(parents.pop(0))
     for f1, f2, parent1, parent2 in zip(fitness_values[::2], fitness_values[1::2], parents[::2], parents[1::2]):
-        child_1 = {'species' : None, 'nodes': copy.deepcopy((parent1, parent2)[f2 >= f1]['nodes']), 'connections' : {}}
+        # child_1 = {'species' : None, 'nodes': copy.deepcopy((parent1, parent2)[f2 >= f1]['nodes']), 'connections' : {}}
+        child_1 = {'species' : None, 'nodes': {}, 'connections' : {}}
         child_2 = copy.deepcopy(child_1)
         innov_ids_1 = set([gene['innovation'] for gene in parent1['connections'].values()])
         innov_ids_2 = set([gene['innovation'] for gene in parent2['connections'].values()])
         common_genes = innov_ids_1.intersection(innov_ids_2)
         random_mask = np.random.randint(2, size=len(common_genes))
-        #* Common genes
+        #* Common connection genes
         for rnd_val, gene_innovation in zip(random_mask, common_genes):
             parent1_gene = {name : conn for name, conn in parent1['connections'].items()\
                             if conn['innovation'] == gene_innovation}
@@ -31,13 +32,24 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
             child_1['connections'].update(child1_genes)
             child_2['connections'].update(child2_genes)
         
-        #* Disjoint and excess genes
+        #* Disjoint and excess connection genes
         for gene_innovation in (innov_ids_1, innov_ids_2)[f2 >= f1] - common_genes:
             winner_gene = {name : conn.copy() for name, conn in (parent1, parent2)[f2 >= f1]['connections'].items()\
                             if conn['innovation'] == gene_innovation}
             assert len(child1_genes) == 1 and len(child2_genes) == 1
             child_1['connections'].update(winner_gene)
             child_2['connections'].update(winner_gene)
+
+        #* Crossover Nodes
+        for node_name in (parent1, parent2)[f2 >= f1]['nodes']:
+            if node_name in parent1['nodes'] and node_name in parent2['nodes']:
+                rnd_gene = np.random.random() > 0.5
+                child_1['nodes'][node_name] = (parent1, parent2)[rnd_gene]['nodes'][node_name].copy()
+                child_2['nodes'][node_name] = (parent1, parent2)[not rnd_gene]['nodes'][node_name].copy()
+            else:
+                child_1['nodes'][node_name] = (parent1, parent2)[f2 >= f1]['nodes'][node_name].copy()
+
+        #* Formalize recombination
         do_crossover = np.random.random() < crossover_prob
         offspring.append((parent1, child_1)[do_crossover])
         offspring.append((parent2, child_2)[do_crossover])

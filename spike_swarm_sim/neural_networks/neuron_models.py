@@ -144,6 +144,7 @@ class RateModel(NonSpikingNeuronModel):
             'motor' : [neuron['tau'] for neuron in ann_graph['neurons'].values() if neuron['is_motor']]
         }.get(neuron_name,  [neuron['tau'] for neuron in ann_graph['neurons'].values() \
                 if neuron['ensemble'] == neuron_name]))
+        if any(tau_vals == 0): import pdb; pdb.set_trace() 
         return (np.log10(0.5 * tau_vals) - min_val) / (max_val - min_val)
 
     @SET('neurons:tau')
@@ -155,12 +156,13 @@ class RateModel(NonSpikingNeuronModel):
         }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
         for tau, neuron in zip(data, neuron_iterable):
             neuron['tau'] = 2 * 10 ** (tau * (max_val - min_val) + min_val)
+            if neuron['tau'] == 0: import pdb; pdb.set_trace() 
             self.tau[neuron['idx']] = neuron['tau']
         return ann_graph
 
     @LEN('neurons:tau')
     def len_tau(self, neuron_name, ann_graph):
-        return len(self.get_tau(neuron_name, ann_graph))
+        return len(self.get_tau(neuron_name, ann_graph, min_val=-1, max_val=.5))
 
     @INIT('neurons:tau')
     def init_tau(self, neuron_name, ann_graph, min_val, max_val):

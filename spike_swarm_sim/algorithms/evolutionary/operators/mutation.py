@@ -11,21 +11,21 @@ def assign_unique_key(keys, base_name):
     return '{}_{}'.format(base_name, unique_id)
 
 #! SIN decorator por ahora
-def add_node(genotype, current_innovation, innovation_history, **kwargs):
+def add_node(genotype, current_innovation, innovation_history, node_variables, **kwargs):
     """ Add a new node inbetween an existing connection. The exisiting connection 
     is disabled and two new synapses are included.
     """
-    #! OJO RESTO DE PARAMETERS.
     #* Make sure that node name does not exist.
     pre_nodes, post_nodes = [*map(lambda x: set(x), zip(*innovation_history.keys()))]
     node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
-    genotype['nodes'].update({
-        node_name :{
+    genotype['nodes'][node_name] = {
             'ensemble' : node_name,
             'idx' : len(genotype['nodes']),
-            'is_motor' : False,
-        }
-    })
+            'is_motor' : False
+    }
+    #* Initialize randomly node parameters
+    for var in node_variables:
+        genotype['nodes'][node_name].update({var : np.random.random()})
     #* Randomly select an enabled connection
     sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
     genotype['connections'][sel_conn]['enabled'] = False
@@ -76,7 +76,8 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     synaptic nodes are selected randomly (validating that the connection does not 
     exist).
     """
-    pos_conns = set([*product(input_nodes, genotype['nodes'].keys())] + [*product(genotype['nodes'].keys(), repeat=2)])
+    pos_conns = set([*product(input_nodes, genotype['nodes'].keys())] 
+                    + [*product(genotype['nodes'].keys(), repeat=2)])
     existing_conns = set([(conn['pre'], conn['post']) for conn in genotype['connections'].values()])
     allowed_conns = list(pos_conns - existing_conns)
     if len(allowed_conns) == 0:
@@ -103,21 +104,26 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
         current_innovation += 1
     return genotype, current_innovation, innovation_history
 
-def neat_mutation(population, input_nodes, current_innovation, innovation_history, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
-    #* Weight Mutations
-    for i, genotype in filter(lambda x: np.random.random() < p_weight_mut, enumerate(population)):
-        for conn in genotype['connections'].values(): #!optimize
-            if np.random.random() >= 0.9:
-                conn['weight'] = np.random.random()
-            else:
-                conn['weight'] += np.random.randn() * 0.05
-                conn['weight'] = np.clip(conn['weight'], a_min=0, a_max=1)
+def neat_mutation(population, input_nodes, current_innovation, innovation_history,
+            mutable_variables, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
+    #* Parameter Mutations
+    for param in mutable_variables:
+        gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[param.split(':')[0]]
+        variable = {'weights' : 'weight'}.get(param.split(':')[1], param.split(':')[1])
+        for i, genotype in filter(lambda x: np.random.random() < p_weight_mut, enumerate(population)):
+            for conn in genotype[gene_type].values(): #!optimize
+                if np.random.random() < 0.02:
+                    conn[variable] = np.random.random()
+                else:
+                    conn[variable] += np.random.randn() * 0.05
+                    conn[variable] = np.clip(conn[variable], a_min=0, a_max=1)
     #* Connnections mutations
     for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):
         genotype, current_innovation, innovation_history = add_connection(genotype, input_nodes, current_innovation, innovation_history)
     #* Node mutations
     for i, genotype in filter(lambda x: np.random.random() < p_node_mut, enumerate(population)):
-        genotype, current_innovation, innovation_history = add_node(genotype, current_innovation, innovation_history)
+        genotype, current_innovation, innovation_history = add_node(genotype, current_innovation, 
+                    innovation_history, [var.split(':')[1] for var in mutable_variables if var.split(':')[0] == 'neurons'])
     return population, current_innovation, innovation_history
 
 @evo_operator_registry(name='gaussian_mutation')
