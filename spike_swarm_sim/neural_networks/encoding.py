@@ -240,6 +240,7 @@ class LIF_Encoding(Encoder):
 
     def plot(self, stimuli):
         self.create_lif(self.receptive_field.n_neurons)
+        self.reset()
         super().plot(stimuli)
         self.create_lif(self.n_stimuli * self.receptive_field.n_neurons)
 

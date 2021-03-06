@@ -226,6 +226,8 @@ class AdExModel(SpikingNeuronModel):
 
     @increase_time
     def step(self, Isyn):
+        # Isyn += 30 * (np.cos(2 * np.pi * 10 * 1e-3 * self.t) + np.random.randn(Isyn.shape[0]))
+        Isyn += 20 * np.random.randn(Isyn.shape[0])
         self._volt += (self.dt / self.tau_m) * (self.V_rest - self._volt\
                     + 2 * np.exp((self._volt - (self._theta)) / 2) - self._recov + Isyn)
         self._volt = np.clip(self._volt, a_min=None, a_max=30.)

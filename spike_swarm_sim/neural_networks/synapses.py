@@ -170,7 +170,7 @@ class DynamicSynapses(Synapses):
 
     def step_ampa(self, spikes, voltages):
         self.s_ampa[spikes] = 1
-        self.s_ampa[~spikes] += self.dt * (-self.s_ampa[~spikes]/self.ampa_tau) 
+        self.s_ampa[~spikes] += self.dt * (-self.s_ampa[~spikes] / self.ampa_tau) 
         PSP = self.ampa_gain * (self.ampa_mask * self.weights).dot(self.s_ampa)# * (self.ampa_E - voltages) 
         if self.ampa_E is not None: PSP *= (self.ampa_E - voltages)
         return PSP

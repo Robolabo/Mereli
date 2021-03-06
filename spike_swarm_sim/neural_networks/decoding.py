@@ -238,7 +238,8 @@ class LinearPopulationDecoding(Decoder):
     ====================================================================================
     """
     def __init__(self, *args, num_outputs=1, tau_decay=30.,
-                    tau_rise=5., rest_value=0.5, **kwargs):
+                    tau_rise=5., non_linearity='sigmoid',
+                    rest_value=0.5, **kwargs):
         kwargs['trainable'] = True
         super(LinearPopulationDecoding, self).__init__(*args, **kwargs)
         self.dt = 1.
@@ -246,6 +247,10 @@ class LinearPopulationDecoding(Decoder):
         self.tau_rise = tau_rise
         self.tau_decay = tau_decay
         self.rest_value = rest_value
+        self.non_linearity = {
+            'tanh' : tanh,
+            'sigmoid' : sigmoid,
+        }.get(non_linearity, 'sigmoid')
 
         # Dynamics
         self.activities = np.zeros(tuple(self.out_ensembles.values())[0])
@@ -270,8 +275,8 @@ class LinearPopulationDecoding(Decoder):
     def decoded_activities(self):
         W = self.w.reshape(self.num_outputs, self.activities.shape[0]).T
         # output = sigmoid(3 * (W.T.dot(self.activities) - 1))
-        output = sigmoid(3 * (W.T.dot(self.activities)))
-        output += (self.rest_value - 0.5)
+        output = self.non_linearity(3 * (W.T.dot(self.activities)))
+        # output += (self.rest_value - 0.5)
         return output
 
     def reset(self):

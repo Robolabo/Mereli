@@ -87,7 +87,9 @@ def encoding_checker(topology):
             rf_child_args = {}
             if rf_child_inspection[3] is not None:
                 rf_child_args = {key : val for key, val in zip(reversed(rf_child_inspection[0]),\
-                                    reversed(rf_child_inspection[3]))}             
+                                    reversed(rf_child_inspection[3]))}
+            if rf_child_inspection[5] is not None:
+                 rf_child_args.update(rf_child_inspection[5])
             rf_args = {key : val for key, val in zip(reversed(rf_base_inspection[0]),\
                                     reversed(rf_base_inspection[3]))}
             rf_args = merge_dicts([rf_args, rf_child_args])

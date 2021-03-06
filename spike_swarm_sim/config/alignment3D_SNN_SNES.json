@@ -13,21 +13,21 @@
                 "scheme" : "LIF_Encoding",
                 "receptive_field" : {
                     "name" : "gaussian_receptive_field",
-                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30, "sigma" : 6, "inverted" : false}
                 }
             },
             "I1" : {
                 "scheme" : "LIF_Encoding",
                 "receptive_field" : {
                     "name" : "gaussian_receptive_field",
-                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                    "params" : {"n_neurons" : 3, "min_stim" : -1, "max_stim" : 1, "min_val" : 0, "max_val" : 30, "sigma" : 0.65, "inverted" : false}
                 }
             },
             "I2" : {
                 "scheme" : "LIF_Encoding",
                 "receptive_field" : {
                     "name" : "gaussian_receptive_field",
-                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                    "params" : {"n_neurons" : 3, "min_stim" : -1, "max_stim" : 1, "min_val" : 0, "max_val" : 30, "sigma" : 0.65, "inverted" : false}
                 }
             }
         },
@@ -35,7 +35,7 @@
         "synapse_model" : "dynamic_synapse",
         "ensembles": {
             "H1e" : {"n" : 15, "params" : {}},
-            "H1i" : {"n" : 10, "params" : {}},
+            "H1i" : {"n" : 7, "params" : {}},
             "OUT" : {"n" : 7, "params" : {}},
             "OUT_COMM" : {"n" : 7, "params" : {}}
         },
@@ -46,13 +46,16 @@
         },     
         "decoding" : {
             "out" : {
-                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 1, "is_cat" : false, "rest_value" : 0.5}
+                "scheme" : "LinearPopulationDecoding", 
+                "params" : {"trainable":true, "num_outputs": 1, "non_linearity" : "tanh","is_cat" : false, "rest_value" : 0.5}
             },
             "out2" : {
-                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 1, "is_cat" : false, "rest_value" : 0.5}
+                "scheme" : "LinearPopulationDecoding", 
+                "params" : {"trainable":true, "num_outputs": 1, "non_linearity" : "sigmoid", "is_cat" : false, "rest_value" : 0.5}
             },
             "out3" : {
-                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 1, "is_cat" : false, "rest_value" : 0.5}
+                "scheme" : "LinearPopulationDecoding", 
+                "params" : {"trainable":true, "num_outputs": 1, "non_linearity" : "sigmoid", "is_cat" : true, "rest_value" : 0.5}
             }
         },
         "synapses" :  {
@@ -73,9 +76,9 @@
             "OUT_COMM-H1e" : {"pre" : "OUT_COMM", "post": "H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true}
         },
         "synapse_params": {
-            "AMPA" : {"gain" : 6, "tau" : 6, "E":null},
-            "GABA" : {"gain" : 5, "tau": 10, "E":null}, 
-            "NDMA" : {"gain" : 1, "tau_rise" : 10, "tau_decay": 50, "Mg2" : 0.5, "E" : null}
+            "AMPA" : {"gain" : 11, "tau" : 6, "E":null},
+            "GABA" : {"gain" : 8, "tau": 10, "E":null}, 
+            "NDMA" : {"gain" : 3, "tau_rise" : 10, "tau_decay": 50, "Mg2" : 0.5, "E" : null}
         }
     },
     "algorithm" : {
@@ -88,9 +91,9 @@
         "fitness_function" : "alignment",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "decoders:weights:all"],
-                "max_vals" : [3, 1],
-                "min_vals" : [-3, -1],
+                "objects" : ["synapses:weights:sensory", "synapses:weights:hidden", "synapses:weights:motor", "decoders:weights:all"],
+                "max_vals" : [7, 5, 5,  1],
+                "min_vals" : [-7, -5, -5, -1],
                 "params" : {
                     "encoding" : "real"
                 }
