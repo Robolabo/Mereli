@@ -84,10 +84,10 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 30,
+        "population_size" : 50,
         "generations" : 5000,
         "evaluation_steps" : 500,
-        "num_evaluations" : 5,
+        "num_evaluations" : 1,
         "fitness_function" : "alignment",
         "populations" : {
             "p1" : {
@@ -111,7 +111,7 @@
                 "type" : "robot",
                 "num_instances" : 5,
                 "controller" : "neural_controller",
-                "sensors" : {"IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}},
+                "sensors" : {"IR_receiver" : {"n_sectors" : 6, "range" : 1.2, "msg_length" : 2}},
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":5}, 
                     "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
