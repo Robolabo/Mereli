@@ -82,7 +82,7 @@
                 "type" : "robot",
                 "num_instances" : 5,
                 "controller" : "neural_controller",
-                "sensors" : {"IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}},
+                "sensors" : {"IR_receiver" : {"n_sectors" : 6, "range" : 1.2, "msg_length" : 2}},
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":5}, 
                     "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}

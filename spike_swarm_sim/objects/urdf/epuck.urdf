@@ -317,4 +317,33 @@
         <child link="IR5" />
         <origin rpy="1.2 0 6.8067840827778845" xyz="0.07999999999999989 -0.13856406460551024 0.127" />
     </joint>
+
+    
+    <link name="arrow">
+        <visual>
+            <geometry>
+                <mesh filename="arrow.obj" scale="0.1 0.1 0.1"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.57 0 -1.57"/>
+            <material name="black">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+               <mesh filename="arrow.obj" scale="0.1 0.1 0.1"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="1.57 0 -1.57"/>
+        </collision>
+        <inertial>
+            <mass value="0"/>
+            <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+        </inertial>
+    </link>
+    <joint name="base_to_arrow" type="fixed">
+        <parent link="base_link"/>
+        <child link="arrow"/>
+        <origin xyz="0 0.0 0.15" rpy="0 0 0"/>
+    </joint>
+
 </robot>

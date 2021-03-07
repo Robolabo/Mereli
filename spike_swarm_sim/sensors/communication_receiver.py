@@ -125,7 +125,7 @@ class IRCommunicationReceiver3D(IRCommunicationReceiver):
             if signal_strength > direction_reading['signal']:
                 my_pos = self.get_position(self.sensors_idx[direction]) + np.r_[0, 0, 0.02]
                 #! Cambiar esto
-                tar_pos = obj.sensors['IR_receiver'].get_position(self.sensors_idx[tx_sensor]) + np.r_[0,0, 0.02]
+                tar_pos = obj.sensors['IR_receiver'].get_position(self.sensors_idx[tx_sensor]) + np.r_[0, 0, 0.02]
                 ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
                 # print(obj.id, ray_res, direction, tx_sensor)
                 if ray_res == obj.id or ray_res == -1: # No beam collisions 
