@@ -99,7 +99,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             survival_time += 1
             # if done:
             #     break
-        print([robots[i].position for i in range(len(robots))])
+        print([robots[i].orientation for i in range(len(robots))])
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
