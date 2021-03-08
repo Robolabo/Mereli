@@ -76,9 +76,9 @@
             "OUT_COMM-H1e" : {"pre" : "OUT_COMM", "post": "H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true}
         },
         "synapse_params": {
-            "AMPA" : {"gain" : 11, "tau" : 6, "E":null},
+            "AMPA" : {"gain" : 13, "tau" : 6, "E":null},
             "GABA" : {"gain" : 8, "tau": 10, "E":null}, 
-            "NDMA" : {"gain" : 3, "tau_rise" : 10, "tau_decay": 50, "Mg2" : 0.5, "E" : null}
+            "NDMA" : {"gain" : 4, "tau_rise" : 10, "tau_decay": 50, "Mg2" : 0.5, "E" : null}
         }
     },
     "algorithm" : {
@@ -86,7 +86,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 5000,
-        "evaluation_steps" : 500,
+        "evaluation_steps" : 300,
         "num_evaluations" : 1,
         "fitness_function" : "alignment",
         "populations" : {
@@ -111,9 +111,9 @@
                 "type" : "robot",
                 "num_instances" : 5,
                 "controller" : "neural_controller",
-                "sensors" : {"IR_receiver" : {"n_sectors" : 6, "range" : 1.2, "msg_length" : 2}},
+                "sensors" : {"IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}},
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":5}, 
+                    "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":10}, 
                     "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
                 },
                 "initializers" : {
