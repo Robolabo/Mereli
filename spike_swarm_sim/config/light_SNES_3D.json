@@ -53,7 +53,7 @@
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
                 "max_vals" : [3,  1.5, 0.75, 5],
-                "min_vals" : [-3, -1.5, -1, 0.05],
+                "min_vals" : [-3, -1.5, -0.6, 0.05],
                 "params" : {"encoding" : "real"}
             }          
         }
@@ -89,7 +89,7 @@
                 "num_instances": 1,
                 "controller" : "light_rnd_pos_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
                 },
                 "params" : {"range" : 2, "color" : "red"}
             }

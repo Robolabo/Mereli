@@ -40,21 +40,21 @@ class LightRndPositionController(Controller):
     """
     def __init__(self):
         self.t = 1
-        self.tar_pos = np.random.uniform(-1, 1, size=2)
+        self.tar_pos = np.random.uniform(-2, 2, size=2)
 
     @increase_time
     def step(self, pos):
         new_pos = pos[:2].copy()
-        if self.t % 100 == 0:
+        if self.t % 50 == 0:
             self.tar_pos = np.random.uniform(-4, 4, size=2)
-        new_pos = new_pos + 0.01 * normalize(self.tar_pos - new_pos)
+        new_pos = new_pos + 0.013 * normalize(self.tar_pos - new_pos)
         if len(pos) == 3:
             new_pos = np.r_[new_pos, pos[-1]]
         return new_pos
 
     def reset(self):
         self.t = 1
-        self.tar_pos = np.random.uniform(-1, 1, size=2)
+        self.tar_pos = np.random.uniform(-2, 2, size=2)
 
 @controller_registry(name='light_prey_controller')
 class PreyController(Controller):

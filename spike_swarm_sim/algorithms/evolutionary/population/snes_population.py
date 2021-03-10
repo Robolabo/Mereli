@@ -43,12 +43,12 @@ class SNES_Population(Population):
         ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])
 
         #* --- Compute utilities -- *#
-        # utilities = np.array([((max(0, np.log(1 + 0.5 * len(self.population)) - np.log(i+1)))\
-        #             / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j+1))\
-        #             for j in range(len(self.population))]))\
-        #             for i in range(len(self.population))])
-        # utilities -= 1 / len(self.population)
-        utilities = ord_fitness
+        utilities = np.array([((max(0, np.log(1 + 0.5 * len(self.population)) - np.log(i+1)))\
+                    / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j+1))\
+                    for j in range(len(self.population))]))\
+                    for i in range(len(self.population))])
+        utilities -= 1 / len(self.population)
+        # utilities = ord_fitness
         #* --- Compute gradients -- *#
         grad_mu = np.dot(utilities, ord_samples)
         grad_sigma = np.dot(utilities, [sample ** 2 - 1  for sample in ord_samples])

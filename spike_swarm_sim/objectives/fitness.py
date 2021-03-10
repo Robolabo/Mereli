@@ -150,9 +150,11 @@ class GotoLight:
         fitness = 0
         for t, (pos, light_pos)  in enumerate(zip(robot_positions, light_positions)):
             #! IF 2D : distances = [LA.norm(toroidal_difference(pos_i, light_pos)) for i, pos_i in enumerate(pos)]
-            distances = [LA.norm(pos_i - light_pos) for i, pos_i in enumerate(pos)]
+            light_pos = light_pos.flatten() #! OJO mal si muchas luces.
+            distances = np.array([LA.norm(pos_i[:2] - light_pos[:2]) for i, pos_i in enumerate(pos)])
             # distances_robots = [LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos)  for j, pos_j in enumerate(pos) if i != j]
-            fitness += np.mean(np.array([dist < 1.2 for dist in distances]))
+            fitness += np.clip(1 - (distances / 1.5), a_min=0., a_max=1.).mean()
+            # if t % 50 ==0: import pdb; pdb.set_trace()
         return fitness / len(states)
 
 @fitness_func_registry(name='grouping')
