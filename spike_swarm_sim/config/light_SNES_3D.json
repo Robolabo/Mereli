@@ -67,10 +67,10 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 5,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 5}, 
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 10}, 
                     "IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}
                 },
                 "actuators" : {
@@ -81,7 +81,7 @@
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {},
                 "params" : {"trainable" : true}
             },
             "light_red" : {
@@ -91,7 +91,7 @@
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":-3, "high" : 3, "size" : 2}}
                 },
-                "params" : {"range" : 5, "color" : "red"}
+                "params" : {"range" : 10, "color" : "red"}
             }
         }
     }

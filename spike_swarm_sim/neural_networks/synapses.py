@@ -53,7 +53,6 @@ class Synapses(ABC):
         self.mask = mask
         self.trainable_mask = trainable_mask
 
-    
     @GET("synapses:weights")
     def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """ Given a connection name the method returns the flattened array of synapse strengths in
@@ -77,7 +76,6 @@ class Synapses(ABC):
         weights = np.array([ann_graph['synapses'][name]['weight'] for name in conn_name\
                     if not only_trainable or ann_graph['synapses'][name]['trainable']])
         return (weights - min_val) / (max_val - min_val)
-
 
     @SET("synapses:weights")
     def set_weights(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
