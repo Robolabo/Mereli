@@ -145,7 +145,6 @@ class GotoLight:
         =======================================================================================
         """
         robot_positions = np.stack(info["robot_positions"]).copy()
-        robot_orientations = np.stack(info["robot_orientations"]).copy()
         light_positions = np.stack(info["light_positions"]).copy()
         fitness = 0
         for t, (pos, light_pos)  in enumerate(zip(robot_positions, light_positions)):
@@ -153,7 +152,7 @@ class GotoLight:
             light_pos = light_pos.flatten() #! OJO mal si muchas luces.
             distances = np.array([LA.norm(pos_i[:2] - light_pos[:2]) for i, pos_i in enumerate(pos)])
             # distances_robots = [LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos)  for j, pos_j in enumerate(pos) if i != j]
-            fitness += np.clip(1 - (distances / 1.5), a_min=0., a_max=1.).mean()
+            fitness += (np.clip(1 - (distances / 3), a_min=0., a_max=1.).mean()) ** 2
             # if t % 50 ==0: import pdb; pdb.set_trace()
         return fitness / len(states)
 

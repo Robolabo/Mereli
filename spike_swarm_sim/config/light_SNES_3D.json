@@ -46,7 +46,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 1000,
-        "evaluation_steps" : 700,
+        "evaluation_steps" : 900,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
@@ -70,7 +70,7 @@
                 "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 2}, 
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 5}, 
                     "IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}
                 },
                 "actuators" : {
@@ -91,7 +91,7 @@
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
                 },
-                "params" : {"range" : 2, "color" : "red"}
+                "params" : {"range" : 5, "color" : "red"}
             }
         }
     }
