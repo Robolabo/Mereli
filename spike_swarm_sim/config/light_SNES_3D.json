@@ -78,7 +78,7 @@
                     "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
@@ -89,7 +89,7 @@
                 "num_instances": 1,
                 "controller" : "light_rnd_pos_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-3, "high" : 3, "size" : 2}}
                 },
                 "params" : {"range" : 5, "color" : "red"}
             }
