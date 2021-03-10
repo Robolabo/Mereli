@@ -2,27 +2,43 @@
     "checkpoint_file" : "chk_light_SNES_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 6, "sensor" : "light_sensor3D"}
+            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 1, "sensor" : "IR_receiver:signal"},
+            "I4" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
             "H1" : {"n" : 10, "params" : {}},
+            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
+            "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_actuator", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "cat"},
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
         },
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
             "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0}
+            "H1-ST" : {"pre":"H1","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "H1-MSG" : {"pre":"H1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
+            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0},
+            "MSG-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
         } 
     },
     "algorithm" : {
@@ -51,25 +67,31 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 1,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
-                "sensors" : {"light_sensor3D" : {"n_sectors" : 6, "range" : 2}},
-                "actuators" : {"joint_actuator" : {"joint_ids" : [0, 1]}},
+                "sensors" : {
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 2}, 
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1]},
+                    "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
+                },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : null,
+                "controller" : "light_rnd_pos_controller",
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
                 },
-                "params" : {"range" : 10, "color" : "red"}
+                "params" : {"range" : 2, "color" : "red"}
             }
         }
     }

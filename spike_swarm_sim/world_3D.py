@@ -7,7 +7,7 @@ import pybullet_data
 import pybullet_utils.bullet_client as bc
 
 
-from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, Wall
+from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall
 from spike_swarm_sim.objectives.reward import GoToLightReward
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit, isinstance_of_any
@@ -284,7 +284,7 @@ class World3D(object):
         """
         neighbors = []
         #!
-        if isinstance(robot, LightSource):
+        if isinstance_of_any(robot, [LightSource, LightSource3D]):
             return self.robots.values()
         if not isinstance(robot, Robot3D) or len(self.hierarchy) == 1:
             return neighbors
@@ -302,8 +302,12 @@ class World3D(object):
                 if max_robot_dist is not None and obj.id != robot.id:
                     if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
                         neighbors.append(obj)
-            elif isinstance(obj, LightSource) and 'light_sensor' in robot.sensors.keys():
-                if np.linalg.norm(obj.position - robot.position) <= robot.sensors['light_sensor'].range:
+            elif isinstance_of_any(obj, [LightSource, LightSource3D]):
+                #! PROV
+                ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}[type(obj).__name__]
+                if ls_sensor not in robot.sensors:
+                    continue
+                if np.linalg.norm(obj.position - robot.position) <= robot.sensors[ls_sensor].range:
                     neighbors.append(obj)
             else:
                 neighbors.append(obj)

@@ -154,7 +154,8 @@ class WorldObject3D(WorldObject):
     @property
     def position(self):
         pos = np.array(p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[0])
-        pos[-1] += self.z_offset
+        # pos[-1] += self.z_offset
+        pos[-1] = self.z_offset
         return pos
         
     @property

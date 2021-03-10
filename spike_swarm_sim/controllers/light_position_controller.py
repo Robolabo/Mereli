@@ -15,15 +15,17 @@ class LightOrbitController(Controller):
 
     @increase_time
     def step(self, pos):
-        new_pos = pos[:1].copy()
+        # import pdb; pdb.set_trace()
+        new_pos = pos[:2].copy()
         # self.dir = np.random.choice([self.dir, -self.dir], p=[0.99, 0.01])
         current_angle = compute_angle(new_pos - np.array([0, 0]))
         new_angle = current_angle + self.dir * 0.01 #0.012 #0.01
-        new_rad = min(np.linalg.norm(new_pos - np.array([0, 0])) + 0.01, 1)
+        new_rad = min(np.linalg.norm(new_pos - np.array([0, 0])) + 0.001, 1)
         new_pos = new_rad * np.r_[np.cos(new_angle), np.sin(new_angle)] + np.array([0, 0])
-        print(new_pos)
+        
         if len(pos) == 3:
-            new_pos = np.r_[new_pos, pos[-1]]
+            new_pos = np.r_[new_pos, pos[-1].copy()]
+        # print(new_pos)
         return new_pos
 
     def reset(self):
@@ -42,10 +44,10 @@ class LightRndPositionController(Controller):
 
     @increase_time
     def step(self, pos):
-        new_pos = pos[:1].copy()
+        new_pos = pos[:2].copy()
         if self.t % 100 == 0:
-            self.tar_pos = np.random.uniform(-1, 1, size=2)
-        new_pos = new_pos + 0.03 * normalize(self.tar_pos - new_pos)
+            self.tar_pos = np.random.uniform(-4, 4, size=2)
+        new_pos = new_pos + 0.01 * normalize(self.tar_pos - new_pos)
         if len(pos) == 3:
             new_pos = np.r_[new_pos, pos[-1]]
         return new_pos
@@ -68,17 +70,22 @@ class PreyController(Controller):
 
     @increase_time
     def step(self, my_pos, robot_positions):
-        new_pos = my_pos.copy()
-        robot_light_vecs = np.stack([toroidal_difference(robot_pos, my_pos) for robot_pos in robot_positions])
+        new_pos = my_pos[:2].copy()
+        if len(robot_positions) == 0:
+            return my_pos
+        robot_light_vecs = np.stack([toroidal_difference(robot_pos[:2], my_pos[:2]) for robot_pos in robot_positions])
         distances = np.array([np.linalg.norm(v) for v in robot_light_vecs])
-        near_robots = [d < 150 for d in distances]
+        near_robots = [d < 1 for d in distances]
         if any(near_robots):
-            weights = (150 - distances[near_robots]) / 150
+            weights = (5 - distances[near_robots]) / 5
             weights /= sum(weights)
             self.direction = -normalize(np.dot(weights, robot_light_vecs[near_robots]))
         if not self.hunted:
-            new_pos += 3. * self.direction
-            self.hunted = any([np.linalg.norm(v) < 30 for v in robot_light_vecs])
+            new_pos += 0.1 * self.direction
+            self.hunted = any([np.linalg.norm(v) < 0.2 for v in robot_light_vecs])
+        
+        if len(my_pos) == 3:
+            new_pos = np.r_[new_pos, my_pos[-1].copy()]
         return new_pos
 
     def reset(self):
