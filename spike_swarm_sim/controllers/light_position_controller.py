@@ -47,7 +47,7 @@ class LightRndPositionController(Controller):
         new_pos = pos[:2].copy()
         if self.t % 100 == 0:
             self.tar_pos = np.random.uniform(-5, 5, size=2)
-        new_pos = new_pos + 0.013 * normalize(self.tar_pos - new_pos)
+        new_pos = new_pos + 0.012 * normalize(self.tar_pos - new_pos)
         if len(pos) == 3:
             new_pos = np.r_[new_pos, pos[-1]]
         return new_pos

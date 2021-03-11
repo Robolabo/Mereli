@@ -25,7 +25,7 @@ class Population:
         self.crossover_prob = crossover_prob
         self.num_elite = num_elite
     
-    def step(self, fitness_vector):
+    def step(self, fitness_vector, generation):
         #* --- Apply Selection operator ---
         parents, parents_fitness = self.selection_operator(self.population.copy(), fitness_vector.copy(),\
                     len(self) - self.num_elite)
