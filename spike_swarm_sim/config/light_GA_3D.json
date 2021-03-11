@@ -48,7 +48,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 1000,
-        "evaluation_steps" : 700,
+        "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
@@ -92,7 +92,7 @@
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {
