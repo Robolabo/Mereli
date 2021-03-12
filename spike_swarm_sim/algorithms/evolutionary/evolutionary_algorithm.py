@@ -142,6 +142,11 @@ class EvolutionaryAlgorithm:
                         [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
             for pop in self.populations.values():
                 pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
+        # for i in range(len(self.populations['p1'].population)):
+        #     plot.plot([p[i] for p in self.populations['p1'].population])
+        # plot.boxplot([p[1] for p in self.populations['p1'].population])
+        # plot.show()
+        # import pdb; pdb.set_trace()
 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 

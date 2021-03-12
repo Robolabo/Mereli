@@ -7,7 +7,7 @@ from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, 
 from .utils.propagation import ExpDecayPropagation
 
 
-@sensor_registry(name='IR_receiver2')
+@sensor_registry(name='IR_receiver')
 class IRCommunicationReceiver(DirectionalSensor):
     """ Communication Receiver mimicking IR technology.
     ========================================================================
@@ -41,7 +41,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading['signal']:
-                sending_direction = 0.0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
+                sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
                 sending_angle = self.directions(0.)[sending_direction]
                 receiving_angle = self.directions(self.sensor_owner.orientation[-1])[direction]
                 direction_reading['sending_direction'] = np.r_[np.cos(sending_angle), np.sin(sending_angle)]
@@ -103,7 +103,7 @@ class IRCommunicationReceiver(DirectionalSensor):
                 'sender' : -1 * np.ones(1), 'n_hops' : 1}
 
 
-@sensor_registry(name='IR_receiver')
+@sensor_registry(name='IR_receiver2')
 class IRCommunicationReceiver3D(IRCommunicationReceiver):
     def _step_direction(self, rho, phi, direction_reading, direction, obj=None, diff_vector=None):
         """ Step the sensor of a sector, receiving the frame messages and the underlying
