@@ -19,13 +19,12 @@ class LightOrbitController(Controller):
         new_pos = pos[:2].copy()
         # self.dir = np.random.choice([self.dir, -self.dir], p=[0.99, 0.01])
         current_angle = compute_angle(new_pos - np.array([0, 0]))
-        new_angle = current_angle + self.dir * 0.01 #0.012 #0.01
-        new_rad = min(np.linalg.norm(new_pos - np.array([0, 0])) + 0.001, 1)
+        new_angle = current_angle + self.dir * 0.012 #0.012 #0.01
+        new_rad = min(np.linalg.norm(new_pos - np.array([0, 0])) + 0.001, 2.5)
         new_pos = new_rad * np.r_[np.cos(new_angle), np.sin(new_angle)] + np.array([0, 0])
         
         if len(pos) == 3:
             new_pos = np.r_[new_pos, pos[-1].copy()]
-        # print(new_pos)
         return new_pos
 
     def reset(self):

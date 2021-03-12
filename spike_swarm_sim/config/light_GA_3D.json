@@ -98,7 +98,7 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_rnd_pos_controller",
+                "controller" : "light_orbit_controller",
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
                 },
