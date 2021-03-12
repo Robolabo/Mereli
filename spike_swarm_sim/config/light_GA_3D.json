@@ -2,7 +2,7 @@
     "checkpoint_file" : "chk_light_GA_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
