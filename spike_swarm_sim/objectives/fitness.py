@@ -151,7 +151,7 @@ class GotoLight:
             #! IF 2D : distances = [LA.norm(toroidal_difference(pos_i, light_pos)) for i, pos_i in enumerate(pos)]
             light_pos = light_pos.flatten() #! OJO mal si muchas luces.
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
-            distances_robots = np.array([LA.norm(pos_i[:, :2] - pos_j[:, :2])\
+            distances_robots = np.array([LA.norm(pos_i[:2] - pos_j[:2])\
                                 for i, pos_i in enumerate(pos)\
                                 for j, pos_j in enumerate(pos) if i != j])
             fA = (np.clip(1 - (distances / 1.5), a_min=0., a_max=1.).mean()) ** 2
