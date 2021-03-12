@@ -151,10 +151,41 @@ class GotoLight:
             #! IF 2D : distances = [LA.norm(toroidal_difference(pos_i, light_pos)) for i, pos_i in enumerate(pos)]
             light_pos = light_pos.flatten() #! OJO mal si muchas luces.
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
-            # distances_robots = [LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos)  for j, pos_j in enumerate(pos) if i != j]
-            fitness += (np.clip(1 - (distances / 1.5), a_min=0., a_max=1.).mean()) ** 2
-            # if t % 50 ==0: import pdb; pdb.set_trace()
+            distances_robots = np.array([LA.norm(pos_i[:, :2] - pos_j[:, :2])\
+                                for i, pos_i in enumerate(pos)\
+                                for j, pos_j in enumerate(pos) if i != j])
+            fA = (np.clip(1 - (distances / 1.5), a_min=0., a_max=1.).mean()) ** 2
+            fB = np.mean(distances_robots > 0.3)
+            fitness += (fA * fB)
         return fitness / len(states)
+
+
+# @fitness_func_registry(name='exploration')
+# class Exploration:
+#     """Fitness function for the exploration task."""
+#     def __init__(self):
+#         self.required_info = ("generation", "robot_positions",)
+
+#     def __call__(self, actions, states, info=None):
+#         """
+#         =======================================================================================
+#         - Args:
+#             actions [list of dicts]: list of dictionaries with actuator names and the 
+#                     corresponding action.
+#             states [list of dicts]: list of dictionaries with sensor names and the 
+#                     corresponding measured states.
+#             info [dict or None]: dict of additional information. 
+#         =======================================================================================
+#         """
+#         robot_positions = np.stack(info["robot_positions"]).copy()
+#         fitness = 0
+#         for t, pos in enumerate(robot_positions[5:], start=5):
+#             distances = np.array([LA.norm(pos_i - pos_j)\
+#                         for i, pos_i in enumerate(pos)\
+#                         for j, pos_j in enumerate(pos) if i != j])
+#             fitness += distances > 0.2
+#         return fitness / len(states)
+
 
 @fitness_func_registry(name='grouping')
 class Grouping:
@@ -241,6 +272,10 @@ class Walking:
         fA = np.linalg.norm(robot_positions[-1][0] - robot_positions[0][0])/10
         # fB = np.mean(robot_positions[:,:,-1] > 0.7)
         return fA + 1e-5
+
+
+
+
 
 # @fitness_func_registry(name='line_formation')
 # class LineFormation:

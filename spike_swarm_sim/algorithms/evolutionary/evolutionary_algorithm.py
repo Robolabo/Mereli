@@ -103,7 +103,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
-    fitness = (fitness / num_evaluations)
+    fitness /= num_evaluations
     # if isinstance(worlds, MultiWorldWrapper):
     world.disconnect()
     return (env_id, fitness)

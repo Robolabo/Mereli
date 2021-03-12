@@ -100,7 +100,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         return {'signal' : np.array([0.0]), 'msg' : np.zeros(self.msg_length), \
                 'sending_direction' : np.zeros(2), 'receiving_direction' : np.zeros(2),\
                 'priority' : np.zeros(1), 'destination' : np.array([-1]), \
-                'sender' : -1*np.ones(1), 'n_hops' : 1}
+                'sender' : -1 * np.ones(1), 'n_hops' : 1}
 
 
 @sensor_registry(name='IR_receiver')
