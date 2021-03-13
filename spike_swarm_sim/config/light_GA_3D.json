@@ -82,7 +82,7 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 1, "range" : 1.5, "msg_length" : 2},
+                    "IR_receiver" : {"n_sectors" : 1, "range" : 1.5, "msg_length" : 1},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.2}
                 },
                 "actuators" : {
