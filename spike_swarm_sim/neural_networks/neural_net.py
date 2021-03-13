@@ -316,7 +316,7 @@ class NeuralNetwork:
             # plot_spikes(self)
             import pdb; pdb.set_trace()
         # actions['outA'] = [0,0]
-        
+        actions['outC'] = 1 #! State = 1
         return actions
     
     @property
