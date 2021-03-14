@@ -5,8 +5,7 @@
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
-            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
-            "I3" : {"n" : 1, "sensor" : "IR_receiver:signal"},
+            "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
             "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
         },
         "neuron_model" : "rate_model",
@@ -45,7 +44,7 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 40,
+        "population_size" : 50,
         "generations" : 1000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
@@ -74,12 +73,12 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 1, "range" : 1.5, "msg_length" : 2},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.5}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 1.5, "msg_length":2}
+                    "wireless_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
