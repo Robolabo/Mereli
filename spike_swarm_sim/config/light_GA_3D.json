@@ -5,8 +5,7 @@
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
-            "I2" : {"n" : 1, "sensor" : "IR_receiver:msg"},
-            "I4" : {"n" : 1, "sensor" : "IR_receiver:signal"},
+            "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
             "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
         },
         "neuron_model" : "rate_model",
@@ -25,7 +24,6 @@
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
             "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
-            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
             "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
 
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
@@ -82,16 +80,16 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 1, "range" : 1.5, "msg_length" : 1},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.2}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 1.5, "msg_length":1}
+                    "wireless_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [0,1], [1,0], [-1,0], [0,-1]]}},
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values": [0,0,0,0,0]}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": 2, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}

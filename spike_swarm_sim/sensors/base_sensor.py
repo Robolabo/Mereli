@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.linalg as LA
 import pybullet as p
-from spike_swarm_sim.objects import WorldObject2D, WorldObject3D, LightSource3D
+from spike_swarm_sim.objects import WorldObject2D, WorldObject3D, LightSource3D, Robot3D, Wall
 from spike_swarm_sim.utils import compute_angle, angle_diff, toroidal_difference
 
 class Sensor:
@@ -96,24 +96,23 @@ class DirectionalSensor(Sensor):
         #! Improve
         for obj in featured_objects:
             if issubclass(type(obj), WorldObject3D):
-                if not isinstance(obj, LightSource3D):
+                if isinstance(obj, Wall):# Wall
                     closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
                             linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
                     v = np.array(closest_points[0][6]) - self.sensor_owner.position     
-                else:
+                else: # Light y robots (quitar radio robot)
                     v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
                     # aa = p.getBodyInfo(obj.id,physicsClientId=self.sensor_owner.physics_client)
-                # v = obj.position - self.sensor_owner.position #! QUITAR ESTA LINEA Y DESCOMENTAR EL RESTO
                 orientation = self.sensor_owner.orientation[-1]
             else:
                 v = toroidal_difference(obj.position, self.sensor_owner.position)
             rho = LA.norm(v)
             # Angle difference between sensor directions and ang(v)
-            phi_values = np.array([angle_diff(compute_angle(v[:2]), direction)\
-                    for direction in self.directions(orientation)])
+            phi_values = np.array([angle_diff(compute_angle(v[:2]), theta) for theta in self.directions(orientation)])
             featured_sensors = np.where(phi_values <= self.aperture)[0]
             phi_values = phi_values[featured_sensors]
-
+            # if isinstance(obj, Robot3D):
+            #     import pdb; pdb.set_trace()
             for k, phi in zip(featured_sensors, phi_values):
                 readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
         return np.array(readings) if not isinstance(readings[0], dict) else readings
