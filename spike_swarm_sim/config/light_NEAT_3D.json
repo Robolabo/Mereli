@@ -42,7 +42,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 700,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
@@ -55,8 +55,8 @@
                     "p_weight_mut" : 0.8,
                     "p_node_mut" : 0.08,
                     "p_conn_mut" : 0.1,
-                    "compatib_thresh" : 2.5,
-                    "c1" : 2.5,
+                    "compatib_thresh" : 2,
+                    "c1" : 5,
                     "c2" : 2, 
                     "c3" : 3
                 }
