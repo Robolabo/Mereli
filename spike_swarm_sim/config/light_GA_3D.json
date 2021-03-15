@@ -44,16 +44,16 @@
     "algorithm" : {
         "name" : "GA",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 800,
+        "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
                 "max_vals" : [3,  1.5, 0.75, 5],
-                "min_vals" : [-3, -1.5, -0.6, 0.05],
+                "min_vals" : [-3, -1.5, -0.75, 0.05],
                 "params" : {
                     "encoding" : "real",
                     "selection_operator" : "nonlin_rank",
@@ -76,12 +76,12 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 5,
+                "num_instances" : 6,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.2}
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.6, "msg_length" : 1},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
