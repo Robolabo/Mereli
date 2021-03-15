@@ -40,14 +40,14 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 200,
+        "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 700,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
                 "max_vals" : [3,  1.5, 0.75],
                 "min_vals" : [-3, -1.5, -0.75],
                 "params" : {
@@ -84,7 +84,7 @@
                     "wireless_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [0.5,0], [-0.5,0], [0, 0.5], [0, -0.5], [1,0]] }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
@@ -95,7 +95,7 @@
                 "num_instances": 1,
                 "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":1, "high" : 1, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }
