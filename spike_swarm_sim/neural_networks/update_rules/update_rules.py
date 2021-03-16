@@ -2,6 +2,7 @@ from collections import deque
 import numpy as np
 
 
+
 class GeneralizedABCDHebbian:
     def __init__(self):
         self.learning_rate = 1e-4
@@ -18,6 +19,10 @@ class GeneralizedABCDHebbian:
                         + self.Bw * np.outer(activities, np.ones_like(act_inpt_cat))\
                         + self.Bw * np.outer(np.ones_like(activities), act_inpt_cat) + self.Dw)
         return weight_update * reward if reward is not None else weight_update
+
+    def build(self):
+        pass
+
 
     def reset(self):
         pass
