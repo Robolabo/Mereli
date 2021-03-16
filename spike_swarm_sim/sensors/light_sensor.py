@@ -61,7 +61,7 @@ class LightSensor3D(DirectionalSensor):
                     and kwargs['obj'].color == self.color
                     #and phi <= self.aperture #<= 3*np.pi/self.n_sectors
         if direction_reading is None:
-            direction_reading = 0.0
+            direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
         # import pdb; pdb.set_trace()
         if condition:
             my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.02]
@@ -70,8 +70,10 @@ class LightSensor3D(DirectionalSensor):
             signal_strength = self.propagation(rho, phi)
             if ray_res[0][0] == -1:
                 direction_reading += signal_strength
+                if self.noise_sigma > 0:
+                    direction_reading += np.random.randn() * self.noise_sigma
                 direction_reading = np.clip(direction_reading, a_min=0, a_max=1)
-        return direction_reading
+        return direction_reading 
     
     def reset(self):
         joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\

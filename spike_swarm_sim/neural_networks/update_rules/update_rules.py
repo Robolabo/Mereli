@@ -42,7 +42,7 @@ class BufferedHebb(GeneralizedABCDHebbian):
         super(BufferedHebb, self).__init__(*args, **kwargs)
         self.buffer_len = 30
         self.gamma = 0.9
-        self.buffer = {'in' : deque([]),'activ': deque([]), 'R': deque([])}
+        self.buffer = {'in' : deque([]), 'activ': deque([]), 'R': deque([])}
         self.t = 0
 
     def step(self, inputs, activities, reward=None):

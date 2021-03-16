@@ -56,7 +56,7 @@
                     "p_node_mut" : 0.08,
                     "p_conn_mut" : 0.1,
                     "compatib_thresh" : 2,
-                    "c1" : 6,
+                    "c1" : 5,
                     "c2" : 5, 
                     "c3" : 3
                 }
@@ -75,9 +75,9 @@
                 "num_instances" : 6,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.6, "msg_length" : 1},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6}
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.6, "msg_length" : 1,  "noise_sigma" : 0.03},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6, "noise_sigma" : 0.03}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},

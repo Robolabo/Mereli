@@ -78,7 +78,7 @@ class GeneticInterface:
 
 class NEATInterface:
     def __init__(self, neural_net):
-        self.neural_net = neural_net 
+        self.neural_net = neural_net
 
     def submit_query(self, query, primitive='GET', **kwargs):
         """

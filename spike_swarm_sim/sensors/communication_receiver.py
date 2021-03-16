@@ -124,6 +124,9 @@ class IRCommRXWrapper(IRCommunicationReceiver):
         curr_msg[curr_dir] = frame['msg'][0]
         frame['msg'] = curr_msg.copy()
         self.prev_msg = curr_msg
+        if self.noise_sigma > 0:
+            frame['msg'] += np.random.randn(len(frame['msg'])) * self.noise_sigma
+            frame['signal'] += np.random.randn() * self.noise_sigma
         return frame
 
     def reset(self):

@@ -97,7 +97,7 @@ class NEAT_Population(Population):
             offspring.extend(neat_crossover(parents, fitness_parents))
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
-                        offspring, self.input_nodes, self.current_innovation, 
+                        offspring, self.input_nodes, self.current_innovation,
                         self.innovation_history, self.objects, p_weight_mut=self.p_weight_mut,
                         p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
 
