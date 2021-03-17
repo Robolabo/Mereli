@@ -1,1 +1,1 @@
-from .update_rules import GeneralizedABCDHebbian, BufferedHebb
+from .update_rules import GeneralizedHebbian, BufferedHebb

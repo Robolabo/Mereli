@@ -265,11 +265,8 @@ class DynamicSynapses(Synapses):
         self.delays = np.random.randint(min_val, max_val, size=self.delays.shape[0])
     
     def trainable_weights(self, shared=False):
-        if not shared:
-            return self.weights[self.trainable_mask&~self.shared_weights_mask]
-        else:
-            return np.array([v[-1] for v in self.shared_weights_ids])
-
+        return self.weights[self.trainable_mask]
+       
     def normalize_weights(self):
         for i, w_row in enumerate(self.weights):
             self.weights[i] /= np.linalg.norm(w_row)

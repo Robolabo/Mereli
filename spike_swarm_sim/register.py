@@ -16,6 +16,7 @@ algorithms = {}
 initializers = {}
 env_perturbations = {}
 receptive_fields = {}
+learning_rules = {}
 
 
 def world_object_registry(*args, **kwargs):
@@ -120,5 +121,12 @@ def receptive_field_registry(*args, **kwargs):
     def decorator(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         receptive_fields[name] = cls
+        return cls
+    return decorator
+
+def learning_rule_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        learning_rules[name] = cls
         return cls
     return decorator

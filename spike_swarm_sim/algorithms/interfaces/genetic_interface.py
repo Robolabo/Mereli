@@ -152,13 +152,12 @@ class NEATInterface:
         # counter = 0
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             # segment_len = self.submit_query(query, primitive='LEN')
-            gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[query.split(':')[0]]
+            gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
             variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
             genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
             # genotype_segment = np.array([g[variable] for g in [*genotype[gene_type].values()][counter:counter+segment_len]])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)
-
             # counter += segment_len
         self.neural_net.build() #* Compile changes.
        

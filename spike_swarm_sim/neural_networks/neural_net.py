@@ -5,12 +5,11 @@ from functools import wraps
 import numpy as np
 import matplotlib.pyplot as plt
 # Own imports
-from spike_swarm_sim.register import neuron_models, synapse_models
+from spike_swarm_sim.register import neuron_models, synapse_models, learning_rules
 from spike_swarm_sim.utils import increase_time, merge_dicts, remove_duplicates
 from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
-from .update_rules import GeneralizedABCDHebbian, BufferedHebb
 from .utils.monitor import NeuralNetMonitor
 from .utils.visualization import *
 
@@ -81,10 +80,10 @@ class NeuralNetwork:
 
         #* Flag indicating if the ANN is built and functional. 
         #* The ANN cannot be used if this flag is False.
-        self.is_built = False #! 
+        self.is_built = False #! NO SE USA
 
         #* Submodules of the neural network distributing its functioning
-        #* and computations. 
+        #* and computations.
         if synapse_model == 'dynamic_synapse' and issubclass(neuron_models[neuron_model], NonSpikingNeuronModel):
             raise Exception(logging.error('The combination of dynamic synapses and '\
                 'non-spiking neuron models is not currently implemented.'))
@@ -92,8 +91,7 @@ class NeuralNetwork:
         self.neurons = neuron_models[self.neuron_model](self.dt)
         self.encoders = EncodingWrapper(self.time_scale)
         self.decoders = None
-        #TODO --- Create Learning Rule ---
-        self.update_rule = BufferedHebb()
+        self.learning_rule = None
         #* Monitor that, if in DEBUG mode, will store all the relevant neural 
         #* variables.
         self.monitor = None
@@ -111,6 +109,8 @@ class NeuralNetwork:
     def build(self):
         #! BUILD NEURONS
         self.synapses.build(self.graph)
+        if self.learning_rule is not None:
+            self.learning_rule.build(self.graph)
         #TODO --- Create Monitor (DEBUG MODE) ---
         # self.output_neurons = remove_duplicates([out['ensemble'] for out in topology['outputs'].values()])
         if logging.root.level == logging.DEBUG:
@@ -145,6 +145,9 @@ class NeuralNetwork:
             self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], **syn_params)
          #* Add Decoders
         self.decoders = DecodingWrapper(topology)
+
+        #* Add Learning Rule
+        self.learning_rule = learning_rules.get(topology.get('learning_rule')) #TODO decouple, improve.
         self.build()
 
     def set_motor(self, ensemble_name):
@@ -284,6 +287,7 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+
         # if self.t == 0: 
         #   import pdb; pdb.set_trace()
         #* --- Convert stimuli into spikes (Encoders Step) ---
@@ -294,9 +298,10 @@ class NeuralNetwork:
         inputs = self.encoders.step(stimuli)
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-        #TODO --- Apply update rules to synapses ---
-        # if self.update_rule is not None and reward is not None:
-        #     self.synapses.weights += self.update_rule.step(inputs[-1], self.spikes, reward=0.01)
+            
+        #* --- Apply update rules to synapses ---
+        if self.learning_rule is not None and reward is not None and reward != 0.0:
+            self.synapses.weights += self.learning_rule.step(inputs[-1], self.spikes, reward=reward)
 
         #* --- Step synapses and neurons ---
         spikes_window = []
@@ -390,7 +395,8 @@ class NeuralNetwork:
         self.synapses.reset()
         self.encoders.reset()
         self.decoders.reset()
-        self.update_rule.reset()
+        if self.learning_rule is not None:
+            self.learning_rule.reset()
         if self.monitor is not None:
             self.monitor.reset()
         self.spikes = np.zeros(self.weights.shape[0])

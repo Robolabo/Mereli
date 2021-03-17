@@ -156,8 +156,7 @@ class GotoLight:
             #                     for j, pos_j in enumerate(pos) if i != j])
             fA = {
                 0 : (distances < 2).mean(),
-                1 : all(distances < 3),
-                2 : all(distances < 3),
+                1 : all(distances < 2),
             }.get(info["generation"] // 50, all(distances < 2))
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
