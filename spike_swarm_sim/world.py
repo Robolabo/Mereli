@@ -1,6 +1,6 @@
 import logging
 from collections import deque
-import tkinter as tk
+#import tkinter as tk
 import numpy as np
 from spike_swarm_sim.objects import  Robot, LightSource
 from spike_swarm_sim.objectives.reward import GoToLightReward
