@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_light_GA_3D",
+    "checkpoint_file" : "chk_light_NEAT_3D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -55,7 +55,7 @@
                     "p_weight_mut" : 0.8,
                     "p_node_mut" : 0.08,
                     "p_conn_mut" : 0.1,
-                    "compatib_thresh" : 2.5,
+                    "compatib_thresh" : 2.4,
                     "c1" : 5,
                     "c2" : 5, 
                     "c3" : 3
