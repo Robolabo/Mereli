@@ -155,11 +155,10 @@ class GotoLight:
             #                     for i, pos_i in enumerate(pos)\
             #                     for j, pos_j in enumerate(pos) if i != j])
             fA = {
-                0 : np.clip(1 - (distances / 5), a_min=0, a_max=1).mean(),
-                1 : np.clip(1 - (distances / 3), a_min=0, a_max=1).mean(),
-                2 : (distances < 2).mean(),
-                3 : all(distances < 3),
-            }.get(info["generation"] // 20, all(distances < 2))
+                0 : (distances < 2).mean(),
+                1 : all(distances < 3),
+                2 : all(distances < 3),
+            }.get(info["generation"] // 50, all(distances < 2))
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
         return fitness / len(states)

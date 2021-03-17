@@ -251,7 +251,7 @@ class EvolutionaryAlgorithm:
         
         # eval_hist = {'actions': [], 'states': []}
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
-        fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names
+        fieldnames = ['trial', 'timestep', 'entity', '\position_x', 'position_y', 'orientation'] + sensor_names + actuator_names
         data_logger = DataLogger(fieldnames)
         for trial in range(trials):
             world.reset()
