@@ -169,7 +169,7 @@ class NEAT_Population(Population):
             #* Initialize genotype (ANN parameters and weights traits)
             for query, max_val, min_val in zip(self.objects, self.min_vals, self.max_vals):
                 gnt_segment = interface.toGenotype([query], [min_val], [max_val])
-                gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[query.split(':')[0]]
+                gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
                 variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
                 for gene, value in zip(self.population[-1][gene_type].values(), gnt_segment):
                     gene[variable] = value

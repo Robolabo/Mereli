@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.linalg as LA
 from spike_swarm_sim.utils import angle_mean, angle_diff
+from spike_swarm_sim.register import reward_registry
 
 
 class AlignmentReward:
@@ -17,10 +18,10 @@ class AlignmentReward:
         return 0.7 * rA + 0.3 * rB
 
 
-
+@reward_registry(name='goto_light')
 class GoToLightReward:
     def __init__(self):
-        self.required_info = ("robot_positions", "light_positions")
+        self.required_info = ("generation", "robot_positions", "light_positions")
 
     def __call__(self, actions, states, info=None):
         # positions = info['robot_positions']
@@ -29,7 +30,7 @@ class GoToLightReward:
 
         # rew = np.mean([np.clip(1 - (dist / 100), a_min=0, a_max=1) for dist in distances])
         # return rew
-        if np.max(states['light_sensor']) > 0:
-            return np.max(states['light_sensor']) ** 0.5
-        else:
-            return -.5
+        if np.max(states['light_sensor3D']) > 0.4:
+            return 1.
+        # else:
+        #     return -.1

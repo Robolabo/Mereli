@@ -101,13 +101,14 @@ class NEATInterface:
             min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.
             max_vals [np.ndarray]: max. bound of the search space. In GET it is None.
         """
+        # if query == "learning_rules:params:all": import pdb; pdb.set_trace()
         query_hierarchy = [primitive] + query.split(':')
         query_status = language_dict
         for query_elem in query_hierarchy[:-1]:
             assert query_elem in query_status
             query_status = query_status[query_elem]
         func = getattr(getattr(self.neural_net, query_hierarchy[1]), query_status)\
-            if query_hierarchy[1] not in ['decoding', 'encoding', ]\
+            if query_hierarchy[1] not in ['decoding', 'encoding']\
             else getattr(self.neural_net, query_status)
         return func(query_hierarchy[-1], self.neural_net.graph, **kwargs)
 

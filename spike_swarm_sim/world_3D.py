@@ -8,8 +8,7 @@ import pybullet_utils.bullet_client as bc
 
 
 from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall
-from spike_swarm_sim.objectives.reward import GoToLightReward
-from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations
+from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
 from spike_swarm_sim.utils import angle_diff, compute_angle, normalize, increase_time, mov_average_timeit, isinstance_of_any
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D
@@ -17,7 +16,7 @@ from .physics_engine import Engine3D
 class MultiWorldWrapper:
     def __init__(self, n_cpu, height=10, width=10, world_delay=1):
         self.n_cpu = n_cpu
-        self._worlds = [World3D(height=height, width=width, world_delay=1) for _ in range(n_cpu+1)]
+        self._worlds = [World3D(height=height, width=width, world_delay=1) for _ in range(n_cpu + 1)]
 
     def build_from_dict(self, world_dict, ann_topology=None):
         for world in self._worlds:
@@ -25,7 +24,7 @@ class MultiWorldWrapper:
 
     @property
     def all(self):
-        return self._worlds 
+        return self._worlds
    
     @property
     def robots(self):
@@ -56,11 +55,10 @@ class World3D(object):
         #* Engine
         self.physics_engine = Engine3D()
       
-
         #* Add world limits
         self.add_limiting_walls()
-
-        # self.reward_generator = GoToLightReward()
+        
+        self.reward_generator = None
         self.t = 0
 
     def add_limiting_walls(self):
@@ -95,12 +93,11 @@ class World3D(object):
             if not isinstance(obj, Robot3D):
                 obj.step(self.neighborhood(obj))
                 continue
-            rew = 0
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in tuple(self.env_perturbations.values())[0]\
                             if not pert.postprocessing and idx in pert.affected_robots]
-            state_obj, action_obj = obj.step(self.neighborhood(obj), reward=rew, perturbations=pre_perturbations) #!
-            # reward = self.reward_generator(action_obj, state_obj) if isinstance(obj, Robot) else None
+            state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
+            reward = self.reward_generator(action_obj, state_obj) if self.reward_generator is not None else 0.
             states.append(state_obj)
             actions.append(action_obj)
         states = np.stack(states)
@@ -129,7 +126,6 @@ class World3D(object):
                     l.hide_coverage()
             #! ----
         # print(states)
-        
         return states, actions
     
     def add(self, name, obj, group=None):
@@ -152,7 +148,6 @@ class World3D(object):
             self.groups[group].append(name)
         else:
             self.groups[group] = [name]
-
     
     def build_from_dict(self, world_dict, ann_topology=None):
         """ Initialize all objects and add them into the world using a dictionary structure.
@@ -164,6 +159,9 @@ class World3D(object):
         =========================================================================================
         """
         engine = world_dict['engine']
+        #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
+        if ann_topology.get('learning_rule', {}).get('reward') is not None:
+            self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
         for obj_name, obj in world_dict['objects'].items():
             #* Create group intializer.
             self.initializers[obj_name] = {

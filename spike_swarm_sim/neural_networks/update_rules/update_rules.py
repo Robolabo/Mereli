@@ -38,10 +38,10 @@ class GeneralizedHebbian:
                                 else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
                     mask[node['idx'], pre_idx] = True
                     trainable_mask[node['idx'], pre_idx] = True
-                    A[node['idx'], pre_idx] = syn['learning_rule'].get('A', 0.)
-                    B[node['idx'], pre_idx] = syn['learning_rule'].get('B', 0.)
-                    C[node['idx'], pre_idx] = syn['learning_rule'].get('C', 0.)
-                    D[node['idx'], pre_idx] = syn['learning_rule'].get('D', 0.)
+                    A[node['idx'], pre_idx] = syn.get('learning_rule', {}).get('A', 0.)
+                    B[node['idx'], pre_idx] = syn.get('learning_rule', {}).get('B', 0.)
+                    C[node['idx'], pre_idx] = syn.get('learning_rule', {}).get('C', 0.)
+                    D[node['idx'], pre_idx] = syn.get('learning_rule', {}).get('D', 0.)
         self.A = A
         self.B = B
         self.C = C
@@ -52,7 +52,7 @@ class GeneralizedHebbian:
         pass
 
     #! OJO refactorizar queries!!!!
-    @GET("learning_rules:params")
+    @GET("learning_rule:params")
     def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         #* Return scaled in [0,1]
         if conn_name == 'all':
@@ -75,7 +75,7 @@ class GeneralizedHebbian:
         return (weights - min_val) / (max_val - min_val)
     
 
-    @SET("learning_rules:params")
+    @SET("learning_rule:params")
     def set_params(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
         """
         """
@@ -105,7 +105,7 @@ class GeneralizedHebbian:
             #         ann_graph['synapses'][syn_name]['weight'] = w
             # return ann_graph
 
-    @INIT("learning_rules:params")
+    @INIT("learning_rule:params")
     def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """
         """
@@ -114,7 +114,7 @@ class GeneralizedHebbian:
         random_params = np.clip(random_params, a_min=0, a_max=1)
         return self.set_params(conn_name, ann_graph, random_params, min_val=min_val, max_val=max_val)
 
-    @LEN("learning_rules:params")
+    @LEN("learning_rule:params")
     def len_params(self, conn_name, ann_graph, only_trainable=True):
         """
         """

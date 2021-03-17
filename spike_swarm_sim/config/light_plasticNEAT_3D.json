@@ -36,21 +36,24 @@
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
         },
-        "learning_rule" : "generalized_hebbian"
+        "learning_rule" : { 
+            "rule" : "generalized_hebbian",
+            "reward" : "goto_light"
+        }
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 800,
+        "evaluation_steps" : 20000,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [3,  1.5, 0.75],
-                "min_vals" : [-3, -1.5, -0.75],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "learning_rule:params:all"],
+                "max_vals" : [3,  1.5, 0.75, 1],
+                "min_vals" : [-3, -1.5, -0.75, -1],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.8,
@@ -88,7 +91,7 @@
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [0.5,0], [-0.5,0], [0, 0.5], [0, -0.5], [1,0]] }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 1, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {

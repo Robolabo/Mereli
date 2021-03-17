@@ -138,16 +138,17 @@ class NeuralNetwork:
         for input_name, encoder in topology['encoding'].items():
             self.add_encoder(encoder['scheme'], topology['stimuli'][input_name]['sensor'],\
                 receptive_field=encoder['receptive_field']['name'], receptive_field_params=encoder['receptive_field']['params'])
+        #* Add Learning Rule
+        if topology.get('learning_rule', {}).get('rule') is not None:
+            self.learning_rule = learning_rules.get(topology.get('learning_rule', {}).get('rule'))() #TODO decouple, improve.
         #* Add Synapses
         for name, syn in topology['synapses'].items():
             syn_params = {key : val for key, val in syn.items()\
                     if key not in ['pre', 'post', 'p', 'trainable']}
             self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], **syn_params)
-         #* Add Decoders
+        #* Add Decoders
         self.decoders = DecodingWrapper(topology)
-
-        #* Add Learning Rule
-        self.learning_rule = learning_rules.get(topology.get('learning_rule')) #TODO decouple, improve.
+        #* Build ANN
         self.build()
 
     def set_motor(self, ensemble_name):
@@ -231,6 +232,8 @@ class NeuralNetwork:
                     'pre' : pre_node, 'post' : post_node,
                     'weight': weight, 'trainable' : trainable,
                     'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}, kwargs])
+                if self.learning_rule is not None:
+                    synapse_config.update({'learning_rule' : {p : 0. for p in ['A', 'B', 'C', 'D']}})
                 if self.synapse_model == 'dynamic_synapse':
                     #! Add min and max possible delays?
                     synapse_config.update({'delay' : np.random.randint(1, 10)})
@@ -287,9 +290,6 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-
-        # if self.t == 0: 
-        #   import pdb; pdb.set_trace()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
@@ -298,7 +298,7 @@ class NeuralNetwork:
         inputs = self.encoders.step(stimuli)
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-            
+
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and reward is not None and reward != 0.0:
             self.synapses.weights += self.learning_rule.step(inputs[-1], self.spikes, reward=reward)
