@@ -72,7 +72,7 @@ class NEAT_Population(Population):
             num_offspring = max(2, int(np.round((self.pop_size - sum(num_elites)) * sum(spc_fitness) / sum(fitness_vector))))
             prev_spc_size = len(spc_genotypes) - spc_elites
             num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
-                            if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
+                    if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
             species_offsprings.append(num_offspring)
         while(sum(species_offsprings) != self.pop_size - sum(num_elites)):
             species_offsprings[np.random.randint(len(self.species))] += (1, -1)[sum(species_offsprings) > self.pop_size]

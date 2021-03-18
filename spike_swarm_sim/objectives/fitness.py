@@ -157,10 +157,10 @@ class GotoLight:
             fA = {
                 0 : (distances < 2).mean(),
                 1 : all(distances < 2),
-            }.get(info["generation"] // 50, all(distances < 2))
+            }.get(info["generation"] // 100, all(distances < 2))
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
-        return fitness / len(states)
+        return fitness / len(states) + 1e-5
 
 
 # @fitness_func_registry(name='exploration')
