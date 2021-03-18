@@ -59,7 +59,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     =====================================================================
     """
     if isinstance(worlds, MultiWorldWrapper):
-        # rank = multiprocessing.current_process()._identity[0] #! ojo mpi
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
             world = copy.deepcopy(worlds.all[rank])
@@ -180,21 +179,19 @@ class EvolutionaryAlgorithm:
 
             #* MPI Parallelization
             elif use_mpi: #! TODO Multi world
-
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
                 comm.Barrier()
-                indiv_per_core = self.population_size // size #!+ (rank == 0) * (self.population_size % size)
+                indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
                 comm.Barrier()
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
-                    fitness = [vv for ff in fitness for vv in ff]
+                    fitness = [vv for ff in eval_result for vv in ff]
                     self.fitness = [f_val for _, f_val in sorted(fitness, key=lambda x: x[0])]
-                    import pdb; pdb.set_trace()
                 comm.Barrier()
             else:
                 eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
