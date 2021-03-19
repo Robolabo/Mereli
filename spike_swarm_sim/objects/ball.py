@@ -45,3 +45,19 @@ class Cube(WorldObject3D):
 
     def reset(self):
         pass
+
+@world_object_registry(name='ground_area')
+class GroundArea(WorldObject3D):
+    def __init__(self, position, orientation, *args, color='red', radius=1., **kwargs):
+        super(GroundArea, self).__init__('ground_area', position, orientation,\
+                        *args, **kwargs)
+        self.color = color
+        self.radius = radius
+
+    def add_physics(self, physics_client):
+        super().add_physics(physics_client)
+        color = list(colors.to_rgb(self.color)) + [1.]
+        p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
+
+    def reset(self):
+        pass
