@@ -159,10 +159,9 @@ class GotoLight:
             #     1 : (distances < 1).mean(),
             # }.get(info["generation"] // 100, (distances < 1).mean())
             fA = (distances < 1).mean()
-            import pdb; pdb.set_trace()
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
-        return fitness / len(states) + 1e-5
+        return (fitness / len(states)) + 1e-5
 
 
 # @fitness_func_registry(name='exploration')
