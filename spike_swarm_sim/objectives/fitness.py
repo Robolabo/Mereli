@@ -154,10 +154,12 @@ class GotoLight:
             # distances_robots = np.array([LA.norm(pos_i[:2] - pos_j[:2])\
             #                     for i, pos_i in enumerate(pos)\
             #                     for j, pos_j in enumerate(pos) if i != j])
-            fA = {
-                0 : (distances < 2).mean(),
-                1 : (distances < 1).mean(),
-            }.get(info["generation"] // 100, (distances < 1).mean())
+            # fA = {
+            #     0 : (distances < 2).mean(),
+            #     1 : (distances < 1).mean(),
+            # }.get(info["generation"] // 100, (distances < 1).mean())
+            fA = (distances < 1).mean()
+            import pdb; pdb.set_trace()
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
         return fitness / len(states) + 1e-5

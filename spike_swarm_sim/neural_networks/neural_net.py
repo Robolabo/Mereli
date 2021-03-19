@@ -320,7 +320,7 @@ class NeuralNetwork:
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0,0]
+        # actions['outA'] = [0.5, -0.5]
         actions['outC'] = 1 #! State = 1
         return actions
     

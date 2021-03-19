@@ -192,7 +192,8 @@ class World3D(object):
                             for pert, pert_params in obj['perturbations'].items()]})
             else: # Non robot objects
                 positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
-                controller = controllers[obj['controller']]() if obj['controller'] is not None else None
+                controller_cls = controllers.get(obj.get('controller'))
+                controller = controller_cls is not None and controller_cls() or None
                 for i, position in enumerate(positions):
                     world_obj = object_cls(position, [0,0,0], controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
