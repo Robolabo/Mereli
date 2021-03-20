@@ -20,9 +20,9 @@ class NeuralController(RobotController):
     """
     def __init__(self, topology, *args, **kwargs):
         super(NeuralController, self).__init__(*args, **kwargs)
-        self.preprocessing = Preprocessing([sens['sensor'] for sens in topology['stimuli'].values()])
-        for val in topology['stimuli'].values():
-            val['sensor'] = val['sensor'].split('@')[0]
+        #self.preprocessing = Preprocessing([sens['sensor'] for sens in topology['stimuli'].values()])
+        #for val in topology['stimuli'].values():
+        #    val['sensor'] = val['sensor'].split('@')[0]
         self.neural_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
                 neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
         self.neural_network.build_from_dict(topology)
@@ -37,7 +37,7 @@ class NeuralController(RobotController):
         if len(state):
             state = flatten_dict(state)
         state['IR_receiver:state'] = np.array([self.comm_state])
-        state = self.preprocessing(state.copy())
+        #state = self.preprocessing(state.copy())
         
         raw_actions = self.neural_network.step(state, reward)
         actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
