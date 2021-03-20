@@ -302,7 +302,6 @@ class NeuralNetwork:
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and reward is not None and reward != 0.0:
             self.synapses.weights += self.learning_rule.step(inputs[-1], self.spikes, reward=reward)
-
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):
