@@ -27,7 +27,7 @@ class NEAT_Population(Population):
         self.c3 = c3
         self.species_count = 1
         # list of existing species. 1 species at first.
-        self.species = [Species(self.species_count, compatib_thresh=compatib_thresh, c1=c1, c2=c2, c3=c3)] 
+        self.species = []
         self.input_nodes = [] #* Cannot be altered by NEAT 
         self.population = []
         #* Global pointer of gene innovations
@@ -37,8 +37,8 @@ class NEAT_Population(Population):
         #* the evolution.
         self.innovation_history = {}
         
-    def step(self, fitness_vector):
-        """ 
+    def step(self, fitness_vector, generation):
+        """
         ==================================================================================
         - Args:
             fitness_vector [np.ndarray or list]: array of computed fitness values.
@@ -46,31 +46,32 @@ class NEAT_Population(Population):
         ==================================================================================
         """
         offspring = []
+        self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
         raw_fitness = fitness_vector.copy()
         #* Adjust fitness scores according to the fitness sharing as defined in the NEAT paper.
         fitness_vector = [f / [sp for sp in self.species if sp.id == genotype['species']][0].num_genotypes \
                             for f, genotype in zip(fitness_vector, self.population)]
-        
+        #* Update species fitness statistics
+        for spc in self.species:
+            spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id]
+            spc.update_stats(np.array(spc_fitness) * spc.num_genotypes)
+
+        #* DISABLED: Elites, 5 in total from most fit species with more than 5 genotypes.
+        num_elites = np.zeros(len(self.species), dtype=int)
+        # for i, spc in sorted(enumerate(self.species), key=lambda x: x[1].fitness_sum['adjusted'])[::-1]:
+        #     if spc.num_genotypes > 5 and sum(num_elites) < 5:
+        #         num_elites[i] += 1
+        #         fittest = [gt for _, gt in sorted(zip(fitness_vector, self.population),
+        #                     key=lambda x: x[0])[::-1] if gt['species'] == spc.id][0]
+        #         offspring.append(fittest)
+
         #* Compute the number of offspring for each species
         species_offsprings = []
-        for spc in self.species:
+        for spc_elites, spc in zip(num_elites, self.species):
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            num_offspring = max(2, int(np.round(self.pop_size * sum(spc_fitness) / sum(fitness_vector))))
-            num_offspring = int(0.6 * len(spc_genotypes) + 0.4 * num_offspring)\
-                            if np.abs(num_offspring - len(spc_genotypes)) > 0 else len(spc_genotypes)
-            species_offsprings.append(num_offspring)
-        #species_offsprings = [max(2, int(np.round(n_off * self.pop_size / sum(species_offsprings))))\
-        #                       for n_off in species_offsprings]     
-        while(sum(species_offsprings) != self.pop_size):
-            species_offsprings[np.random.randint(len(self.species))] += (1, -1)[sum(species_offsprings) > self.pop_size]
-        if sum(species_offsprings) != self.pop_size:
-            logging.error('Population Size altered (Before crossover).')
-            import pdb; pdb.set_trace()
-        #* Crossover in-between species individuals.
-        for n_offspring, spc in zip(species_offsprings, self.species):
-            #! OJO DEEPCOPY????
-            spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            #* Truncate bests
+            num_offspring = max(2, int(np.round((self.pop_size - sum(num_elites)) * sum(spc_fitness) / sum(fitness_vector))))
+            prev_spc_size = len(spc_genotypes) - spc_elites
+            num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
                     if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
             species_offsprings.append(num_offspring)
         while(sum(species_offsprings) != self.pop_size - sum(num_elites)):
@@ -173,3 +174,15 @@ class NEAT_Population(Population):
                 gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
                 variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
                 for gene, value in zip(self.population[-1][gene_type].values(), gnt_segment):
+                    gene[variable] = value
+            #* Assign innovation numbers
+            for i, conn in enumerate(self.population[-1]['connections'].values()):
+                if n == 0:
+                    conn['innovation'] = self.current_innovation
+                    self.innovation_history[(conn['pre'], conn['post'])] = self.current_innovation
+                    self.current_innovation += 1
+                else:
+                    conn['innovation'] = self.innovation_history[(conn['pre'], conn['post'])]
+        #* Assign species representative. There is only 1 species.
+        self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
+        self.species[0].num_genotypes = self.pop_size
