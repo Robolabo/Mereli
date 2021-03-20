@@ -117,8 +117,7 @@ class NEAT_Population(Population):
                 genotype['species'] = self.species[-1].id
             else:
                 # species_idx = np.random.choice(np.arange(len(self.species))[list(compatible)]) # Random
-                _, species_idx = sorted(zip(np.arange(len(self.species))[list(compatible)], distances), key=lambda x:x[1])[0]
-                import pdb;pdb.set_trace()
+                species_idx, _  = sorted(zip(np.arange(len(self.species))[list(compatible)], distances), key=lambda x:x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype['species'] = self.species[species_idx].id
 
