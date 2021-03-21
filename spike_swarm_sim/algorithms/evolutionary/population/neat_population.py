@@ -90,12 +90,13 @@ class NEAT_Population(Population):
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)
             try:
-                parents = [parents[idx] for idx in parents_mating] # shuffle parents
+                parents = [copy.deepcopy(parents[idx]) for idx in parents_mating] # shuffle parents
                 fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             except:
                 import pdb; pdb.set_trace()
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents, fitness_parents))
+        prev_offs = copy.deepcopy(offspring)#! TEST
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
                         offspring, self.input_nodes, self.current_innovation,
