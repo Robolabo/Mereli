@@ -118,11 +118,13 @@ class NEAT_Population(Population):
                 genotype['species'] = self.species[-1].id
             else:
                 # species_idx = np.random.choice(np.arange(len(self.species))[list(compatible)]) # Random
-                species_idx, _  = sorted(zip(np.arange(len(self.species))[list(compatible)], distances), key=lambda x:x[1])[0]
+                compatible_species = np.arange(len(self.species))[list(compatible)]
+                compatible_distances = np.array(distances)[list(compatible)]
+                species_idx, _  = sorted(zip(compatible_species, compatible_distances), key=lambda x : x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype['species'] = self.species[species_idx].id
 
-        #! check extintion
+        #* Check extintion
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))

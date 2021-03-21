@@ -6,7 +6,7 @@ from spike_swarm_sim.register import evo_operator_registry
 def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75):
     #! First version, to be optimized
     offspring = []
-    if len(parents) % 2:
+    if len(parents) % 2 != 0:
         offspring.append(parents.pop(0))
     for f1, f2, parent1, parent2 in zip(fitness_values[::2], fitness_values[1::2], parents[::2], parents[1::2]):
         # child_1 = {'species' : None, 'nodes': copy.deepcopy((parent1, parent2)[f2 >= f1]['nodes']), 'connections' : {}}
