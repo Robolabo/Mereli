@@ -84,12 +84,12 @@ class NEAT_Population(Population):
             #     offspring.append(spc_genotypes[0])
             #     continue
             #* Truncate bests
-            n_sel = max(2, int(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
+            n_sel = max(1, round(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)
             try:
-                parents = [copy.deepcopy(parents[idx]) for idx in parents_mating] # shuffle parents
+                parents = [parents[idx] for idx in parents_mating] # shuffle parents
                 fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             except:
                 import pdb; pdb.set_trace()
@@ -123,7 +123,7 @@ class NEAT_Population(Population):
                 self.species[species_idx].num_genotypes += 1
                 genotype['species'] = self.species[species_idx].id
 
-        #* Check extintion
+        #! check extintion
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))
@@ -135,7 +135,6 @@ class NEAT_Population(Population):
         #! Update species fitness statistics!!!
         #* Update popultation
         self.population = offspring
-        fitness_vector = raw_fitness #!
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
             import pdb; pdb.set_trace()
