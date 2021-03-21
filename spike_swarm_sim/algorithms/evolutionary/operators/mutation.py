@@ -16,7 +16,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     is disabled and two new synapses are included.
     """
     #* Make sure that node name does not exist.
-    pre_nodes, post_nodes = [*map(lambda x: set(x), zip(*innovation_history.keys()))]
+    pre_nodes, post_nodes = [*map(set, zip(*innovation_history.keys()))]
     node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
     genotype['nodes'][node_name] = {
             'ensemble' : node_name,

@@ -317,9 +317,11 @@ class NeuralNetwork:
         if self.t == self.time_scale * 800 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
+            II = np.stack(tuple(self.monitor.get('currents').values()))
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0.5, -0.5]
+        # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
+        # actions['outA'] = [0, 0]
         actions['outC'] = 1 #! State = 1
         return actions
     
