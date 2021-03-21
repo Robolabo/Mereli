@@ -71,32 +71,32 @@ class NEAT_Population(Population):
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             num_offspring = max(2, int(np.round((self.pop_size - sum(num_elites)) * sum(spc_fitness) / sum(fitness_vector))))
             prev_spc_size = len(spc_genotypes) - spc_elites
-            num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
+            num_offspring = int(0.6 * prev_spc_size + 0.4 * num_offspring)\
                     if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
             species_offsprings.append(num_offspring)
+        
         while(sum(species_offsprings) != self.pop_size - sum(num_elites)):
             species_offsprings[np.random.randint(len(self.species))] += (1, -1)[sum(species_offsprings) > self.pop_size]
-        
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
             #! OJO DEEPCOPY????
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
-                offspring.append(spc_genotypes[0])
-                continue
+            #if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
+            #    offspring.append(spc_genotypes[0])
+            #    continue
             #* Truncate bests
-            n_sel = max(2, int(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
+            n_sel = max(1, round(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)
             try:
-                parents = [copy.deepcopy(parents[idx]) for idx in parents_mating] # shuffle parents
+                parents = [parents[idx] for idx in parents_mating] # shuffle parents
                 fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             except:
                 import pdb; pdb.set_trace()
             #* NEAT Crossover
-            offspring.extend(neat_crossover(parents, fitness_parents))
-        prev_offs = copy.deepcopy(offspring)#! TEST
+            xvr_p = neat_crossover(parents, fitness_parents)
+            offspring.extend(xvr_p)
         #* Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
                         offspring, self.input_nodes, self.current_innovation,
@@ -119,13 +119,11 @@ class NEAT_Population(Population):
                 genotype['species'] = self.species[-1].id
             else:
                 # species_idx = np.random.choice(np.arange(len(self.species))[list(compatible)]) # Random
-                compatible_species = np.arange(len(self.species))[list(compatible)]
-                compatible_distances = np.array(distances)[list(compatible)]
-                species_idx, _  = sorted(zip(compatible_species, compatible_distances), key=lambda x : x[1])[0]
+                species_idx, _  = sorted(zip(np.arange(len(self.species))[list(compatible)], distances), key=lambda x:x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype['species'] = self.species[species_idx].id
 
-        #* Check extintion
+        #! check extintion
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))
