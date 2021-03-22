@@ -40,16 +40,16 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 150,
+        "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 500,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [3,  1.5, 0.75],
-                "min_vals" : [-3, -1.5, -0.75],
+                "max_vals" : [2,  1, 0.75],
+                "min_vals" : [-2, -1, -0.75],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.8,
