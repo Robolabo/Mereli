@@ -137,7 +137,7 @@ class NEAT_Population(Population):
         num_tar_species = 6
         if len(self.species) != num_tar_species:
             for sp in self.species:
-                sp.compatib_thresh += 0.3 * (1, -1)[len(self.species) > num_tar_species]
+                sp.compatib_thresh += 0.3 * (-1, 1)[len(self.species) > num_tar_species]
             
         #* Update popultation
         self.population = offspring

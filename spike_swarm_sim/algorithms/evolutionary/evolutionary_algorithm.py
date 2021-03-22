@@ -150,7 +150,6 @@ class EvolutionaryAlgorithm:
         #     plot.plot([p[i] for p in self.populations['p1'].population])
         # plot.boxplot([p[1] for p in self.populations['p1'].population])
         # plot.show()
-        # import pdb; pdb.set_trace()
 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
