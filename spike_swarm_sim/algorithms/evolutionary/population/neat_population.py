@@ -47,7 +47,7 @@ class NEAT_Population(Population):
         """
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
-    
+
         #* Update species fitness statistics
         for spc in self.species:
             spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id]
@@ -132,12 +132,17 @@ class NEAT_Population(Population):
                 species.representative = copy.deepcopy(offspring[np.random.choice(\
                     [n for n, g in enumerate(offspring) if g['species'] == species.id])])
         logging.info('Num. species is {}'.format(len(self.species)))
-        #! Update species fitness statistics!!!
+
+        #* Adaptive species thresh.
+        num_tar_species = 6
+        if len(self.species) != num_tar_species:
+            for sp in self.species:
+                sp.compatib_thresh += 0.3 * (1, -1)[len(self.species) > num_tar_species]
+            
         #* Update popultation
         self.population = offspring
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')
-            import pdb; pdb.set_trace()
         
     @property
     def min_vector(self):
