@@ -290,7 +290,6 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        import pdb; pdb.set_trace()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
