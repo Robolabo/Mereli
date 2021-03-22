@@ -1,4 +1,5 @@
 import copy
+import re
 import csv
 import pickle
 from collections import deque
@@ -68,6 +69,18 @@ def key_of(dic, value):
     if isinstance(value, np.ndarray):
         return [k for k, v in dic.items() if all(v == value)][0]
     return [k for k, v in dic.items() if v == value][0]
+
+class RegexpDict(dict):
+    def __init(self, *args, **kwargs):
+        super(RegexpDict, self).__init__(*args, **kwargs)
+
+    def __getitem__(self, key):
+        for regex_key, val in self.items():
+            if re.match(regex_key, key):
+                return val
+        raise KeyError
+
+
 
 def remove_duplicates(lst):
     """ Return input list without duplicates. """

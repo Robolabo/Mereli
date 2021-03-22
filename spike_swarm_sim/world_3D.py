@@ -192,7 +192,8 @@ class World3D(object):
                             for pert, pert_params in obj['perturbations'].items()]})
             else: # Non robot objects
                 positions = map(lambda x: (x[0], x[1], 0.), self.initializers[obj_name]['positions']())
-                controller = controllers[obj['controller']]() if obj['controller'] is not None else None
+                controller_cls = controllers.get(obj.get('controller'))
+                controller = controller_cls is not None and controller_cls() or None
                 for i, position in enumerate(positions):
                     world_obj = object_cls(position, [0,0,0], controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
@@ -301,12 +302,15 @@ class World3D(object):
                     if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
                         neighbors.append(obj)
             elif isinstance_of_any(obj, [LightSource, LightSource3D]):
-                #! PROV
-                ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}[type(obj).__name__]
-                if ls_sensor not in robot.sensors:
-                    continue
-                if np.linalg.norm(obj.position - robot.position) <= robot.sensors[ls_sensor].range:
-                    neighbors.append(obj)
+                # #! PROV
+                # ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}[type(obj).__name__]
+
+                # ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}
+                # if ls_sensor not in robot.sensors:
+                #     continue
+                # if np.linalg.norm(obj.position - robot.position) <= robot.sensors[ls_sensor].range:
+                    # neighbors.append(obj)
+                neighbors.append(obj) #! OJO: He simplificado esto por las prisas. TODO FIX.
             else:
                 neighbors.append(obj)
         return neighbors

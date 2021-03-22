@@ -44,13 +44,20 @@ class LightSensor(DirectionalSensor):
 class LightSensor3D(DirectionalSensor):
     """ Directional ambient light sensor that enables the sensing 
     of the light intensity resulting from the emission of luminous 
-    WorldObjects (e.g. LightSource).
+    WorldObjects (e.g. LightSource). This sensor is sensitive to 
+    light beams of any color.
     """
     def __init__(self, *args, color='red', **kwargs):
         super(LightSensor3D, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 3 * np.pi / self.n_sectors
         self.propagation = ExpDecayPropagation(rho_att=0.2, phi_att=1)
+    
+    def _target_filter(self, obj):
+        """ Filtering of potential target WorldObjects. 
+        #TODO Support for more luminous objects.
+        """
+        return type(obj).__name__ == 'LightSource3D'
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
@@ -58,7 +65,7 @@ class LightSensor3D(DirectionalSensor):
         """
         condition = kwargs['obj'] is not None\
                     and rho <= kwargs['obj'].range\
-                    and kwargs['obj'].color == self.color
+                    # and kwargs['obj'].color == self.color
                     #and phi <= self.aperture #<= 3*np.pi/self.n_sectors
         if direction_reading is None:
             direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
@@ -84,8 +91,32 @@ class LightSensor3D(DirectionalSensor):
     def get_position(self, idx):
         return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
 
+
+class ColoredLightSensor(LightSensor3D):
+    def __init__(self, color, *args, **kwargs):
+        super(ColoredLightSensor, self).__init__(*args, **kwargs)
+        self.color = color
+
     def _target_filter(self, obj):
-        """ Filtering of potential target WorldObjects. 
-        #TODO Support for more luminous objects.
-        """
-        return type(obj).__name__ == 'LightSource3D'
+        """ Filtering of potential target WorldObjects. """
+        return super()._target_filter(obj) and obj.color == self.color
+
+@sensor_registry(name='blue_light_sensor')
+class BlueLightSensor(ColoredLightSensor):
+    def __init__(self, *args, **kwargs):
+        super(BlueLightSensor, self).__init__('blue', *args, **kwargs)
+
+@sensor_registry(name='yellow_light_sensor')
+class YellowLightSensor(ColoredLightSensor):
+    def __init__(self, *args, **kwargs):
+        super(YellowLightSensor, self).__init__('yellow', *args, **kwargs)
+    
+@sensor_registry(name='red_light_sensor')
+class RedLightSensor(ColoredLightSensor):
+    def __init__(self, *args, **kwargs):
+        super(RedLightSensor, self).__init__('red', *args, **kwargs)
+
+@sensor_registry(name='green_light_sensor')
+class GreenLightSensor(ColoredLightSensor):
+    def __init__(self, *args, **kwargs):
+        super(GreenLightSensor, self).__init__('green', *args, **kwargs)

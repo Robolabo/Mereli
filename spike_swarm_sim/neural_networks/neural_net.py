@@ -302,7 +302,6 @@ class NeuralNetwork:
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and reward is not None and reward != 0.0:
             self.synapses.weights += self.learning_rule.step(inputs[-1], self.spikes, reward=reward)
-
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):
@@ -318,9 +317,11 @@ class NeuralNetwork:
         if self.t == self.time_scale * 800 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
+            II = np.stack(tuple(self.monitor.get('currents').values()))
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0,0]
+        # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
+        # actions['outA'] = [0, 0]
         actions['outC'] = 1 #! State = 1
         return actions
     

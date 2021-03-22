@@ -155,12 +155,12 @@ class GotoLight:
             #                     for i, pos_i in enumerate(pos)\
             #                     for j, pos_j in enumerate(pos) if i != j])
             fA = {
-                0 : (distances < 2).mean(),
-                1 : all(distances < 2),
-            }.get(info["generation"] // 50, all(distances < 2))
+                0 : (distances < 1).mean(),
+                1 : (distances < 1).mean(),
+            }.get(info["generation"] // 50, (distances < 1).mean())
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
-        return fitness / len(states)
+        return (fitness / len(states)) + 1e-5
 
 
 # @fitness_func_registry(name='exploration')
