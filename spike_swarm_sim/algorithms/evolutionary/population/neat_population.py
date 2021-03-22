@@ -138,7 +138,7 @@ class NEAT_Population(Population):
         
         if len(self.species) != num_tar_species:
             self.compatib_thresh += 0.3 * (-1, 1)[len(self.species) > num_tar_species]
-            self.compatib_thresh = min(self.compatib_thresh, 0.3)
+            self.compatib_thresh = max(self.compatib_thresh, 0.3)
             for sp in self.species:
                 sp.compatib_thresh = self.compatib_thresh
                 
