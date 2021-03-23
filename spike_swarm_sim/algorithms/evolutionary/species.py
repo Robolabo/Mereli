@@ -43,8 +43,10 @@ class Species:
         weights_repr = np.array([g['weight'] for g in self.representative['connections'].values()])
         weights_genotype = np.array([g['weight'] for g in genotype['connections'].values()])
         W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
-        dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
-                + self.c3 * W_dist
+        # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
+        #         + self.c3 * W_dist
+        dist = 2 * self.c1 * len(diff_genes) + self.c3 * W_dist
+        
         return dist < self.compatib_thresh, dist
 
     def update_stats(self, fitness_scores):
