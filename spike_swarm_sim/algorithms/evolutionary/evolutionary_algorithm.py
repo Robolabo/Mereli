@@ -181,7 +181,8 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
-                comm.Barrier()
+		print('TEST MPI, RANK,SIZE=',rank, size)
+		comm.Barrier()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
