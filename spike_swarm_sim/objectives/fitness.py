@@ -162,7 +162,7 @@ class GotoLight:
             fitness += fA
         return (fitness / len(states)) + 1e-5
 
-@fitness_func_registry(name='goto_light')
+@fitness_func_registry(name='two_lights')
 class TwoLights:
     """Fitness function for the light follower task."""
     def __init__(self):

@@ -46,9 +46,9 @@
         "evolvable_object" : "robotA",
         "population_size" : 150,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
-        "fitness_function" : "goto_light",
+        "fitness_function" : "two_lights",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -76,7 +76,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 6,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "green_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
