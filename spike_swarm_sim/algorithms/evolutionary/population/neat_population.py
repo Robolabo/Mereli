@@ -134,11 +134,10 @@ class NEAT_Population(Population):
         logging.info('Num. species is {}'.format(len(self.species)))
 
         #* Adaptive species thresh.
-        num_tar_species = 6
-        
+        num_tar_species = 10
         if len(self.species) != num_tar_species:
-            self.compatib_thresh += 0.3 * (-1, 1)[len(self.species) > num_tar_species]
-            self.compatib_thresh = max(self.compatib_thresh, 0.3)
+            self.compatib_thresh += 0.1 * (-1, 1)[len(self.species) > num_tar_species]
+            self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)
             for sp in self.species:
                 sp.compatib_thresh = self.compatib_thresh
                 
