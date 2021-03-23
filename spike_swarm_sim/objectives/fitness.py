@@ -183,7 +183,7 @@ class TwoLights:
         """
         robot_positions = np.stack(info["robot_positions"]).copy()
         green_light_positions = np.stack(info["green_light_positions"]).copy()
-        yellow_light_positions = np.stack(info["green_light_positions"]).copy()
+        yellow_light_positions = np.stack(info["yellow_light_positions"]).copy()
         fitness = 0
         for t, (pos, green_light_pos, yellow_light_pos)  in enumerate(zip(robot_positions, green_light_positions, yellow_light_positions)):
             green_light_pos = green_light_pos.flatten()
@@ -201,7 +201,7 @@ class TwoLights:
             # )
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
-
+            import pdb; pdb.set_trace()
         return (fitness / len(states)) + 1e-5
 
 # @fitness_func_registry(name='exploration')

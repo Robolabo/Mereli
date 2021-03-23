@@ -89,7 +89,7 @@
                     "wireless_transmitter" : {"quantize": false, "range" : 2, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [1,0], [-1,0], [0, 1], [0, -1], [2,0]] }},
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,-1], [0,1]] }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
