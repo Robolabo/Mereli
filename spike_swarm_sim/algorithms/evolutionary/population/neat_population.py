@@ -137,7 +137,7 @@ class NEAT_Population(Population):
         num_tar_species = 10
         if len(self.species) != num_tar_species:
             self.compatib_thresh += 0.1 * (-1, 1)[len(self.species) > num_tar_species]
-            self.compatib_thresh = np.clip(self.compatib_thresh, a_min=1, a_max=5)
+            self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)
             for sp in self.species:
                 sp.compatib_thresh = self.compatib_thresh
                 
