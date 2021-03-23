@@ -4,8 +4,8 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 1, "sensor" : "yellow_light_sensor@max"},
-            "I2" : {"n" : 1, "sensor" : "green_light_sensor@max"},
+            "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
+            "I2" : {"n" : 4, "sensor" : "green_light_sensor"},
             "I3" : {"n" : 4, "sensor" : "IR_receiver:msg"},
             "I4" : {"n" : 4, "sensor" : "distance_sensor3D"}
         },
@@ -44,9 +44,9 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 2000,
-        "evaluation_steps" : 1400,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
