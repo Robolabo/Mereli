@@ -162,6 +162,46 @@ class GotoLight:
             fitness += fA
         return (fitness / len(states)) + 1e-5
 
+@fitness_func_registry(name='goto_light')
+class TwoLights:
+    """Fitness function for the light follower task."""
+    def __init__(self):
+        self.required_info = ("generation", "robot_positions", "robot_orientations", 
+                            "green_light_positions", "yellow_light_positions")
+
+    def __call__(self, actions, states, info=None):
+        """Computes the fitness function based on trial actions and states. 
+        Additionally, other useful variables can be used from info dict (if specified in init).
+        =======================================================================================
+        - Args:
+            actions [list of dicts]: list of dictionaries with actuator names and the 
+                    corresponding action.
+            states [list of dicts]: list of dictionaries with sensor names and the 
+                    corresponding measured states.
+            info [dict or None]: dict of additional information. 
+        =======================================================================================
+        """
+        robot_positions = np.stack(info["robot_positions"]).copy()
+        green_light_positions = np.stack(info["green_light_positions"]).copy()
+        yellow_light_positions = np.stack(info["green_light_positions"]).copy()
+        fitness = 0
+        for t, (pos, green_light_pos, yellow_light_pos)  in enumerate(zip(robot_positions, green_light_positions, yellow_light_positions)):
+            green_light_pos = green_light_pos.flatten()
+            yellow_light_pos = yellow_light_pos.flatten()
+
+            distances_green = LA.norm(pos[:, :2] - green_light_pos[:2], axis=1)
+            distances_yellow = LA.norm(pos[:, :2] - yellow_light_pos[:2], axis=1)
+            fA = 0.5 * (distances_green < 1).mean() + 0.5 * (distances_yellow < 1).mean()
+            # fA = {
+            #     0 : 0.5*(distances_green < 1).mean() + 0.5*(distances_yellow < 1).mean(),
+            #     1 : sum(distances_green < 1) ,
+            # }.get(info["generation"] // 100, 
+            #     (distances < 1).mean()
+            # )
+            # fB = np.mean(distances_robots > 0.5)
+            fitness += fA
+
+        return (fitness / len(states)) + 1e-5
 
 # @fitness_func_registry(name='exploration')
 # class Exploration:

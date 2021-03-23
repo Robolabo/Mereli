@@ -34,7 +34,11 @@ def get_info(name, robots, world,):
     return {
         'robot_positions' : np.stack([bot.position for bot in robots]),
         'robot_orientations' : np.array([bot.orientation for bot in robots]),
-        'light_positions' : np.array([light.position for light in world.lights.values()])
+        'light_positions' : np.array([light.position for light in world.lights.values()]),
+        'green_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'green']),
+        'yellow_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'yellow']),
+        'red_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'red']),
+        'blue_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'blue'])
     }[name]
 
 
@@ -151,7 +155,7 @@ class EvolutionaryAlgorithm:
         # plot.boxplot([p[1] for p in self.populations['p1'].population])
         # plot.show()
         # import pdb; pdb.set_trace()
-        
+
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
         genotype evaluation to obtain the fitness and performs the evolution step. 
@@ -182,6 +186,7 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
+                print('TEST MPI, RANK,SIZE={}, {}'.format(rank, size), flush=True)
                 comm.Barrier()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))

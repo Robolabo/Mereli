@@ -8,3 +8,4 @@ spike_swarm_sim/logs/data/*
 scripts
 examples
 *.sh
+*.log
