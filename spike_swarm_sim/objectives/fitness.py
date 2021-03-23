@@ -201,7 +201,6 @@ class TwoLights:
             # )
             # fB = np.mean(distances_robots > 0.5)
             fitness += fA
-            import pdb; pdb.set_trace()
         return (fitness / len(states)) + 1e-5
 
 # @fitness_func_registry(name='exploration')
