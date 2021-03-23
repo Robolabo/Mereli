@@ -191,7 +191,8 @@ class TwoLights:
 
             distances_green = LA.norm(pos[:, :2] - green_light_pos[:2], axis=1)
             distances_yellow = LA.norm(pos[:, :2] - yellow_light_pos[:2], axis=1)
-            fA = 0.5 * (distances_green < 1).mean() + 0.5 * (distances_yellow < 1).mean()
+            fA = 0.5 * any(distances_green < 1) + 0.5 * any(distances_yellow < 1)
+
             # fA = {
             #     0 : 0.5*(distances_green < 1).mean() + 0.5*(distances_yellow < 1).mean(),
             #     1 : sum(distances_green < 1) ,
