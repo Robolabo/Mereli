@@ -1,8 +1,6 @@
 import logging
 import copy
 import numpy as np
-import matplotlib.pyplot as plot
-import seaborn as sns
 from scipy.linalg import expm
 from .population import Population
 from spike_swarm_sim.utils import eigendecomposition, normalize
