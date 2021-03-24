@@ -291,7 +291,7 @@ class World3D(object):
         if len(self.robots) > 1:
             #! ---
             max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['IR_receiver', 'distance_sensor3D'] \
+                            for sensor in ['IR_receiver', 'distance_sensor3D', 'RF_receiver'] \
                             if sensor in robot.sensors.keys()])
             #! ---
         #* Robots
