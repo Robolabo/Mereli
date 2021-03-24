@@ -11,7 +11,10 @@ from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .utils.monitor import NeuralNetMonitor
-from .utils.visualization import *
+try:
+    from .utils.visualization import *
+except:
+    pass
 
 def monitor(func):
     """ Decorator for recording and monitoring the relevant neuronal variables. 

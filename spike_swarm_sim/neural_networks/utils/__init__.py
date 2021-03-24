@@ -1,4 +1,8 @@
 from .monitor import NeuralNetMonitor
 from .builder import  SynapsesBuilder
-from .visualization import  *
+
+try:
+    from .visualization import  *
+except:
+    logging.warning('Visualization Module cannot be loaded. Running without it')
 from .utils import  *
