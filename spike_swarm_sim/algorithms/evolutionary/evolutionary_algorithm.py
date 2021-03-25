@@ -1,7 +1,10 @@
 import time
 import copy
 import re
-import multiprocessing
+try:
+    import multiprocessing
+except:
+    logging.warning('Running without multiprocessing.')
 import logging
 from collections import deque
 from itertools import repeat, chain
