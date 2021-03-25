@@ -190,7 +190,7 @@ class EvolutionaryAlgorithm:
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
-                comm.Barrier()
+                #comm.Barrier()
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
                     fitness = [vv for ff in eval_result for vv in ff]
