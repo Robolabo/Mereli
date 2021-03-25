@@ -1,11 +1,11 @@
 import time
 import copy
 import re
+import logging
 try:
     import multiprocessing
 except:
     logging.warning('Running without multiprocessing.')
-import logging
 from collections import deque
 from itertools import repeat, chain
 try:

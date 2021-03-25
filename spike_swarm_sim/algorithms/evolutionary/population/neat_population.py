@@ -86,11 +86,8 @@ class NEAT_Population(Population):
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)
-            try:
-                parents = [parents[idx] for idx in parents_mating] # shuffle parents
-                fitness_parents = [fitness_parents[idx] for idx in parents_mating]
-            except:
-                import pdb; pdb.set_trace()
+            parents = [parents[idx] for idx in parents_mating] # shuffle parents
+            fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents, fitness_parents))
         #* Mutation
