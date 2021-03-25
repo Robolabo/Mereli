@@ -325,7 +325,7 @@ class NeuralNetwork:
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
         # actions['outA'] = [0, 0]
-        actions['outC'] = 1 #! State = 1
+        # actions['outC'] = 1 #! State = 1
         return actions
     
     @property
