@@ -44,9 +44,9 @@
     "algorithm" : {
         "name" : "GA",
         "evolvable_object" : "robotA",
-        "population_size" : 80,
+        "population_size" : 10,
         "generations" : 2000,
-        "evaluation_steps" : 500,
+        "evaluation_steps" : 50,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {

@@ -186,6 +186,7 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
+                if rank == 1: import pandas as pd; pd.DataFrame({'a' : [1,2], 'b':[3,4]}).to_csv('test_file.csv')
                 print('TEST MPI, RANK,SIZE={}, {}'.format(rank, size), flush=True)
                 comm.Barrier()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
