@@ -1,7 +1,10 @@
 import time
 import copy
 import re
-import multiprocessing
+try:
+    import multiprocessing
+except:
+    logging.warning('Running without multiprocessing.')
 import logging
 from collections import deque
 from itertools import repeat, chain
@@ -77,10 +80,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
         for pop in populations.values():
-            try:
-                genotype_segment = pop.population[env_id]
-            except:
-                import pdb; pdb.set_trace()
+            genotype_segment = pop.population[env_id]
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
@@ -186,18 +186,18 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
-                print('TEST MPI, RANK,SIZE={}, {}'.format(rank, size), flush=True)
-                comm.Barrier()
+                # if rank == 1: import pandas as pd; pd.DataFrame({'a' : [1,2], 'b':[3,4]}).to_csv('test_file.csv')
+                # print('TEST MPI, RANK,SIZE={}, {}'.format(rank, size), flush=True)
+                # comm.Barrier()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
-                comm.Barrier()
+                #comm.Barrier()
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
                     fitness = [vv for ff in eval_result for vv in ff]
                     self.fitness = [f_val for _, f_val in sorted(fitness, key=lambda x: x[0])]
-                comm.Barrier()
             else:
                 eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
                                 self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
@@ -213,6 +213,8 @@ class EvolutionaryAlgorithm:
                 any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
                             zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
                 if k % 5 == 0 and self.checkpoint_name is not None:
+                    if use_mpi:
+                        print('SAVING CHECKPOINT', flush=True)
                     self.save_population(k)
             if use_mpi:
                 #* Broadcast evolved populations to all nodes
