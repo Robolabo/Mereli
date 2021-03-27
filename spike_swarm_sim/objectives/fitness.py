@@ -152,12 +152,9 @@ class GotoLight:
             light_pos = light_pos.flatten() #! OJO mal si muchas luces.
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
             joint_actions = [ac['joint_velocity_actuator'] for ac in actions_t]
-            distances_robots = np.array([LA.norm(pos_i[:2] - pos_j[:2])\
-                                for i, pos_i in enumerate(pos)\
-                                for j, pos_j in enumerate(pos) if i != j])
-            f_exp = 0.33 * np.mean(distances_robots > 0.5)\
-                  + 0.33 * np.mean(distances_robots < 2)\
-                  + 0.33 * np.mean([1 - (np.abs(np.diff(ac)) / 2) for ac in joint_actions])
+            distances_robots = np.array([LA.norm(pos_i[:2] - pos[:, :2].mean(0)) for i, pos_i in enumerate(pos)])
+            f_exp = np.mean(distances_robots > 0.5) * np.mean(distances_robots < 1.5)
+            f_exp *= np.mean([(1 - (np.abs(np.diff(ac)) / 2)) * np.abs(ac[0]) for ac in joint_actions])
             fA = all(distances < 2) * np.clip(1 - (distances / 2), a_min=0, a_max=1).mean()
             fitness += {
                 0 : 0.7 * f_exp + 0.3 * fA,
