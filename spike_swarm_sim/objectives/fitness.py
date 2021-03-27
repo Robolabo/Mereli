@@ -147,20 +147,23 @@ class GotoLight:
         robot_positions = np.stack(info["robot_positions"]).copy()
         light_positions = np.stack(info["light_positions"]).copy()
         fitness = 0
-        for t, (pos, light_pos)  in enumerate(zip(robot_positions, light_positions)):
+        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):
             #! IF 2D : distances = [LA.norm(toroidal_difference(pos_i, light_pos)) for i, pos_i in enumerate(pos)]
             light_pos = light_pos.flatten() #! OJO mal si muchas luces.
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
+            joint_actions = [ac['joint_velocity_actuator'] for ac in actions_t]
             distances_robots = np.array([LA.norm(pos_i[:2] - pos_j[:2])\
                                 for i, pos_i in enumerate(pos)\
                                 for j, pos_j in enumerate(pos) if i != j])
-            # fA = {
-            #     0 : (distances < 2).mean(),
-            #     1 : (distances < 2).mean(),
-            # }.get(info["generation"] // 50, (distances < 1).mean())
-            # fB = np.mean(distances_robots > 0.5)
-            fA = np.mean(np.clip(1 - (distances / 2), a_min=0, a_max=1) ** 2)
-            fitness += fA
+            f_exp = 0.33 * np.mean(distances_robots > 0.5)\
+                  + 0.33 * np.mean(distances_robots < 2)\
+                  + 0.33 * np.mean([1 - (np.abs(np.diff(ac)) / 2) for ac in joint_actions])
+            fA = all(distances < 2) * np.clip(1 - (distances / 2), a_min=0, a_max=1).mean()
+            fitness += {
+                0 : 0.7 * f_exp + 0.3 * fA,
+                1 : 0.5 * f_exp + 0.5 * fA,
+                1 : 0.3 * f_exp + 0.7 * fA,
+            }.get(info["generation"] // 70,  0.2 * f_exp + 0.8 * fA)
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='two_lights')
