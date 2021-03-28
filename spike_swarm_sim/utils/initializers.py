@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.linalg as LA
 from spike_swarm_sim.register import initializer_registry
 from spike_swarm_sim.utils import tanh, compute_angle, isinstance_of_any
 
@@ -22,10 +23,21 @@ class RandomUniformInitializer:
         self.low = low
         self.high = high
         self.size = size
+        self.check_overlapping = size > 1
 
     def __call__(self):
-        return [np.random.uniform(low=self.low, high=self.high, size=self.size)\
-                for _ in range(self.num_points)]
+        res = []
+        if self.check_overlapping:
+            while len(res) < self.num_points:
+                new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
+                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.4 for pp in res):
+                    res.append(new_sample)
+        else: 
+            res = [np.random.uniform(low=self.low, high=self.high, size=self.size)\
+                    for _ in range(self.num_points)]
+        return res
+        # return [np.random.uniform(low=self.low, high=self.high, size=self.size)\
+        #         for _ in range(self.num_points)]
 
 
 @initializer_registry(name='random_circumference')
@@ -89,16 +101,16 @@ class RandomGraphInitializer:
             while any([np.linalg.norm(new_pos - pos) < 0.4 for pos in points]) or np.min([np.linalg.norm(new_pos - pos) for pos in points]) > 1:
                 delta_X = points[-1] #- 500
                 mu = tanh(-(delta_X / R_max) ** 3)
-                sigma_x = np.sin(compute_angle(delta_X / R_max))**2 if np.linalg.norm(delta_X) > R_max/2 else 1
-                sigma_y = np.sin(compute_angle(delta_X / R_max)+np.pi/2)**2 if np.linalg.norm(delta_X) > R_max/2 else 1
-                rho = 0.5*np.sin(2 * compute_angle(delta_X / R_max))**3
-                cov_mat = np.array([[sigma_x, rho*sigma_x*sigma_y], [rho*sigma_x*sigma_y, sigma_y]])
+                sigma_x = np.sin(compute_angle(delta_X / R_max)) ** 2 if np.linalg.norm(delta_X) > R_max/2 else 1
+                sigma_y = np.sin(compute_angle(delta_X / R_max) + np.pi / 2) ** 2 if np.linalg.norm(delta_X) > R_max/2 else 1
+                rho = 0.5 * np.sin(2 * compute_angle(delta_X / R_max)) ** 3
+                cov_mat = np.array([[sigma_x, rho * sigma_x * sigma_y], [rho * sigma_x * sigma_y, sigma_y]])
                 # new_pos = 80 * np.random.multivariate_normal(mu, cov_mat, size=1).flatten() + points[-1]
                 new_pos = 0.8 * np.random.multivariate_normal(mu, cov_mat, size=1).flatten() + points[-1]
             points.append(new_pos)
         # for p in points:
         #     p[1] = 1000 - p[1]
-        return points 
+        return points
      
 
 

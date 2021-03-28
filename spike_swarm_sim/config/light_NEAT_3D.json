@@ -52,8 +52,8 @@
         "evolvable_object" : "robotA",
         "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 1200,
-        "num_evaluations" : 1,
+        "evaluation_steps" : 1000,
+        "num_evaluations" : 5,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
@@ -77,8 +77,8 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":15,
-        "width": 15,
+        "height":12,
+        "width": 12,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
@@ -96,7 +96,7 @@
                     "RF_transmitter" : {"range" : 20}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [1,0], [-1,0], [0, 1], [0, -1], [2,0]] }},
+                    "positions" : {"name" : "random_uniform", "params" : {"low": -4, "high" : 4, "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
@@ -107,7 +107,7 @@
                 "num_instances": 1,
                 "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[4, 0]]}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }

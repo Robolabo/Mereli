@@ -254,7 +254,7 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                genotype_segment = pop.population[3] # pop.best if pop.best is not None else pop.population[1] # pop.population[156]
+                genotype_segment = pop.best if pop.best is not None else pop.population[1] # pop.population[156]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}
