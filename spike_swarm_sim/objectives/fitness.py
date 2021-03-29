@@ -163,7 +163,7 @@ class GotoLight:
             # }.get(info["generation"] // 50, fA)
             fA = (distances < 1).mean()
             fitness += fA
-	return (fitness / len(states)) + 1e-5
+        return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='two_lights')
 class TwoLights:
