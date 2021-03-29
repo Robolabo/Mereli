@@ -50,10 +50,10 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 400,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 1000,
-        "num_evaluations" : 5,
+        "num_evaluations" : 3,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
