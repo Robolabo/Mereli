@@ -101,3 +101,4 @@ class Preprocessing:
                 ope = self.operations[self.sensors[key].split('@')[1]]
                 stimuli[key] = ope(stim)
         return stimuli        
+

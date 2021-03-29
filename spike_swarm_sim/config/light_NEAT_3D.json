@@ -50,7 +50,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 200,
+        "population_size" : 400,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 5,
@@ -58,8 +58,8 @@
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
-                "max_vals" : [2,  1, 0.75, 5],
-                "min_vals" : [-2, -1, -0.75, 0.05],
+                "max_vals" : [4,  1, 0.75, 2],
+                "min_vals" : [-4, -1, -0.9, 0.05],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.4,
@@ -77,8 +77,8 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":12,
-        "width": 12,
+        "height":10,
+        "width": 10,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
@@ -88,7 +88,7 @@
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1,  "noise_sigma" : 0.03},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.5, "noise_sigma" : 0.03},
-                    "RF_receiver" : {"range" : 20, "noise_sigma" : 0.07}
+                    "RF_receiver" : {"range" : 20, "noise_sigma" : 3}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
@@ -99,15 +99,14 @@
                     "positions" : {"name" : "random_uniform", "params" : {"low": -4, "high" : 4, "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 2, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
-            },
+            },            
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":-4, "high" : 4, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-3, "high" : 3, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }

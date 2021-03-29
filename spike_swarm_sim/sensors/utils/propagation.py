@@ -66,3 +66,27 @@ class ExpDecayPropagation(Propagation):
 
     def __call__(self, rho, phi):
         return np.exp(- self.rho_att * rho) * np.exp(-self.phi_att * phi)
+
+
+
+class RSSI_Propagation(Propagation):
+    """ 
+    """
+    def __init__(self, noise_sigma=0.05):
+        self.rssi_0 = -69
+        self.n = 2.
+        self.noise_sigma = noise_sigma
+        self.buffer = [0.0] * 3
+
+    def __call__(self, rho, phi):
+        rho = max(rho, 1e-3)
+        #* Simulate measured noisy RSSI
+        rssi = self.rssi_0 - 10 * self.n * np.log10(rho) + np.random.randn() * self.noise_sigma 
+        # Normalize (suppose max dist 10 meters)
+        # rssi_max = self.rssi_0 - 10 * self.n
+        # rssi_min = self.rssi_0 - 10 * self.n * np.log10(0.1)
+        estim_dist = 10 ** ((-rssi + self.rssi_0) / (10*self.n))
+        self.buffer.append(estim_dist)
+        self.buffer.pop(0)
+        estim_dist = np.array([0.1, 0.3, 0.6]).dot(np.array(self.buffer))
+        return estim_dist / 10

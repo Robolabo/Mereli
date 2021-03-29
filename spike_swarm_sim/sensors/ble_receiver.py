@@ -4,7 +4,7 @@ from .base_sensor import DirectionalSensor
 from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.objects import Robot, Robot3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
-from .utils.propagation import ExpDecayPropagation
+from .utils.propagation import ExpDecayPropagation, RSSI_Propagation
 
 @sensor_registry(name='RF_receiver')
 class RF_Receiver(DirectionalSensor):
@@ -19,7 +19,7 @@ class RF_Receiver(DirectionalSensor):
     def __init__(self, *args, **kwargs):
         kwargs['n_sectors'] = 1
         super(RF_Receiver, self).__init__(*args,  **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=0)
+        self.propagation = RSSI_Propagation(noise_sigma=self.noise_sigma)
 
     def _target_filter(self, obj):
         """ Filtering of potential sender robots. """
@@ -52,8 +52,8 @@ class RF_Receiver(DirectionalSensor):
         """
         #* Imposed only 1 direction
         frame = super().step(*args, **kwargs)[0]
-        frame['signal'] = np.mean(frame['signal']) if len(frame['signal']) else 0.
-        frame['signal'] = np.array(frame['signal']) + np.random.randn() * self.noise_sigma
+        frame['signal'] = np.mean(frame['signal']) if len(frame['signal']) else np.random.randn() * 0.05
+        frame['signal'] = np.array(frame['signal'])
         frame['msg'] = np.array(frame['msg'])
         return frame
      
