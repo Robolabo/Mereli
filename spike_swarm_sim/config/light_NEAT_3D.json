@@ -99,7 +99,7 @@
                     "positions" : {"name" : "random_uniform", "params" : {"low": -4, "high" : 4, "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 2, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 5, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },            
             "light_red" : {
