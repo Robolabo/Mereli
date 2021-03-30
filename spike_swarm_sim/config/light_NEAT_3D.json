@@ -82,7 +82,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 7,
+                "num_instances" : 6,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
@@ -104,7 +104,7 @@
             },            
             "light_red" : {
                 "type" : "light_source",
-                "num_instances": 4,
+                "num_instances": 1,
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":-3, "high" : 3, "size" : 2}}
                 },
