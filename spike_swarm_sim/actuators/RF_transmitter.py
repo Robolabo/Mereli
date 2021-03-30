@@ -26,7 +26,7 @@ class RF_Transmitter(Actuator):
         
     def step(self, action):
         self.frame['msg'] = action
-        self.frame['enabled'] = bool(action[0])
+        self.frame['enabled'] = bool(action[0]) if isinstance(action, list) else bool(action)
 
     def reset(self):
         self.frame = {
