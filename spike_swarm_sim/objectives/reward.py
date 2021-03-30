@@ -30,7 +30,8 @@ class GoToLightReward:
 
         # rew = np.mean([np.clip(1 - (dist / 100), a_min=0, a_max=1) for dist in distances])
         # return rew
-        if np.max(states['light_sensor3D']) > 0.4:
-            return 1.
+        # if np.max(states['light_sensor3D']) > 0.4:
+        #     return 1.
         # else:
         #     return -.1
+        return  1.
