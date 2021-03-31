@@ -315,15 +315,16 @@ class World3D(object):
                 neighbors.append(obj)
         return neighbors
 
-    def world_objects(self, obj_type):
+    def entities(self, obj_type):
+        #! ?????
         """ Dict with all world objects of some object type (robot, light_source, ...).
         """
-        if obj_type not in world_objects.keys():
-            logging.warning('Wrong world object. Known world objects are: {}'.format(tuple(world_objects)))
-            return {}
-        obj_cls = type(world_objects[obj_type])
+        # if obj_type not in world_objects['3D'].keys():
+        #     logging.warning('Wrong world object. Known world objects are: {}'.format(tuple(world_objects)))
+        #     return {}
+        obj_cls = world_objects['3D'][obj_type]
         return {name : obj for name, obj in self.hierarchy.items()\
-                if isinstance(type(obj), obj_cls)}
+                if isinstance(obj, obj_cls)}
 
     @property
     def robots(self):
@@ -331,6 +332,7 @@ class World3D(object):
         """
         return {name : obj for name, obj in self.hierarchy.items()\
             if issubclass(type(obj), Robot) or issubclass(type(obj), Robot3D)}
+
     @property
     def lights(self):
         """ Dict with all light sources.

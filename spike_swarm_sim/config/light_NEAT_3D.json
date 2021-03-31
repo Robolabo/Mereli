@@ -82,7 +82,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 4,
+                "num_instances" : 8,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},

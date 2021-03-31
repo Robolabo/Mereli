@@ -23,7 +23,7 @@ from  spike_swarm_sim.actuators.utils import list_actuators
 from spike_swarm_sim.globals import global_states          
 from spike_swarm_sim import MultiWorldWrapper, World3D
 
-def get_info(name, robots, world,):
+def get_info_old(name, robots, world,):
     """
     Returns queried information about the world and its objects.
     #! Provisional implementation, will be improved in the future.
@@ -43,6 +43,21 @@ def get_info(name, robots, world,):
         'red_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'red']),
         'blue_light_positions' : np.array([light.position for light in world.lights.values() if light.color == 'blue'])
     }[name]
+
+def get_info(names, world):
+    obj_name = names.split(':')[0]
+    obj_var = names.split(':')[1] if len(names.split(':')) > 1 else 'position'
+    condition = names.split('@')[1] if '@' in names else None
+    objects = world.entities(obj_name)
+    if condition is not None:
+        obj_var = obj_var.split('@')[0]
+        objects = filter(lambda x: {
+            't' : str(world.t) == condition.split('=')[1],
+            'color' : x.color == condition.split('=')[1]
+        }.get(condition.split('=')[0], True), objects.values())
+        return np.array([getattr(v, obj_var) for v in objects if hasattr(v, obj_var)])
+    return np.array([getattr(v, obj_var) for v in objects.values() if hasattr(v, obj_var)])
+
 
 
 #!
@@ -101,7 +116,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             states, actions = world.step()
             for key, val in info.items():
                 if isinstance(val, deque):
-                    val.append(get_info(key, robots, world))
+                    val.append(get_info(key, world))
             actions_history.append(actions)
             states_history.append(states)
             survival_time += 1
