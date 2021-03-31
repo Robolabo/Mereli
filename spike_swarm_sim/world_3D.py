@@ -195,7 +195,7 @@ class World3D(object):
                 controller_cls = controllers.get(obj.get('controller'))
                 controller = controller_cls is not None and controller_cls() or None
                 for i, position in enumerate(positions):
-                    world_obj = object_cls(position, [0,0,0], controller=controller, **obj['params'])
+                    world_obj = object_cls(position, [0, 0, 0], controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def group_objects(self, group):
@@ -242,7 +242,7 @@ class World3D(object):
 
 
     def reset(self, seed=None):
-        """ Resets the world and all its objects. It also initalizes
+        """ Resets the world and all its objects. It also initializes
         the dynamics (pos, orientation, ...) of objects.
         ================================================================
         - Args:

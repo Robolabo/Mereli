@@ -126,8 +126,6 @@ class NEATInterface:
     def fromGenotype(self, queries, genotype, min_vals, max_vals):
         """ Converts a genotype into a phenotype or, in this case, structured ANN.
         """
-        if 'OUT_MOT_0' not in genotype['nodes']:
-            import pdb; pdb.set_trace()
         #* Clean previous architecture
         for name in list(self.neural_net.graph['neurons']):
             if name not in genotype['nodes']: #* residual from prev genotype

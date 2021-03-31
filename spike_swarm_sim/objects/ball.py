@@ -29,16 +29,21 @@ class Ball(WorldObject3D):
 
 @world_object_registry(name='cube')
 class Cube(WorldObject3D):
-    def __init__(self, position, orientation, *args, color='red', range=1., **kwargs):
+    def __init__(self, position, orientation, *args, color='blue', mass=1., side_len=0.3, **kwargs):
+        position = list(position)
+        position[-1] = side_len / 2 - 0.05
         super(Cube, self).__init__('cube', position, orientation,\
                         *args, **kwargs)
         self.color = color
+        self.mass = mass
+        self.side_len = side_len
 
     def add_physics(self, physics_client):
-        super().add_physics(physics_client)
+        super().add_physics(physics_client, scaling=self.side_len)
         color = list(colors.to_rgb(self.color)) + [1.]
         # import pdb; pdb.set_trace()
         p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
+        p.changeDynamics(self.id, -1, mass=self.mass, physicsClientId=physics_client)
     
     def step(self, world_dict):
         pass
@@ -55,9 +60,9 @@ class GroundArea(WorldObject3D):
         self.radius = radius
 
     def add_physics(self, physics_client):
-        super().add_physics(physics_client)
+        super().add_physics(physics_client, scaling=self.radius)
         color = list(colors.to_rgb(self.color)) + [1.]
         p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
-
+        
     def reset(self):
         pass

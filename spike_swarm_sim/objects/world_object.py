@@ -143,10 +143,11 @@ class WorldObject3D(WorldObject):
     def reset(self):
         raise NotImplementedError
 
-    def add_physics(self, physics_client):
+    def add_physics(self, physics_client, scaling=1.):
         self.physics_client = physics_client
         self._id = p.loadURDF(self.urdf_file, self.init_position,\
-            p.getQuaternionFromEuler(self.init_orientation), physicsClientId=self.physics_client)
+            p.getQuaternionFromEuler(self.init_orientation),
+            globalScaling=scaling, physicsClientId=self.physics_client)
         for i in range(2):
             p.changeDynamics(self.id, i, lateralFriction=0.9, physicsClientId=self.physics_client,\
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)

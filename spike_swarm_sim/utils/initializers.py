@@ -18,7 +18,7 @@ class FixedInitializer:
 
 @initializer_registry(name='random_uniform')
 class RandomUniformInitializer:
-    def __init__(self, num_points, low=100, high=900, size=2):
+    def __init__(self, num_points, low=[-2, -2], high=[2, 2], size=2):
         self.num_points = num_points
         self.low = low
         self.high = high
@@ -29,15 +29,37 @@ class RandomUniformInitializer:
         res = []
         if self.check_overlapping:
             while len(res) < self.num_points:
-                new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
-                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.4 for pp in res):
+                # new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
+                if isinstance(self.low, int):
+                    new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
+                else:
+                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0])
+                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1])
+                    new_sample = np.r_[new_sample_x, new_sample_y]
+                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.6 for pp in res):
                     res.append(new_sample)
-        else: 
+        else:
             res = [np.random.uniform(low=self.low, high=self.high, size=self.size)\
                     for _ in range(self.num_points)]
         return res
-        # return [np.random.uniform(low=self.low, high=self.high, size=self.size)\
-        #         for _ in range(self.num_points)]
+        
+@initializer_registry(name='random_circle')
+class RandomCircleInitializer:
+    def __init__(self, num_points, center=[0, 0], radius=1.):
+        self.num_points = num_points
+        self.center = np.array(center)
+        self.radius = radius
+
+    def __call__(self):
+        res = []
+        while len(res) < self.num_points:
+            rnd_mod = np.random.uniform(1e-3, self.radius)
+            rnd_phase = np.random.uniform(0, 2 * np.pi)
+            new_sample = rnd_mod * np.r_[np.cos(rnd_phase), np.sin(rnd_phase)] + self.center
+            if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.6 for pp in res):
+                res.append(new_sample)
+        return res
+
 
 
 @initializer_registry(name='random_circumference')

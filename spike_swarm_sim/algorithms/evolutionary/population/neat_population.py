@@ -76,7 +76,7 @@ class NEAT_Population(Population):
         
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
-            #! OJO DEEPCOPY????
+            #* Filter out genotypes from species.
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             # if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
             #     offspring.append(spc_genotypes[0])
@@ -90,7 +90,7 @@ class NEAT_Population(Population):
             fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents, fitness_parents))
-        #* Mutation
+        #* NEAT Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
                         offspring, self.input_nodes, self.current_innovation,
                         self.innovation_history, self.objects, p_weight_mut=self.p_weight_mut,

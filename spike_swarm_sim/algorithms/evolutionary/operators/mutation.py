@@ -12,7 +12,7 @@ def assign_unique_key(keys, base_name):
 
 #! SIN decorator por ahora
 def add_node(genotype, current_innovation, innovation_history, node_variables, **kwargs):
-    """ Add a new node inbetween an existing connection. The exisiting connection 
+    """ Add a new node in between an existing connection. The exisiting connection 
     is disabled and two new synapses are included.
     """
     #* Make sure that node name does not exist.
@@ -46,7 +46,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     })
     if (node_name, genotype['connections'][sel_conn]['post']) not in innovation_history:
         innovation_history.update({
-            (node_name, genotype['connections'][sel_conn]['post']): current_innovation
+            (node_name, genotype['connections'][sel_conn]['post']) : current_innovation
         })
         current_innovation += 1
     conn_name = genotype['connections'][sel_conn]['pre'] + '-' + node_name
@@ -76,7 +76,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     synaptic nodes are selected randomly (validating that the connection does not 
     exist).
     """
-    pos_conns = set([*product(input_nodes, genotype['nodes'].keys())] 
+    pos_conns = set([*product(input_nodes, genotype['nodes'].keys())]
                     + [*product(genotype['nodes'].keys(), repeat=2)])
     existing_conns = set([(conn['pre'], conn['post']) for conn in genotype['connections'].values()])
     allowed_conns = list(pos_conns - existing_conns)
@@ -84,7 +84,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
         return genotype 
     new_conn = allowed_conns[np.random.choice(range(len(allowed_conns)))]
 
-    #* Name connection is "pre-post"    
+    #* Name connection is "pre-post"
     conn_name = '-'.join(new_conn)
     #! OJO RESTO DE PARAMETERS.
     genotype['connections'].update({
@@ -122,7 +122,7 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
         genotype, current_innovation, innovation_history = add_connection(genotype, input_nodes, current_innovation, innovation_history)
     #* Node mutations
     for i, genotype in filter(lambda x: np.random.random() < p_node_mut, enumerate(population)):
-        genotype, current_innovation, innovation_history = add_node(genotype, current_innovation, 
+        genotype, current_innovation, innovation_history = add_node(genotype, current_innovation,
                     innovation_history, [var.split(':')[1] for var in mutable_variables if var.split(':')[0] == 'neurons'])
     return population, current_innovation, innovation_history
 

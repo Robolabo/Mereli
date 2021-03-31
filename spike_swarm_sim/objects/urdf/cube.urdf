@@ -9,7 +9,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.1"/>
       <geometry>
-				<mesh filename="cube.obj" scale="0.8 0.8 0.8"/>      
+				<mesh filename="cube.obj" scale="1 1 1"/>      
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.8"/>
@@ -19,7 +19,7 @@
     <collision>
       <origin rpy="0 0 0" xyz="0 0 0.1"/>
       <geometry>
-				<mesh filename="cube.obj" scale="0.8 0.8 0.8"/>      
+				<mesh filename="cube.obj" scale="1 1 1"/>   
       </geometry>
     </collision>
   </link>
