@@ -45,25 +45,21 @@
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
-        },
-        "learning_rule" : { 
-            "rule" : "generalized_hebbian",
-            "reward" : "goto_light"
         }
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 400,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 3,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all", "learning_rule:params:all"],
-                "max_vals" : [4,  1, 0.75, 2, 1],
-                "min_vals" : [-4, -1, -0.9, 0.05, -1],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "max_vals" : [4,  1, 0.75, 2],
+                "min_vals" : [-4, -1, -0.9, 0.05],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.6,
