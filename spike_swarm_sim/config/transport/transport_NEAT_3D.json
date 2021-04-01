@@ -58,10 +58,10 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 400,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 2000,
-        "num_evaluations" : 3,
+        "num_evaluations" : 1,
         "fitness_function" : "transport_cubes",
         "populations" : {
             "p1" : {
@@ -97,7 +97,7 @@
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 2, "noise_sigma" : 0.03},
-                    "RF_receiver" : {"range" : 20, "noise_sigma" : 2},
+                    "RF_receiver" : {"n_sectors" : 1, "range" : 20, "noise_sigma" : 2},
                     "ground_sensor" : {}
                 },
                 "actuators" : {
