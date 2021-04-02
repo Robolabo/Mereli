@@ -173,12 +173,13 @@ class GotoLight:
             fitness += fA * fB
         return (fitness / len(states)) + 1e-5
 
-@fitness_func_registry(name='two_lights')
-class TwoLights:
+@fitness_func_registry(name='multi_lights')
+class MultipleLights:
     """Fitness function for the light follower task."""
     def __init__(self):
-        self.required_info = ("generation", "robot_positions", "robot_orientations", 
-                            "green_light_positions", "yellow_light_positions")
+        self.required_info = ("generation", "robot:position", "robot:orientation", 
+                            "light_source:position@color=green", "light_source:position@color=red", 
+                            "light_source:position@color=yellow")
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -192,18 +193,23 @@ class TwoLights:
             info [dict or None]: dict of additional information. 
         =======================================================================================
         """
-        robot_positions = np.stack(info["robot_positions"]).copy()
-        green_light_positions = np.stack(info["green_light_positions"]).copy()
-        yellow_light_positions = np.stack(info["yellow_light_positions"]).copy()
+        robot_positions = np.stack(info["robot:position"]).copy()
+        green_light_positions = np.stack(info[ "light_source:position@color=green"]).copy()
+        yellow_light_positions = np.stack(info["light_source:position@color=yellow"]).copy()
+        red_light_positions = np.stack(info["light_source:position@color=red"]).copy()
         fitness = 0
-        for t, (pos, green_light_pos, yellow_light_pos)  in enumerate(zip(robot_positions, green_light_positions, yellow_light_positions)):
+        for t, (pos, green_light_pos, yellow_light_pos, red_light_pos) in enumerate(zip(robot_positions,\
+                            green_light_positions, yellow_light_positions, red_light_positions)):
             green_light_pos = green_light_pos.flatten()
             yellow_light_pos = yellow_light_pos.flatten()
+            red_light_pos = red_light_pos.flatten()
 
             distances_green = LA.norm(pos[:, :2] - green_light_pos[:2], axis=1)
             distances_yellow = LA.norm(pos[:, :2] - yellow_light_pos[:2], axis=1)
-            fA = 0.5 * any(distances_green < 1) + 0.5 * any(distances_yellow < 1)
-
+            distances_red = LA.norm(pos[:, :2] - red_light_pos[:2], axis=1)
+            #! OJO: solo ok si 6 robots.
+            fA = (sum(distances_green < 1.75) == 2 + sum(distances_red < 1.75) == 2 + sum(distances_yellow < 1.75) == 2) / 3
+            
             # fA = {\
             #     0 : 0.5*(distances_green < 1).mean() + 0.5*(distances_yellow < 1).mean(),
             #     1 : sum(distances_green < 1) ,
