@@ -111,7 +111,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         info['generation'] = generation
         survival_time = 0
         done = False
-        # print('AA', [robots[i].position for i in [5,6]])
         while (not done and survival_time <= eval_steps):
             states, actions = world.step()
             for key, val in info.items():
@@ -122,12 +121,10 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             survival_time += 1
             # if done:
             #     break
-        # print([robots[i].orientation for i in range(len(robots))])
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
-    # if isinstance(worlds, MultiWorldWrapper):
     world.disconnect()
     return (env_id, fitness)
 
@@ -287,7 +284,7 @@ class EvolutionaryAlgorithm:
                 states, actions = world.step()
                 for key, val in info.items():
                     if isinstance(val, deque):
-                        val.append(get_info(key, robots, world))
+                        val.append(get_info(key, world))
                 for robot, state, action in map(lambda x: (x[0], flatten_dict(x[1]), flatten_dict(x[2])), zip(world.robots.items(), states, actions)):
                     re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
                     st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])

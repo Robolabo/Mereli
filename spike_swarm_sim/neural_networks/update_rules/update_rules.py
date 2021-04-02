@@ -3,6 +3,10 @@ import numpy as np
 from spike_swarm_sim.algorithms.interfaces import GET, SET, LEN, INIT
 from spike_swarm_sim.register import learning_rule_registry
 
+def append_and_pop(queue, new_elem):
+    queue.append(new_elem)
+    queue.popleft()
+    return queue
 
 @learning_rule_registry(name='generalized_hebbian')
 class GeneralizedHebbian:
@@ -12,9 +16,14 @@ class GeneralizedHebbian:
         self.B = 0.0
         self.C = 0.0
         self.D = 0.0
-
-    def step(self, inputs, activities, reward=None):
-        # print(reward)
+        self.gamma = 0.9
+        self.timesteps_update = 50 # Gather XX rewards before updating for computing value func.
+        self.reward_queue = deque([])
+        self.activities_queue = deque([])
+        self.inputs_queue = deque([])
+        self.t = 0
+    
+    def __step(self, inputs, activities, reward=None):
         act_inpt_cat = np.r_[inputs, activities]
         weight_update = self.learning_rate * (
                         self.A * np.outer(activities, act_inpt_cat)\
@@ -22,6 +31,27 @@ class GeneralizedHebbian:
                         + self.C * np.outer(np.ones_like(activities), act_inpt_cat)\
                         + self.D)
         return weight_update * reward if reward is not None else weight_update
+
+    def step(self, inputs, activities, reward=None):
+        if self.t < self.timesteps_update:
+            self.activities_queue.append(activities)
+            self.inputs_queue.append(inputs)
+            if reward is not None:
+                self.reward_queue.append(reward)
+            self.t += 1
+            return 0.0
+        weight_update = 0.0
+        if self.timesteps_update > 1:
+            self.activities_queue = append_and_pop(self.activities_queue, activities)
+            self.inputs_queue = append_and_pop(self.inputs_queue, inputs)
+            if reward is not None:
+                self.reward_queue = append_and_pop(self.reward_queue, reward)
+            value_fn = np.sum([rew * self.gamma ** k for k, rew in enumerate(self.reward_queue)])
+            weight_update = self.__step(self.inputs_queue[0], self.activities_queue[0], reward=value_fn)
+        else:
+            weight_update = self.__step(inputs, activities, reward=reward)
+        self.t += 1
+        return weight_update
 
     def build(self, ann_graph):
         mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
@@ -49,7 +79,10 @@ class GeneralizedHebbian:
 
 
     def reset(self):
-        pass
+        self.t = 0
+        self.reward_queue = deque([])
+        self.activities_queue = deque([])
+        self.inputs_queue = deque([])
 
     #! OJO refactorizar queries!!!!
     @GET("learning_rule:params")

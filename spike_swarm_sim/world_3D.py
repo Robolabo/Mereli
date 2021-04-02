@@ -59,6 +59,9 @@ class World3D(object):
         self.add_limiting_walls()
         
         self.reward_generator = None
+
+        self.rewards = []
+        
         self.t = 0
 
     def add_limiting_walls(self):
@@ -87,7 +90,6 @@ class World3D(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
-        reward = 1.0 #! MAL
         #* Step controllers
         for idx, (n, obj) in enumerate(self.controllable_objects.items()):
             if not isinstance(obj, Robot3D):
@@ -96,8 +98,10 @@ class World3D(object):
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in tuple(self.env_perturbations.values())[0]\
                             if not pert.postprocessing and idx in pert.affected_robots]
+            reward = self.rewards[idx] if self.reward_generator is not None else None
             state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
-            reward = self.reward_generator(action_obj, state_obj) if self.reward_generator is not None else 1.
+            if self.reward_generator is not None:
+                self.rewards[idx] = self.reward_generator(action_obj, state_obj)
             states.append(state_obj)
             actions.append(action_obj)
         states = np.stack(states)
@@ -251,6 +255,8 @@ class World3D(object):
         ================================================================
         """
         self.t = 0
+        self.rewards = np.zeros(len(self.controllable_objects))\
+                        if self.reward_generator else []
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects

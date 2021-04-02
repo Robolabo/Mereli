@@ -130,7 +130,7 @@ class Alignment:
 class GotoLight:
     """Fitness function for the light follower task."""
     def __init__(self):
-        self.required_info = ("generation", "robot_positions", "robot_orientations", "light_positions")
+        self.required_info = ("generation", "robot:position", "robot:orientation", "light_source:position")
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -241,8 +241,12 @@ class TransportCubesFitness:
         ground_area_pos = info["ground_area:position@t=1"][0].flatten()
         ground_area_rad = info["ground_area:radius@t=1"][0]
         fitness = 0
-        n_cubes_correct = np.sum([LA.norm(cube_pos - ground_area_pos) <= ground_area_rad for cube_pos in cube_positions[-1]])
-        mean_dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1).mean() / 10
+        n_cubes_correct = np.sum([LA.norm(cube_pos - ground_area_pos) <= ground_area_rad for cube_pos in cube_positions[-1]])\
+        
+        mask_dist_moved = LA.norm(cube_positions[-1] - ground_area_pos, axis=1) < LA.norm(cube_positions[0] - ground_area_pos, axis=1)
+        dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
+        mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
+                
         fitness = n_cubes_correct + mean_dist_moved
         return fitness + 1e-5
 
@@ -261,7 +265,7 @@ class TransportCubesFitness:
 #                     corresponding action.
 #             states [list of dicts]: list of dictionaries with sensor names and the 
 #                     corresponding measured states.
-#             info [dict or None]: dict of additional information. 
+#             info [dict or None]: dict of additional information.
 #         =======================================================================================
 #         """
 #         robot_positions = np.stack(info["robot_positions"]).copy()

@@ -107,7 +107,7 @@ class NeuralNetwork:
         #* Ordered list of stimuli names (not input nodes)
         self.stimuli_names = []
         #* Variables storing the previous stim and spikes.
-        self.stimuli, self.spikes = None, None
+        self.stimuli, self.spikes, self.prev_input = None, None, None
 
     def build(self):
         #! BUILD NEURONS
@@ -293,20 +293,21 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-       
         # if self.t == 0: self.init_w = self.weights.copy()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
         stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
-        self.stimuli = stimuli.copy()
         inputs = self.encoders.step(stimuli)
+        self.stimuli = stimuli.copy()
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
 
         #* --- Apply update rules to synapses ---
-        if self.learning_rule is not None and reward is not None and reward != 0.0:
-            self.synapses.weights += self.learning_rule.step(inputs[-1], self.spikes, reward=reward)
+        if self.t > 1 and self.learning_rule is not None and reward is not None:
+            # Use inputs and neuron outputs of previous time step.
+            self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):
@@ -317,7 +318,7 @@ class NeuralNetwork:
 
         #* --- Convert spikes into actions (Decoding Step) ---
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
-
+        self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
         if self.t == self.time_scale * 800 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
@@ -407,3 +408,4 @@ class NeuralNetwork:
             self.monitor.reset()
         self.spikes = np.zeros(self.weights.shape[0])
         self.stimuli = None
+        self.prev_input = None

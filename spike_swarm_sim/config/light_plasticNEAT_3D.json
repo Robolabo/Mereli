@@ -71,8 +71,8 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":15,
-        "width": 15,
+        "height":10,
+        "width": 10,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
@@ -91,15 +91,15 @@
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,0], [0.5,0], [-0.5,0], [0, 0.5], [0, -0.5], [1,0]] }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 1, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 0, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
+                "controller" : null,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":-2, "high" : 2, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-3, "high" : 3, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }
