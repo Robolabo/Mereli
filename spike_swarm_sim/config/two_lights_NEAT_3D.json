@@ -18,7 +18,7 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
         },
         "synapses" :  {
             "I0-MOT" : {"pre":"I0","post":"OUT_MOT", "trainable":true, "p":1.0},
@@ -34,8 +34,7 @@
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         } 
     },
     "algorithm" : {
@@ -78,6 +77,7 @@
                 "sensors" : {
                     "green_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
+                    "red_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6, "noise_sigma" : 0.03}
                 },
@@ -86,7 +86,7 @@
                     "wireless_transmitter" : {"quantize": false, "range" : 2, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low": [-2, 1], "high" : [2, 3], "size" : 2 }},
+                    "positions" : {"name" : "random_uniform", "params" : {"low": [-2, 0], "high" : [2, -2], "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
