@@ -42,7 +42,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 800,
+        "evaluation_steps" : 1200,
         "num_evaluations" : 1,
         "fitness_function" : "multi_lights",
         "populations" : {
@@ -96,7 +96,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[3.5, -4]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[3.5, -3.5]]}}
                 },
                 "params" : {"range" : 20, "color" : "green"}
             },
@@ -104,7 +104,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[0, -4]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[0, -3.5]]}}
                 },
                 "params" : {"range" : 20, "color" : "yellow"}
             },
@@ -112,7 +112,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[-3.5, -4]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[-3.5, -3.5]]}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }

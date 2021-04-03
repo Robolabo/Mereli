@@ -93,7 +93,7 @@
                 "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "color_sensor" : {"n_sectors" : 4, "range" : 3},
+                    "color_sensor" : {"n_sectors" : 4, "range" : 5},
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 2, "noise_sigma" : 0.03},

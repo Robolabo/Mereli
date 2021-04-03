@@ -207,16 +207,18 @@ class MultipleLights:
             distances_green = LA.norm(pos[:, :2] - green_light_pos[:2], axis=1)
             distances_yellow = LA.norm(pos[:, :2] - yellow_light_pos[:2], axis=1)
             distances_red = LA.norm(pos[:, :2] - red_light_pos[:2], axis=1)
+            #* Distance of every robot to the nearest neighbor
+            distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
+                                for i, pos_i in enumerate(pos)])
             #! OJO: solo ok si 6 robots.
-            fA = (sum(distances_green < 1.75) == 2 + sum(distances_red < 1.75) == 2 + sum(distances_yellow < 1.75) == 2) / 3
-            
+            fA = (int(sum(distances_green < 1) == 2) + int(sum(distances_red < 1) == 2) + int(sum(distances_yellow < 1) == 2)) / 3
             # fA = {\
             #     0 : 0.5*(distances_green < 1).mean() + 0.5*(distances_yellow < 1).mean(),
             #     1 : sum(distances_green < 1) ,
             # }.get(info["generation"] // 100, 
             #     (distances < 1).mean()
             # )
-            # fB = np.mean(distances_robots > 0.5)
+            # fB = np.mean(distances_robots > 0.4)
             fitness += fA
         return (fitness / len(states)) + 1e-5
 
