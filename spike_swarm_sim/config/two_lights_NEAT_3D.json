@@ -4,6 +4,7 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
+            "I0" : {"n" : 4, "sensor" : "red_light_sensor"},
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "green_light_sensor"},
             "I3" : {"n" : 4, "sensor" : "IR_receiver:msg"},
@@ -13,23 +14,19 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
-            "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
         },
         "synapses" :  {
+            "I0-MOT" : {"pre":"I0","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I2-MOT" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I4-MOT" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I1-ST" : {"pre":"I1","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-            "I2-ST" : {"pre":"I2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-            "I3-ST" : {"pre":"I3","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-            "I4-ST" : {"pre":"I4","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "I0-COMM" : {"pre":"I0","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
@@ -37,23 +34,22 @@
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         } 
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 150,
+        "population_size" : 100,
         "generations" : 2000,
         "evaluation_steps" : 800,
         "num_evaluations" : 1,
-        "fitness_function" : "two_lights",
+        "fitness_function" : "multi_lights",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [3,  1.5, 0.75],
-                "min_vals" : [-3, -1.5, -0.75],
+                "max_vals" : [4,  1.5, 0.75],
+                "min_vals" : [-4, -1.5, -0.75],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.8,
@@ -71,16 +67,17 @@
         "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":15,
-        "width": 15,
+        "height":12,
+        "width": 12,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 2,
+                "num_instances" : 6,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "green_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
+                    "red_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6, "noise_sigma" : 0.03}
                 },
@@ -89,7 +86,7 @@
                     "wireless_transmitter" : {"quantize": false, "range" : 2, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0,-1], [0,1]] }},
+                    "positions" : {"name" : "random_uniform", "params" : {"low": [-2, 0], "high" : [2, -2], "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
@@ -98,20 +95,26 @@
             "light_green" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[4, 0]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[3.5, -4]]}}
                 },
                 "params" : {"range" : 20, "color" : "green"}
             },
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[-4, 0]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[0, -4]]}}
                 },
                 "params" : {"range" : 20, "color" : "yellow"}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values" : [[-3.5, -4]]}}
+                },
+                "params" : {"range" : 20, "color" : "red"}
             }
         }
     }
