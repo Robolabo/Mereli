@@ -31,7 +31,7 @@ class Ball(WorldObject3D):
 class Cube(WorldObject3D):
     def __init__(self, position, orientation, *args, color='blue', mass=1., side_len=0.3, **kwargs):
         position = list(position)
-        position[-1] = side_len / 2 - 0.05
+        position[-1] = side_len / 2 - 0.1
         super(Cube, self).__init__('cube', position, orientation,\
                         *args, **kwargs)
         self.color = color

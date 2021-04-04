@@ -91,7 +91,7 @@ class World3D(object):
         actions = deque()
         pre_perturbations = []
         #* Step controllers
-        for idx, (n, obj) in enumerate(self.controllable_objects.items()):
+        for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
             if not isinstance(obj, Robot3D):
                 obj.step(self.neighborhood(obj))
                 continue
@@ -101,7 +101,7 @@ class World3D(object):
             reward = self.rewards[idx] if self.reward_generator is not None else None
             state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
             if self.reward_generator is not None:
-                self.rewards[idx] = self.reward_generator(action_obj, state_obj)
+                self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
             states.append(state_obj)
             actions.append(action_obj)
         states = np.stack(states)

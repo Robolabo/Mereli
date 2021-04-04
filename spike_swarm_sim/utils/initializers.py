@@ -36,7 +36,7 @@ class RandomUniformInitializer:
                     new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0])
                     new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1])
                     new_sample = np.r_[new_sample_x, new_sample_y]
-                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.6 for pp in res):
+                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.7 for pp in res):
                     res.append(new_sample)
         else:
             res = [np.random.uniform(low=self.low, high=self.high, size=self.size)\

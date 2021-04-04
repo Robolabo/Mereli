@@ -164,6 +164,14 @@ class WorldObject3D(WorldObject):
         quaternion_orientation = p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[1]
         return np.array(p.getEulerFromQuaternion(quaternion_orientation, physicsClientId=self.physics_client))
 
+    @property
+    def velocity(self):
+        return p.getBaseVelocity(self._id, physicsClientId=self.physics_client)[0]
+
+    @property
+    def angular_velocity(self):
+        return p.getBaseVelocity(self._id, physicsClientId=self.physics_client)[1]
+
     @position.setter
     def position(self, new_position):
         """ Setter of the position. """

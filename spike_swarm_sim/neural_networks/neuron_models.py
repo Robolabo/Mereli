@@ -86,7 +86,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
     @INIT('neurons:bias')
     def init_bias(self, neuron_name, ann_graph, min_val=-1., max_val=1.):
         biases_len = self.len_bias(neuron_name, ann_graph)
-        random_biases = 0.5*np.random.randn(biases_len)*0.2
+        random_biases = 0.5 * np.random.randn(biases_len)*0.2
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
 
@@ -168,6 +168,8 @@ class RateModel(NonSpikingNeuronModel):
     def init_tau(self, neuron_name, ann_graph, min_val, max_val):
         tau_len = self.len_tau(neuron_name, ann_graph)
         random_taus = np.random.random(size=tau_len)
+        random_taus = np.random.rayleigh(scale=0.6, size=tau_len) / 3
+        random_taus = np.clip(random_taus, a_min=0, a_max=1)
         return self.set_tau(neuron_name, ann_graph, random_taus, min_val=min_val, max_val=max_val)
 
     @GET('neurons:gain')
