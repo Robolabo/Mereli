@@ -18,7 +18,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     
     #* Randomly select an enabled connection
     sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
-    node_name = 'Node_' + genotype['connections']['innovation']
+    node_name = 'Node_' + str(genotype['connections']['innovation'])
     assert node_name not in genotype['nodes']
 
     # pre_nodes, post_nodes = [*map(set, zip(*innovation_history.keys()))]
