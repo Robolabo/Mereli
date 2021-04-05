@@ -15,9 +15,14 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     """ Add a new node in between an existing connection. The exisiting connection 
     is disabled and two new synapses are included.
     """
-    #* Make sure that node name does not exist.
-    pre_nodes, post_nodes = [*map(set, zip(*innovation_history.keys()))]
-    node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
+    
+    #* Randomly select an enabled connection
+    sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
+    node_name = 'Node_' + genotype['connections']['innovation']
+    assert node_name not in genotype['nodes']
+
+    # pre_nodes, post_nodes = [*map(set, zip(*innovation_history.keys()))]
+    # node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
     genotype['nodes'][node_name] = {
             'ensemble' : node_name,
             'idx' : len(genotype['nodes']),
@@ -26,10 +31,8 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     #* Initialize randomly node parameters
     for var in node_variables:
         genotype['nodes'][node_name].update({var : np.random.random()})
-    #* Randomly select an enabled connection
-    sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
-    genotype['connections'][sel_conn]['enabled'] = False
     #* Add the new connections
+    genotype['connections'][sel_conn]['enabled'] = False
     conn_name = node_name + '-' + genotype['connections'][sel_conn]['post']
     genotype['connections'].update({
         conn_name : {
@@ -54,7 +57,8 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
         conn_name : {
             'pre' : genotype['connections'][sel_conn]['pre'],
             'post' : node_name,
-            'weight': 0.5, # Fixed weight
+            # Random weight but very close to zero (in the paper the authors propose w=0.5 fixed).
+            'weight': np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1), 
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,

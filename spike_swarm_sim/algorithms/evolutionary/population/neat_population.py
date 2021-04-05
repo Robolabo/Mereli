@@ -128,13 +128,13 @@ class NEAT_Population(Population):
                     [n for n, g in enumerate(offspring) if g['species'] == species.id])])
         logging.info('Num. species is {}'.format(len(self.species)))
 
-        #* Adaptive species thresh.
-        num_tar_species = 15
-        if len(self.species) != num_tar_species:
-            self.compatib_thresh += 0.1 * (-1, 1)[len(self.species) > num_tar_species]
-            self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)
-            for sp in self.species:
-                sp.compatib_thresh = self.compatib_thresh
+        # #* Adaptive species thresh.
+        # num_tar_species = 15
+        # if len(self.species) != num_tar_species:
+        #     self.compatib_thresh += 0.1 * (-1, 1)[len(self.species) > num_tar_species]
+        #     self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)
+        #     for sp in self.species:
+        #         sp.compatib_thresh = self.compatib_thresh
                 
         #* Update popultation
         self.population = offspring
