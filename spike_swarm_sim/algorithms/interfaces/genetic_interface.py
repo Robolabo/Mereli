@@ -115,7 +115,7 @@ class NEATInterface:
     def toGenotype(self, queries, min_vals, max_vals):
         #! CHECK
         """ Converts a phenotype or structured ANN into a vector genotype. 
-        It performs a series of queries (depending on the population segments) 
+        It performs a series of queries (depending on the population segments)
         and gathers the results as the final genotype.    
         """
         genotype = np.hstack([self.submit_query(query, primitive='GET',\

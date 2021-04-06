@@ -53,6 +53,10 @@
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
+        }, 
+        "learning_rule" : { 
+            "rule" : "generalized_hebbian",
+            "reward" : "transport_cube"
         }
     },
     "algorithm" : {
@@ -65,9 +69,9 @@
         "fitness_function" : "transport_cubes",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
-                "max_vals" : [4,  2, 1.25, 2],
-                "min_vals" : [-4, -2, -0.9, 0.05],
+                "objects" : ["synapses:weights:sensory",  "neurons:bias:all",  "neurons:tau:all"],
+                "max_vals" : [6,  2, 1],
+                "min_vals" : [-6, -2, -0.8],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.6,

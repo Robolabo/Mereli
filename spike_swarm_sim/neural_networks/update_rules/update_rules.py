@@ -11,6 +11,7 @@ def append_and_pop(queue, new_elem):
 @learning_rule_registry(name='generalized_hebbian')
 class GeneralizedHebbian:
     def __init__(self):
+        self.modulated = False
         self.learning_rate = 1e-4
         self.A = 1.0
         self.B = 0.0
@@ -33,6 +34,8 @@ class GeneralizedHebbian:
         return weight_update * reward if reward is not None else weight_update
 
     def step(self, inputs, activities, reward=None):
+        if not self.modulated:
+            return self.__step(inputs, activities, reward=1.)
         if self.t < self.timesteps_update:
             self.activities_queue.append(activities)
             self.inputs_queue.append(inputs)

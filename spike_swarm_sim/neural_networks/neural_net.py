@@ -293,7 +293,7 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        # if self.t == 0: self.init_w = self.weights.copy()
+        if self.t == 0: self.init_w = self.weights.copy()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
@@ -304,7 +304,11 @@ class NeuralNetwork:
             inputs = inputs[np.newaxis]
 
         #* --- Apply update rules to synapses ---
-        if self.t > 1 and self.learning_rule is not None and reward is not None:
+        if self.t > 1 and self.learning_rule is not None:
+            # If reward is None  while learning rule is not, then 
+            # assume that it is a non modulated learning rule.
+            if reward is None:
+                reward = 1.
             # Use inputs and neuron outputs of previous time step.
             self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
 
