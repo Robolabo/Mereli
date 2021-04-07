@@ -153,7 +153,11 @@ class NEATInterface:
             # segment_len = self.submit_query(query, primitive='LEN')
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
             variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
-            genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
+            if 'learning_rule' in query:
+                
+                genotype_segment = np.array([[gnt['learning_rule'][v] for gnt in genotype['connections'].values()] for v in ['A', 'B', 'C', 'D']]).flatten()
+            else:
+                genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
             # genotype_segment = np.array([g[variable] for g in [*genotype[gene_type].values()][counter:counter+segment_len]])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)

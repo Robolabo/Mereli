@@ -41,6 +41,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,
+            'learning_rule' : genotype['connections'][sel_conn]['learning_rule'],
             'innovation' : innovation_history.get((node_name,\
                     genotype['connections'][sel_conn]['post']), current_innovation),
             'idx' : len(genotype['connections']),#!
@@ -61,6 +62,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,
+            'learning_rule' : {v : np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1) for v in ['A', 'B', 'C', 'D']},
             'innovation' : innovation_history.get((genotype['connections'][sel_conn]['pre'],\
                     node_name), current_innovation),
             'idx' : len(genotype['connections']),#!
@@ -98,6 +100,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
             'group' : conn_name,
             'enabled' : True,
             'trainable' : True,
+            'learning_rule' : {v : np.random.random() for v in ['A', 'B', 'C', 'D']},
             'innovation' : innovation_history.get((new_conn[0], new_conn[1]), current_innovation),
             'idx' : len(genotype['connections']),#!
             'p' : 1.}
@@ -111,15 +114,23 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
             mutable_variables, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
     #* Parameter Mutations
     for param in mutable_variables:
-        gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}[param.split(':')[0]]
+        gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(param.split(':')[0], 'connections')
         variable = {'weights' : 'weight'}.get(param.split(':')[1], param.split(':')[1])
         for i, genotype in filter(lambda x: np.random.random() < p_weight_mut, enumerate(population)):
             for conn in genotype[gene_type].values(): #!optimize
                 if np.random.random() < 0.02:
-                    conn[variable] = np.random.random()
+                    if 'learning_rule' in param:
+                        conn['learning_rule'] = {v : np.random.random() for v in ['A', 'B', 'C', 'D']}
+                    else:
+                        conn[variable] = np.random.random()
                 else:
-                    conn[variable] += np.random.randn() * 0.05
-                    conn[variable] = np.clip(conn[variable], a_min=0, a_max=1)
+                    if 'learning_rule' in param:
+                        for v in ['A', 'B', 'C', 'D']:
+                            conn['learning_rule'][v] += np.random.randn() * .1 
+                            conn['learning_rule'][v] = np.clip(conn['learning_rule'][v], a_min=0, a_max=1)
+                    else:
+                        conn[variable] += np.random.randn() * 0.1
+                        conn[variable] = np.clip(conn[variable], a_min=0, a_max=1)
     #* Connnections mutations
     for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):
         genotype, current_innovation, innovation_history = add_connection(genotype, input_nodes, current_innovation, innovation_history)
