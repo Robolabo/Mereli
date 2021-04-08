@@ -11,8 +11,8 @@ def append_and_pop(queue, new_elem):
 @learning_rule_registry(name='generalized_hebbian')
 class GeneralizedHebbian:
     def __init__(self):
-        self.modulated = True #!
-        self.learning_rate = 1e-3
+        self.modulated = False #!
+        self.learning_rate = 5e-4
         self.A = 1.0
         self.B = 0.0
         self.C = 0.0

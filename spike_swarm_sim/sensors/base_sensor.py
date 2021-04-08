@@ -99,7 +99,10 @@ class DirectionalSensor(Sensor):
                 if isinstance(obj, Wall):# Wall
                     closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
                             linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
-                    v = np.array(closest_points[0][6]) - self.sensor_owner.position     
+                    try:
+                        v = np.array(closest_points[0][6]) - self.sensor_owner.position     
+                    except:
+                        import pdb; pdb.set_trace()
                 else: # Light y robots (quitar radio robot)
                     v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
                     # aa = p.getBodyInfo(obj.id,physicsClientId=self.sensor_owner.physics_client)

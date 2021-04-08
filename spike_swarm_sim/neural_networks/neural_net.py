@@ -311,6 +311,7 @@ class NeuralNetwork:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
             self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+            self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
 
         #* --- Step synapses and neurons ---
         spikes_window = []
@@ -324,7 +325,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 800 and self.monitor is not None:
+        if self.t == self.time_scale * 1200 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
