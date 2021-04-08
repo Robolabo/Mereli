@@ -212,12 +212,6 @@ class MultipleLights:
                                 for i, pos_i in enumerate(pos)])
             #! OJO: solo ok si 6 robots.
             fA = (int(sum(distances_green < 1) == 2) + int(sum(distances_red < 1) == 2) + int(sum(distances_yellow < 1) == 2)) / 3
-            # fA = {\
-            #     0 : 0.5*(distances_green < 1).mean() + 0.5*(distances_yellow < 1).mean(),
-            #     1 : sum(distances_green < 1) ,
-            # }.get(info["generation"] // 100, 
-            #     (distances < 1).mean()
-            # )
             # fB = np.mean(distances_robots > 0.4)
             fitness += fA
         return (fitness / len(states)) + 1e-5
