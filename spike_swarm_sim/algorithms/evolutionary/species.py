@@ -39,9 +39,14 @@ class Species:
         genotype_innovations = set([g['innovation'] for g in genotype['connections'].values()])
         # Do not care about disjoint and excess. For the moment we use same weights.
         diff_genes = genotype_innovations - repr_innovations
-        weights_repr = np.array([g['weight'] for g in self.representative['connections'].values()])
-        weights_genotype = np.array([g['weight'] for g in genotype['connections'].values()])
-        W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
+        common_genes = genotype_innovations.intersection(repr_innovations)
+        weights_repr = np.array([g['weight'] for g in self.representative['connections'].values() 
+                        if g['innovation'] in common_genes])
+        weights_genotype = np.array([g['weight'] for g in genotype['connections'].values() 
+                        if g['innovation'] in common_genes])
+        assert len(weights_repr) == len(weights_genotype)
+        # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
+        W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(2)
         # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
         #         + self.c3 * W_dist
         dist = 2 * self.c1 * len(diff_genes) + self.c3 * W_dist
