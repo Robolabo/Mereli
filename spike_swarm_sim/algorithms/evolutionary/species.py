@@ -46,7 +46,7 @@ class Species:
                         if g['innovation'] in common_genes])
         assert len(weights_repr) == len(weights_genotype)
         # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
-        W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(2)
+        W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(len(weights_genotype))
         # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
         #         + self.c3 * W_dist
         dist = 2 * self.c1 * len(diff_genes) + self.c3 * W_dist
