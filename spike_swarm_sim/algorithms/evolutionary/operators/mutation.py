@@ -58,7 +58,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'pre' : genotype['connections'][sel_conn]['pre'],
             'post' : node_name,
             # Random weight but very close to zero (in the paper the authors propose w=0.5 fixed).
-            'weight': np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1), 
+            'weight': np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1),
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,

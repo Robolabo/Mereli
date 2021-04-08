@@ -62,16 +62,16 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 400,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 2500,
         "num_evaluations" : 1,
         "fitness_function" : "transport_cubes",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:sensory",  "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [6,  2, 1],
-                "min_vals" : [-6, -2, -0.8],
+                "objects" : ["synapses:weights:sensory",  "neurons:bias:all",  "neurons:tau:all",  "learning_rule:params:all"],
+                "max_vals" : [6,  2, 1, 3],
+                "min_vals" : [-6, -2, -0.8, -3],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.6,
