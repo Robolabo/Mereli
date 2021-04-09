@@ -38,7 +38,6 @@ class Engine3D:
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
-        print(plane_id)
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True
