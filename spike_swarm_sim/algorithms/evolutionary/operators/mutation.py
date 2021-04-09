@@ -41,7 +41,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,
-            'learning_rule' : genotype['connections'][sel_conn]['learning_rule'],
+            'learning_rule' : genotype['connections'][sel_conn].get('learning_rule', None),
             'innovation' : innovation_history.get((node_name,\
                     genotype['connections'][sel_conn]['post']), current_innovation),
             'idx' : len(genotype['connections']),#!
