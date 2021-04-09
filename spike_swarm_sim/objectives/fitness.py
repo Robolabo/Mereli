@@ -147,30 +147,20 @@ class GotoLight:
         robot_positions = np.stack(info["robot_positions"]).copy()
         light_positions = np.stack(info["light_positions"]).copy()
         fitness = 0
-        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):
-            #! IF 2D : distances = [LA.norm(toroidal_difference(pos_i, light_pos)) for i, pos_i in enumerate(pos)]
-            
-            # light_pos = light_pos.flatten() #! OJO mal si muchas luces.
+        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):            
+            #* Considering only 1 light
+            light_pos = light_pos.flatten()
+            distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
             #* Considering that there can be multiple lights
-            distances = np.min([LA.norm(pos[:, :2] - ls_pos[:2], axis=1) for ls_pos in light_pos], 0)
-            # distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
-            # joint_actions = [ac['joint_velocity_actuator'] for ac in actions_t]
+            # distances = np.min([LA.norm(pos[:, :2] - ls_pos[:2], axis=1) for ls_pos in light_pos], 0)
 
             #* Distance of every robot to the nearest neighbor
             distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
                                 for i, pos_i in enumerate(pos)])
-
-            # f_exp = np.mean(distances_robots > 0.5) * np.mean(distances_robots < 1.5)
-            # f_exp *= np.mean([(1 - (np.abs(np.diff(ac)) / 2)) * np.abs(ac[0]) for ac in joint_actions])
-            # fA = (np.clip(1 - (distances / 2), a_min=0, a_max=1) ** 2).mean()
-            # fitness += {
-            #     0 : 0.7 * f_exp + 0.3 * fA,
-            #     1 : 0.5 * f_exp + 0.5 * fA,
-            #     1 : 0.2 * f_exp + 0.8 * fA,
-            # }.get(info["generation"] // 50, fA)
-            fA = (distances < 0.5).mean()
+            fA = (distances < 1.5).mean()
             fB = np.mean(distances_robots > 0.4)
-            fitness += fA * fB
+            fC = np.mean(distances_robots < 1.5)
+            fitness += fA * fB * fC
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='multi_lights')

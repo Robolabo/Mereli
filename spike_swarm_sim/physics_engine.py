@@ -27,17 +27,18 @@ class Engine3D:
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-        time.sleep(1/50.)
+        time.sleep(1/240.)
 
     def connect(self, objects):
         self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
-        self.engine.setTimeStep(1/60.)
+        self.engine.setTimeStep(1/50.)
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
-        planeId = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
+        plane_id = p.loadURDF("plane.urdf", physicsClientId=self.engine._client)
+        print(plane_id)
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True

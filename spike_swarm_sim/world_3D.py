@@ -272,7 +272,15 @@ class World3D(object):
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
-
+        # #! DISABLE COLLISIONS INTER ROBOT
+        # for i, rA in enumerate(self.robots.values()):
+        #     for j, rB in enumerate(self.robots.values()):
+        #         if i != j:
+        #             p.setCollisionFilterPair(rA.id, rB.id, -1, -1, 0)
+        #             for ii in range(50):
+        #                 for jj in range(50):
+        #                     p.setCollisionFilterPair(rA.id, rB.id, ii, jj, 0)
+        
     def disconnect(self):
         self.physics_engine.disconnect()
 
