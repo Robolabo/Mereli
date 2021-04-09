@@ -144,8 +144,8 @@ class GotoLight:
             info [dict or None]: dict of additional information.
         =======================================================================================
         """
-        robot_positions = np.stack(info["robot_positions"]).copy()
-        light_positions = np.stack(info["light_positions"]).copy()
+        robot_positions = np.stack(info["robot:position"]).copy()
+        light_positions = np.stack(info["light_source:position"]).copy()
         fitness = 0
         for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):            
             #* Considering only 1 light
