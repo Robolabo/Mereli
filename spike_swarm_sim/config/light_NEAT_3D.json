@@ -2,34 +2,49 @@
     "checkpoint_file" : "chk_light_NEAT_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
-            "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
-            "I3" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
+            "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
+            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
+            "OUT_ST" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"}
         },
         "synapses" :  {
             "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I2-MOT" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I4-MOT" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I5-MOT" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
     
             "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
+            "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I4-COMM" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
+
+            "I1-ST" : {"pre":"I1","post":"OUT_ST", "trainable":true, "p":1.0},
+            "I2-ST" : {"pre":"I2","post":"OUT_ST", "trainable":true, "p":1.0},
+            "I3-ST" : {"pre":"I3","post":"OUT_ST", "trainable":true, "p":1.0},
+            "I4-ST" : {"pre":"I4","post":"OUT_ST", "trainable":true, "p":1.0},
+            "I5-ST" : {"pre":"I5","post":"OUT_ST", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
         }
     },
     "algorithm" : {
@@ -38,7 +53,7 @@
         "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 1000,
-        "num_evaluations" : 3,
+        "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
@@ -67,31 +82,30 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 4,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2, "noise_sigma" : 0.03},
-                    "RF_receiver" : {"range" : 20, "noise_sigma" : 2}
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2, "selection_scheme" : "random"},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": false, "range" : 2, "msg_length":1},
-                    "RF_transmitter" : {"range" : 20}
+                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low": -1, "high" : 1, "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },            
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
+                "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3]]}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low": -2, "high" : 2, "size" : 2 }}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }
