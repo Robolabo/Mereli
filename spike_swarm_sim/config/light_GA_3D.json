@@ -48,16 +48,16 @@
     "algorithm" : {
         "name" : "GA",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
-                "max_vals" : [3,  1.5, 1.25, 5],
-                "min_vals" : [-3, -1.5, -0.8, 0.05],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
+                "max_vals" : [3,  1.5, 1.25],
+                "min_vals" : [-3, -1.5, -0.8],
                 "params" : {
                     "encoding" : "real",
                     "selection_operator" : "nonlin_rank",
@@ -103,7 +103,7 @@
                 "num_instances": 1,
                 "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low":1, "high" : 1, "size" : 2}}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-1, "high" : 1, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }

@@ -157,10 +157,11 @@ class GotoLight:
             #* Distance of every robot to the nearest neighbor
             distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
                                 for i, pos_i in enumerate(pos)])
-            fA = (distances < 1.5).mean()
-            fB = np.mean(distances_robots > 0.4)
-            fC = np.mean(distances_robots < 1.5)
-            fitness += fA * fB * fC
+            fA = (distances < 1).mean()
+            # fB = np.mean(distances_robots > 0.4)
+            # fC = np.mean(distances_robots < 1.5)
+            # import pdb; pdb.set_trace()
+            fitness += fA# * fB * fC
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='multi_lights')
