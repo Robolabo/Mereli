@@ -7,7 +7,7 @@ from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, 
 from .utils.propagation import ExpDecayPropagation
 
 
-@sensor_registry(name='IR_receiver3')
+@sensor_registry(name='IR_receiver')
 class IRCommunicationReceiver(DirectionalSensor):
     """ Communication Receiver mimicking IR technology.
     ========================================================================
@@ -17,11 +17,12 @@ class IRCommunicationReceiver(DirectionalSensor):
         max_hops [int] : maximum number of hops before frame discard. 
     ========================================================================
     """
-    def __init__(self, *args, msg_length=1, max_hops=10, **kwargs):
+    def __init__(self, *args, msg_length=1, max_hops=10, selection_scheme='random', **kwargs):
         super(IRCommunicationReceiver, self).__init__(*args, **kwargs)
         self.msg_length = msg_length
         self.max_hops = max_hops
         self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1)
+        self.selection_scheme = selection_scheme
         self.current_direction = 0
 
     def _target_filter(self, obj):
@@ -60,40 +61,46 @@ class IRCommunicationReceiver(DirectionalSensor):
                     direction_reading['sending_direction'] = obj.actuators['wireless_transmitter'].frame['sending_direction']
         return direction_reading
 
-    def step(self, *args, **kwargs):
-        """ Steps the communication receiver. With the sensed frames from all directions it 
-        firstly discards those with more hops than a thresh. Then, the selection of a 
-        unique frame is carried out stochastically among those frames whose sender is not the receiver. 
-        If no message is sensed, the measurement is an empty frame.
-        """
-        frames = super().step(*args, **kwargs)
-        if len(np.where(np.array(frames) == 0.0)[0]):
-            frames = [self.empty_msg for _ in range(len(frames))]
+    def __random_selection(self, frames):
         # Discard very old frames (max 10 hops)
-        #!frames = [frame for frame in frames if frame['n_hops'] < self.max_hops and frame['sender'] != -1]
-        #!if len(frames) == 0:
-        #!   frames = [self.empty_msg]
-
+        frames = [frame for frame in frames if frame['n_hops'] < self.max_hops and frame['sender'] != -1]
+        if len(frames) == 0:
+            frames = [self.empty_msg]
         #* Select only a direction
         signal_strengths = np.hstack([frame['signal'] for frame in frames])
         senders = np.hstack([frame['sender'].item() for frame in frames])
+        selected_direction = np.argmax(signal_strengths)
+        if any(np.logical_and(senders != self.sensor_owner.id, senders != -1)):
+            elements = np.where(np.logical_and(senders != self.sensor_owner.id, senders != -1))[0]
+            selected_direction = np.random.choice(elements,)
+            frames[selected_direction]['am_i_sender'] = np.array([0])
+        else:
+            selected_direction = 0
+            frames = [self.empty_msg]
+            frames[selected_direction]['am_i_sender'] = np.array([0])
+            frames[selected_direction]['am_i_targeted'] = np.array([0])
+        return frames[selected_direction]
 
+    def __cyclic_selection(self, frames):
         #* --- MESSAGE SELECTION Cyclic --- *#
         selected_frame = frames[self.current_direction].copy()
         self.current_direction = (self.current_direction + 1) % self.n_sectors
         return selected_frame
 
-        # selected_direction = np.argmax(signal_strengths)
-        # if any(np.logical_and(senders != self.sensor_owner.id, senders != -1)):
-        #     elements = np.where(np.logical_and(senders != self.sensor_owner.id, senders != -1))[0]
-        #     selected_direction = np.random.choice(elements,)
-        #     frames[selected_direction]['am_i_sender'] = np.array([0])
-        # else:
-        #     selected_direction = 0
-        #     frames = [self.empty_msg]
-        #     frames[selected_direction]['am_i_sender'] = np.array([0])
-        #     frames[selected_direction]['am_i_targeted'] = np.array([0])
-        # return frames[selected_direction]
+    def step(self, *args, **kwargs):
+        """ Steps the communication receiver. With the sensed frames from all directions it 
+        firstly discards those with more hops than a thresh. Then, the selection of a 
+        unique frame is carried out stochastically among those frames whose sender is not the receiver.
+        If no message is sensed, the measurement is an empty frame.
+        """
+        frames = super().step(*args, **kwargs)
+        if len(np.where(np.array(frames) == 0.0)[0]):
+            frames = [self.empty_msg for _ in range(len(frames))]
+        selected_frame = {
+            'cyclic' : self.__cyclic_selection(frames),
+            'random' : self.__random_selection(frames),
+        }[self.selection_scheme]
+        return selected_frame
 
 
     def reset(self):
@@ -111,10 +118,10 @@ class IRCommunicationReceiver(DirectionalSensor):
                 'priority' : np.zeros(1), 'destination' : np.array([-1]), \
                 'sender' : -1 * np.ones(1), 'n_hops' : 1}
 
-@sensor_registry(name='IR_receiver')
-class IRCommRXWrapper(IRCommunicationReceiver):
+@sensor_registry(name='IR_receiver2')
+class BufferedIRCommRX(IRCommunicationReceiver):
     def __init__(self,  *args, **kwargs):
-        super(IRCommRXWrapper, self).__init__(*args, **kwargs)
+        super(BufferedIRCommRX, self).__init__(*args, **kwargs)
         self.prev_msg = np.zeros(self.n_sectors)
 
     def step(self, *args, **kwargs):

@@ -2,10 +2,12 @@
     "checkpoint_file" : "chk_light_GA_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
-            "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
+            "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
             "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
         },
         "neuron_model" : "rate_model",
@@ -24,6 +26,8 @@
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
             "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
             "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
 
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
@@ -52,8 +56,8 @@
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
-                "max_vals" : [3,  1.5, 0.75, 5],
-                "min_vals" : [-3, -1.5, -0.75, 0.05],
+                "max_vals" : [3,  1.5, 1.25, 5],
+                "min_vals" : [-3, -1.5, -0.8, 0.05],
                 "params" : {
                     "encoding" : "real",
                     "selection_operator" : "nonlin_rank",
@@ -80,12 +84,12 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 1.6, "msg_length" : 1},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.6}
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2, "selection_scheme" : "random"},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
+                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":1}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
