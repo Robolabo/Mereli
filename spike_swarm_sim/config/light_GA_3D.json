@@ -51,7 +51,7 @@
         "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 800,
-        "num_evaluations" : 1,
+        "num_evaluations" : 3,
         "fitness_function" : "goto_light",
         "populations" : {
             "p1" : {
@@ -60,13 +60,13 @@
                 "min_vals" : [-3, -1.5, -0.8],
                 "params" : {
                     "encoding" : "real",
-                    "selection_operator" : "nonlin_rank",
+                    "selection_operator" : "tournament",
                     "crossover_operator" : "blxalpha",
                     "mutation_operator" : "gaussian",
                     "mating_operator" : "random",
-                    "mutation_prob" : 0.05,
+                    "mutation_prob" : 0.1,
                     "crossover_prob" : 0.9,
-                    "num_elite" : 2
+                    "num_elite" : 5
                 }
             }          
         }
@@ -80,7 +80,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 5,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
