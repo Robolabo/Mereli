@@ -50,7 +50,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
         "fitness_function" : "goto_light",
         "populations" : {
@@ -80,7 +80,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 6,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
@@ -89,13 +89,13 @@
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":1}
+                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {
