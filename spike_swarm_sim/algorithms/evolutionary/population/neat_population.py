@@ -82,7 +82,7 @@ class NEAT_Population(Population):
             #     offspring.append(spc_genotypes[0])
             #     continue
             #* Truncate bests
-            n_sel = max(1, round(0.4 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
+            n_sel = max(1, round(0.25 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=n_offspring)

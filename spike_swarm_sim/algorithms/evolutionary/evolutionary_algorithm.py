@@ -15,7 +15,7 @@ except:
     MPI_AVAILABLE = False
     logging.warning('MPI is not installed. Running without mpi4py.')
 import numpy as np
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 from spike_swarm_sim.algorithms.interfaces import InterfaceFactory
 from spike_swarm_sim.utils import flatten_dict, DataLogger, without_duplicates
 from  spike_swarm_sim.sensors.utils import list_sensors
@@ -163,9 +163,9 @@ class EvolutionaryAlgorithm:
             for pop in self.populations.values():
                 pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
         # for i in range(len(self.populations['p1'].population)):
-        #     plot.plot([p[i] for p in self.populations['p1'].population])
-        # plot.boxplot([p[1] for p in self.populations['p1'].population])
-        # plot.show()
+        #     plt.plot([p[i] for p in self.populations['p1'].population])
+        # plt.boxplot([p[1] for p in self.populations['p1'].population])
+        # plt.show()
         # import pdb; pdb.set_trace()
 
     def run(self):
@@ -312,7 +312,7 @@ class EvolutionaryAlgorithm:
             fitness_mean = np.array([fitness_mean[i-5:i].mean() for i in range(5, len(fitness_mean))])
             fitness_max = np.array([fitness_max[i-5:i].mean() for i in range(5, len(fitness_max))])
             fitness_min = np.array([fitness_min[i-5:i].mean() for i in range(5, len(fitness_min))])
-        plot.plot(fitness_mean)
-        plot.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color='blue', alpha=.1)
-        plot.xlabel('Generation')
-        plot.ylabel('Fitness')
+        plt.plot(fitness_mean)
+        plt.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color='blue', alpha=.1)
+        plt.xlabel('Generation')
+        plt.ylabel('Fitness')

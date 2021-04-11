@@ -147,7 +147,7 @@ class GotoLight:
         robot_positions = np.stack(info["robot:position"]).copy()
         light_positions = np.stack(info["light_source:position"]).copy()
         fitness = 0
-        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):            
+        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):     
             #* Considering only 1 light
             light_pos = light_pos.flatten()
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
