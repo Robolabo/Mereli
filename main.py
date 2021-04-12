@@ -36,7 +36,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     else:
         world_cls = {'2D' : World2D, '3D' : World3D}[cfg_dict['world']['engine']]
         world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-             world_delay=cfg_dict['world']["world_delay"])#!, render_connections=cfg_dict['world']["render_connections"])
+             world_delay=cfg_dict['world']["world_delay"])
         # world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
         #                 world_delay=cfg_dict['world']["world_delay"],)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])

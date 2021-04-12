@@ -4,7 +4,6 @@ from spike_swarm_sim.objects import WorldObject3D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
 
-
 @world_object_registry(name='robot')
 class Robot3D(WorldObject3D):
     """
@@ -38,7 +37,7 @@ class Robot3D(WorldObject3D):
         Firstly steps all the sensors in order to perceive the environment.
         Secondly, the robot executes its controller in order to compute the
         actions based on the sensory information.
-        Lasty, the actionas are stored as planned actions to be eventually executed.
+        Lastly, the actions are stored as planned actions to be eventually executed.
         =====================
         - Args:
             neighborhood [list] -> list filled with the neighboring world objects.

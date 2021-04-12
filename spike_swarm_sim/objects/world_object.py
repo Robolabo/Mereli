@@ -2,8 +2,6 @@ from abc import ABC, abstractmethod, abstractproperty
 import numpy as np
 import pybullet as p
 
-
-
 class WorldObject(ABC):
     """ 
     Base class for abstract world objects. This class is the most basic class of
@@ -126,7 +124,7 @@ class WorldObject3D(WorldObject):
         z_offset [float]
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation,  *args, z_offset=0, **kwargs):
+    def __init__(self, urdf_file, position, orientation, *args, z_offset=0, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
         self.urdf_file = urdf_file + ".urdf"
         if len(urdf_file.split('/')) < 2 or 'tmp' in urdf_file:

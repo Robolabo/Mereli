@@ -5,13 +5,11 @@ import pybullet as p
 from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
 from spike_swarm_sim.register import world_object_registry
 
-
 @world_object_registry(name='light_source')
 class LightSource3D(WorldObject3D):
     def __init__(self, position, orientation, *args, color='red', range=1., **kwargs):
         super(LightSource3D, self).__init__('light', position, orientation, z_offset=0.8,\
-                        static=False, luminous=True, tangible=False, \
-                        *args, **kwargs)
+                        static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color
         self.shadow_id = None
@@ -56,18 +54,9 @@ class LightSource3D(WorldObject3D):
             p.removeBody(self.shadow_id, physicsClientId=self.physics_client)
             self.shadow_id = None
 
-
-
-
-
-
-
 class IsotropicEmitter(WorldObject2D):
-    def __init__(self, pos, color='red', range=150, static=False, controller=None):
-        super(IsotropicEmitter, self).__init__(pos=pos,
-            static=static, tangible=False, luminous=True, controller=controller,
-            shape='circ',)
-        self.controller = controller
+    def __init__(self, *args, color='red', range=150, **kwargs):
+        super(IsotropicEmitter, self).__init__(*args, **kwargs)
         self.range = range
         self.color = color
         self.reset()
@@ -165,17 +154,3 @@ class Nest(IsotropicEmitter):
         canvas.tag_lower(self.render_dict['body'])
         canvas.tag_lower(self.render_dict['shadow'])
         return canvas
-
-
-# #! TO BE MOVED 
-
-# class FoodObserver:
-#     def __init__(self, food_droppers, food_depots):
-#         self.food_droppers = food_droppers
-#         self.food_depots = food_depots
-
-#     def notify_depots(self):
-#         pass
-
-#     def add_dropper(self, food_dropper):
-#         self.food_droppers.append(food_dropper)
