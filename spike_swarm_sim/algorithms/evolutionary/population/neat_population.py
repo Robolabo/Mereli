@@ -10,6 +10,37 @@ from ..operators.mutation import *
 from ..operators.selection import *
 
 
+#! OJO (prov) to test NEAT: extracted from https://github.com/CodeReclaimers/neat-python/blob/c2b79c88667a1798bfe33c00dd8e251ef8be41fa/neat/reproduction.py#L84
+def compute_spawn(species, pop_size, min_species_size):
+    """Compute the proper number of offspring per species (proportional to fitness)."""
+    adjusted_fitness = [spc.mean_fitness['raw'] / spc.num_genotypes for spc in species]
+    af_sum = sum(adjusted_fitness)
+    previous_sizes = [spc.num_genotypes for spc in species]
+    spawn_amounts = []
+    for af, ps in zip(adjusted_fitness, previous_sizes):
+        if af_sum > 0:
+            s = max(min_species_size, af / af_sum * pop_size)
+        else:
+            s = min_species_size
+
+        d = (s - ps) * 0.5
+        c = int(round(d))
+        spawn = ps
+        if abs(c) > 0:
+            spawn += c
+        elif d > 0:
+            spawn += 1
+        elif d < 0:
+            spawn -= 1
+        spawn_amounts.append(spawn)
+
+    # Normalize the spawn amounts so that the next generation is roughly
+    # the population size requested by the user.
+    total_spawn = sum(spawn_amounts)
+    norm = pop_size / total_spawn
+    spawn_amounts = [max(min_species_size, int(round(n * norm))) for n in spawn_amounts]
+    return spawn_amounts
+
 class NEAT_Population(Population):
     """  
     """ 
@@ -61,16 +92,18 @@ class NEAT_Population(Population):
         #         offspring.append(fittest)
 
         #* Compute the number of offspring for each species
-        species_offsprings = []
-        total_size = self.pop_size - sum(num_elites)
-        sum_mean_fitnesses = sum([spc.mean_fitness['raw'] for spc in self.species])
-        for spc_elites, spc in zip(num_elites, self.species):
-            # spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            num_offspring = max(2, int(np.round(total_size * spc.mean_fitness['raw'] / sum_mean_fitnesses)))
-            prev_spc_size = spc.num_genotypes - spc_elites
-            num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
-                    if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
-            species_offsprings.append(num_offspring)
+        
+        # species_offsprings = []
+        total_size = self.pop_size # - sum(num_elites)
+        species_offsprings = compute_spawn(self.species, self.pop_size, 2)
+        # sum_mean_fitnesses = sum([spc.mean_fitness['raw'] for spc in self.species])
+        # for spc_elites, spc in zip(num_elites, self.species):
+        #     # num_offspring = max(2, int(np.round(total_size * spc.mean_fitness['raw'] / sum_mean_fitnesses)))
+        #     prev_spc_size = spc.num_genotypes - spc_elites
+        #     num_offspring = compute_spawn(spc.mean_fitness['raw'] / sum_mean_fitnesses, prev_spc_size, total_size, min_species_size)
+        #     # num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
+        #     #         if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
+        #     species_offsprings.append(num_offspring)
         while(sum(species_offsprings) != total_size):
             species_offsprings[np.random.choice(len(self.species))] += (1, -1)[sum(species_offsprings) > total_size]
         
@@ -114,7 +147,7 @@ class NEAT_Population(Population):
                 # species_idx = np.random.choice(np.arange(len(self.species))[list(compatible)]) # Random
                 compatible_species = np.arange(len(self.species))[list(compatible)]
                 compatible_distances = np.array(distances)[list(compatible)]
-                species_idx, _  = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
+                species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype['species'] = self.species[species_idx].id
 

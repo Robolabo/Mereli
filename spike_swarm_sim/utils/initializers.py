@@ -4,6 +4,19 @@ from spike_swarm_sim.register import initializer_registry
 from spike_swarm_sim.utils import tanh, compute_angle, isinstance_of_any
 
 
+class InitializerHandler:
+    def __init__(self, initializer, engine='3D', variable='positions'):
+        self.initializer = initializer
+        self.engine = engine
+        self.variable = variable
+
+    def __call__(self, *args, **kwargs):
+        return {
+        '2D' : {'orientations' : map(lambda x: x[0], self.initializer())},
+        '3D' : {'positions' : map(lambda x: (x[0], x[1], 0), self.initializer()),
+                'orientations' : map(lambda x: (0., 0., x[0]), self.initializer())}
+        }.get(self.engine, {}).get(self.variable, self.initializer())
+
 @initializer_registry(name='fixed')
 class FixedInitializer:
     def __init__(self, num_points, fixed_values=None):
@@ -13,8 +26,6 @@ class FixedInitializer:
 
     def __call__(self):
         return [np.array(val) for val in self.fixed_values]
-
-
 
 @initializer_registry(name='random_uniform')
 class RandomUniformInitializer:

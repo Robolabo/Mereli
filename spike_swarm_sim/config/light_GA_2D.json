@@ -1,54 +1,52 @@
 {
-    "checkpoint_file" : "chk_light_NEAT_3D",
+    "checkpoint_file" : "chk_light_GA_2D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
+            "I1" : {"n" : 4, "sensor" : "light_sensor"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
             "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I5" : {"n" : 4, "sensor" : "distance_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
-            "OUT_ST" : {"n" : 1, "params" : {"tau": 0.5}},
+            "H1" : {"n" : 20, "params" : {}},
+            "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
         },
         "synapses" :  {
-            "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I2-MOT" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I4-MOT" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I5-MOT" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
-    
-            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I4-COMM" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
+            "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
 
-            "I1-ST" : {"pre":"I1","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I2-ST" : {"pre":"I2","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I3-ST" : {"pre":"I3","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I4-ST" : {"pre":"I4","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I5-ST" : {"pre":"I5","post":"OUT_ST", "trainable":true, "p":1.0}
+            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
+            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "H1-ST" : {"pre":"H1","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "H1-COMM" : {"pre":"H1","post":"OUT_COMM", "trainable":true, "p":1.0},
+
+            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
+            "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
+            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
-        }
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
+        } 
     },
     "algorithm" : {
-        "name" : "NEAT",
+        "name" : "GA",
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
@@ -62,50 +60,50 @@
                 "min_vals" : [-3, -1.5, -0.8],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.7,
-                    "p_node_mut" : 0.07,
-                    "p_conn_mut" : 0.15,
-                    "compatib_thresh" : 4,
-                    "c1" : 0.1,
-                    "c2" : 0.1, 
-                    "c3" : 1
+                    "selection_operator" : "tournament",
+                    "crossover_operator" : "blxalpha",
+                    "mutation_operator" : "gaussian",
+                    "mating_operator" : "random",
+                    "mutation_prob" : 0.1,
+                    "crossover_prob" : 0.9,
+                    "num_elite" : 5
                 }
             }          
         }
     },
     "world":{
-        "engine" : "3D",
+        "engine" : "2D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":10,
-        "width": 10,
+        "height":15,
+        "width": 15,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
                 "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
+                    "light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 2}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
+                    "wheel_actuator" : {},
                     "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low": -1, "high" : 1, "size" : 2 }},
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
-            },            
+            },
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
                 "controller" : "light_orbit_controller",
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low": -1, "high" : 1, "size" : 2 }}
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-1, "high" : 1, "size" : 2}}
                 },
                 "params" : {"range" : 20, "color" : "red"}
             }

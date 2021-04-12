@@ -20,7 +20,7 @@ class WheelActuator(Actuator):
         v_motors[np.abs(v_motors) < self.min_thresh] = 0.0
         delta_t = self.dt
         R = .5 * self.robot_radius * v_motors.sum() / (v_motors[0] - v_motors[1] + 1e-3)
-        w = (v_motors[0] - v_motors[1] +1e-3) / (self.robot_radius * .5)
+        w = (v_motors[0] - v_motors[1] + 1e-3) / (self.robot_radius * .5)
         icc = current_pos + R * np.array([-np.sin(current_theta), np.cos(current_theta)])
         transf_mat = lambda x: np.array([[np.cos(x), -np.sin(x)], [np.sin(x), np.cos(x)]])
         self.delta_pos = transf_mat(w * delta_t).dot(current_pos - icc) + icc - current_pos

@@ -10,7 +10,7 @@ from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine2D
 
 WORLD_MODES = ['EVOLUTION', 'EVALUATION', 'DEBUGING']
-class World(object):
+class WorldOLD(object):
     def __init__(self, physics_engine, height=1000, width=1000, render_connections=True, world_delay=1):
         self.height = height
         self.width = width
@@ -186,7 +186,6 @@ class World(object):
                 if 'orientations' in group_initializer.keys():
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
-                        
                         obj.orientation = orientation[0]
         np.random.seed()
     
@@ -319,7 +318,7 @@ class World(object):
 
 
 
-class World2D(World):
+class World2D(WorldOLD):
     def __init__(self, *args, **kwargs):
         physics_engine = Engine2D()
         super(World2D, self).__init__(physics_engine, *args, **kwargs)

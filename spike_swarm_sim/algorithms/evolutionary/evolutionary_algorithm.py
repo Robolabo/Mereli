@@ -176,6 +176,7 @@ class EvolutionaryAlgorithm:
         The method does not return any data. Instead, it saves all the required 
         information to resume the evolution periodically.
         """
+
         use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
         alg_name = type(self).__name__
         for k in range(self.init_generation, self.n_generations):
@@ -259,7 +260,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
