@@ -52,17 +52,12 @@ class Robot3D(WorldObject3D):
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Apply perturbations to stimuli 
-        for pert in perturbations:
-            state = pert(state, self)
+        if perturbations is not None:
+            for pert in perturbations:
+                state = pert(state, self)
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
-
-        # if False or any(state['distance_sensor3D'] > 0.0):
-        #     actions['joint_actuator'] = [1, -1]
-        # else: 
-        # actions['joint_actuator'] = [1, 1]
-
         #* Plan actions for future execution
         self.plan_actions(actions)
         # #* Handle robot food pickup

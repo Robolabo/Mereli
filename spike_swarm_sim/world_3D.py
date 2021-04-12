@@ -9,7 +9,7 @@ import pybullet_utils.bullet_client as bc
 
 from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
-from spike_swarm_sim.utils import (angle_diff, compute_angle, normalize, increase_time, 
+from spike_swarm_sim.utils import (angle_diff, compute_angle, normalize, increase_time,
                                   mov_average_timeit, isinstance_of_any, InitializerHandler)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
@@ -78,7 +78,7 @@ class World(object):
                 if self.t > 0 and self.reward_generator is not None else None
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
-            if not isinstance(obj, Robot3D):
+            if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
                 obj.step(self.neighborhood(obj))
                 continue
             if len(self.env_perturbations) > 0:
@@ -414,11 +414,11 @@ class World2D(World):
 
     def step(self):
         states, actions = super().step()
-         #* Apply mirror
-        for robot in self.hierarchy.values(): #! OJO fall en las esquinas
-            if  robot.controllable:
-                robot.position[robot.position > 1000+15] = 20
-                robot.position[robot.position < -13] = 1000-20
+        #  #* Apply mirror
+        # for robot in self.hierarchy.values(): #! OJO fall en las esquinas
+        #     if  robot.controllable:
+        #         robot.position[robot.position > 1000+15] = 20
+        #         robot.position[robot.position < -13] = 1000-20
         return states, actions
     
     def neighborhood(self, robot):
