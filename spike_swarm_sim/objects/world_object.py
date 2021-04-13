@@ -101,7 +101,7 @@ class WorldObject2D(WorldObject):
     @position.setter
     def position(self, new_position):
         """ Setter of the position. """
-        new_position = new_position * 100 + 500
+        new_position = new_position * 100 + 500        
         # if any(new_position > 1000):import pdb; pdb.set_trace()
         self.physics_client.reset_body_position(self.id, 0, tuple(new_position))
     

@@ -101,7 +101,6 @@ class Engine2D:
     def reset_body_position(self, identifier, body_id, position):
         self.objects[identifier]['bodies'][body_id].position = position
 
-
     def get_body_orientation(self, identifier, body_id):
         return self.objects[identifier]['bodies'][body_id].angle
 
@@ -125,7 +124,7 @@ class Engine2D:
         self.screen.fill((255, 255, 255))
         self.engine.debug_draw(self.draw_options)
         pygame.display.flip()
-        self.clock.tick(50)
+        self.clock.tick(30)
 
     def add_objects(self, objects):
         for obj in objects:

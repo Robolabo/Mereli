@@ -15,7 +15,7 @@ class Robot(WorldObject2D):
     def __init__(self, position, orientation, *args, **kwargs):
         super(Robot, self).__init__(position, orientation, static=False, luminous=False,\
                         tangible=True, *args, **kwargs)
-        self.radius = 11
+        self.radius = .11
         self._food = False
 
         #* Initialize sensors and actuators according to controller requirements
@@ -29,8 +29,6 @@ class Robot(WorldObject2D):
 
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
-
-
         self.reset()
 
     def add_physics(self, engine):
@@ -69,9 +67,10 @@ class Robot(WorldObject2D):
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Apply perturbations to stimuli 
-        for pert in perturbations:
-            state = pert(state, self)
-
+        if perturbations is not None:
+            for pert in perturbations:
+                state = pert(state, self)
+        
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
         #* Plan actions for future execution

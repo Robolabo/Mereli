@@ -1,14 +1,15 @@
 {
-    "checkpoint_file" : "chk_light_GA_2D",
+    "checkpoint_file" : "chk_transport_GA_3D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor"},
+            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
             "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor"}
+            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"},
+            "I6" : {"n" : 4, "sensor" : "color_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -19,7 +20,7 @@
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"},
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
             "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
         },
@@ -29,6 +30,7 @@
             "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
             "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
             "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
+            "I6-H1" : {"pre":"I6","post":"H1", "trainable":true, "p":1.0},
 
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
             "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
@@ -50,9 +52,9 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 800,
+        "evaluation_steps" : 1500,
         "num_evaluations" : 3,
-        "fitness_function" : "goto_light",
+        "fitness_function" : "transport_cubes",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -72,31 +74,56 @@
         }
     },
     "world":{
-        "engine" : "2D",
+        "engine" : "3D",
         "world_delay" : 1,
         "render_connections":true,
-        "height":15,
-        "width": 15,
+        "height":10,
+        "width": 10,
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 4,
+                "num_instances" : 3,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 4, "range" : 20},
+                    "color_sensor" : {"n_sectors" : 4, "range" : 5},
+                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor" : {"n_sectors" : 4, "range" : 2}
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
                 },
                 "actuators" : {
-                    "wheel_actuator" : {},
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
                     "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
+                    "positions" : {"name" : "random_uniform", "params" : {"low": [-4, -2], "high" : [4, -4], "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor"}},
-                "params" : {"trainable" : true}
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 2, "stimuli" : "color_sensor"}},
+                "params" : {"trainable" : true} 
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3]]}}
+                },
+                "params" : {"range" : 20, "color" : "yellow"}
+            },
+            "ground_area_grey" : {
+                "type" : "ground_area",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3]]}}
+                },
+                "params" : {"radius" : 1.5, "color" : "grey"}
+            },
+            "cube_blue" : {
+                "type" : "cube",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low": [-3, -1.5], "high" : [3, 0], "size" : 2 }}
+                },
+                "params" : {"mass" : 1, "side_len" : 0.7, "color" : "blue"}
             }
         }
     }
