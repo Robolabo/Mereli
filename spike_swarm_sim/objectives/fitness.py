@@ -213,7 +213,7 @@ class TransportCubesFitness:
     """Fitness function for the light follower task."""
     def __init__(self):
         self.required_info = ("generation", "robot:position", "robot:orientation",
-                            "light_source:position@color=red",
+                            "light_source:position@color=yellow",
                             "cube:position", "ground_area:position@t=1", "ground_area:radius@t=1")
 
     def __call__(self, actions, states, info=None):
@@ -231,16 +231,21 @@ class TransportCubesFitness:
         
         robot_positions = np.stack(info["robot:position"]).copy()
         cube_positions = np.stack(info["cube:position"]).copy()
-        ground_area_pos = info["ground_area:position@t=1"][0].flatten()
-        ground_area_rad = info["ground_area:radius@t=1"][0]
-        fitness = 0
-        n_cubes_correct = np.sum([LA.norm(cube_pos - ground_area_pos) <= ground_area_rad for cube_pos in cube_positions[-1]])\
+        ground_area_pos = info["ground_area:position@t=1"][0]
+        ground_area_rad = info["ground_area:radius@t=1"][0][0]#Second index supposes all ground areas have same area.
+        light_source_pos = info["light_source:position@color=yellow"][0].flatten()
         
+        #* Correct area is the one with light source above
+        correct_area_idx = np.argmin(LA.norm(ground_area_pos[:, :2] - light_source_pos[:2], axis=1))
+        correct_area = ground_area_pos[correct_area_idx]
+        wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
+        n_cubes_correct = np.sum([LA.norm(cube_pos - correct_area) <= ground_area_rad for cube_pos in cube_positions[-1]])
+        n_cubes_wrong = np.sum([any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad) for cube_pos in cube_positions[-1]])
         mask_dist_moved = LA.norm(cube_positions[-1] - ground_area_pos, axis=1) < LA.norm(cube_positions[0] - ground_area_pos, axis=1)
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
                 
-        fitness = n_cubes_correct + mean_dist_moved
+        fitness = max(0, n_cubes_correct - n_cubes_wrong) #+ mean_dist_moved
         return fitness + 1e-5
 
 
