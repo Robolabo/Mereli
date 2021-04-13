@@ -20,12 +20,29 @@ class InitializerHandler:
 @initializer_registry(name='fixed')
 class FixedInitializer:
     def __init__(self, num_points, fixed_values=None):
+        self.num_points = num_points
         self.fixed_values = fixed_values
         if not isinstance_of_any(fixed_values[0], [list, np.ndarray]):
             self.fixed_values = [[val] for val in self.fixed_values]
+        assert num_points == len(self.fixed_values)
 
     def __call__(self):
         return [np.array(val) for val in self.fixed_values]
+
+
+@initializer_registry(name='fixed_random')
+class FixedRandomInitializer:
+    def __init__(self, num_points, possible_values=None, replacement=True):
+        self.num_points = num_points
+        self.replacement = replacement
+        self.possible_values = possible_values
+        if not isinstance_of_any(possible_values[0], [list, np.ndarray]):
+            self.possible_values = [[val] for val in self.possible_values]
+        assert self.replacement or len(self.possible_values) < self.num_points
+
+    def __call__(self):
+        sel_indices = np.random.choice(len(self.possible_values), size=self.num_points, replace=self.replacement)
+        return [self.possible_values[idx] for idx in sel_indices]
 
 @initializer_registry(name='random_uniform')
 class RandomUniformInitializer:

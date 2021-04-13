@@ -10,7 +10,10 @@ class EnvironmentalPerturbation:
         if affected_robots == 'all':
             self.affected_robots = np.arange(total_robots)
         else:
-            self.affected_robots = np.random.choice(range(total_robots), size=affected_robots, replace=False)
+            if isinstance(affected_robots, list):
+                self.affected_robots = np.array(affected_robots)
+            else:
+                self.affected_robots = np.random.choice(range(total_robots), size=affected_robots, replace=False)
         self.t = 0
     
     def reset(self):
@@ -95,9 +98,12 @@ class UncontrollableRotation(PostProcessingPerturbation):
 
 @env_perturbation_registry(name='stimuli_inhibition')
 class StimuliInhibition(PreProcessingPerturbation):
-    def __init__(self, *args, stimuli='light_sensor', **kwargs):
+    def __init__(self, *args, stimuli='light_sensor', stim2=None, **kwargs):
         super(StimuliInhibition, self).__init__(*args, **kwargs)
         self.stimuli = stimuli.split(':')
+        #! Prov name, this stimuli is always enabled in the affected robots 
+        #! and disabled in the others
+        self.stim2 = stim2 is not None and stim2.split(':') or None
 
     @increase_time
     def __call__(self, state, robot):
@@ -109,5 +115,7 @@ class StimuliInhibition(PreProcessingPerturbation):
         else:
             state[self.stimuli[0]] = np.random.randn(len(stim_val)) * noise_sigma\
                     if noise_sigma > 0 else np.zeros_like(stim_val)
+        
+        state[self.stimuli[0]]
         # state.update(reduce(lambda x, y: {y : x}, self.stimuli[::-1], np.zeros_like(stim_val)))
         return state

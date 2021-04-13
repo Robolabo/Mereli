@@ -151,8 +151,13 @@ class World(object):
                     robot = object_cls(position, orientation, controller=controller, **obj['params'])
                     self.add(obj_name + '_' + str(i), robot, group=obj_name)
                 if len(obj['perturbations']) > 0:
-                    self.env_perturbations.update({obj_name : [env_perturbations[pert](obj['num_instances'], **pert_params)\
-                            for pert, pert_params in obj['perturbations'].items()]})
+                    object_perturbations = []
+                    for pert_name, perturbations in obj['perturbations'].items():
+                        if not isinstance(perturbations, list):
+                            object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **perturbations))
+                        for i, pert in enumerate(perturbations):
+                            object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **pert))
+                    self.env_perturbations.update({obj_name : object_perturbations})
             else: # Non robot objects
                 controller_cls = controllers.get(obj.get('controller'))
                 controller = controller_cls is not None and controller_cls() or None

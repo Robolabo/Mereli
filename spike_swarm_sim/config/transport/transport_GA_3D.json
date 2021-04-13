@@ -50,7 +50,7 @@
     "algorithm" : {
         "name" : "GA",
         "evolvable_object" : "robotA",
-        "population_size" : 300,
+        "population_size" : 400,
         "generations" : 2000,
         "evaluation_steps" : 1500,
         "num_evaluations" : 3,
@@ -98,32 +98,37 @@
                     "positions" : {"name" : "random_uniform", "params" : {"low": [-4, -2], "high" : [4, -4], "size" : 2 }},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 2, "stimuli" : "color_sensor"}},
+                "perturbations" : {
+                    "stimuli_inhibition" : [
+                        {"affected_robots": [1, 2], "stimuli" : "color_sensor"}, 
+                        {"affected_robots": [0], "stimuli" : "light_sensor3D"}
+                    ]
+                },
                 "params" : {"trainable" : true} 
             },
-            "light_red" : {
+            "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3]]}}
+                    "positions" : {"name" : "fixed_random", "params" : {"possible_values": [[0, 3.5], [3.5, 0], [-3.5, 0]]}}
                 },
                 "params" : {"range" : 20, "color" : "yellow"}
             },
             "ground_area_grey" : {
                 "type" : "ground_area",
-                "num_instances": 1,
+                "num_instances": 3,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3.5], [3.5, 0], [-3.5, 0]]}}
                 },
                 "params" : {"radius" : 1.5, "color" : "grey"}
             },
             "cube_blue" : {
                 "type" : "cube",
-                "num_instances": 1,
+                "num_instances": 3,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low": [-3, -1.5], "high" : [3, 0], "size" : 2 }}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 0], [0, 1], [-1, 0]]}}
                 },
-                "params" : {"mass" : 1, "side_len" : 0.7, "color" : "blue"}
+                "params" : {"mass" : 0.5, "side_len" : 0.5, "color" : "blue"}
             }
         }
     }
