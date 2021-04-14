@@ -45,7 +45,6 @@ class CommunicationTransmitter(Actuator):
         self.frame['state'] = action['state']
         self.frame['sending_direction'] = action['sending_direction']
 
-
     def quantize_fn(self, msg, tau=0.01):
         dists = np.linalg.norm(msg - self.clusters, axis=1)
         # Max. dist in hypercube is sqrt(dim(x))

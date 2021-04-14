@@ -1,6 +1,7 @@
 import numpy as np
 import pybullet as p
 from .base_sensor import DirectionalSensor
+from .distance_sensor import DistanceSensor3D
 from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.objects import Robot, Robot3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
@@ -21,9 +22,9 @@ class IRCommunicationReceiver(DirectionalSensor):
         super(IRCommunicationReceiver, self).__init__(*args, **kwargs)
         self.msg_length = msg_length
         self.max_hops = max_hops
-        self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1)
         self.selection_scheme = selection_scheme
         self.current_direction = 0
+        self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.)
 
     def _target_filter(self, obj):
         """ Filtering of potential sender robots. """
@@ -35,30 +36,36 @@ class IRCommunicationReceiver(DirectionalSensor):
         """
         condition = obj is not None\
                     and rho <= self.range\
+                    and phi <= self.aperture\
                     and rho <= obj.actuators['wireless_transmitter'].range\
                     and obj.actuators['wireless_transmitter'].frame['enabled']
+        
         #* Fill initial reading with empty frame
         if direction_reading is None:
             direction_reading = self.empty_msg
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading['signal']:
-                sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
-                sending_angle = self.directions(0.)[sending_direction]
-                receiving_angle = self.directions(0.)[direction]
-                direction_reading['sending_direction'] = np.r_[np.cos(sending_angle), np.sin(sending_angle)].round(2)
-                direction_reading['receiving_direction'] = np.r_[np.cos(receiving_angle), np.sin(receiving_angle)].round(2)
-                direction_reading['receiving_direction'][np.abs(direction_reading['receiving_direction']) < 1e-5] = 0.0
-                # msg = .actuators['wireless_transmitter'].msg[send_dir] #! if directional transmission
-                direction_reading['msg'] = np.array(obj.actuators['wireless_transmitter'].frame['msg'])  #! if isotropic
-                direction_reading['signal'] = np.array([signal_strength])
-                direction_reading['priority'] = np.array([obj.actuators['wireless_transmitter'].frame['priority']])
-                direction_reading['destination'] = np.array([obj.actuators['wireless_transmitter'].frame['destination']])
-                direction_reading['sender'] = np.array([obj.id]) if obj.actuators['wireless_transmitter'].frame['state'] \
-                                            else obj.actuators['wireless_transmitter'].frame['sender']
-                direction_reading['n_hops'] = obj.actuators['wireless_transmitter'].frame['n_hops']
-                if direction_reading['n_hops'] > 1:
-                    direction_reading['sending_direction'] = obj.actuators['wireless_transmitter'].frame['sending_direction']
+                my_pos = self.get_position(self.sensors_idx[direction]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
+                tar_pos = obj.position + np.r_[0, 0, 0.07] # my_pos[2]]
+                ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
+                if ray_res == obj.id:
+                    sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
+                    sending_angle = self.directions(0.)[sending_direction]
+                    receiving_angle = self.directions(0.)[direction]
+                    direction_reading['sending_direction'] = np.r_[np.cos(sending_angle), np.sin(sending_angle)].round(2)
+                    direction_reading['receiving_direction'] = np.r_[np.cos(receiving_angle), np.sin(receiving_angle)].round(2)
+                    direction_reading['receiving_direction'][np.abs(direction_reading['receiving_direction']) < 1e-5] = 0.0
+                    # msg = .actuators['wireless_transmitter'].msg[send_dir] #! if directional transmission
+                    direction_reading['msg'] = np.array(obj.actuators['wireless_transmitter'].frame['msg'])  #! if isotropic
+                    direction_reading['signal'] = np.array([signal_strength])
+                    direction_reading['priority'] = np.array([obj.actuators['wireless_transmitter'].frame['priority']])
+                    direction_reading['destination'] = np.array([obj.actuators['wireless_transmitter'].frame['destination']])
+                    direction_reading['sender'] = np.array([obj.id]) if obj.actuators['wireless_transmitter'].frame['state'] \
+                                                else obj.actuators['wireless_transmitter'].frame['sender']
+                    direction_reading['n_hops'] = obj.actuators['wireless_transmitter'].frame['n_hops']
+                    if direction_reading['n_hops'] > 1:
+                        direction_reading['sending_direction'] = obj.actuators['wireless_transmitter'].frame['sending_direction']
         return direction_reading
 
     def __random_selection(self, frames):
@@ -104,6 +111,7 @@ class IRCommunicationReceiver(DirectionalSensor):
 
 
     def reset(self):
+        super().reset()
         self.current_direction = 0
     
     def remove_duplicates(self, frames):

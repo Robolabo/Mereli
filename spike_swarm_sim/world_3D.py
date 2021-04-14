@@ -78,12 +78,14 @@ class World(object):
                 if self.t > 0 and self.reward_generator is not None else None
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
+            
             if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
                 obj.step(self.neighborhood(obj))
                 continue
             if len(self.env_perturbations) > 0:
-                pre_perturbations = [pert for pert in tuple(self.env_perturbations.values())[0]\
+                pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
+            
             reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
             state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:
@@ -262,6 +264,8 @@ class World(object):
         """
         return [self.hierarchy[element] for element in self.groups[group]]
 
+    def group_of(self, obj_name):
+        return [key for key, group_members in self.groups.items() if obj_name in group_members][0]
 
     def entities(self, obj_type):
         #! ?????

@@ -27,7 +27,8 @@ class Engine3D:
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-        time.sleep(1/240.)
+        time.sleep(1/240.) # Fast mode
+        # time.sleep(1/10) # Slow mode
 
     def connect(self, objects):
         self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
