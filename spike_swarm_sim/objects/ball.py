@@ -55,7 +55,7 @@ class Cube(WorldObject3D):
 class GroundArea(WorldObject3D):
     def __init__(self, position, orientation, *args, color='red', radius=1., **kwargs):
         super(GroundArea, self).__init__('ground_area', position, orientation,\
-                        *args, **kwargs)
+                        *args, tangible=False, **kwargs)
         self.color = color
         self.radius = radius
 

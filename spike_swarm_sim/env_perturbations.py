@@ -5,6 +5,7 @@ from spike_swarm_sim.utils import increase_time, angle_diff
 
 class EnvironmentalPerturbation:
     def __init__(self, total_robots, affected_robots='all'):
+        self.random_selection = affected_robots is not 'all' and not isinstance(affected_robots, list)
         self.total_robots = total_robots
         self.affected_robots = total_robots if affected_robots == 'all' else affected_robots
         if affected_robots == 'all':
@@ -18,8 +19,7 @@ class EnvironmentalPerturbation:
     
     def reset(self):
         self.t = 0
-        #! seed ?
-        if len(self.affected_robots) != self.total_robots:
+        if self.random_selection:
             self.affected_robots = np.random.choice(range(self.total_robots),\
                 size=self.affected_robots.shape[0], replace=False)
 
@@ -98,12 +98,9 @@ class UncontrollableRotation(PostProcessingPerturbation):
 
 @env_perturbation_registry(name='stimuli_inhibition')
 class StimuliInhibition(PreProcessingPerturbation):
-    def __init__(self, *args, stimuli='light_sensor', stim2=None, **kwargs):
+    def __init__(self, *args, stimuli='light_sensor', **kwargs):
         super(StimuliInhibition, self).__init__(*args, **kwargs)
         self.stimuli = stimuli.split(':')
-        #! Prov name, this stimuli is always enabled in the affected robots 
-        #! and disabled in the others
-        self.stim2 = stim2 is not None and stim2.split(':') or None
 
     @increase_time
     def __call__(self, state, robot):
@@ -115,7 +112,5 @@ class StimuliInhibition(PreProcessingPerturbation):
         else:
             state[self.stimuli[0]] = np.random.randn(len(stim_val)) * noise_sigma\
                     if noise_sigma > 0 else np.zeros_like(stim_val)
-        
-        state[self.stimuli[0]]
         # state.update(reduce(lambda x, y: {y : x}, self.stimuli[::-1], np.zeros_like(stim_val)))
         return state
