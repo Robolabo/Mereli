@@ -31,7 +31,7 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
                 [*child2_genes.values()][0]['enabled'] = np.random.random() > disable_prob
             child_1['connections'].update(child1_genes)
             child_2['connections'].update(child2_genes)
-        
+
         #* Disjoint and excess connection genes
         for gene_innovation in (innov_ids_1, innov_ids_2)[f2 >= f1] - common_genes:
             winner_gene = {name : conn.copy() for name, conn in (parent1, parent2)[f2 >= f1]['connections'].items()\

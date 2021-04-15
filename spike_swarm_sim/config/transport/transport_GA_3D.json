@@ -15,7 +15,7 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "H1" : {"n" : 20, "params" : {}},
-            "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
