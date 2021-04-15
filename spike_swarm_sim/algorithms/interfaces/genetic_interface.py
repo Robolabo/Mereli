@@ -146,15 +146,14 @@ class NEATInterface:
                 syn = genotype['connections'][key]
                 self.neural_net.add_synapse(key, syn['pre'], syn['post'], syn['weight'], conn_prob=1.)
             self.neural_net.graph['synapses'].update({key : genotype['connections'][key].copy()})
-
+        
         #* Update parameters (Decoders and encoders not supported yet).
         # counter = 0
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             # segment_len = self.submit_query(query, primitive='LEN')
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
             variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
-            if 'learning_rule' in query:
-                
+            if 'learning_rule' in query: 
                 genotype_segment = np.array([[gnt['learning_rule'][v] for gnt in genotype['connections'].values()] for v in ['A', 'B', 'C', 'D']]).flatten()
             else:
                 genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
@@ -163,7 +162,6 @@ class NEATInterface:
                         data=genotype_segment, min_val=min_val, max_val=max_val)
             # counter += segment_len
         self.neural_net.build() #* Compile changes.
-       
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.

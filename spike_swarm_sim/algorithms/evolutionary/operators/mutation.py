@@ -40,7 +40,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'weight': genotype['connections'][sel_conn]['weight'],
             'group' : conn_name,
             'enabled' : True,
-            'trainable':True,
+            'trainable' : True,
             'learning_rule' : genotype['connections'][sel_conn].get('learning_rule', None),
             'innovation' : innovation_history.get((node_name,\
                     genotype['connections'][sel_conn]['post']), current_innovation),
@@ -96,7 +96,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
         conn_name : {
             'pre' : new_conn[0],
             'post' : new_conn[1],
-            'weight': np.random.random(), # Random weight in [0,1] (denormalized later).
+            'weight': np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1), # Random weight in [0,1] (denormalized later).
             'group' : conn_name,
             'enabled' : True,
             'trainable' : True,

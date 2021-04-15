@@ -225,7 +225,7 @@ class TransportCubesFitness:
                     corresponding action.
             states [list of dicts]: list of dictionaries with sensor names and the 
                     corresponding measured states.
-            info [dict or None]: dict of additional information. 
+            info [dict or None]: dict of additional information.
         =======================================================================================
         """
         
@@ -245,7 +245,7 @@ class TransportCubesFitness:
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         dist_moved[dist_moved < 0.1] = 0.
         mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
-        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved) 
+        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved)
         return fitness + 1e-5
 
 
