@@ -94,7 +94,7 @@
                     "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":2}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[4,0], [-4,0]]}},
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "light_sensor3D"}},
