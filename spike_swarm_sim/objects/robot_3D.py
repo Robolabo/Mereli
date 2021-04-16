@@ -1,6 +1,7 @@
 import numpy as np
 from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject3D
+from spike_swarm_sim.actuators.base_actuator import HighLevelActuator
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
 
@@ -72,7 +73,7 @@ class Robot3D(WorldObject3D):
             self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
                     and [action, self.position, self.orientation]  or [action]
 
-    def actuate(self):
+    def actuate(self, neighborhood):
         """
         Executes the previously planned actions in order to be processed in the world.
         =====================
@@ -81,9 +82,10 @@ class Robot3D(WorldObject3D):
         =====================
         """
         for actuator_name, actuator in self.actuators.items():
-            actuator.step(*iter(self.planned_actions[actuator_name]))
-        # if 'wheel_actuator' in self.controller.enabled_actuators.keys() or 'target_pos_actuator' in self.controller.enabled_actuators.keys():
-        #     self._move(validated=True)
+            if issubclass(type(actuator), HighLevelActuator):
+                actuator.step(*iter(self.planned_actions[actuator_name]), neighborhood)
+            else:
+                actuator.step(*iter(self.planned_actions[actuator_name]))
 
     def perceive(self, neighborhood):
         """

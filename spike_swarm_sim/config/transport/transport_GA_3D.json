@@ -17,12 +17,14 @@
             "H1" : {"n" : 20, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "OUT_GRASP" : {"n" : 3, "params" : {}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"},
+            "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
@@ -36,15 +38,18 @@
             "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "H1-ST" : {"pre":"H1","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
             "H1-COMM" : {"pre":"H1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "H1-GRASP" : {"pre":"H1","post":"OUT_GRASP", "trainable":true, "p":1.0},
 
             "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
             "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
-            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0}
+            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0},
+            "GRASP-H1" : {"pre":"OUT_GRASP","post":"H1", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}   
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
+            "outD" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : true}}   
         } 
     },
     "algorithm" : {
@@ -92,10 +97,12 @@
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
+                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2},
+                    "grasp_actuator" : {}
+                    
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform", "params" : {"low": [-1, -2], "high" : [1, -3], "size" : 2 }},
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 0.5], [3.5, 0], [-3.5, 0]]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {
@@ -128,7 +135,7 @@
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 0], [0, 1], [-1, 0]]}}
                 },
-                "params" : {"mass" : 0.2, "side_len" : 0.5, "color" : "blue"}
+                "params" : {"mass" : 0.1, "side_len" : 0.2, "color" : "blue"}
             }
         }
     }

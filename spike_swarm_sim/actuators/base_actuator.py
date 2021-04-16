@@ -12,5 +12,14 @@ class Actuator:
         self.actuator_owner = actuator_owner
 
 
-    def step(self, neighborhood):
-        raise NotImplementedError    
+    def step(self, action):
+        raise NotImplementedError
+
+
+class HighLevelActuator(Actuator):
+    def __init__(self, *args, **kwargs):
+        super(HighLevelActuator, self).__init__(*args, **kwargs)
+
+
+    def step(self, action, neighborhood):
+        raise NotImplementedError

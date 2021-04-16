@@ -37,6 +37,7 @@ class Cube(WorldObject3D):
         self.color = color
         self.mass = mass
         self.side_len = side_len
+        self.is_grasped = False # Whether a robot is grasping the cube or not.
 
     def add_physics(self, physics_client):
         super().add_physics(physics_client, scaling=self.side_len)
@@ -49,7 +50,7 @@ class Cube(WorldObject3D):
         pass
 
     def reset(self):
-        pass
+        self.is_grasped = False
 
 @world_object_registry(name='ground_area')
 class GroundArea(WorldObject3D):
