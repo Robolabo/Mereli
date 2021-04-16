@@ -97,7 +97,7 @@
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[4,0], [-4,0]]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 1, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },            
             "light_red" : {
