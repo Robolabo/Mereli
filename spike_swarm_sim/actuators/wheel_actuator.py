@@ -14,9 +14,11 @@ class WheelActuator(Actuator):
         self.delta_theta = 0
         self.min_thresh = min_thresh
     
-    def step(self, v_motors, current_pos, current_theta, ):
+    def step(self, v_motors ):
         if isinstance(v_motors, list):
             v_motors = np.array(v_motors)
+        current_pos = self.actuator_owner.position
+        current_theta = self.actuator_owner.orientation
         v_motors[np.abs(v_motors) < self.min_thresh] = 0.0
         delta_t = self.dt
         R = .5 * self.robot_radius * v_motors.sum() / (v_motors[0] - v_motors[1] + 1e-3)

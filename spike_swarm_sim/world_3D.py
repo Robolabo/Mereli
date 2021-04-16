@@ -103,8 +103,8 @@ class World(object):
 
         #! Actuate
         for obj in self.controllable_objects.values():
-            if obj.tangible:
-                obj.actuate()
+            if obj.tangible:#! this prop may not be the best one
+                obj.actuate(self.hierarchy)
      
         #* Render and physics step.
         self.physics_engine.step_physics()
@@ -157,8 +157,9 @@ class World(object):
                     for pert_name, perturbations in obj['perturbations'].items():
                         if not isinstance(perturbations, list):
                             object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **perturbations))
-                        for i, pert in enumerate(perturbations):
-                            object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **pert))
+                        else:
+                            for i, pert in enumerate(perturbations):
+                                object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **pert))
                     self.env_perturbations.update({obj_name : object_perturbations})
             else: # Non robot objects
                 controller_cls = controllers.get(obj.get('controller'))
