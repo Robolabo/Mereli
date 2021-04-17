@@ -2,7 +2,7 @@ import numpy as np
 import pybullet as p
 from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.utils import compute_angle
-from spike_swarm_sim.sensors import DirectionalSensor
+from spike_swarm_sim.sensors import Sensor, DirectionalSensor
 from .utils.propagation import ExpDecayPropagation
 
 
@@ -20,7 +20,7 @@ class ColorSensor(DirectionalSensor):
         """ Filtering of potential target WorldObjects.
         #TODO Support for more luminous objects.
         """
-        return type(obj).__name__ in ['Cube'] # List because may be extended to other objects.
+        return type(obj).__name__ in ['Cube'] and not obj.is_grasped # List because may be extended to other objects.
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of
@@ -39,7 +39,7 @@ class ColorSensor(DirectionalSensor):
             # signal_strength = self.propagation(rho, phi)
             if ray_res == kwargs['obj'].id:
                 direction_reading = 1.
-        return direction_reading 
+        return direction_reading
     
     # def reset(self):
     #     joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
@@ -49,3 +49,13 @@ class ColorSensor(DirectionalSensor):
 
     # def get_position(self, idx):
     #     return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
+
+
+@sensor_registry(name='object_grasped_sensor')
+class ObjectGraspedSensor(Sensor):
+    def __init__(self, *args, **kwargs):
+        super(ObjectGraspedSensor, self).__init__(*args, **kwargs)
+    
+    def step(self, neighborhood):
+        reading = int(self.sensor_owner.actuators['grasp_actuator'].cube_grasped is not None)
+        return np.array([reading])
