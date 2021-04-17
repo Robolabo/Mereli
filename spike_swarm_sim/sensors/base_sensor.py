@@ -17,6 +17,7 @@ class Sensor:
         self.sensor_owner = sensor_owner
         self.noise_sigma = noise_sigma
         self.range = range
+        self.reading = None
         # self.sensor_idx = {}#!
 
     def step(self, neighborhood):
@@ -110,8 +111,9 @@ class DirectionalSensor(Sensor):
                 rho = LA.norm(v)
                 phi = angle_diff(compute_angle(v[:2]), direction)
                 readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
-            
-        return np.array(readings) if not isinstance(readings[0], dict) else readings
+        reading = np.array(readings) if not isinstance(readings[0], dict) else readings
+        self.reading = reading.copy()
+        return reading
 
 
     def directions(self, theta):
@@ -125,6 +127,7 @@ class DirectionalSensor(Sensor):
         return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
 
     def reset(self):
+        self.reading = None
         joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
             for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
         self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
@@ -170,7 +173,6 @@ class DirectionalSensor(Sensor):
     #         phi_values = np.array([angle_diff(compute_angle(v[:2]), theta) for theta in self.directions(orientation)])
     #         featured_sensors = np.where(phi_values <= self.aperture)[0]
     #         phi_values = phi_values[featured_sensors]
-    #         import pdb; pdb.set_trace()
 
     #         for k, phi in zip(featured_sensors, phi_values):
     #             readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
