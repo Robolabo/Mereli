@@ -291,7 +291,6 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        # import pdb; pdb.set_trace()
         if self.t == 0: self.init_w = self.weights.copy()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
@@ -331,8 +330,9 @@ class NeuralNetwork:
             # plot_spikes(self)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
-        # actions['outA'] = [0, 0]
+        # actions['outA'] = [0.5, 0.5]
         # actions['outC'] = 1 #! State = 1
+        # print(self.spikes[2], actions['outC'])
         return actions
     
     @property
