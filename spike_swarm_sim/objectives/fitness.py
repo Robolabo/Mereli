@@ -214,7 +214,8 @@ class TransportCubesFitness:
     def __init__(self):
         self.required_info = ("generation", "robot:position", "robot:orientation",
                             "light_source:position@color=yellow",
-                            "cube:position", "ground_area:position@t=1", "ground_area:radius@t=1")
+                            "cube:position", "ground_area:position@t=1",
+                            "ground_area:radius@t=1", "cube:is_grasped")
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states.
@@ -234,13 +235,15 @@ class TransportCubesFitness:
         ground_area_pos = info["ground_area:position@t=1"][0]
         ground_area_rad = info["ground_area:radius@t=1"][0][0]#Second index supposes all ground areas have same area.
         light_source_pos = info["light_source:position@color=yellow"][0].flatten()
-        
+        cubes_grasped = info["cube:is_grasped"][-1]
         #* Correct area is the one with light source above
         correct_area_idx = np.argmin(LA.norm(ground_area_pos[:, :2] - light_source_pos[:2], axis=1))
         correct_area = ground_area_pos[correct_area_idx]
         wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
-        n_cubes_correct = np.sum([LA.norm(cube_pos - correct_area) <= ground_area_rad for cube_pos in cube_positions[-1]])
-        n_cubes_wrong = np.sum([any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad) for cube_pos in cube_positions[-1]])
+        n_cubes_correct = np.sum([not is_grasped and LA.norm(cube_pos - correct_area) <= ground_area_rad\
+                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
+        n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
+                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
         mask_dist_moved = LA.norm(cube_positions[-1] - correct_area, axis=1) < LA.norm(cube_positions[0] - correct_area, axis=1)
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         dist_moved[dist_moved < 0.1] = 0.

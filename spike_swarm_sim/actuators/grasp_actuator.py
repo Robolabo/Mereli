@@ -31,7 +31,7 @@ class GraspActuator(HighLevelActuator):
     def step(self, action, neighborhood):
         if self.cube_grasped is not None:
             #* Avoid cube from falling from robot.
-            if LA.norm(self.cube_grasped.position - self.actuator_owner.position) > 0.25:
+            if LA.norm(self.cube_grasped.position - self.actuator_owner.position) > 0.3:
                 self.__grasp(self.cube_grasped)
         #* Action is a\in{0,1,2}. a=0 means do nothing, a=1 means grasp and a=2 means drop.
         if action == 0 or 0 > action > 2:
