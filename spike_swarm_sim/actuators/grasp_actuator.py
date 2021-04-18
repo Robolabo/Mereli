@@ -8,6 +8,7 @@ class GraspActuator(HighLevelActuator):
     def __init__(self, *args, **kwargs):
         super(GraspActuator, self).__init__(*args, **kwargs)
         self.grasp_range = 0.5
+        self.grasp_cooldown = 0
         self.cube_grasped = None
 
     def __grasp(self, cube):
@@ -16,9 +17,10 @@ class GraspActuator(HighLevelActuator):
         cube.position = new_pos
         cube.is_grasped = True
         self.cube_grasped = cube
+        # self.grasp_cooldown = 10
+
 
     def __drop(self):
-        
         robot_pos = self.actuator_owner.position.copy()
         robot_ori = self.actuator_owner.orientation.copy()[-1]
         drop_sector = np.argmin(self.actuator_owner.sensors['distance_sensor3D'].reading)
@@ -27,6 +29,7 @@ class GraspActuator(HighLevelActuator):
         self.cube_grasped.is_grasped = False
         self.cube_grasped.position = new_pos
         self.cube_grasped = None
+        self.grasp_cooldown = 50
 
     def step(self, action, neighborhood):
         if self.cube_grasped is not None:
@@ -37,7 +40,8 @@ class GraspActuator(HighLevelActuator):
         if action == 0 or 0 > action > 2:
             return
         if action == 1: #* Grasp
-            if self.cube_grasped is not None:
+            if self.cube_grasped is not None or self.grasp_cooldown > 0:
+                self.grasp_cooldown -= 1
                 return
             cubes = [obj for obj in neighborhood.values() if type(obj).__name__ == 'Cube']
             if len(cubes) == 0:
@@ -56,4 +60,5 @@ class GraspActuator(HighLevelActuator):
 
 
     def reset(self):
+        self.grasp_cooldown = 0
         self.cube_grasped = None
