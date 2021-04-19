@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_transport_GA_3D",
+    "checkpoint_file" : "chk_task_switching_GA_3D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 20,
@@ -18,7 +18,10 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H1" : {"n" : 20, "params" : {}},
+            "H_ls" : {"n" : 10, "params" : {}},
+            "H_comm" : {"n" : 10, "params" : {}},
+            "H_cubes" : {"n" : 10, "params" : {}},
+            "H" : {"n" : 20, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
@@ -31,27 +34,41 @@
             "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
-            "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
-            "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
-            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
-            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
-            "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
-            "I6-H1" : {"pre":"I6","post":"H1", "trainable":true, "p":1.0},
-            "I7-H1" : {"pre":"I7","post":"H1", "trainable":true, "p":1.0},
-            "I8-H1" : {"pre":"I8","post":"H1", "trainable":true, "p":1.0},
-            "I9-H1" : {"pre":"I9","post":"H1", "trainable":true, "p":1.0},
-            "I10-H1" : {"pre":"I10","post":"H1", "trainable":true, "p":1.0},
+            "I2-Hls" : {"pre":"I2","post":"H_ls", "trainable":true, "p":1.0},
 
-            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
-            "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "H1-ST" : {"pre":"H1","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
-            "H1-COMM" : {"pre":"H1","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "H1-GRASP" : {"pre":"H1","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I3-H_comm" : {"pre":"I3","post":"H_comm", "trainable":true, "p":1.0},
+            "I4-H_comm" : {"pre":"I4","post":"H_comm", "trainable":true, "p":1.0},
+            "I5-H_comm" : {"pre":"I5","post":"H_comm", "trainable":true, "p":1.0},
+            "I6-H_comm" : {"pre":"I6","post":"H_comm", "trainable":true, "p":1.0},
 
-            "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
-            "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
-            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0},
-            "GRASP-H1" : {"pre":"OUT_GRASP","post":"H1", "trainable":true, "p":1.0}
+
+            "I1-H_cubes" : {"pre":"I1","post":"H_cubes", "trainable":true, "p":1.0},
+            "I7-H_cubes" : {"pre":"I7","post":"H_cubes", "trainable":true, "p":1.0},
+            "I8-H_cubes" : {"pre":"I8","post":"H_cubes", "trainable":true, "p":1.0},
+            "I9-H_cubes" : {"pre":"I9","post":"H_cubes", "trainable":true, "p":1.0},
+
+            "I10-H_cubes" : {"pre":"I10","post":"H_cubes", "trainable":true, "p":1.0},
+            "I10-H_ls" : {"pre":"I10","post":"H_ls", "trainable":true, "p":1.0},
+            "I10-H_comm" : {"pre":"I10","post":"H_comm", "trainable":true, "p":1.0},
+
+           
+            "H_ls-H_ls" : {"pre":"H_ls","post":"H_ls", "trainable":true, "p":1.0},
+            "H_comm-H_comm" : {"pre":"H_comm","post":"H_comm", "trainable":true, "p":1.0},
+            "H_cubes-H_cubes" : {"pre":"H_cubes","post":"H_cubes", "trainable":true, "p":1.0},
+
+            "H_ls-H" : {"pre":"H_ls","post":"H", "trainable":true, "p":1.0},
+            "H_comm-H" : {"pre":"H_comm","post":"H", "trainable":true, "p":1.0},
+            "H_cubes-H" : {"pre":"H_cubes","post":"H", "trainable":true, "p":1.0},
+
+            "H-MOT" : {"pre":"H","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "H-ST" : {"pre":"H","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "H-COMM" : {"pre":"H","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "H-GRASP" : {"pre":"H","post":"OUT_GRASP", "trainable":true, "p":1.0},
+
+            "MOT-H1" : {"pre":"OUT_MOT","post":"H", "trainable":true, "p":1.0},
+            "COMM-H1" : {"pre":"OUT_COMM","post":"H", "trainable":true, "p":1.0},
+            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H", "trainable":true, "p":1.0},
+            "GRASP-H1" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
@@ -65,7 +82,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 2000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching",
         "populations" : {
@@ -156,7 +173,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1000}
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000}
             }
         }
     }
