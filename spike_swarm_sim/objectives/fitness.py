@@ -1,4 +1,5 @@
 from itertools import combinations
+from functools import reduce
 import numpy as np
 import numpy.linalg as LA
 import matplotlib.pyplot as plot
@@ -130,7 +131,7 @@ class Alignment:
 class GotoLight:
     """Fitness function for the light follower task."""
     def __init__(self):
-        self.required_info = ("generation", "robot:position", "robot:orientation", "light_source:position")
+        self.required_info = ("robot:position", "robot:orientation", "light_source:position")
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -147,7 +148,7 @@ class GotoLight:
         robot_positions = np.stack(info["robot:position"]).copy()
         light_positions = np.stack(info["light_source:position"]).copy()
         fitness = 0
-        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):     
+        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):   
             #* Considering only 1 light
             light_pos = light_pos.flatten()
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
@@ -157,19 +158,87 @@ class GotoLight:
             #* Distance of every robot to the nearest neighbor
             distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
                                 for i, pos_i in enumerate(pos)])
-            fA = (distances < 1.5).mean() * (np.sum(distances < 1.5) > 1)
+            fA = (distances < 1).mean() * (np.sum(distances < 1) > 1)
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()g
             fitness += fA# * fB * fC
         return (fitness / len(states)) + 1e-5
 
+@fitness_func_registry(name='transport_cubes')
+class TransportCubesFitness:
+    """Fitness function for the light follower task."""
+    def __init__(self):
+        self.required_info = ("robot:position", "robot:orientation",
+                            "light_source:position@color=yellow",
+                            "cube:position", "ground_area:position",
+                            "ground_area:radius", "cube:is_grasped")
+
+    def __call__(self, actions, states, info=None):
+        """Computes the fitness function based on trial actions and states.
+        Additionally, other useful variables can be used from info dict (if specified in init).
+        =======================================================================================
+        - Args:
+            actions [list of dicts]: list of dictionaries with actuator names and the 
+                    corresponding action.
+            states [list of dicts]: list of dictionaries with sensor names and the 
+                    corresponding measured states.
+            info [dict or None]: dict of additional information.
+        =======================================================================================
+        """
+        
+        robot_positions = np.stack(info["robot:position"]).copy()
+        cube_positions = np.stack(info["cube:position"]).copy()
+        ground_area_pos = info["ground_area:position"][0]
+        ground_area_rad = info["ground_area:radius"][0][0]#Second index supposes all ground areas have same area.
+        light_source_pos = info["light_source:position@color=yellow"][0].flatten()
+        cubes_grasped = info["cube:is_grasped"][-1]
+        #* Correct area is the one with light source above
+        correct_area_idx = np.argmin(LA.norm(ground_area_pos[:, :2] - light_source_pos[:2], axis=1))
+        correct_area = ground_area_pos[correct_area_idx]
+        wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
+        n_cubes_correct = np.sum([not is_grasped and LA.norm(cube_pos - correct_area) <= ground_area_rad\
+                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
+        n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
+                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
+        mask_dist_moved = LA.norm(cube_positions[-1] - correct_area, axis=1) < LA.norm(cube_positions[0] - correct_area, axis=1)
+        dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
+        dist_moved[dist_moved < 0.1] = 0.
+        mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
+        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved)
+        return fitness + 1e-5
+
+
+@fitness_func_registry(name='task_switching')
+class TaskSwitching:
+    """Fitness function for the exploration task."""
+    def __init__(self):
+        self.tasks = [GotoLight(), TransportCubesFitness()]
+        #! Add current task info
+        self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+
+
+    def __call__(self, actions, states, info=None):
+        tasks = np.array(info['task_scheduler:current_task']).flatten()
+        task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
+        fitness = 0
+        for i, tsk_sw in enumerate(task_switch):
+            tsk = tasks[tsk_sw]
+            init_instant = task_switch[i-1] if i > 0 else 0
+            last_instant = tsk_sw + 1
+            task_actions = np.array(actions)[init_instant:last_instant]
+            task_states = np.array(states)[init_instant:last_instant]
+            task_info = {key : np.array(values)[init_instant:last_instant] if key != 'generation' else values for key, values in info.items()}
+            fitness *= self.tasks[tsk](task_actions, task_states, info=task_info)
+        import pdb; pdb.set_trace()
+
+
 @fitness_func_registry(name='multi_lights')
 class MultipleLights:
     """Fitness function for the light follower task."""
     def __init__(self):
-        self.required_info = ("generation", "robot:position", "robot:orientation", 
-                            "light_source:position@color=green", "light_source:position@color=red", 
+        self.required_info = ("generation", "robot:position", "robot:orientation",
+                            "light_source:position@color=green", "light_source:position@color=red",
                             "light_source:position@color=yellow")
 
     def __call__(self, actions, states, info=None):
@@ -206,51 +275,6 @@ class MultipleLights:
             # fB = np.mean(distances_robots > 0.4)
             fitness += fA
         return (fitness / len(states)) + 1e-5
-
-
-@fitness_func_registry(name='transport_cubes')
-class TransportCubesFitness:
-    """Fitness function for the light follower task."""
-    def __init__(self):
-        self.required_info = ("generation", "robot:position", "robot:orientation",
-                            "light_source:position@color=yellow",
-                            "cube:position", "ground_area:position@t=1",
-                            "ground_area:radius@t=1", "cube:is_grasped")
-
-    def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states.
-        Additionally, other useful variables can be used from info dict (if specified in init).
-        =======================================================================================
-        - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
-                    corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
-                    corresponding measured states.
-            info [dict or None]: dict of additional information.
-        =======================================================================================
-        """
-        
-        robot_positions = np.stack(info["robot:position"]).copy()
-        cube_positions = np.stack(info["cube:position"]).copy()
-        ground_area_pos = info["ground_area:position@t=1"][0]
-        ground_area_rad = info["ground_area:radius@t=1"][0][0]#Second index supposes all ground areas have same area.
-        light_source_pos = info["light_source:position@color=yellow"][0].flatten()
-        cubes_grasped = info["cube:is_grasped"][-1]
-        #* Correct area is the one with light source above
-        correct_area_idx = np.argmin(LA.norm(ground_area_pos[:, :2] - light_source_pos[:2], axis=1))
-        correct_area = ground_area_pos[correct_area_idx]
-        wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
-        n_cubes_correct = np.sum([not is_grasped and LA.norm(cube_pos - correct_area) <= ground_area_rad\
-                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
-        n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
-                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
-        mask_dist_moved = LA.norm(cube_positions[-1] - correct_area, axis=1) < LA.norm(cube_positions[0] - correct_area, axis=1)
-        dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
-        dist_moved[dist_moved < 0.1] = 0.
-        mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
-        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved)
-        return fitness + 1e-5
-
 
 # @fitness_func_registry(name='exploration')
 # class Exploration:

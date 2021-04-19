@@ -4,14 +4,16 @@
         "dt" : 0.1,
         "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
-            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
-            "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
-            "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"},
-            "I6" : {"n" : 4, "sensor" : "color_sensor"},
-            "I7" : {"n" : 1, "sensor" : "ground_sensor"},
-            "I8" : {"n" : 1, "sensor" : "object_grasped_sensor"}
+            "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
+            "I2" : {"n" : 4, "sensor" : "red_light_sensor"},
+            "I3" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I4" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
+            "I5" : {"n" : 1, "sensor" : "IR_receiver:state"},
+            "I6" : {"n" : 4, "sensor" : "distance_sensor3D"},
+            "I7" : {"n" : 4, "sensor" : "color_sensor"},
+            "I8" : {"n" : 1, "sensor" : "ground_sensor"},
+            "I9" : {"n" : 1, "sensor" : "object_grasped_sensor"},
+            "I10" : {"n" : 1, "sensor" : "task_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -37,6 +39,8 @@
             "I6-H1" : {"pre":"I6","post":"H1", "trainable":true, "p":1.0},
             "I7-H1" : {"pre":"I7","post":"H1", "trainable":true, "p":1.0},
             "I8-H1" : {"pre":"I8","post":"H1", "trainable":true, "p":1.0},
+            "I9-H1" : {"pre":"I9","post":"H1", "trainable":true, "p":1.0},
+            "I10-H1" : {"pre":"I10","post":"H1", "trainable":true, "p":1.0},
 
             "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":1.0},
             "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
@@ -63,7 +67,7 @@
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
-        "fitness_function" : "transport_cubes",
+        "fitness_function" : "task_switching",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -91,15 +95,17 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 3,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
+                    "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20},
+                    "red_light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 2},
                     "object_grasped_sensor" : {},
-                    "ground_sensor" : {}
+                    "ground_sensor" : {},
+                    "task_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
@@ -132,11 +138,25 @@
             },
             "cube_blue" : {
                 "type" : "cube",
-                "num_instances": 6,
+                "num_instances": 4,
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -1], "high" : [1, 2], "size" : 2}}
                 },
                 "params" : {"mass" : 0.1, "side_len" : 0.2, "color" : "blue"}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "controller" : "light_orbit_controller",
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low":-1, "high" : 1, "size" : 2}}
+                },
+                "params" : {"range" : 20, "color" : "red"}
+            }, 
+            "task_scheduler" : {
+                "type" : "task_scheduler",
+                "num_instances": 1,
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1000}
             }
         }
     }

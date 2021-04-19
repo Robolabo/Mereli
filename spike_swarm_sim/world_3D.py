@@ -78,7 +78,6 @@ class World(object):
                 if self.t > 0 and self.reward_generator is not None else None
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
-            
             if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
                 obj.step(self.neighborhood(obj))
                 continue
@@ -130,13 +129,18 @@ class World(object):
         if ann_topology.get('learning_rule', {}).get('reward') is not None:
             self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
         for obj_name, obj in world_dict['objects'].items():
+            object_cls = world_objects[engine][obj['type']]
+            #! Prov implementation
+            if object_cls.__name__ == 'TaskScheduler':
+                world_obj = object_cls(**obj['params'])
+                self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
+                continue
             #* Create group intializer.
             self.initializers[obj_name] = {
                 key :  InitializerHandler(initializers[value['name']](obj['num_instances'],
                         **value['params']), engine, key)\
                         for key, value in obj['initializers'].items()
             }
-            object_cls = world_objects[engine][obj['type']]
             entity_positions = self.initializers[obj_name]['positions']()
             #! OJO cambiar esto!!!! (lo de robot, robot3D)
             if issubclass(object_cls, Robot) or issubclass(object_cls, Robot3D):
@@ -186,7 +190,7 @@ class World(object):
         self.run_initializers(seed=seed)
         #* Reset objects
         for obj in self.hierarchy.values():
-            obj.reset()
+            obj.reset(seed=seed)
            
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
