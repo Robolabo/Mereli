@@ -101,7 +101,7 @@ class Robot3D(WorldObject3D):
                 for sensor_name, sensor in self.sensors.items()}
 
 
-    def reset(self):
+    def reset(self, seed=None):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
         can be randomly initialized or fixed. In the former case a seed can be specified.

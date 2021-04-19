@@ -1,5 +1,5 @@
 from functools import wraps
-from spike_swarm_sim.objects import WorldObject3D
+from spike_swarm_sim.objects.world_object import WorldObject3D, WorldObject, WorldObject2D
 
 # Set of registers for easing class and function automatic discovery
 world_objects = {'2D' : {}, '3D' : {}}
@@ -22,8 +22,13 @@ rewards = {}
 def world_object_registry(*args, **kwargs):
     def wrapper(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        # if name == 'task_scheduler': import pdb; pdb.set_trace()
         engine = '3D' if issubclass(cls, WorldObject3D) else '2D'
         world_objects[engine][name] = cls
+        if all([not issubclass(cls, WorldObject3D), 
+                not issubclass(cls, WorldObject2D), 
+                issubclass(cls, WorldObject)]):
+            world_objects['3D'][name] = cls # Add to both 
         return cls
     return wrapper
 

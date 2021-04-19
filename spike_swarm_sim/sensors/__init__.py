@@ -10,4 +10,5 @@ from .food_sensor import FoodSensor, FoodAreaSensor, NestSensor
 from .ground_sensor import GroundSensor
 from .color_sensor import ColorSensor
 from .joint_sensor import JointPositionSensor, JointVelocitySensor
+from .task_sensor import TaskSensor
 from .utils import *

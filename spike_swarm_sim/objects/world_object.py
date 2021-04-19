@@ -53,7 +53,7 @@ class WorldObject(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def reset(self):
+    def reset(self, seed=None):
         raise NotImplementedError
 
     @abstractproperty
@@ -138,7 +138,7 @@ class WorldObject3D(WorldObject):
     def step(self):
         raise NotImplementedError
     
-    def reset(self):
+    def reset(self, seed=None):
         raise NotImplementedError
 
     def add_physics(self, physics_client, scaling=1.):
