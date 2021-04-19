@@ -20,5 +20,5 @@ class Wall(WorldObject3D):
             root.findall(".//link/collision/geometry/box")[0].attrib['size'] = '{} {} 2'.format(self.width, self.height)
             tree.write(open("spike_swarm_sim/objects/urdf/tmp/wall_{}x{}x2.urdf".format(self.width, self.height), 'wb'))
 
-    def reset(self):
+    def reset(self, seed=None):
         pass

@@ -23,7 +23,7 @@ class Ball(WorldObject3D):
     def step(self, world_dict):
         pass
 
-    def reset(self):
+    def reset(self, seed=None):
         pass
 
 
@@ -49,7 +49,7 @@ class Cube(WorldObject3D):
     def step(self, world_dict):
         pass
 
-    def reset(self):
+    def reset(self, seed=None):
         self.is_grasped = False
 
 @world_object_registry(name='ground_area')
@@ -65,5 +65,5 @@ class GroundArea(WorldObject3D):
         color = list(colors.to_rgb(self.color)) + [1.]
         p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
         
-    def reset(self):
+    def reset(self, seed=None):
         pass

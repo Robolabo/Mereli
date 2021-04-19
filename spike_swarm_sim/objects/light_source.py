@@ -31,7 +31,7 @@ class LightSource3D(WorldObject3D):
                 self.position = self.controller.step(self.position)
         return (0, 0)
 
-    def reset(self):
+    def reset(self, seed=None):
         self.shadow_id = None
         if self.controller is not None:
             self.controller.reset()
