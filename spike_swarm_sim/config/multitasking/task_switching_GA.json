@@ -21,7 +21,7 @@
             "H_ls" : {"n" : 10, "params" : {}},
             "H_comm" : {"n" : 10, "params" : {}},
             "H_cubes" : {"n" : 10, "params" : {}},
-            "H" : {"n" : 20, "params" : {}},
+            "H" : {"n" : 10, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
@@ -82,7 +82,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 2000,
+        "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching",
         "populations" : {
@@ -173,7 +173,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000}
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1000}
             }
         }
     }
