@@ -131,7 +131,7 @@ class Alignment:
 class GotoLight:
     """Fitness function for the light follower task."""
     def __init__(self):
-        self.required_info = ("robot:position", "robot:orientation", "light_source:position")
+        self.required_info = ("robot:position", "robot:orientation", "light_source:position@color=red")
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -146,7 +146,7 @@ class GotoLight:
         =======================================================================================
         """
         robot_positions = np.stack(info["robot:position"]).copy()
-        light_positions = np.stack(info["light_source:position"]).copy()
+        light_positions = np.stack(info["light_source:position@color=red"]).copy()
         fitness = 0
         for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):   
             #* Considering only 1 light
