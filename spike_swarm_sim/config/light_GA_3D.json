@@ -85,7 +85,7 @@
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 4}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
