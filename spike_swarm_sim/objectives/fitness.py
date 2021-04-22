@@ -220,7 +220,7 @@ class TaskSwitching:
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
         task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
-        fitness = 0
+        fitness = 1
         for i, tsk_sw in enumerate(task_switch):
             tsk = tasks[tsk_sw]
             init_instant = task_switch[i-1] if i > 0 else 0
