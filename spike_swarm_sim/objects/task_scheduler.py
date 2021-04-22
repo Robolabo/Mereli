@@ -1,7 +1,9 @@
 import numpy as np
+import pybullet as p
 from spike_swarm_sim.objects.world_object import WorldObject
 from spike_swarm_sim.register import world_object_registry
 from spike_swarm_sim.utils import increase_time
+from spike_swarm_sim.globals import global_states
 
 @world_object_registry(name='task_scheduler')
 class TaskScheduler(WorldObject):
@@ -20,7 +22,9 @@ class TaskScheduler(WorldObject):
 
     def step(self, neighborhood):
         self.t += 1
-        # print(self.t, self.current_task)
+        # if global_states.RENDER:
+            # p.addUserDebugText(str(self.t, (0,0,3), textColorRGB=(0,0,0), textSize=1)
+        # print(self.t, ('Lights', 'Cubes')[self.current_task])
 
     def controllable(self):
         return True
