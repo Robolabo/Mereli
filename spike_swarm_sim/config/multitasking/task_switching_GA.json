@@ -18,7 +18,7 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H" : {"n" : 20, "params" : {}},
+            "H" : {"n" : 30, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
@@ -78,8 +78,8 @@
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [3,  1.5, 1.25],
-                "min_vals" : [-3, -1.5, -0.8],
+                "max_vals" : [4,  1.5, 1.25],
+                "min_vals" : [-4, -1.5, -0.8],
                 "params" : {
                     "encoding" : "real",
                     "selection_operator" : "tournament",
@@ -87,8 +87,8 @@
                     "mutation_operator" : "gaussian",
                     "mating_operator" : "random",
                     "mutation_prob" : 0.1,
-                    "crossover_prob" : 0.9,
-                    "num_elite" : 5
+                    "crossover_prob" : 1,
+                    "num_elite" : 10
                 }
             }          
         }
@@ -109,7 +109,7 @@
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
                     "object_grasped_sensor" : {},
                     "ground_sensor" : {},
                     "task_sensor" : {}

@@ -205,7 +205,7 @@ class TransportCubesFitness:
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         dist_moved[dist_moved < 0.1] = 0.
         mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
-        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved)
+        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved) / 3
         return fitness + 1e-5
 
 
@@ -223,11 +223,12 @@ class TaskSwitching:
         fitness = 1
         for i, tsk_sw in enumerate(task_switch):
             tsk = tasks[tsk_sw]
-            init_instant = task_switch[i-1] if i > 0 else 0
+            init_instant = task_switch[i - 1] if i > 0 else 0
             last_instant = tsk_sw + 1 if i < len(task_switch) - 1 else tsk_sw
             task_actions = np.array(actions)[init_instant:last_instant]
             task_states = np.array(states)[init_instant:last_instant]
-            task_info = {key : np.array(values)[init_instant:last_instant] if key != 'generation' else values for key, values in info.items()}
+            task_info = {key : np.array(values)[init_instant:last_instant]\
+                if key != 'generation' else values for key, values in info.items()}
             fitness *= self.tasks[tsk](task_actions, task_states, info=task_info)
         return fitness + 1e-5
 
