@@ -18,7 +18,7 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H" : {"n" : 30, "params" : {}},
+            "H" : {"n" : 20, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
