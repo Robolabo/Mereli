@@ -178,5 +178,6 @@ class InterfaceFactory:
             'xNES' : GeneticInterface(neural_net),
             'CMA_ES' : GeneticInterface(neural_net),
             'OpenAI_ES' : GeneticInterface(neural_net),
-            'NEAT' : NEATInterface(neural_net)
+            'NEAT' : NEATInterface(neural_net),
+            'BenchmarkNEAT' : NEATInterface(neural_net)
         }[algorithm]

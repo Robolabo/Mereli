@@ -4,5 +4,6 @@ from .xnes import xNES
 from .snes import SNES
 from .neat import NEAT
 from .openai_es import OpenAI_ES
+from .benchmark_neat import BenchmarkNEAT
 from .operators import *
 from .species import Species
