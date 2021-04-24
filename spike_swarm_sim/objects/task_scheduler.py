@@ -24,7 +24,7 @@ class TaskScheduler(WorldObject):
         self.t += 1
         # if global_states.RENDER:
             # p.addUserDebugText(str(self.t, (0,0,3), textColorRGB=(0,0,0), textSize=1)
-        # print(self.t, ('Lights', 'Cubes')[self.current_task])
+        print(self.t, ('Lights', 'Cubes')[self.current_task])
 
     def controllable(self):
         return True
