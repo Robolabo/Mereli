@@ -158,7 +158,7 @@ class GotoLight:
             #* Distance of every robot to the nearest neighbor
             distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
                                 for i, pos_i in enumerate(pos)])
-            fA = (distances < 1).mean() * (np.sum(distances < 1) > 1)
+            fA = (distances < 0.5).mean() * (np.sum(distances < .5) > 1)
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()g
@@ -220,7 +220,7 @@ class TaskSwitching:
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
         task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
-        fitness = 1
+        fitness_tasks = []
         for i, tsk_sw in enumerate(task_switch):
             tsk = tasks[tsk_sw]
             init_instant = task_switch[i - 1] if i > 0 else 0
@@ -229,7 +229,9 @@ class TaskSwitching:
             task_states = np.array(states)[init_instant:last_instant]
             task_info = {key : np.array(values)[init_instant:last_instant]\
                 if key != 'generation' else values for key, values in info.items()}
-            fitness *= self.tasks[tsk](task_actions, task_states, info=task_info)
+            fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
+        # fitness = np.prod(fitness_tasks) #* Product combination
+        fitness = np.mean(fitness_tasks) 
         return fitness + 1e-5
 
 
