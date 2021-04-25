@@ -2,13 +2,12 @@
     "checkpoint_file" : "chk_task_switching_GA_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 1,
+        "time_scale" : 20,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "red_light_sensor"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:msg"},
             "I4" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
-            "I5" : {"n" : 1, "sensor" : "IR_receiver:state"},
             "I6" : {"n" : 4, "sensor" : "distance_sensor3D"},
             "I7" : {"n" : 4, "sensor" : "color_sensor"},
             "I8" : {"n" : 1, "sensor" : "ground_sensor"},
@@ -21,14 +20,12 @@
             "H" : {"n" : 20, "params" : {}},
             "H2" : {"n" : 10, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
-            "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_GRASP" : {"n" : 3, "params" : {}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"},
             "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
@@ -36,7 +33,6 @@
 
             "I3-H" : {"pre":"I3","post":"H", "trainable":true, "p":1.0},
             "I4-H" : {"pre":"I4","post":"H", "trainable":true, "p":1.0},
-            "I5-H" : {"pre":"I5","post":"H", "trainable":true, "p":1.0},
             "I6-H" : {"pre":"I6","post":"H", "trainable":true, "p":1.0},
 
 
@@ -55,19 +51,16 @@
 
 
             "H2-MOT" : {"pre":"H2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "H2-ST" : {"pre":"H2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
             "H2-COMM" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
             "H2-GRASP" : {"pre":"H2","post":"OUT_GRASP", "trainable":true, "p":1.0},
 
             "MOT-H1" : {"pre":"OUT_MOT","post":"H", "trainable":true, "p":1.0},
             "COMM-H1" : {"pre":"OUT_COMM","post":"H", "trainable":true, "p":1.0},
-            "ST-H1" : {"pre":"OUT_COMM_STATE","post":"H", "trainable":true, "p":1.0},
             "GRASP-H1" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
             "outD" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : true}}   
         } 
     },
