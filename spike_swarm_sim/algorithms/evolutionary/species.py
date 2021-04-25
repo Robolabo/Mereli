@@ -49,7 +49,7 @@ class Species:
         W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(len(weights_genotype))
         # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
         #         + self.c3 * W_dist
-        dist = 2 * self.c1 * len(diff_genes) + self.c3 * W_dist
+        dist = 2 * self.c1 * len(diff_genes) / max(len(repr_innovations), len(genotype_innovations)) + self.c3 * W_dist
         
         return dist < self.compatib_thresh, dist
 
