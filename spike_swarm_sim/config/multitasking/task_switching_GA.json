@@ -77,7 +77,7 @@
         "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 900,
-        "num_evaluations" : 5,
+        "num_evaluations" : 4,
         "fitness_function" : "multiple_tasks",
         "populations" : {
             "p1" : {
@@ -90,7 +90,7 @@
                     "crossover_operator" : "blxalpha",
                     "mutation_operator" : "gaussian",
                     "mating_operator" : "random",
-                    "mutation_prob" : 0.01,
+                    "mutation_prob" : 0.05,
                     "crossover_prob" : 1,
                     "num_elite" : 10
                 }
@@ -167,7 +167,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 1000}
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 2000}
             }
         }
     }

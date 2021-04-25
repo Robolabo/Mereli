@@ -2,55 +2,38 @@
     "checkpoint_file" : "chk_light_NEAT_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 20,
+        "time_scale" : 30,
         "stimuli": { 
-            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
-            "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"},
+            "I5" : {"n" : 1, "sensor" : "IR_receiver:signal"},
             "I1" : {"n" : 4, "sensor" : "light_sensor3D"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
-            "OUT_ST" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_COMM" : {"n" : 4, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
         },
         "synapses" :  {
             "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I2-MOT" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I4-MOT" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I5-MOT" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
     
             "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I4-COMM" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
-
-            "I1-ST" : {"pre":"I1","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I2-ST" : {"pre":"I2","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I3-ST" : {"pre":"I3","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I4-ST" : {"pre":"I4","post":"OUT_ST", "trainable":true, "p":1.0},
-            "I5-ST" : {"pre":"I5","post":"OUT_ST", "trainable":true, "p":1.0}
+            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}}
-        },
-        "learning_rule" : { 
-            "rule" : "generalized_hebbian",
-            "reward" : null
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         }
-
     },
     "algorithm" : {
         "name" : "NEAT",
@@ -91,18 +74,18 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 3}
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 4, "selection_scheme" : "random"},
+                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 4}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":2}
+                    "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":4, "K" : 2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2], "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 2], "stimuli" : "light_sensor3D"}},
                 "params" : {"trainable" : true}
             },            
             "light_red" : {

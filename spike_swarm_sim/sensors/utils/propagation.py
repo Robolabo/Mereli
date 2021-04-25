@@ -68,7 +68,6 @@ class ExpDecayPropagation(Propagation):
         return np.exp(- self.rho_att * rho) * np.exp(-self.phi_att * phi)
 
 
-
 class RSSI_Propagation(Propagation):
     """ 
     """
