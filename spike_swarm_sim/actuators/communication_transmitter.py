@@ -16,16 +16,18 @@ class CommunicationTransmitter(Actuator):
         quantize [bool] : whether to quantize the message to a set of possible 
                 symbols or not.
     """
-    def __init__(self, *args, range=120, msg_length=1, quantize=True, **kwargs):
+    def __init__(self, *args, range=2, msg_length=1, quantize=True, K=4, avoid_zero=False, **kwargs):
         super(CommunicationTransmitter, self).__init__(*args, **kwargs)
         self.channel = 0
         self.msg_length = msg_length
         self.range = range
         self.quantize = quantize
+        self.K = K
+        self.avoid_zero = avoid_zero #TODO Ignore symbol (0,...,0)^T
         if self.quantize:
             self.clusters = [centroid for centroid in \
                     zip(*map(lambda v: v.flatten(),\
-                    np.meshgrid(*[np.linspace(0, 1, 4) for _ in np.arange(self.msg_length)])))]
+                    np.meshgrid(*[np.linspace(0, 1, self.K) for _ in np.arange(self.msg_length)])))]
             self.clusters = np.array(self.clusters)
         self.frame = None
         self.reset()
