@@ -158,7 +158,7 @@ class GotoLight:
             #* Distance of every robot to the nearest neighbor
             distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
                                 for i, pos_i in enumerate(pos)])
-            fA = (distances < 0.5).mean() * (np.sum(distances < .5) > 1)
+            fA = (distances < 1).mean()# * (np.sum(distances < .5) > 1)
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()g
@@ -231,7 +231,22 @@ class TaskSwitching:
                 if key != 'generation' else values for key, values in info.items()}
             fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
         # fitness = np.prod(fitness_tasks) #* Product combination
-        fitness = np.mean(fitness_tasks) 
+        # import pdb; pdb.set_trace()
+        fitness = np.mean(fitness_tasks)
+        return fitness + 1e-5
+
+@fitness_func_registry(name='multiple_tasks')
+class MultitpleTasks:
+    def __init__(self):
+        self.tasks = [GotoLight(), TransportCubesFitness()]
+        #! Add current task info
+        self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+        
+    def __call__(self, actions, states, info=None):
+        task = np.array(info['task_scheduler:current_task']).flatten()[0]
+        fA = self.tasks[0](actions, states, info=info)
+        fB = self.tasks[1](actions, states, info=info)
+        fitness = fA * (1 - fB) if task == 0 else fB * (1 - fA)
         return fitness + 1e-5
 
 
