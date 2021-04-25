@@ -18,8 +18,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from spike_swarm_sim.algorithms.interfaces import InterfaceFactory
 from spike_swarm_sim.utils import flatten_dict, DataLogger, without_duplicates
-from  spike_swarm_sim.sensors.utils import list_sensors
-from  spike_swarm_sim.actuators.utils import list_actuators     
+from spike_swarm_sim.sensors.utils import list_sensors
+from spike_swarm_sim.actuators.utils import list_actuators
 from spike_swarm_sim.globals import global_states          
 from spike_swarm_sim import MultiWorldWrapper, World3D
 
@@ -57,7 +57,6 @@ def get_info(names, world):
         }.get(condition.split('=')[0], True), objects.values())
         return np.array([getattr(v, obj_var) for v in objects if hasattr(v, obj_var)])
     return np.array([getattr(v, obj_var) for v in objects.values() if hasattr(v, obj_var)])
-
 
 
 #!
