@@ -23,9 +23,11 @@ class TaskScheduler(WorldObject):
     def step(self, neighborhood):
         if global_states.RENDER:
             if self.t == 0:
-                self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), textColorRGB=(0,0,0), textSize=1, )
+                self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), 
+                                textColorRGB=(0,0,0), textSize=1, )
             else:
-                self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), textColorRGB=(0,0,0), textSize=1, replaceItemUniqueId=self.label_id)
+                self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), 
+                                textColorRGB=(0,0,0), textSize=1, replaceItemUniqueId=self.label_id)
         # print(self.t, ('Lights', 'Cubes')[self.current_task])
         self.t += 1
 

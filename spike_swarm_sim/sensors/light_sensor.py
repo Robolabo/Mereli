@@ -51,7 +51,7 @@ class LightSensor3D(DirectionalSensor):
         super(LightSensor3D, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 3 * np.pi / self.n_sectors
-        self.propagation = ExpDecayPropagation(rho_att=0.2, phi_att=1)
+        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)
     
     def _target_filter(self, obj):
         """ Filtering of potential target WorldObjects. 

@@ -2,7 +2,7 @@
     "checkpoint_file" : "chk_task_switching_GA_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 20,
+        "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "red_light_sensor"},
@@ -76,9 +76,9 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 1800,
-        "num_evaluations" : 1,
-        "fitness_function" : "task_switching",
+        "evaluation_steps" : 900,
+        "num_evaluations" : 5,
+        "fitness_function" : "multiple_tasks",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -90,7 +90,7 @@
                     "crossover_operator" : "blxalpha",
                     "mutation_operator" : "gaussian",
                     "mating_operator" : "random",
-                    "mutation_prob" : 0.06,
+                    "mutation_prob" : 0.01,
                     "crossover_prob" : 1,
                     "num_elite" : 10
                 }
@@ -106,7 +106,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 3,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
@@ -167,7 +167,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1800}
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 1000}
             }
         }
     }
