@@ -1,3 +1,4 @@
+import os
 import logging
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,19 +9,68 @@ import matplotlib.patches as mpatches
 import seaborn as sns
 from sklearn.decomposition import PCA
 import networkx as nx
+import graphviz
 
-def plot_ann_graph(neural_net):
-    G_ann = nx.DiGraph()
-    ens_dict = {key : i for i, key in enumerate(neural_net.input_ensemble_names + neural_net.ensemble_names)}
-    for name, node in neural_net.graph['inputs'].items():
-        G_ann.add_node(name, input=True, motor=False, ensemble=ens_dict[node['ensemble']])
-    for name, node in neural_net.graph['neurons'].items():
-        G_ann.add_node(name, input=False, motor=node['is_motor'], ensemble=ens_dict[node['ensemble']])
-    for name, conn in neural_net.graph['synapses'].items():
-        G_ann.add_edge(conn['pre'], conn['post'])
-    nodes_pos = nx.drawing.layout.multipartite_layout(G_ann, subset_key='ensemble')
-    nx.draw(G_ann, nodes_pos)
-    plt.show()
+# def plot_ann_graph(neural_net):
+#     G_ann = nx.DiGraph()
+#     ens_dict = {key : i for i, key in enumerate(neural_net.input_ensemble_names + neural_net.ensemble_names)}
+#     for name, node in neural_net.graph['inputs'].items():
+#         G_ann.add_node(name, input=True, motor=False, ensemble=ens_dict[node['ensemble']])
+#     for name, node in neural_net.graph['neurons'].items():
+#         G_ann.add_node(name, input=False, motor=node['is_motor'], ensemble=ens_dict[node['ensemble']])
+#     for name, conn in neural_net.graph['synapses'].items():
+#         G_ann.add_edge(conn['pre'], conn['post'])
+#     nodes_pos = nx.drawing.layout.multipartite_layout(G_ann, subset_key='ensemble')
+#     nx.draw(G_ann, nodes_pos)
+#     plt.show()
+
+
+def plot_ann_graph(neural_net, filename=None):
+    
+    node_attrs = {
+        'shape': 'circle',
+        'fontsize': '5',
+        'height': '0.2',
+        'width': '0.2',
+        'style': 'filled',}
+    graph = graphviz.Digraph()# node_attr=node_attrs)
+    # graph.attr(rankdir='BT', size='5,5') #,splines='line', size='6,6',nodesep='0.8')
+    graph.attr(rankdir='LR',size='6,6',)
+    graph.attr('node', shape='circle', style='filled',fixedsize='true')
+    with graph.subgraph(name='inputs') as subG:
+        for in_name in neural_net.graph['inputs'].keys():
+            subG.attr( rank='same', nodesep='0.1', constrain='false', rankdir='TB')
+            subG.node_attr.update(fillcolor='cadetblue1')
+            subG.node(in_name)
+    
+    for ensemble in neural_net.ensemble_names:
+        if ensemble not in neural_net.motor_ensemble_names:
+            with graph.subgraph(name=ensemble) as subG:
+                # subG.attr(label=ensemble, rank='same')
+                subG.node_attr.update(fillcolor='darkseagreen1')
+                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                    subG.node(mot_name)
+    for ensemble in neural_net.ensemble_names:
+        if ensemble in neural_net.motor_ensemble_names:
+            with graph.subgraph(name=ensemble) as subG:
+                subG.attr(rank='same', constrain='false')
+                subG.node_attr.update(fillcolor='red', constrain='false', rankdir='TB')
+                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                    subG.node(mot_name)
+    for conn_name, conn in neural_net.graph['synapses'].items():
+        conn_attr = {
+            # 'style' : 'normal' if conn['weight'] >= 0 else 'dot',
+            # 'color' : 'blue' if conn['weight'] >= 0 else 'red',
+            'penwidth' : '0.1',#str(np.abs(conn['weight']) / 3),
+            'arrowsize' : '0.2',
+            #'weight' : str(np.abs(conn['weight'])),
+
+        }
+        graph.edge(conn['pre'], conn['post'],)#fontsize='9'#,**conn_attr)
+    if filename is None:
+        filename = 'ann_plot'
+    graph.view('tmp/' + filename)
+    import pdb; pdb.set_trace()
 
 def plot_state_plane(neural_net, t_start=0, t_end=500,\
     n_pc=3, downsampled=False, fig=None):
