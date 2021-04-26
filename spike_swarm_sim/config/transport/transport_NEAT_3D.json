@@ -60,7 +60,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 1200,
         "num_evaluations" : 1,
         "fitness_function" : "transport_cubes",
         "populations" : {
@@ -70,10 +70,10 @@
                 "min_vals" : [-3, -2, -0.8],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.5,
+                    "p_weight_mut" : 0.2,
                     "p_node_mut" : 0.05,
-                    "p_conn_mut" : 0.2,
-                    "compatib_thresh" : 0.5,
+                    "p_conn_mut" : 0.3,
+                    "compatib_thresh" : 0.35,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 0.5

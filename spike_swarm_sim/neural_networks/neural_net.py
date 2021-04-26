@@ -291,7 +291,8 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        if self.t == 0: self.init_w = self.weights.copy()
+        # plot_ann_graph(self)
+        # if self.t == 0: self.init_w = self.weights.copy()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))

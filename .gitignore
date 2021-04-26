@@ -9,3 +9,4 @@ scripts
 examples
 *.sh
 *.log
+tmp/*
