@@ -132,7 +132,7 @@
             },
             "cube_blue" : {
                 "type" : "cube",
-                "num_instances": 6,
+                "num_instances": 3,
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -1], "high" : [1, 2], "size" : 2}}
                 },
