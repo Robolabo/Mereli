@@ -39,13 +39,16 @@ def compute_spawn(species, pop_size, min_species_size):
     total_spawn = sum(spawn_amounts)
     norm = pop_size / total_spawn
     spawn_amounts = [max(min_species_size, int(round(n * norm))) for n in spawn_amounts]
+    
+    while(sum(spawn_amounts) != pop_size):
+        spawn_amounts[np.random.choice(len(species))] += (1, -1)[sum(spawn_amounts) > pop_size]
     return spawn_amounts
 
 class NEAT_Population(Population):
     """  
     """ 
     def __init__(self, *args, p_weight_mut=0.75, p_node_mut=0.08, p_conn_mut=0.1,
-                    compatib_thresh=2, c1=1, c2=1, c3=2, **kwargs):
+                compatib_thresh=2, c1=1, c2=1, c3=2, species_elites=0, **kwargs):
         super(NEAT_Population, self).__init__(*args, **kwargs)
         self.p_weight_mut = p_weight_mut
         self.p_node_mut = p_node_mut
@@ -54,6 +57,7 @@ class NEAT_Population(Population):
         self.c1 = c1
         self.c2 = c2
         self.c3 = c3
+        self.species_elites = species_elites
         self.species_count = 1
         # list of existing species. 1 species at first.
         self.species = []
@@ -74,6 +78,10 @@ class NEAT_Population(Population):
         - Returns: None
         ==================================================================================
         """
+
+        # #!
+        # fitness_vector = np.random.random(len(fitness_vector))
+        # #!
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
 
@@ -82,43 +90,23 @@ class NEAT_Population(Population):
             spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id]
             spc.update_stats(np.array(spc_fitness))
 
-        #* DISABLED: Elites, 5 in total from most fit species with more than 5 genotypes.
-        num_elites = np.zeros(len(self.species), dtype=int)
-        # for i, spc in sorted(enumerate(self.species), key=lambda x: x[1].fitness_sum['adjusted'])[::-1]:
-        #     if spc.num_genotypes > 5 and sum(num_elites) < 5:
-        #         num_elites[i] += 1
-        #         fittest = [gt for _, gt in sorted(zip(fitness_vector, self.population),
-        #                     key=lambda x: x[0])[::-1] if gt['species'] == spc.id][0]
-        #         offspring.append(fittest)
-
         #* Compute the number of offspring for each species
-        
-        # species_offsprings = []
-        total_size = self.pop_size # - sum(num_elites)
         species_offsprings = compute_spawn(self.species, self.pop_size, 2)
-        # sum_mean_fitnesses = sum([spc.mean_fitness['raw'] for spc in self.species])
-        # for spc_elites, spc in zip(num_elites, self.species):
-        #     # num_offspring = max(2, int(np.round(total_size * spc.mean_fitness['raw'] / sum_mean_fitnesses)))
-        #     prev_spc_size = spc.num_genotypes - spc_elites
-        #     num_offspring = compute_spawn(spc.mean_fitness['raw'] / sum_mean_fitnesses, prev_spc_size, total_size, min_species_size)
-        #     # num_offspring = int(0.5 * prev_spc_size + 0.5 * num_offspring)\
-        #     #         if np.abs(num_offspring - prev_spc_size) > 0 else prev_spc_size
-        #     species_offsprings.append(num_offspring)
-        while(sum(species_offsprings) != total_size):
-            species_offsprings[np.random.choice(len(self.species))] += (1, -1)[sum(species_offsprings) > total_size]
-        
+
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
             #* Filter out genotypes from species.
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
-            # if len(spc_genotypes) == 1: # If only one genotype in species, no crossover.
-            #     offspring.append(spc_genotypes[0])
-            #     continue
+            #* Apply species elitism
+            if self.species_elites > 0:
+                for _, (elite_gnt, _) in zip(range(self.species_elites), sorted(zip(spc_genotypes, spc_fitness), key=lambda x: x[1])[::-1]):
+                    n_offspring -= 1
+                    offspring.append(copy.deepcopy(elite_gnt))
             #* Truncate bests
-            n_sel = max(1, round(0.25 * len(spc_genotypes))) #! Truncate only 40% best. Note that implem is diff from GA!
+            n_sel = max(1, round(0.25 * len(spc_genotypes)))
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
-            parents_mating = np.random.choice(n_sel, size=n_offspring)
+            parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
             parents = [parents[idx] for idx in parents_mating] # shuffle parents
             fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
@@ -128,37 +116,12 @@ class NEAT_Population(Population):
                         offspring, self.input_nodes, self.current_innovation,
                         self.innovation_history, self.objects, p_weight_mut=self.p_weight_mut,
                         p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
-
-        #* Assign Species. Use representatives from the previous generation.
-        #* If a new species is created the current representative is the genotype 
-        #* that created it.
-        for species in self.species:
-            species.num_genotypes = 0
-        for genotype in offspring:
-            compatible, distances = zip(*[species.compatibility(genotype) for species in self.species])
-            if not any(compatible): #* create new species
-                self.species_count += 1
-                self.species.append(Species(self.species_count, generation, compatib_thresh=self.compatib_thresh,
-                                    c1=self.c1, c2=self.c2, c3=self.c3))
-                self.species[-1].num_genotypes += 1
-                self.species[-1].representative = copy.deepcopy(genotype)
-                genotype['species'] = self.species[-1].id
-            else:
-                # species_idx = np.random.choice(np.arange(len(self.species))[list(compatible)]) # Random
-                compatible_species = np.arange(len(self.species))[list(compatible)]
-                compatible_distances = np.array(distances)[list(compatible)]
-                species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
-                self.species[species_idx].num_genotypes += 1
-                genotype['species'] = self.species[species_idx].id
-
-        #! check extintion
-        for i, species in enumerate(self.species):
-            if species.num_genotypes == 0:
-                logging.info('Extint Species {}'.format(species.id))
-                self.species.pop(i)
-            else:
-                species.representative = copy.deepcopy(offspring[np.random.choice(\
-                    [n for n, g in enumerate(offspring) if g['species'] == species.id])])
+        #* Update popultation
+        self.population = offspring
+        if len(self.population) != self.pop_size:
+            logging.error('Population Size altered.')
+        #* Speciation
+        self.update_species(generation)
         logging.info('Num. species is {}'.format(len(self.species)))
 
         # #* Adaptive species thresh.
@@ -169,11 +132,44 @@ class NEAT_Population(Population):
         #     for sp in self.species:
         #         sp.compatib_thresh = self.compatib_thresh
                 
-        #* Update popultation
-        self.population = offspring
-        if len(self.population) != self.pop_size:
-            logging.error('Population Size altered.')
-        
+       
+    
+    def update_species(self, generation):
+        #* Assign Species. Use representatives from the previous generation.
+        #* If a new species is created the current representative is the genotype 
+        #* that created it.
+        for spc in self.species:
+            if len(spc.representative) > 0:
+                compatible, distances = zip(*[spc.compatibility(gnt) for gnt in self.population])
+                spc.representative = copy.deepcopy(self.population[np.argmin(distances)])
+            spc.num_genotypes = 0
+
+        for genotype in self.population:
+            compatible, distances = zip(*[spc.compatibility(genotype) for spc in self.species])
+            if not any(compatible): #* create new species
+                self.species_count += 1
+                new_species = Species(self.species_count, generation, compatib_thresh=self.compatib_thresh,
+                                    c1=self.c1, c2=self.c2, c3=self.c3)
+                new_species.num_genotypes += 1
+                new_species.representative = copy.deepcopy(genotype)
+                self.species.append(new_species)
+                genotype['species'] = new_species.id
+            else:
+                compatible_species = np.arange(len(self.species))[list(compatible)]
+                compatible_distances = np.array(distances)[list(compatible)]
+                species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
+                self.species[species_idx].num_genotypes += 1
+                genotype['species'] = self.species[species_idx].id
+
+        #* check extintion
+        for i, species in enumerate(self.species):
+            if species.num_genotypes == 0:
+                logging.info('Extint Species {}'.format(species.id))
+                self.species.pop(i)
+            # else:
+            #     species.representative = copy.deepcopy(self.population[np.random.choice(\
+            #         [n for n, g in enumerate(self.population) if g['species'] == species.id])])
+
     @property
     def min_vector(self):
         raise NotImplementedError
@@ -218,6 +214,7 @@ class NEAT_Population(Population):
                     self.current_innovation += 1
                 else:
                     conn['innovation'] = self.innovation_history[(conn['pre'], conn['post'])]
-        #* Assign species representative. There is only 1 species.
-        self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
-        self.species[0].num_genotypes = self.pop_size
+        #* Initial Speciation
+        self.update_species(0)
+        # self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
+        # self.species[0].num_genotypes = self.pop_size

@@ -33,16 +33,15 @@ class Species:
         ============================================================================
         """
         if self.representative is None or len(self.representative) == 0:
-            logging.error(Exception('Cannot compute compatibility of genotype '\
-                'to species if there is no species representative.'))
+            return (False, 1000.)
         repr_innovations = set([g['innovation'] for g in self.representative['connections'].values()])
         genotype_innovations = set([g['innovation'] for g in genotype['connections'].values()])
         # Do not care about disjoint and excess. For the moment we use same weights.
         diff_genes = genotype_innovations - repr_innovations
         common_genes = genotype_innovations.intersection(repr_innovations)
-        weights_repr = np.array([g['weight'] for g in self.representative['connections'].values() 
+        weights_repr = np.array([g['weight'] for g in self.representative['connections'].values()
                         if g['innovation'] in common_genes])
-        weights_genotype = np.array([g['weight'] for g in genotype['connections'].values() 
+        weights_genotype = np.array([g['weight'] for g in genotype['connections'].values()
                         if g['innovation'] in common_genes])
         assert len(weights_repr) == len(weights_genotype)
         # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK

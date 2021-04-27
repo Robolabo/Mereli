@@ -58,7 +58,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'pre' : genotype['connections'][sel_conn]['pre'],
             'post' : node_name,
             # Random weight but very close to zero (in the paper the authors propose w=0.5 fixed).
-            'weight': np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1),
+            'weight': np.clip(0.5 + np.random.randn() * 0.05, a_min=0, a_max=1),
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,
@@ -126,10 +126,10 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
                 else:
                     if 'learning_rule' in param:
                         for v in ['A', 'B', 'C', 'D']:
-                            conn['learning_rule'][v] += np.random.randn() * .1 
+                            conn['learning_rule'][v] += np.random.randn() * .01 
                             conn['learning_rule'][v] = np.clip(conn['learning_rule'][v], a_min=0, a_max=1)
                     else:
-                        conn[variable] += np.random.randn() * 0.1
+                        conn[variable] += np.random.randn() * 0.01
                         conn[variable] = np.clip(conn[variable], a_min=0, a_max=1)
     #* Connnections mutations
     for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):
