@@ -2,7 +2,7 @@
     "checkpoint_file" : "chk_task_switching_GA_3D",
     "topology" : {
         "dt" : 0.1,
-        "time_scale" : 20,
+        "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "red_light_sensor"},
@@ -69,7 +69,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 900,
+        "evaluation_steps" : 1200,
         "num_evaluations" : 4,
         "fitness_function" : "multiple_tasks",
         "populations" : {

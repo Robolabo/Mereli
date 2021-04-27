@@ -245,7 +245,7 @@ class MultitpleTasks:
     def __call__(self, actions, states, info=None):
         task = np.array(info['task_scheduler:current_task']).flatten()[0]
         fA = self.tasks[0](actions, states, info=info)
-        fB = self.tasks[1](actions, states, info=info)
+        fB = np.clip(self.tasks[1](actions, states, info=info), a_min=0, a_max=1)
         fitness = fA * (1 - fB) if task == 0 else fB * (1 - fA)
         return fitness + 1e-5
 

@@ -18,6 +18,7 @@ class TaskScheduler(WorldObject):
         self.task_order = None
         # self.task_switch = None
         self.t = 0
+        self.prev_tasks = []
 
 
     def step(self, neighborhood):
@@ -43,7 +44,10 @@ class TaskScheduler(WorldObject):
         if seed is not None:
             np.random.seed(seed)
         self.t = 0
-        self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        if seed is not None:
+            self.task_order = np.array([1 if seed % 2 != 0 else 0]) #np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        else:
+            self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
         if seed is not None:
             np.random.seed()
     
