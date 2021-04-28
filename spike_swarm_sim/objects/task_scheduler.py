@@ -29,7 +29,7 @@ class TaskScheduler(WorldObject):
             else:
                 self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), 
                                 textColorRGB=(0,0,0), textSize=1, replaceItemUniqueId=self.label_id)
-        # print(self.t, ('Lights', 'Cubes')[self.current_task])
+        print(self.t, ('Lights', 'Cubes')[self.current_task])
         self.t += 1
 
     def controllable(self):

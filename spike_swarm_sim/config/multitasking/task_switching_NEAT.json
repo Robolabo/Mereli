@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_task_switching_GA_3D",
+    "checkpoint_file" : "chk_task_switching_NEAT_3D",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 20,
@@ -17,8 +17,7 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H" : {"n" : 20, "params" : {}},
-            "H2" : {"n" : 10, "params" : {}},
+            "H" : {"n" : 5, "params" : {}},
             "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_GRASP" : {"n" : 3, "params" : {}}
@@ -43,21 +42,9 @@
 
             "I10-H" : {"pre":"I10","post":"H", "trainable":true, "p":1.0},
 
-           
-            "H-H" : {"pre":"H","post":"H", "trainable":true, "p":1.0},
-            "H-H2" : {"pre":"H","post":"H2", "trainable":true, "p":1.0},
-            "H2-H2" : {"pre":"H2","post":"H2", "trainable":true, "p":1.0},
-
-
-
-            "H2-MOT" : {"pre":"H2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "H2-COMM" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "H2-GRASP" : {"pre":"H2","post":"OUT_GRASP", "trainable":true, "p":1.0},
-
-            "MOT-H1" : {"pre":"OUT_MOT","post":"H", "trainable":true, "p":1.0},
-            "COMM-H1" : {"pre":"OUT_COMM","post":"H", "trainable":true, "p":1.0},
-            "GRASP-H1" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0},
-            "GRASP-GRASP" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0}
+            "H-MOT" : {"pre":"H","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "H-COMM" : {"pre":"H","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "H-GRASP" : {"pre":"H","post":"OUT_GRASP", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
@@ -66,7 +53,7 @@
         } 
     },
     "algorithm" : {
-        "name" : "GA",
+        "name" : "NEAT",
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
@@ -80,13 +67,14 @@
                 "min_vals" : [-3, -1.5, -0.8],
                 "params" : {
                     "encoding" : "real",
-                    "selection_operator" : "tournament",
-                    "crossover_operator" : "blxalpha",
-                    "mutation_operator" : "gaussian",
-                    "mating_operator" : "random",
-                    "mutation_prob" : 0.1,
-                    "crossover_prob" : 1,
-                    "num_elite" : 10
+                    "p_weight_mut" : 0.2,
+                    "p_node_mut" : 0.07,
+                    "p_conn_mut" : 0.2,
+                    "compatib_thresh" : 0.35,
+                    "c1" : 1,
+                    "c2" : 1,
+                    "c3" : 0.7,
+                    "species_elites" : 2
                 }
             }          
         }
