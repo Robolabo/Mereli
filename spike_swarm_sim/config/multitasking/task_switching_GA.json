@@ -57,7 +57,7 @@
             "MOT-H1" : {"pre":"OUT_MOT","post":"H", "trainable":true, "p":1.0},
             "COMM-H1" : {"pre":"OUT_COMM","post":"H", "trainable":true, "p":1.0},
             "GRASP-H1" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0},
-            "GRASP-GRASP" : {"pre":"OUT_GRASP","post":"H", "trainable":true, "p":1.0}
+            "GRASP-GRASP" : {"pre":"OUT_GRASP","post":"OUT_GRASP", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
