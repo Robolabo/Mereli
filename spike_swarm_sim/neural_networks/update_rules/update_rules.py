@@ -12,7 +12,7 @@ def append_and_pop(queue, new_elem):
 class GeneralizedHebbian:
     def __init__(self):
         self.modulated = False #!
-        self.learning_rate = 5e-4
+        self.learning_rate = 3e-4
         self.A = 1.0
         self.B = 0.0
         self.C = 0.0
@@ -92,9 +92,9 @@ class GeneralizedHebbian:
     def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         #* Return scaled in [0,1]
         if conn_name == 'all':
-            weights = np.hstack([np.array([syn['learning_rule'][param] for syn in ann_graph['synapses'].values()\
+            params = np.hstack([np.array([syn['learning_rule'][param] for syn in ann_graph['synapses'].values()\
                     if syn['trainable']]) for param in ['A', 'B', 'C', 'D']])
-            return (weights - min_val) / (max_val - min_val)
+            return (params - min_val) / (max_val - min_val)
         #* Special queries of synapses
         conn_name = {
             'sensory' : [key for key, syn in ann_graph['synapses'].items()\
