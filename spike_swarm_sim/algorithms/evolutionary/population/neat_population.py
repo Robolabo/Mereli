@@ -200,7 +200,7 @@ class NEAT_Population(Population):
                 'connections' : copy.deepcopy(interface.neural_net.graph['synapses'])
             })
             #* Initialize genotype (ANN parameters and weights traits)
-            for query, max_val, min_val in zip(self.objects, self.min_vals, self.max_vals):
+            for query, min_val, max_val in zip(self.objects, self.min_vals, self.max_vals):
                 gnt_segment = interface.toGenotype([query], [min_val], [max_val])
                 gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
                 variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
