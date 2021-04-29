@@ -148,21 +148,23 @@ class GotoLight:
         robot_positions = np.stack(info["robot:position"]).copy()
         light_positions = np.stack(info["light_source:position@color=red"]).copy()
         fitness = 0
-        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):   
+        for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):
             #* Considering only 1 light
             light_pos = light_pos.flatten()
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
             #* Considering that there can be multiple lights
             # distances = np.min([LA.norm(pos[:, :2] - ls_pos[:2], axis=1) for ls_pos in light_pos], 0)
 
-            #* Distance of every robot to the nearest neighbor
-            distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
-                                for i, pos_i in enumerate(pos)])
+            # #* Distance of every robot to the nearest neighbor
+            # distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
+            #                     for i, pos_i in enumerate(pos)])
             fA = (distances < 1).mean()# * (np.sum(distances < .5) > 1)
+            
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()g
             fitness += fA# * fB * fC
+            
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='transport_cubes')

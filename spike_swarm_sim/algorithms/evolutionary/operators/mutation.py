@@ -62,7 +62,7 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
             'group' : conn_name,
             'enabled' : True,
             'trainable':True,
-            'learning_rule' : {v : np.clip(0.5 + np.random.randn() * 0.1, a_min=0, a_max=1) for v in ['A', 'B', 'C', 'D']},
+            'learning_rule' : {v : np.clip(0.5 + np.random.randn() * 0.05, a_min=0, a_max=1) for v in ['A', 'B', 'C', 'D']},
             'innovation' : innovation_history.get((genotype['connections'][sel_conn]['pre'],\
                     node_name), current_innovation),
             'idx' : len(genotype['connections']),#!
@@ -110,6 +110,29 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
         current_innovation += 1
     return genotype, current_innovation, innovation_history
 
+
+def delete_node(genotype, input_nodes, **kwargs):
+    node = np.random.choice([*genotype['nodes']])
+    if node in input_nodes or genotype['nodes'][node]['is_motor']:
+        return
+    for conn_name, conn in genotype['connections'].items():
+        if node in [conn['pre'], conn['post']]:
+            del genotype['connections'][conn_name]
+    del genotype['nodes'][node]
+
+    import pdb; pdb.set_trace()
+
+def delete_connection(genotype, input_nodes, **kwargs):
+    conn = np.random.choice([*genotype['connections']])
+    pre_node = genotype['connections'][conn]['pre']
+    post_node = genotype['connections'][conn]['post']
+    condition = any(conn2['pre'] == pre_node and conn2['post'] == post_node\
+        for conn2_name, conn2 in genotype['connections'].items() if conn2_name != conn)
+    if condition:
+        return
+    del genotype['connections'][conn]
+
+
 def neat_mutation(population, input_nodes, current_innovation, innovation_history,
             mutable_variables, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
     #* Parameter Mutations
@@ -126,10 +149,10 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
                 else:
                     if 'learning_rule' in param:
                         for v in ['A', 'B', 'C', 'D']:
-                            conn['learning_rule'][v] += np.random.randn() * .01 
+                            conn['learning_rule'][v] += np.random.randn() * .05
                             conn['learning_rule'][v] = np.clip(conn['learning_rule'][v], a_min=0, a_max=1)
                     else:
-                        conn[variable] += np.random.randn() * 0.01
+                        conn[variable] += np.random.randn() * 0.05
                         conn[variable] = np.clip(conn[variable], a_min=0, a_max=1)
     #* Connnections mutations
     for i, genotype in filter(lambda x: np.random.random() < p_conn_mut, enumerate(population)):
