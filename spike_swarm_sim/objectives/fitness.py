@@ -232,9 +232,8 @@ class TaskSwitching:
             task_info = {key : np.array(values)[init_instant:last_instant]\
                 if key != 'generation' else values for key, values in info.items()}
             fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
-        # fitness = np.prod(fitness_tasks) #* Product combination
-        # import pdb; pdb.set_trace()
-        fitness = np.mean(fitness_tasks)
+        fitness = np.prod(fitness_tasks) #* Product combination
+        # fitness = np.mean(fitness_tasks)
         return fitness + 1e-5
 
 @fitness_func_registry(name='multiple_tasks')

@@ -124,8 +124,8 @@ class NeuralNetwork:
                         self.motor_ensemble_names)
         else:
             self.monitor = None
-        #* --- Reset dynamics ---
-        self.reset()
+        # #* --- Reset dynamics ---
+        # self.reset()
 
     def build_from_dict(self, topology):
         #* Add neurons
@@ -292,7 +292,7 @@ class NeuralNetwork:
         ===============================================================
         """
         # plot_ann_graph(self)
-        if self.t == 0: self.init_w = self.weights.copy()
+        # if self.t == 0: import pdb; pdb.set_trace() # self.init_w = self.weights.copy()
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
@@ -403,6 +403,7 @@ class NeuralNetwork:
     def reset(self):
         """ Reset process of all the neural network dynamics. """
         self.t = 0
+        self.build()
         self.neurons.reset()
         self.synapses.reset()
         self.encoders.reset()
@@ -414,3 +415,4 @@ class NeuralNetwork:
         self.spikes = np.zeros(self.weights.shape[0])
         self.stimuli = None
         self.prev_input = None
+        
