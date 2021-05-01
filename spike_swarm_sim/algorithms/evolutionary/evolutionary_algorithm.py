@@ -156,16 +156,17 @@ class EvolutionaryAlgorithm:
         if resume:
             self.load_population()
         else:
-            robots = [copy.deepcopy(robot) for robot in world.robots.values()]\
-                        if not isinstance(world, MultiWorldWrapper) else\
-                        [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
-            for pop in self.populations.values():
-                pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
-        # for i in range(len(self.populations['p1'].population)):
-        #     plt.plot([p[i] for p in self.populations['p1'].population])
-        # plt.boxplot([p[1] for p in self.populations['p1'].population])
-        # plt.show()
-        # import pdb; pdb.set_trace()
+            use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+            #* Only one core is responsible of initialization
+            if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
+                robots = [copy.deepcopy(robot) for robot in world.robots.values()]\
+                            if not isinstance(world, MultiWorldWrapper) else\
+                            [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
+                for pop in self.populations.values():
+                    pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
+            if use_mpi:
+                self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
+                MPI.COMM_WORLD.barrier()
 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
@@ -198,9 +199,6 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
-                # if rank == 1: import pandas as pd; pd.DataFrame({'a' : [1,2], 'b':[3,4]}).to_csv('test_file.csv')
-                # print('TEST MPI, RANK,SIZE={}, {}'.format(rank, size), flush=True)
-                # comm.Barrier()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
@@ -259,7 +257,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
-        # import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
@@ -267,7 +265,7 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                genotype_segment = pop.best if pop.best is not None else pop.population[1] # pop.population[187]
+                genotype_segment = pop.population[100] #pop.best if pop.best is not None else pop.population[1] # pop.population[187]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}

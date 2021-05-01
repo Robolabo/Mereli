@@ -328,6 +328,7 @@ class NeuralNetwork:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
+            # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
