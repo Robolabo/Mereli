@@ -233,6 +233,7 @@ class TaskSwitching:
                 if key != 'generation' else values for key, values in info.items()}
             fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
+        # import pdb; pdb.set_trace()
         # fitness = np.mean(fitness_tasks)
         return fitness + 1e-5
 
