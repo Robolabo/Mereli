@@ -26,17 +26,18 @@ class OpenAI_ES_Population(Population):
         ord_samples = [self.z_samples[idx].copy() for idx in fitness_order]
         ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])
 
-        # utilities = np.array([((max(0, np.log(1 + 0.5 * len(self.population)) - np.log(i + 1)))\
-        #             / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j + 1))\
-        #             for j in range(len(self.population))]))\
-        #             for i in range(len(self.population))])
-        # utilities -= 1 / len(self.population)
+        utilities = np.array([((max(0, np.log(1 + 0.5 * len(self.population)) - np.log(i + 1)))\
+                    / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j + 1))\
+                    for j in range(len(self.population))]))\
+                    for i in range(len(self.population))])
+        utilities -= 1 / len(self.population)
 
-        utilities = (ord_fitness / ord_fitness[0]) - 0.5 #! IF no utilities
+        # utilities = (ord_fitness / ord_fitness[0]) - 0.5 #! IF no utilities
         # # import pdb; pdb.set_trace()
         # if any(np.array(fitness_vector) > 1.):
         #     ord_fitness = normalize(ord_fitness)
         # utilities = ord_fitness.copy() #! Quitar si usamos utitilies
+        # import pdb; pdb.set_trace()
 
         #* --- Update distribution -- *#
         self.mu += (self.learning_rate / (self.sigma * len(ord_fitness))) * np.sum([ui * sample \
