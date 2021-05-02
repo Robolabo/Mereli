@@ -65,8 +65,8 @@
         "evolvable_object" : "robotA",
         "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 2500,
-        "num_evaluations" : 3,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 1,
         "fitness_function" : "task_switching",
         "populations" : {
             "p1" : {
@@ -146,7 +146,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2500}
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 3000}
             }
         }
     }

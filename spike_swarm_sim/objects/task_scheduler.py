@@ -25,10 +25,10 @@ class TaskScheduler(WorldObject):
         if global_states.RENDER:
             if self.t == 0:
                 self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), 
-                                textColorRGB=(0,0,0), textSize=1, )
+                                textColorRGB=(0,0,0), textSize=3, )
             else:
                 self.label_id = p.addUserDebugText(('Lights', 'Cubes')[self.current_task], (0,0,3), 
-                                textColorRGB=(0,0,0), textSize=1, replaceItemUniqueId=self.label_id)
+                                textColorRGB=(0,0,0), textSize=3, replaceItemUniqueId=self.label_id)
         # print(self.t, ('Lights', 'Cubes')[self.current_task])
         self.t += 1
 
