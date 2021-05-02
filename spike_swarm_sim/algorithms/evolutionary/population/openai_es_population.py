@@ -12,13 +12,10 @@ class OpenAI_ES_Population(Population):
 
         self.mu = None
         self.z_samples = None
-
-    def _sample(self):
-        sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)))
-        return (self.mu + self.sigma * sample, sample)
         
     def sample(self):
-        sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)), size=self.pop_size)
+        # sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)), size=self.pop_size)
+        sample = np.array([np.random.randn(len(self.mu)) for _ in range(self.pop_size)])
         return (self.mu + self.sigma * sample, sample)
         
     def step(self, fitness_vector, generation):
@@ -43,8 +40,8 @@ class OpenAI_ES_Population(Population):
         self.mu += (self.learning_rate / (self.sigma * len(ord_fitness))) * np.sum([ui * sample \
                 for ui, sample in zip(utilities, ord_samples)], 0)
         self.mu = np.clip(self.mu, a_min=0, a_max=1)
-        self.learning_rate = max(5e-3, 0.999 * self.learning_rate) #* decay learning rate with gens
-        self.sigma = max(0.01, 0.999 * self.sigma) #* decay sigma with gens
+        # self.learning_rate = max(5e-3, 0.999 * self.learning_rate) #* decay learning rate with gens
+        # self.sigma = max(0.01, 0.999 * self.sigma) #* decay sigma with gens
 
         #* --- Sample New population -- *#
         self.population, self.z_samples = self.sample()
@@ -58,8 +55,8 @@ class OpenAI_ES_Population(Population):
         # self.mu = np.random.uniform(low=self.min_vector, high=self.max_vector, size=genotype_length)
         np.random.seed()
 
-        self.sigma = 0.1
-        self.learning_rate = 0.2
+        self.sigma = 0.05
+        self.learning_rate = 1
         self.mu = 0.5 * np.ones(genotype_length)
         # import pdb; pdb.set_trace()
         #* Use larger sigma at first for better initialization
