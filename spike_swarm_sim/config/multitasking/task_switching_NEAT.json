@@ -74,7 +74,7 @@
                     "compatib_thresh" : 0.4,
                     "c1" : 1,
                     "c2" : 1,
-                    "c3" : 1,
+                    "c3" : 0.6,
                     "species_elites" : 4
                 }
             }          

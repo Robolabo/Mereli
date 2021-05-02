@@ -25,7 +25,8 @@ class SNES_Population(Population):
             genotypes in local coords [np.ndarray]
         ==============================================================================================
         """
-        sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)), size=self.pop_size)
+        sample = np.array([np.random.randn(len(self.mu)) for _ in range(self.pop_size)])
+        # sample = np.random.multivariate_normal(np.zeros_like(self.mu), np.eye(len(self.mu)), size=self.pop_size)
         return (self.mu + self.sigma * sample, sample)
 
     def step(self, fitness_vector, generation):

@@ -61,7 +61,7 @@
         }
     },
     "algorithm" : {
-        "name" : "openaiES",
+        "name" : "SNES",
         "evolvable_object" : "robotA",
         "population_size" : 200,
         "generations" : 2000,
