@@ -30,11 +30,9 @@ class OpenAI_ES_Population(Population):
         #             / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j + 1))\
         #             for j in range(len(self.population))]))\
         #             for i in range(len(self.population))])
-        # #* Avoid ranking zero-fitness samples
-        # utilities[ord_fitness <= 1e-5] = 0.0
+        # utilities -= 1 / len(self.population)
 
-        utilities = ord_fitness #! IF no utilities
-
+        utilities = (ord_fitness / ord_fitness[0]) - 0.5 #! IF no utilities
         # # import pdb; pdb.set_trace()
         # if any(np.array(fitness_vector) > 1.):
         #     ord_fitness = normalize(ord_fitness)

@@ -246,7 +246,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=50, timesteps=2500):
+    def evaluate(self, trials=50, timesteps=3000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).
@@ -257,7 +257,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
@@ -265,7 +265,7 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                genotype_segment = pop.population[100] #pop.best if pop.best is not None else pop.population[1] # pop.population[187]
+                genotype_segment = pop.best if pop.best is not None else pop.population[1] # pop.population[187]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}
