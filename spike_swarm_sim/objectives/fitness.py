@@ -201,13 +201,13 @@ class TransportCubesFitness:
         wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
         n_cubes_correct = np.sum([not is_grasped and LA.norm(cube_pos - correct_area) <= ground_area_rad\
                             for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
-        n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
-                            for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
+        # n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
+        #                     for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
         mask_dist_moved = LA.norm(cube_positions[-1] - correct_area, axis=1) < LA.norm(cube_positions[0] - correct_area, axis=1)
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         dist_moved[dist_moved < 0.1] = 0.
         mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
-        fitness = max(0, n_cubes_correct - n_cubes_wrong + mean_dist_moved) / cube_positions.shape[1]
+        fitness = max(0, n_cubes_correct + mean_dist_moved) / cube_positions.shape[1]
         return fitness + 1e-5
 
 

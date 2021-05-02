@@ -265,13 +265,11 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                genotype_segment = pop.best if pop.best is not None else pop.population[1] # pop.population[187]
+                genotype_segment = pop.population[150] #pop.best if pop.best is not None else pop.population[1] # pop.population[187]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
-        # fitness = np.zeros(len(robots))
         info = {n : deque() for n in self.fitness_fn.required_info}
         info['generation'] = 1
         
-        # eval_hist = {'actions': [], 'states': []}
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
         fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names
         data_logger = DataLogger(fieldnames)
