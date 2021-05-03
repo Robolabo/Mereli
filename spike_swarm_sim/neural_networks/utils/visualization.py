@@ -266,7 +266,7 @@ def plot_weights(neural_net):
 
 def plot_ntx(neural_net):
     """ Plots a matrix of the same shape as the adjacency matrix of the ANN
-    that represents the synapse type of each synapse (AMPA, GABA, NDMA, ...). 
+    that represents the synapse type of each synapse (AMPA, GABA, NDMA, ...).
     More formally, it specifies the neurotransmitter of the synspses.
     ===========================================================================
     - Args:

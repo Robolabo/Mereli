@@ -116,7 +116,7 @@ class NEATInterface:
         #! CHECK
         """ Converts a phenotype or structured ANN into a vector genotype. 
         It performs a series of queries (depending on the population segments)
-        and gathers the results as the final genotype.    
+        and gathers the results as the final genotype. 
         """
         genotype = np.hstack([self.submit_query(query, primitive='GET',\
                 min_val=min_val, max_val=max_val) \
@@ -126,27 +126,41 @@ class NEATInterface:
     def fromGenotype(self, queries, genotype, min_vals, max_vals):
         """ Converts a genotype into a phenotype or, in this case, structured ANN.
         """
+        effective_genotype = copy.deepcopy(genotype)
+        # disabled_nodes = []
+        # for key, node in effective_genotype['nodes'].items():
+        #     if not any(conn['post'] == key and conn['enabled'] for conn in effective_genotype['connections'].values()):
+        #         disabled_nodes.append(key)
+        # for key in disabled_nodes:
+        #     del effective_genotype['nodes'][key]
+
+        disabled_connections = []
+        for key, conn in effective_genotype['connections'].items():
+            if not conn['enabled']:
+                disabled_connections.append(key)
+        for key in disabled_connections:
+            del effective_genotype['connections'][key]
+
         #* Clean previous architecture
         for name in list(self.neural_net.graph['neurons']):
-            if name not in genotype['nodes']: #* residual from prev genotype
+            if name not in effective_genotype['nodes']: #* residual from prev genotype
                 self.neural_net.delete_neuron(name)
         for name in list(self.neural_net.graph['synapses']):
-            if name not in genotype['connections']: #* residual from prev genotype
+            if name not in effective_genotype['connections']: #* residual from prev genotype
                 self.neural_net.delete_synapse(name)
         #* Add new neurons 
-        for i, key in enumerate(genotype['nodes']):
+        for i, key in enumerate(effective_genotype['nodes']):
             #* Reallocate node indices
-            genotype['nodes'][key]['idx'] = i
+            effective_genotype['nodes'][key]['idx'] = i
             if key not in self.neural_net.graph['neurons']:
                 self.neural_net.add_neuron(key)
-            self.neural_net.graph['neurons'].update({key : genotype['nodes'][key].copy()})
+            self.neural_net.graph['neurons'].update({key : effective_genotype['nodes'][key].copy()})
         #* Add new synapses 
-        for key in genotype['connections']:
+        for key in effective_genotype['connections']:
             if key not in self.neural_net.graph['synapses']:
-                syn = genotype['connections'][key]
+                syn = effective_genotype['connections'][key]
                 self.neural_net.add_synapse(key, syn['pre'], syn['post'], syn['weight'], conn_prob=1.)
-            self.neural_net.graph['synapses'].update({key : genotype['connections'][key].copy()})
-        
+            self.neural_net.graph['synapses'].update({key : effective_genotype['connections'][key].copy()})
         #* Update parameters (Decoders and encoders not supported yet).
         # counter = 0
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
@@ -154,9 +168,9 @@ class NEATInterface:
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
             variable = {'weights' : 'weight'}.get(query.split(':')[1], query.split(':')[1])
             if 'learning_rule' in query:
-                genotype_segment = np.array([[gnt['learning_rule'][v] for gnt in genotype['connections'].values()] for v in ['A', 'B', 'C', 'D']]).flatten()
+                genotype_segment = np.array([[gnt['learning_rule'][v] for gnt in effective_genotype['connections'].values()] for v in ['A', 'B', 'C', 'D']]).flatten()
             else:
-                genotype_segment = np.array([gnt[variable] for gnt in genotype[gene_type].values()])
+                genotype_segment = np.array([gnt[variable] for gnt in effective_genotype[gene_type].values()])
             # genotype_segment = np.array([g[variable] for g in [*genotype[gene_type].values()][counter:counter+segment_len]])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)

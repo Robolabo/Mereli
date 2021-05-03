@@ -23,11 +23,11 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
                             if conn['innovation'] == gene_innovation}
             child1_genes = copy.deepcopy((parent1_gene, parent2_gene)[rnd_val])
             # child2_genes = copy.deepcopy((parent1_gene, parent2_gene)[1 - rnd_val])
-            assert len(child1_genes) == 1# and len(child2_genes) == 1
-            if not all([[*parent1_gene.values()][0]['enabled'],\
-                        [*parent2_gene.values()][0]['enabled']]):
-                [*child1_genes.values()][0]['enabled'] = np.random.random() > disable_prob
-                # [*child2_genes.values()][0]['enabled'] = np.random.random() > disable_prob
+            assert len(child1_genes) == 1 # and len(child2_genes) == 1
+            # if not all([[*parent1_gene.values()][0]['enabled'],\
+            #             [*parent2_gene.values()][0]['enabled']]):
+            #     [*child1_genes.values()][0]['enabled'] = np.random.random() > 0.
+                ## [*child2_genes.values()][0]['enabled'] = np.random.random() > disable_prob
             child_1['connections'].update(child1_genes)
             # child_2['connections'].update(child2_genes)
 
