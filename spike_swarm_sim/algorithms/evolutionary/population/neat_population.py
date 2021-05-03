@@ -103,7 +103,7 @@ class NEAT_Population(Population):
                     n_offspring -= 1
                     offspring.append(copy.deepcopy(elite_gnt))
             #* Truncate bests
-            n_sel = max(1, round(0.25 * len(spc_genotypes)))
+            n_sel = max(1, round(0.3 * len(spc_genotypes)))
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
             parents_mating = np.random.choice(n_sel, size=2 * n_offspring)

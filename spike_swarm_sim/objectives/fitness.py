@@ -210,7 +210,6 @@ class TransportCubesFitness:
         fitness = max(0, n_cubes_correct + mean_dist_moved) / cube_positions.shape[1]
         return fitness + 1e-5
 
-
 @fitness_func_registry(name='task_switching')
 class TaskSwitching:
     """Fitness function for the exploration task."""
