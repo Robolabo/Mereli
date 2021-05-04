@@ -79,7 +79,7 @@ class SNES_Population(Population):
         self.sigma = 0.2 * np.ones(genotype_length) #0.2 * np.ones(genotype_length)
         d = self.mu.shape[0]
         n_expected = int(4 + np.floor(3 * np.log(d)))
-        self.eta_mu = 1.
+        self.eta_mu = 1e-2
         self.eta_s = (3 + np.log(d)) / (5 * np.sqrt(d)) + 0.2 #!
         
         #* sample initial pop
