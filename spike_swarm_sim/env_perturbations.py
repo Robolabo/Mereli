@@ -98,8 +98,9 @@ class UncontrollableRotation(PostProcessingPerturbation):
 
 @env_perturbation_registry(name='stimuli_inhibition')
 class StimuliInhibition(PreProcessingPerturbation):
-    def __init__(self, *args, stimuli='light_sensor', **kwargs):
+    def __init__(self, *args, stimuli='light_sensor', replace_value=0, **kwargs):
         super(StimuliInhibition, self).__init__(*args, **kwargs)
+        self.replace_value = replace_value
         self.stimuli = stimuli.split(':')
 
     @increase_time
@@ -109,8 +110,10 @@ class StimuliInhibition(PreProcessingPerturbation):
         if len(self.stimuli) > 1:
             state[self.stimuli[0]][self.stimuli[1]] = np.random.randn(len(stim_val)) * noise_sigma\
                     if noise_sigma > 0 else np.zeros_like(stim_val)
+            state[self.stimuli[0]][self.stimuli[1]] += self.replace_value  
         else:
             state[self.stimuli[0]] = np.random.randn(len(stim_val)) * noise_sigma\
                     if noise_sigma > 0 else np.zeros_like(stim_val)
+            state[self.stimuli[0]] += self.replace_value       
         # state.update(reduce(lambda x, y: {y : x}, self.stimuli[::-1], np.zeros_like(stim_val)))
         return state
