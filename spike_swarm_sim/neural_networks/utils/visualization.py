@@ -32,48 +32,59 @@ def plot_ann_graph(neural_net, filename=None):
         'fontsize': '5',
         'height': '0.2',
         'width': '0.2',
-        'style': 'filled',}
-    graph = graphviz.Digraph()# node_attr=node_attrs)
+        'style': 'filled',
+        }
+    graph = graphviz.Digraph(format='svg', node_attr=node_attrs)
     # graph.attr(rankdir='BT', size='5,5') #,splines='line', size='6,6',nodesep='0.8')
-    graph.attr(rankdir='LR',size='6,6',)
-    graph.attr('node', shape='circle', style='filled',fixedsize='true')
-    with graph.subgraph(name='inputs') as subG:
-        for in_name in neural_net.graph['inputs'].keys():
-            subG.attr( rank='same', nodesep='0.1', constrain='false', rankdir='TB')
+    graph.attr(rankdir='LR', size='7,7', nodesep='0.05')
+    graph.attr('node', shape='circle', style='filled', fixedsize='true')
+    with graph.subgraph(name='cluster_inputs') as subG:
+        for in_name in neural_net.graph['inputs']:
+            subG.attr( rank='same')
             subG.node_attr.update(fillcolor='cadetblue1')
             subG.node(in_name)
-    
-    for ensemble in neural_net.ensemble_names:
-        if ensemble not in neural_net.motor_ensemble_names:
-            with graph.subgraph(name=ensemble) as subG:
-                # subG.attr(label=ensemble, rank='same')
-                subG.node_attr.update(fillcolor='darkseagreen1')
-                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
-                    subG.node(mot_name)
-    for ensemble in neural_net.ensemble_names:
-        if ensemble in neural_net.motor_ensemble_names:
-            with graph.subgraph(name=ensemble) as subG:
-                subG.attr(rank='same', constrain='false')
-                subG.node_attr.update(fillcolor='red', constrain='false', rankdir='TB')
-                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
-                    subG.node(mot_name)
+        # for conn_name, conn in neural_net.graph['synapses'].items(): 
+        #     if conn['pre'] in  neural_net.graph['inputs'] and conn['enabled']:
+        #         subG.edge(conn['pre'], conn['post'], fontsize='9', arrowsize='0.2')
+    #* Hidden
+    with graph.subgraph(name='hidden') as subG:
+        for ensemble in neural_net.ensemble_names:
+            if ensemble not in neural_net.motor_ensemble_names:
+                    # subG.attr(rank='same', style="rounded")
+                    subG.node_attr.update(fillcolor='darkseagreen1')
+                    for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                        subG.node(mot_name)
+    # for ensemble in neural_net.ensemble_names:
+    #     if ensemble not in neural_net.motor_ensemble_names:
+    #         for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+    #             graph.node(mot_name, fillcolor='darkseagreen1')
+    #* Motor
+    with graph.subgraph(name=' cluster_motor') as subG:
+        for ensemble in neural_net.ensemble_names:
+            if ensemble in neural_net.motor_ensemble_names:
+                    subG.attr(rank='same')
+                    subG.node_attr.update(fillcolor='red')
+                    for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                        subG.node(mot_name)
+
     for conn_name, conn in neural_net.graph['synapses'].items():
         conn_attr = {
             # 'style' : 'normal' if conn['weight'] >= 0 else 'dot',
             # 'color' : 'blue' if conn['weight'] >= 0 else 'red',
-            'penwidth' : '0.1',#str(np.abs(conn['weight']) / 3),
+            'penwidth' : '0.5',#str(np.abs(conn['weight']) / 3),
             'arrowsize' : '0.2',
             #'weight' : str(np.abs(conn['weight'])),
 
         }
-        graph.edge(conn['pre'], conn['post'],)#fontsize='9'#,**conn_attr)
+        if conn['enabled']:
+            graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
     if filename is None:
         filename = 'ann_plot'
     graph.view('tmp/' + filename)
     import pdb; pdb.set_trace()
 
 def plot_state_plane(neural_net, t_start=0, t_end=500,\
-    n_pc=3, downsampled=False, fig=None):
+    n_pc=3, downsampled=False, color='red', fig=None):
     """Plots the state plane projected into 2D with PCA. 
     The plotted trajectory within the specified time window.
     #! Only implemented for rate_models for the moment.
@@ -115,10 +126,10 @@ def plot_state_plane(neural_net, t_start=0, t_end=500,\
     if n_pc >= 3:
         ax.plot(state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 0],\
                 state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 1],\
-                state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 2])
+                state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 2], color=color)
     else:
         ax.plot(state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 0],\
-                state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 1])
+                state_pca[t_start * neural_net.time_scale : t_end * neural_net.time_scale : Ts, 1], color=color)
     ax.set_xlabel(r"Principal Component 1")
     ax.set_ylabel(r"Principal Component 2")
     if n_pc >= 3:
