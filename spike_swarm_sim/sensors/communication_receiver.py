@@ -25,6 +25,8 @@ class IRCommunicationReceiver(DirectionalSensor):
         self.selection_scheme = selection_scheme
         self.current_direction = 0
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.)
+        self.current_sender = None
+        self.aux_t = 0
 
     def _target_filter(self, obj):
         """ Filtering of potential sender robots. """
@@ -88,6 +90,43 @@ class IRCommunicationReceiver(DirectionalSensor):
             frames[selected_direction]['am_i_targeted'] = np.array([0])
         return frames[selected_direction]
 
+    def __random_selection2(self, frames):
+
+        if self.current_sender is not None and self.aux_t < 30:
+            senders = np.hstack([frame['sender'].item() for frame in frames])
+            if self.current_sender in senders:
+                frame = [fr for fr in frames if fr['sender'] == self.current_sender][0]
+                self.aux_t += 1
+            else:
+                frame = self.__random_selection(frames)
+                self.current_sender = frame['sender'].item()
+                self.aux_t = 0
+        else: #* Chose new sender randomly.
+            frame = self.__random_selection(frames)
+            self.current_sender = frame['sender'].item()
+            self.aux_t = 0
+        return frame
+        # # Discard very old frames (max 10 hops)
+        # frames = [frame for frame in frames if frame['n_hops'] < self.max_hops and frame['sender'] != -1]
+        # if len(frames) == 0:
+        #     frames = [self.empty_msg]
+        # #* Select only a direction
+        # signal_strengths = np.hstack([frame['signal'] for frame in frames])
+        # senders = np.hstack([frame['sender'].item() for frame in frames])
+        # selected_direction = np.argmax(signal_strengths)
+        # if any(np.logical_and(senders != self.sensor_owner.id, senders != -1)):
+        #     import pdb; pdb.set_trace()
+        #     elements = np.where(np.logical_and(senders != self.sensor_owner.id, senders != -1))[0]
+        #     selected_direction = np.random.choice(elements,)
+        #     frames[selected_direction]['am_i_sender'] = np.array([0])
+        # else:
+        #     selected_direction = 0
+        #     frames = [self.empty_msg]
+        #     frames[selected_direction]['am_i_sender'] = np.array([0])
+        #     frames[selected_direction]['am_i_targeted'] = np.array([0])
+        # return frames[selected_direction]
+
+
     def __cyclic_selection(self, frames):
         #* --- MESSAGE SELECTION Cyclic --- *#
         selected_frame = frames[self.current_direction].copy()
@@ -106,12 +145,15 @@ class IRCommunicationReceiver(DirectionalSensor):
         selected_frame = {
             'cyclic' : self.__cyclic_selection(frames),
             'random' : self.__random_selection(frames),
+            'random_2' : self.__random_selection2(frames),
         }[self.selection_scheme]
         return selected_frame
 
 
     def reset(self):
         super().reset()
+        self.current_sender = None
+        self.aux_t = 0
         self.current_direction = 0
     
     def remove_duplicates(self, frames):

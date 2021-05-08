@@ -101,7 +101,7 @@ class DirectionalSensor(Sensor):
                 if issubclass(type(obj), WorldObject3D):
                     if obj.tangible:
                         closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-                                linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
+                                linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)              
                         v = np.array(closest_points[0][6]) - self.sensor_owner.position
                     else:
                         v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
@@ -110,7 +110,9 @@ class DirectionalSensor(Sensor):
                     v = toroidal_difference(obj.position, self.sensor_owner.position)
                 rho = LA.norm(v)
                 phi = angle_diff(compute_angle(v[:2]), direction)
-                readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
+                # import pdb; pdb.set_trace()
+                if rho < self.range and phi < self.aperture:
+                    readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
         reading = np.array(readings) if not isinstance(readings[0], dict) else readings
         self.reading = reading.copy()
         return reading

@@ -158,13 +158,13 @@ class GotoLight:
             # #* Distance of every robot to the nearest neighbor
             # distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
             #                     for i, pos_i in enumerate(pos)])
-            fA = (distances < 1).mean()# * (np.sum(distances < .5) > 1)
-            
+            fA = (distances < 1).mean()
+            if len(distances) > 1:
+                fA *= (np.sum(distances < 1) > 1)
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
-            # import pdb; pdb.set_trace()g
+            # import pdb; pdb.set_trace()
             fitness += fA# * fB * fC
-            
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='transport_cubes')
@@ -198,7 +198,8 @@ class TransportCubesFitness:
         #* Correct area is the one with light source above
         correct_area_idx = np.argmin(LA.norm(ground_area_pos[:, :2] - light_source_pos[:2], axis=1))
         correct_area = ground_area_pos[correct_area_idx]
-        wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
+        n_cubes_correct_start = np.sum([LA.norm(cube_pos - correct_area) <= ground_area_rad for cube_pos in cube_positions[0]])
+        # wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])
         n_cubes_correct = np.sum([not is_grasped and LA.norm(cube_pos - correct_area) <= ground_area_rad\
                             for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])
         # n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) <= ground_area_rad)\
@@ -207,7 +208,7 @@ class TransportCubesFitness:
         dist_moved = LA.norm(cube_positions[-1] - cube_positions[0], axis=1)
         dist_moved[dist_moved < 0.1] = 0.
         mean_dist_moved = (mask_dist_moved * dist_moved).mean() / 10
-        fitness = max(0, n_cubes_correct + mean_dist_moved) / cube_positions.shape[1]
+        fitness = max(0, n_cubes_correct + mean_dist_moved - n_cubes_correct_start) / cube_positions.shape[1]
         return fitness + 1e-5
 
 @fitness_func_registry(name='task_switching')
@@ -232,7 +233,6 @@ class TaskSwitching:
                 if key != 'generation' else values for key, values in info.items()}
             fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        # import pdb; pdb.set_trace()
         # fitness = np.mean(fitness_tasks)
         return fitness + 1e-5
 
