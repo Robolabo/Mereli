@@ -8,7 +8,7 @@ class CommunicationTransmitter(Actuator):
     """ Communication transmitter actuator. It isotropically transmits a 
     frame with a message and its context. The propagation simulation is 
     implemented at the receiver side, this class only updates the transmitted 
-    frame of each robot. 
+    frame of each robot.
     =========================================================================
     - Params:
         range [float] : maximum distance of message reception, in centimeters.
@@ -25,17 +25,18 @@ class CommunicationTransmitter(Actuator):
         self.K = K
         self.avoid_zero = avoid_zero #TODO Ignore symbol (0,...,0)^T
         if self.quantize:
-            self.clusters = [centroid for centroid in \
-                    zip(*map(lambda v: v.flatten(),\
+            self.clusters = [centroid for centroid in zip(*map(lambda v: v.flatten(),\
                     np.meshgrid(*[np.linspace(0, 1, self.K) for _ in np.arange(self.msg_length)])))]
             self.clusters = np.array(self.clusters)
         self.frame = None
         self.reset()
         
     def step(self, action):
+        
         #* Select cluster using softmax on distances to clusters
         if self.quantize:
             action['msg'] = self.quantize_fn(action['msg'])
+        
         self.frame['msg'] = action['msg']
         self.frame['priority'] = action['priority']
         self.frame['sender'] = action['sender']

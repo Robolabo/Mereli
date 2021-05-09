@@ -164,7 +164,7 @@ class GotoLight:
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()
-            fitness += fA# * fB * fC
+            fitness += fA # * fB * fC
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='transport_cubes')
