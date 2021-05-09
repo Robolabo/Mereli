@@ -75,7 +75,7 @@ class DirectionalSensor(Sensor):
         =================================================================================================
         """
         raise NotImplementedError
-    
+
     def step(self, neighborhood):
         """
         Main method for steping the sensor and capturing nearby environment events.

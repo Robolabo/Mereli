@@ -7,7 +7,6 @@ from spike_swarm_sim.objects import Robot, Robot3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
 from .utils.propagation import ExpDecayPropagation
 
-
 @sensor_registry(name='IR_receiver')
 class IRCommunicationReceiver(DirectionalSensor):
     """ Communication Receiver mimicking IR technology.
@@ -91,8 +90,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         return frames[selected_direction]
 
     def __random_selection2(self, frames):
-
-        if self.current_sender is not None and self.aux_t < 30:
+        if self.current_sender is not None and self.aux_t < 50:
             senders = np.hstack([frame['sender'].item() for frame in frames])
             if self.current_sender in senders:
                 frame = [fr for fr in frames if fr['sender'] == self.current_sender][0]
