@@ -23,7 +23,7 @@ class Propagation:
         """
         raise NotImplementedError
     
-    def plot(self, max_rad=200, sensor_name=None):
+    def plot(self, max_rad=5, sensor_name=None):
         """ Illustrates the polar plot of a sector coverage.
         =============================================================
         -Args:
@@ -54,19 +54,46 @@ class Propagation:
         else:
             ax.set_title('Sector Coverage.')
         plt.show()
+        
+    def plot_directivity(self, max_rad=5, sensor_name=None):
+        """ Illustrates the polar plot of a sector coverage.
+        =============================================================
+        -Args:
+            max_rad [float] : maximum coverage range (to be ploted) 
+                It is expressed in centimeters.
+            sensor_name [str] : Name of type of the sensor to include 
+                it in the figure title.
+        =============================================================
+        """
+        direction = 0
+        theta_vals = np.radians(np.linspace(0, 360, 360))
+        phi_vals = np.abs(direction - theta_vals)
+        phi_vals[phi_vals > np.pi] =  2 * np.pi - phi_vals[phi_vals > np.pi]
+        
+        
+        fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
+        # import pdb; pdb.set_trace()
+        ax.plot(theta_vals, [self(0.01, th) for th in phi_vals])
+        
+        if sensor_name is not None:
+            ax.set_title('Coverage of {} for a sector.'.format(sensor_name))
+        else:
+            ax.set_title('Sector Coverage.')
+        plt.show()
 
 class ExpDecayPropagation(Propagation):
     """ Simplified signal propagation using the exponential decaying 
     of the signal of both radius and phi. Both terms are combined as 
     a product.
     """
-    def __init__(self, rho_att=1/200, phi_att=1):
+    def __init__(self, rho_att=0.3, phi_att=1):
         self.rho_att = rho_att
         self.phi_att = phi_att
 
     def __call__(self, rho, phi):
-        return np.exp(- self.rho_att * rho) * np.exp(-self.phi_att * phi)
-
+        return np.exp(-self.rho_att * rho)  * np.exp(-self.phi_att * phi)
+        # signal = np.exp(-self.rho_att * rho) * np.exp(-5 * phi ** 2)
+        # return signal
 
 class RSSI_Propagation(Propagation):
     """ 
