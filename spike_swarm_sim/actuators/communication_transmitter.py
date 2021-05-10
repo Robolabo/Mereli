@@ -36,7 +36,6 @@ class CommunicationTransmitter(Actuator):
         #* Select cluster using softmax on distances to clusters
         if self.quantize:
             action['msg'] = self.quantize_fn(action['msg'])
-        
         self.frame['msg'] = action['msg']
         self.frame['priority'] = action['priority']
         self.frame['sender'] = action['sender']
@@ -48,7 +47,7 @@ class CommunicationTransmitter(Actuator):
         self.frame['state'] = action['state']
         self.frame['sending_direction'] = action['sending_direction']
 
-    def quantize_fn(self, msg, tau=0.01):
+    def quantize_fn(self, msg, tau=0.1):
         dists = np.linalg.norm(msg - self.clusters, axis=1)
         # Max. dist in hypercube is sqrt(dim(x))
         max_distance = np.sqrt(len(msg))

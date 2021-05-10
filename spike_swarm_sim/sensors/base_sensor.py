@@ -101,7 +101,7 @@ class DirectionalSensor(Sensor):
                 if issubclass(type(obj), WorldObject3D):
                     if obj.tangible:
                         closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-                                linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)              
+                                linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
                         v = np.array(closest_points[0][6]) - self.sensor_owner.position
                     else:
                         v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.

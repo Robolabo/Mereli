@@ -16,6 +16,7 @@ class LightSensor(DirectionalSensor):
         self.color = color
         self.aperture = 3 * np.pi / self.n_sectors
         self.propagation = ExpDecayPropagation(rho_att=0.2, phi_att=1)
+        
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
