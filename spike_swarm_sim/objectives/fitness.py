@@ -235,6 +235,7 @@ class TaskSwitching:
             fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
         # fitness = np.mean(fitness_tasks)
+        # import pdb; pdb.set_trace()
         return fitness + 1e-5
 
 @fitness_func_registry(name='multiple_tasks')
