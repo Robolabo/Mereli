@@ -32,7 +32,6 @@ class CommunicationTransmitter(Actuator):
         self.reset()
         
     def step(self, action):
-        
         #* Select cluster using softmax on distances to clusters
         if self.quantize:
             action['msg'] = self.quantize_fn(action['msg'])
