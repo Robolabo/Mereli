@@ -108,6 +108,7 @@ class NeuralNetwork:
         self.stimuli_names = []
         #* Variables storing the previous stim and spikes.
         self.stimuli, self.spikes, self.prev_input = None, None, None
+        self.weight_registry = None
 
     def build(self):
         #! BUILD NEURONS
@@ -292,7 +293,10 @@ class NeuralNetwork:
         ===============================================================
         """
         # import pdb; pdb.set_trace()
-        if self.t == 0: self.init_w = self.weights.copy()
+        if self.t == 0:
+            self.weight_registry = self.weights[self.synapses.mask].copy().flatten()
+        else:
+            self.weight_registry = np.vstack((self.weight_registry, self.synapses.weights[self.synapses.mask].copy().flatten()))
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))
@@ -309,9 +313,8 @@ class NeuralNetwork:
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
-            self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
-
+            # self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+            # self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):

@@ -121,8 +121,11 @@ class Synapses(ABC):
         """
         return self.get_weights(conn_name, ann_graph, only_trainable=True).shape[0]
 
+
+
 @synapse_registry(name='static_synapse')
 class StaticSynapses(Synapses):
+
     def step(self, spikes, voltages):
         return self.weights.dot(spikes)
 
