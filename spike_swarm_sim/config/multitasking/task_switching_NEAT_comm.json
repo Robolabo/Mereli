@@ -16,8 +16,8 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "HA" : {"n" : 5, "params" : {}},
-            "HB" : {"n" : 3, "params" : {}},
+            "HA" : {"n" : 10, "params" : {}},
+            "HB" : {"n" : 5, "params" : {}},
             "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_GRASP" : {"n" : 3, "params" : {}}
@@ -62,16 +62,16 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 400,
+        "population_size" : 300,
         "generations" : 2000,
         "evaluation_steps" : 2000,
-        "num_evaluations" : 3,
+        "num_evaluations" : 1,
         "fitness_function" : "task_switching",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "learning_rule:params:all"],
-                "max_vals" : [4,  2, 1.2, 2],
-                "min_vals" : [-4, -2, -0.8, -2],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
+                "max_vals" : [4,  2, 1.2],
+                "min_vals" : [-4, -2, -0.8],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.1,

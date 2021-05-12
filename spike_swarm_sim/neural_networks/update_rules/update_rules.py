@@ -12,7 +12,7 @@ def append_and_pop(queue, new_elem):
 class GeneralizedHebbian:
     def __init__(self):
         self.modulated = False #!
-        self.learning_rate = 3e-4
+        self.learning_rate = 1e-3
         self.A = 1.0
         self.B = 0.0
         self.C = 0.0
@@ -23,16 +23,16 @@ class GeneralizedHebbian:
         self.activities_queue = deque([])
         self.inputs_queue = deque([])
         self.t = 0
-    
+
     def __step(self, inputs, activities, reward=None):
         act_inpt_cat = np.r_[inputs, activities]
         weight_update = self.learning_rate * (
                         self.A * np.outer(activities, act_inpt_cat)\
                         + self.B * np.outer(activities, np.ones_like(act_inpt_cat))\
                         + self.C * np.outer(np.ones_like(activities), act_inpt_cat)\
-                        + self.D)
+                        + self.D) 
         return weight_update * reward if reward is not None else weight_update
-
+    
     def step(self, inputs, activities, reward=None):
         if not self.modulated:
             return self.__step(inputs, activities, reward=1.)
@@ -79,6 +79,7 @@ class GeneralizedHebbian:
         self.B = B
         self.C = C
         self.D = D
+        # self.learning_rate = np.random.randn(*self.A.shape) * 1e-3    
 
 
     def reset(self):
@@ -125,22 +126,7 @@ class GeneralizedHebbian:
             return ann_graph
         else:
             raise NotImplementedError #!!!
-            # #* Special queries of synapses
-            # conn_name = {
-            #     'sensory' : [key for key, syn in ann_graph['synapses'].items()\
-            #                     if syn['pre'] in ann_graph['inputs']],
-            #     'hidden' : [key for key, syn in ann_graph['synapses'].items()\
-            #                 if syn['pre'] in ann_graph['neurons']\
-            #                 and not ann_graph['neurons'][syn['pre']]['is_motor']],
-            #     'motor' : [key for key, syn in ann_graph['synapses'].items()\
-            #                 if syn['pre'] in ann_graph['neurons']\
-            #                 and ann_graph['neurons'][syn['pre']]['is_motor']]
-            # }.get(conn_name, [conn_name])
-            # for w, syn_name in zip(data, conn_name):
-            #     if ann_graph['synapses'][syn_name]['trainable']:
-            #         ann_graph['synapses'][syn_name]['weight'] = w
-            # return ann_graph
-
+   
     @INIT("learning_rule:params")
     def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """
@@ -155,7 +141,6 @@ class GeneralizedHebbian:
         """
         """
         return self.get_params(conn_name, ann_graph, only_trainable=True).shape[0]
-
 
 
 
