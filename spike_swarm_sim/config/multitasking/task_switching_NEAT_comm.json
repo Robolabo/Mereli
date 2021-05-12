@@ -11,33 +11,27 @@
             "I8" : {"n" : 1, "sensor" : "ground_sensor"},
             "I9" : {"n" : 1, "sensor" : "object_grasped_sensor"},
             "I10" : {"n" : 1, "sensor" : "task_sensor"},
-            "I11" : {"n" : 2, "sensor" : "IR_receiver:msg"},
-            "I12" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
-            "I13" : {"n" : 1, "sensor" : "IR_receiver:state"}
+            "I11" : {"n" : 4, "sensor" : "IR_receiver:msg"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
             "HA" : {"n" : 5, "params" : {}},
             "HB" : {"n" : 3, "params" : {}},
-            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
-            "OUT_ST" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_GRASP" : {"n" : 3, "params" : {}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"},
             "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
             "I1-HA" : {"pre":"I1","post":"HA", "trainable":true, "p":1.0},
             "I2-HA" : {"pre":"I2","post":"HA", "trainable":true, "p":1.0},
-
          
             "I6-HA" : {"pre":"I6","post":"HA", "trainable":true, "p":1.0},
-
            
             "I7-HA" : {"pre":"I7","post":"HA", "trainable":true, "p":1.0},
             "I8-HA" : {"pre":"I8","post":"HA", "trainable":true, "p":1.0},
@@ -46,8 +40,6 @@
             "I10-HA" : {"pre":"I10","post":"HA", "trainable":true, "p":1.0},
             "I10-HB" : {"pre":"I10","post":"HB", "trainable":true, "p":1.0},
             "I11-HB" : {"pre":"I11","post":"HB", "trainable":true, "p":1.0},
-            "I12-HB" : {"pre":"I12","post":"HB", "trainable":true, "p":1.0},
-            "I13-HB" : {"pre":"I13","post":"HB", "trainable":true, "p":1.0},
 
             "HA-MOT" : {"pre":"HA","post":"OUT_MOT", "trainable":true, "p":1.0},
             "HA-COMM" : {"pre":"HA","post":"OUT_COMM", "trainable":true, "p":1.0},
@@ -55,13 +47,11 @@
             
             "HB-MOT" : {"pre":"HB","post":"OUT_MOT", "trainable":true, "p":1.0},
             "HB-COMM" : {"pre":"HB","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "HB-ST" : {"pre":"HB","post":"OUT_ST", "trainable":true, "p":1.0},
             "HB-GRASP" : {"pre":"HB","post":"OUT_GRASP", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
             "outD" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : true}}
         },
         "learning_rule" : { 
@@ -75,7 +65,7 @@
         "population_size" : 400,
         "generations" : 2000,
         "evaluation_steps" : 2000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 3,
         "fitness_function" : "task_switching",
         "populations" : {
             "p1" : {
@@ -87,7 +77,7 @@
                     "p_weight_mut" : 0.1,
                     "p_node_mut" : 0.05,
                     "p_conn_mut" : 0.15,
-                    "compatib_thresh" : 0.3,
+                    "compatib_thresh" : 0.33,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 0.6,
@@ -110,7 +100,7 @@
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 30},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 30},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 2, "selection_scheme" : "random_2"},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic"},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
                     "object_grasped_sensor" : {},
                     "ground_sensor" : {},
@@ -118,7 +108,7 @@
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 12},
-                    "wireless_transmitter" : {"quantize": true, "range" : 15, "msg_length":2, "K" : 2},
+                    "wireless_transmitter" : {"quantize": false, "range" : 15, "msg_length":1, "K" : 2},
                     "grasp_actuator" : {}
                 },
                 "initializers" : {

@@ -7,7 +7,7 @@ from spike_swarm_sim.objects import Robot, Robot3D
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
 from .utils.propagation import ExpDecayPropagation
 
-@sensor_registry(name='IR_receiver')
+@sensor_registry(name='IR_receiver2')
 class IRCommunicationReceiver(DirectionalSensor):
     """ Communication Receiver mimicking IR technology.
     ========================================================================
@@ -166,7 +166,7 @@ class IRCommunicationReceiver(DirectionalSensor):
                 'priority' : np.zeros(1), 'destination' : np.array([-1]), \
                 'sender' : -1 * np.ones(1), 'n_hops' : 1}
 
-@sensor_registry(name='IR_receiver2')
+@sensor_registry(name='IR_receiver')
 class BufferedIRCommRX(IRCommunicationReceiver):
     def __init__(self,  *args, **kwargs):
         super(BufferedIRCommRX, self).__init__(*args, **kwargs)
