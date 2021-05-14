@@ -299,7 +299,6 @@ class MultipleLights:
 
 
 
-from numba import njit, jit
 
 def steppp(states, robot_positions):
     fitness = 0
