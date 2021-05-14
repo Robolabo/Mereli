@@ -304,7 +304,7 @@ def steppp(states, robot_positions):
     fitness = 0
     for t, pos in enumerate(robot_positions):
         distances = np.array([LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos) for j, pos_j in enumerate(pos) if i != j])
-        fitness += np.mean(distances < 0.7)
+        fitness += 1 - distances[0] / 10
     return fitness / len(states)
 
 @fitness_func_registry(name='test_comm_aggregation')
