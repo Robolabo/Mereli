@@ -92,6 +92,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     #* Name connection is "pre-post"
     conn_name = '-'.join(new_conn)
     #! OJO RESTO DE PARAMETERS.
+    if isinstance(innovation_history, int): import pdb; pdb.set_trace()
     genotype['connections'].update({
         conn_name : {
             'pre' : new_conn[0],

@@ -31,7 +31,7 @@
         "population_size" : 50,
         "generations" : 2000,
         "evaluation_steps" : 600,
-        "num_evaluations" : 1,
+        "num_evaluations" : 3,
         "fitness_function" : "test_comm_aggregation",
         "populations" : {
             "p1" : {
