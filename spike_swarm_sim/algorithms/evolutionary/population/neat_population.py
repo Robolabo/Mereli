@@ -78,10 +78,6 @@ class NEAT_Population(Population):
         - Returns: None
         ==================================================================================
         """
-
-        # #!
-        # fitness_vector = np.random.random(len(fitness_vector))
-        # #!
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
 
@@ -123,7 +119,6 @@ class NEAT_Population(Population):
         #* Speciation
         self.update_species(generation)
         logging.info('Num. species is {}'.format(len(self.species)))
-
         # #* Adaptive species thresh.
         # num_tar_species = 15
         # if len(self.species) != num_tar_species:

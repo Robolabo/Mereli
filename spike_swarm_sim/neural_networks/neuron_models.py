@@ -90,7 +90,6 @@ class NonSpikingNeuronModel(BaseNeuronModel):
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
 
-
 @neuron_model_registry(name='rate_model')
 class RateModel(NonSpikingNeuronModel):
     """ Class for the Rate model or non spiking model mainly used as building block 
@@ -104,7 +103,7 @@ class RateModel(NonSpikingNeuronModel):
         self.activation = np.empty(0)
         # self.build(tau=tau, gain=gain, bias=bias, activation=activation)
         # self.reset()
-        
+    
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
         outputs = self.gain * self._volt.copy() + self.bias

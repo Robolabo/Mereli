@@ -59,7 +59,7 @@ def plot_ann_graph(neural_net, filename=None):
     #         for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
     #             graph.node(mot_name, fillcolor='darkseagreen1')
     #* Motor
-    with graph.subgraph(name=' cluster_motor') as subG:
+    with graph.subgraph(name=' motor') as subG:
         for ensemble in neural_net.ensemble_names:
             if ensemble in neural_net.motor_ensemble_names:
                     subG.attr(rank='same')

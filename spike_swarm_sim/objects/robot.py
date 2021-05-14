@@ -70,7 +70,6 @@ class Robot(WorldObject2D):
         if perturbations is not None:
             for pert in perturbations:
                 state = pert(state, self)
-        
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
         #* Plan actions for future execution
