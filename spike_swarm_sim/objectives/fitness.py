@@ -296,6 +296,34 @@ class MultipleLights:
             fitness += fA
         return (fitness / len(states)) + 1e-5
 
+
+
+
+from numba import njit, jit
+
+def steppp(states, robot_positions):
+    fitness = 0
+    for t, pos in enumerate(robot_positions):
+        distances = np.array([LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos) for j, pos_j in enumerate(pos) if i != j])
+        fitness += np.mean(distances < 0.7)
+    return fitness / len(states)
+
+@fitness_func_registry(name='test_comm_aggregation')
+class TestCommAggr:
+    def __init__(self):
+        self.required_info = ("generation", "robot:position",)
+
+    
+    def __call__(self, actions, states, info=None):
+        robot_positions = np.stack(info["robot:position"]).copy()
+        fitness = 0
+        # for t, pos in enumerate(robot_positions):
+        #     distances = np.array([LA.norm(pos_i - pos_j) for i, pos_i in enumerate(pos) for j, pos_j in enumerate(pos) if i != j])
+        #     fitness += np.mean(distances < 0.7)
+        # return fitness / len(states)
+        return steppp([*states], robot_positions)
+
+
 # @fitness_func_registry(name='exploration')
 # class Exploration:
 #     """Fitness function for the exploration task."""

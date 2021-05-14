@@ -37,8 +37,10 @@ class NeuralController(RobotController):
         if len(state):
             state = flatten_dict(state)
         state['IR_receiver:state'] = np.array([self.comm_state])
+        
         #state = self.preprocessing(state.copy())
         raw_actions = self.neural_network.step(state, reward)
+
         actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
                    if 'wireless_transmitter' not in self.out_act_mapping[name]}
         if 'wireless_transmitter' in self.out_act_mapping.values():

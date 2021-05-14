@@ -76,7 +76,7 @@ class DirectionalSensor(Sensor):
         """
         raise NotImplementedError
 
-    def step(self, neighborhood):
+    def step2(self, neighborhood):
         """
         Main method for steping the sensor and capturing nearby environment events.
         It senses the environment independently in each of the sensing sectors. The 
@@ -139,43 +139,43 @@ class DirectionalSensor(Sensor):
         return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
     
 
-    # def step(self, neighborhood):
-    #     """
-    #     Main method for steping the sensor and capturing nearby environment events.
-    #     It senses the environment independently in each of the sensing sectors. The 
-    #     particular behavior of each sensor inheriting this class should be specified in 
-    #     _step_direction method.
-    #     ================================================================================
-    #     - Args: 
-    #         neighborhood -> List of neighboring WorldObjects.
+    def step(self, neighborhood):
+        """
+        Main method for steping the sensor and capturing nearby environment events.
+        It senses the environment independently in each of the sensing sectors. The 
+        particular behavior of each sensor inheriting this class should be specified in 
+        _step_direction method.
+        ================================================================================
+        - Args: 
+            neighborhood -> List of neighboring WorldObjects.
 
-    #     - Returns:
-    #         Numpy array with the measurement in each direction. In exceptional cases 
-    #         it may return a list of python dictionaries (see CommunicationReceiver).
-    #     ================================================================================
-    #     """
-    #     readings = [self._step_direction(0, 0, None, 0, obj=None) for _ in range(self.n_sectors)]
-    #     orientation = self.sensor_owner.orientation
-    #     featured_objects = [obj for obj in neighborhood \
-    #                         if self._target_filter(obj) and obj.id != self.sensor_owner.id]
-    #     #! Improve
-    #     for obj in featured_objects:
-    #         if issubclass(type(obj), WorldObject3D):
-    #             if obj.tangible:
-    #                 closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-    #                         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
-    #                 v = np.array(closest_points[0][6]) - self.sensor_owner.position
-    #             else:
-    #                 v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
-    #             orientation = self.sensor_owner.orientation[-1]
-    #         else:
-    #             v = toroidal_difference(obj.position, self.sensor_owner.position)
-    #         rho = LA.norm(v)
-    #         # Angle difference between sensor directions and ang(v)
-    #         phi_values = np.array([angle_diff(compute_angle(v[:2]), theta) for theta in self.directions(orientation)])
-    #         featured_sensors = np.where(phi_values <= self.aperture)[0]
-    #         phi_values = phi_values[featured_sensors]
+        - Returns:
+            Numpy array with the measurement in each direction. In exceptional cases 
+            it may return a list of python dictionaries (see CommunicationReceiver).
+        ================================================================================
+        """
+        readings = [self._step_direction(0, 0, None, 0, obj=None) for _ in range(self.n_sectors)]
+        orientation = self.sensor_owner.orientation
+        featured_objects = [obj for obj in neighborhood \
+                            if self._target_filter(obj) and obj.id != self.sensor_owner.id]
+        #! Improve
+        for obj in featured_objects:
+            if type(obj).__name__ == 'Wall':
+                closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
+                        linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
+                v = np.array(closest_points[0][6]) - self.sensor_owner.position
+            else:
+                v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
+            orientation = self.sensor_owner.orientation[-1]
+            rho = LA.norm(v)
+            if rho >= self.range:
+                continue
 
-    #         for k, phi in zip(featured_sensors, phi_values):
-    #             readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
-    #     return np.array(readings) if not isinstance(readings[0], dict) else readings
+            # Angle difference between sensor directions and ang(v)
+            # import pdb; pdb.set_trace()
+            phi_values = np.array([angle_diff(compute_angle(v[:2]), theta) for theta in self.directions(orientation)])
+            featured_sensors = np.where(phi_values <= self.aperture)[0]
+            phi_values = phi_values[featured_sensors]
+            for k, phi in zip(featured_sensors, phi_values):
+                readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
+        return np.array(readings) if not isinstance(readings[0], dict) else readings

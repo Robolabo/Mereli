@@ -9,7 +9,7 @@ def relu(x):
 
 def sigmoid(x):
     return np.divide(1, 1 + np.exp(-x))
-    
+
 def tanh(x):
     return (np.exp(2*x) - 1) / (np.exp(2*x) + 1)
 

@@ -76,7 +76,9 @@ class World(object):
         #* Compute rewards
         rewards = self.reward_generator(self.prev_actions, self.prev_states, info=self.hierarchy)\
                 if self.t > 0 and self.reward_generator is not None else None
+                
         #* Step controllers
+
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
             if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
                 obj.step(self.neighborhood(obj))
@@ -84,7 +86,6 @@ class World(object):
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
-            
             reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
             state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:
@@ -93,7 +94,6 @@ class World(object):
             actions.append(action_obj)
         states = np.stack(states)
         actions = np.stack(actions)
-        
         #* Apply environmental perturbations (Postprocessing)
         if len(self.env_perturbations) > 0:
             for perturbation in tuple(self.env_perturbations.values())[0]:
@@ -104,15 +104,16 @@ class World(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:#! this prop may not be the best one
                 obj.actuate(self.hierarchy)
-     
+        
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-
+        
         #* Retain prev states and actions to compute rewards.
         self.prev_states = states.copy()
         self.prev_actions = actions.copy()
+        # print('TIME WORLD STEP:  ', str(time.time() - t0))
         return states, actions
 
     def build_from_dict(self, world_dict, ann_topology=None):

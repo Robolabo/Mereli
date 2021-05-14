@@ -8,6 +8,7 @@ def angle_mean(angles):
     """ Compute average angle of a vector of angles in radians.""" 
     return np.angle(np.sum([np.exp(1j * ang) for ang in angles]))
 
+
 def compute_angle(u, v=None):
     '''
     Computes the angle between vectors u and v.
@@ -15,21 +16,23 @@ def compute_angle(u, v=None):
     '''
     # if v is None: v = np.array([1, 0])
     if v is None:
-        if u.sum() == 0:
+        if all(u == 0):
             return 0
         ang = np.arccos(u[0] / np.linalg.norm(u))
-        return ang if u[1] >= 0 else 2 * np.pi - ang
+        return ang if u[1] >= 0 else -ang
     else:
         if u.sum() == 0 or v.sum() == 0 or u == v:
             return 0
-        cos_theta = np.dot(u, v)/np.linalg.norm(u)/np.linalg.norm(v)
+        cos_theta = np.dot(u, v) / np.linalg.norm(u) / np.linalg.norm(v)
         theta = np.arccos(np.clip(cos_theta, a_min=-1, a_max=1))
         # if(u[0]*v[1] - u[1]*v[0] < 0): theta *= -1
         return theta
 
 
 def angle_diff(x, y):
-    """ Compute the difference between two angles in radians.""" 
+    """ Compute the difference between two angles in radians."""
+    # abs_diff = np.abs(x - y)
+    # return min(abs_diff, 2 * np.pi - abs_diff)
     return min((x - y) % (2 * np.pi), (y - x) % (2 * np.pi))
 
 def normalize(v):

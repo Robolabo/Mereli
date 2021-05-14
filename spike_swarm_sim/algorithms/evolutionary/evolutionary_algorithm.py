@@ -98,6 +98,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     fitness = 0
     mean_survival_time = 0
+    t0 = time.time()
     # print(p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_engine.engine._client))
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
@@ -109,6 +110,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         info['generation'] = generation
         survival_time = 0
         done = False
+
         while (not done and survival_time <= eval_steps):
             states, actions = world.step()
             for key, val in info.items():
@@ -119,8 +121,12 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             survival_time += 1
             # if done:
             #     break
+        
         mean_survival_time += survival_time
+        
         fitness += fitness_fn(actions_history, states_history, info=info)
+    # print(time.time() - t0)
+
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()

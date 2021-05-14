@@ -100,7 +100,6 @@ class Robot3D(WorldObject3D):
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
 
-
     def reset(self, seed=None):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
