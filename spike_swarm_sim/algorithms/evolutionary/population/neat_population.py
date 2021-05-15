@@ -80,7 +80,6 @@ class NEAT_Population(Population):
         """
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
-
         #* Update species fitness statistics
         for spc in self.species:
             spc_fitness = [ft for ft, gt in zip(fitness_vector, self.population) if gt['species'] == spc.id]
@@ -88,7 +87,6 @@ class NEAT_Population(Population):
 
         #* Compute the number of offspring for each species
         species_offsprings = compute_spawn(self.species, self.pop_size, 2)
-
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
             #* Filter out genotypes from species.

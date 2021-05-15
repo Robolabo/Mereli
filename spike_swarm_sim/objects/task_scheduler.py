@@ -7,11 +7,12 @@ from spike_swarm_sim.globals import global_states
 
 @world_object_registry(name='task_scheduler')
 class TaskScheduler(WorldObject):
-    def __init__(self, *args, total_timesteps=1000, num_tasks=2, num_slots=2, **kwargs):
+    def __init__(self, *args, total_timesteps=1000, num_tasks=2, num_slots=2, replacement=False, **kwargs):
         super(TaskScheduler, self).__init__(*args, tangible=False, **kwargs)
         self.total_timesteps = total_timesteps
         self.num_tasks = num_tasks
         self.num_slots = num_slots
+        self.replacement = replacement
         
         # self.min_slot_duration = int(total_timesteps
         # self.max_slot_duration = 
@@ -49,7 +50,7 @@ class TaskScheduler(WorldObject):
         #     print(seed, self.task_order)
         # else:
         #     self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
-        self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=self.replacement)
         if seed is not None:
             np.random.seed()
     

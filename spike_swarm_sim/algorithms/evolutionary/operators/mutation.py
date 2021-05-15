@@ -84,13 +84,12 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     existing_conns = set([(conn['pre'], conn['post']) for conn in genotype['connections'].values()])
     allowed_conns = list(pos_conns - existing_conns)
     if len(allowed_conns) == 0:
-        return genotype 
+        return genotype, current_innovation, innovation_history
     new_conn = allowed_conns[np.random.choice(range(len(allowed_conns)))]
 
     #* Name connection is "pre-post"
     conn_name = '-'.join(new_conn)
     #! OJO RESTO DE PARAMETERS.
-    # if isinstance(innovation_history, str): import pdb; pdb.set_trace()
     genotype['connections'].update({
         conn_name : {
             'pre' : new_conn[0],
@@ -130,7 +129,6 @@ def delete_connection(genotype, input_nodes, **kwargs):
     if condition:
         return
     del genotype['connections'][conn]
-
 
 def neat_mutation(population, input_nodes, current_innovation, innovation_history,
             mutable_variables, p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
