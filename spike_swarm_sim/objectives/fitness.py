@@ -334,7 +334,7 @@ class TestCommLEDs:
         fitness = 0
         led_targets = np.array(info['task_scheduler:current_task']).flatten()
         for actions_t, target in zip(actions, led_targets):
-            fitness += np.mean([ac['led_actuator_3D'] == target for ac in actions_t])
+            fitness += all([ac['led_actuator_3D'] == target for ac in actions_t])
         return fitness / len(states)
 
 # @fitness_func_registry(name='exploration')
