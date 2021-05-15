@@ -147,7 +147,7 @@ class GotoLight:
         =======================================================================================
         """
         robot_positions = np.stack(info["robot:position"]).copy()
-        light_positions = np.stack(info["light_source:position@color=red"]).copy()
+        light_positions = np.stack(info["light_source:position@color="+self.color]).copy()
         fitness = 0
         for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):
             #* Considering only 1 light
@@ -316,6 +316,7 @@ class TestCommLEDs:
         fA, fB = 0, 0
         nA, nB = 0, 0
         led_targets = np.array(info['task_scheduler:current_task']).flatten()
+        
         for actions_t, target in zip(actions, led_targets):
             if target == 0:
                 fA += all([ac['led_actuator_3D'] == 0 for ac in actions_t])
