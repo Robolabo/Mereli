@@ -4,25 +4,28 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I0" : {"n" : 4, "sensor" : "IR_receiver:msg"}
+            "I0" : {"n" : 4, "sensor" : "IR_receiver:msg"},
+            "I1" : {"n" : 1, "sensor" : "task_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+            "OUT_LED" : {"n" : 1, "params" : {"tau": 0.5}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_LED", "actuator" : "led_actuator_3D", "enc": "cat"}
         },
         "synapses" :  {
-            "I0-MOT" : {"pre":"I0","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I0-COMM" : {"pre":"I0","post":"OUT_COMM", "trainable":true, "p":1.0}
+            "I0-COMM" : {"pre":"I0","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I0-LED" : {"pre":"I0","post":"OUT_LED", "trainable":true, "p":1.0},
+            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I1-LED" : {"pre":"I1","post":"OUT_LED", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : false}}
         }
     },
     "algorithm" : {
@@ -30,9 +33,9 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 2000,
-        "evaluation_steps" : 600,
+        "evaluation_steps" : 200,
         "num_evaluations" : 3,
-        "fitness_function" : "test_comm_aggregation",
+        "fitness_function" : "test_comm_leds",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -60,23 +63,29 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 2,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic"}
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic"},
+                    "task_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 12},
-                    "wireless_transmitter" : {"quantize": false, "range" : 15, "msg_length":1, "K" : 2}
+                    "wireless_transmitter" : {"quantize": false, "range" : 15, "msg_length":1, "K" : 2},
+                    "led_actuator_3D" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0, 0], [2, 2]]}},
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0, 0], [2, 2], [2, -2], [-2,2]]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {
-                    "stimuli_inhibition" : {"affected_robots": [1], "stimuli" : "IR_receiver:msg"}
+                    "stimuli_inhibition" : {"affected_robots": [1, 2, 3], "stimuli" : "task_sensor", "replace_value" : -1}
                 },
                 "params" : {"trainable" : true}
+            }, 
+            "task_scheduler" : {
+                "type" : "task_scheduler",
+                "num_instances": 1,
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 200}
             }
         }
     }

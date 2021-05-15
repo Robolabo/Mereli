@@ -265,6 +265,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
+        # import pdb; pdb.set_trace()
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()

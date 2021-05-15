@@ -324,6 +324,19 @@ class TestCommAggr:
         return steppp([*states], robot_positions)
 
 
+@fitness_func_registry(name='test_comm_leds')
+class TestCommLEDs:
+    def __init__(self):
+        self.required_info = ("generation", 'task_scheduler:current_task')
+
+    
+    def __call__(self, actions, states, info=None):
+        fitness = 0
+        led_targets = np.array(info['task_scheduler:current_task']).flatten()
+        for actions_t, target in zip(actions, led_targets):
+            fitness += np.mean([ac['led_actuator_3D'] == target for ac in actions_t])
+        return fitness / len(states)
+
 # @fitness_func_registry(name='exploration')
 # class Exploration:
 #     """Fitness function for the exploration task."""
