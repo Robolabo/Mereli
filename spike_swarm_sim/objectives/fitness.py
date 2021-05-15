@@ -341,7 +341,7 @@ class TestCommLEDs:
             else:
                 fB += all([ac['led_actuator_3D'] == 1 for ac in actions_t])
                 nB += 1
-        return ((fA /nA) * (fB / nB)) ** (0.5)
+        return ((fA /nA) * (fB / nB)) ** (0.5) + 1e-5
 
 # @fitness_func_registry(name='exploration')
 # class Exploration:
