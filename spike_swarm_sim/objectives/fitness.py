@@ -331,11 +331,17 @@ class TestCommLEDs:
 
     
     def __call__(self, actions, states, info=None):
-        fitness = 0
+        fA, fB = 0, 0
+        nA, nB = 0, 0
         led_targets = np.array(info['task_scheduler:current_task']).flatten()
         for actions_t, target in zip(actions, led_targets):
-            fitness += all([ac['led_actuator_3D'] == target for ac in actions_t])
-        return fitness / len(states)
+            if target == 0:
+                fA += all([ac['led_actuator_3D'] == 0 for ac in actions_t])
+                nA += 1
+            else:
+                fB += all([ac['led_actuator_3D'] == 1 for ac in actions_t])
+                nB += 1
+        return ((fA /nA) * (fB / nB)) ** (0.5)
 
 # @fitness_func_registry(name='exploration')
 # class Exploration:
