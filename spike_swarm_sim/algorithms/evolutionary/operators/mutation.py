@@ -20,8 +20,6 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     sel_conn = np.random.choice([*zip(*filter(lambda x: x[1]['enabled'], genotype['connections'].items()))][0])
     node_name = 'Node_' + str(genotype['connections'][sel_conn]['innovation'])
 
-    # pre_nodes, post_nodes = [*map(set, zip(*innovation_history.keys()))]
-    # node_name = assign_unique_key(list(pre_nodes.union(post_nodes)), 'Node')
     genotype['nodes'][node_name] = {
             'ensemble' : node_name,
             'idx' : len(genotype['nodes']),
