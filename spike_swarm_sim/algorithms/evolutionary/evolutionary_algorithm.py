@@ -67,7 +67,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     compute its fitness.
     =====================================================================
     - Args:
-        env_id [int] -> if parallelized, the id of the worker.
+        env_id [int] -> if parallelized, the id of the genotype to eval.
         populations [dict] -> population dict storing all the subpopulations of the EA.
         world [World] -> world object to evaluate fitness.
         num_evaluations [int] -> number of eval repetitions or samples to average the fitness.
@@ -75,10 +75,11 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         seed [int] -> random state to intialize the world equally for all individuals
                       in the population.
     - Returns:
-        Tuple (env_id [int], fitness [float]) with the worker id that executed the evaluation
+        Tuple (env_id [int], fitness [float]) with the genotype id 
         and the resulting fitness.
     =====================================================================
     """
+    
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
@@ -230,7 +231,7 @@ class EvolutionaryAlgorithm:
                 if k % 5 == 0 and self.checkpoint_name is not None:
                     if use_mpi:
                         print('SAVING CHECKPOINT', flush=True)
-                    self.save_population(k)
+                    #! self.save_population(k)
             if use_mpi:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
@@ -242,11 +243,13 @@ class EvolutionaryAlgorithm:
         max_fitness = np.max(self.fitness)
         min_fitness = np.min(self.fitness)
         self.fitness = [0 for _ in range(self.population_size)]
+
         return mean_fitness, max_fitness, min_fitness
 
     def save_population(self, generation):
         """ Save the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
+
     def load_population(self):
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
