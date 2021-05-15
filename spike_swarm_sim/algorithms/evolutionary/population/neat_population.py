@@ -109,8 +109,8 @@ class NEAT_Population(Population):
             offspring.extend(neat_crossover(parents, fitness_parents))
         #* NEAT Mutation
         offspring, self.current_innovation, self.innovation_history = neat_mutation(
-                        offspring, self.input_nodes, self.current_innovation,
-                        self.innovation_history, self.objects, p_weight_mut=self.p_weight_mut,
+                        offspring, self.input_nodes, copy.deepcopy(self.current_innovation),
+                        copy.deepcopy(self.innovation_history), self.objects, p_weight_mut=self.p_weight_mut,
                         p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
         #* Update popultation
         self.population = offspring
@@ -208,7 +208,7 @@ class NEAT_Population(Population):
                     self.innovation_history[(conn['pre'], conn['post'])] = self.current_innovation
                     self.current_innovation += 1
                 else:
-                    conn['innovation'] = self.innovation_history[(conn['pre'], conn['post'])]
+                    conn['innovation'] = copy.deepcopy(self.innovation_history[(conn['pre'], conn['post'])])
         #* Initial Speciation
         self.update_species(0)
         # self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
