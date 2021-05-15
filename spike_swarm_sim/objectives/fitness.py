@@ -130,8 +130,9 @@ class Alignment:
 @fitness_func_registry(name='goto_light')
 class GotoLight:
     """Fitness function for the light follower task."""
-    def __init__(self):
-        self.required_info = ("robot:position", "robot:orientation", "light_source:position@color=red")
+    def __init__(self, color='red'):
+        self.color = color
+        self.required_info = ("robot:position", "robot:orientation", "light_source:position@color="+color)
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -217,9 +218,38 @@ class TaskSwitching:
     """Fitness function for the exploration task."""
     def __init__(self):
         self.tasks = [GotoLight(), TransportCubesFitness()]
+        
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
-        
+        import pdb; pdb.set_trace()
+
+    def __call__(self, actions, states, info=None):
+        tasks = np.array(info['task_scheduler:current_task']).flatten()
+        task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
+        fitness_tasks = []
+        for i, tsk_sw in enumerate(task_switch):
+            tsk = tasks[tsk_sw]
+            init_instant = task_switch[i - 1] if i > 0 else 0
+            last_instant = tsk_sw + 1 if i < len(task_switch) - 1 else tsk_sw
+            task_actions = np.array(actions)[init_instant:last_instant]
+            task_states = np.array(states)[init_instant:last_instant]
+            task_info = {key : np.array(values)[init_instant:last_instant]\
+                if key != 'generation' else values for key, values in info.items()}
+            fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
+        fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
+        # fitness = np.mean(fitness_tasks)
+        # import pdb; pdb.set_trace()
+        return fitness + 1e-5
+
+
+@fitness_func_registry(name='task_switching2')
+class TaskSwitching2:
+    """Fitness function for the exploration task."""
+    def __init__(self):
+        self.tasks = [GotoLight(), GotoLight(color='yellow')]
+        #! Add current task info
+        self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
         task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
@@ -251,54 +281,6 @@ class MultitpleTasks:
         fB = np.clip(self.tasks[1](actions, states, info=info), a_min=0, a_max=1)
         fitness = fA * (1 - fB) if task == 0 else fB * (1 - fA)
         return fitness + 1e-5
-
-
-@fitness_func_registry(name='multi_lights')
-class MultipleLights:
-    """Fitness function for the light follower task."""
-    def __init__(self):
-        self.required_info = ("generation", "robot:position", "robot:orientation",
-                            "light_source:position@color=green", "light_source:position@color=red",
-                            "light_source:position@color=yellow")
-
-    def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
-        Additionally, other useful variables can be used from info dict (if specified in init).
-        =======================================================================================
-        - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
-                    corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
-                    corresponding measured states.
-            info [dict or None]: dict of additional information. 
-        =======================================================================================
-        """
-        robot_positions = np.stack(info["robot:position"]).copy()
-        green_light_positions = np.stack(info[ "light_source:position@color=green"]).copy()
-        yellow_light_positions = np.stack(info["light_source:position@color=yellow"]).copy()
-        red_light_positions = np.stack(info["light_source:position@color=red"]).copy()
-        fitness = 0
-        for t, (pos, green_light_pos, yellow_light_pos, red_light_pos) in enumerate(zip(robot_positions,\
-                            green_light_positions, yellow_light_positions, red_light_positions)):
-            green_light_pos = green_light_pos.flatten()
-            yellow_light_pos = yellow_light_pos.flatten()
-            red_light_pos = red_light_pos.flatten()
-
-            distances_green = LA.norm(pos[:, :2] - green_light_pos[:2], axis=1)
-            distances_yellow = LA.norm(pos[:, :2] - yellow_light_pos[:2], axis=1)
-            distances_red = LA.norm(pos[:, :2] - red_light_pos[:2], axis=1)
-            #* Distance of every robot to the nearest neighbor
-            distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
-                                for i, pos_i in enumerate(pos)])
-            #! OJO: solo ok si 6 robots.
-            fA = (int(sum(distances_green < 1) == 2) + int(sum(distances_red < 1) == 2) + int(sum(distances_yellow < 1) == 2)) / 3
-            # fB = np.mean(distances_robots > 0.4)
-            fitness += fA
-        return (fitness / len(states)) + 1e-5
-
-
-
-
 
 def steppp(states, robot_positions):
     fitness = 0
