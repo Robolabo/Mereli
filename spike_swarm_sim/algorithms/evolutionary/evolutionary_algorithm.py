@@ -231,7 +231,7 @@ class EvolutionaryAlgorithm:
                 if k % 5 == 0 and self.checkpoint_name is not None:
                     if use_mpi:
                         print('SAVING CHECKPOINT', flush=True)
-                    #! self.save_population(k)
+                    self.save_population(k)
             if use_mpi:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
