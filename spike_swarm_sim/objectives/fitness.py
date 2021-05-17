@@ -313,20 +313,15 @@ class TestCommLEDs:
 
     
     def __call__(self, actions, states, info=None):
-        fA, fB = 0, 0
-        nA, nB = 0, 0
         led_targets = np.array(info['task_scheduler:current_task']).flatten()
-        
-        for actions_t, target in zip(actions, led_targets):
-            if target == 0:
-                fA += all([ac['led_actuator_3D'] == 0 for ac in actions_t])
-                nA += 1
-            else:
-                fB += all([ac['led_actuator_3D'] == 1 for ac in actions_t])
-                nB += 1
-        if nA == 0: return fB / nB + 1e-5
-        if nB == 0: return fA / nA + 1e-5
-        return ((fA /nA) * (fB / nB)) ** (0.5) + 1e-5
+        actions = np.array(actions)
+        fitness_slots = []
+        for i in range(4):
+            fi = 0
+            for actions_t, target in zip(actions[i*50:(i+1)*50], led_targets[i*50:(i+1)*50]):
+                fi += all([ac['led_actuator_3D'] == target for ac in actions_t])
+            fitness_slots.append(fi / 50)  
+        return np.prod(fitness_slots) ** (1/4) + 1e-5
 
 # @fitness_func_registry(name='exploration')
 # class Exploration:
