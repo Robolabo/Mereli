@@ -86,7 +86,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
     @INIT('neurons:bias')
     def init_bias(self, neuron_name, ann_graph, min_val=-1., max_val=1.):
         biases_len = self.len_bias(neuron_name, ann_graph)
-        random_biases = 0.5 * np.random.randn(biases_len)*0.2
+        random_biases = 0.5 * np.random.randn(biases_len) * 0.3
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
 
