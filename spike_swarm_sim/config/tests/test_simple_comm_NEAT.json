@@ -10,6 +10,7 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
+            "H" : {"n" : 10, "params" : {"tau": 0.5}},
             "OUT_COMM" : {"n" : 1, "params" : {"tau": 0.5}},
             "OUT_LED" : {"n" : 1, "params" : {"tau": 0.5}}
         },
@@ -18,10 +19,12 @@
             "outC" : {"ensemble" : "OUT_LED", "actuator" : "led_actuator_3D", "enc": "cat"}
         },
         "synapses" :  {
-            "I0-COMM" : {"pre":"I0","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I0-LED" : {"pre":"I0","post":"OUT_LED", "trainable":true, "p":1.0},
-            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I1-LED" : {"pre":"I1","post":"OUT_LED", "trainable":true, "p":1.0}
+            "I0-H" : {"pre":"I0","post":"H", "trainable":true, "p":1.0},
+            "I1-H" : {"pre":"I1","post":"H", "trainable":true, "p":1.0},
+
+            "H-LED" : {"pre":"H","post":"OUT_LED", "trainable":true, "p":1.0}, 
+            "H-COMM" : {"pre":"H","post":"OUT_COMM", "trainable":true, "p":1.0}
+
         },
         "decoding" : {
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
