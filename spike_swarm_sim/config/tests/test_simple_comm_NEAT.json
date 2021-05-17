@@ -37,7 +37,7 @@
         "population_size" : 50,
         "generations" : 2000,
         "evaluation_steps" : 200,
-        "num_evaluations" : 5,
+        "num_evaluations" : 10,
         "fitness_function" : "test_comm_leds",
         "populations" : {
             "p1" : {
@@ -65,7 +65,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 4,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic"},
@@ -76,7 +76,7 @@
                     "led_actuator_3D" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0, 0], [2, 2], [2, -2], [-2,2]]}},
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0, 0], [2, 2]]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {
