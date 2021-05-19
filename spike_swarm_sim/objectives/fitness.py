@@ -160,8 +160,8 @@ class GotoLight:
             # distances_robots = np.array([np.min([LA.norm(pos_i - pos_j) for j, pos_j in enumerate(pos) if i != j]) 
             #                     for i, pos_i in enumerate(pos)])
             fA = (distances < 1).mean()
-            # if len(distances) > 1:
-            #     fA *= (np.sum(distances < 1) > 1)
+            if len(distances) > 1:
+                fA *= (np.sum(distances < 1) > 1)
             
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
