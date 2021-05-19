@@ -124,7 +124,7 @@
                 "type" : "task_scheduler",
                 "num_instances": 1,
                 "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1500}
-            }
+            }   
         }
     }
 }
