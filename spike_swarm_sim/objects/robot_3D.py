@@ -50,6 +50,7 @@ class Robot3D(WorldObject3D):
             a dict with the sensor/actuator name and the corresponding stimuli/action.
         =====================
         """
+        # import pdb; pdb.set_trace()
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Apply perturbations to stimuli 
