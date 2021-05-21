@@ -162,7 +162,9 @@ class GotoLight:
             fA = (distances < 1).mean()
             if len(distances) > 1:
                 fA *= (np.sum(distances < 1) > 1)
-            
+            if t < 100:
+                rad_ball = -(3/100) * t + 3
+                fA = np.clip(1 - (distances / rad_ball), a_max=1, a_min=0).mean()
             # fB = np.mean(distances_robots > 0.4)
             # fC = np.mean(distances_robots < 1.5)
             # import pdb; pdb.set_trace()
@@ -221,7 +223,6 @@ class TaskSwitching:
         
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
-        import pdb; pdb.set_trace()
 
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
@@ -248,24 +249,23 @@ class TaskSwitching2:
     def __init__(self):
         self.tasks = [GotoLight(), GotoLight(color='yellow')]
         #! Add current task info
-        self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+        self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
 
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
-        task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
+        n_slots = info['task_scheduler:num_slots'][0].item()
         fitness_tasks = []
-        for i, tsk_sw in enumerate(task_switch):
-            tsk = tasks[tsk_sw]
-            init_instant = task_switch[i - 1] if i > 0 else 0
-            last_instant = tsk_sw + 1 if i < len(task_switch) - 1 else tsk_sw
-            task_actions = np.array(actions)[init_instant:last_instant]
-            task_states = np.array(states)[init_instant:last_instant]
-            task_info = {key : np.array(values)[init_instant:last_instant]\
+        for i in range(n_slots):
+            t_init = int(i * len(actions) / n_slots)
+            t_end = int((i + 1)  * len(actions) / n_slots)
+            task_actions = np.array(actions)[t_init:t_end]
+            task_states = np.array(states)[t_init:t_end]
+            task_info = {key : np.array(values)[t_init:t_end]\
                 if key != 'generation' else values for key, values in info.items()}
-            fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
+            task = self.tasks[tasks[t_init+1]]
+            fitness_tasks.append(task(task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        # fitness = np.mean(fitness_tasks)
-        # import pdb; pdb.set_trace()
+
         return fitness + 1e-5
 
 @fitness_func_registry(name='multiple_tasks')

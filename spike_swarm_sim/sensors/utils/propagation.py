@@ -65,20 +65,20 @@ class Propagation:
                 it in the figure title.
         =============================================================
         """
-        direction = 0
+        directions = [0, np.pi/2, np.pi, 1.5*np.pi]#[0]
         theta_vals = np.radians(np.linspace(0, 360, 360))
-        phi_vals = np.abs(direction - theta_vals)
-        phi_vals[phi_vals > np.pi] =  2 * np.pi - phi_vals[phi_vals > np.pi]
-        
-        
         fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
-        # import pdb; pdb.set_trace()
-        ax.plot(theta_vals, [self(0.01, th) for th in phi_vals])
-        
-        if sensor_name is not None:
-            ax.set_title('Coverage of {} for a sector.'.format(sensor_name))
-        else:
-            ax.set_title('Sector Coverage.')
+        for direction in directions:
+            phi_vals = np.abs(direction - theta_vals)
+            phi_vals[phi_vals > np.pi] =  2 * np.pi - phi_vals[phi_vals > np.pi]
+            
+            # import pdb; pdb.set_trace()
+            ax.plot(theta_vals, [self(0.01, th) for th in phi_vals])
+            
+            # if sensor_name is not None:
+            #     ax.set_title('Coverage of {} for a sector.'.format(sensor_name))
+            # else:
+            #     ax.set_title('Sector Coverage.')
         plt.show()
 
 class ExpDecayPropagation(Propagation):
@@ -92,7 +92,7 @@ class ExpDecayPropagation(Propagation):
 
     def __call__(self, rho, phi):
         return np.exp(-self.rho_att * rho)  * np.exp(-self.phi_att * phi)
-        # signal = np.exp(-self.rho_att * rho) * np.exp(-5 * phi ** 2)
+        # return np.exp(-self.rho_att * rho) * np.exp(-0.75 * phi ** 2)#
         # return signal
 
 class RSSI_Propagation(Propagation):
