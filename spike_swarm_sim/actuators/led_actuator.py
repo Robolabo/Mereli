@@ -39,7 +39,7 @@ class LedActuator3D(Actuator):
         # In epuck, 3 is the led piece
         p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=list(color) + [0.6],\
             physicsClientId=self.actuator_owner.physics_client)
-    
+
     def reset(self):
         self.on = 0
         self.fault = False
