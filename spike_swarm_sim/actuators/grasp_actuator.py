@@ -39,7 +39,7 @@ class GraspActuator(HighLevelActuator):
         #* Action is a\in{0,1,2}. a=0 means do nothing, a=1 means grasp and a=2 means drop.
         if action == 0 or 0 > action > 2:
             return
-        if action == 1: #* Grasp
+        if action == 1: #* Grasp    
             if self.cube_grasped is not None or self.grasp_cooldown > 0:
                 self.grasp_cooldown -= 1
                 return
