@@ -292,7 +292,6 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-
         # import pdb; pdb.set_trace()
         # if self.t == 0:
         #     self.weight_registry = self.weights[self.synapses.mask].copy().flatten()
@@ -314,8 +313,8 @@ class NeuralNetwork:
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            # self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
-            # self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
+            self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+            self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
         #* --- Step synapses and neurons ---
 
         spikes_window = []
@@ -329,7 +328,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 2500 and self.monitor is not None:
+        if self.t == self.time_scale * 2000 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))

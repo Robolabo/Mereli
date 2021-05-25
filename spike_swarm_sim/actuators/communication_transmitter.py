@@ -2,6 +2,8 @@ import numpy as np
 from .base_actuator import Actuator
 from spike_swarm_sim.register import actuator_registry
 from spike_swarm_sim.utils import softmax
+from spike_swarm_sim.globals import global_states
+import pybullet as p
 
 @actuator_registry(name='wireless_transmitter')
 class CommunicationTransmitter(Actuator):
@@ -45,6 +47,10 @@ class CommunicationTransmitter(Actuator):
         self.frame['n_hops'] = action['n_hops']
         self.frame['state'] = action['state']
         self.frame['sending_direction'] = action['sending_direction']
+        if global_states.RENDER:
+            color = [self.frame['msg'][0], 0, 0]
+            p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.6],\
+                physicsClientId=self.actuator_owner.physics_client)
 
     def quantize_fn(self, msg, tau=0.1):
         dists = np.linalg.norm(msg - self.clusters, axis=1)
