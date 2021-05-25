@@ -70,7 +70,6 @@ class World(object):
             A tuple with state and action dicts.
         ======================================================
         """
-        
         states = deque()
         actions = deque()
         pre_perturbations = []

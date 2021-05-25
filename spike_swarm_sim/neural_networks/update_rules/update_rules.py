@@ -12,7 +12,7 @@ def append_and_pop(queue, new_elem):
 class GeneralizedHebbian:
     def __init__(self):
         self.modulated = False #!
-        self.learning_rate = 1e-3
+        self.learning_rate = 5e-3
         self.A = 1.0
         self.B = 0.0
         self.C = 0.0
