@@ -26,7 +26,14 @@ import graphviz
 
 
 def plot_ann_graph(neural_net, filename=None):
-    
+    conn_attr = {
+        # 'style' : 'normal' if conn['weight'] >= 0 else 'dot',
+        # 'color' : 'blue' if conn['weight'] >= 0 else 'red',
+        'penwidth' : '0.5',#str(np.abs(conn['weight']) / 3),
+        'arrowsize' : '0.2',
+        #'weight' : str(np.abs(conn['weight'])),
+
+    }
     node_attrs = {
         'shape': 'circle',
         'fontsize': '5',
@@ -36,48 +43,58 @@ def plot_ann_graph(neural_net, filename=None):
         }
     graph = graphviz.Digraph(format='svg', node_attr=node_attrs)
     # graph.attr(rankdir='BT', size='5,5') #,splines='line', size='6,6',nodesep='0.8')
-    graph.attr(rankdir='LR', size='7,7', nodesep='0.05')
+    graph.attr(rankdir='BT', size='7,7', nodesep='0.05', ranksep = '0.5')
     graph.attr('node', shape='circle', style='filled', fixedsize='true')
-    with graph.subgraph(name='cluster_inputs') as subG:
-        for in_name in neural_net.graph['inputs']:
-            subG.attr( rank='same')
-            subG.node_attr.update(fillcolor='cadetblue1')
-            subG.node(in_name)
-        # for conn_name, conn in neural_net.graph['synapses'].items(): 
-        #     if conn['pre'] in  neural_net.graph['inputs'] and conn['enabled']:
-        #         subG.edge(conn['pre'], conn['post'], fontsize='9', arrowsize='0.2')
+    
+    for in_ens in neural_net.input_ensemble_names:
+        with graph.subgraph(name='cluster_inputs'+in_ens) as subG:
+            for in_name, inp in neural_net.graph['inputs'].items():
+                if inp['ensemble'] == in_ens:
+                    subG.attr( rank='min')
+                    subG.node_attr.update(fillcolor='cadetblue1', label='')
+                    subG.node(in_name)
+       
     #* Hidden
-    with graph.subgraph(name='hidden') as subG:
-        for ensemble in neural_net.ensemble_names:
-            if ensemble not in neural_net.motor_ensemble_names:
-                    # subG.attr(rank='same', style="rounded")
-                    subG.node_attr.update(fillcolor='darkseagreen1')
-                    for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
-                        subG.node(mot_name)
-    # for ensemble in neural_net.ensemble_names:
-    #     if ensemble not in neural_net.motor_ensemble_names:
-    #         for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
-    #             graph.node(mot_name, fillcolor='darkseagreen1')
+    for ensemble in neural_net.ensemble_names:
+        if ensemble not in neural_net.motor_ensemble_names:
+            with graph.subgraph(name='hidden'+ensemble) as subG:
+                subG.attr(rank='same', constrain='false')
+                subG.node_attr.update(fillcolor='darkseagreen1', label='',)
+                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                    subG.node(mot_name)
     #* Motor
-    with graph.subgraph(name=' motor') as subG:
-        for ensemble in neural_net.ensemble_names:
-            if ensemble in neural_net.motor_ensemble_names:
-                    subG.attr(rank='same')
-                    subG.node_attr.update(fillcolor='red')
-                    for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
-                        subG.node(mot_name)
+    for ensemble in neural_net.ensemble_names:
+        if ensemble in neural_net.motor_ensemble_names:
+            with graph.subgraph(name='cluster_motor' + ensemble) as subG:
+                subG.attr(rank='max')
+                subG.node_attr.update(fillcolor='red', label='')
+                for mot_name, _ in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                    subG.node(mot_name)
 
+    hidden_nodes = [name for name, node in neural_net.graph['neurons'].items() if not node['is_motor']]
+    motor_nodes = [name for name, node in neural_net.graph['neurons'].items() if node['is_motor']]
+    # Hidden-Hidden
     for conn_name, conn in neural_net.graph['synapses'].items():
-        conn_attr = {
-            # 'style' : 'normal' if conn['weight'] >= 0 else 'dot',
-            # 'color' : 'blue' if conn['weight'] >= 0 else 'red',
-            'penwidth' : '0.5',#str(np.abs(conn['weight']) / 3),
-            'arrowsize' : '0.2',
-            #'weight' : str(np.abs(conn['weight'])),
-
-        }
-        if conn['enabled']:
+        if conn['enabled'] and (conn['pre'] in hidden_nodes and conn['post'] in hidden_nodes):
             graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+    # Input-Hidden
+    for conn_name, conn in neural_net.graph['synapses'].items():
+        if conn['enabled'] and (conn['pre'] in neural_net.graph['inputs'] and conn['post'] in hidden_nodes):
+            graph.edge(conn['pre'], conn['post'], fontsize='9', **conn_attr)
+    # Hidden-Motor
+    for conn_name, conn in neural_net.graph['synapses'].items():
+        if conn['enabled'] and (conn['pre'] in hidden_nodes and conn['post'] in motor_nodes):
+            graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+  
+
+
+    # Hidden to motor and motor to hidden
+    
+    # for conn_name, conn in neural_net.graph['synapses'].items():
+    #     if conn['enabled'] and (conn['pre'] in motor_nodes or conn['post'] in motor_nodes):
+    #         graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+
+    
     if filename is None:
         filename = 'ann_plot'
     graph.view('tmp/' + filename)

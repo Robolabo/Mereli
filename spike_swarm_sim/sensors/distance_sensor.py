@@ -47,7 +47,8 @@ class DistanceSensor3D(DirectionalSensor):
     """
     def __init__(self, *args, **kwargs):
         super(DistanceSensor3D, self).__init__(*args, **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.)
+        self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
+        # self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1.) # DS=
         # self.sensors_idx = None
         self.aperture = 1.5 * np.pi / self.n_sectors
 

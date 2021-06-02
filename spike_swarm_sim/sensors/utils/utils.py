@@ -6,9 +6,9 @@ def list_sensors(robot):
     sensor_list = []
     for name, sens in robot.sensors.items():
         if name == 'IR_receiver':
-            comm_info = ['msg_' + str(i) for i in range(sens.msg_length)]\
-                + ['signal', 'sending_direction_x', 'sending_direction_y',\
-                'receiving_direction_x', 'receiving_direction_y']
+            comm_info = ['msg_' + str(i) for i in range(sens.msg_length)]
+                # + ['signal', 'sending_direction_x', 'sending_direction_y',\
+                # 'receiving_direction_x', 'receiving_direction_y']
             sensor_list.extend(['IR_receiver:' + str(key) for key in comm_info])
         else:
             if hasattr(sens, 'n_sectors'):

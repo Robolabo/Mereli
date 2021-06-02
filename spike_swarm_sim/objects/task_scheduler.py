@@ -50,7 +50,7 @@ class TaskScheduler(WorldObject):
         #     print(seed, self.task_order)
         # else:
         #     self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
-        self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=self.replacement)
+        self.task_order = np.array([0,1])# np.random.choice(self.num_tasks, size=self.num_slots, replace=self.replacement)
         if seed is not None:
             np.random.seed()
     

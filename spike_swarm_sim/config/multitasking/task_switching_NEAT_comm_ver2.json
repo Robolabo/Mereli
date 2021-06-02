@@ -80,7 +80,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 3,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 30},
@@ -123,7 +123,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 4000, "replacement" : false}
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, "replacement" : false}
             }   
         }
     }

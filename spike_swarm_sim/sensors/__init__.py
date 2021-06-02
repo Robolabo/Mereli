@@ -11,4 +11,6 @@ from .ground_sensor import GroundSensor
 from .color_sensor import ColorSensor
 from .joint_sensor import JointPositionSensor, JointVelocitySensor
 from .task_sensor import TaskSensor
+from .collision_sensor import CollisionSensor
+
 from .utils import *

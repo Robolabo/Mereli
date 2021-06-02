@@ -8,6 +8,8 @@ def list_actuators(robot):
             actuator_list.extend(['wireless_transmitter:' + str(key) for key in comm_info])
         elif name == 'wheel_actuator':
             actuator_list.extend(['wheel_actuator_0', 'wheel_actuator_1'])
+        elif name in ['joint_position_actuator', 'joint_velocity_actuator']:
+            actuator_list.extend([name + '_' + str(i) for i in range(len(robot.actuators[name].joint_ids))])
         else:
             actuator_list.append(name)
     return actuator_list

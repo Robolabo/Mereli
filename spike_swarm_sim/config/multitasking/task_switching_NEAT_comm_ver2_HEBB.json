@@ -85,7 +85,7 @@
                 "sensors" : {
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 30},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 30},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic"},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 15, "msg_length" : 1, "selection_scheme" : "cyclic", "noise_sigma" : 0.05},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
                     "task_sensor" : {}
                 },

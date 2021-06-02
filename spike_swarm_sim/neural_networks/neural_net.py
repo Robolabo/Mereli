@@ -109,7 +109,7 @@ class NeuralNetwork:
         #* Variables storing the previous stim and spikes.
         self.stimuli, self.spikes, self.prev_input = None, None, None
         self.weight_registry = None
-
+    
     def build(self):
         #! BUILD NEURONS
         self.synapses.build(self.graph)
@@ -292,6 +292,7 @@ class NeuralNetwork:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+        # plot_ann_graph(self)
         # import pdb; pdb.set_trace()
         # if self.t == 0:
         #     self.weight_registry = self.weights[self.synapses.mask].copy().flatten()
@@ -313,8 +314,8 @@ class NeuralNetwork:
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
-            self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
+            # self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+            # self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
         #* --- Step synapses and neurons ---
 
         spikes_window = []
@@ -328,7 +329,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 2000 and self.monitor is not None:
+        if self.t == self.time_scale * 4000 and self.monitor is not None:
             vv = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -336,8 +337,8 @@ class NeuralNetwork:
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outB'] = [np.sin(2*np.pi*10e-3*self.t)]
-        # actions['outA'] = [0, 0]
+        # actions['outB'] = [np.sin(2*np.pi*freq*self.t * 1e-3)**2]
+        # actions['outA'] = [1, 1]
         # actions['outA'] = [0.5, -0.5]
         # actions['outC'] = [1] #! State = 1
         # print(self.spikes[2], actions['outC'])
