@@ -92,7 +92,7 @@ class ExpDecayPropagation(Propagation):
 
     def __call__(self, rho, phi):
         return np.exp(-self.rho_att * rho)  * np.exp(-self.phi_att * phi)
-        # return np.exp(-self.rho_att * rho) * np.exp(-0.75 * phi ** 2)#
+        # return np.exp(-self.rho_att * rho) * np.exp(-.75* phi ** 2)# 1.5 DS, 0.75 LS
         # return signal
 
 class RSSI_Propagation(Propagation):

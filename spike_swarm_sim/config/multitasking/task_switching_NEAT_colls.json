@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_task_switching_NEAT_3Dold_geom_mean",
+    "checkpoint_file" : "chk_task_switching_NEAT_colls",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -16,13 +16,11 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "H" : {"n" : 5, "params" : {}},
-            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_GRASP" : {"n" : 3, "params" : {}}
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
             "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
@@ -39,12 +37,10 @@
             "I10-H" : {"pre":"I10","post":"H", "trainable":true, "p":1.0},
 
             "H-MOT" : {"pre":"H","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "H-COMM" : {"pre":"H","post":"OUT_COMM", "trainable":true, "p":1.0},
             "H-GRASP" : {"pre":"H","post":"OUT_GRASP", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
             "outD" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : true}}   
         },
         "learning_rule" : { 
@@ -55,16 +51,16 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 300,
+        "population_size" : 200,
         "generations" : 2000,
         "evaluation_steps" : 4000,
-        "num_evaluations" : 2,
-        "fitness_function" : "task_switching",
+        "num_evaluations" : 7,
+        "fitness_function" : "task_switching3",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "learning_rule:params:all"],
-                "max_vals" : [4,  3, 1.2, 2],
-                "min_vals" : [-4, -3, -0.9, -2],
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
+                "max_vals" : [4,  3, 1.2],
+                "min_vals" : [-4, -3, -0.9],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.1,
@@ -93,15 +89,14 @@
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 20},
-                    "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
                     "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
                     "object_grasped_sensor" : {},
                     "ground_sensor" : {},
-                    "task_sensor" : {}
+                    "task_sensor" : {},
+                    "collision_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":2},
                     "grasp_actuator" : {}
                 },
                 "initializers" : {

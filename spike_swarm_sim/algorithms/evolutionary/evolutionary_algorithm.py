@@ -253,7 +253,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=50, timesteps=6000):
+    def evaluate(self, trials=30, timesteps=4000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).
@@ -277,7 +277,14 @@ class EvolutionaryAlgorithm:
         info['generation'] = 1
         
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
-        fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names
+        #! Change list_sensors and actuators to add comm:msg
+        sensor_names = [sens for sens in sensor_names if 'IR_receiver' not in sens]
+        actuator_names = [act for act in actuator_names if 'wireless_transmitter' not in act]
+        #! --------------------------------------------------
+        lights = self.world.lights
+        cubes = self.world.entities('cube')
+        fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names 
+        fieldnames = fieldnames + [y for x in [['position_x_'+name, 'position_y_'+name] for name in {**lights, **cubes}] for y in x]
         data_logger = DataLogger(fieldnames)
         for trial in range(trials):
             world.reset()
@@ -291,12 +298,15 @@ class EvolutionaryAlgorithm:
                     re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
                     st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])
                     ac = np.hstack([action[a] for a in without_duplicates(map(re_split, actuator_names)) if a in action.keys()])
-                    row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position, robot[1].orientation, st, ac)))
+                    row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position[:2], robot[1].orientation[-1], st, ac)))
                     row_dict = {key: val for key, val in zip(fieldnames, row_values)}
+                    for name, obj in {**lights, **cubes}.items():
+                        row_dict.update({'position_x_'+ name : obj.position[0], 'position_y_'+ name : obj.position[1]})
                     data_logger.update(row_dict)
                     eval_hist['states'].append(st)
                     eval_hist['actions'].append(st)
-            fitness = self.fitness_fn(eval_hist['actions'], eval_hist['states'], info=info)
+            # fitness = self.fitness_fn(eval_hist['actions'], eval_hist['states'], info=info)
+            print('End of evaluation trial ' + str(trial))
         data_logger.save(self.checkpoint_name, len(robots))
         import pdb; pdb.set_trace()
 

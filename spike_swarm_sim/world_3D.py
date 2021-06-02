@@ -78,7 +78,6 @@ class World(object):
                 if self.t > 0 and self.reward_generator is not None else None
                 
         #* Step controllers
-
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
             if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
                 obj.step(self.neighborhood(obj))
@@ -114,6 +113,7 @@ class World(object):
         self.prev_states = states.copy()
         self.prev_actions = actions.copy()
         # print('TIME WORLD STEP:  ', str(time.time() - t0))
+        # print([st['collision_sensor'] for st in states])
         return states, actions
 
     def build_from_dict(self, world_dict, ann_topology=None):
