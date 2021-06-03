@@ -87,7 +87,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "robot",
-                "num_instances" : 3,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
