@@ -273,7 +273,7 @@ class TaskSwitching2:
 class TaskSwitching3:
     """Fitness function for the exploration task."""
     def __init__(self):
-        self.tasks = [GotoLight(), GotoLight(color='yellow')]
+        self.tasks = [GotoLight(), TransportCubesFitness()]
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
 
@@ -294,7 +294,6 @@ class TaskSwitching3:
             task = self.tasks[tasks[t_init+1]]
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-
         return fitness + 1e-5
 
 
