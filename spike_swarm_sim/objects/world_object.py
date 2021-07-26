@@ -21,6 +21,7 @@ class WorldObject(ABC):
     def __init__(self, static=True, controller=None, tangible=True,\
                     luminous=False, trainable=False):
         self._id = None
+        self.group = None
         self.static = static
         self.controller = controller
         self.tangible = tangible
@@ -49,10 +50,6 @@ class WorldObject(ABC):
         raise NotImplementedError
     
     @abstractmethod
-    def add_physics(self, engine):
-        raise NotImplementedError
-
-    @abstractmethod
     def reset(self, seed=None):
         raise NotImplementedError
 
@@ -75,23 +72,19 @@ class WorldObject2D(WorldObject):
         position [np.ndarray or list]: position vector of the object.
     ====================================================================================
     """
-    def __init__(self, position, orientation, *args, **kwargs):
+    def __init__(self, model_file, position, orientation, *args, **kwargs):
         super(WorldObject2D, self).__init__(*args, **kwargs)
+        self.model_file = model_file
         self.init_position = position.astype(float) if isinstance(position, np.ndarray) else position
         self.init_orientation = orientation
         self.physics_client = None
 
-    def add_physics(self, engine):
-        self.physics_client = engine
-        #! HACER XML PARSER
-
     def step(self):
-        pass
+        raise NotImplementedError
 
     @property
     def position(self):
         pos = self.physics_client.get_body_position(self.id, 0)
-        # import pdb; pdb.set_trace()
         return (np.array([pos.x, pos.y]) - 500) / 100 
     
     @property
@@ -141,46 +134,31 @@ class WorldObject3D(WorldObject):
     def reset(self, seed=None):
         raise NotImplementedError
 
-    def add_physics(self, physics_client, scaling=1.):
-        self.physics_client = physics_client
-        self._id = p.loadURDF(self.urdf_file, self.init_position,\
-            p.getQuaternionFromEuler(self.init_orientation),
-            globalScaling=scaling, physicsClientId=self.physics_client)
-        for i in range(2):
-            p.changeDynamics(self.id, i, lateralFriction=0.9, physicsClientId=self.physics_client,\
-                activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
-
     @property
     def position(self):
-        pos = np.array(p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[0])
-        # pos[-1] += self.z_offset
-        pos[-1] = self.z_offset
-        if np.isnan(pos).any():import pdb; pdb.set_trace()
+        #TODO: move z_offset to physics_engine 3D. 
+        pos = self.physics_client.get_body_position(self.id, 0)
+        pos[-1] = self.init_position[-1] + self.z_offset
         return pos
-        
+ 
     @property
     def orientation(self):
-        quaternion_orientation = p.getBasePositionAndOrientation(self._id, physicsClientId=self.physics_client)[1]
-        return np.array(p.getEulerFromQuaternion(quaternion_orientation, physicsClientId=self.physics_client))
-
+        return self.physics_client.get_body_orientation(self.id, 0)
+        
     @property
     def velocity(self):
-        return p.getBaseVelocity(self._id, physicsClientId=self.physics_client)[0]
+        return self.physics_client.get_body_velocity(self.id, 0)
 
     @property
     def angular_velocity(self):
-        return p.getBaseVelocity(self._id, physicsClientId=self.physics_client)[1]
+        return self.physics_client.get_body_angular_velocity(self.id, 0)
 
     @position.setter
     def position(self, new_position):
         """ Setter of the position. """
-        p.resetBasePositionAndOrientation(self.id, new_position,\
-            p.getQuaternionFromEuler(self.orientation), physicsClientId=self.physics_client)
-    
+        self.physics_client.set_body_state(self.id, 0, new_position, self.orientation)
+        
     @orientation.setter
     def orientation(self, new_orientation):
         """ Setter of the orientation. """
-        if len(new_orientation) == 1:
-            new_orientation = [0., 0., new_orientation]
-        p.resetBasePositionAndOrientation(self.id, self.position,\
-                p.getQuaternionFromEuler(new_orientation), physicsClientId=self.physics_client)
+        self.physics_client.set_body_state(self.id, 0, self.position, new_orientation)

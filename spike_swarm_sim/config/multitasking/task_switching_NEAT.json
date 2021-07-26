@@ -57,7 +57,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 300,
         "generations" : 2000,
-        "evaluation_steps" : 4000,
+        "evaluation_steps" : 8000,
         "num_evaluations" : 2,
         "fitness_function" : "task_switching",
         "populations" : {
@@ -100,7 +100,7 @@
                     "task_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 12},
                     "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":2},
                     "grasp_actuator" : {}
                 },
@@ -130,7 +130,7 @@
             },
             "cube_blue" : {
                 "type" : "cube",
-                "num_instances": 3,
+                "num_instances": 4,
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -1], "high" : [1, 2], "size" : 2}}
                 },
@@ -148,7 +148,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 4000}
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" :8000}
             }
         }
     }

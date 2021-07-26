@@ -59,7 +59,6 @@ def get_info(names, world):
     return np.array([getattr(v, obj_var) for v in objects.values() if hasattr(v, obj_var)])
 
 
-#!
 def _run_worker(env_id, worlds, populations, eval_steps, \
         num_evaluations, fitness_fn, seed, generation, algorithm):
     """
@@ -79,7 +78,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
-    
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
@@ -100,7 +98,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     fitness = 0
     mean_survival_time = 0
     t0 = time.time()
-    # print(p.getDynamicsInfo(robots[0].id, 0, physicsClientId=world.physics_engine.engine._client))
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
@@ -119,14 +116,10 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             actions_history.append(actions)
             states_history.append(states)
             survival_time += 1
-            # if done:
-            #     break
-        
+            if done:
+                break
         mean_survival_time += survival_time
-        
         fitness += fitness_fn(actions_history, states_history, info=info)
-    # print(time.time() - t0)
-
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
@@ -253,7 +246,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=30, timesteps=4000):
+    def evaluate(self, trials=30, timesteps=8000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).
@@ -264,7 +257,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         world = self.world
         robots = [robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
@@ -279,9 +272,10 @@ class EvolutionaryAlgorithm:
         
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
         #! Change list_sensors and actuators to add comm:msg
-        sensor_names = [sens for sens in sensor_names if 'IR_receiver' not in sens]
-        actuator_names = [act for act in actuator_names if 'wireless_transmitter' not in act]
-        #! --------------------------------------------------
+        # sensor_names = [sens for sens in sensor_names if 'IR_receiver' not in sens]
+        # # actuator_names = [act for act in actuator_names if 'wireless_transmitter' not in act]
+        # actuator_names = [act for act in actuator_names if 'state' not in act]
+        #--------------------------------------------------
         lights = self.world.lights
         cubes = self.world.entities('cube')
         fieldnames = ['trial', 'timestep', 'entity', 'position_x', 'position_y', 'orientation'] + sensor_names + actuator_names 
@@ -290,6 +284,7 @@ class EvolutionaryAlgorithm:
         for trial in range(trials):
             world.reset()
             eval_hist = {'actions': [], 'states': []} # For fitness function not recording
+            info = {n : deque() for n in self.fitness_fn.required_info}
             for timestep in range(timesteps):
                 states, actions = world.step()
                 for key, val in info.items():
@@ -304,9 +299,9 @@ class EvolutionaryAlgorithm:
                     for name, obj in {**lights, **cubes}.items():
                         row_dict.update({'position_x_'+ name : obj.position[0], 'position_y_'+ name : obj.position[1]})
                     data_logger.update(row_dict)
-                    eval_hist['states'].append(st)
-                    eval_hist['actions'].append(st)
-            # fitness = self.fitness_fn(eval_hist['actions'], eval_hist['states'], info=info)
+                eval_hist['states'].append(states)
+                eval_hist['actions'].append(actions)
+            self.fitness_fn(eval_hist['actions'], eval_hist['states'], info=info)
             print('End of evaluation trial ' + str(trial))
         data_logger.save(self.checkpoint_name, len(robots))
         import pdb; pdb.set_trace()
@@ -322,13 +317,24 @@ class EvolutionaryAlgorithm:
         ======================================
         """
         fitness_mean = np.array(self.evolution_history['mean'])
-        fitness_max = np.array(self.evolution_history['max'])
+        fitness_max = np.array([0]+self.evolution_history['max'])
         fitness_min = np.array(self.evolution_history['min'])
         if smoothed:
             fitness_mean = np.array([fitness_mean[i-5:i].mean() for i in range(5, len(fitness_mean))])
             fitness_max = np.array([fitness_max[i-5:i].mean() for i in range(5, len(fitness_max))])
             fitness_min = np.array([fitness_min[i-5:i].mean() for i in range(5, len(fitness_min))])
-        plt.plot(fitness_mean)
-        plt.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color='blue', alpha=.1)
+        plt.plot(fitness_max)
+        plt.ylim([0,1])
+        # plt.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color='blue', alpha=.1)
         plt.xlabel('Generation')
         plt.ylabel('Fitness')
+        plt.show()
+    
+    def plot_species_evolution(self, smoothed=True):
+        species = self.populations['p1'].species
+        for spc in species:
+            fn_ts = np.array(spc.history['max_fitness'])
+            if smoothed:
+                fn_ts = np.array([fn_ts[i-5:i].mean() for i in range(5, len(fn_ts))])        
+            plt.plot(np.arange(spc.creation_generation, spc.creation_generation + len(fn_ts)), fn_ts)
+        plt.show()

@@ -5,10 +5,34 @@ import pybullet as p
 from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
 from spike_swarm_sim.register import world_object_registry
 
+
+@world_object_registry(name='light_source2D')
+class LightSource2D(WorldObject2D):
+    def __init__(self, position, orientation, *args, color='red', range=1., **kwargs):
+        super(LightSource2D, self).__init__('light', position, orientation[-1],\
+                        static=False, luminous=True, tangible=False, *args, **kwargs)
+        self.range = range
+        self.color = color
+        self.reset()
+ 
+    def step(self, world_dict):
+        if self.controllable:
+            if type(self.controller).__name__ == 'PreyController':
+                robot_pos = [robot.position for robot in world_dict]
+                self.position = self.controller.step(self.position, robot_pos)
+            else:
+                self.position = self.controller.step(self.position)
+        return (0, 0)
+
+    def reset(self, seed=None):
+        if self.controller is not None:
+            self.controller.reset()
+
+
 @world_object_registry(name='light_source')
 class LightSource3D(WorldObject3D):
-    def __init__(self, position, orientation, *args, color='red', range=1., **kwargs):
-        super(LightSource3D, self).__init__('light', position, orientation, z_offset=0.8,\
+    def __init__(self, position, orientation, *args, color='red', range=1., z_offset=0., **kwargs):
+        super(LightSource3D, self).__init__('light', position, orientation, z_offset=z_offset,\
                         static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color
@@ -19,8 +43,10 @@ class LightSource3D(WorldObject3D):
         super().add_physics(physics_client)
         color = list(colors.to_rgb(self.color)) + [0.8]
         p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
-    
-    # def set_color(self):
+        # pos = self.position
+        # pos[-1] = 5.
+        # import pdb; pdb.set_trace()
+        # self.position = pos
 
     def step(self, world_dict):
         if self.controllable:
@@ -35,7 +61,7 @@ class LightSource3D(WorldObject3D):
         self.shadow_id = None
         if self.controller is not None:
             self.controller.reset()
-
+       
     def show_coverage(self):
         if self.shadow_id is None:
             self.shadow_id = p.loadURDF('spike_swarm_sim/objects/urdf/shadow.urdf', self.position,\

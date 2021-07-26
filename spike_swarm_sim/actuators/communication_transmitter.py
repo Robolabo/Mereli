@@ -49,7 +49,7 @@ class CommunicationTransmitter(Actuator):
         self.frame['sending_direction'] = action['sending_direction']
         if global_states.RENDER:
             color = [self.frame['msg'][0], 0, 0]
-            p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.6],\
+            p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.7],\
                 physicsClientId=self.actuator_owner.physics_client)
 
     def quantize_fn(self, msg, tau=0.1):

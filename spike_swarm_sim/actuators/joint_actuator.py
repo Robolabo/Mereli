@@ -20,16 +20,16 @@ class JointVelocityActuator(Actuator):
             	'the number of controllable joints.'))
         for ac, joint in zip(action, self.joint_ids):
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=ac * self.max_velocity,\
-                controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client, velocityGain=1.1)
+                controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client.client, velocityGain=1.1)
         if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
             p.setJointMotorControl2(self.actuator_owner.id, self.inverse_mirrored,\
                 targetVelocity=-action[0] * self.max_velocity, controlMode=p.VELOCITY_CONTROL,\
-                physicsClientId=self.actuator_owner.physics_client, velocityGain=1.1)
+                physicsClientId=self.actuator_owner.physics_client.client, velocityGain=1.1)
 
     def reset(self,):
         for joint in self.joint_ids:
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
-                controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client)
+                controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client.client)
 
 @actuator_registry(name='joint_position_actuator')
 class JointPositionActuator(Actuator):
@@ -47,7 +47,7 @@ class JointPositionActuator(Actuator):
 
         for ac, joint in zip(action, self.joint_ids):
             p.setJointMotorControl2(self.actuator_owner.id, joint, targetPosition=ac * np.pi,\
-                controlMode=p.POSITION_CONTROL, physicsClientId=self.actuator_owner.physics_client,\
+                controlMode=p.POSITION_CONTROL, physicsClientId=self.actuator_owner.physics_client.client,\
                 positionGain=1.1, velocityGain=1.1, maxVelocity=self.max_velocity)
     
     # def reset(self,):

@@ -55,11 +55,11 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         else:
             #* Evaluate after evolution
             opt_alg.evaluate()
-    # else:
-    #     world.reset()
-    #     # world.draw_node_coords()
-    #     while(True):
-    #         state, action = world.step()
+    else: #* Non-optimizable simulation
+        world.connect()
+        world.reset()
+        while(True):
+            state, action = world.step()
 
 if __name__ == "__main__":
     main()

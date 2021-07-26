@@ -112,15 +112,15 @@ def config_checker(cfg_dict):
             if obj['controller'] not in reg.controllers.keys():
                 logging.warning('Controller {} of entity {} is not implemented. '\
                     'Dummy controller will be used instead.'.format(obj_name, obj['controller']))
-            #! Meter dummy controller
-            for var, possible_vals in zip(['sensors', 'actuators'], [reg.sensors, reg.actuators]):
-                if var not in obj.keys() or len(obj[var]) == 0 or obj[var] is None:
-                    raise Exception(logging.error('No {} was settled for entity {}.'.format(var[:-1], obj_name)))
-                else:
-                    for key in obj[var].keys():
-                        if key not in possible_vals.keys():
-                            raise Exception(logging.error('{} {} is not implemented. Available {} are {}.'\
-                                .format(var[:-1], key, var, tuple(possible_vals))))
+            # #! Meter dummy controller
+            # for var, possible_vals in zip(['sensors', 'actuators'], [reg.sensors, reg.actuators]):
+            #     if var not in obj.keys() or len(obj[var]) == 0 or obj[var] is None:
+            #         raise Exception(logging.error('No {} was settled for entity {}.'.format(var[:-1], obj_name)))
+            #     else:
+            #         for key in obj[var].keys():
+            #             if key not in possible_vals.keys():
+            #                 raise Exception(logging.error('{} {} is not implemented. Available {} are {}.'\
+            #                     .format(var[:-1], key, var, tuple(possible_vals))))
             # Check actuators params
             for act_name, act_params in obj['actuators'].items():
                 check_actuator_cfg(act_name, act_params)

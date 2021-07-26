@@ -67,16 +67,20 @@ class DistanceSensor3D(DirectionalSensor):
             if signal_strength > direction_reading:
                 my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
                 tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
-                ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
-                # print(rho, ray_res, 'IR'+str(args[0]), signal_strength)
-                # assert ray_res != self.sensor_owner.id and ray_res != -1
-                if ray_res == kwargs['obj'].id:
+                # Cast a ray between my_pos y tar_pos to verify if there are obstacles
+                #! ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client.client)[0][0]
+                ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
+                if ray_res == kwargs['obj'].id: 
                     # print('IR'+str(args[0]), type(kwargs['obj']).__name__, rho)
                     direction_reading = signal_strength
                     if self.noise_sigma > 0:
                         direction_reading += np.random.randn() * self.noise_sigma
         return direction_reading
-    
+
+    def _target_filter(self, obj):
+        """ Filtering of potential target WorldObjects. """
+        return obj.tangible
+
     # def reset(self):
     #     joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
     #         for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
@@ -86,6 +90,3 @@ class DistanceSensor3D(DirectionalSensor):
     # def get_position(self, idx):
     #     return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
       
-    def _target_filter(self, obj):
-        """ Filtering of potential target WorldObjects. """
-        return obj.tangible
