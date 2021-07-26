@@ -13,7 +13,6 @@ from pygame.color import THECOLORS
 # from pymunk.vec2d import Vec2d
 from spike_swarm_sim.globals import global_states
 
-#! Inherit from Bullet??
 class Engine3D:
     def __init__(self):
         self.connected = False
@@ -122,6 +121,8 @@ class Engine3D:
 
 
 def json_parser(file, position, orientation):
+    """ Parser function of the json description of the 2D entities.
+    """
     file = "spike_swarm_sim/objects/urdf/" + file + '.json'
     with open(file) as json_file:
         obj_dict = json.load(json_file)
