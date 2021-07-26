@@ -6,15 +6,15 @@ from spike_swarm_sim.register import actuator_registry
 class WheelActuator(Actuator):
     """ Robot wheel actuator using a differential drive system. 
     """
-    def __init__(self, *args, robot_radius=0.11, dt=1., min_thresh=0.0, **kwargs):
+    def __init__(self, *args, robot_radius=0.11, dt=0.01, min_thresh=0.0, **kwargs):
         super(WheelActuator, self).__init__(*args, **kwargs)
         self.robot_radius = robot_radius
-        self.dt = dt
+        self.dt = 5e-3
         self.delta_pos = np.zeros(2)
         self.delta_theta = 0
         self.min_thresh = min_thresh
     
-    def step(self, v_motors ):
+    def step(self, v_motors):
         if isinstance(v_motors, list):
             v_motors = np.array(v_motors)
         current_pos = self.actuator_owner.position

@@ -32,6 +32,7 @@ class Robot3D(WorldObject3D):
         self.colorB = 'black'
         self.color2 = ('skyblue3', 'green')[self.trainable]
         # self.reset()
+        self.st_aux = [] #!
 
     def step(self, neighborhood, reward=None, perturbations=None):
         """
@@ -59,6 +60,7 @@ class Robot3D(WorldObject3D):
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
+
         #* Plan actions for future execution
         self.plan_actions(actions)
         # #* Handle robot food pickup
@@ -142,6 +144,7 @@ class Robot3D(WorldObject3D):
 class Minitaur(Robot3D):
     def __init__(self, *args, **kwargs):
         super(Minitaur, self).__init__(*args, urdf_file='quadruped/minitaur', z_offset=0.5,**kwargs)
+
 
 @world_object_registry(name='epuck')
 class Epuck3D(Robot3D):

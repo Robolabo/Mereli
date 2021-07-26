@@ -25,7 +25,7 @@ class GraspActuator(HighLevelActuator):
         robot_ori = self.actuator_owner.orientation.copy()[-1]
         drop_sector = np.argmin(self.actuator_owner.sensors['distance_sensor3D'].reading)
         drop_ori = self.actuator_owner.sensors['distance_sensor3D'].directions(robot_ori)[drop_sector]
-        new_pos = robot_pos + 0.3 * np.r_[np.cos(drop_ori), np.sin(drop_ori), 0]
+        new_pos = robot_pos + 0.3 * np.r_[np.cos(drop_ori), np.sin(drop_ori), 0.]
         self.cube_grasped.is_grasped = False
         self.cube_grasped.position = new_pos
         self.cube_grasped = None
@@ -57,7 +57,6 @@ class GraspActuator(HighLevelActuator):
             if self.cube_grasped is None:
                 return
             self.__drop()
-
 
     def reset(self):
         self.grasp_cooldown = 0

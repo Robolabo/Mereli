@@ -10,7 +10,6 @@ def assign_unique_key(keys, base_name):
         unique_id += 1
     return '{}_{}'.format(base_name, unique_id)
 
-#! SIN decorator por ahora
 def add_node(genotype, current_innovation, innovation_history, node_variables, **kwargs):
     """ Add a new node in between an existing connection. The exisiting connection 
     is disabled and two new synapses are included.
@@ -73,7 +72,6 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
         current_innovation += 1
     return genotype, current_innovation, innovation_history
 
-#! SIN decorator por ahora
 def add_connection(genotype, input_nodes, current_innovation, innovation_history, **kwargs):
     """ Add a new gene connection to the genotype. The pre and post 
     synaptic nodes are selected randomly (validating that the connection does not 
@@ -89,7 +87,6 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
 
     #* Name connection is "pre-post"
     conn_name = '-'.join(new_conn)
-    #! OJO RESTO DE PARAMETERS.
     genotype['connections'].update({
         conn_name : {
             'pre' : new_conn[0],
@@ -110,6 +107,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
 
 
 def delete_node(genotype, input_nodes, **kwargs):
+    #TODO: to be implemented (not ready yet)
     node = np.random.choice([*genotype['nodes']])
     if node in input_nodes or genotype['nodes'][node]['is_motor']:
         return
@@ -121,6 +119,7 @@ def delete_node(genotype, input_nodes, **kwargs):
     import pdb; pdb.set_trace()
 
 def delete_connection(genotype, input_nodes, **kwargs):
+    #TODO: to be implemented (not ready yet)
     conn = np.random.choice([*genotype['connections']])
     pre_node = genotype['connections'][conn]['pre']
     post_node = genotype['connections'][conn]['post']

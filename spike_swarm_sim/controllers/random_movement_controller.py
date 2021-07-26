@@ -1,11 +1,12 @@
 import numpy as np
-from spike_swarm_sim.controllers import Controller
-import pdb
+from spike_swarm_sim.controllers import RobotController
+from spike_swarm_sim.register import controller_registry
 
-class RandomMovementController(Controller):
-    def __init__(self):
-        super().__init__()
-        self.enabled_actuators['wheel_actuator'] = True
+
+@controller_registry(name='random_walk')
+class RandomMovementController(RobotController):
+    def __init__(self, *args, **kwargs):
+        super(RandomMovementController, self).__init__(*args, **kwargs)
         
-    def step(self, state):
-        return {'wheel_actuator' : np.random.choice([-1,1],size=2)}
+    def step(self, state, reward=0.0):
+        return {'wheel_actuator' : np.r_[-.5, -.5]} # np.random.choice([-.1, 1], size=2)}

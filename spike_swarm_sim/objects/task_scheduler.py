@@ -21,15 +21,15 @@ class TaskScheduler(WorldObject):
         self.t = 0
         self.prev_tasks = []
 
-
     def step(self, neighborhood):
         if global_states.RENDER:
+            task_labels = ['Red Light Pursuit', 'Yellow Light Pursuit'] #['Red Light Pursuit', 'Cube Transportation']
             if self.t == 0:
-                self.label_id = p.addUserDebugText(('Red', 'Yellow')[self.current_task], (0,0,3), 
-                                textColorRGB=(0,0,0), textSize=3, )
+                self.label_id = p.addUserDebugText(task_labels[self.current_task], (0,0,3), 
+                                textColorRGB=(0,0,0), textSize=2, )
             else:
-                self.label_id = p.addUserDebugText(('Red', 'Yellow')[self.current_task], (0,0,3), 
-                                textColorRGB=(0,0,0), textSize=3, replaceItemUniqueId=self.label_id)
+                self.label_id = p.addUserDebugText(task_labels[self.current_task], (-0.5,0,3), 
+                                textColorRGB=(0,0,0), textSize=2, replaceItemUniqueId=self.label_id)
         # print(self.t, ('RED', 'YELLOW')[self.current_task])
         self.t += 1
 
@@ -41,7 +41,7 @@ class TaskScheduler(WorldObject):
         assert self.task_order is not None
         return self.task_order[self.t // (self.total_timesteps // self.num_slots + 1)]
 
-    def reset(self, seed=None):#! OJO seed
+    def reset(self, seed=None):
         if seed is not None:
             np.random.seed(seed)
         self.t = 0
@@ -53,7 +53,7 @@ class TaskScheduler(WorldObject):
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=self.replacement)
         if seed is not None:
             np.random.seed()
-    
+
     def add_physics(self, engine):
         pass
 

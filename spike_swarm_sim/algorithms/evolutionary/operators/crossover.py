@@ -22,14 +22,8 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
             parent2_gene = {name : conn for name, conn in parent2['connections'].items()\
                             if conn['innovation'] == gene_innovation}
             child1_genes = copy.deepcopy((parent1_gene, parent2_gene)[rnd_val])
-            # child2_genes = copy.deepcopy((parent1_gene, parent2_gene)[1 - rnd_val])
             assert len(child1_genes) == 1 # and len(child2_genes) == 1
-            # if not all([[*parent1_gene.values()][0]['enabled'],\
-            #             [*parent2_gene.values()][0]['enabled']]):
-            #     [*child1_genes.values()][0]['enabled'] = np.random.random() > 0.
-                ## [*child2_genes.values()][0]['enabled'] = np.random.random() > disable_prob
             child_1['connections'].update(child1_genes)
-            # child_2['connections'].update(child2_genes)
 
         #* Disjoint and excess connection genes
         fittest_parent = parent1 if f1 >= f2 else parent2
@@ -39,21 +33,17 @@ def neat_crossover(parents, fitness_values, crossover_prob=1., disable_prob=0.75
                             if conn['innovation'] == gene_innovation}
             assert len(child1_genes) == 1 # and len(child2_genes) == 1
             child_1['connections'].update(copy.deepcopy(winner_gene))
-            # child_2['connections'].update(copy.deepcopy(winner_gene))
 
         #* Crossover Nodes
         for node_name in fittest_parent['nodes']:
             if node_name in parent1['nodes'] and node_name in parent2['nodes']:
                 rnd_gene = np.random.random() > 0.5
                 child_1['nodes'][node_name] = copy.deepcopy((parent1, parent2)[rnd_gene]['nodes'][node_name])
-                # child_2['nodes'][node_name] = (parent1, parent2)[not rnd_gene]['nodes'][node_name].copy()
             else:
                 child_1['nodes'][node_name] = copy.deepcopy(fittest_parent['nodes'][node_name])
-                # child_2['nodes'][node_name] =parent1_gene (parent1, parent2)[f2 >= f1]['nodes'][node_name].copy()
         #* Formalize recombination
-        do_crossover = True # np.random.random() < crossover_prob
+        do_crossover = np.random.random() < crossover_prob
         offspring.append((parent1, child_1)[do_crossover])
-        # offspring.append((parent2, child_2)[do_crossover])
     return offspring
 
 @evo_operator_registry(name='uniform_crossover')

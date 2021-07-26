@@ -13,7 +13,7 @@ class Robot(WorldObject2D):
     Base class for the robot world object.
     """
     def __init__(self, position, orientation, *args, **kwargs):
-        super(Robot, self).__init__(position, orientation, static=False, luminous=False,\
+        super(Robot, self).__init__('epuck', position, orientation, static=False, luminous=False,\
                         tangible=True, *args, **kwargs)
         self.radius = .11
         self._food = False
@@ -31,20 +31,29 @@ class Robot(WorldObject2D):
         self.planned_actions = {k : [None] for k in actuators.keys()}
         self.reset()
 
-    def add_physics(self, engine):
-        super().add_physics(engine)
-        mass = 1
-        inertia = pymunk.moment_for_circle(mass, 0, self.radius, (0, 0))
-        body = pymunk.Body(mass, inertia)
-        body.position = tuple(self.init_position * 100 + 500)
-        body.orientation = self.init_orientation
-        shape = pymunk.Circle(body, self.radius, (0, 0))
-        # shape_ori = pymunk.Segment(body, (0, 0), \
-        #     (self.radius * np.cos(body.orientation), self.radius * np.sin(body.orientation)), 2)
-        shape.friction = 1
-        shape.color = THECOLORS['green']
-        # shape_ori.color = THECOLORS['black']
-        engine.add(self.id, [body], [shape,])
+    # def add_physics(self, engine):
+    #     super().add_physics(engine)
+    #     mass = 1
+    #     rad = self.radius * 100
+    #     # Body
+    #     inertia = pymunk.moment_for_circle(mass, 0, rad, (0, 0))
+    #     body = pymunk.Body(mass, inertia)
+    #     body.position = tuple(self.init_position * 100 + 500)
+    #     body.orientation = self.init_orientation
+    #     shape = pymunk.Circle(body, rad, (0, 0))
+    #     # Wheels
+    #     w, h = 3, 11+2
+    #     vert = ((-w/2,-h/2), (w/2,-h/2), (w/2,h/2), (-w/2,h/2))
+        
+    #     # wh_right_body = pymunk.Body(0.2, pymunk.moment_for_poly(0.2, vert)
+    #     wh_right_sh = pymunk.Poly(body, vert, transform=pymunk.Transform(a=np.cos(np.pi/2), b=-np.sin(np.pi/2), c=-np.sin(np.pi/2), d=np.cos(np.pi/2), ty=-rad-2))
+    #     wh_right_sh.color = THECOLORS['black']
+    #     wh_left_sh = pymunk.Poly(body, vert, transform=pymunk.Transform(a=np.cos(np.pi/2), b=-np.sin(np.pi/2), c=-np.sin(np.pi/2), d=np.cos(np.pi/2), ty=rad+2))
+    #     wh_left_sh.color = THECOLORS['black']
+
+    #     shape.friction = 1
+    #     shape.color = (0, 255,0, 255)
+    #     engine.add(self.id, [body], [shape, wh_right_sh, wh_left_sh])
 
 
     def step(self, neighborhood, reward=None, perturbations=None):
@@ -95,10 +104,11 @@ class Robot(WorldObject2D):
       
     def plan_actions(self, actions):
         for actuator, action in actions.items():
-            self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
-                and [action, self.position, self.orientation]  or [action]
+            self.planned_actions[actuator] = action
+            # self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
+            #     and [action, self.position, self.orientation]  or [action]
 
-    def actuate(self):
+    def actuate(self, neighborhood):
         """
         Executes the previously planned actions in order to be processed in the world.
         =====================
@@ -109,7 +119,8 @@ class Robot(WorldObject2D):
         for actuator_name, actuator in self.actuators.items():
             # if actuator_name not in self.planned_actions:
             #     raise Exception('Error: Actuator does not have corresponding planned action.')
-            actuator.step(*iter(self.planned_actions[actuator_name]))
+            #! actuator.step(*iter(self.planned_actions[actuator_name]))
+            actuator.step(self.planned_actions[actuator_name])
 
     def perceive(self, neighborhood):
         """
@@ -124,7 +135,7 @@ class Robot(WorldObject2D):
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
 
-    def reset(self):
+    def reset(self, seed=None):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
         can be randomly initialized or fixed. In the former case a seed can be specified.

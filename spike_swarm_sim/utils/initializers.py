@@ -13,7 +13,7 @@ class InitializerHandler:
     def __call__(self, *args, **kwargs):
         return {
         '2D' : {'orientations' : map(lambda x: x[0], self.initializer())},
-        '3D' : {'positions' : map(lambda x: (x[0], x[1], 0), self.initializer()),
+        '3D' : {'positions' : map(lambda x: (x[0], x[1], x[2] if len(x) > 2 else 0), self.initializer()),
                 'orientations' : map(lambda x: (0., 0., x[0]), self.initializer())}
         }.get(self.engine, {}).get(self.variable, self.initializer())
 
@@ -64,7 +64,7 @@ class RandomUniformInitializer:
                     new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0])
                     new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1])
                     new_sample = np.r_[new_sample_x, new_sample_y]
-                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.7 for pp in res):
+                if len(res) == 0 or all(LA.norm(new_sample - pp) > 0.9 for pp in res):
                     res.append(new_sample)
         else:
             res = [np.random.uniform(low=self.low, high=self.high, size=self.size)\

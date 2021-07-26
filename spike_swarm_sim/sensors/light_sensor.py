@@ -16,7 +16,6 @@ class LightSensor(DirectionalSensor):
         self.color = color
         self.aperture = 3 * np.pi / self.n_sectors
         self.propagation = ExpDecayPropagation(rho_att=0.2, phi_att=1)
-        
 
     def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Step the sensor of a sector. For a detailed explanation of 
@@ -38,8 +37,8 @@ class LightSensor(DirectionalSensor):
         """ Filtering of potential target WorldObjects. 
         #TODO Support for more luminous objects.
         """
-        return type(obj).__name__ == 'LightSource3D'
-
+        # return type(obj).__name__ == 'LightSource3D'
+        return type(obj).__name__ == 'LightSource'#!
 
 @sensor_registry(name='light_sensor3D')
 class LightSensor3D(DirectionalSensor):
@@ -52,7 +51,7 @@ class LightSensor3D(DirectionalSensor):
         super(LightSensor3D, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 3 * np.pi / self.n_sectors
-        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)
+        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
         # self.propagation = ExpDecayPropagation(rho_att=0.15, phi_att=1)
     
     def _target_filter(self, obj):
@@ -71,27 +70,27 @@ class LightSensor3D(DirectionalSensor):
                     #and phi <= self.aperture #<= 3*np.pi/self.n_sectors
         if direction_reading is None:
             direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
-        # import pdb; pdb.set_trace()
         if condition:
             my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0,0,0.02]
             tar_post = kwargs['obj'].position
-            ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)
+            ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client.client)
             signal_strength = self.propagation(rho, phi)
             if ray_res[0][0] == -1:
                 direction_reading += signal_strength
                 if self.noise_sigma > 0:
                     direction_reading += np.random.randn() * self.noise_sigma
                 direction_reading = np.clip(direction_reading, a_min=0, a_max=1)
-        return direction_reading 
+               
+        return direction_reading
     
     def reset(self):
-        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
-            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
+        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client.client)[:2]\
+            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client.client))])
         self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
                 for i in range(self.n_sectors)}
 
     def get_position(self, idx):
-        return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
+        return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client.client)[0])
 
 
 class ColoredLightSensor(LightSensor3D):
