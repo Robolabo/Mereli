@@ -1,2 +1,0 @@
-examples
-spike_swarm_sim
