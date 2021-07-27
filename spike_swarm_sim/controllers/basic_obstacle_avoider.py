@@ -17,6 +17,6 @@ class BasicObstacleAvoider(RobotController):
                 0 : [-1,-1],
                 1 : [-1, 1],
                 3 : [1, -1],
-                2: [1, 1]
+                2 : [1, 1]
             }.get(max_dir, [1,1]))
         return {'joint_velocity_actuator' : action}

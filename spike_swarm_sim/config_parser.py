@@ -5,7 +5,6 @@ import spike_swarm_sim.register as reg
 from spike_swarm_sim.sensors.utils import check_sensor_cfg, autocomplete_sensor_cfg
 from spike_swarm_sim.actuators.utils import check_actuator_cfg, autocomplete_actuator_cfg
 from spike_swarm_sim.neural_networks.utils import neural_net_checker, autocomplete_neural_net
-from spike_swarm_sim.utils import any_duplicates, JSONParserException, ConfigException
 
 def ExceptionDuplicates(kv_pairs):
     dct = {}

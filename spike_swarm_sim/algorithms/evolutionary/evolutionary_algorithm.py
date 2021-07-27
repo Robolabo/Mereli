@@ -21,7 +21,7 @@ from spike_swarm_sim.utils import flatten_dict, DataLogger, without_duplicates
 from spike_swarm_sim.sensors.utils import list_sensors
 from spike_swarm_sim.actuators.utils import list_actuators
 from spike_swarm_sim.globals import global_states          
-from spike_swarm_sim import MultiWorldWrapper, World3D
+from spike_swarm_sim.world import MultiWorldWrapper, World3D
 
 def get_info_old(name, robots, world,):
     """

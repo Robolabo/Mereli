@@ -9,8 +9,7 @@ import pybullet_utils.bullet_client as bc
 
 from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall, Wall2D
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
-from spike_swarm_sim.utils import (angle_diff, compute_angle, normalize, increase_time,
-                                  mov_average_timeit, isinstance_of_any, InitializerHandler)
+from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any, InitializerHandler)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
 
@@ -132,6 +131,73 @@ class World(object):
         self.prev_actions = actions.copy()
         return states, actions
 
+    def register_entity(self, name, obj, group=None):
+        """ Adds an object to the world registry. Assigns a unique identifier to the object.
+        Additionally, if the object belongs to a group of world objects it also registers it.
+        ============================
+        - Args:
+            name [str] -> name of the object.
+            obj [WorldObject] -> instance of the world object to be added.
+            group [str] -> name of the group to which obj belong to. If none a new group is created with
+                           obj as unique element.
+        - Returns: None
+        ============================
+        """
+        self.hierarchy.update({name : obj})
+        #* Register group element
+        if group is None:
+            group = name
+        if group in self.groups.keys():
+            self.groups[group].append(name)
+        else:
+            self.groups[group] = [name]
+        obj.group = group 
+
+    def set_initializer(self, group_name, initializer_pos, initializer_ori=None):
+        """ Bounds and registers entity initializers to groups of entities. 
+        Therefore, every time that an experiment is reset, the settled initializers are used 
+        to establish the positions and orientations (if robot) of the world entities. 
+        The use of this method is compulsory if the experiment is created without using 
+        neither build_from_dict nor add_group (see e.g. examples/basic_examples). 
+        =========================================================================================
+        - Args:
+            group_name [str] : name of the group of entities to be created.
+            initializer_pos [Initializer] : initializer class of the positions of the group.
+            initializer_ori [Initializer] : initializer class of the orientations of the group.
+        - Returns: None
+        =========================================================================================
+        """
+        self.initializers[group_name] = {
+            'positions' : initializer_pos,
+            'orientations' : initializer_ori
+        }
+
+    def add_group(self, group_name, entity_cls,  initializer_pos, initializer_ori=None, controller=None):
+        """ Adds entities belonging to a certain group to the world. For instance, it can create all the 
+        homogeneous robots within a swarm.
+        =========================================================================================
+        - Args:
+            group_name [str] : name of the group of entities to be created.
+            entity_cls [WorldObject] : precise class of the entities of the group.
+            initializer_pos [Initializer] : initializer class of the positions of the group.
+            initializer_ori [Initializer] : initializer class of the orientations of the group.
+            controller [Controller or None] : controller (if any) of the entities of the group.
+        - Returns: None
+        =========================================================================================
+        """
+        #* Create group intializers.
+        self.initializers[group_name] = {
+            'positions' : initializer_pos,
+            'orientations' : initializer_ori
+        }
+        positions = self.initializers[group_name]['positions']()
+        orientations = self.initializers[group_name]['orientations']()\
+                        if initializer_ori is not None else 5*[[0,0,0]]
+        for i, pos, ori in enumerate(zip(positions, orientations)):
+            entity = entity_cls(pos, ori, controller=controller)
+            ent_name = group_name + '_' + i
+            self.add_entity(ent_name, entity_cls, pos, ori, controller=controller, group_name=group_name)
+        
     def build_from_dict(self, world_dict, ann_topology=None):
         """ Initialize all objects and add them into the world using a dictionary structure.
         =========================================================================================
@@ -143,14 +209,14 @@ class World(object):
         """
         engine = world_dict['engine']
         #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
-        if ann_topology.get('learning_rule', {}).get('reward') is not None:
+        if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
             self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
         for obj_name, obj in world_dict['objects'].items():
             object_cls = world_objects[engine][obj['type']]
             #! Prov implementation for TFM regarding the task scheduler
             if object_cls.__name__ == 'TaskScheduler':
                 world_obj = object_cls(**obj['params'])
-                self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
+                self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                 continue
             #* Create group intializers.
             self.initializers[obj_name] = {
@@ -167,13 +233,16 @@ class World(object):
                 for i, (position, orientation) in enumerate(zip(entity_positions, entity_orientations)):
                     controller = None
                     if obj['controller'] is not None:
+                        #* Create Controller and add sensors and actuators
                         controller_cls = controllers[obj['controller']]
+                        controller = controller_cls()
+                        controller.add_sensors_from_dict(obj['sensors'])
+                        controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
-                            controller = controller_cls(ann_topology, obj['sensors'], obj['actuators'])
-                        else: # non-trainable robot controllers
-                            controller = controller_cls(obj['sensors'], obj['actuators'])
+                            controller.add_ann_from_dict(ann_topology)
                     robot = object_cls(position, orientation, controller=controller, **obj['params'])
-                    self.add(obj_name + '_' + str(i), robot, group=obj_name)
+                    self.register_entity(obj_name + '_' + str(i), robot, group=obj_name)
+
                 #* Add perturbations (if any) to the robot states and actions (not physical perturbs)
                 #* For example: inhibit a certain sensor reading or ignore some action of a robot.
                 if len(obj['perturbations']) > 0:
@@ -190,7 +259,7 @@ class World(object):
                 controller = controller_cls is not None and controller_cls() or None
                 for i, position in enumerate(entity_positions):
                     world_obj = object_cls(position, [0, 0, 0], controller=controller, **obj['params'])
-                    self.add(obj_name + '_' + str(i), world_obj, group=obj_name)
+                    self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initializes
@@ -250,28 +319,6 @@ class World(object):
                     for orientation, obj in zip(orientations, group_elements):
                         obj.orientation = orientation
         np.random.seed()
-
-    def add(self, name, obj, group=None):
-        """ Adds an object to the world registry. Assigns a unique identifier to the object.
-        Additionally, if the object belongs to a group of world objects it also registers it.
-        ============================
-        - Args:
-            name [str] -> name of the object.
-            obj [WorldObject] -> instance of the world object to be added.
-            group [str] -> name of the group to which obj belong to. If none a new group is created with
-                           obj as unique element.
-        - Returns: None
-        ============================
-        """
-        self.hierarchy.update({name : obj})
-        #* Register group element
-        if group is None:
-            group = name
-        if group in self.groups.keys():
-            self.groups[group].append(name)
-        else:
-            self.groups[group] = [name]
-        obj.group = group
 
     def group_objects(self, group):
         """ List all the objects belonging to a group.
@@ -352,13 +399,13 @@ class World3D(World):
 
     def add_limiting_walls(self):
         """ Creates the limiting walls of the arena. """
-        self.add('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
+        self.register_entity('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
             width=self.width-1), group='side_wall')
-        self.add('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
+        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
             width=self.width-1), group='side_wall')
-        self.add('wall_side_left', Wall([0, self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
+        self.register_entity('wall_side_left', Wall([0, self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
              width=1), group='side_wall')
-        self.add('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
+        self.register_entity('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
             width=1), group='side_wall')
 
     def step(self):
@@ -438,13 +485,13 @@ class World2D(World):
         self.add_limiting_walls()
 
     def add_limiting_walls(self):
-        self.add('wall_side_up', Wall2D([self.width/2, 0], np.pi/2, height=0.5,\
+        self.register_entity('wall_side_up', Wall2D([self.width/2, 0], np.pi/2, height=0.5,\
             width=self.width), group='side_wall')
-        self.add('wall_side_bottom', Wall2D([-self.width/2,0], np.pi/2, height=0.5,\
+        self.register_entity('wall_side_bottom', Wall2D([-self.width/2,0], np.pi/2, height=0.5,\
             width=self.width), group='side_wall')
-        self.add('wall_side_left', Wall2D([0, self.height/2], -np.pi/2, height=self.height-0.5,\
+        self.register_entity('wall_side_left', Wall2D([0, self.height/2], -np.pi/2, height=self.height-0.5,\
             width=0.5), group='side_wall')
-        self.add('wall_side_right', Wall2D([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
+        self.register_entity('wall_side_right', Wall2D([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
             width=0.5), group='side_wall')
 
     def neighborhood(self, robot):
@@ -495,10 +542,10 @@ class World2D(World):
             obj_id = np.random.randint(1, 1000)
         return obj_id
 
-    def add(self, name, obj, group=None):
+    def register_entity(self, name, obj, group=None):
         """ Adds entity to the world registry. """
         obj.id = self.assign_unique_id()
-        super().add(name, obj, group=group)
+        super().register_entity(name, obj, group=group)
 
 
 

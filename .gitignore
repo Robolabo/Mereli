@@ -10,3 +10,6 @@ examples
 *.sh
 *.log
 tmp/*
+dist/*
+spike_swarm_sim.egg-info/*
+build/*

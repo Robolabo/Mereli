@@ -23,14 +23,17 @@ class NeuralController(RobotController):
         #self.preprocessing = Preprocessing([sens['sensor'] for sens in topology['stimuli'].values()])
         #for val in topology['stimuli'].values():
         #    val['sensor'] = val['sensor'].split('@')[0]
-        self.neural_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
-                neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
-        self.neural_network.build_from_dict(topology)
-        
+        self.neural_network = None        
         self.out_act_mapping = {out_name : snn_output['actuator'] \
                     for out_name, snn_output in topology['outputs'].items()}
         self.comm_state = 1 # Communication state (0 : RELAY, 1 : SEND)
         self.t = 0
+
+    def add_ann_from_dict(self, topology):
+        #! CHECK BUGS
+        self.neural_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
+                neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
+        self.neural_network.build_from_dict(topology)
 
     @increase_time
     def step(self, state, reward=0.0):

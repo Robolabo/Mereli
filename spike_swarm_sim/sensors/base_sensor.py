@@ -11,6 +11,8 @@ class Sensor:
         sensor_owner [Robot] : instance of the agent executing the sensor.
         range [float] : range of coverage of the sensor.
         noise_sigma [float] : white noise std. dev.  
+    - Attribs:
+        sensor_owner [Robot] : robot object owning and reading from the sensor.
     ======================================================================
     """
     def __init__(self, sensor_owner, range=100, noise_sigma=0.0):
@@ -28,7 +30,10 @@ class DirectionalSensor(Sensor):
     Base class for directional sensors.
     ==========================================
     - Args:
-        - n_sectors [int] : number of sectors.
+        n_sectors [int] : number of sectors.
+    - Attribs:
+        aperture [float] : aperture in radians of each sector of the sensor.
+        sensors_idx [] :
     ===========================================
     """
     def __init__(self, *args, n_sectors=8, **kwargs):
@@ -75,32 +80,7 @@ class DirectionalSensor(Sensor):
         =================================================================================================
         """
         raise NotImplementedError
-
-    def directions(self, theta):
-        """
-        Returns the vector of sensing directions of the sectors based on the robot heading orientation.
-        - Args:
-            theta [float] -> orientation of the robots using the sensor.
-        - Returns:
-            Numpy Array with the absolute directions of each sensor (starting from theta).
-        """
-        return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
-
-    def reset(self):
-        self.reading = None
-        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client.client)[:2]\
-            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client.client))])
-        self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
-                for i in range(self.n_sectors)}
-
-    def get_position(self, idx):
-        """ Gets the position of the sensor of each sector. Each sector is represented by a small 3D model 
-        used  to cast rays and compute the readings wrt it. 
-        TODO: For the moment only available in 3D."""
-        # aa = self.sensor_owner.physics_client.get_link_state(self.sensor_owner.id, idx)
-        return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client.client)[0])
     
-
     def step(self, neighborhood):
         """
         Main method for steping the sensor and capturing nearby environment events.
@@ -109,8 +89,8 @@ class DirectionalSensor(Sensor):
         _step_direction method.
         ================================================================================
         - Args: 
-            neighborhood -> List of neighboring WorldObjects.
-
+            neighborhood -> List of  target neighboring WorldObjects (excluding the robot 
+                            reading the sensor).
         - Returns:
             Numpy array with the measurement in each direction. In exceptional cases 
             it may return a list of python dictionaries (see CommunicationReceiver).
@@ -126,7 +106,10 @@ class DirectionalSensor(Sensor):
             if type(obj).__name__ == 'Wall':
                 closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
                         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client.client)
-                v = np.array(closest_points[0][6]) - self.sensor_owner.position
+                closest_pt_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, obj.id,  
+                                    linkA=-1, linkB=-1, max_dist=20)
+                # closest_pt_pos = np.array(closest_points[0][6])
+                v = closest_pt_pos - self.sensor_owner.position
             else:
                 # Provisional solution: For the rest of objects (generally small objects) compute the distance 
                 # to the CoM of the target object.
@@ -145,6 +128,32 @@ class DirectionalSensor(Sensor):
             for k, phi in zip(featured_sensors, phi_values):
                 readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
         return np.array(readings) if not isinstance(readings[0], dict) else readings
+
+    def directions(self, theta):
+        """ Returns the vector of sensing directions of the sectors based on the robot heading orientation.
+        - Args:
+            theta [float] -> orientation of the robots using the sensor.
+        - Returns:
+            Numpy Array with the absolute directions of each sensor (starting from theta).
+        """
+        return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
+
+    def reset(self):
+        """ Resets the sensor. """
+        self.reading = None
+        joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client.client)[:2]\
+            for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client.client))])
+        self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
+                for i in range(self.n_sectors)}
+
+    def get_position(self, idx):
+        """ Gets the position of the sensor of each sector. Each sector is represented by a small 3D model 
+        used  to cast rays and compute the readings wrt it. 
+        TODO: For the moment only available in 3D."""
+        # aa = self.sensor_owner.physics_client.get_link_state(self.sensor_owner.id, idx)
+        return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client.client)[0])
+    
+
 
 
 

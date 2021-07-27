@@ -15,11 +15,33 @@ class Controller:
 
 class RobotController(Controller):
     """ Base class for Robot Controllers. """
-    def __init__(self, robot_sensors, robot_actuators, controller_owner=None):
+    def __init__(self, controller_owner=None):
         self.controller_owner = controller_owner
+        self.enabled_sensors = {} #{sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
+        self.enabled_actuators = {} #{actuator : actuator_config for actuator, actuator_config in robot_actuators.items()}
+    
+    def add_sensors_from_dict(self, robot_sensors):
+        """ Add the sensors that the controller can make use of in the form of a python dict.
+            The dict structure must be {"sensor_name" : sensor_params}.
+            Example:
+                robot_sensors = {'distance_sensor' : {'n_sectors' : 4, 'range' : 1}}
+        """
         self.enabled_sensors = {sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
+    
+    def add_actuators_from_dict(self, robot_actuators):
+        """ Add the actuators that the controller can make use of in the form of a python dict.
+            The dict structure must be {"actuator_name" : actuator_params}.
+            Example:
+                robot_actuators = {'joint_velocity_actuator' : {'joint_ids' : [0,1], 'max_velocity' : 10}}
+        """
         self.enabled_actuators = {actuator : actuator_config for actuator, actuator_config in robot_actuators.items()}
 
+
+    def add_sensor(self, sensor_name, sensor_params):
+        pass
+
+    def add_actuator(self, actuator_name, actuator_params):
+        pass
 
 @controller_registry(name='prey_controller')
 class PreyController(RobotController):

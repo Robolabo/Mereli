@@ -5,20 +5,32 @@ from colorama import Fore, Style
 from pathlib import Path
 
 
-from .world import World3D, World2D, MultiWorldWrapper
-from .physics_engine import Engine2D, Engine3D
+
+
+
+
+
+from .globals import Globals, global_states
+from .register import *
+from .utils import *
 
 from .env_perturbations import *
-from .algorithms import *
-from .objects import *
-from .actuators import *
-from .sensors import *
-from .controllers import *
-from .objectives import *
 from .neural_networks import *
+from .controllers import *
+from .sensors import *
+from .actuators import *
+
+from .objects import *
 from .config_parser import *
-from .register import *
-from .globals import Globals, global_states
+
+
+
+
+
+from .physics_engine import Engine2D, Engine3D
+from .world import World3D, World2D, MultiWorldWrapper
+from .objectives import *
+from .algorithms import *
 
 ROOT_DIR = Path(__file__).parents[0].parents[0]
 sys.path.append(os.path.abspath(os.path.join('..', 'config')))
