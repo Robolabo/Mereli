@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.sensors.base_sensor &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.sensors.base_sensor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.sensors.base_sensor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">WorldObject2D</span><span class="p">,</span> <span class="n">WorldObject3D</span><span class="p">,</span> <span class="n">LightSource3D</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">,</span> <span class="n">Wall</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">toroidal_difference</span>
+
+<div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Base class of sensors.</span>
+<span class="sd">    ======================================================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        sensor_owner [Robot] : instance of the agent executing the sensor.</span>
+<span class="sd">        range [float] : range of coverage of the sensor.</span>
+<span class="sd">        noise_sigma [float] : white noise std. dev.  </span>
+<span class="sd">    - Attribs:</span>
+<span class="sd">        sensor_owner [Robot] : robot object owning and reading from the sensor.</span>
+<span class="sd">    ======================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensor_owner</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">noise_sigma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span> <span class="o">=</span> <span class="n">sensor_owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">=</span> <span class="n">noise_sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reading</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># self.sensor_idx = {}#!</span>
+
+<div class="viewcode-block" id="Sensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+
+<div class="viewcode-block" id="DirectionalSensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor">[docs]</a><span class="k">class</span> <span class="nc">DirectionalSensor</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for directional sensors.</span>
+<span class="sd">    ==========================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        n_sectors [int] : number of sectors.</span>
+<span class="sd">    - Attribs:</span>
+<span class="sd">        aperture [float] : aperture in radians of each sector of the sensor.</span>
+<span class="sd">        sensors_idx [] :</span>
+<span class="sd">    ===========================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">n_sectors</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span> <span class="o">=</span> <span class="n">n_sectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensors_idx</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method devoted to filtering the world objects that should be targeted for a particular sensor.</span>
+<span class="sd">        For example: a light sensor will filter out only luminous objects.</span>
+<span class="sd">        This method must be overwritten in each directional sensor that inherits from DirectionalSensor </span>
+<span class="sd">        in order to particularize its functioning.</span>
+<span class="sd">        ===============================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            obj [WorldObject] -&gt; Potential world object to be sensed.</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">            Boolean response revealing whether the obj should be explored by the sensor or not.</span>
+<span class="sd">        ===============================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">_step_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">direction_reading</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff_vector</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Method that specifies the particular behavior of a directional sensor in each sensing direction.</span>
+<span class="sd">        It must return the reading of the current direction.</span>
+<span class="sd">        This method must be overwritten in each directional sensor that inherits from DirectionalSensor </span>
+<span class="sd">        in order to particularize its functioning.</span>
+<span class="sd">        ==================================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            rho [float] -&gt; distance between the object sensing and the object (obj) sensed.</span>
+<span class="sd">            phi [float] -&gt; angle between the direction of the sensor and the line passing through </span>
+<span class="sd">                    both sensing and sensed object positions.</span>
+<span class="sd">            direction_reading [float or dict] -&gt; Current reading in the featured direction </span>
+<span class="sd">                    to be potentially overwritten.</span>
+<span class="sd">            direction [int] -&gt; integer refering to the current sensing direction between 0 and n_sectors - 1.</span>
+<span class="sd">            obj [WorldObject] -&gt; Optionally, the object that is being sensed can be used.</span>
+<span class="sd">            diff_vector [np.ndarray] -&gt; Optionally, the vector resulting from the difference </span>
+<span class="sd">                    of the between object positions can be used. However, most of the times, </span>
+<span class="sd">                    rho and phi are sufficient. Notice that rho=|diff_vector|.</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">            Reading of the sensor in the current direction.</span>
+<span class="sd">        =================================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+    
+<div class="viewcode-block" id="DirectionalSensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Main method for steping the sensor and capturing nearby environment events.</span>
+<span class="sd">        It senses the environment independently in each of the sensing sectors. The </span>
+<span class="sd">        particular behavior of each sensor inheriting this class should be specified in </span>
+<span class="sd">        _step_direction method.</span>
+<span class="sd">        ================================================================================</span>
+<span class="sd">        - Args: </span>
+<span class="sd">            neighborhood -&gt; List of  target neighboring WorldObjects (excluding the robot </span>
+<span class="sd">                            reading the sensor).</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">            Numpy array with the measurement in each direction. In exceptional cases </span>
+<span class="sd">            it may return a list of python dictionaries (see CommunicationReceiver).</span>
+<span class="sd">        ================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_step_direction</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)]</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">orientation</span>
+        <span class="n">featured_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">neighborhood</span> \
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_target_filter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="c1">#! Improve code</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">featured_objects</span><span class="p">:</span>
+            <span class="c1"># If Wall, detect the distance to the closest point to the wall (CoM would not work).</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;Wall&#39;</span><span class="p">:</span>
+                <span class="n">closest_points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span>\
+                        <span class="n">linkIndexA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkIndexB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+                <span class="n">closest_pt_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>  
+                                    <span class="n">linkA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+                <span class="c1"># closest_pt_pos = np.array(closest_points[0][6])</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">closest_pt_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">position</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Provisional solution: For the rest of objects (generally small objects) compute the distance </span>
+                <span class="c1"># to the CoM of the target object.</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">position</span> <span class="c1">#!OJO</span>
+            <span class="n">orientation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="c1"># Discard distant entities.</span>
+            <span class="k">if</span> <span class="n">rho</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Angle difference between sensor directions and ang(v).</span>
+            <span class="c1"># Compute the directions with candidate entities to be perceived by the sensor. </span>
+            <span class="n">phi_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">angle_diff</span><span class="p">(</span><span class="n">compute_angle</span><span class="p">(</span><span class="n">v</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span> <span class="n">theta</span><span class="p">)</span> <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">orientation</span><span class="p">)])</span>
+            <span class="n">featured_sensors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phi_values</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">phi_values</span> <span class="o">=</span> <span class="n">phi_values</span><span class="p">[</span><span class="n">featured_sensors</span><span class="p">]</span>
+            <span class="c1"># For each sector with candidate targets to perceive, read the sector&#39;s sensor. </span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">featured_sensors</span><span class="p">,</span> <span class="n">phi_values</span><span class="p">):</span>
+                <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step_direction</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">diff_vector</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">readings</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.directions"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">[docs]</a>    <span class="k">def</span> <span class="nf">directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the vector of sensing directions of the sectors based on the robot heading orientation.</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            theta [float] -&gt; orientation of the robots using the sensor.</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">            Numpy Array with the absolute directions of each sensor (starting from theta).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">theta</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets the sensor. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reading</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">joints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">getJointInfo</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>\
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">))])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensors_idx</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">joints</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bytes</span><span class="p">(</span><span class="s1">&#39;base_to_IR&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>\
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.get_position"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the position of the sensor of each sector. Each sector is represented by a small 3D model </span>
+<span class="sd">        used  to cast rays and compute the readings wrt it. </span>
+<span class="sd">        TODO: For the moment only available in 3D.&quot;&quot;&quot;</span>
+        <span class="c1"># aa = self.sensor_owner.physics_client.get_link_state(self.sensor_owner.id, idx)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getLinkState</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span></div></div>
+    
+
+
+
+
+
+    <span class="c1"># def step2(self, neighborhood):</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     Main method for steping the sensor and capturing nearby environment events.</span>
+    <span class="c1">#     It senses the environment independently in each of the sensing sectors. The </span>
+    <span class="c1">#     particular behavior of each sensor inheriting this class should be specified in </span>
+    <span class="c1">#     _step_direction method.</span>
+    <span class="c1">#     ================================================================================</span>
+    <span class="c1">#     - Args: </span>
+    <span class="c1">#         neighborhood -&gt; List of neighboring WorldObjects.</span>
+
+    <span class="c1">#     - Returns:</span>
+    <span class="c1">#         Numpy array with the measurement in each direction. In exceptional cases </span>
+    <span class="c1">#         it may return a list of python dictionaries (see CommunicationReceiver).</span>
+    <span class="c1">#     ================================================================================</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     readings = [self._step_direction(0, 0, None, 0, obj=None) for _ in range(self.n_sectors)]</span>
+    <span class="c1">#     orientation = self.sensor_owner.orientation[-1]</span>
+    <span class="c1">#     featured_objects = [obj for obj in neighborhood \</span>
+    <span class="c1">#                         if self._target_filter(obj) and obj.id != self.sensor_owner.id]</span>
+    <span class="c1">#     for obj in featured_objects:</span>
+    <span class="c1">#         for k, direction in enumerate(self.directions(orientation)):</span>
+    <span class="c1">#             robot_sensor = self.sensors_idx[k]</span>
+    <span class="c1">#             if issubclass(type(obj), WorldObject3D):</span>
+    <span class="c1">#                 if obj.tangible:</span>
+    <span class="c1">#                     closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\</span>
+    <span class="c1">#                             linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)</span>
+    <span class="c1">#                     v = np.array(closest_points[0][6]) - self.sensor_owner.position</span>
+    <span class="c1">#                 else:</span>
+    <span class="c1">#                     v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.</span>
+    <span class="c1">#                 orientation = self.sensor_owner.orientation[-1]</span>
+    <span class="c1">#             else:</span>
+    <span class="c1">#                 v = toroidal_difference(obj.position, self.sensor_owner.position)</span>
+    <span class="c1">#             rho = LA.norm(v)</span>
+    <span class="c1">#             phi = angle_diff(compute_angle(v[:2]), direction)</span>
+    <span class="c1">#             # import pdb; pdb.set_trace()</span>
+    <span class="c1">#             if rho &lt; self.range and phi &lt; self.aperture:</span>
+    <span class="c1">#                 readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)</span>
+    <span class="c1">#     reading = np.array(readings) if not isinstance(readings[0], dict) else readings</span>
+    <span class="c1">#     self.reading = reading.copy()</span>
+    <span class="c1">#     return reading</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

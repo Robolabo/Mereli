@@ -49,7 +49,8 @@ class IRCommunicationReceiver(DirectionalSensor):
             if signal_strength > direction_reading['signal']:
                 my_pos = self.get_position(self.sensors_idx[direction]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
                 tar_pos = obj.position + np.r_[0, 0, 0.07] # my_pos[2]]
-                ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
+                # ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
+                ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
                 if ray_res == obj.id:
                     sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
                     sending_angle = self.directions(0.)[sending_direction]

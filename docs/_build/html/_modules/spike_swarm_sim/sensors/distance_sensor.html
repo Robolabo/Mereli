@@ -1,0 +1,301 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.sensors.distance_sensor &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.sensors.distance_sensor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.sensors.distance_sensor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+
+<span class="c1"># from shapely.geometry import LineString</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors</span> <span class="k">import</span> <span class="n">DirectionalSensor</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensor_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span>
+<span class="kn">from</span> <span class="nn">.utils.propagation</span> <span class="k">import</span> <span class="n">ExpDecayPropagation</span>
+
+
+<div class="viewcode-block" id="DistanceSensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor">[docs]</a><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distance_sensor&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DistanceSensor</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Directional distance sensor class. It mimics the IR distance sensor. </span>
+<span class="sd">    The sensor is partitioned into multiple sector that provide measurements </span>
+<span class="sd">    solely of their sector coverage. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DistanceSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span> <span class="o">=</span> <span class="n">ExpDecayPropagation</span><span class="p">(</span><span class="n">rho_att</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">200</span><span class="p">,</span> <span class="n">phi_att</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_step_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">direction_reading</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step the sensor of a sector. For a detailed explanation of </span>
+<span class="sd">        this method see DirectionalSensor._step_direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>\
+                    <span class="ow">and</span> <span class="n">rho</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span>\
+                    <span class="ow">and</span> <span class="n">phi</span> <span class="o">&lt;=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span> <span class="o">+</span> <span class="mf">0.001</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">direction_reading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">direction_reading</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
+            <span class="n">signal_strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">signal_strength</span> <span class="o">&gt;</span> <span class="n">direction_reading</span><span class="p">:</span>
+                <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">signal_strength</span>
+        <span class="k">return</span> <span class="n">direction_reading</span>
+
+    <span class="k">def</span> <span class="nf">_target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Filtering of potential target WorldObjects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span></div>
+
+
+<div class="viewcode-block" id="DistanceSensor3D"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor3D">[docs]</a><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distance_sensor3D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DistanceSensor3D</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Directional distance sensor class. It mimics the IR distance sensor. </span>
+<span class="sd">    The sensor is partitioned into multiple sector that provide measurements </span>
+<span class="sd">    solely of their sector coverage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DistanceSensor3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span> <span class="o">=</span> <span class="n">ExpDecayPropagation</span><span class="p">(</span><span class="n">rho_att</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">phi_att</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span> <span class="c1"># DS=</span>
+        <span class="c1"># self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1.) # DS=</span>
+        <span class="c1"># self.sensors_idx = None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span>
+
+    <span class="k">def</span> <span class="nf">_step_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">direction_reading</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step the sensor of a sector. For a detailed explanation of </span>
+<span class="sd">        this method see DirectionalSensor._step_direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>\
+                    <span class="ow">and</span> <span class="n">rho</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span>\
+                    <span class="ow">and</span> <span class="n">phi</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">direction_reading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span>
+        <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
+            <span class="n">signal_strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">signal_strength</span> <span class="o">&gt;</span> <span class="n">direction_reading</span><span class="p">:</span>
+                <span class="n">my_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensors_idx</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="c1">#+ np.r_[0, 0, 0.017]</span>
+                <span class="n">tar_pos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">]</span> <span class="c1"># my_pos[2]]</span>
+                <span class="c1"># Cast a ray between my_pos y tar_pos to verify if there are obstacles</span>
+                <span class="c1">#! ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client.client)[0][0]</span>
+                <span class="n">ray_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">(</span><span class="n">my_pos</span><span class="p">,</span> <span class="n">tar_pos</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">ray_res</span> <span class="o">==</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> 
+                    <span class="c1"># print(&#39;IR&#39;+str(args[0]), type(kwargs[&#39;obj&#39;]).__name__, rho)</span>
+                    <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">signal_strength</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">direction_reading</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span>
+        <span class="k">return</span> <span class="n">direction_reading</span>
+
+    <span class="k">def</span> <span class="nf">_target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Filtering of potential target WorldObjects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span></div>
+
+    <span class="c1"># def reset(self):</span>
+    <span class="c1">#     joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\</span>
+    <span class="c1">#         for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])</span>
+    <span class="c1">#     self.sensors_idx = {i : np.where(np.array(joints) == bytes(&#39;base_to_IR&#39;+str(i), &#39;utf-8&#39;))[0][0]\</span>
+    <span class="c1">#             for i in range(self.n_sectors)}</span>
+
+    <span class="c1"># def get_position(self, idx):</span>
+    <span class="c1">#     return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])</span>
+      
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

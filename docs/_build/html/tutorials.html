@@ -1,0 +1,1132 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Tutorials &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Customize Code" href="custom_classes.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#worlds">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#entities">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initializers">Initializers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sensors">Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#controllers">Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#artificial-neural-networks">Artificial Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-files">Configuration Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#world-configuration">World Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Tutorials</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/tutorials.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tutorials">
+<span id="id1"></span><h1>Tutorials<a class="headerlink" href="#tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="worlds">
+<h2>Worlds<a class="headerlink" href="#worlds" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="entities">
+<h2>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h2>
+<p>Entities are any kind of world objects that are created in the world or environment space. Jointly with the physics and render engine, they
+define the variety experiments to be carried out. Every entity defined in the simulator inherits from the class <a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.world_object.WorldObject</span></code></a>.
+This base class cannot be directly instantiated and defines a set of abstract properties of entities. Even thought their names are descriptive, the
+following table defines the currently implemented entity properties:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Property</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>tangible</p></td>
+<td><p>Whether the object has collisions or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p>static</p></td>
+<td><p>Whether the object is static or can move.</p></td>
+</tr>
+<tr class="row-even"><td><p>luminous</p></td>
+<td><p>Whether the object emits light or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p>controllable</p></td>
+<td><p>Whether the object has a controller or not.</p></td>
+</tr>
+<tr class="row-even"><td><p>trainable</p></td>
+<td><p>Whether the object controller can be trained (not really used yet).</p></td>
+</tr>
+</tbody>
+</table>
+<p>Additionally, on top of <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code>, <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> are built. These classes inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code>
+and particularize the entities for 2D and 3D simulations. For the moment, 3D objects inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> and 2D entities inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code>.
+Nonetheless’, this implementation is temporal and, in future versions, it is expected that any entity will be decoupled from the type of physics and graphics it employs in
+a simulation. In this way, <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> would be removed and only <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> would act as base class.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Several objects (robot, light_source, etc) have two classes devoted to 2D and 3D physics and graphics. This implementation
+is temporal until the 2D/3D standardization is fulfilled. The aim is that there is a single class for each entity and it is
+the physics engine the responsible for loading and executing the correct object model, physics and graphics.</p>
+</div>
+<p>The entities that are currently implemented in the simulator are gathered in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 44%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Entity Name</p></td>
+<td><p>Python Class</p></td>
+<td><p>Description</p></td>
+<td><p>Image</p></td>
+</tr>
+<tr class="row-even"><td><p>robot/robot3D</p></td>
+<td><p>Robot/Robot3D</p></td>
+<td></td>
+<td><a class="reference internal image-reference" href="_images/robot.png"><img alt="_images/robot.png" src="_images/robot.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-odd"><td><p>light_source</p></td>
+<td></td>
+<td></td>
+<td><a class="reference internal image-reference" href="_images/light.png"><img alt="_images/light.png" src="_images/light.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-even"><td><p>wall</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ground_area</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cube</p></td>
+<td></td>
+<td></td>
+<td><a class="reference internal image-reference" href="_images/cube.png"><img alt="_images/cube.png" src="_images/cube.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-odd"><td><p>ball</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>epuck</p></td>
+<td><p>Epuck3D</p></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> and <code class="docutils literal notranslate"><span class="pre">Robot3D</span></code> are base classes for any simulated robot. Although these classes can be directly instantiated
+through the config. files, it is advisable to create a separate class inheriting from them for the precise robot model (epuck, minitaur, hexapod, etc.).
+Nonetheless, if instantiated directly,  <code class="docutils literal notranslate"><span class="pre">Robot</span></code> and <code class="docutils literal notranslate"><span class="pre">Robot3D</span></code> will load the epuck model by default.</p>
+</div>
+<p>Another important aspect about entities is that they are arranged in groups. Groups are useful for several reasons. Firstly, they ease the execution of
+many operations as a group instead of applying it object by object. The clearest example is the initialization of the position of the entities, allowing
+the initialization as group, forming an spatial graph, a grid or avoiding object overlapping. Initializers will be treated later in this tutorial. Secondly,
+they allow the instantiation of homogeneous groups of entities. By homogeneous we refer to the situation in which every entity has the same characteristics,
+equipment and capabilities. For example, a group would be a swarm of 10 mobile robots with the same controller, sensors and actuators.</p>
+<div class="section" id="entity-creation-and-modelling">
+<h3>Entity creation and modelling<a class="headerlink" href="#entity-creation-and-modelling" title="Permalink to this headline">¶</a></h3>
+<p>There are three different ways to instantiate entities in an experiment: using directly the API, using a configuration <code class="docutils literal notranslate"><span class="pre">dict</span></code> and
+using a configuration file. Even though all of them are equivalent, the third option is much more used in practice for designing and
+carrying out robotics experiments. The first and second options are more suitable when building other software on top of this simulator or
+using the library inside another program. Hereafter, all of the mentioned options are explained.
+Firstly, lets address the first option: instantiating entities using the API. Even though this option is not as useful as the others, it is
+important to know it in order to understand the simulator design. There are two main steps in the entity instantiation, which are the entity
+creation (calling the class constructor) and its addition and registry within the world.
+The following example shows the process of creating two robots and a blue cube:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create controller and define sensors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr1</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr2</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ctlr1</span><span class="p">,</span> <span class="n">ctlr2</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">({</span><span class="s2">&quot;distance_sensor3D&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">({</span><span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create objects instances</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot1</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot2</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="mf">3.14</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cube</span> <span class="o">=</span> <span class="n">Cube</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">side_len</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add objects to world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_1&#39;</span><span class="p">,</span> <span class="n">robot1</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_2&#39;</span><span class="p">,</span> <span class="n">robot2</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;cube_1&#39;</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;cubes&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first steps imply creating the robot controller, which is a basic obstacle avoidance controller, and the activation of the sensors
+and actuators. For the moment, lets ignore this steps as they are treated later in this tutorial. Secondly, the robots and the cube are
+created using the corresponding Python class (imports not shown in the example). The robots are directly initialized at (0,0) and (1,0) and
+with orientations 0 and <span class="math notranslate nohighlight">\(\pi\)</span> radians. The cube is created at (2,2).
+The last step is to register the entities in the world. This is accomplished using the <code class="docutils literal notranslate"><span class="pre">register_entity</span></code> method of the <code class="docutils literal notranslate"><span class="pre">World</span></code> class.
+The arguments are the entity name, the python instance and the group to which it belongs. Notice that the two robots belong to the same group.</p>
+<p>The second way of creating entities is using <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects to gather all the configuration details. Thereafter, once this dictionary has been
+created, the method <code class="docutils literal notranslate"><span class="pre">build_from_dict</span></code> of the class <code class="docutils literal notranslate"><span class="pre">World</span></code> is used. The configuration details and an explanation of the possible fields can
+be consulted at the <a class="reference external" href="configuration_files.html">Configuration Files</a> section. At this point, lets recreate the previous example with two robots
+and a blue cube:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world_cfg</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;engine&quot;</span> <span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;width&quot;</span><span class="p">:</span>  <span class="mi">10</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;objects&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;swarm&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;epuck&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="s2">&quot;basic_obstable_avoider&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;sensors&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="s2">&quot;distance_sensor3D&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]}}</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;orientations&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">]}}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;cubes&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>              <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;cube&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>                   <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;mass&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;side_len&quot;</span> <span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">build_from_dict</span><span class="p">(</span><span class="n">world_cfg</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The only configuration distinction is that we have already introduced the entity initializers. More precisely, we have used the
+<a class="reference internal" href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.initializers.FixedInitializer" title="spike_swarm_sim.utils.initializers.FixedInitializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.utils.initializers.FixedInitializer</span></code></a>, that deterministically assigns the given fixed values to the
+positions and orientations of the objects in the group.</p>
+<p>The third option is very similar to using a <code class="docutils literal notranslate"><span class="pre">dict</span></code> gathering the configuration. Specifically, it is about using configuration files gathering
+the configuration. Moreover, the configuration files not only encompass the world configuration but also the neural topology and optimization algorithm (if any).
+For the moment, the format of the configuration files is <code class="docutils literal notranslate"><span class="pre">json</span></code> and the configuration files are stored in the <code class="docutils literal notranslate"><span class="pre">spike_swarm_sim/config</span></code> directory.
+The meaning of the JSON field is explained at the <a class="reference external" href="configuration_files.html">Configuration Files</a> section.
+When using configuration files, the only way of executing the simulator is via the main.py file. More precisely, provided that the configuration file name is <code class="docutils literal notranslate"><span class="pre">config_example.json</span></code>,
+the command line execution would be:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">python</span> <span class="n">main</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">f</span> <span class="n">config_example</span> <span class="o">-</span><span class="n">R</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">-R</span></code> means that the simulation is run in visual mode and <code class="docutils literal notranslate"><span class="pre">-f</span></code> is the config. file name. For the description of the rest of command line arguments see XXXXXXXX.</p>
+<p>Finally, another important aspect when creating entities is their model definition. Each entity class has an attribute called <code class="docutils literal notranslate"><span class="pre">model_file</span></code> that states the name of the
+file defining the 2D or 3D model of the object. The model must be previously designed, coded and stored in <code class="docutils literal notranslate"><span class="pre">spike_swarm_sim/objects/models</span></code>. In the case of the 3D
+entities using the <code class="docutils literal notranslate"><span class="pre">pybullet</span></code> based engine (the only 3D engine currently available), the 3D model must be defined as an <a class="reference external" href="http://wiki.ros.org/urdf">URDF</a> file.
+These aside from from  defining the geometry, inertia, masses, and so on, it also establishes the links and joints of robots.
+See <a class="reference external" href="_static/epuck.urdf">epuck.urdf</a> for an example of creating a simplified epuck through an URDF file.
+On the contrary, for creating 2D entities for <code class="docutils literal notranslate"><span class="pre">pymunk</span></code> based physics engine, we created a simple yet easily extensible JSON module syntax. An example of a JSON
+file modelling a simplified 2D epuck is shown in <a class="reference external" href="_static/epuck.json">epuck.json</a> .</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>Explain the details the syntax of the JSON model files of 2D entities. To be done when 2D/3D standardization is finished.</p>
+</div>
+</div>
+<div class="section" id="initializers">
+<h3>Initializers<a class="headerlink" href="#initializers" title="Permalink to this headline">¶</a></h3>
+<p>Now, lets return to the entity initializers. Initializer are python classes that noticeably ease the selection of entity initial states of
+the positions and the orientations. For example it allows to sample positions uniformly within a square without physical overlapping or
+sample the 2D coordinates of robots in a swarm as a 2D spatial random graph (assuring swarm compactness).
+Initializers work at the group level, meaning that they initialize the positions and orientations considering whole groups of entities.
+This remarkably useful for avoiding initial overlapping or creating compact swarms of robots. The mapping between group names and initializers
+is an attribute of the class <code class="docutils literal notranslate"><span class="pre">World</span></code> that holds all the groups and entities. This attribute is called <code class="docutils literal notranslate"><span class="pre">initializers</span></code> of type <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
+An pseudocode example of this attribute is exposed below:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">initializers</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;swarm&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;orientations&#39;</span> <span class="p">:</span> <span class="n">Initializer2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;cubes&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer3</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">Initializer1</span></code>, <code class="docutils literal notranslate"><span class="pre">Initializer2</span></code> and  <code class="docutils literal notranslate"><span class="pre">Initializer3</span></code> are not actual classes. In practice, they should be instances of any of the
+available Initializer classes.</p>
+<p>The initializer classes that are currently implemented within the simulator are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 19%" />
+<col style="width: 65%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
+<td><p><strong>Python Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>fixed</p></td>
+<td><p>FixedInitializer</p></td>
+<td><p>Initializes the positions or orientations always at the given fixed values.</p></td>
+</tr>
+<tr class="row-odd"><td><p>fixed_random</p></td>
+<td><p>FixedRandomInitializer</p></td>
+<td><p>Randomly initializes the positions or orientations from a list of fixed possible values.</p></td>
+</tr>
+<tr class="row-even"><td><p>random_uniform</p></td>
+<td><p>RandomUniformInitializer</p></td>
+<td><p>Randomly initializes objects positions within a rectangle area (positions) or a segment
+orientations().</p></td>
+</tr>
+<tr class="row-odd"><td><p>random_circle</p></td>
+<td><p>RandomCircleInitializer</p></td>
+<td><p>Randomly initializes objects positions within a circle area.</p></td>
+</tr>
+<tr class="row-even"><td><p>random_circumference</p></td>
+<td><p>RandomCircumference</p></td>
+<td><p>Randomly initializes objects positions embedded in a circumference.</p></td>
+</tr>
+<tr class="row-odd"><td><p>random_graph</p></td>
+<td><p>RandomGraphInitializer</p></td>
+<td><p>Randomly initializes objects positions as a random spatial graph.</p></td>
+</tr>
+<tr class="row-even"><td><p>grid</p></td>
+<td><p>GridInitializer</p></td>
+<td><p>Deterministically initializes objects positions within a 2D regular lattice or grid.</p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>Not implemented yet</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, lets learn how initializers are used. In case of using configuration files or <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects, the initializers are used as in the  last
+example of the previous section, introducing for each object the initializer reference name and the parameters (see the API for an explanation of the
+class arguments). On the contrary, in order to understand its use with the API, lets observe the following example:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create and register initializers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_ori</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">6.28</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;orientations&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_pos</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span>  <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;positions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">set_initializer</span><span class="p">(</span><span class="s1">&#39;swarm&#39;</span><span class="p">,</span> <span class="n">ini_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="n">ini_ori</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ini_pos</span><span class="p">(),</span> <span class="n">ini_ori</span><span class="p">())):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">({</span><span class="s2">&quot;distance_sensor3D&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">({</span><span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ent</span> <span class="o">=</span> <span class="n">Robot3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ent</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the examples, we have created a group called <code class="docutils literal notranslate"><span class="pre">'swarm'</span></code> with 5 robots and with the following initialization:</p>
+<ol class="arabic simple">
+<li><p><strong>Positions</strong>:  are sampled randomly from the hypercube <span class="math notranslate nohighlight">\(\,[-3,\,3]^2\)</span>.</p></li>
+<li><p><strong>Orientations</strong>:  are sampled randomly  <span class="math notranslate nohighlight">\(\,\mathcal{U}(0, 2\pi)\)</span>.</p></li>
+</ol>
+<p>Additionally, notice that, once created, the initializers are registered in the world and mapped to the corresponding group
+using the method <a class="reference internal" href="modules.html#spike_swarm_sim.world.World.set_initializer" title="spike_swarm_sim.world.World.set_initializer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World.set_initializer()</span></code></a>.</p>
+<video controls src="_static/TFM_video.mp4" width="300" height="300"/></div>
+</div>
+<div class="section" id="sensors">
+<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="actuators">
+<h2>Actuators<a class="headerlink" href="#actuators" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="controllers">
+<h2>Controllers<a class="headerlink" href="#controllers" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="artificial-neural-networks">
+<h2>Artificial Neural Networks<a class="headerlink" href="#artificial-neural-networks" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="overview">
+<h3>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="world-configuration">
+<h3>World Configuration<a class="headerlink" href="#world-configuration" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><dl class="simple">
+<dt><em>engine</em> (str)</dt><dd><p>Physics and render engine to be used in the simulation. Currently, it can be either 2D and 3D.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>height</em> (float)</dt><dd><p>Height in metres of the environment arena.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><em>width</em> (float)</dt><dd><p>Width in metres of the environment arena.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><em>objects</em> (dict)</dt><dd><p>Python <a href="#id5"><span class="problematic" id="id6">``</span></a>dict``gathering all the entites/objects instantiated in the arena. The entities are gathered in groups that
+share the same characteristics. Therefore, each key-value pair maps the name of the group of entities to the configuration
+of the group members. The most important configuration fields of each entity group are the type of the entities of the
+group, the number of instances and the initializers. Moreover, in the case of robot entities, the controller, the enabled sensors and
+the employed actuators are also stated here.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;robotA&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;robot&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="s2">&quot;neural_controller&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;sensors&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;yellow_light_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;IR_receiver&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;msg_length&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;selection_scheme&quot;</span> <span class="p">:</span> <span class="s2">&quot;cyclic&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;distance_sensor3D&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;wireless_transmitter&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;quantize&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;msg_length&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;orientations&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="mf">6.28</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;perturbations&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;stimuli_inhibition&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;affected_robots&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;stimuli&quot;</span> <span class="p">:</span> <span class="s2">&quot;IR_receiver&quot;</span><span class="p">,</span> <span class="s2">&quot;replace_value&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;trainable&quot;</span> <span class="p">:</span> <span class="n">true</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>  <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="s2">&quot;yellow_light&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;light_source&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="s2">&quot;num_instances&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]}}</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>     <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span> <span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 26%" />
+<col style="width: 19%" />
+<col style="width: 10%" />
+<col style="width: 25%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Sensor Reference</p></td>
+<td><p>Sensor Class</p></td>
+<td><p>Parameter</p></td>
+<td><p>Default</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><div class="line-block">
+<div class="line">distance_sensor3D</div>
+<div class="line">distance_sensor</div>
+</div>
+</td>
+<td rowspan="2"><div class="line-block">
+<div class="line">DistanceSensor</div>
+<div class="line">DistanceSensor3D</div>
+</div>
+</td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td rowspan="5"><div class="line-block">
+<div class="line">IR_receiver</div>
+</div>
+</td>
+<td rowspan="5"><div class="line-block">
+<div class="line">IRCommunicationReceiver</div>
+<div class="line">BufferedIRCommRX</div>
+</div>
+</td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>msg_length</p></td>
+<td><p>1</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>max_hops</p></td>
+<td><p>10</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>selection_scheme</p></td>
+<td><p>“cyclic”</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><div class="line-block">
+<div class="line">light_sensor3D</div>
+<div class="line">distance_sensor</div>
+</div>
+</td>
+<td rowspan="2"><div class="line-block">
+<div class="line">LightSensor3D</div>
+<div class="line">DistanceSensor3D</div>
+</div>
+</td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ground_sensor</p></td>
+<td><p>GroundSensor</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>color_sensor</p></td>
+<td><p>ColorSensor</p></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="topology-configuration">
+<h3>Topology Configuration<a class="headerlink" href="#topology-configuration" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><dl class="simple">
+<dt><strong>dt</strong> (float)</dt><dd><p>Euler time step used to iteratively solve the differential equations of the neurons.</p>
+</dd>
+</dl>
+</li>
+<li><p><em>time_scale</em> (float)</p></li>
+<li><dl>
+<dt><em>neuron_model</em> (str)</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference Name</p></th>
+<th class="head"><p>Python class</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>rate_model</p></td>
+<td><p>RateModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-odd"><td><p>adex</p></td>
+<td><p>AdExModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-even"><td><p>izhikevich</p></td>
+<td><p>IzhikevichModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-odd"><td><p>lif</p></td>
+<td><p>LIFModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-even"><td><p>exp_lif</p></td>
+<td><p>ExpLIFModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-odd"><td><p>morris_lecar</p></td>
+<td><p>MorrisLecarModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">MorrisLecarModel</span></code> and <code class="docutils literal notranslate"><span class="pre">LIFModel</span></code> classes do exist in the simulator but cannot be used for the
+moment.</p>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt><em>synapse_model</em>  (str)</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference Name</p></th>
+<th class="head"><p>Python class</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>static</p></td>
+<td><p>RateModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+<tr class="row-odd"><td><p>adex</p></td>
+<td><p>AdExModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><p><em>stimuli</em> (dict)</p>
+<blockquote>
+<div><p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;stimuli&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;I1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span> <span class="p">:</span> <span class="s2">&quot;yellow_light_sensor&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;I2&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span> <span class="p">:</span> <span class="s2">&quot;red_light_sensor&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;I3&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span> <span class="p">:</span> <span class="s2">&quot;distance_sensor3D&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;I4&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span> <span class="p">:</span> <span class="s2">&quot;task_sensor&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;I5&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;sensor&quot;</span> <span class="p">:</span> <span class="s2">&quot;IR_receiver:msg&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><em>ensembles</em> (dict)</dt><dd><p>Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> defining the neuron ensembles or layers of the architecture. For the moment,
+all the ensembles’ neurons are based on the same neuron model established in the <code class="docutils literal notranslate"><span class="pre">neuron_model</span></code>
+field. Nonetheless, the neurons of each ensemble can have different neuron parameters (e.g. one
+can define an ensemble of fast rate model neurons with a small <span class="math notranslate nohighlight">\(\tau\)</span> and another ensemble composed
+by slow neurons with a large <span class="math notranslate nohighlight">\(\tau\)</span>). The <code class="docutils literal notranslate"><span class="pre">dict</span></code> maps ensemble names to ensemble parameters. There
+is only one compulsory parameter named as <code class="docutils literal notranslate"><span class="pre">n</span></code> that represents the number of neurons in the ensemble.
+The other parameters are gathered within the values of a subdict with key <code class="docutils literal notranslate"><span class="pre">&quot;params&quot;</span></code>.
+The following example shows the ensemble configuration of an architecture with rate models and four  ensembles
+(<code class="docutils literal notranslate"><span class="pre">H1</span></code>, <code class="docutils literal notranslate"><span class="pre">H2</span></code>, <code class="docutils literal notranslate"><span class="pre">OUT_COMM</span></code> and <code class="docutils literal notranslate"><span class="pre">OUT_MOT</span></code>):</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;neuron_model&quot;</span> <span class="p">:</span> <span class="s2">&quot;rate_model&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;ensembles&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tau&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;bias&quot;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;gain&quot;</span> <span class="p">:</span> <span class="mf">0.75</span><span class="p">}},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;H2&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tau&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;bias&quot;</span> <span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">}},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;OUT_COMM&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tau&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;OUT_MOT&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tau&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;activation&quot;</span> <span class="p">:</span> <span class="s2">&quot;tanh&quot;</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>It can be observed in the example, the parameters of the <code class="docutils literal notranslate"><span class="pre">&quot;params&quot;</span></code> field  are optional and
+it they are not defined, the default value is used. Moreover, the parameters shown in the example
+are specifically used only in the case of the <code class="docutils literal notranslate"><span class="pre">rate_model</span></code>. For other neuron models, the parameters
+are different according to the neuron requirements. The following table gathers the possible parameters
+of each of the available neuron models:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 18%" />
+<col style="width: 19%" />
+<col style="width: 13%" />
+<col style="width: 33%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Neuron Model</p></td>
+<td><p>Parameter</p></td>
+<td><p>Math Notation</p></td>
+<td><p>Default</p></td>
+<td><p>Description</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p>rate_model</p></td>
+<td><p>tau</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron’s time constant</p></td>
+</tr>
+<tr class="row-odd"><td><p>bias</p></td>
+<td><p><span class="math notranslate nohighlight">\(\beta\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p>Neuron bias or offset</p></td>
+</tr>
+<tr class="row-even"><td><p>gain</p></td>
+<td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron gain</p></td>
+</tr>
+<tr class="row-odd"><td><p>activation</p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-even"><td rowspan="9"><p>adex</p></td>
+<td><p>tau_w</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau_w\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron’s time constant</p></td>
+</tr>
+<tr class="row-odd"><td><p>tau_m</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau_m\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p>Neuron bias or offset</p></td>
+</tr>
+<tr class="row-even"><td><p>V_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron gain</p></td>
+</tr>
+<tr class="row-odd"><td><p>V_reset</p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-even"><td><p>A</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p><span class="math notranslate nohighlight">\(B\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-even"><td><p>theta_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-odd"><td><p>R</p></td>
+<td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-even"><td><p>refractoriness</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="4"><p>izhikevich</p></td>
+<td><p>A</p></td>
+<td><p><span class="math notranslate nohighlight">\(a\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p>Neuron’s time constant</p></td>
+</tr>
+<tr class="row-even"><td><p>B</p></td>
+<td><p><span class="math notranslate nohighlight">\(b\)</span></p></td>
+<td><p>0.2</p></td>
+<td><p>Neuron bias or offset</p></td>
+</tr>
+<tr class="row-odd"><td><p>C</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\)</span></p></td>
+<td><p>-65</p></td>
+<td><p>Neuron gain</p></td>
+</tr>
+<tr class="row-even"><td><p>D</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>8.0</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p>exp_lif</p></td>
+<td><p>tau</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau\)</span></p></td>
+<td><p>20</p></td>
+<td><p>Neuron’s time constant</p></td>
+</tr>
+<tr class="row-even"><td><p>R</p></td>
+<td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>1</p></td>
+<td><p>Neuron bias or offset</p></td>
+</tr>
+<tr class="row-odd"><td><p>v_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\)</span></p></td>
+<td><p>-65.0</p></td>
+<td><p>Neuron gain</p></td>
+</tr>
+<tr class="row-even"><td><p>time_refrac</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><ol class="arabic simple" start="10">
+<li></li>
+</ol>
+</td>
+<td><p>Neuron activation function</p></td>
+</tr>
+<tr class="row-odd"><td><p>thresh</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>-40.0</p></td>
+<td><p>Neuron activation function</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</li>
+<li><p><strong>synapses</strong> (dict)</p>
+<blockquote>
+<div><p>Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> defining the groups of synapses connecting the neurons and input nodes in defined in
+<code class="docutils literal notranslate"><span class="pre">stimuli</span></code> and <code class="docutils literal notranslate"><span class="pre">ensembles</span></code> fields. Each key-value of the synapses dictionary defines the connections
+between two ensembles (either of neurons or input nodes) and maps the synapse name to the synapse configuration.
+The synapse configuration encompasses several parameters that structurally define the connection. Among them,
+the <code class="docutils literal notranslate"><span class="pre">&quot;pre&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;post&quot;</span></code> parameters are compulsory and define the pre-synaptic and post-synaptic ensembles.
+These ensemble names have to be defined either in the <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> or <code class="docutils literal notranslate"><span class="pre">ensembles</span></code> fields. Moreover, notice that
+each synapse entry can define a set of connections instead of a single one in the cases in which the number of
+neurons or nodes in the ensembles is greater than 1. The following extract of code extends the example exposed
+in the <code class="docutils literal notranslate"><span class="pre">ensembles</span></code> and <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> explanation, showing how to connect the ensembles:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;synapses&quot;</span> <span class="p">:</span>  <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;I1-H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;I1&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;I2-H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;I2&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;I3-H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;I3&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;I4-H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;I4&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;I5-H1&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;I5&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;H1-H2&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span><span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;H2&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;H2-OUT_COMM&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;H2&quot;</span><span class="p">,</span><span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;OUT_COMM&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;H2-OUT_MOT&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;pre&quot;</span><span class="p">:</span><span class="s2">&quot;H2&quot;</span><span class="p">,</span><span class="s2">&quot;post&quot;</span><span class="p">:</span><span class="s2">&quot;OUT_MOT&quot;</span><span class="p">,</span> <span class="s2">&quot;trainable&quot;</span><span class="p">:</span><span class="n">true</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">:</span><span class="mf">1.0</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Additionally, the following table gathers the possible parameters to be defined in a synapse entry.
+Notice that the <code class="docutils literal notranslate"><span class="pre">neuroTX</span></code> parameter is only valid when using spiking neural networks
+(spiking neurons + dynamic synapses). It is worth mentioning the function of <code class="docutils literal notranslate"><span class="pre">p</span></code>, which represents
+the connection probability. Its meaning is that each synapse joining two ensembles will be created
+with a probability <code class="docutils literal notranslate"><span class="pre">p</span></code>. This parameter is specially important when building large unstructured
+neural sparse meshes in which the connectivity is, say, 25%. In regular ANNs it is normally fixed
+to 1.0 (fully connected).</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 18%" />
+<col style="width: 66%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
+<td><p><strong>Default</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>pre</p></td>
+<td><p>Compulsory</p></td>
+<td><p>Name of the pre-synaptic neuron ensemble.</p></td>
+</tr>
+<tr class="row-odd"><td><p>post</p></td>
+<td><p>Compulsory</p></td>
+<td><p>Name of the post-synaptic neuron ensemble.</p></td>
+</tr>
+<tr class="row-even"><td><p>p</p></td>
+<td><p>1.0</p></td>
+<td><p>Connection probability among <code class="docutils literal notranslate"><span class="pre">pre</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> neurons.</p></td>
+</tr>
+<tr class="row-odd"><td><p>neuroTX</p></td>
+<td><p>“AMPA+NDMA”</p></td>
+<td><p>Type of synapse neurotransmitter. Only valid if
+dynamic_synapse is used. Possible values: “AMPA+NDMA”,
+“AMPA”, “GABA” or “NDMA”.</p></td>
+</tr>
+<tr class="row-even"><td><p>trainable</p></td>
+<td><p>True</p></td>
+<td><p>Flag indicating if the weights of the synapses
+can be optimized. Currently not used.</p></td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</li>
+<li><dl>
+<dt><em>outputs</em> (dict)</dt><dd><p>The outputs field states which of the previously defined ensembles are output layers of the architecture.
+It also maps these output layers, responsible of generating actions, to the corresponding actuators.
+The <code class="docutils literal notranslate"><span class="pre">dict</span></code> maps output names (do not confuse with ensemble names) with the output configuration.
+The output configuration states the ensemble name (has to be defined) and the actuator name (has to be an
+implemented actuator). The following example defines <code class="docutils literal notranslate"><span class="pre">OUT_COMM</span></code> and <code class="docutils literal notranslate"><span class="pre">OUT_MOT</span></code> neuron ensembles as outputs:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;outputs&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;outA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ensemble&quot;</span> <span class="p">:</span> <span class="s2">&quot;OUT_MOT&quot;</span><span class="p">,</span> <span class="s2">&quot;actuator&quot;</span> <span class="p">:</span> <span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span> <span class="s2">&quot;enc&quot;</span><span class="p">:</span> <span class="s2">&quot;real&quot;</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;outB&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ensemble&quot;</span> <span class="p">:</span> <span class="s2">&quot;OUT_COMM&quot;</span><span class="p">,</span> <span class="s2">&quot;actuator&quot;</span> <span class="p">:</span> <span class="s2">&quot;wireless_transmitter&quot;</span><span class="p">,</span> <span class="s2">&quot;enc&quot;</span><span class="p">:</span> <span class="s2">&quot;real&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 24%" />
+<col style="width: 53%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Actuator Name</strong></p></td>
+<td><p><strong>Actuator Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>joint_velocity_actuator</p></td>
+<td><p>JointVelocityActuator</p></td>
+<td><p>Actuator for the velocity control of joints.</p></td>
+</tr>
+<tr class="row-odd"><td><p>joint_position_actuator</p></td>
+<td><p>JointPositionActuator</p></td>
+<td><p>Actuator for the position control of joints.</p></td>
+</tr>
+<tr class="row-even"><td><p>wireless_transmitter</p></td>
+<td><p>CommunicationTransmitter</p></td>
+<td><p>IR-based Communication transmitter.</p></td>
+</tr>
+<tr class="row-odd"><td><p>led_actuator</p></td>
+<td><p>LedActuator3D/LedActuator</p></td>
+<td><p>Actuator for controlling the LEDs of a robot.</p></td>
+</tr>
+<tr class="row-even"><td><p>grasp_actuator</p></td>
+<td><p>GraspActuator</p></td>
+<td><div class="line-block">
+<div class="line">High level simplified actuator for grasping and dropping</div>
+<div class="line">small lightweight objects (TODO: for the moment only cubes).</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Just like the sensor classes, some actuator classes have a 2D and 3D implementation. This feature is temporal
+until 2D and 3D classes are standardized.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">wireless_transmitter</span></code> actuator name is provisional and it will eventually changed to a more descriptive name.</p>
+</div>
+</dd>
+</dl>
+</li>
+<li><p><em>encoding</em> (dict)</p></li>
+<li><p><em>decoding</em> (dict)</p>
+<blockquote>
+<div><p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;decoding&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;outA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;scheme&quot;</span> <span class="p">:</span> <span class="s2">&quot;IdentityDecoding&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;is_cat&quot;</span> <span class="p">:</span> <span class="n">false</span><span class="p">}},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;outB&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;scheme&quot;</span> <span class="p">:</span> <span class="s2">&quot;IdentityDecoding&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;is_cat&quot;</span> <span class="p">:</span> <span class="n">false</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p><em>learning_rule</em> (dict)</p></li>
+</ul>
+</div>
+<div class="section" id="algorithm-configuration">
+<h3>Algorithm Configuration<a class="headerlink" href="#algorithm-configuration" title="Permalink to this headline">¶</a></h3>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="custom_classes.html" class="btn btn-neutral float-right" title="Customize Code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

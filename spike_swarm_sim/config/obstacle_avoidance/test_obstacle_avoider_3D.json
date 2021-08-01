@@ -10,7 +10,7 @@
         "width":  10,
         "objects" : {
             "robotA" : {
-                "type" : "robot",
+                "type" : "epuck",
                 "num_instances" : 5,
                 "controller" : "basic_obstable_avoider",
                 "sensors" : {

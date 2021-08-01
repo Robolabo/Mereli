@@ -7,13 +7,17 @@ from spike_swarm_sim.globals import global_states
 
 @world_object_registry(name='task_scheduler')
 class TaskScheduler(WorldObject):
-    def __init__(self, *args, total_timesteps=1000, num_tasks=2, num_slots=2, replacement=False, **kwargs):
+    def __init__(self, *args, total_timesteps=1000, num_tasks=2, 
+                num_slots=2, replacement=False, task_names=None, 
+                **kwargs):
+        self.model_file = None
         super(TaskScheduler, self).__init__(*args, tangible=False, **kwargs)
         self.total_timesteps = total_timesteps
         self.num_tasks = num_tasks
         self.num_slots = num_slots
         self.replacement = replacement
-        
+        self.task_names = task_names if task_names is not None else ['Task ' + str(i) for i in range(self.num_tasks)]
+        assert len(self.task_names) ==  self.num_tasks
         # self.min_slot_duration = int(total_timesteps
         # self.max_slot_duration = 
         self.task_order = None
@@ -22,13 +26,12 @@ class TaskScheduler(WorldObject):
         self.prev_tasks = []
 
     def step(self, neighborhood):
-        if global_states.RENDER:
-            task_labels = ['Red Light Pursuit', 'Yellow Light Pursuit'] #['Red Light Pursuit', 'Cube Transportation']
+        if global_states.RENDER: #['Red Light Pursuit', 'Cube Transportation']
             if self.t == 0:
-                self.label_id = p.addUserDebugText(task_labels[self.current_task], (0,0,3), 
+                self.label_id = p.addUserDebugText(self.task_names[self.current_task], (0,0,3), 
                                 textColorRGB=(0,0,0), textSize=2, )
             else:
-                self.label_id = p.addUserDebugText(task_labels[self.current_task], (-0.5,0,3), 
+                self.label_id = p.addUserDebugText(self.task_names[self.current_task], (-0.5,0,3), 
                                 textColorRGB=(0,0,0), textSize=2, replaceItemUniqueId=self.label_id)
         # print(self.t, ('RED', 'YELLOW')[self.current_task])
         self.t += 1

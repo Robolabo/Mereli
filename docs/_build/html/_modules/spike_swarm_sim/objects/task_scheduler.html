@@ -1,0 +1,277 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.objects.task_scheduler &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.objects.task_scheduler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.objects.task_scheduler</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects.world_object</span> <span class="k">import</span> <span class="n">WorldObject</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">world_object_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">increase_time</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
+
+<div class="viewcode-block" id="TaskScheduler"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_scheduler&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TaskScheduler</span><span class="p">(</span><span class="n">WorldObject</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">total_timesteps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">num_tasks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+                <span class="n">num_slots</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">replacement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">task_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> 
+                <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TaskScheduler</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_timesteps</span> <span class="o">=</span> <span class="n">total_timesteps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_tasks</span> <span class="o">=</span> <span class="n">num_tasks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_slots</span> <span class="o">=</span> <span class="n">num_slots</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">replacement</span> <span class="o">=</span> <span class="n">replacement</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_names</span> <span class="o">=</span> <span class="n">task_names</span> <span class="k">if</span> <span class="n">task_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;Task &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tasks</span><span class="p">)]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task_names</span><span class="p">)</span> <span class="o">==</span>  <span class="bp">self</span><span class="o">.</span><span class="n">num_tasks</span>
+        <span class="c1"># self.min_slot_duration = int(total_timesteps</span>
+        <span class="c1"># self.max_slot_duration = </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_order</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># self.task_switch = None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="TaskScheduler.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">global_states</span><span class="o">.</span><span class="n">RENDER</span><span class="p">:</span> <span class="c1">#[&#39;Red Light Pursuit&#39;, &#39;Cube Transportation&#39;]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label_id</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">addUserDebugText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
+                                <span class="n">textColorRGB</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">textSize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">label_id</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">addUserDebugText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">task_names</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_task</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> 
+                                <span class="n">textColorRGB</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">textSize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">replaceItemUniqueId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">label_id</span><span class="p">)</span>
+        <span class="c1"># print(self.t, (&#39;RED&#39;, &#39;YELLOW&#39;)[self.current_task])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="TaskScheduler.controllable"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.controllable">[docs]</a>    <span class="k">def</span> <span class="nf">controllable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">current_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_order</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">//</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">total_timesteps</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_slots</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="TaskScheduler.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># if seed is not None:</span>
+        <span class="c1">#     self.task_order = np.array([1 if seed % 2 != 0 else 0]) #np.random.choice(self.num_tasks, size=self.num_slots, replace=False)</span>
+        <span class="c1">#     print(seed, self.task_order)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">task_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_tasks</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_slots</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">replacement</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TaskScheduler.add_physics"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="TaskScheduler.position"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.position">[docs]</a>    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+    
+<div class="viewcode-block" id="TaskScheduler.orientation"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.orientation">[docs]</a>    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

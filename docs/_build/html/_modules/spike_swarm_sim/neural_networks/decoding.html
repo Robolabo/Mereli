@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.neural_networks.decoding &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.neural_networks.decoding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.neural_networks.decoding</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">decoding_registry</span><span class="p">,</span> <span class="n">decoders</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">softmax</span><span class="p">,</span> <span class="n">sigmoid</span><span class="p">,</span> <span class="n">tanh</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">SET</span><span class="p">,</span> <span class="n">LEN</span><span class="p">,</span> <span class="n">INIT</span>
+
+<div class="viewcode-block" id="DecodingWrapper"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper">[docs]</a><span class="k">class</span> <span class="nc">DecodingWrapper</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for gathering all the decoders of each ANN output. </span>
+<span class="sd">    It contains a dict mapping output names to Decoder instances.</span>
+<span class="sd">    =============================================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        topology [dict] : configuration dict of the overall topology.</span>
+<span class="sd">    - Attributes:</span>
+<span class="sd">        motor_ensembles [dict] :  dict mapping motor ensembles to num of neurons.</span>
+<span class="sd">        decoding_config [dict] : config. dict of the decoding (extracted from </span>
+<span class="sd">                topology config.).</span>
+<span class="sd">        act_ens_map [dict] : dict mapping output names to motor ensemble names.</span>
+<span class="sd">    =============================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_config</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">topology</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DecodingWrapper.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Steps all the decoders with the corresponding spikes or activities. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">spikes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The dim. of spikes to be decoded must be the same &#39;</span>\
+                <span class="s1">&#39;as the number of motor neurons.&#39;</span><span class="p">))</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">current_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dec_spikes</span> <span class="o">=</span> <span class="n">spikes</span><span class="p">[:,</span> <span class="n">current_idx</span> <span class="p">:</span> <span class="n">current_idx</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span><span class="p">[</span><span class="n">name</span><span class="p">]]]</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span> <span class="p">:</span> <span class="n">decoder</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dec_spikes</span><span class="p">)})</span>
+            <span class="n">current_idx</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+        <span class="k">return</span> <span class="n">actions</span>        </div>
+
+<div class="viewcode-block" id="DecodingWrapper.build"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topology</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Builds the decoders using the topology config. dict. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span> <span class="o">=</span> <span class="p">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span> <span class="p">:</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>\
+                <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoding_config</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">out_name</span> <span class="p">:</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span>  <span class="k">for</span> <span class="n">out_name</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">for</span> <span class="n">decoder_name</span><span class="p">,</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">decoder_name</span> <span class="p">:</span> <span class="n">decoders</span><span class="p">[</span><span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">]]({</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span><span class="p">[</span><span class="n">decoder_name</span><span class="p">]</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">motor_ensembles</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">act_ens_map</span><span class="p">[</span><span class="n">decoder_name</span><span class="p">]]},</span>\
+                <span class="o">**</span><span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])})</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return all the decoders. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span>
+
+<div class="viewcode-block" id="DecodingWrapper.get"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the decoder corresponding to key. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Decoder corresponding to key </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span>\
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DecodingWrapper.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets all the decoders. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">decoder</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DecodingWrapper.get_decoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.get_decoding_weights">[docs]</a>    <span class="nd">@GET</span><span class="p">(</span><span class="s1">&#39;decoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_decoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dec_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">dec_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">decoder</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">for</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">decoder</span><span class="o">.</span><span class="n">trainable</span><span class="p">])</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">weights</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="p">[</span><span class="n">dec_name</span><span class="p">]</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecodingWrapper.set_decoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.set_decoding_weights">[docs]</a>    <span class="nd">@SET</span><span class="p">(</span><span class="s1">&#39;decoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_decoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dec_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">min_val</span> <span class="o">+</span> <span class="n">data</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dec_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">pointer</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">decoder</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+                    <span class="n">decoder</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pointer</span><span class="p">:</span><span class="n">pointer</span><span class="o">+</span><span class="n">decoder</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">pointer</span> <span class="o">+=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_decoders</span><span class="p">[</span><span class="n">dec_name</span><span class="p">]</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">ann_graph</span><span class="c1">#!</span></div>
+
+<div class="viewcode-block" id="DecodingWrapper.init_decoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.init_decoding_weights">[docs]</a>    <span class="nd">@INIT</span><span class="p">(</span><span class="s1">&#39;decoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">init_decoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dec_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">weights_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_decoding_weights</span><span class="p">(</span><span class="n">dec_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">)</span>
+        <span class="n">random_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">weights_len</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_decoding_weights</span><span class="p">(</span><span class="n">dec_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">random_weights</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DecodingWrapper.len_decoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.len_decoding_weights">[docs]</a>    <span class="nd">@LEN</span><span class="p">(</span><span class="s1">&#39;decoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">len_decoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_decoding_weights</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="Decoder"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.Decoder">[docs]</a><span class="k">class</span> <span class="nc">Decoder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Base class for decoding ANN outputs (spikes, activities, ...) </span>
+<span class="sd">    into actions.</span>
+<span class="sd">    ===================================================================</span>
+<span class="sd">    - Params :</span>
+<span class="sd">        out_ensembles [dict] : dict mapping output/motor ensembles to </span>
+<span class="sd">                number of neurons.</span>
+<span class="sd">        trainable [bool] : whether there are trainable/optimizable </span>
+<span class="sd">                variables in the decoder. # TODO check</span>
+<span class="sd">        is_cat [bool] : whether the decoded actions are categorical or </span>
+<span class="sd">                numerical.</span>
+<span class="sd">    ===================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_ensembles</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_cat</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">out_ensembles</span> <span class="o">=</span> <span class="n">out_ensembles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_categorical</span> <span class="o">=</span> <span class="n">is_cat</span>
+
+<div class="viewcode-block" id="Decoder.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.Decoder.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="IdentityDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.IdentityDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">IdentityDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Identity of dummy decoding of activities (not supported for spikes). </span>
+<span class="sd">    It outputs the same value as the input. If time_scale &gt; 1 then it returns the </span>
+<span class="sd">    input value at the last time step.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IdentityDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IdentityDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.IdentityDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">):</span>
+        <span class="c1">#* choose last state for action generation</span>
+        <span class="k">return</span> <span class="n">spikes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="ThresholdDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ThresholdDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">ThresholdDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Decodes activities into binary actions by means of applying a </span>
+<span class="sd">    heaviside function.</span>
+<span class="sd">    ====================================================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        threshold [float]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">stochastic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ThresholdDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stochastic</span> <span class="o">=</span> <span class="n">stochastic</span>
+
+<div class="viewcode-block" id="ThresholdDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ThresholdDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">):</span>
+        <span class="n">spikes_last</span> <span class="o">=</span> <span class="n">spikes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1">#* choose last state for action generation</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spikes_last</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stochastic</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">spikes_last</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">spikes_last</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">spikes_last</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">spikes_last</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="ArgmaxDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ArgmaxDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">ArgmaxDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; #TODO</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ArgmaxDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ArgmaxDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ArgmaxDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="SoftmaxDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.SoftmaxDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">SoftmaxDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Decodes activities into categorical actions by transforming activities </span>
+<span class="sd">    into probabilities with softmax and sampling the action with a categorical </span>
+<span class="sd">    dist.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SoftmaxDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SoftmaxDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.SoftmaxDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">activities</span><span class="p">):</span>
+        <span class="n">activities</span> <span class="o">=</span> <span class="n">activities</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#* choose last state for action generation</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">activities</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">softmax</span><span class="p">(</span><span class="mi">5</span> <span class="o">*</span> <span class="n">activities</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">action</span></div></div>
+    
+<div class="viewcode-block" id="FirstToSpike"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.FirstToSpike">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">FirstToSpike</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Temporal decoding process in which selected action in a time </span>
+<span class="sd">        window is defined by the output neuron that spiked first.</span>
+<span class="sd">        It is used when the action is categorical and low dimensional.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FirstToSpike</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="FirstToSpike.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.FirstToSpike.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">):</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">([(</span><span class="n">spikes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">v</span><span class="p">))[</span><span class="n">v</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spikes</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">action</span></div></div>
+
+<div class="viewcode-block" id="RankOrderDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.RankOrderDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">RankOrderDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="c1"># TODO: Not tested. May produce errors</span>
+    <span class="sd">&quot;&quot;&quot; Temporal decoding process in which the selected action within a time window is defined </span>
+<span class="sd">        based on a linear combination of the order of neuron spikes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RankOrderDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="RankOrderDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.RankOrderDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">):</span>
+        <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">([(</span><span class="n">spikes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">v</span><span class="p">))[</span><span class="n">v</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spikes</span><span class="o">.</span><span class="n">T</span><span class="p">])</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="p">(</span><span class="n">spikes</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="o">.</span><span class="mi">25</span><span class="o">**</span><span class="n">order</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">action</span></div></div>
+    
+<div class="viewcode-block" id="LinearPopulationDecoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding">[docs]</a><span class="nd">@decoding_registry</span>
+<span class="k">class</span> <span class="nc">LinearPopulationDecoding</span><span class="p">(</span><span class="n">Decoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Decodes spikes as a linear transformation of the computed activities of </span>
+<span class="sd">    each motor neuron. More specifically, it is computed as follows:</span>
+<span class="sd">        -- actions = sigmoid(3 * W.dot(u(t)) --</span>
+<span class="sd">    where W is a weight matrix and u(t) is the vector of activities/rates computed </span>
+<span class="sd">    as the filtering of the spike trains.</span>
+<span class="sd">    The weights are normally optimized and can be addressed by the evolutionary alg. </span>
+<span class="sd">    with the query &quot;decoders:weights:all&quot;.</span>
+<span class="sd">    ====================================================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        num_outputs [int] : number of output actions.</span>
+<span class="sd">        tau_decay [float] : decaying time constant of the neuron&#39;s activity after spike. </span>
+<span class="sd">        tau_rise [float] : rise time constant of the neuron&#39;s activity after spike. </span>
+<span class="sd">    - Attributes:</span>
+<span class="sd">        dt [float] : Euler step to compute the activities.</span>
+<span class="sd">        activities [np.ndarray] : current activities of the neurons of the ensemble.</span>
+<span class="sd">        decoded_activities [np.ndarray] : decoded activities.</span>
+<span class="sd">        x [np.ndarray] : auxiliary variable to filter spikes.</span>
+<span class="sd">        w [np.ndarray] :  flattened or vectorized decoding weight matrix.</span>
+<span class="sd">        action_recodings [np.ndarray] : Data recodings of the decoded activities.</span>
+<span class="sd">                # TODO: Provisional, pasar a monitor.</span>
+<span class="sd">    ====================================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">tau_decay</span><span class="o">=</span><span class="mf">30.</span><span class="p">,</span>
+                    <span class="n">tau_rise</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">non_linearity</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">,</span>
+                    <span class="n">rest_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LinearPopulationDecoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_outputs</span> <span class="o">=</span> <span class="n">num_outputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_rise</span> <span class="o">=</span> <span class="n">tau_rise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span> <span class="o">=</span> <span class="n">tau_decay</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rest_value</span> <span class="o">=</span> <span class="n">rest_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">non_linearity</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;tanh&#39;</span> <span class="p">:</span> <span class="n">tanh</span><span class="p">,</span>
+            <span class="s1">&#39;sigmoid&#39;</span> <span class="p">:</span> <span class="n">sigmoid</span><span class="p">,</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">non_linearity</span><span class="p">,</span> <span class="s1">&#39;sigmoid&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Dynamics</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_ensembles</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activities</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_outputs</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># not important, set in initialize </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_recording</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">))</span> <span class="k">if</span> <span class="n">global_states</span><span class="o">.</span><span class="n">DEBUG</span> <span class="k">else</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="LinearPopulationDecoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes_batch</span><span class="p">):</span>
+        <span class="n">spikes_batch</span> <span class="o">=</span> <span class="n">spikes_batch</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">spikes</span> <span class="ow">in</span> <span class="n">spikes_batch</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="n">spikes</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_rise</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">activities</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">activities</span><span class="p">)</span>\
+                            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">activities</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">tau_decay</span><span class="p">)</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded_activities</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_categorical</span> \
+                <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">decoded_activities</span> <span class="o">&gt;=</span> <span class="o">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">global_states</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_recording</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">action_recording</span><span class="p">,</span> <span class="n">actions</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">actions</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">decoded_activities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_outputs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">activities</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="c1"># output = sigmoid(3 * (W.T.dot(self.activities) - 1))</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">non_linearity</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">W</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">activities</span><span class="p">)))</span>
+        <span class="c1"># output += (self.rest_value - 0.5)</span>
+        <span class="k">return</span> <span class="n">output</span>
+
+<div class="viewcode-block" id="LinearPopulationDecoding.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">activities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

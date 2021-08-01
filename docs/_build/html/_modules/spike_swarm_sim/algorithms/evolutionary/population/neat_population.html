@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.algorithms.evolutionary.population.neat_population &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.algorithms.evolutionary.population.neat_population</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.algorithms.evolutionary.population.neat_population</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">expm</span>
+<span class="kn">from</span> <span class="nn">.population</span> <span class="k">import</span> <span class="n">Population</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">eigendecomposition</span><span class="p">,</span> <span class="n">normalize</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.evolutionary.species</span> <span class="k">import</span> <span class="n">Species</span>
+<span class="kn">from</span> <span class="nn">..operators.crossover</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..operators.mutation</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..operators.selection</span> <span class="k">import</span> <span class="o">*</span>
+
+
+<span class="c1">#! OJO (prov) to test NEAT: extracted from https://github.com/CodeReclaimers/neat-python/blob/c2b79c88667a1798bfe33c00dd8e251ef8be41fa/neat/reproduction.py#L84</span>
+<div class="viewcode-block" id="compute_spawn"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.compute_spawn">[docs]</a><span class="k">def</span> <span class="nf">compute_spawn</span><span class="p">(</span><span class="n">species</span><span class="p">,</span> <span class="n">pop_size</span><span class="p">,</span> <span class="n">min_species_size</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the proper number of offspring per species (proportional to fitness).&quot;&quot;&quot;</span>
+    <span class="n">adjusted_fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">mean_fitness</span><span class="p">[</span><span class="s1">&#39;raw&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">spc</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">species</span><span class="p">]</span>
+    <span class="n">af_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">adjusted_fitness</span><span class="p">)</span>
+    <span class="n">previous_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">species</span><span class="p">]</span>
+    <span class="n">spawn_amounts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">af</span><span class="p">,</span> <span class="n">ps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">adjusted_fitness</span><span class="p">,</span> <span class="n">previous_sizes</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">af_sum</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">min_species_size</span><span class="p">,</span> <span class="n">af</span> <span class="o">/</span> <span class="n">af_sum</span> <span class="o">*</span> <span class="n">pop_size</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">min_species_size</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="o">-</span> <span class="n">ps</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+        <span class="n">spawn</span> <span class="o">=</span> <span class="n">ps</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">spawn</span> <span class="o">+=</span> <span class="n">c</span>
+        <span class="k">elif</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">spawn</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">spawn</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">spawn_amounts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spawn</span><span class="p">)</span>
+
+    <span class="c1"># Normalize the spawn amounts so that the next generation is roughly</span>
+    <span class="c1"># the population size requested by the user.</span>
+    <span class="n">total_spawn</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">spawn_amounts</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">pop_size</span> <span class="o">/</span> <span class="n">total_spawn</span>
+    <span class="n">spawn_amounts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">min_species_size</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">n</span> <span class="o">*</span> <span class="n">norm</span><span class="p">)))</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">spawn_amounts</span><span class="p">]</span>
+    
+    <span class="k">while</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">spawn_amounts</span><span class="p">)</span> <span class="o">!=</span> <span class="n">pop_size</span><span class="p">):</span>
+        <span class="n">spawn_amounts</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">species</span><span class="p">))]</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="nb">sum</span><span class="p">(</span><span class="n">spawn_amounts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">pop_size</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">spawn_amounts</span></div>
+
+<div class="viewcode-block" id="NEAT_Population"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population">[docs]</a><span class="k">class</span> <span class="nc">NEAT_Population</span><span class="p">(</span><span class="n">Population</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  </span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">p_weight_mut</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span> <span class="n">p_node_mut</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">p_conn_mut</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                <span class="n">compatib_thresh</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">c1</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">c3</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">species_elites</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NEAT_Population</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_weight_mut</span> <span class="o">=</span> <span class="n">p_weight_mut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_node_mut</span> <span class="o">=</span> <span class="n">p_node_mut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">p_conn_mut</span> <span class="o">=</span> <span class="n">p_conn_mut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compatib_thresh</span> <span class="o">=</span> <span class="n">compatib_thresh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span> <span class="o">=</span> <span class="n">c1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c2</span> <span class="o">=</span> <span class="n">c2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c3</span> <span class="o">=</span> <span class="n">c3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species_elites</span> <span class="o">=</span> <span class="n">species_elites</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species_count</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># list of existing species. 1 species at first.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#* Cannot be altered by NEAT </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#* Global pointer of gene innovations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1">#* Dict mapping (pre, post) tuple connections to innovation numbers.</span>
+        <span class="c1">#* It is used for assigning same innovations to mutations already occured in </span>
+        <span class="c1">#* the evolution.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">innovation_history</span> <span class="o">=</span> <span class="p">{}</span>
+        
+<div class="viewcode-block" id="NEAT_Population.step"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fitness_vector</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        ==================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            fitness_vector [np.ndarray or list]: array of computed fitness values.</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        ==================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">offspring</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">fitness_vector</span><span class="p">)])</span>
+        <span class="c1">#* Update species fitness statistics</span>
+        <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">:</span>
+            <span class="n">spc_fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">ft</span> <span class="k">for</span> <span class="n">ft</span><span class="p">,</span> <span class="n">gt</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fitness_vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">)</span> <span class="k">if</span> <span class="n">gt</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">spc</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+            <span class="n">spc</span><span class="o">.</span><span class="n">update_stats</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spc_fitness</span><span class="p">))</span>
+
+        <span class="c1">#* Compute the number of offspring for each species</span>
+        <span class="n">species_offsprings</span> <span class="o">=</span> <span class="n">compute_spawn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop_size</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1">#* Crossover in-between species individuals.</span>
+        <span class="k">for</span> <span class="n">n_offspring</span><span class="p">,</span> <span class="n">spc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">species_offsprings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">):</span>
+            <span class="c1">#* Filter out genotypes from species.</span>
+            <span class="n">spc_fitness</span><span class="p">,</span> <span class="n">spc_genotypes</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">spc</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fitness_vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">)))</span>
+            <span class="c1">#* Apply species elitism</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">species_elites</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">elite_gnt</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_elites</span><span class="p">),</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">spc_genotypes</span><span class="p">,</span> <span class="n">spc_fitness</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="n">n_offspring</span> <span class="o">-=</span> <span class="mi">1</span>
+                    <span class="n">offspring</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">elite_gnt</span><span class="p">))</span>
+            <span class="c1">#* Truncate bests</span>
+            <span class="n">n_sel</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">spc_genotypes</span><span class="p">)))</span>
+            <span class="n">parents</span><span class="p">,</span> <span class="n">fitness_parents</span> <span class="o">=</span> <span class="n">truncation_selection</span><span class="p">(</span><span class="n">spc_genotypes</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spc_fitness</span><span class="p">),</span> <span class="n">n_sel</span><span class="p">)</span>
+            <span class="c1">#* Random Mating (OJO REPLACEMENT)</span>
+            <span class="n">parents_mating</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_sel</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_offspring</span><span class="p">)</span>
+            <span class="n">parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">parents</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">parents_mating</span><span class="p">]</span> <span class="c1"># shuffle parents</span>
+            <span class="n">fitness_parents</span> <span class="o">=</span> <span class="p">[</span><span class="n">fitness_parents</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">parents_mating</span><span class="p">]</span>
+            <span class="c1">#* NEAT Crossover</span>
+            <span class="n">offspring</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">neat_crossover</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">fitness_parents</span><span class="p">))</span>
+        <span class="c1">#* NEAT Mutation</span>
+        <span class="n">offspring</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">innovation_history</span> <span class="o">=</span> <span class="n">neat_mutation</span><span class="p">(</span>
+                        <span class="n">offspring</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span><span class="p">),</span>
+                        <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">innovation_history</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="n">p_weight_mut</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_weight_mut</span><span class="p">,</span>
+                        <span class="n">p_node_mut</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_node_mut</span><span class="p">,</span> <span class="n">p_conn_mut</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_conn_mut</span><span class="p">)</span>
+        <span class="c1">#* Update popultation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">offspring</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">)</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pop_size</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Population Size altered.&#39;</span><span class="p">)</span>
+        <span class="c1">#* Speciation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_species</span><span class="p">(</span><span class="n">generation</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Num. species is </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)))</span></div>
+        <span class="c1"># #* Adaptive species thresh.</span>
+        <span class="c1"># num_tar_species = 15</span>
+        <span class="c1"># if len(self.species) != num_tar_species:</span>
+        <span class="c1">#     self.compatib_thresh += 0.1 * (-1, 1)[len(self.species) &gt; num_tar_species]</span>
+        <span class="c1">#     self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)</span>
+        <span class="c1">#     for sp in self.species:</span>
+        <span class="c1">#         sp.compatib_thresh = self.compatib_thresh</span>
+                
+       
+    
+<div class="viewcode-block" id="NEAT_Population.update_species"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.update_species">[docs]</a>    <span class="k">def</span> <span class="nf">update_species</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="c1">#* Assign Species. Use representatives from the previous generation.</span>
+        <span class="c1">#* If a new species is created the current representative is the genotype </span>
+        <span class="c1">#* that created it.</span>
+        <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">representative</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">compatible</span><span class="p">,</span> <span class="n">distances</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">compatibility</span><span class="p">(</span><span class="n">gnt</span><span class="p">)</span> <span class="k">for</span> <span class="n">gnt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">])</span>
+                <span class="n">spc</span><span class="o">.</span><span class="n">representative</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">distances</span><span class="p">)])</span>
+            <span class="n">spc</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">:</span>
+            <span class="n">compatible</span><span class="p">,</span> <span class="n">distances</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">spc</span><span class="o">.</span><span class="n">compatibility</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span> <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">compatible</span><span class="p">):</span> <span class="c1">#* create new species</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">species_count</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">new_species</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_count</span><span class="p">,</span> <span class="n">generation</span><span class="p">,</span> <span class="n">compatib_thresh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compatib_thresh</span><span class="p">,</span>
+                                    <span class="n">c1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c3</span><span class="p">)</span>
+                <span class="n">new_species</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">new_species</span><span class="o">.</span><span class="n">representative</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_species</span><span class="p">)</span>
+                <span class="n">genotype</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_species</span><span class="o">.</span><span class="n">id</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">compatible_species</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">))[</span><span class="nb">list</span><span class="p">(</span><span class="n">compatible</span><span class="p">)]</span>
+                <span class="n">compatible_distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">distances</span><span class="p">)[</span><span class="nb">list</span><span class="p">(</span><span class="n">compatible</span><span class="p">)]</span>
+                <span class="n">species_idx</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">compatible_species</span><span class="p">,</span> <span class="n">compatible_distances</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">[</span><span class="n">species_idx</span><span class="p">]</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">genotype</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">[</span><span class="n">species_idx</span><span class="p">]</span><span class="o">.</span><span class="n">id</span>
+
+        <span class="c1">#* check extintion</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">species</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">species</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Extint Species </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">species</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></div>
+            <span class="c1"># else:</span>
+            <span class="c1">#     species.representative = copy.deepcopy(self.population[np.random.choice(\</span>
+            <span class="c1">#         [n for n, g in enumerate(self.population) if g[&#39;species&#39;] == species.id])])</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">min_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="NEAT_Population.initialize"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initializes the parameters and population of SNES.</span>
+<span class="sd">        =====================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            interface [GeneticInterface] : Phenotype to genotype interface of </span>
+<span class="sd">                Evolutionary algs.</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        =====================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="p">[</span><span class="n">Species</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">species_count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">compatib_thresh</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">compatib_thresh</span><span class="p">,</span> 
+                            <span class="n">c1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">c3</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">interface</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="c1">#* Only initialize weights randomly, the structure is always the same.</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pop_size</span><span class="p">):</span>
+            <span class="n">interface</span><span class="o">.</span><span class="n">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_vals</span><span class="p">)</span>
+            <span class="c1">#* Initialize genotype (ANN architectural traits)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;species&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s1">&#39;nodes&#39;</span> <span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;connections&#39;</span> <span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">interface</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">])</span>
+            <span class="p">})</span>
+            <span class="c1">#* Initialize genotype (ANN parameters and weights traits)</span>
+            <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_vals</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_vals</span><span class="p">):</span>
+                <span class="n">gnt_segment</span> <span class="o">=</span> <span class="n">interface</span><span class="o">.</span><span class="n">toGenotype</span><span class="p">([</span><span class="n">query</span><span class="p">],</span> <span class="p">[</span><span class="n">min_val</span><span class="p">],</span> <span class="p">[</span><span class="n">max_val</span><span class="p">])</span>
+                <span class="n">gene_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;synapses&#39;</span> <span class="p">:</span> <span class="s1">&#39;connections&#39;</span><span class="p">,</span> <span class="s1">&#39;neurons&#39;</span> <span class="p">:</span> <span class="s1">&#39;nodes&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;connections&#39;</span><span class="p">)</span>
+                <span class="n">variable</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;weights&#39;</span> <span class="p">:</span> <span class="s1">&#39;weight&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">for</span> <span class="n">gene</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">gene_type</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">gnt_segment</span><span class="p">):</span>
+                    <span class="n">gene</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="c1">#* Assign innovation numbers</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">conn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;connections&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">[</span><span class="s1">&#39;innovation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">innovation_history</span><span class="p">[(</span><span class="n">conn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">conn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">])]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_innovation</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">[</span><span class="s1">&#39;innovation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">innovation_history</span><span class="p">[(</span><span class="n">conn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">conn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">])])</span>
+        <span class="c1">#* Initial Speciation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_species</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div></div>
+        <span class="c1"># self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])</span>
+        <span class="c1"># self.species[0].num_genotypes = self.pop_size</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

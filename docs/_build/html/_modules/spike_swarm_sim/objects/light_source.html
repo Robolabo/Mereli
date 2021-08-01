@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.objects.light_source &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.objects.light_source</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.objects.light_source</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>            
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">colors</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plot</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">WorldObject2D</span><span class="p">,</span> <span class="n">WorldObject3D</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">world_object_registry</span>
+
+
+<div class="viewcode-block" id="LightSource2D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource2D">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;light_source2D&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LightSource2D</span><span class="p">(</span><span class="n">WorldObject2D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LightSource2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;light&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>\
+                        <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">luminous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+ 
+<div class="viewcode-block" id="LightSource2D.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource2D.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;PreyController&#39;</span><span class="p">:</span>
+                <span class="n">robot_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">robot_pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LightSource2D.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource2D.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="LightSource3D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;light_source&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LightSource3D</span><span class="p">(</span><span class="n">WorldObject3D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LightSource3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s1">&#39;light&#39;</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="n">z_offset</span><span class="p">,</span>\
+                        <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">luminous</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LightSource3D.add_physics"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_client</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_physics</span><span class="p">(</span><span class="n">physics_client</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.8</span><span class="p">]</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">changeVisualShape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rgbaColor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="n">physics_client</span><span class="p">)</span></div>
+        <span class="c1"># pos = self.position</span>
+        <span class="c1"># pos[-1] = 5.</span>
+        <span class="c1"># import pdb; pdb.set_trace()</span>
+        <span class="c1"># self.position = pos</span>
+
+<div class="viewcode-block" id="LightSource3D.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;PreyController&#39;</span><span class="p">:</span>
+                <span class="n">robot_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">robot_pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LightSource3D.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+       
+<div class="viewcode-block" id="LightSource3D.show_coverage"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D.show_coverage">[docs]</a>    <span class="k">def</span> <span class="nf">show_coverage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">loadURDF</span><span class="p">(</span><span class="s1">&#39;spike_swarm_sim/objects/urdf/shadow.urdf&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>\
+                <span class="n">p</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">),</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="p">,</span> <span class="n">globalScaling</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">]</span>
+            <span class="c1"># import pdb; pdb.set_trace()</span>
+            <span class="c1"># p.resetBasePositionAndOrientation(self.shadow_id, p.getBasePositionAndOrientation(\</span>
+            <span class="c1">#     self.id, physicsClientId=self.physics_client)[0], [0,0,0,0], physicsClientId=self.physics_client)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">changeVisualShape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rgbaColor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="p">)</span></div>
+        <span class="c1"># else:</span>
+        <span class="c1">#     p.resetBasePositionAndOrientation(self.shadow_id, p.getBasePositionAndOrientation(\</span>
+        <span class="c1">#         self.id, physicsClientId=self.physics_client)[0], [0,0,0,0], physicsClientId=self.physics_client)</span>
+
+<div class="viewcode-block" id="LightSource3D.hide_coverage"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource3D.hide_coverage">[docs]</a>    <span class="k">def</span> <span class="nf">hide_coverage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">removeBody</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">shadow_id</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+
+<div class="viewcode-block" id="IsotropicEmitter"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.IsotropicEmitter">[docs]</a><span class="k">class</span> <span class="nc">IsotropicEmitter</span><span class="p">(</span><span class="n">WorldObject2D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IsotropicEmitter</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    
+<div class="viewcode-block" id="IsotropicEmitter.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.IsotropicEmitter.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;PreyController&#39;</span><span class="p">:</span>
+                <span class="n">robot_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">pos</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">robot_pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IsotropicEmitter.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.IsotropicEmitter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="IsotropicEmitter.initialize_render"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.IsotropicEmitter.initialize_render">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">coverage_shadow_id</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">render_id</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;body&#39;</span> <span class="p">:</span> <span class="n">render_id</span><span class="p">,</span>
+            <span class="s1">&#39;shadow&#39;</span> <span class="p">:</span> <span class="n">coverage_shadow_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">canvas</span> </div>
+
+<div class="viewcode-block" id="IsotropicEmitter.render"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.IsotropicEmitter.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">],</span>
+                        <span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span>
+                        <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">itemconfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">],</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="c1"># #coverage shadow</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">],</span>
+                <span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">itemconfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">],</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">tag_lower</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">tag_lower</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">canvas</span></div></div>
+
+<div class="viewcode-block" id="LightSource"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.LightSource">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;light_source&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">LightSource</span><span class="p">(</span><span class="n">IsotropicEmitter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LightSource</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FoodArea"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.FoodArea">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;food_area&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">FoodArea</span><span class="p">(</span><span class="n">IsotropicEmitter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FoodArea</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Nest"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nest&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Nest</span><span class="p">(</span><span class="n">IsotropicEmitter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Nest</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span> <span class="o">=</span> <span class="mi">0</span>
+    
+<div class="viewcode-block" id="Nest.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">food_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span>
+    
+<div class="viewcode-block" id="Nest.increase_food"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest.increase_food">[docs]</a>    <span class="k">def</span> <span class="nf">increase_food</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span> <span class="o">+=</span> <span class="mi">1</span></div>
+    
+<div class="viewcode-block" id="Nest.decrease_food"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest.decrease_food">[docs]</a>    <span class="k">def</span> <span class="nf">decrease_food</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_food_items</span> <span class="o">=</span> <span class="mi">1</span></div>
+    
+<div class="viewcode-block" id="Nest.initialize_render"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest.initialize_render">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">coverage_shadow_id</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">render_id</span> <span class="o">=</span> <span class="n">canvas</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;body&#39;</span> <span class="p">:</span> <span class="n">render_id</span><span class="p">,</span>
+            <span class="s1">&#39;shadow&#39;</span> <span class="p">:</span> <span class="n">coverage_shadow_id</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">canvas</span> </div>
+
+<div class="viewcode-block" id="Nest.render"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.light_source.Nest.render">[docs]</a>    <span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">canvas</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">],</span>
+                        <span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span>
+                        <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">itemconfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">],</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="c1">#coverage shadow</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">coords</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">],</span>
+                <span class="n">x</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span> <span class="n">y</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span>
+                <span class="n">x</span> <span class="o">+</span> <span class="mi">10</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">itemconfig</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">],</span> <span class="n">fill</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">tag_lower</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">])</span>
+        <span class="n">canvas</span><span class="o">.</span><span class="n">tag_lower</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_dict</span><span class="p">[</span><span class="s1">&#39;shadow&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">canvas</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

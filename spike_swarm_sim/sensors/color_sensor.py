@@ -34,9 +34,9 @@ class ColorSensor(DirectionalSensor):
         # import pdb; pdb.set_trace()
         if condition and direction_reading == 0.0:
             my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
-            tar_post = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
-            ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client)[0][0]
-            # signal_strength = self.propagation(rho, phi)
+            tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
+            # ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client)[0][0]
+            ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
             if ray_res == kwargs['obj'].id:
                 direction_reading = 1.
         return direction_reading

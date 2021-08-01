@@ -1,0 +1,553 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.algorithms.evolutionary package &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="spike_swarm_sim.algorithms.evolutionary.operators package" href="spike_swarm_sim.algorithms.evolutionary.operators.html" />
+    <link rel="prev" title="spike_swarm_sim.algorithms package" href="spike_swarm_sim.algorithms.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">SpikeSwarmSim Package</a> &raquo;</li>
+        
+          <li><a href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.algorithms.evolutionary package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/spike_swarm_sim.algorithms.evolutionary.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spike-swarm-sim-algorithms-evolutionary-package">
+<h1>spike_swarm_sim.algorithms.evolutionary package<a class="headerlink" href="#spike-swarm-sim-algorithms-evolutionary-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html">spike_swarm_sim.algorithms.evolutionary.operators package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.crossover">spike_swarm_sim.algorithms.evolutionary.operators.crossover module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mating">spike_swarm_sim.algorithms.evolutionary.operators.mating module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mutation">spike_swarm_sim.algorithms.evolutionary.operators.mutation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.selection">spike_swarm_sim.algorithms.evolutionary.operators.selection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html">spike_swarm_sim.algorithms.evolutionary.population package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population">spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.neat_population">spike_swarm_sim.algorithms.evolutionary.population.neat_population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.openai_es_population">spike_swarm_sim.algorithms.evolutionary.population.openai_es_population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.population">spike_swarm_sim.algorithms.evolutionary.population.population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.snes_population">spike_swarm_sim.algorithms.evolutionary.population.snes_population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.xnes_population">spike_swarm_sim.algorithms.evolutionary.population.xnes_population module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.cma_es">
+<span id="spike-swarm-sim-algorithms-evolutionary-cma-es-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.cma_es module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.cma_es" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.cma_es.</span></span><span class="sig-name descname"><span class="pre">CMA_ES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/cma_es.html#CMA_ES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<p>Class of the CMA-ES.
+The evolution step is defined in the CMA_EA_Population class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/cma_es.html#CMA_ES.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the checkpoint with the necessary information to resume the evolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/cma_es.html#CMA_ES.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a previously saved checkpoint to resume evolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm">
+<span id="spike-swarm-sim-algorithms-evolutionary-evolutionary-algorithm-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info_old">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.</span></span><span class="sig-name descname"><span class="pre">get_info_old</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#get_info_old"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns queried information about the world and its objects.
+#! Provisional implementation, will be improved in the future.
+====================================
+- Args:</p>
+<blockquote>
+<div><p>name [str] -&gt; name of the query.
+robots [dict] -&gt; world robots.
+world [World] -&gt; world under assessment.</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.</span></span><span class="sig-name descname"><span class="pre">get_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#get_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.</span></span><span class="sig-name descname"><span class="pre">EvolutionaryAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_generations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_evaluations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_processes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'chk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for evolutionary algorithms</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run method common to all evolutionary computation algs. It parallelizes the 
+genotype evaluation to obtain the fitness and performs the evolution step. 
+The precise method evolve has to be defined in the population class of the 
+precise algorithm that inherits from this class. 
+The method does not return any data. Instead, it saves all the required 
+information to resume the evolution periodically.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evolve">
+<span class="sig-name descname"><span class="pre">evolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.evolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evolve" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the algorithm checkpoint. To be implemented in the particular algorithm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the algorithm checkpoint. To be implemented in the particular algorithm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trials</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesteps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates an individual of a population without any evolution. 
+Records the data for the specified amount of evaluation trials and time steps and 
+saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).
+============================================================
+- Args:</p>
+<blockquote>
+<div><p>trials [int] -&gt; number of evaluation trials.
+timesteps [int] -&gt; number of evaluation timesteps.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Returns: None</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_learning_curve">
+<span class="sig-name descname"><span class="pre">plot_learning_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smoothed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.plot_learning_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_learning_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the fitness curve of the evolution. Paints the mean, max and min values.
+It can be smoothed by generational averaging (every 5 generations).
+======================================
+- Args:</p>
+<blockquote>
+<div><p>smoothed [bool] -&gt; flag denoting if the curve should be smoothed.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Returns: None</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_species_evolution">
+<span class="sig-name descname"><span class="pre">plot_species_evolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smoothed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/evolutionary_algorithm.html#EvolutionaryAlgorithm.plot_species_evolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_species_evolution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.genetic_algorithm">
+<span id="spike-swarm-sim-algorithms-evolutionary-genetic-algorithm-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.genetic_algorithm module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.genetic_algorithm" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.</span></span><span class="sig-name descname"><span class="pre">GeneticAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/genetic_algorithm.html#GeneticAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<p>Class of the Canonical Genetic Algorithm. The evolution step is defined in the Population class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/genetic_algorithm.html#GeneticAlgorithm.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the checkpoint with the necessary information to resume the 
+evolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/genetic_algorithm.html#GeneticAlgorithm.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a previously saved checkpoint to resume evolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.neat">
+<span id="spike-swarm-sim-algorithms-evolutionary-neat-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.neat module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.neat" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.neat.NEAT">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.neat.</span></span><span class="sig-name descname"><span class="pre">NEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/neat.html#NEAT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.neat.NEAT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.neat.NEAT.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/neat.html#NEAT.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.neat.NEAT.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the checkpoint with the necessary information to resume the evolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.neat.NEAT.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/neat.html#NEAT.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.neat.NEAT.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a previously saved checkpoint to resume evolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.openai_es">
+<span id="spike-swarm-sim-algorithms-evolutionary-openai-es-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.openai_es module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.openai_es" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.openai_es.</span></span><span class="sig-name descname"><span class="pre">OpenAI_ES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/openai_es.html#OpenAI_ES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/openai_es.html#OpenAI_ES.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the algorithm checkpoint. To be implemented in the particular algorithm.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/openai_es.html#OpenAI_ES.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the algorithm checkpoint. To be implemented in the particular algorithm.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.snes">
+<span id="spike-swarm-sim-algorithms-evolutionary-snes-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.snes module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.snes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.snes.SNES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.snes.</span></span><span class="sig-name descname"><span class="pre">SNES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/snes.html#SNES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.snes.SNES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<p>Class of the Separable Natural Evolution Strategy (SNES).  
+The evolution step is defined in the SNES_Population class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.snes.SNES.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/snes.html#SNES.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.snes.SNES.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the checkpoint with the necessary information to resume the evolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.snes.SNES.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/snes.html#SNES.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.snes.SNES.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a previously saved checkpoint to resume evolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.species">
+<span id="spike-swarm-sim-algorithms-evolutionary-species-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.species module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.species" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.species.Species">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.species.</span></span><span class="sig-name descname"><span class="pre">Species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatib_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/species.html#Species"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.species.Species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.species.Species.compatibility">
+<span class="sig-name descname"><span class="pre">compatibility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/species.html#Species.compatibility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.species.Species.compatibility" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the compatibility distance of the genotype to the species 
+as defined in the NEAT paper. It returns both the distance and whether the 
+genotype is compatible to the species or not.
+============================================================================
+- Args:</p>
+<blockquote>
+<div><p>genotype [dict] :</p>
+</div></blockquote>
+<ul>
+<li><dl>
+<dt>Returns:</dt><dd><p>is_compatible [bool] : whether the genotype is compatible or not.
+distance [float] : compatibility distance of the genotype to the species</p>
+<blockquote>
+<div><p>representative.</p>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.species.Species.update_stats">
+<span class="sig-name descname"><span class="pre">update_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fitness_scores</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/species.html#Species.update_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.species.Species.update_stats" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.species.Species.is_extinct">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_extinct</span></span><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.species.Species.is_extinct" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.xnes">
+<span id="spike-swarm-sim-algorithms-evolutionary-xnes-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.xnes module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.xnes" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.xnes.xNES">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.xnes.</span></span><span class="sig-name descname"><span class="pre">xNES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/xnes.html#xNES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.xnes.xNES" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm" title="spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm</span></code></a></p>
+<p>Class of the Exponential Natural Evolution Strategy (xNES).  
+The evolution step is defined in the xNES_Population class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.xnes.xNES.save_population">
+<span class="sig-name descname"><span class="pre">save_population</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/xnes.html#xNES.save_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.xnes.xNES.save_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves the checkpoint with the necessary information to resume the evolution.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.xnes.xNES.load_population">
+<span class="sig-name descname"><span class="pre">load_population</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/xnes.html#xNES.load_population"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.xnes.xNES.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a previously saved checkpoint to resume evolution.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.algorithms.evolutionary">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="spike_swarm_sim.algorithms.evolutionary.operators.html" class="btn btn-neutral float-right" title="spike_swarm_sim.algorithms.evolutionary.operators package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="spike_swarm_sim.algorithms.html" class="btn btn-neutral float-left" title="spike_swarm_sim.algorithms package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

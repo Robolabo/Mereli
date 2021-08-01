@@ -20,7 +20,6 @@ class NEAT(EvolutionaryAlgorithm):
         super(NEAT, self).__init__(populations, *args, **kwargs)
 
     def save_population(self, generation):
-        #!!!!OJO SAVE TOPOLOGY
         """ Saves the checkpoint with the necessary information to resume the evolution. 
         """
         pop_checkpoint = {
@@ -54,7 +53,6 @@ class NEAT(EvolutionaryAlgorithm):
     def load_population(self):
         """ Loads a previously saved checkpoint to resume evolution.
         """
-        #!!!!OJO SAVE TOPOLOGY MAL AHORA
         checkpoint = load_pickle('spike_swarm_sim/checkpoints/populations/' + self.checkpoint_name)
         logging.info('Resuming NEAT evolution using checkpoint ' +  self.checkpoint_name)
         key = tuple(self.populations.keys())[0]

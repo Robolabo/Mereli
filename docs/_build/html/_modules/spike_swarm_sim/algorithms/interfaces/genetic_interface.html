@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.algorithms.interfaces.genetic_interface &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.algorithms.interfaces.genetic_interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.algorithms.interfaces.genetic_interface</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">.interpreter</span> <span class="k">import</span> <span class="n">language_dict</span>
+
+<div class="viewcode-block" id="GeneticInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface">[docs]</a><span class="k">class</span> <span class="nc">GeneticInterface</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Interface used by all the evolutionary algorithms to manage phenotype to </span>
+<span class="sd">    genotype transactions (bijectively), genotype initialization and so on.</span>
+<span class="sd">    ================================================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        neural_net [NeuralNetwork] : ANN of a robot.</span>
+<span class="sd">    ================================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span> <span class="o">=</span> <span class="n">neural_net</span> 
+
+<div class="viewcode-block" id="GeneticInterface.submit_query"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query">[docs]</a>    <span class="k">def</span> <span class="nf">submit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits a query to read or write the ANN. The operation is of the syntax </span>
+<span class="sd">        &quot;PRIMITIVE query data&quot; (data if primitive is write). </span>
+<span class="sd">        - Args:</span>
+<span class="sd">            query [str] : query subject to the primitive. The query addresses some </span>
+<span class="sd">                    variable of the ANN and it has the following syntax:</span>
+<span class="sd">                        &quot;ANN_part:variable:name&quot;</span>
+<span class="sd">                    Some examples are:</span>
+<span class="sd">                        &quot;synapses:weights:all&quot; -&gt; weights of all the synapses.</span>
+<span class="sd">                        &quot;synapses:weights:S1&quot; -&gt; weights of synapse with name S1 (must be)</span>
+<span class="sd">                                                 defined</span>
+<span class="sd">                        &quot;neurons:tau:all&quot; -&gt; time constants of all neuron models.</span>
+<span class="sd">                        &quot;neurons:gain:sensory&quot; -&gt; gains of sensory neurons.</span>
+<span class="sd">                        &quot;decoding:weights:all&quot; -&gt; weights of all decoders (in SNN).</span>
+<span class="sd">            primitive [str]: action or primitive of the query. Possible primitives </span>
+<span class="sd">                    are GET, SET, LEN, INIT.</span>
+<span class="sd">            data [np.ndarray]: genotype array only supplied when the primitive is SET.</span>
+<span class="sd">            min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.</span>
+<span class="sd">            max_vals [np.ndarray]: max. bound of the search space. In GET it is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query_hierarchy</span> <span class="o">=</span> <span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">+</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">query_status</span> <span class="o">=</span> <span class="n">language_dict</span>
+        <span class="k">for</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_hierarchy</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_status</span>
+            <span class="n">query_status</span> <span class="o">=</span> <span class="n">query_status</span><span class="p">[</span><span class="n">query_elem</span><span class="p">]</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">query_status</span><span class="p">)</span>\
+               <span class="k">if</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">]</span>\
+               <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">query_hierarchy</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GeneticInterface.toGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">toGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a phenotype or structured ANN into a vector genotype. </span>
+<span class="sd">        It performs a series of queries (depending on the population segments) </span>
+<span class="sd">        and gathers the results as the final genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">genotype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>\
+                   <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>\
+                   <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">genotype</span></div>
+
+<div class="viewcode-block" id="GeneticInterface.fromGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">fromGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a genotype into a phenotype or, in this case, structured ANN. </span>
+<span class="sd">        It iterates across population opt. vars. with the corresponding queries and </span>
+<span class="sd">        submits a SET operation towards the ANN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="n">segment_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;LEN&#39;</span><span class="p">)</span>
+            <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">genotype</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span><span class="o">+</span><span class="n">segment_len</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;SET&#39;</span><span class="p">,</span>\
+                    <span class="n">data</span><span class="o">=</span><span class="n">genotype_segment</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="n">segment_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span> <span class="c1">#* Compile changes.</span></div>
+    
+<div class="viewcode-block" id="GeneticInterface.initGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method for initializing the values of the genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="NEATInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface">[docs]</a><span class="k">class</span> <span class="nc">NEATInterface</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span> <span class="o">=</span> <span class="n">neural_net</span>
+
+<div class="viewcode-block" id="NEATInterface.submit_query"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query">[docs]</a>    <span class="k">def</span> <span class="nf">submit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits a query to read or write the ANN. The operation is of the syntax </span>
+<span class="sd">        &quot;PRIMITIVE query data&quot; (data if primitive is write). </span>
+<span class="sd">        - Args:</span>
+<span class="sd">            query [str] : query subject to the primitive. The query addresses some </span>
+<span class="sd">                    variable of the ANN and it has the following syntax:</span>
+<span class="sd">                        &quot;ANN_part:variable:name&quot;</span>
+<span class="sd">                    Some examples are:</span>
+<span class="sd">                        &quot;synapses:weights:all&quot; -&gt; weights of all the synapses.</span>
+<span class="sd">                        &quot;synapses:weights:S1&quot; -&gt; weights of synapse with name S1 (must be)</span>
+<span class="sd">                                                defined</span>
+<span class="sd">                        &quot;neurons:tau:all&quot; -&gt; time constants of all neuron models.</span>
+<span class="sd">                        &quot;neurons:gain:sensory&quot; -&gt; gains of sensory neurons.</span>
+<span class="sd">                        &quot;decoding:weights:all&quot; -&gt; weights of all decoders (in SNN).</span>
+<span class="sd">            primitive [str]: action or primitive of the query. Possible primitives </span>
+<span class="sd">                    are GET, SET, LEN, INIT.</span>
+<span class="sd">            data [np.ndarray]: genotype array only supplied when the primitive is SET.</span>
+<span class="sd">            min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.</span>
+<span class="sd">            max_vals [np.ndarray]: max. bound of the search space. In GET it is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if query == &quot;learning_rules:params:all&quot;: import pdb; pdb.set_trace()</span>
+        <span class="n">query_hierarchy</span> <span class="o">=</span> <span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">+</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">query_status</span> <span class="o">=</span> <span class="n">language_dict</span>
+        <span class="k">for</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_hierarchy</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_status</span>
+            <span class="n">query_status</span> <span class="o">=</span> <span class="n">query_status</span><span class="p">[</span><span class="n">query_elem</span><span class="p">]</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">query_status</span><span class="p">)</span>\
+            <span class="k">if</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">]</span>\
+            <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">query_hierarchy</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NEATInterface.toGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.toGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">toGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="c1">#! CHECK</span>
+        <span class="sd">&quot;&quot;&quot; Converts a phenotype or structured ANN into a vector genotype. </span>
+<span class="sd">        It performs a series of queries (depending on the population segments)</span>
+<span class="sd">        and gathers the results as the final genotype. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">genotype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>\
+                <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span> \
+                <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">genotype</span></div>
+
+<div class="viewcode-block" id="NEATInterface.fromGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">fromGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a genotype into a phenotype or, in this case, structured ANN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">effective_genotype</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span>
+        <span class="c1"># disabled_nodes = []</span>
+        <span class="c1"># for key, node in effective_genotype[&#39;nodes&#39;].items():</span>
+        <span class="c1">#     if not any(conn[&#39;post&#39;] == key and conn[&#39;enabled&#39;] for conn in effective_genotype[&#39;connections&#39;].values()):</span>
+        <span class="c1">#         disabled_nodes.append(key)</span>
+        <span class="c1"># for key in disabled_nodes:</span>
+        <span class="c1">#     del effective_genotype[&#39;nodes&#39;][key]</span>
+
+        <span class="n">disabled_connections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">conn</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]:</span>
+                <span class="n">disabled_connections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">disabled_connections</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+
+        <span class="c1">#* Clean previous architecture</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]:</span> <span class="c1">#* residual from prev genotype</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">delete_neuron</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">]:</span> <span class="c1">#* residual from prev genotype</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">delete_synapse</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1">#* Add new neurons </span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">]):</span>
+            <span class="c1">#* Reallocate node indices</span>
+            <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_neuron</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span> <span class="p">:</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;nodes&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()})</span>
+        <span class="c1">#* Add new synapses </span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]:</span>
+                <span class="n">syn</span> <span class="o">=</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">conn_prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span> <span class="p">:</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()})</span>
+        <span class="c1">#* Update parameters (Decoders and encoders not supported yet).</span>
+        <span class="c1"># counter = 0</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="c1"># segment_len = self.submit_query(query, primitive=&#39;LEN&#39;)</span>
+            <span class="n">gene_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;synapses&#39;</span> <span class="p">:</span> <span class="s1">&#39;connections&#39;</span><span class="p">,</span> <span class="s1">&#39;neurons&#39;</span> <span class="p">:</span> <span class="s1">&#39;nodes&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;connections&#39;</span><span class="p">)</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;weights&#39;</span> <span class="p">:</span> <span class="s1">&#39;weight&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s1">&#39;learning_rule&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+                <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">gnt</span><span class="p">[</span><span class="s1">&#39;learning_rule&#39;</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">gnt</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">gnt</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="k">for</span> <span class="n">gnt</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="n">gene_type</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+            <span class="c1"># genotype_segment = np.array([g[variable] for g in [*genotype[gene_type].values()][counter:counter+segment_len]])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;SET&#39;</span><span class="p">,</span>\
+                        <span class="n">data</span><span class="o">=</span><span class="n">genotype_segment</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+            <span class="c1"># counter += segment_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span> <span class="c1">#* Compile changes.</span></div>
+
+<div class="viewcode-block" id="NEATInterface.initGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method for initializing the values of the genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="InterfaceFactory"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory">[docs]</a><span class="k">class</span> <span class="nc">InterfaceFactory</span><span class="p">:</span>
+<div class="viewcode-block" id="InterfaceFactory.create"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;GeneticAlgorithm&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">),</span>
+            <span class="s1">&#39;SNES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">),</span>
+            <span class="s1">&#39;xNES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">),</span>
+            <span class="s1">&#39;CMA_ES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">),</span>
+            <span class="s1">&#39;OpenAI_ES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">),</span>
+            <span class="s1">&#39;NEAT&#39;</span> <span class="p">:</span> <span class="n">NEATInterface</span><span class="p">(</span><span class="n">neural_net</span><span class="p">)</span>
+        <span class="p">}[</span><span class="n">algorithm</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

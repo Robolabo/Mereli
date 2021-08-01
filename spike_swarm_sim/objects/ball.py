@@ -1,5 +1,4 @@
 import numpy as np            
-from matplotlib import colors
 import matplotlib.pyplot as plot
 import pybullet as p
 from spike_swarm_sim.objects import WorldObject2D, WorldObject3D
@@ -36,7 +35,7 @@ class Cube(WorldObject3D):
                         *args, **kwargs)
         self.color = color
         self.mass = mass
-        self.side_len = side_len
+        self.scaling = side_len
         self.is_grasped = False # Whether a robot is grasping the cube or not.
 
     def add_physics(self, physics_client):
@@ -45,6 +44,7 @@ class Cube(WorldObject3D):
         # import pdb; pdb.set_trace()
         p.changeVisualShape(self.id, -1, rgbaColor=color, physicsClientId=physics_client)
         p.changeDynamics(self.id, -1, mass=self.mass, physicsClientId=physics_client)
+        import pdb; pdb.set_trace()
     
     def step(self, world_dict):
         pass

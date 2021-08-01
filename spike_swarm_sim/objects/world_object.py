@@ -4,19 +4,17 @@ import pybullet as p
 
 class WorldObject(ABC):
     """ 
-    Base class for abstract world objects. This class is the most basic class of
+    Base class for abstract world objects or entities. This class is the most basic class of
     world entities and only implements abstract properties of objects. It does not 
-    implement positions, orientations, and so on. 
-    This class must not be directly instantiated and all world objects have to
-    inherit from it indirectly.
-    ====================================================================================
-    - Params:
-        static [bool]: whether the object is static or can move.
-        controller [Controller or None] : controller, if any, defining object behavior.
-        tangible [bool]: whether the object could have collisions or not. #!(usefulness to be checked).
-        luminous [bool]: whether the object emits light or not.
-        trainable [bool]: whether the object controoler can be trained. (#!CHECK)
-    ====================================================================================
+    implement positions, orientations, and so on. This class must not be directly instantiated 
+    and all world objects have to inherit from it indirectly.
+
+    :param bool static: whether the object is static or can move.
+    :param Controller controller: controller, if any, defining object behavior. 
+        If the object cannot be controlled, then controller=None. 
+    :param bool tangible: whether the object has collisions or not.
+    :param bool luminous: whether the object emits light or not.
+    :param bool trainable: whether the object controller can be trained (not really used yet).
     """
     def __init__(self, static=True, controller=None, tangible=True,\
                     luminous=False, trainable=False):
@@ -30,35 +28,54 @@ class WorldObject(ABC):
 
     @property
     def id(self):
-        """ Getter of the unique object id."""
+        """ Getter of the unique object's id.
+        
+        :returns: int id of the entity.
+        """
         return self._id
 
     @id.setter
     def id(self, new_id):
-        """ Setter of the unique object id."""
+        """ Setter of the unique object id. Do not use outside the program or during a simulation.
+
+        :param int new_id: new id of the object.
+        """
         self._id = new_id
 
     @property
     def controllable(self):
-        """ Getter of flag denoting whether the object 
+        """ Getter of a flag denoting whether the object 
         can be controlled or not.
+
+        :returns: bool stating if the entity is controllable.
         """
         return self.controller is not None
 
     @abstractmethod
     def step(self):
+        """ Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+        robots, that read sensors and execute the controller. 
+        """
         raise NotImplementedError
     
     @abstractmethod
     def reset(self, seed=None):
+        """ Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+        the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+        order to be reset at a precise random state.
+
+        :param int seed: seed to reset at a precise random state. None if no seed is used.
+        """
         raise NotImplementedError
 
     @abstractproperty
     def position(self):
+        """ Abstract getter of the entity position. """
         raise NotImplementedError
     
     @abstractproperty
     def orientation(self):
+        """ Abstract getter of the entity orientation. """
         raise NotImplementedError
     
   
@@ -67,10 +84,11 @@ class WorldObject2D(WorldObject):
     Base class for 2D world objects (robots, lights, walls, and so on). 
     This class must not be directly instantiated and all 2D world objects have to
     inherit from it.
-    ====================================================================================
-    - Params:
-        position [np.ndarray or list]: position vector of the object.
-    ====================================================================================
+
+    :param str model_file: name of the json file stored at spike_swarm_sim/objects/urdf describing 
+        the entity 2D model.
+    :param np.ndarray position: 2D position vector of the entity.
+    :param float position: orientation in radians of the entity.
     """
     def __init__(self, model_file, position, orientation, *args, **kwargs):
         super(WorldObject2D, self).__init__(*args, **kwargs)
@@ -117,11 +135,11 @@ class WorldObject3D(WorldObject):
         z_offset [float]
     ====================================================================================
     """
-    def __init__(self, urdf_file, position, orientation, *args, z_offset=0, **kwargs):
+    def __init__(self, model_file, position, orientation, *args, z_offset=0, **kwargs):
         super(WorldObject3D, self).__init__(*args, **kwargs)
-        self.urdf_file = urdf_file + ".urdf"
-        if len(urdf_file.split('/')) < 2 or 'tmp' in urdf_file:
-            self.urdf_file = "spike_swarm_sim/objects/urdf/" + self.urdf_file
+        self.model_file = model_file + ".urdf"
+        if len(model_file.split('/')) < 2 or 'tmp' in model_file:
+            self.model_file = "spike_swarm_sim/objects/urdf/" + self.model_file
         self.init_position = position
         self.init_orientation = orientation
         self.z_offset = z_offset
