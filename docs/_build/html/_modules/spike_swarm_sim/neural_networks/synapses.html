@@ -1,0 +1,484 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.neural_networks.synapses &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.neural_networks.synapses</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.neural_networks.synapses</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">abstractproperty</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.utils.builder</span> <span class="k">import</span> <span class="n">SynapsesBuilder</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">SET</span><span class="p">,</span> <span class="n">LEN</span><span class="p">,</span> <span class="n">INIT</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">merge_dicts</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">synapse_registry</span>
+
+<div class="viewcode-block" id="delay"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.delay">[docs]</a><span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="n">spikes</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">delayed_spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span><span class="p">])</span>
+        <span class="nb">any</span><span class="p">([</span><span class="n">v</span><span class="o">.</span><span class="n">appendleft</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">s</span><span class="p">))</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span><span class="p">)])</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delayed_spikes</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">voltages</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ret</span>
+    <span class="k">return</span> <span class="n">wrapper</span>  </div>
+
+<div class="viewcode-block" id="Synapses"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses">[docs]</a><span class="k">class</span> <span class="nc">Synapses</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+        <span class="c1">#* Weighted adjacency matrix.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#* Unweighted boolean adjacency matrix (w=0 != no connection)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#* Mask of connection that can be optimized.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable_mask</span> <span class="o">=</span> <span class="kc">None</span>
+    
+<div class="viewcode-block" id="Synapses.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.step">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Synapses.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.reset">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Synapses.build"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">])),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">trainable_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">in_connections</span> <span class="o">=</span> <span class="p">[</span><span class="n">syn</span> <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">in_connections</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]:</span>
+                    <span class="n">pre_idx</span> <span class="o">=</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>\
+                                <span class="k">else</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span>
+                    <span class="n">mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">trainable_mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable_mask</span> <span class="o">=</span> <span class="n">trainable_mask</span></div>
+
+<div class="viewcode-block" id="Synapses.get_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.get_weights">[docs]</a>    <span class="nd">@GET</span><span class="p">(</span><span class="s2">&quot;synapses:weights&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Given a connection name the method returns the flattened array of synapse strengths in</span>
+<span class="sd">        that connection. If only_trainable is active, only weights in train mode are returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#* Return scaled in [0,1]</span>
+        <span class="k">if</span> <span class="n">conn_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">]])</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">weights</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+        <span class="c1">#* Special queries of synapses</span>
+        <span class="n">conn_name</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;sensory&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]],</span>
+            <span class="s1">&#39;hidden&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                        <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span>\
+                        <span class="ow">and</span> <span class="ow">not</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;is_motor&#39;</span><span class="p">]],</span>
+            <span class="s1">&#39;motor&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                        <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span>\
+                        <span class="ow">and</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;is_motor&#39;</span><span class="p">]]</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="p">[</span><span class="n">conn_name</span><span class="p">])</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">conn_name</span>\
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">only_trainable</span> <span class="ow">or</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;trainable&#39;</span><span class="p">]])</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">weights</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Synapses.set_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.set_weights">[docs]</a>    <span class="nd">@SET</span><span class="p">(</span><span class="s2">&quot;synapses:weights&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#* rescale genotype segment to weight range</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">min_val</span> <span class="o">+</span> <span class="n">data</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">conn_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">],</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+                <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="k">return</span> <span class="n">ann_graph</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#* Special queries of synapses</span>
+            <span class="n">conn_name</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;sensory&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                                <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]],</span>
+                <span class="s1">&#39;hidden&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span>\
+                            <span class="ow">and</span> <span class="ow">not</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;is_motor&#39;</span><span class="p">]],</span>
+                <span class="s1">&#39;motor&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span>\
+                            <span class="ow">and</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;is_motor&#39;</span><span class="p">]]</span>
+            <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="p">[</span><span class="n">conn_name</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">w</span><span class="p">,</span> <span class="n">syn_name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">syn_name</span><span class="p">][</span><span class="s1">&#39;trainable&#39;</span><span class="p">]:</span>
+                    <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">syn_name</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span>
+            <span class="k">return</span> <span class="n">ann_graph</span></div>
+
+<div class="viewcode-block" id="Synapses.init_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.init_weights">[docs]</a>    <span class="nd">@INIT</span><span class="p">(</span><span class="s1">&#39;synapses:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">init_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">weights_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_weights</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">)</span>
+        <span class="n">random_weights</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">weights_len</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="c1">#between 0 and 1 (denormalized in set)</span>
+        <span class="c1"># random_weights = np.random.random(size=weights_len)</span>
+        <span class="n">random_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">random_weights</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_weights</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">random_weights</span><span class="p">,</span>\
+                            <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Synapses.len_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.Synapses.len_weights">[docs]</a>    <span class="nd">@LEN</span><span class="p">(</span><span class="s1">&#39;synapses:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">len_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_weights</span><span class="p">(</span><span class="n">conn_name</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+
+<div class="viewcode-block" id="StaticSynapses"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.StaticSynapses">[docs]</a><span class="nd">@synapse_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;static_synapse&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StaticSynapses</span><span class="p">(</span><span class="n">Synapses</span><span class="p">):</span>
+
+<div class="viewcode-block" id="StaticSynapses.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.StaticSynapses.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">spikes</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="StaticSynapses.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.StaticSynapses.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+<div class="viewcode-block" id="DynamicSynapses"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses">[docs]</a><span class="nd">@synapse_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;dynamic_synapse&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DynamicSynapses</span><span class="p">(</span><span class="n">Synapses</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DynamicSynapses</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="c1"># masks and matrices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_mask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delays</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1"># synapse variables (initialized in reset)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span> <span class="o">=</span> <span class="kc">None</span>
+        
+        <span class="c1">#* Synapse Parameters (default)</span>
+        <span class="c1">#* Changed in build method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_gain</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_tau</span> <span class="o">=</span> <span class="mf">5.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_E</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_gain</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_tau</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_E</span> <span class="o">=</span> <span class="o">-</span><span class="mf">70.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_gain</span> <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_rise</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_decay</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_Mg2</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_E</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<div class="viewcode-block" id="DynamicSynapses.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.step">[docs]</a>    <span class="nd">@delay</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="n">Iampa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_ampa</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="n">Igaba</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_gaba</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="n">Indma</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_nmda</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">Iampa</span> <span class="o">+</span> <span class="n">Igaba</span> <span class="o">+</span> <span class="n">Indma</span>
+        <span class="k">return</span> <span class="n">I</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.step_ampa"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.step_ampa">[docs]</a>    <span class="k">def</span> <span class="nf">step_ampa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span><span class="p">[</span><span class="n">spikes</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ampa_tau</span><span class="p">)</span> 
+        <span class="n">PSP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ampa_gain</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ampa_mask</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span><span class="p">)</span><span class="c1"># * (self.ampa_E - voltages) </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ampa_E</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">PSP</span> <span class="o">*=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ampa_E</span> <span class="o">-</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PSP</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.step_gaba"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.step_gaba">[docs]</a>    <span class="k">def</span> <span class="nf">step_gaba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span><span class="p">[</span><span class="n">spikes</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">gaba_tau</span><span class="p">)</span>
+        <span class="n">PSP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaba_gain</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gaba_mask</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span><span class="p">)</span><span class="c1">#* (self.gaba_E - voltages) </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaba_E</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">PSP</span> <span class="o">*=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gaba_E</span> <span class="o">-</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PSP</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.step_nmda"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.step_nmda">[docs]</a>    <span class="k">def</span> <span class="nf">step_nmda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span><span class="p">[</span><span class="n">spikes</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span><span class="p">[</span><span class="o">~</span><span class="n">spikes</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_rise</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">.</span><span class="mi">5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_decay</span><span class="p">)</span> 
+        <span class="n">PSP</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndma_gain</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndma_mask</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span><span class="p">)</span>\
+                <span class="o">*</span> <span class="p">(</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndma_Mg2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.062</span><span class="o">*</span><span class="n">voltages</span><span class="p">)</span><span class="o">/</span><span class="mf">3.57</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ndma_E</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="n">PSP</span> <span class="o">*=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ndma_E</span> <span class="o">-</span> <span class="n">voltages</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PSP</span></div>
+    
+<div class="viewcode-block" id="DynamicSynapses.build"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ann_graph</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">])),</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">trainable_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">ampa_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">gaba_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">ndma_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1">#* List of input connections to node.</span>
+            <span class="n">in_connections</span> <span class="o">=</span> <span class="p">[</span><span class="n">syn</span> <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">in_connections</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]:</span>
+                    <span class="n">pre_idx</span> <span class="o">=</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span>\
+                            <span class="k">else</span> <span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span>
+                    <span class="n">mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">trainable_mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+                    <span class="n">ampa_mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;AMPA&#39;</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">]</span>
+                    <span class="n">gaba_mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GABA&#39;</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">]</span>
+                    <span class="n">ndma_mask</span><span class="p">[</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">],</span> <span class="n">pre_idx</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;NDMA&#39;</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">weights</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable_mask</span> <span class="o">=</span> <span class="n">trainable_mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_mask</span> <span class="o">=</span> <span class="n">ampa_mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_mask</span> <span class="o">=</span> <span class="n">gaba_mask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_mask</span> <span class="o">=</span> <span class="n">ndma_mask</span>
+
+        <span class="c1">#* Set up synapse delays</span>
+        <span class="c1">#! Not implemented yet.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">ann_graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]))</span> 
+        <span class="c1"># np.random.choice(range(min_delay, max_delay),\</span>
+        <span class="c1"># size=len(ann_graph[&#39;inputs&#39;])+len(ann_graph[&#39;neurons&#39;]))  </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span> <span class="o">=</span> <span class="p">[</span><span class="n">deque</span><span class="p">([</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deque</span><span class="p">([</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))]))</span>
+
+        <span class="c1">#! Pasar a matrices mediante kwargs en ann_graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_gain</span> <span class="o">=</span> <span class="mf">6.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_tau</span> <span class="o">=</span> <span class="mf">6.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ampa_E</span> <span class="o">=</span>  <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_gain</span> <span class="o">=</span> <span class="mf">5.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_tau</span> <span class="o">=</span> <span class="mf">10.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gaba_E</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_gain</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_rise</span> <span class="o">=</span> <span class="mf">10.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_tau_decay</span> <span class="o">=</span> <span class="mf">50.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_Mg2</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ndma_E</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaba_E</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gaba_gain</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ampa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_gaba</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s_ndma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_ndma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spike_buffer</span> <span class="o">=</span> <span class="p">[</span><span class="n">deque</span><span class="p">([</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="p">))])</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.get_delays"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.get_delays">[docs]</a>    <span class="nd">@GET</span><span class="p">(</span><span class="s1">&#39;synapses:delays&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_delays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.set_delays"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.set_delays">[docs]</a>    <span class="nd">@SET</span><span class="p">(</span><span class="s1">&#39;synapses:delays&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_delays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron_name</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delays</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.len_delays"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.len_delays">[docs]</a>    <span class="nd">@LEN</span><span class="p">(</span><span class="s1">&#39;synapses:delays&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">len_delays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DynamicSynapses.init_delays"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.init_delays">[docs]</a>    <span class="nd">@INIT</span><span class="p">(</span><span class="s1">&#39;synapses:delays&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">init_delays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neuron_name</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">delays</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="DynamicSynapses.trainable_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.trainable_weights">[docs]</a>    <span class="k">def</span> <span class="nf">trainable_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shared</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">trainable_mask</span><span class="p">]</span></div>
+       
+<div class="viewcode-block" id="DynamicSynapses.normalize_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.normalize_weights">[docs]</a>    <span class="k">def</span> <span class="nf">normalize_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w_row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">w_row</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

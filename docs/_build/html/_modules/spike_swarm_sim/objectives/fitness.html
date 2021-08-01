@@ -1,0 +1,603 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.objectives.fitness &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.objectives.fitness</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.objectives.fitness</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">reduce</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plot</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">fitness_func_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">normalize</span><span class="p">,</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span>
+                                    <span class="n">geom_mean</span><span class="p">,</span> <span class="n">angle_mean</span><span class="p">,</span> <span class="n">get_alphashape</span><span class="p">,</span>
+                                    <span class="n">convert2graph</span><span class="p">,</span> <span class="n">disjoint_subgraphs</span><span class="p">,</span> <span class="n">toroidal_difference</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IdentifyBorderline"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.IdentifyBorderline">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;identify_borderline&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IdentifyBorderline</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the borderline identification task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">borderline</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information. </span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="c1">#* Assume static robots</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;robot_positions&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1">#* Compute alpha-shape</span>
+        <span class="n">borderline_robots</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Check if there are robot clusters</span>
+        <span class="n">subgraphs</span> <span class="o">=</span> <span class="n">disjoint_subgraphs</span><span class="p">(</span><span class="n">convert2graph</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">100</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">subG</span> <span class="ow">in</span> <span class="n">subgraphs</span><span class="p">:</span> <span class="c1"># Compute alpha shape for each subgraph</span>
+            <span class="n">borderline_subG</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_alphashape</span><span class="p">(</span><span class="n">positions</span><span class="p">[</span><span class="n">subG</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span><span class="c1">#0.8)</span>
+            <span class="n">borderline_robots</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">borderline_subG</span><span class="p">)</span>
+        <span class="c1">#* Compute fitness</span>
+        <span class="n">target_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">borderline_robots</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">positions</span><span class="p">))])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">borderline</span> <span class="o">=</span> <span class="n">target_actions</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">timestep_actions</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">actions</span><span class="p">):</span>
+            <span class="n">action_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ac</span><span class="p">[</span><span class="s1">&#39;led_actuator&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">timestep_actions</span><span class="p">])</span>
+            <span class="n">true_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([(</span><span class="n">ac</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">target</span> <span class="k">for</span> <span class="n">ac</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">action_vector</span><span class="p">,</span> <span class="n">target_actions</span><span class="p">)])</span>\
+                     <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">target_actions</span><span class="p">)</span>
+            <span class="n">true_pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([(</span><span class="n">ac</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="n">target</span> <span class="k">for</span> <span class="n">ac</span><span class="p">,</span> <span class="n">target</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">action_vector</span><span class="p">,</span> <span class="n">target_actions</span><span class="p">)])</span>\
+                     <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">target_actions</span><span class="p">)</span>
+            <span class="n">Fi</span> <span class="o">=</span> <span class="n">true_neg</span> <span class="o">*</span> <span class="n">true_pos</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="n">Fi</span>
+        <span class="n">fitness</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+<div class="viewcode-block" id="IdentifyLeader"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.IdentifyLeader">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;identify_leader&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IdentifyLeader</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the leader selection task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;generation&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information. </span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([[</span><span class="n">ac_robot</span><span class="p">[</span><span class="s1">&#39;led_actuator&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ac_robot</span> <span class="ow">in</span> <span class="n">ac</span><span class="p">]</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">])</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">consecutive_leader</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prev_leader</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">init_timestep</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">robot_actions</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">[</span><span class="n">init_timestep</span><span class="p">:]:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">robot_actions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">new_leader</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">robot_actions</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">prev_leader</span> <span class="o">==</span> <span class="n">new_leader</span><span class="p">:</span>
+                    <span class="n">consecutive_leader</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">fitness</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">consecutive_leader</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">consecutive_leader</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">prev_leader</span> <span class="o">=</span> <span class="n">new_leader</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prev_leader</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">consecutive_leader</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">fitness</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">-</span> <span class="n">init_timestep</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Alignment"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.Alignment">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;alignment&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Alignment</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the orientation consensus task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">,</span> <span class="s2">&quot;robot_orientations&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information.</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">robot_orientations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot_orientations&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">initial_timestep</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># ignore previous timesteps for fitness computation</span>
+        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">thetas</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">robot_orientations</span><span class="p">[</span><span class="n">initial_timestep</span><span class="p">:],</span> \
+                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">)[</span><span class="n">initial_timestep</span><span class="p">:]),</span> <span class="n">start</span><span class="o">=</span><span class="n">initial_timestep</span><span class="p">):</span>
+            <span class="c1">#angle_errs = np.max([angle_diff(th1[-1], th2[-1])</span>
+            <span class="c1">#                    for j, th1 in enumerate(thetas)</span>
+            <span class="c1">#                    for i, th2 in enumerate(thetas) if i != j])</span>
+            <span class="n">angle_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">angle_diff</span><span class="p">(</span><span class="n">th1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">th2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">th1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">th2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">])</span>
+            <span class="c1">#import pdb; pdb.set_trace()</span>
+            <span class="n">fA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">angle_errs</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)),</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">fB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ac</span><span class="p">[</span><span class="s1">&#39;joint_velocity_actuator&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">action</span><span class="p">])</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="p">(</span><span class="n">fA</span> <span class="o">*</span> <span class="n">fB</span><span class="p">)</span>
+        <span class="n">fitness</span> <span class="o">/=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">robot_orientations</span><span class="p">)</span> <span class="o">-</span> <span class="n">initial_timestep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+<div class="viewcode-block" id="GotoLight"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.GotoLight">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;goto_light&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GotoLight</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the light follower task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot:position&quot;</span><span class="p">,</span> <span class="s2">&quot;robot:orientation&quot;</span><span class="p">,</span> <span class="s2">&quot;light_source:position@color=&quot;</span><span class="o">+</span><span class="n">color</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information.</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">robot_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot:position&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">light_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;light_source:position@color=&quot;</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">light_pos</span><span class="p">,</span> <span class="n">actions_t</span><span class="p">)</span>  <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">robot_positions</span><span class="p">,</span> <span class="n">light_positions</span><span class="p">,</span> <span class="n">actions</span><span class="p">)):</span>
+            <span class="c1">#* Considering only 1 light</span>
+            <span class="n">light_pos</span> <span class="o">=</span> <span class="n">light_pos</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="n">distances</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">light_pos</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1">#* Considering that there can be multiple lights</span>
+            <span class="c1"># distances = np.min([LA.norm(pos[:, :2] - ls_pos[:2], axis=1) for ls_pos in light_pos], 0)</span>
+            <span class="n">fA</span> <span class="o">=</span> <span class="p">(</span><span class="n">distances</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">fA</span> <span class="o">*=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distances</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+                <span class="n">rad_ball</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">3</span>
+                <span class="n">fA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">distances</span> <span class="o">/</span> <span class="n">rad_ball</span><span class="p">),</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="n">fA</span> 
+        <span class="k">return</span> <span class="p">(</span><span class="n">fitness</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">))</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+<div class="viewcode-block" id="TransportCubesFitness"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.TransportCubesFitness">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;transport_cubes&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TransportCubesFitness</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the light follower task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot:position&quot;</span><span class="p">,</span> <span class="s2">&quot;robot:orientation&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;light_source:position@color=yellow&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;cube:position&quot;</span><span class="p">,</span> <span class="s2">&quot;ground_area:position&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;ground_area:radius&quot;</span><span class="p">,</span> <span class="s2">&quot;cube:is_grasped&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states.</span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information.</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">robot_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot:position&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">cube_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;cube:position&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">ground_area_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;ground_area:position&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ground_area_rad</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;ground_area:radius&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="c1">#Second index supposes all ground areas have same area.</span>
+        <span class="n">light_source_pos</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;light_source:position@color=yellow&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">cubes_grasped</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;cube:is_grasped&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1">#* Correct area is the one with light source above</span>
+        <span class="n">correct_area_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ground_area_pos</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">light_source_pos</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">correct_area</span> <span class="o">=</span> <span class="n">ground_area_pos</span><span class="p">[</span><span class="n">correct_area_idx</span><span class="p">]</span>
+        <span class="n">n_cubes_correct_start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cube_pos</span> <span class="o">-</span> <span class="n">correct_area</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">ground_area_rad</span> <span class="k">for</span> <span class="n">cube_pos</span> <span class="ow">in</span> <span class="n">cube_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="c1"># wrong_areas = np.array([ground_area_pos[j] for j in range(len(ground_area_pos)) if j != correct_area_idx])</span>
+        <span class="n">n_cubes_correct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="ow">not</span> <span class="n">is_grasped</span> <span class="ow">and</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cube_pos</span> <span class="o">-</span> <span class="n">correct_area</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">ground_area_rad</span>\
+                            <span class="k">for</span> <span class="n">is_grasped</span><span class="p">,</span> <span class="n">cube_pos</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cubes_grasped</span><span class="p">,</span> <span class="n">cube_positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span>
+        <span class="c1"># n_cubes_wrong = np.sum([not is_grasped and any(LA.norm(cube_pos - wrong_areas, axis=1) &lt;= ground_area_rad)\</span>
+        <span class="c1">#                     for is_grasped, cube_pos in zip(cubes_grasped, cube_positions[-1])])</span>
+        <span class="n">mask_dist_moved</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cube_positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">correct_area</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cube_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">correct_area</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">dist_moved</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cube_positions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cube_positions</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">dist_moved</span><span class="p">[</span><span class="n">dist_moved</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">mean_dist_moved</span> <span class="o">=</span> <span class="p">(</span><span class="n">mask_dist_moved</span> <span class="o">*</span> <span class="n">dist_moved</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="mi">10</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_cubes_correct</span> <span class="o">+</span> <span class="n">mean_dist_moved</span> <span class="o">-</span> <span class="n">n_cubes_correct_start</span><span class="p">)</span> <span class="o">/</span> <span class="n">cube_positions</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+<div class="viewcode-block" id="TaskSwitching"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.TaskSwitching">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_switching&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TaskSwitching</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the exploration task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">GotoLight</span><span class="p">(),</span> <span class="n">TransportCubesFitness</span><span class="p">()]</span>
+        <span class="c1">#! Add current task info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">tsk</span><span class="o">.</span><span class="n">required_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">tsk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffered_fitnesses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">task_switch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">tasks</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fitness_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">tsk_sw</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">task_switch</span><span class="p">):</span>
+            <span class="n">tsk</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">tsk_sw</span><span class="p">]</span>
+            <span class="n">init_instant</span> <span class="o">=</span> <span class="n">task_switch</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">last_instant</span> <span class="o">=</span> <span class="n">tsk_sw</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">task_switch</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">tsk_sw</span>
+            <span class="n">task_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">)[</span><span class="n">init_instant</span><span class="p">:</span><span class="n">last_instant</span><span class="p">]</span>
+            <span class="n">task_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">states</span><span class="p">)[</span><span class="n">init_instant</span><span class="p">:</span><span class="n">last_instant</span><span class="p">]</span>
+            <span class="n">task_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)[</span><span class="n">init_instant</span><span class="p">:</span><span class="n">last_instant</span><span class="p">]</span>\
+                <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;generation&#39;</span> <span class="k">else</span> <span class="n">values</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">fitness_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">tsk</span><span class="p">](</span><span class="n">task_actions</span><span class="p">,</span> <span class="n">task_states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">task_info</span><span class="p">))</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">))</span> <span class="c1">#* Geom mean combination</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffered_fitnesses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">)</span>
+        <span class="c1"># fitness = np.mean(fitness_tasks)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+
+<div class="viewcode-block" id="TaskSwitching2"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.TaskSwitching2">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_switching2&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TaskSwitching2</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the exploration task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">GotoLight</span><span class="p">(),</span> <span class="n">GotoLight</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)]</span>
+        <span class="c1">#! Add current task info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">,</span> <span class="s1">&#39;task_scheduler:num_slots&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">tsk</span><span class="o">.</span><span class="n">required_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">tsk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffered_fitnesses</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">n_slots</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;task_scheduler:num_slots&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">fitness_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_slots</span><span class="p">):</span>
+            <span class="n">t_init</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_slots</span><span class="p">)</span>
+            <span class="n">t_end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_slots</span><span class="p">)</span>
+            <span class="n">task_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>
+            <span class="n">task_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">states</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>
+            <span class="n">task_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>\
+                <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;generation&#39;</span> <span class="k">else</span> <span class="n">values</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">tasks</span><span class="p">[</span><span class="n">t_init</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">fitness_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="n">task_actions</span><span class="p">,</span> <span class="n">task_states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">task_info</span><span class="p">))</span>
+        
+        <span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">))</span> <span class="c1">#* Geom mean combination</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">buffered_fitnesses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+
+<div class="viewcode-block" id="TaskSwitching3"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.TaskSwitching3">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;task_switching3&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TaskSwitching3</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the exploration task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">GotoLight</span><span class="p">(),</span> <span class="n">TransportCubesFitness</span><span class="p">()]</span>
+        <span class="c1">#! Add current task info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">,</span> <span class="s1">&#39;task_scheduler:num_slots&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">tsk</span><span class="o">.</span><span class="n">required_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">tsk</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">]))</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">tasks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;task_scheduler:current_task&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">n_slots</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;task_scheduler:num_slots&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">n_collisions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([[</span><span class="n">st</span><span class="p">[</span><span class="s1">&#39;collision_sensor&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">state_t</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_t</span> <span class="ow">in</span> <span class="n">states</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">n_collisions</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mf">1e-5</span>
+        <span class="n">fitness_tasks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_slots</span><span class="p">):</span>
+            <span class="n">t_init</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_slots</span><span class="p">)</span>
+            <span class="n">t_end</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_slots</span><span class="p">)</span>
+            <span class="n">task_actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>
+            <span class="n">task_states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">states</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>
+            <span class="n">task_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">values</span><span class="p">)[</span><span class="n">t_init</span><span class="p">:</span><span class="n">t_end</span><span class="p">]</span>\
+                <span class="k">if</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;generation&#39;</span> <span class="k">else</span> <span class="n">values</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="n">task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tasks</span><span class="p">[</span><span class="n">tasks</span><span class="p">[</span><span class="n">t_init</span><span class="o">+</span><span class="mi">1</span><span class="p">]]</span>
+            <span class="n">fitness_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">(</span><span class="n">task_actions</span><span class="p">,</span> <span class="n">task_states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">task_info</span><span class="p">))</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_tasks</span><span class="p">))</span> <span class="c1">#* Geom mean combination</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="Grouping"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.Grouping">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;grouping&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Grouping</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the aggrupation task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">,</span> <span class="s2">&quot;robot_orientations&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information. </span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">robot_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">robot_orientations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot_orientations&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">thetas</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>  <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">robot_positions</span><span class="p">,</span> <span class="n">robot_orientations</span><span class="p">,</span> <span class="n">actions</span><span class="p">)):</span>
+            <span class="c1"># angle_errs = np.mean([angle_diff(th1, th2)</span>
+            <span class="c1">#                     for j, th1 in enumerate(thetas)</span>
+            <span class="c1">#                     for i, th2 in enumerate(thetas) if i != j])</span>
+            <span class="n">distances_robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_i</span> <span class="o">-</span> <span class="n">pos_j</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pos_i</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> 
+                                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">pos_j</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">]</span>
+            <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos_i</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">pos_i</span> <span class="ow">in</span> <span class="n">pos</span><span class="p">]</span>
+            <span class="n">fA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dist</span> <span class="o">/</span> <span class="mi">100</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">dist</span> <span class="ow">in</span> <span class="n">distances</span><span class="p">])</span>
+            <span class="n">fB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">distances_robots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">20</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="n">fA</span> <span class="o">*</span> <span class="n">fB</span>
+        <span class="n">fitness</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">robot_positions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+
+
+
+<div class="viewcode-block" id="ObstacleAvoidance"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.ObstacleAvoidance">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;obstacle_avoidance&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ObstacleAvoidance</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the Obstacle Avoidance task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information.</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">robot_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="p">(</span><span class="n">states_t</span><span class="p">,</span> <span class="n">actions_t</span><span class="p">,</span> <span class="n">pos</span><span class="p">)</span>  <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">robot_positions</span><span class="p">)):</span>
+            <span class="n">fA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="s1">&#39;distance_sensor3D&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">states_t</span><span class="p">])</span>
+            <span class="n">fB</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="mf">0.5</span><span class="o">*</span><span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ac</span><span class="p">[</span><span class="s1">&#39;joint_actuator&#39;</span><span class="p">],</span> <span class="nb">ord</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">ac</span><span class="p">[</span><span class="s1">&#39;joint_actuator&#39;</span><span class="p">]))</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">actions_t</span><span class="p">])</span>
+            <span class="n">fitness</span> <span class="o">+=</span> <span class="n">fA</span> <span class="o">*</span> <span class="n">fB</span>
+        <span class="n">fitness</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+
+
+<div class="viewcode-block" id="GotoGoal"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.GotoGoal">[docs]</a><span class="nd">@fitness_func_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;goto_goal&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GotoGoal</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Fitness function for the Obstacle Avoidance task.&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot:position&quot;</span><span class="p">,</span> <span class="s2">&quot;robot:orientation&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;cube:position&quot;</span><span class="p">,</span> <span class="s2">&quot;ground_area:position&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;ground_area:radius&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Computes the fitness function based on trial actions and states. </span>
+<span class="sd">        Additionally, other useful variables can be used from info dict (if specified in init).</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            actions [list of dicts]: list of dictionaries with actuator names and the </span>
+<span class="sd">                    corresponding action.</span>
+<span class="sd">            states [list of dicts]: list of dictionaries with sensor names and the </span>
+<span class="sd">                    corresponding measured states.</span>
+<span class="sd">            info [dict or None]: dict of additional information.</span>
+<span class="sd">        =======================================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#! Assuming only 1 robot!!!</span>
+        <span class="n">collisions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">st</span><span class="p">[</span><span class="s1">&#39;collision_sensor&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">st</span> <span class="ow">in</span> <span class="n">state_t</span><span class="p">]</span> <span class="k">for</span> <span class="n">state_t</span> <span class="ow">in</span> <span class="n">states</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="c1"># if any(n_collisions &gt; 200):</span>
+        <span class="c1">#     return 1e-5</span>
+        <span class="n">robot_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;robot:position&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">goal_center</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;ground_area:position&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">goal_rad</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;ground_area:radius&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="c1">#! Assuming only 1 robot!!!</span>
+        <span class="n">rew</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos</span> <span class="o">-</span> <span class="n">goal_center</span><span class="p">)</span><span class="o">/</span><span class="mi">15</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">robot_positions</span><span class="p">])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="c1"># import pdb; pdb.set_trace()</span>
+        <span class="n">rew</span> <span class="o">=</span> <span class="n">rew</span> <span class="o">-</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">collisions</span>
+        <span class="n">fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rew</span><span class="p">[</span><span class="n">i</span><span class="p">:]</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="o">**</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rew</span><span class="p">[</span><span class="n">i</span><span class="p">:])))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rew</span><span class="p">))])</span>
+        <span class="k">return</span> <span class="n">fitness</span> <span class="o">+</span> <span class="mf">1e-5</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,548 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Running without multiprocessing.&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">repeat</span><span class="p">,</span> <span class="n">chain</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="k">import</span> <span class="n">MPI</span>
+    <span class="n">MPI_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">MPI_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;MPI is not installed. Running without mpi4py.&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">InterfaceFactory</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">flatten_dict</span><span class="p">,</span> <span class="n">DataLogger</span><span class="p">,</span> <span class="n">without_duplicates</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors.utils</span> <span class="k">import</span> <span class="n">list_sensors</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.utils</span> <span class="k">import</span> <span class="n">list_actuators</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>          
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.world</span> <span class="k">import</span> <span class="n">MultiWorldWrapper</span><span class="p">,</span> <span class="n">World3D</span>
+
+<div class="viewcode-block" id="get_info_old"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info_old">[docs]</a><span class="k">def</span> <span class="nf">get_info_old</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">robots</span><span class="p">,</span> <span class="n">world</span><span class="p">,):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns queried information about the world and its objects.</span>
+<span class="sd">    #! Provisional implementation, will be improved in the future.</span>
+<span class="sd">    ====================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        name [str] -&gt; name of the query.</span>
+<span class="sd">        robots [dict] -&gt; world robots.</span>
+<span class="sd">        world [World] -&gt; world under assessment.</span>
+<span class="sd">    ====================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s1">&#39;robot_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">bot</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">]),</span>
+        <span class="s1">&#39;robot_orientations&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bot</span><span class="o">.</span><span class="n">orientation</span> <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">]),</span>
+        <span class="s1">&#39;light_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">light</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">()]),</span>
+        <span class="s1">&#39;green_light_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">light</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;green&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;yellow_light_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">light</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;yellow&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;red_light_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">light</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;red&#39;</span><span class="p">]),</span>
+        <span class="s1">&#39;blue_light_positions&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">light</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">light</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">lights</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">light</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="s1">&#39;blue&#39;</span><span class="p">])</span>
+    <span class="p">}[</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="get_info"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info">[docs]</a><span class="k">def</span> <span class="nf">get_info</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+    <span class="n">obj_name</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">obj_var</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="s1">&#39;position&#39;</span>
+    <span class="n">condition</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;@&#39;</span> <span class="ow">in</span> <span class="n">names</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">entities</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">condition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">obj_var</span> <span class="o">=</span> <span class="n">obj_var</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">objects</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;t&#39;</span> <span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">t</span><span class="p">)</span> <span class="o">==</span> <span class="n">condition</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="s1">&#39;color&#39;</span> <span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">color</span> <span class="o">==</span> <span class="n">condition</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">condition</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">True</span><span class="p">),</span> <span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">obj_var</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">objects</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">obj_var</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">obj_var</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">objects</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">obj_var</span><span class="p">)])</span></div>
+
+
+<span class="k">def</span> <span class="nf">_run_worker</span><span class="p">(</span><span class="n">env_id</span><span class="p">,</span> <span class="n">worlds</span><span class="p">,</span> <span class="n">populations</span><span class="p">,</span> <span class="n">eval_steps</span><span class="p">,</span> \
+        <span class="n">num_evaluations</span><span class="p">,</span> <span class="n">fitness_fn</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">generation</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Worker function to evaluate an individual of the EA population and</span>
+<span class="sd">    compute its fitness.</span>
+<span class="sd">    =====================================================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        env_id [int] -&gt; if parallelized, the id of the genotype to eval.</span>
+<span class="sd">        populations [dict] -&gt; population dict storing all the subpopulations of the EA.</span>
+<span class="sd">        world [World] -&gt; world object to evaluate fitness.</span>
+<span class="sd">        num_evaluations [int] -&gt; number of eval repetitions or samples to average the fitness.</span>
+<span class="sd">        fitness_fn [Fitness] -&gt; fitness class or function to quantify evaluation performance.</span>
+<span class="sd">        seed [int] -&gt; random state to intialize the world equally for all individuals</span>
+<span class="sd">                      in the population.</span>
+<span class="sd">    - Returns:</span>
+<span class="sd">        Tuple (env_id [int], fitness [float]) with the genotype id </span>
+<span class="sd">        and the resulting fitness.</span>
+<span class="sd">    =====================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">worlds</span><span class="p">,</span> <span class="n">MultiWorldWrapper</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+            <span class="n">world</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">worlds</span><span class="o">.</span><span class="n">all</span><span class="p">[</span><span class="n">rank</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">_identity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">world</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">worlds</span><span class="o">.</span><span class="n">all</span><span class="p">[(</span><span class="n">rank</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">worlds</span><span class="o">.</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="n">worlds</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="n">interfaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">InterfaceFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">algorithm</span><span class="p">,</span> <span class="n">bot</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">neural_network</span><span class="p">)</span> <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">populations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">env_id</span><span class="p">]</span>
+            <span class="n">interface</span><span class="o">.</span><span class="n">fromGenotype</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="n">genotype_segment</span><span class="p">,</span> <span class="n">pop</span><span class="o">.</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">pop</span><span class="o">.</span><span class="n">max_vals</span><span class="p">)</span>
+    <span class="n">fitness</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">mean_survival_time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="c1">#* Evaluate gentoype several times and average</span>
+    <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evaluations</span><span class="p">):</span>
+        <span class="n">seed</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="n">actions_history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">states_history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span> <span class="p">:</span> <span class="n">deque</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">fitness_fn</span><span class="o">.</span><span class="n">required_info</span><span class="p">}</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;generation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">generation</span>
+        <span class="n">survival_time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="n">done</span> <span class="ow">and</span> <span class="n">survival_time</span> <span class="o">&lt;=</span> <span class="n">eval_steps</span><span class="p">):</span>
+            <span class="n">states</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">deque</span><span class="p">):</span>
+                    <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_info</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">world</span><span class="p">))</span>
+            <span class="n">actions_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+            <span class="n">states_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+            <span class="n">survival_time</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                <span class="k">break</span>
+        <span class="n">mean_survival_time</span> <span class="o">+=</span> <span class="n">survival_time</span>
+        <span class="n">fitness</span> <span class="o">+=</span> <span class="n">fitness_fn</span><span class="p">(</span><span class="n">actions_history</span><span class="p">,</span> <span class="n">states_history</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+    <span class="n">mean_survival_time</span> <span class="o">/=</span> <span class="n">num_evaluations</span>
+    <span class="n">fitness</span> <span class="o">/=</span> <span class="n">num_evaluations</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">env_id</span><span class="p">,</span> <span class="n">fitness</span><span class="p">)</span>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm">[docs]</a><span class="k">class</span> <span class="nc">EvolutionaryAlgorithm</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Base class for evolutionary algorithms &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populations</span><span class="p">,</span> <span class="n">world</span><span class="p">,</span>
+                 <span class="n">n_generations</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">population_size</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                 <span class="n">eval_steps</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+                 <span class="n">num_evaluations</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                 <span class="n">n_processes</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                 <span class="n">fitness_fn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">checkpoint_name</span><span class="o">=</span><span class="s1">&#39;chk&#39;</span><span class="p">,</span>
+                 <span class="n">resume</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="o">=</span> <span class="n">world</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="o">=</span> <span class="n">populations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_generations</span> <span class="o">=</span> <span class="n">n_generations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population_size</span> <span class="o">=</span> <span class="n">population_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eval_steps</span> <span class="o">=</span> <span class="n">eval_steps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span> <span class="o">=</span> <span class="n">num_evaluations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_processes</span> <span class="o">=</span> <span class="n">n_processes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span> <span class="o">=</span> <span class="n">checkpoint_name</span>
+        <span class="c1"># print(&#39;Running with &#39;, self.n_processes, &#39; cores&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span> <span class="o">=</span> <span class="n">fitness_fn</span>
+        <span class="k">if</span> <span class="n">fitness_fn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Error: Specify fitness function.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span> <span class="o">=</span> <span class="p">{</span><span class="n">stat</span> <span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_generation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">resume</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_population</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">use_mpi</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">MPI_AVAILABLE</span> <span class="k">else</span> <span class="kc">False</span>
+            <span class="c1">#* Only one core is responsible of initialization</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_mpi</span> <span class="ow">or</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>\
+                            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">MultiWorldWrapper</span><span class="p">)</span> <span class="k">else</span>\
+                            <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">all</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+                <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                    <span class="n">pop</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">InterfaceFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">robots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">neural_network</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">use_mpi</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">barrier</span><span class="p">()</span>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.run"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run method common to all evolutionary computation algs. It parallelizes the </span>
+<span class="sd">        genotype evaluation to obtain the fitness and performs the evolution step. </span>
+<span class="sd">        The precise method evolve has to be defined in the population class of the </span>
+<span class="sd">        precise algorithm that inherits from this class. </span>
+<span class="sd">        The method does not return any data. Instead, it saves all the required </span>
+<span class="sd">        information to resume the evolution periodically.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">use_mpi</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">MPI_AVAILABLE</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">alg_name</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">init_generation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_generations</span><span class="p">):</span>
+            <span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">seed</span> <span class="o">=</span> <span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span> 
+            <span class="c1">#* MULTIPROCESSING Parallelization</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_mpi</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_processes</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># worlds = [self.world.all[idx % self.n_processes] for idx in range(self.population_size)]</span>
+                <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_processes</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+                    <span class="n">pool_args</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span><span class="p">),</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">world</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span><span class="p">)],</span>\
+                        <span class="o">*</span><span class="p">[</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">repeat</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>\
+                        <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span>\
+                        <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">alg_name</span><span class="p">])])</span>
+                    <span class="n">evaluation_res</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">starmap</span><span class="p">(</span><span class="n">_run_worker</span><span class="p">,</span> <span class="n">pool_args</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">evaluation_res</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+
+            <span class="c1">#* MPI Parallelization</span>
+            <span class="k">elif</span> <span class="n">use_mpi</span><span class="p">:</span> <span class="c1">#! TODO Multi world</span>
+                <span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
+                <span class="n">rank</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+                <span class="n">size</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span>
+                <span class="n">indiv_per_core</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">population_size</span> <span class="o">//</span> <span class="n">size</span> <span class="o">+</span> <span class="p">(</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span> <span class="o">%</span> <span class="n">size</span><span class="p">)</span>
+                <span class="n">my_individuals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">indiv_per_core</span> <span class="o">*</span> <span class="n">rank</span><span class="p">,</span> <span class="n">indiv_per_core</span> <span class="o">*</span> <span class="p">(</span><span class="n">rank</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                <span class="n">my_fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">_run_worker</span><span class="p">(</span><span class="n">ii</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_steps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span>\
+                                <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">alg_name</span><span class="p">)</span> <span class="k">for</span> <span class="n">ii</span> <span class="ow">in</span> <span class="n">my_individuals</span><span class="p">]</span>
+                <span class="c1">#comm.Barrier()</span>
+                <span class="n">eval_result</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">my_fitness</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">vv</span> <span class="k">for</span> <span class="n">ff</span> <span class="ow">in</span> <span class="n">eval_result</span> <span class="k">for</span> <span class="n">vv</span> <span class="ow">in</span> <span class="n">ff</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">f_val</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">f_val</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">fitness</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eval_result</span> <span class="o">=</span> <span class="p">[</span><span class="n">_run_worker</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_steps</span><span class="p">,</span> \
+                                <span class="bp">self</span><span class="o">.</span><span class="n">num_evaluations</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">alg_name</span><span class="p">)</span>\
+                                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span><span class="p">)]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">eval_result</span><span class="p">]</span>
+            <span class="c1">#* No parallelization</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">use_mpi</span> <span class="ow">or</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1">#* Evolve Population</span>
+                <span class="n">mean_fitness</span><span class="p">,</span> <span class="n">max_fitness</span><span class="p">,</span> <span class="n">min_fitness</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;End of generation </span><span class="si">{}</span><span class="s1"> with mean fitness </span><span class="si">{}</span><span class="s1"> and max finess </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1"> seconds.&#39;</span>\
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_fitness</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">max_fitness</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">any</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span><span class="p">[</span><span class="n">stat_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">stat</span><span class="p">)</span> <span class="k">for</span> <span class="n">stat_name</span><span class="p">,</span> <span class="n">stat</span> <span class="ow">in</span> \
+                            <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">mean_fitness</span><span class="p">,</span> <span class="n">max_fitness</span><span class="p">,</span> <span class="n">min_fitness</span><span class="p">])])</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">use_mpi</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;SAVING CHECKPOINT&#39;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save_population</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_mpi</span><span class="p">:</span>
+                <span class="c1">#* Broadcast evolved populations to all nodes</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">populations</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.evolve"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">pop</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">,</span> <span class="n">generation</span><span class="p">)</span>
+        <span class="n">mean_fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+        <span class="n">max_fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+        <span class="n">min_fitness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population_size</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">mean_fitness</span><span class="p">,</span> <span class="n">max_fitness</span><span class="p">,</span> <span class="n">min_fitness</span></div>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.save_population"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.save_population">[docs]</a>    <span class="k">def</span> <span class="nf">save_population</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save the algorithm checkpoint. To be implemented in the particular algorithm. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.load_population"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.load_population">[docs]</a>    <span class="k">def</span> <span class="nf">load_population</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Load the algorithm checkpoint. To be implemented in the particular algorithm. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.evaluate"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">timesteps</span><span class="o">=</span><span class="mi">8000</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Evaluates an individual of a population without any evolution. </span>
+<span class="sd">        Records the data for the specified amount of evaluation trials and time steps and </span>
+<span class="sd">        saves all the data records as a csv dataset (stored in spike_swarm_sim/logs/data).</span>
+<span class="sd">        ============================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            trials [int] -&gt; number of evaluation trials.</span>
+<span class="sd">            timesteps [int] -&gt; number of evaluation timesteps.</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        ============================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># import pdb; pdb.set_trace()</span>
+        <span class="n">world</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span>
+        <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">robot</span><span class="o">.</span><span class="n">trainable</span><span class="p">]</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">interfaces</span> <span class="o">=</span> <span class="p">[</span><span class="n">InterfaceFactory</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">bot</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">neural_network</span><span class="p">)</span> <span class="k">for</span> <span class="n">bot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interface</span> <span class="ow">in</span> <span class="n">interfaces</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">best</span> <span class="k">if</span> <span class="n">pop</span><span class="o">.</span><span class="n">best</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pop</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># pop.population[150]</span>
+                <span class="n">interface</span><span class="o">.</span><span class="n">fromGenotype</span><span class="p">(</span><span class="n">pop</span><span class="o">.</span><span class="n">objects</span><span class="p">,</span> <span class="n">genotype_segment</span><span class="p">,</span> <span class="n">pop</span><span class="o">.</span><span class="n">min_vals</span><span class="p">,</span> <span class="n">pop</span><span class="o">.</span><span class="n">max_vals</span><span class="p">)</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span> <span class="p">:</span> <span class="n">deque</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="o">.</span><span class="n">required_info</span><span class="p">}</span>
+        <span class="n">info</span><span class="p">[</span><span class="s1">&#39;generation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="n">sensor_names</span><span class="p">,</span> <span class="n">actuator_names</span> <span class="o">=</span> <span class="n">list_sensors</span><span class="p">(</span><span class="n">robots</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">list_actuators</span><span class="p">(</span><span class="n">robots</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1">#! Change list_sensors and actuators to add comm:msg</span>
+        <span class="c1"># sensor_names = [sens for sens in sensor_names if &#39;IR_receiver&#39; not in sens]</span>
+        <span class="c1"># # actuator_names = [act for act in actuator_names if &#39;wireless_transmitter&#39; not in act]</span>
+        <span class="c1"># actuator_names = [act for act in actuator_names if &#39;state&#39; not in act]</span>
+        <span class="c1">#--------------------------------------------------</span>
+        <span class="n">lights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">lights</span>
+        <span class="n">cubes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">entities</span><span class="p">(</span><span class="s1">&#39;cube&#39;</span><span class="p">)</span>
+        <span class="n">fieldnames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;trial&#39;</span><span class="p">,</span> <span class="s1">&#39;timestep&#39;</span><span class="p">,</span> <span class="s1">&#39;entity&#39;</span><span class="p">,</span> <span class="s1">&#39;position_x&#39;</span><span class="p">,</span> <span class="s1">&#39;position_y&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">sensor_names</span> <span class="o">+</span> <span class="n">actuator_names</span> 
+        <span class="n">fieldnames</span> <span class="o">=</span> <span class="n">fieldnames</span> <span class="o">+</span> <span class="p">[</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[[</span><span class="s1">&#39;position_x_&#39;</span><span class="o">+</span><span class="n">name</span><span class="p">,</span> <span class="s1">&#39;position_y_&#39;</span><span class="o">+</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">{</span><span class="o">**</span><span class="n">lights</span><span class="p">,</span> <span class="o">**</span><span class="n">cubes</span><span class="p">}]</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="n">data_logger</span> <span class="o">=</span> <span class="n">DataLogger</span><span class="p">(</span><span class="n">fieldnames</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">trial</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trials</span><span class="p">):</span>
+            <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">eval_hist</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;states&#39;</span><span class="p">:</span> <span class="p">[]}</span> <span class="c1"># For fitness function not recording</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="n">n</span> <span class="p">:</span> <span class="n">deque</span><span class="p">()</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="o">.</span><span class="n">required_info</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">timestep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">timesteps</span><span class="p">):</span>
+                <span class="n">states</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">deque</span><span class="p">):</span>
+                        <span class="n">val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">get_info</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">world</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">robot</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">flatten_dict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">flatten_dict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span> <span class="nb">zip</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">)):</span>
+                    <span class="n">re_split</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_\d|_[a-z]$&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">st</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">state</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">without_duplicates</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">re_split</span><span class="p">,</span> <span class="n">sensor_names</span><span class="p">))</span> <span class="k">if</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+                    <span class="n">ac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">action</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">without_duplicates</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">re_split</span><span class="p">,</span> <span class="n">actuator_names</span><span class="p">))</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">action</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+                    <span class="n">row_values</span> <span class="o">=</span> <span class="n">chain</span><span class="p">([</span><span class="n">trial</span><span class="p">,</span> <span class="n">timestep</span><span class="p">],</span> <span class="p">[</span><span class="n">robot</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">robot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">position</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">robot</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">st</span><span class="p">,</span> <span class="n">ac</span><span class="p">)))</span>
+                    <span class="n">row_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">fieldnames</span><span class="p">,</span> <span class="n">row_values</span><span class="p">)}</span>
+                    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="p">{</span><span class="o">**</span><span class="n">lights</span><span class="p">,</span> <span class="o">**</span><span class="n">cubes</span><span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">row_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;position_x_&#39;</span><span class="o">+</span> <span class="n">name</span> <span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;position_y_&#39;</span><span class="o">+</span> <span class="n">name</span> <span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">]})</span>
+                    <span class="n">data_logger</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">row_dict</span><span class="p">)</span>
+                <span class="n">eval_hist</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+                <span class="n">eval_hist</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fitness_fn</span><span class="p">(</span><span class="n">eval_hist</span><span class="p">[</span><span class="s1">&#39;actions&#39;</span><span class="p">],</span> <span class="n">eval_hist</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">],</span> <span class="n">info</span><span class="o">=</span><span class="n">info</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;End of evaluation trial &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">trial</span><span class="p">))</span>
+        <span class="n">data_logger</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">robots</span><span class="p">))</span>
+        <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="EvolutionaryAlgorithm.plot_learning_curve"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_learning_curve">[docs]</a>    <span class="k">def</span> <span class="nf">plot_learning_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smoothed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Plots the fitness curve of the evolution. Paints the mean, max and min values.</span>
+<span class="sd">        It can be smoothed by generational averaging (every 5 generations).</span>
+<span class="sd">        ======================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            smoothed [bool] -&gt; flag denoting if the curve should be smoothed.</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        ======================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fitness_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">])</span>
+        <span class="n">fitness_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">])</span>
+        <span class="n">fitness_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">smoothed</span><span class="p">:</span>
+            <span class="n">fitness_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fitness_mean</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_mean</span><span class="p">))])</span>
+            <span class="n">fitness_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fitness_max</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_max</span><span class="p">))])</span>
+            <span class="n">fitness_min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fitness_min</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fitness_min</span><span class="p">))])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fitness_max</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="c1"># plt.fill_between(range(len(fitness_mean)), fitness_min, fitness_max, color=&#39;blue&#39;, alpha=.1)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Generation&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Fitness&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="EvolutionaryAlgorithm.plot_species_evolution"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.plot_species_evolution">[docs]</a>    <span class="k">def</span> <span class="nf">plot_species_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smoothed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">species</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="s1">&#39;p1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">species</span>
+        <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">species</span><span class="p">:</span>
+            <span class="n">fn_ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;max_fitness&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">smoothed</span><span class="p">:</span>
+                <span class="n">fn_ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fn_ts</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">5</span><span class="p">:</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fn_ts</span><span class="p">))])</span>        
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">creation_generation</span><span class="p">,</span> <span class="n">spc</span><span class="o">.</span><span class="n">creation_generation</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">fn_ts</span><span class="p">)),</span> <span class="n">fn_ts</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

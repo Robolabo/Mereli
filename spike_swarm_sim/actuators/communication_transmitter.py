@@ -50,7 +50,7 @@ class CommunicationTransmitter(Actuator):
         if global_states.RENDER:
             color = [self.frame['msg'][0], 0, 0]
             p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.7],\
-                physicsClientId=self.actuator_owner.physics_client)
+                physicsClientId=self.actuator_owner.physics_client.client)
 
     def quantize_fn(self, msg, tau=0.1):
         dists = np.linalg.norm(msg - self.clusters, axis=1)

@@ -15,7 +15,7 @@ class Sensor:
         sensor_owner [Robot] : robot object owning and reading from the sensor.
     ======================================================================
     """
-    def __init__(self, sensor_owner, range=100, noise_sigma=0.0):
+    def __init__(self, sensor_owner, range=2, noise_sigma=0.0):
         self.sensor_owner = sensor_owner
         self.noise_sigma = noise_sigma
         self.range = range

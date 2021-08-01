@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.algorithms.evolutionary.neat &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.algorithms.evolutionary.neat</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.algorithms.evolutionary.neat</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.population</span> <span class="k">import</span> <span class="n">NEAT_Population</span>  
+<span class="kn">from</span> <span class="nn">.evolutionary_algorithm</span> <span class="k">import</span> <span class="n">EvolutionaryAlgorithm</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">NEATInterface</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">algorithm_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">save_pickle</span><span class="p">,</span> <span class="n">load_pickle</span>
+<span class="kn">from</span> <span class="nn">.species</span> <span class="k">import</span> <span class="n">Species</span>
+
+<div class="viewcode-block" id="NEAT"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.neat.NEAT">[docs]</a><span class="nd">@algorithm_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;NEAT&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">NEAT</span><span class="p">(</span><span class="n">EvolutionaryAlgorithm</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populations</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">populations</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">NEAT_Population</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;population_size&#39;</span><span class="p">],</span>\
+                <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>\
+                <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NEAT</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">populations</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NEAT.save_population"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.neat.NEAT.save_population">[docs]</a>    <span class="k">def</span> <span class="nf">save_population</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Saves the checkpoint with the necessary information to resume the evolution. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pop_checkpoint</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;populations&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;best&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">best</span><span class="p">,</span>
+                <span class="s1">&#39;genotypes&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">population</span><span class="p">,</span> <span class="c1"># List of dicts</span>
+                <span class="s1">&#39;current_innovation&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">current_innovation</span><span class="p">,</span>
+                <span class="s1">&#39;innovation_history&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">innovation_history</span><span class="p">,</span>
+                <span class="s1">&#39;input_nodes&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">input_nodes</span><span class="p">,</span>
+                <span class="s1">&#39;species_count&#39;</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">species_count</span><span class="p">,</span>
+                <span class="s1">&#39;species&#39;</span> <span class="p">:</span> <span class="p">[{</span>
+                    <span class="s1">&#39;id&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                    <span class="s1">&#39;creation_generation&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">creation_generation</span><span class="p">,</span>
+                    <span class="s1">&#39;history&#39;</span> <span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spc</span><span class="o">.</span><span class="n">history</span><span class="p">),</span>
+                    <span class="s1">&#39;representative&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">representative</span><span class="p">,</span>
+                    <span class="s1">&#39;thresh&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">compatib_thresh</span><span class="p">,</span>
+                    <span class="s1">&#39;c1&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">c1</span><span class="p">,</span> <span class="s1">&#39;c2&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">c2</span><span class="p">,</span> <span class="s1">&#39;c3&#39;</span> <span class="p">:</span> <span class="n">spc</span><span class="o">.</span><span class="n">c3</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">spc</span> <span class="ow">in</span> <span class="n">pop</span><span class="o">.</span><span class="n">species</span><span class="p">],</span>
+                <span class="s1">&#39;species_hist&#39;</span> <span class="p">:</span> <span class="kc">None</span>
+            <span class="p">}</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="s1">&#39;generation&#39;</span> <span class="p">:</span> <span class="n">generation</span><span class="p">,</span>
+            <span class="s1">&#39;p_weight_mut&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">p_weight_mut</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="s1">&#39;p_node_mut&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">p_node_mut</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="s1">&#39;p_conn_mut&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">pop</span><span class="o">.</span><span class="n">p_conn_mut</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span>
+            <span class="s1">&#39;evolution_hist&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;spike_swarm_sim/checkpoints/populations/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span>
+        <span class="n">save_pickle</span><span class="p">(</span><span class="n">pop_checkpoint</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Successfully saved evolution checkpoint.&#39;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="NEAT.load_population"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.neat.NEAT.load_population">[docs]</a>    <span class="k">def</span> <span class="nf">load_population</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Loads a previously saved checkpoint to resume evolution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="n">load_pickle</span><span class="p">(</span><span class="s1">&#39;spike_swarm_sim/checkpoints/populations/&#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Resuming NEAT evolution using checkpoint &#39;</span> <span class="o">+</span>  <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_name</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;populations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">p_weight_mut</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;p_weight_mut&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">p_node_mut</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;p_node_mut&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">p_conn_mut</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;p_conn_mut&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;genotypes&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="n">pop</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;best&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">current_innovation</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;current_innovation&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">innovation_history</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;innovation_history&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">input_nodes</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;input_nodes&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">species_count</span> <span class="o">=</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;species_count&#39;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">spc_chk</span> <span class="ow">in</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]:</span>
+                <span class="n">spc</span> <span class="o">=</span> <span class="n">Species</span><span class="p">(</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;creation_generation&#39;</span><span class="p">],</span>
+                        <span class="n">compatib_thresh</span><span class="o">=</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;thresh&#39;</span><span class="p">],</span> <span class="n">c1</span><span class="o">=</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;c1&#39;</span><span class="p">],</span> <span class="n">c2</span><span class="o">=</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;c2&#39;</span><span class="p">],</span> <span class="n">c3</span><span class="o">=</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;c3&#39;</span><span class="p">])</span>
+                <span class="n">spc</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;history&#39;</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">populations</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">species</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">spc</span><span class="p">)</span>
+                <span class="n">spc</span><span class="o">.</span><span class="n">representative</span> <span class="o">=</span> <span class="n">spc_chk</span><span class="p">[</span><span class="s1">&#39;representative&#39;</span><span class="p">]</span>
+                <span class="n">spc</span><span class="o">.</span><span class="n">num_genotypes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">genotype</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">spc</span><span class="o">.</span><span class="n">id</span>  <span class="k">for</span> <span class="n">genotype</span> <span class="ow">in</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;genotypes&#39;</span><span class="p">]])</span>
+            <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">world</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+            <span class="n">interface</span> <span class="o">=</span> <span class="n">NEATInterface</span><span class="p">(</span><span class="n">robots</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">neural_network</span><span class="p">)</span>
+            <span class="c1"># #!</span>
+            <span class="c1"># self.populations[key].segment_lengths = [interface.submit_query(query, primitive=&#39;LEN&#39;)\</span>
+            <span class="c1">#             for query in self.populations[key].objects]         </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_generation</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;generation&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evolution_history</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s1">&#39;evolution_hist&#39;</span><span class="p">]</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

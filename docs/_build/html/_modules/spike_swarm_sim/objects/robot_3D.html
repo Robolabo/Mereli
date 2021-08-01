@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.objects.robot_3D &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.objects.robot_3D</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.objects.robot_3D</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="k">import</span> <span class="n">Point</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">WorldObject3D</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.base_actuator</span> <span class="k">import</span> <span class="n">HighLevelActuator</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">world_object_registry</span>
+
+
+<div class="viewcode-block" id="Robot3D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;robot&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Robot3D</span><span class="p">(</span><span class="n">WorldObject3D</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Base class for the robot world object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">urdf_file</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Robot3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">urdf_file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span>\
+                        <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">luminous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> \
+                        <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1">#* Initialize sensors and actuators according to controller requirements</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+        <span class="c1">#* Storage for actions selected by the controllers to be fed to actuators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+
+        <span class="c1">#* Rendering colors (TO BE MOVED TO RENDER FILE IN THE FUTURE)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colorA</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">colorB</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;skyblue3&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">trainable</span><span class="p">]</span>
+        <span class="c1"># self.reset()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">st_aux</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1">#!</span>
+
+<div class="viewcode-block" id="Robot3D.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Firstly steps all the sensors in order to perceive the environment.</span>
+<span class="sd">        Secondly, the robot executes its controller in order to compute the</span>
+<span class="sd">        actions based on the sensory information.</span>
+<span class="sd">        Lastly, the actions are stored as planned actions to be eventually executed.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            neighborhood [list] -&gt; list filled with the neighboring world objects.</span>
+<span class="sd">            reward [float] -&gt; reward to be fed to the controller update rules, if any.</span>
+<span class="sd">            perturbations [list of PostProcessingPerturbation or None] -&gt; perturbation to apply </span>
+<span class="sd">                        to the stimuli before controller step.</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">            State and action tuple of the current timestep. Both of them are expressed as </span>
+<span class="sd">            a dict with the sensor/actuator name and the corresponding stimuli/action.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#* Sense environment surroundings.</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">perceive</span><span class="p">(</span><span class="n">neighborhood</span><span class="p">)</span>
+        <span class="c1">#* Apply perturbations to stimuli </span>
+        <span class="k">if</span> <span class="n">perturbations</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pert</span> <span class="ow">in</span> <span class="n">perturbations</span><span class="p">:</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">pert</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1">#* Obtain actions using controller.</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
+
+        <span class="c1">#* Plan actions for future execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plan_actions</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="c1"># #* Handle robot food pickup</span>
+        <span class="c1"># if &#39;food_area_sensor&#39; in state.keys() and bool(state[&#39;food_area_sensor&#39;][0]):</span>
+        <span class="c1">#     self.food = True</span>
+        <span class="c1"># if &#39;nest_sensor&#39; in state.keys() and bool(state[&#39;nest_sensor&#39;][0]):</span>
+        <span class="c1">#     self.food = False</span>
+        <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">actions</span></div>
+
+<div class="viewcode-block" id="Robot3D.plan_actions"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D.plan_actions">[docs]</a>    <span class="k">def</span> <span class="nf">plan_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">actuator</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span><span class="p">[</span><span class="n">actuator</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">actuator</span> <span class="o">==</span> <span class="s1">&#39;wheel_actuator&#39;</span><span class="p">)</span>\
+                    <span class="ow">and</span> <span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">]</span>  <span class="ow">or</span> <span class="p">[</span><span class="n">action</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Robot3D.actuate"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D.actuate">[docs]</a>    <span class="k">def</span> <span class="nf">actuate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Executes the previously planned actions in order to be processed in the world.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        - Args: None</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        =====================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">actuator_name</span><span class="p">,</span> <span class="n">actuator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">actuator</span><span class="p">),</span> <span class="n">HighLevelActuator</span><span class="p">):</span>
+                <span class="n">actuator</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="o">*</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">]),</span> <span class="n">neighborhood</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">actuator</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="o">*</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Robot3D.perceive"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D.perceive">[docs]</a>    <span class="k">def</span> <span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the observed stimuli by steping each of the active sensors.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            neighborhood [list] -&gt; list filled with the neighboring world objects.</span>
+<span class="sd">        -Returns:</span>
+<span class="sd">            A dict with each sensor name as key and the sensor readings as value.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">sensor_name</span> <span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">neighborhood</span><span class="p">)</span>\
+                <span class="k">for</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+<div class="viewcode-block" id="Robot3D.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot3D.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the robot dynamics, sensors, actuators and controller. Position and orientation </span>
+<span class="sd">        can be randomly initialized or fixed. In the former case a seed can be specified.</span>
+<span class="sd">        =====================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            seed [int] -&gt; seed for random intialization.</span>
+<span class="sd">        - Returns: None</span>
+<span class="sd">        =====================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1">#* Reset Controller</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="c1">#* Reset Actuators</span>
+        <span class="k">for</span> <span class="n">actuator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">actuator</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
+                <span class="n">actuator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="c1">#* Reset Sensors</span>
+        <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sensor</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
+                <span class="n">sensor</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">food</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Getter for the food attribute. It is a boolean attribute active if the robot stores food.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_food</span>
+
+    <span class="nd">@food</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">food</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hasfood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Setter for the food attribute. It is a boolean attribute active if the robot stores food.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="n">hasfood</span></div>
+
+
+
+
+<div class="viewcode-block" id="Minitaur"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Minitaur">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;minitaur&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Minitaur</span><span class="p">(</span><span class="n">Robot3D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Minitaur</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">urdf_file</span><span class="o">=</span><span class="s1">&#39;quadruped/minitaur&#39;</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Epuck3D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Epuck3D">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Epuck3D</span><span class="p">(</span><span class="n">Robot3D</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Epuck3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">urdf_file</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

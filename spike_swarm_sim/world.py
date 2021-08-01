@@ -9,27 +9,36 @@ import pybullet_utils.bullet_client as bc
 
 from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall, Wall2D
 from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
-from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any, InitializerHandler)
+from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
 
 
 class MultiWorldWrapper:
     """ Wrapper class for paralellizing genotype evaluations. 
-    TODO: Extend to 2D worlds.
+    
+    :param int n_cpu: number of cores (and parallel simulations).
+    :param float height: height in metres of the square arena.
+    :param float width: width in metres of the square arena.
+    :param float world_delay: deprecated, to be removed in next ver.
+
+    .. todo:: #TODO: Extend to 2D worlds.
     """
     def __init__(self, n_cpu, height=10, width=10, world_delay=1):
         self.n_cpu = n_cpu
         self._worlds = [World3D(height=height, width=width, world_delay=1) for _ in range(n_cpu + 1)]
 
     def build_from_dict(self, world_dict, ann_topology=None):
-        """Build all the created worlds from the config dicts. n"""
+        """Build all the created worlds from the config dicts. """
         for world in self._worlds:
             world.build_from_dict(world_dict, ann_topology=ann_topology)
 
     @property
     def all(self):
-        """ Return all the worlds. """
+        """ Return all the worlds as a list. 
+
+        :returns: list of World instances of length N_worlds + 1.
+        """
         return self._worlds
 
     @property
@@ -38,19 +47,78 @@ class MultiWorldWrapper:
         return self._worlds[0].robots
 
     def get_world(self, idx):
-        """ Get world by idx. """
+        """ 
+        Get world by index. 
+        
+        :param int idx: index of the world queried within [0, N_worlds]
+
+        :returns: World instance requested.
+        """
         return self._worlds[idx]
 
+
 class World(object):
-    """ Base class of the world or environment. Currently only 2D and 3D square arenas
-    are implemented.
-    ======================================================
-    - Args: 
-        physics_engine [Engine3D or Engine2D]: physics engine to be used.
-        height [float] : height in metres of the square arena.
-        width [float] : width in metres of the square arena.
-        world_delay : deprecated.
-    ======================================================
+    # language=rst
+    """ Base class of the world or environment. This class is never used directly in an experiment but 
+    any experiment environment/world must inherit from it. The main function of World classes is to act as
+    containers and orchestrator of the simulation. It stores all the objects that have been instantiated, 
+    calls the :py:meth:`spike_swarm_sim.objects.Robot.step` method of every robot in order to map states into 
+    actions and communicates with the physics and render engines in order to simulate and visualize rigid object 
+    realistic physics and collisions. 
+    Currently only 2D and 3D square arenas are implemented. 
+
+    :param Engine physics_engine: physics engine to be used.
+    :param float height: height in metres of the square arena.
+    :param float width: width in metres of the square arena.
+    :param float world_delay: deprecated, to be removed in next ver.
+
+    :var dict hierarchy: dictionary storing all the entities instantiated in the world.
+    :var dict initializers: dictionary mapping groups of entities to initializers of the positions 
+            and orientations
+    :var dict env_perturbations: dictionary mapping object groups to environmental perturbations (``EnvironmentalPerturbation``) applied 
+        to robot states or actions.
+
+    Example::
+
+    >>> # Example of an obstacle avoidance experiment with 5 robots in 3D. 
+    >>> from spike_swarm_sim.world import World3D
+    >>> from spike_swarm_sim.objects import Robot3D
+    >>> from spike_swarm_sim.controllers import BasicObstacleAvoider
+    >>> from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
+    >>> n_robots = 5
+    >>> world = World3D(height=10, width=10)
+    >>> world_cfg = {
+    >>>     "engine" : "3D",
+    >>>     "world_delay" : 1,
+    >>>     "height": 10,
+    >>>     "width":  10,
+    >>>     "objects" : {
+    >>>        "robotA" : {
+    >>>            "type" : "robot",
+    >>>            "num_instances" : n_robots,
+    >>>            "controller" : "basic_obstable_avoider",
+    >>>            "sensors" : {
+    >>>                "distance_sensor3D" : {"n_sectors" : 4, "range" : 1}
+    >>>            },  
+    >>>            "actuators" : {
+    >>>                "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}
+    >>>            },
+    >>>            "initializers" : {
+    >>>                "positions" : {"name" : "random_uniform",  "params" : {"low" : [-3, -3], "high" : [3, 3], "size" : 2}},
+    >>>                "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+    >>>            },
+    >>>            "perturbations" : {
+    >>>            },
+    >>>            "params" : {"trainable" : True}
+    >>>        }
+    >>>     }
+    >>> }
+    >>> world.build_from_dict(world_cfg)
+    >>> world.connect()
+    >>> world.reset()
+    >>> while(True):
+    >>>     state, action = world.step()
+
     """
     def __init__(self, physics_engine, height=10, width=10, world_delay=1):
         self.physics_engine = physics_engine
@@ -77,14 +145,31 @@ class World(object):
     @increase_time
     @mov_average_timeit
     def step(self):
-        """ Step function of the world to run it one timestep.
-        Steps all objects are stores the state and actions.
-        It also renders new world.
-        ======================================================
-        - Args: None
-        - Returns:
-            A tuple with state and action dicts.
-        ======================================================
+        # language=rst
+        """ Step function of the world to run it one timestep. This method is must be executed at every step of 
+        the simulation in order to iterate the physics and robot controllers.
+        
+        The main functions of the method are:
+
+        * It computes the swarm rewards based on the previous action and states.
+        * For each instantiated controllable entity, the :py:meth:`step` method is executed. This results in the partially observable state measured by the robot sensors and the corresponding 
+          actions elaborated by the controller. These states and actions are python ``dict`` objects mapping sensor 
+          and actuator names to numpy arrays of measured states and actions. The states and actions of all the robots 
+          in the swarm are gathered as a numpy array of python ``dict`` objects (each corresponding to a robot).
+            
+          Example::
+
+          >>> state_obj = {'distance_sensor' : np.array([0, 0, 0, 1]), 'ground_sensor' : np.array([0])}
+          >>> action_obj = {'joint_velocity_actuator' : np.array([0.4, -0.1])}
+
+        * Perturbations are applied to the planned actions. For example, a robot communication transmitter can 
+          be broken and its action is, therefore, inhibited.
+        * Actuators of the robots are executed with the actions planned by the controllers.
+        * The render and physics engines are iterated. The render engine is iterated only if 
+          :py:attr:`spike_swarm_sim.World.render` is ``True``. 
+
+        :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
+                  Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
         states = deque()
         actions = deque()
@@ -132,16 +217,14 @@ class World(object):
         return states, actions
 
     def register_entity(self, name, obj, group=None):
-        """ Adds an object to the world registry. Assigns a unique identifier to the object.
+        """ 
+        Adds an object to the world registry. Assigns a unique identifier to the object.
         Additionally, if the object belongs to a group of world objects it also registers it.
-        ============================
-        - Args:
-            name [str] -> name of the object.
-            obj [WorldObject] -> instance of the world object to be added.
-            group [str] -> name of the group to which obj belong to. If none a new group is created with
+
+        :param str name: name of the object.
+        :param WorldObject obj: instance of the world object to be added.
+        :param str group: name of the group to which obj belong to. If none a new group is created with
                            obj as unique element.
-        - Returns: None
-        ============================
         """
         self.hierarchy.update({name : obj})
         #* Register group element
@@ -156,16 +239,15 @@ class World(object):
     def set_initializer(self, group_name, initializer_pos, initializer_ori=None):
         """ Bounds and registers entity initializers to groups of entities. 
         Therefore, every time that an experiment is reset, the settled initializers are used 
-        to establish the positions and orientations (if robot) of the world entities. 
+        to establish the positions and orientations (only if the entity is a robot) of 
+        the world entities. 
         The use of this method is compulsory if the experiment is created without using 
-        neither build_from_dict nor add_group (see e.g. examples/basic_examples). 
-        =========================================================================================
-        - Args:
-            group_name [str] : name of the group of entities to be created.
-            initializer_pos [Initializer] : initializer class of the positions of the group.
-            initializer_ori [Initializer] : initializer class of the orientations of the group.
-        - Returns: None
-        =========================================================================================
+        neither :py:meth:`spike_swarm_sim.World.build_from_dict` nor :py:meth:`spike_swarm_sim.World.add_group` 
+        (see e.g. examples/basic_examples). 
+
+        :param str group_name: name of the group of entities to be created.
+        :param Initializer initializer_pos: initializer class of the positions of the group.
+        :param Initializer initializer_ori: initializer class of the orientations of the group.
         """
         self.initializers[group_name] = {
             'positions' : initializer_pos,
@@ -175,15 +257,13 @@ class World(object):
     def add_group(self, group_name, entity_cls,  initializer_pos, initializer_ori=None, controller=None):
         """ Adds entities belonging to a certain group to the world. For instance, it can create all the 
         homogeneous robots within a swarm.
-        =========================================================================================
-        - Args:
-            group_name [str] : name of the group of entities to be created.
-            entity_cls [WorldObject] : precise class of the entities of the group.
-            initializer_pos [Initializer] : initializer class of the positions of the group.
-            initializer_ori [Initializer] : initializer class of the orientations of the group.
-            controller [Controller or None] : controller (if any) of the entities of the group.
-        - Returns: None
-        =========================================================================================
+
+        :param str group_name: name of the group of entities to be created.
+        :param WorldObject entity_cls: precise class of the entities of the group.
+        :param Initializer initializer_pos: initializer class of the positions of the group.
+        :param Initializer initializer_ori: initializer class of the orientations of the group.
+        :param Controller controller: controller (if any) of the entities of the group. If the entity is not 
+                controllable then its content must be None
         """
         #* Create group intializers.
         self.initializers[group_name] = {
@@ -199,13 +279,14 @@ class World(object):
             self.add_entity(ent_name, entity_cls, pos, ori, controller=controller, group_name=group_name)
         
     def build_from_dict(self, world_dict, ann_topology=None):
-        """ Initialize all objects and add them into the world using a dictionary structure.
-        =========================================================================================
-        - Args:
-            world_dict [dict] : configuration dict of the environment (parameters, objects, ...).
-            ann_topology [dict] :  configuration dict of the neural network.
-        - Returns: None
-        =========================================================================================
+        """ 
+        Initializes all the entities and adds them to the world/environment using a ``dict`` structure as input.
+        The ``world_dict`` fully defines the environment and the instatiated robots and the ``ann_topology`` 
+        entirely establishes the ANN controller topology (if :py:class:`spike_swarm_sim.controllers.NeuralController` is used).
+        For a dedicated description of the configuration files fields see `Configuration Files <configuration_files.html>`__ .
+
+        :param dict world_dict: configuration ``dict`` of the environment (parameters, objects, ...).
+        :param dict ann_topology:  configuration ``dict`` of the neural network.
         """
         engine = world_dict['engine']
         #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
@@ -220,8 +301,7 @@ class World(object):
                 continue
             #* Create group intializers.
             self.initializers[obj_name] = {
-                key : InitializerHandler(initializers[value['name']](obj['num_instances'],
-                        **value['params']), engine, key)\
+                key : initializers[value['name']](obj['num_instances'], engine=engine, variable=key, **value['params']) 
                         for key, value in obj['initializers'].items()
             }
             #* Loop entities and add them to the world.
@@ -263,12 +343,10 @@ class World(object):
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initializes
-        the dynamics (pos, orientation, ...) of objects.
-        ================================================================
-        - Args:
-            seed [int] -> seed to initialize at some known random state.
-        - Returns: None
-        ================================================================
+        the dynamics (positions, orientation, ...) of entities.
+
+        :param int seed: seed to initialize at some known random state. If no seed is used then the 
+                argument to be fed must be None
         """
         self.t = 0
         self.prev_states = None
@@ -294,13 +372,10 @@ class World(object):
         self.physics_engine.disconnect()
 
     def run_initializers(self, seed=None):
-        """ Executes the initialization procedures of each group of objects.
-        As all obj in a group are initialized jointly, initializers are associated to groups.
-        =====================================================================================
-        - Args:
-            seed [int] -> seed to initialize to a known random state.
-        - Returns: None
-        =====================================================================================
+        """ Executes the initializers of the positions and orientations of each group of world entities.
+        As all entities in a group are initialized jointly, initializers are associated to groups.
+        
+        :param int seed: seed to initialize to a known random state or None if no seed is used.
         """
         if seed is not None:
             np.random.seed(seed)
@@ -322,12 +397,9 @@ class World(object):
 
     def group_objects(self, group):
         """ List all the objects belonging to a group.
-        ==================================================
-        - Args:
-            group [str] -> name of the group to be listed.
-        - Returns:
-            List of WorldObjects belonging to the group.
-        ==================================================
+
+        :param str group: name of the group to be listed.
+        :returns: List of WorldObjects belonging to the group.
         """
         return [self.hierarchy[element] for element in self.groups[group]]
 
@@ -392,13 +464,14 @@ class World(object):
 
 #TODO implementar p.disconnect(). Ctx manager?
 class World3D(World):
+    """ World class of 3D bounded arenas. """
     def __init__(self, *args, **kwargs):
         super(World3D, self).__init__(Engine3D(), *args, **kwargs)
         #* Add world limits
         self.add_limiting_walls()
 
     def add_limiting_walls(self):
-        """ Creates the limiting walls of the arena. """
+        """ Creates the limiting walls of the 3D arena. """
         self.register_entity('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
             width=self.width-1), group='side_wall')
         self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
@@ -412,11 +485,9 @@ class World3D(World):
         """ Step function of the world to run it one timestep.
         Steps all objects are stores the state and actions.
         It also renders new world.
-        ======================================================
-        - Args: None
-        - Returns:
-            A tuple with state and action dicts.
-        ======================================================
+
+        :returns: A tuple with state and action dicts. These dicts map sensor names with observed states 
+            and actuator names to actions. 
         """
         states, actions = super().step()
         if self.render:
@@ -429,18 +500,17 @@ class World3D(World):
 
     def neighborhood(self, robot):
         """ 
-        TODO: Not finished
+        .. todo:: #TODO: Not finished
         Method that returns the list of neighboring world objects of a robot.
         An object is considered to be in the vicinity if it is contained in the ball
         of radius equal to:
             a) The maximum range of distance or comunication sensors if the object is a robot.
             b) The range of the light sensor if the object is a light source.
         If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
-        =========================================================================================================
-        - Args:
-            robot -> The Robot object whose vicinity has to be computed.
-        - Returns:
-            List of neighboring world objects.
+
+        :param Robot3D robot: The Robot object whose vicinity has to be computed.
+
+        :returns: List of neighboring WorldObject.
         =========================================================================================================
         """
         neighbors = []
@@ -479,12 +549,14 @@ class World3D(World):
 
 
 class World2D(World):
+    """ World class of 2D bounded arenas. """
     def __init__(self, *args, **kwargs):
         physics_engine = Engine2D()
         super(World2D, self).__init__(physics_engine, *args, **kwargs)
         self.add_limiting_walls()
 
     def add_limiting_walls(self):
+        """ Creates the limiting walls of the 2D arena. """
         self.register_entity('wall_side_up', Wall2D([self.width/2, 0], np.pi/2, height=0.5,\
             width=self.width), group='side_wall')
         self.register_entity('wall_side_bottom', Wall2D([-self.width/2,0], np.pi/2, height=0.5,\
@@ -494,21 +566,31 @@ class World2D(World):
         self.register_entity('wall_side_right', Wall2D([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
             width=0.5), group='side_wall')
 
+    def assign_unique_id(self):
+        """ Returns a unique identifier to be assigned to a new entity. """
+        obj_id = np.random.randint(1000)
+        while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
+            obj_id = np.random.randint(1, 1000)
+        return obj_id
+
+    def register_entity(self, name, obj, group=None):
+        """ Adds entity to the world registry. """
+        obj.id = self.assign_unique_id()
+        super().register_entity(name, obj, group=group)
+
     def neighborhood(self, robot):
         """ 
-        TODO: Not finished
+        .. todo:: #TODO: Not implemented yet
         Method that returns the list of neighboring world objects of a robot.
         An object is considered to be in the vicinity if it is contained in the ball
         of radius equal to:
             a) The maximum range of distance or comunication sensors if the object is a robot.
             b) The range of the light sensor if the object is a light source.
         If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
-        =========================================================================================================
-        - Args:
-            robot -> The Robot object whose vicinity has to be computed.
-        - Returns:
-            List of neighboring world objects.
-        =========================================================================================================
+        
+        :param Robot2D robot: The Robot object whose vicinity has to be computed.
+
+        :returns: List of neighboring world objects.
         """
         return self.hierarchy
         import pdb; pdb.set_trace()
@@ -535,17 +617,7 @@ class World2D(World):
                 neighbors.append(obj)
         return neighbors
 
-    def assign_unique_id(self):
-        """ Returns a unique identifier to be assigned to a new entity. """
-        obj_id = np.random.randint(1000)
-        while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
-            obj_id = np.random.randint(1, 1000)
-        return obj_id
 
-    def register_entity(self, name, obj, group=None):
-        """ Adds entity to the world registry. """
-        obj.id = self.assign_unique_id()
-        super().register_entity(name, obj, group=group)
 
 
 

@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_task_switching_NEAT_3Dcomm_ver2",
+    "checkpoint_file" : "chk_task_switching_NEAT_3Dcomm_ver2_aux_backup_vOLD",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -79,7 +79,7 @@
         "width": 10,
         "objects" : {
             "robotA" : {
-                "type" : "robot",
+                "type" : "epuck",
                 "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
