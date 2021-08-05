@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,9 +13,6 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/tabs.css" type="text/css" />
 
   
   
@@ -31,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/tabs.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -87,7 +93,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
@@ -95,7 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -168,18 +174,18 @@
   <h1>Source code for spike_swarm_sim.world</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
 <span class="kn">import</span> <span class="nn">pybullet_data</span>
 <span class="kn">import</span> <span class="nn">pybullet_utils.bullet_client</span> <span class="k">as</span> <span class="nn">bc</span>
 
 
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span>  <span class="n">Robot</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">,</span> <span class="n">LightSource</span><span class="p">,</span> <span class="n">LightSource3D</span><span class="p">,</span> <span class="n">Wall</span><span class="p">,</span> <span class="n">Wall2D</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">controllers</span><span class="p">,</span> <span class="n">world_objects</span><span class="p">,</span> <span class="n">initializers</span><span class="p">,</span> <span class="n">env_perturbations</span><span class="p">,</span> <span class="n">rewards</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">increase_time</span><span class="p">,</span> <span class="n">mov_average_timeit</span><span class="p">,</span> <span class="n">isinstance_of_any</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
-<span class="kn">from</span> <span class="nn">.physics_engine</span> <span class="k">import</span> <span class="n">Engine3D</span><span class="p">,</span> <span class="n">Engine2D</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="kn">import</span>  <span class="n">Robot</span><span class="p">,</span> <span class="n">LightSource</span><span class="p">,</span> <span class="n">Wall</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">controllers</span><span class="p">,</span> <span class="n">world_objects</span><span class="p">,</span> <span class="n">initializers</span><span class="p">,</span> <span class="n">env_perturbations</span><span class="p">,</span> <span class="n">rewards</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">increase_time</span><span class="p">,</span> <span class="n">mov_average_timeit</span><span class="p">,</span> <span class="n">isinstance_of_any</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="kn">import</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">.physics_engine</span> <span class="kn">import</span> <span class="n">Engine3D</span><span class="p">,</span> <span class="n">Engine2D</span>
 
 
 <div class="viewcode-block" id="MultiWorldWrapper"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.MultiWorldWrapper">[docs]</a><span class="k">class</span> <span class="nc">MultiWorldWrapper</span><span class="p">:</span>
@@ -192,7 +198,7 @@
 
 <span class="sd">    .. todo:: #TODO: Extend to 2D worlds.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_cpu</span> <span class="o">=</span> <span class="n">n_cpu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">World3D</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
 
@@ -266,7 +272,7 @@
 <span class="sd">    &gt;&gt;&gt;            &quot;num_instances&quot; : n_robots,</span>
 <span class="sd">    &gt;&gt;&gt;            &quot;controller&quot; : &quot;basic_obstable_avoider&quot;,</span>
 <span class="sd">    &gt;&gt;&gt;            &quot;sensors&quot; : {</span>
-<span class="sd">    &gt;&gt;&gt;                &quot;distance_sensor3D&quot; : {&quot;n_sectors&quot; : 4, &quot;range&quot; : 1}</span>
+<span class="sd">    &gt;&gt;&gt;                &quot;distance_sensor&quot; : {&quot;n_sectors&quot; : 4, &quot;range&quot; : 1}</span>
 <span class="sd">    &gt;&gt;&gt;            },  </span>
 <span class="sd">    &gt;&gt;&gt;            &quot;actuators&quot; : {</span>
 <span class="sd">    &gt;&gt;&gt;                &quot;joint_velocity_actuator&quot; : {&quot;joint_ids&quot; : [0, 1], &quot;max_velocity&quot; : 13}</span>
@@ -288,7 +294,7 @@
 <span class="sd">    &gt;&gt;&gt;     state, action = world.step()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_engine</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_engine</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span> <span class="o">=</span> <span class="n">physics_engine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
@@ -348,7 +354,7 @@
 
         <span class="c1">#* Step controllers</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controllable_objects</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">isinstance_of_any</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">[</span><span class="n">Robot</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">]):</span> <span class="c1">#! Make both robot2D and 3D to have a common antecesor.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">):</span>
                 <span class="n">obj</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neighborhood</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span>
                 <span class="k">continue</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -475,7 +481,7 @@
             <span class="c1">#* Loop entities and add them to the world.</span>
             <span class="c1">#* Distinguish between robots and the other objects.</span>
             <span class="n">entity_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s1">&#39;positions&#39;</span><span class="p">]()</span>
-            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">object_cls</span><span class="p">,</span> <span class="n">Robot</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">object_cls</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">object_cls</span><span class="p">,</span> <span class="n">Robot</span><span class="p">):</span><span class="c1"># or issubclass(object_cls, Robot3D):</span>
                 <span class="n">entity_orientations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s1">&#39;orientations&#39;</span><span class="p">]()</span>
                 <span class="c1">#* Add entities one by one at their position and orientation</span>
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">entity_positions</span><span class="p">,</span> <span class="n">entity_orientations</span><span class="p">)):</span>
@@ -590,7 +596,7 @@
     <span class="k">def</span> <span class="nf">robots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Dict with all robots. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
-            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot3D</span><span class="p">)}</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">)}</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">lights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -633,7 +639,7 @@
 <span class="c1">#TODO implementar p.disconnect(). Ctx manager?</span>
 <div class="viewcode-block" id="World3D"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World3D">[docs]</a><span class="k">class</span> <span class="nc">World3D</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; World class of 3D bounded arenas. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">World3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Engine3D</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1">#* Add world limits</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_limiting_walls</span><span class="p">()</span>
@@ -679,29 +685,29 @@
 <span class="sd">        :param Robot3D robot: The Robot object whose vicinity has to be computed.</span>
 
 <span class="sd">        :returns: List of neighboring WorldObject.</span>
-<span class="sd">        =========================================================================================================</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">neighbors</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1">#!</span>
-        <span class="k">if</span> <span class="n">isinstance_of_any</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="p">[</span><span class="n">LightSource</span><span class="p">,</span> <span class="n">LightSource3D</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">isinstance_of_any</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="p">[</span><span class="n">LightSource</span><span class="p">]):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">robot</span><span class="p">),</span> <span class="n">Robot</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">neighbors</span>
         <span class="n">max_robot_dist</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1">#! ---</span>
             <span class="n">max_robot_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">robot</span><span class="o">.</span><span class="n">sensors</span><span class="p">[</span><span class="n">sensor</span><span class="p">]</span><span class="o">.</span><span class="n">range</span> \
-                            <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">,</span> <span class="s1">&#39;distance_sensor3D&#39;</span><span class="p">,</span> <span class="s1">&#39;RF_receiver&#39;</span><span class="p">]</span> \
+                            <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">,</span> <span class="s1">&#39;distance_sensor&#39;</span><span class="p">,</span> <span class="s1">&#39;RF_receiver&#39;</span><span class="p">]</span> \
                             <span class="k">if</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
             <span class="c1">#! ---</span>
         <span class="c1">#* Robots</span>
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="c1">#!</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Robot3D</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">robot</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">robot</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">max_robot_dist</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">robot</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
                     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">robot</span><span class="o">.</span><span class="n">position</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_robot_dist</span><span class="p">:</span>
                         <span class="n">neighbors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">isinstance_of_any</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">[</span><span class="n">LightSource</span><span class="p">,</span> <span class="n">LightSource3D</span><span class="p">]):</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">LightSource</span><span class="p">):</span>
                 <span class="c1"># #! PROV</span>
                 <span class="c1"># ls_sensor = {&#39;LightSource&#39; : &#39;light_sensor&#39;, &#39;LightSource3D&#39; : &#39;light_sensor3D&#39;}[type(obj).__name__]</span>
 
@@ -718,20 +724,20 @@
 
 <div class="viewcode-block" id="World2D"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World2D">[docs]</a><span class="k">class</span> <span class="nc">World2D</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; World class of 2D bounded arenas. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">physics_engine</span> <span class="o">=</span> <span class="n">Engine2D</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">World2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">physics_engine</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_limiting_walls</span><span class="p">()</span>
 
 <div class="viewcode-block" id="World2D.add_limiting_walls"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World2D.add_limiting_walls">[docs]</a>    <span class="k">def</span> <span class="nf">add_limiting_walls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Creates the limiting walls of the 2D arena. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_up&#39;</span><span class="p">,</span> <span class="n">Wall2D</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>\
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_up&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>\
             <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_bottom&#39;</span><span class="p">,</span> <span class="n">Wall2D</span><span class="p">([</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>\
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_bottom&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>\
             <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_left&#39;</span><span class="p">,</span> <span class="n">Wall2D</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>\
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_left&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>\
             <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_right&#39;</span><span class="p">,</span> <span class="n">Wall2D</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>\
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_right&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span>\
             <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="World2D.assign_unique_id"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World2D.assign_unique_id">[docs]</a>    <span class="k">def</span> <span class="nf">assign_unique_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -790,7 +796,7 @@
 
 
 <div class="viewcode-block" id="GymWorld"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.GymWorld">[docs]</a><span class="k">class</span> <span class="nc">GymWorld</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">):</span>
         <span class="k">pass</span></div>
 </pre></div>
 

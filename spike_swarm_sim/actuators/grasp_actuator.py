@@ -23,8 +23,8 @@ class GraspActuator(HighLevelActuator):
     def __drop(self):
         robot_pos = self.actuator_owner.position.copy()
         robot_ori = self.actuator_owner.orientation.copy()[-1]
-        drop_sector = np.argmin(self.actuator_owner.sensors['distance_sensor3D'].reading)
-        drop_ori = self.actuator_owner.sensors['distance_sensor3D'].directions(robot_ori)[drop_sector]
+        drop_sector = np.argmin(self.actuator_owner.sensors['distance_sensor'].reading)
+        drop_ori = self.actuator_owner.sensors['distance_sensor'].directions(robot_ori)[drop_sector]
         new_pos = robot_pos + 0.3 * np.r_[np.cos(drop_ori), np.sin(drop_ori), 0.]
         self.cube_grasped.is_grasped = False
         self.cube_grasped.position = new_pos

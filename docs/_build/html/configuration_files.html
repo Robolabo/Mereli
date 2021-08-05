@@ -215,7 +215,7 @@ the employed actuators are also stated here.</p>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">},</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;wireless_transmitter&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;quantize&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;msg_length&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;IR_transmitter&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;quantize&quot;</span><span class="p">:</span> <span class="n">false</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s2">&quot;msg_length&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;K&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>
@@ -680,7 +680,7 @@ implemented actuator). The following example defines <code class="docutils liter
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;outputs&quot;</span> <span class="p">:</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;outA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ensemble&quot;</span> <span class="p">:</span> <span class="s2">&quot;OUT_MOT&quot;</span><span class="p">,</span> <span class="s2">&quot;actuator&quot;</span> <span class="p">:</span> <span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span> <span class="s2">&quot;enc&quot;</span><span class="p">:</span> <span class="s2">&quot;real&quot;</span><span class="p">},</span>
-<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;outB&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ensemble&quot;</span> <span class="p">:</span> <span class="s2">&quot;OUT_COMM&quot;</span><span class="p">,</span> <span class="s2">&quot;actuator&quot;</span> <span class="p">:</span> <span class="s2">&quot;wireless_transmitter&quot;</span><span class="p">,</span> <span class="s2">&quot;enc&quot;</span><span class="p">:</span> <span class="s2">&quot;real&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;outB&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ensemble&quot;</span> <span class="p">:</span> <span class="s2">&quot;OUT_COMM&quot;</span><span class="p">,</span> <span class="s2">&quot;actuator&quot;</span> <span class="p">:</span> <span class="s2">&quot;IR_transmitter&quot;</span><span class="p">,</span> <span class="s2">&quot;enc&quot;</span><span class="p">:</span> <span class="s2">&quot;real&quot;</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
 </pre></div>
 </div>
@@ -703,7 +703,7 @@ implemented actuator). The following example defines <code class="docutils liter
 <td>JointPositionActuator</td>
 <td>Actuator for the position control of joints.</td>
 </tr>
-<tr class="row-even"><td>wireless_transmitter</td>
+<tr class="row-even"><td>IR_transmitter</td>
 <td>CommunicationTransmitter</td>
 <td>IR-based Communication transmitter.</td>
 </tr>
@@ -728,7 +728,7 @@ until 2D and 3D classes are standardized.</p>
 </div>
 <div class="last admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">The <code class="docutils literal notranslate"><span class="pre">wireless_transmitter</span></code> actuator name is provisional and it will eventually changed to a more descriptive name.</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> actuator name is provisional and it will eventually changed to a more descriptive name.</p>
 </div>
 </dd>
 </dl>

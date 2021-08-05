@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../_static/jquery.js"></script>
         <script type="text/javascript" src="../_static/underscore.js"></script>
         <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -162,36 +173,26 @@
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">colorama</span> <span class="k">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Style</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">colorama</span> <span class="kn">import</span> <span class="n">Fore</span><span class="p">,</span> <span class="n">Style</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
+<span class="kn">from</span> <span class="nn">.globals</span> <span class="kn">import</span> <span class="n">Globals</span><span class="p">,</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">.register</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="o">*</span>
 
+<span class="kn">from</span> <span class="nn">.env_perturbations</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.neural_networks</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.controllers</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.sensors</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.actuators</span> <span class="kn">import</span> <span class="o">*</span>
 
+<span class="kn">from</span> <span class="nn">.objects</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.config_parser</span> <span class="kn">import</span> <span class="o">*</span>
 
-
-
-
-<span class="kn">from</span> <span class="nn">.globals</span> <span class="k">import</span> <span class="n">Globals</span><span class="p">,</span> <span class="n">global_states</span>
-<span class="kn">from</span> <span class="nn">.register</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="o">*</span>
-
-<span class="kn">from</span> <span class="nn">.env_perturbations</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.neural_networks</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.controllers</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.sensors</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.actuators</span> <span class="k">import</span> <span class="o">*</span>
-
-<span class="kn">from</span> <span class="nn">.objects</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.config_parser</span> <span class="k">import</span> <span class="o">*</span>
-
-
-
-
-
-<span class="kn">from</span> <span class="nn">.physics_engine</span> <span class="k">import</span> <span class="n">Engine2D</span><span class="p">,</span> <span class="n">Engine3D</span>
-<span class="kn">from</span> <span class="nn">.world</span> <span class="k">import</span> <span class="n">World3D</span><span class="p">,</span> <span class="n">World2D</span><span class="p">,</span> <span class="n">MultiWorldWrapper</span>
-<span class="kn">from</span> <span class="nn">.objectives</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">.algorithms</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.physics_engine</span> <span class="kn">import</span> <span class="n">Engine2D</span><span class="p">,</span> <span class="n">Engine3D</span>
+<span class="kn">from</span> <span class="nn">.world</span> <span class="kn">import</span> <span class="n">World3D</span><span class="p">,</span> <span class="n">World2D</span><span class="p">,</span> <span class="n">MultiWorldWrapper</span>
+<span class="kn">from</span> <span class="nn">.objectives</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">.algorithms</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">ROOT_DIR</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">)))</span>
@@ -209,10 +210,10 @@
    <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span> <span class="p">:</span> <span class="n">Fore</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span>
 <span class="p">}</span>
 
-<div class="viewcode-block" id="apply_color_log"><a class="viewcode-back" href="../spike_swarm_sim.html#spike_swarm_sim.apply_color_log">[docs]</a><span class="k">def</span> <span class="nf">apply_color_log</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<div class="viewcode-block" id="apply_color_log"><a class="viewcode-back" href="../modules.html#spike_swarm_sim.apply_color_log">[docs]</a><span class="k">def</span> <span class="nf">apply_color_log</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>      
-        <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{{}}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log_color</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelno</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelname</span><span class="p">)</span>\
-                        <span class="o">+</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{Style.RESET_ALL}</span><span class="s1">&#39;</span>
+        <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">{{}}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">log_color</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelno</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">levelname</span><span class="p">)</span>\
+                        <span class="o">+</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">Style</span><span class="o">.</span><span class="n">RESET_ALL</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapper</span></div>
 <span class="n">console_handler</span><span class="o">.</span><span class="n">emit</span> <span class="o">=</span> <span class="n">apply_color_log</span><span class="p">(</span><span class="n">console_handler</span><span class="o">.</span><span class="n">emit</span><span class="p">)</span>

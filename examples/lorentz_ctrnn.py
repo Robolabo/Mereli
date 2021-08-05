@@ -44,7 +44,7 @@ class fitness:
         self.required_info = ()
 
     def __call__(self, actions, states, info=None):
-        actions = np.stack([ac[0]['wireless_transmitter']['msg'] for ac in actions])
+        actions = np.stack([ac[0]['IR_transmitter']['msg'] for ac in actions])
         fitness = 0.0
         lorentz_sys = LorentzAttractor(actions[0])
         for ac in actions:
@@ -61,7 +61,7 @@ ctrnn = {
     "ensembles": {
         "H" : {"n" : 2, "tau" : 10, "gain" : 1, "bias": 0, "activation":"sigmoid"},
     },
-    "outputs" : {"OUT" : {"ensemble" : ["H"], "actuator" : "wireless_transmitter", "enc": "real"}},
+    "outputs" : {"OUT" : {"ensemble" : ["H"], "actuator" : "IR_transmitter", "enc": "real"}},
     "synapses" :  {
         "i-h": {"pre":"W1", "post":"H", "trainable":True, "p":1},
         "h-h": {"pre":"H", "post":"H", "trainable":True, "p":1},
@@ -73,7 +73,7 @@ ctrnn = {
 debug = True
 world = World(render=False, render_connections=False)
 sensors = {"wireless_receiver" : {"msg_length" : 2}}
-actuators = {"wireless_transmitter" : {"msg_length" : 2}}
+actuators = {"IR_transmitter" : {"msg_length" : 2}}
 neural_controller = NeuralController(ctrnn, sensors, actuators, debug_options=debug)
 abstract_robot = Robot(np.zeros(2), controller=neural_controller, trainable=True)
 world.add('abstract_robot', abstract_robot)

@@ -3,7 +3,7 @@ import pathlib
 # sys.path.append('D:\subversion\SpikeSwarmSim') #* Cambiar Path
 # sys.path.insert(0, str(pathlib.Path(__file__).parent))
 from spike_swarm_sim.world import World3D
-from spike_swarm_sim.objects import Robot3D
+from spike_swarm_sim.objects import Epuck3D
 from spike_swarm_sim.controllers import BasicObstacleAvoider
 from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
 
@@ -26,14 +26,16 @@ n_robots = 5
 world = World3D(height=10,  width=10)
 
 if USE_API:
-    ini_ori = InitializerHandler(RandomUniformInitializer(n_robots, low=0, high=6.28, size=1), variable='orientations')
-    ini_pos = InitializerHandler(RandomUniformInitializer(n_robots, low=[-3,-3], high=[3,3], size=2), variable='positions')
+    ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
+    ini_pos = RandomUniformInitializer(n_robots, low=[-3,-3], high=[3,3], size=2, engine='3D',  variable='positions')
     world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
     for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
         ctlr = BasicObstacleAvoider()
-        ctlr.add_sensors_from_dict({"distance_sensor3D" : {"n_sectors" : 4, "range" : 1}})
-        ctlr.add_actuators_from_dict({"joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}})
-        ent = Robot3D(pos, ori, controller=ctlr)
+        ctlr.add_sensor("distance_sensor", {"n_sectors" : 4, "range" : 1})
+        ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 13})
+        # ctlr.add_sensors_from_dict({"distance_sensor" : {"n_sectors" : 4, "range" : 1}})
+        # ctlr.add_actuators_from_dict({"joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}})
+        ent = Epuck3D(pos, ori, controller=ctlr)
         world.register_entity('swarm_' + str(i), ent, group='swarm')
 else:
     world_cfg = {
@@ -47,7 +49,7 @@ else:
                 "num_instances" : n_robots,
                 "controller" : "basic_obstable_avoider",
                 "sensors" : {
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1}
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 1}
                 },  
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}

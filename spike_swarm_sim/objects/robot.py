@@ -7,8 +7,7 @@ from pygame.color import THECOLORS
 from spike_swarm_sim.objects import WorldObject2D
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
-@world_object_registry(name='robot')
-class Robot(WorldObject2D):
+class Robot_deprecated(WorldObject2D):
     """
     Base class for the robot world object.
     """
@@ -91,8 +90,8 @@ class Robot(WorldObject2D):
 
     def update_colors(self, state, action):
         colors = ['black', 'red', 'yellow', 'blue']
-        if 'wireless_transmitter' in self.actuators.keys():
-            for k, msg in enumerate(action['wireless_transmitter']['msg']):
+        if 'IR_transmitter' in self.actuators.keys():
+            for k, msg in enumerate(action['IR_transmitter']['msg']):
                 symbol = np.argmin([np.abs(sym - msg) for sym in [0, 0.33, 0.66, 1]])
                 if k == 0:
                     self.colorA = colors[symbol]
@@ -100,7 +99,7 @@ class Robot(WorldObject2D):
                     self.colorB = colors[symbol]
     
         if 'led_actuator' in self.actuators.keys():
-            self.color2 = ('green', 'white', 'red')[action['led_actuator']] #[actions['wireless_transmitter']['state']]#
+            self.color2 = ('green', 'white', 'red')[action['led_actuator']] #[actions['IR_transmitter']['state']]#
       
     def plan_actions(self, actions):
         for actuator, action in actions.items():

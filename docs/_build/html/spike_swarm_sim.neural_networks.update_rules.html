@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,9 +13,6 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
 
   
   
@@ -31,11 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -88,7 +95,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -96,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -208,64 +215,64 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.neural_networks.update_rules.update_rules">
 <span id="spike-swarm-sim-neural-networks-update-rules-update-rules-module"></span><h2>spike_swarm_sim.neural_networks.update_rules.update_rules module<a class="headerlink" href="#module-spike_swarm_sim.neural_networks.update_rules.update_rules" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.append_and_pop">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.neural_networks.update_rules.update_rules.</span></span><span class="sig-name descname"><span class="pre">append_and_pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_elem</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#append_and_pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.append_and_pop" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.append_and_pop">
+<code class="descclassname">spike_swarm_sim.neural_networks.update_rules.update_rules.</code><code class="descname">append_and_pop</code><span class="sig-paren">(</span><em>queue</em>, <em>new_elem</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#append_and_pop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.append_and_pop" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.neural_networks.update_rules.update_rules.</span></span><span class="sig-name descname"><span class="pre">GeneralizedHebbian</span></span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.neural_networks.update_rules.update_rules.</code><code class="descname">GeneralizedHebbian</code><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>inputs</em>, <em>activities</em>, <em>reward=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.build">
-<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ann_graph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.build" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.build">
+<code class="descname">build</code><span class="sig-paren">(</span><em>ann_graph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.build"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.build" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.get_params">
-<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_trainable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.get_params" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.get_params">
+<code class="descname">get_params</code><span class="sig-paren">(</span><em>conn_name</em>, <em>ann_graph</em>, <em>min_val=0.0</em>, <em>max_val=1.0</em>, <em>only_trainable=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.get_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.get_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.set_params">
-<span class="sig-name descname"><span class="pre">set_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.set_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.set_params" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.set_params">
+<code class="descname">set_params</code><span class="sig-paren">(</span><em>conn_name</em>, <em>ann_graph</em>, <em>data</em>, <em>min_val=0.0</em>, <em>max_val=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.set_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.set_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.init_params">
-<span class="sig-name descname"><span class="pre">init_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_trainable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.init_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.init_params" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.init_params">
+<code class="descname">init_params</code><span class="sig-paren">(</span><em>conn_name</em>, <em>ann_graph</em>, <em>min_val=0.0</em>, <em>max_val=1.0</em>, <em>only_trainable=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.init_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.init_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.len_params">
-<span class="sig-name descname"><span class="pre">len_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conn_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_trainable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.len_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.len_params" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.len_params">
+<code class="descname">len_params</code><span class="sig-paren">(</span><em>conn_name</em>, <em>ann_graph</em>, <em>only_trainable=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#GeneralizedHebbian.len_params"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.len_params" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.neural_networks.update_rules.update_rules.</span></span><span class="sig-name descname"><span class="pre">BufferedHebb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian" title="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.neural_networks.update_rules.update_rules.</code><code class="descname">BufferedHebb</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian" title="spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>inputs</em>, <em>activities</em>, <em>reward=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/neural_networks/update_rules/update_rules.html#BufferedHebb.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

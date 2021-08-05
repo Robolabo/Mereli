@@ -47,7 +47,6 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.doctest",
     'sphinx.ext.intersphinx',
-    'sphinx_tabs.tabs'
 ]
 autodoc_member_order = 'bysource'
 # Add any paths that contain templates here, relative to this directory.

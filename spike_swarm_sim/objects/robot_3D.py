@@ -1,21 +1,28 @@
 import numpy as np
-from shapely.geometry import Point
-from spike_swarm_sim.objects import WorldObject3D
+# from shapely.geometry import Point
+from spike_swarm_sim.objects import WorldObject
 from spike_swarm_sim.actuators.base_actuator import HighLevelActuator
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
 
 @world_object_registry(name='robot')
-class Robot3D(WorldObject3D):
+class Robot(WorldObject):
     """
-    Base class for the robot world object.
+    Base class for the robot entity. Any robot should inherit from this class. 
+
+    :param position: 
+    :param orientation:
+    :param str model_file: name of the file where the robot model is defined.
+
+    :var dict sensors:
+    :var dict actuators:
+    :var dict planned_actions: 
     """
-    def __init__(self, position, orientation,  *args, urdf_file='epuck', **kwargs):
-        super(Robot3D, self).__init__(urdf_file, position, orientation,\
+    def __init__(self, position, orientation,  *args, model_file='epuck', **kwargs):
+        super(Robot, self).__init__(model_file, position, orientation,\
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
         self._food = False
-
         #* Initialize sensors and actuators according to controller requirements
         self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
                             for k, s in sensors.items()\
@@ -35,19 +42,21 @@ class Robot3D(WorldObject3D):
         self.st_aux = [] #!
 
     def step(self, neighborhood, reward=None, perturbations=None):
-        """
-        Firstly steps all the sensors in order to perceive the environment.
-        Secondly, the robot executes its controller in order to compute the
-        actions based on the sensory information.
-        Lastly, the actions are stored as planned actions to be eventually executed.
-        =====================
-        - Args:
-            neighborhood [list] -> list filled with the neighboring world objects.
-            reward [float] -> reward to be fed to the controller update rules, if any.
-            perturbations [list of PostProcessingPerturbation or None] -> perturbation to apply 
-                        to the stimuli before controller step.
-        - Returns:
-            State and action tuple of the current timestep. Both of them are expressed as 
+        """ Step method of the robots. 
+        It is composed by the following main steps:
+
+        1. Firstly steps and reads all the sensors in order to perceive the environment.
+        2. The robot executes its controller in order to compute the
+           actions based on the sensory information.
+        3. The actions are stored as planned actions to be eventually executed.
+
+        :param list neighborhood: list filled with the neighboring world objects.
+        :param float reward: reward to be fed to the controller update rules, if any.
+        :param list perturbations: list of ``PostProcessingPerturbation`` to apply 
+            to the stimuli before controller step. If there are no perturbations
+            to apply the paramter is ``None``.
+
+        :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
         =====================
         """
@@ -76,12 +85,10 @@ class Robot3D(WorldObject3D):
                     and [action, self.position, self.orientation]  or [action]
 
     def actuate(self, neighborhood):
-        """
-        Executes the previously planned actions in order to be processed in the world.
-        =====================
-        - Args: None
-        - Returns: None
-        =====================
+        """ Executes the previously planned actions in order to be processed in the world.
+        
+        :param list neighborhood: list of neighoboring entities to be used by some high level 
+            actuators.
         """
         for actuator_name, actuator in self.actuators.items():
             if issubclass(type(actuator), HighLevelActuator):
@@ -91,13 +98,11 @@ class Robot3D(WorldObject3D):
 
     def perceive(self, neighborhood):
         """
-        Computes the observed stimuli by steping each of the active sensors.
-        =====================
-        - Args:
-            neighborhood [list] -> list filled with the neighboring world objects.
-        -Returns:
-            A dict with each sensor name as key and the sensor readings as value.
-        =====================
+        Computes the observed stimuli by steping each of the active sensors one by one.
+        
+        :param list neighborhood:  list filled with the neighboring world objects.
+        
+        :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
         return {sensor_name : sensor.step(neighborhood)\
                 for sensor_name, sensor in self.sensors.items()}
@@ -106,13 +111,21 @@ class Robot3D(WorldObject3D):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
         can be randomly initialized or fixed. In the former case a seed can be specified.
-        =====================
-        - Args:
-            seed [int] -> seed for random intialization.
-        - Returns: None
-        =====================
+
+        :param int seed: seed for random intialization.
         """
         self._food = False
+        # Check if new sensors or actuator has been enabled from the controller. If so, 
+        # activate them.
+        if not all(key in self.sensors.keys() for key in self.controller.enabled_sensors):
+            self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                        for k, s in sensors.items()\
+                        if k in self.controller.enabled_sensors.keys()}
+        if not all(key in self.actuators.keys() for key in self.controller.enabled_actuators):
+            self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                            for k, a in actuators.items()\
+                            if k in self.controller.enabled_actuators.keys()}
+
         #* Reset Controller
         if self.controller is not None:
             self.controller.reset()
@@ -127,26 +140,25 @@ class Robot3D(WorldObject3D):
 
     @property
     def food(self):
-        """Getter for the food attribute. It is a boolean attribute active if the robot stores food.
+        """ Getter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         return self._food
 
     @food.setter
     def food(self, hasfood):
-        """Setter for the food attribute. It is a boolean attribute active if the robot stores food.
+        """ Setter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         self._food = hasfood
 
-
-
-
 @world_object_registry(name='minitaur')
-class Minitaur(Robot3D):
+class Minitaur(Robot):
+    """ Class for the Minitaur robot. """
     def __init__(self, *args, **kwargs):
-        super(Minitaur, self).__init__(*args, urdf_file='quadruped/minitaur', z_offset=0.5,**kwargs)
+        super(Minitaur, self).__init__(*args, model_file='quadruped/minitaur', z_offset=0.5,**kwargs)
 
 
 @world_object_registry(name='epuck')
-class Epuck3D(Robot3D):
+class Epuck3D(Robot):
+    """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
-        super(Epuck3D, self).__init__(*args, urdf_file='epuck', **kwargs)
+        super(Epuck3D, self).__init__(*args, model_file='epuck', **kwargs)

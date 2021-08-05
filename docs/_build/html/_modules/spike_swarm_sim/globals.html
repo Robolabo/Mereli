@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -161,23 +172,23 @@
            <div itemprop="articleBody">
             
   <h1>Source code for spike_swarm_sim.globals</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="Globals"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.globals.Globals">[docs]</a><span></span><span class="k">class</span> <span class="nc">Globals</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Globals"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.globals.Globals">[docs]</a><span></span><span class="k">class</span> <span class="nc">Globals</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_EVAL</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_RENDER</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_INFO</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="Globals.set_eval_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.globals.Globals.set_eval_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_eval_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
+<div class="viewcode-block" id="Globals.set_eval_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.globals.Globals.set_eval_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_eval_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_EVAL</span> <span class="o">=</span> <span class="n">new_state</span></div>
     
-<div class="viewcode-block" id="Globals.set_render_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.globals.Globals.set_render_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_render_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
+<div class="viewcode-block" id="Globals.set_render_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.globals.Globals.set_render_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_render_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_RENDER</span> <span class="o">=</span> <span class="n">new_state</span></div>
 
-<div class="viewcode-block" id="Globals.set_debug_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.globals.Globals.set_debug_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_debug_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
+<div class="viewcode-block" id="Globals.set_debug_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.globals.Globals.set_debug_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_debug_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_DEBUG</span> <span class="o">=</span> <span class="n">new_state</span></div>
 
-<div class="viewcode-block" id="Globals.set_states"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.globals.Globals.set_states">[docs]</a>    <span class="k">def</span> <span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="Globals.set_states"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.globals.Globals.set_states">[docs]</a>    <span class="k">def</span> <span class="nf">set_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">eval</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_EVAL</span> <span class="o">=</span> <span class="nb">eval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_RENDER</span> <span class="o">=</span> <span class="n">render</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_DEBUG</span> <span class="o">=</span> <span class="n">debug</span>

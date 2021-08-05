@@ -10,7 +10,7 @@ class BasicObstacleAvoider(RobotController):
     def step(self, state, reward=0.0):
         sens = 0.15
         action = np.ones(2)
-        st_ds = state['distance_sensor3D']
+        st_ds = state['distance_sensor']
         max_dir = np.argmax(st_ds)
         if st_ds[max_dir] > sens:
             action = np.array({

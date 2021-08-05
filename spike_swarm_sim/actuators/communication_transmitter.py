@@ -5,7 +5,7 @@ from spike_swarm_sim.utils import softmax
 from spike_swarm_sim.globals import global_states
 import pybullet as p
 
-@actuator_registry(name='wireless_transmitter')
+@actuator_registry(name='IR_transmitter')
 class CommunicationTransmitter(Actuator):
     """ Communication transmitter actuator. It isotropically transmits a 
     frame with a message and its context. The propagation simulation is 
@@ -38,15 +38,14 @@ class CommunicationTransmitter(Actuator):
         if self.quantize:
             action['msg'] = self.quantize_fn(action['msg'])
         self.frame['msg'] = action['msg']
-        self.frame['priority'] = action['priority']
-        self.frame['sender'] = action['sender']
-        self.frame['destination'] = action['destination'] \
-                if 'destination' in action.keys() else 0
-        self.frame['enabled'] = action['enabled']\
-                if 'enabled' in action.keys() else True
-        self.frame['n_hops'] = action['n_hops']
-        self.frame['state'] = action['state']
-        self.frame['sending_direction'] = action['sending_direction']
+        self.frame['priority'] = action.get('priority', 0)
+        self.frame['sender'] = action.get('sender', -1)
+        self.frame['sender'] = action.get('sender', -1)
+        self.frame['destination'] = action.get('destination', 0)
+        self.frame['enabled'] = action.get('enabled', True)
+        self.frame['n_hops'] = action.get('n_hops', 0)
+        self.frame['state'] = action.get('state', 1)
+        self.frame['sending_direction'] = action.get('sending_direction', 0.)
         if global_states.RENDER:
             color = [self.frame['msg'][0], 0, 0]
             p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.7],\

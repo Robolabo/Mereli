@@ -6,7 +6,7 @@
         "dt" : 1,
         "time_scale" : 30,
         "stimuli": {
-            "I0" : {"n" : 6, "sensor" : "light_sensor3D"},
+            "I0" : {"n" : 6, "sensor" : "light_sensor"},
             "I1" : {"n" : 1, "sensor" : "IR_receiver:msg"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"}
         },
@@ -43,8 +43,8 @@
         },
         "outputs" : {
             "out" :  {"ensemble" : "OUT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "out2" :  {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "out3" :  {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+            "out2" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "out3" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter:state", "enc": "cat"}
         },     
         "decoding" : {
             "out" : {
@@ -110,13 +110,13 @@
                 "type" : "robot",
                 "num_instances" : 6,
                 "controller" : "neural_controller",
-                "sensors" : {"IR_receiver" : {"n_sectors":4, "range" : 1.4,  "msg_length" : 1}, "light_sensor3D" : {"n_sectors" : 6, "range" : 3}},
-                "actuators" : {"joint_velocity_actuator" : {"joint_ids" : [0, 1]},  "wireless_transmitter" : {"quantize":true, "range" : 1.4, "msg_length" : 1}},
+                "sensors" : {"IR_receiver" : {"n_sectors":4, "range" : 1.4,  "msg_length" : 1}, "light_sensor" : {"n_sectors" : 6, "range" : 3}},
+                "actuators" : {"joint_velocity_actuator" : {"joint_ids" : [0, 1]},  "IR_transmitter" : {"quantize":true, "range" : 1.4, "msg_length" : 1}},
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {

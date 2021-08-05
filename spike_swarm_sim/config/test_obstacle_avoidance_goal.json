@@ -5,7 +5,7 @@
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
-            "I2" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I2" : {"n" : 4, "sensor" : "distance_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -65,7 +65,7 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 30},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 3},
                     "collision_sensor" : {}    
                 },
                 "actuators" : {

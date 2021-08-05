@@ -46,20 +46,20 @@ class NeuralController(RobotController):
         raw_actions = self.neural_network.step(state, reward)
 
         actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
-                   if 'wireless_transmitter' not in self.out_act_mapping[name]}
-        if 'wireless_transmitter' in self.out_act_mapping.values():
-            msg = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter')]
+                   if 'IR_transmitter' not in self.out_act_mapping[name]}
+        if 'IR_transmitter' in self.out_act_mapping.values():
+            msg = raw_actions[key_of(self.out_act_mapping, 'IR_transmitter')]
             is_response = 1
-            if 'wireless_transmitter:priority' in self.out_act_mapping.values():
-                is_response = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter:priority')]
-            if 'wireless_transmitter:state' in self.out_act_mapping.values() and self.t > 10:
-                self.comm_state = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter:state')]
+            if 'IR_transmitter:priority' in self.out_act_mapping.values():
+                is_response = raw_actions[key_of(self.out_act_mapping, 'IR_transmitter:priority')]
+            if 'IR_transmitter:state' in self.out_act_mapping.values() and self.t > 10:
+                self.comm_state = raw_actions[key_of(self.out_act_mapping, 'IR_transmitter:state')]
 
             #* relay or bcast
             msg = msg if self.comm_state else state['IR_receiver:msg'].copy()
             n_hops = state['IR_receiver:n_hops'] + 1 if not self.comm_state else 1
             destination = state['IR_receiver:sender'].item() if is_response and state['IR_receiver:sender'] > 0 else 0
-            actions['wireless_transmitter'] = {'destination': destination, 'sender' : state['IR_receiver:sender'], 'priority':is_response, 'en' : 1, \
+            actions['IR_transmitter'] = {'destination': destination, 'sender' : state['IR_receiver:sender'], 'priority':is_response, 'en' : 1, \
                     'n_hops': n_hops, 'state' : self.comm_state, 'msg' : msg, 'sending_direction' : state['IR_receiver:sending_direction']}
             
         if 'wheel_actuator' in actions.keys():

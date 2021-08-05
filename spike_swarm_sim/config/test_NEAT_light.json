@@ -4,11 +4,11 @@
         "dt" : 0.1,
         "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
+            "I1" : {"n" : 4, "sensor" : "light_sensor"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
             "I4" : {"n" : 1, "sensor" : "IR_receiver:state"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I5" : {"n" : 4, "sensor" : "distance_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -19,8 +19,8 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "real"}
         },
         "synapses" :  {
             "I1-OUT_COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
@@ -85,13 +85,13 @@
                 "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
+                    "light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2}
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 2}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
+                    "IR_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},

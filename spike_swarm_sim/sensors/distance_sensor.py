@@ -8,55 +8,52 @@ from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.utils import compute_angle, angle_diff
 from .utils.propagation import ExpDecayPropagation
 
-
 @sensor_registry(name='distance_sensor')
 class DistanceSensor(DirectionalSensor):
-    """ Directional distance sensor class. It mimics the IR distance sensor. 
-    The sensor is partitioned into multiple sector that provide measurements 
-    solely of their sector coverage. 
-    """
+    """ Directional distance sensor class. It mimics a IR based distance sensor. 
+    The sensor is partitioned into multiple sectors that provide measurements 
+    solely of their sector coverage and about the corresponding sensing orientation. 
+    The reading of each sector is an scalar bounded in [0, 1] that estimates the distance 
+    to the closest solid entity within the correspoding sector. A reading of 1 means that 
+    the target object is very close and a measurement near 0 indicates that there are no obstacles 
+    in that direction.
+    
+    **Reference Name**: ``distance_sensor``.
+
+    :param Robot sensor_owner: robot object owning and reading from the sensor.
+    :param float range: range of coverage of the sensor.
+    :param float noise_sigma: std. dev. of the white noise attached to the measurement.
+    :param int n_sectors: number of sectors of the sensor.
+
+    :var float aperture: aperture in radians of each sector of the sensor.
+    :var ExpDecayPropagation propagation: propagation model to map ``rho`` and ``phi`` into the 
+        distance estimation bounded in [0, 1]. 
+    """ 
     def __init__(self, *args, **kwargs):
         super(DistanceSensor, self).__init__(*args, **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=1/200, phi_att=1)
-
-    def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
-        """ Step the sensor of a sector. For a detailed explanation of 
-        this method see DirectionalSensor._step_direction.
-        """
-        condition = (kwargs['obj'] is not None\
-                    and rho <= self.range\
-                    and phi <= np.pi / self.n_sectors + 0.001)
-        if direction_reading is None:
-            direction_reading = 0.0
-        if condition:
-            signal_strength = self.propagation(rho, phi)
-            if signal_strength > direction_reading:
-                direction_reading = signal_strength
-        return direction_reading
-
-    def _target_filter(self, obj):
-        """ Filtering of potential target WorldObjects. """
-        return obj.tangible
-
-
-@sensor_registry(name='distance_sensor3D')
-class DistanceSensor3D(DirectionalSensor):
-    """ Directional distance sensor class. It mimics the IR distance sensor. 
-    The sensor is partitioned into multiple sector that provide measurements 
-    solely of their sector coverage.
-    """
-    def __init__(self, *args, **kwargs):
-        super(DistanceSensor3D, self).__init__(*args, **kwargs)
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
         # self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1.) # DS=
         # self.sensors_idx = None
         self.aperture = 1.5 * np.pi / self.n_sectors
 
-    def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
-        """ Step the sensor of a sector. For a detailed explanation of 
-        this method see DirectionalSensor._step_direction.
-        """
+    def step_direction(self, rho, phi, direction_reading, *args, **kwargs):
+        """ Method that specifies the particular behavior of a directional sensor in each sensing direction.
+        It must return the reading of the current direction. Only objects that are within the range and 
+        aperture are considered.
+
+        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.
+        :param float phi: angle between the direction of the sensor and the line passing through 
+            both sensing and sensed object positions.
+        :param float direction_reading: Current reading in the featured direction 
+            to be potentially overwritten. In some cases such as the communication receiver it can be a ``dict``.
+        :param int direction: integer refering to the current sensing direction between 0 and n_sectors - 1.
+        :param WorldObject obj: Optionally, the object that is being sensed can be used.
+        :param np.ndarray diff_vector: Optionally, the vector resulting from the difference 
+            of the between object positions can be used. However, most of the times, 
+            rho and phi are sufficient. Notice that rho=|diff_vector|.
         
+        :returns: Reading of the sensor in the current direction.
+        """
         condition = (kwargs['obj'] is not None\
                     and rho <= self.range\
                     and phi <= self.aperture)
@@ -65,7 +62,7 @@ class DistanceSensor3D(DirectionalSensor):
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading:
-                my_pos = self.get_position(self.sensors_idx[args[0]]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
+                my_pos = self.get_sensor_position(args[0]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
                 tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
                 # Cast a ray between my_pos y tar_pos to verify if there are obstacles
                 #! ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client.client)[0][0]
@@ -77,16 +74,12 @@ class DistanceSensor3D(DirectionalSensor):
                         direction_reading += np.random.randn() * self.noise_sigma
         return direction_reading
 
-    def _target_filter(self, obj):
-        """ Filtering of potential target WorldObjects. """
+    def target_filter(self, obj):
+        """ Method devoted to filtering the world objects that should be targeted for a particular sensor.
+        In this case it filters out, among all neighboring objects, only the tangible (solid) entities.
+
+        :param WorldObject obj: Potential world object to be sensed.
+        
+        :returns: Boolean response revealing whether the obj should be explored by the sensor or not.
+        """
         return obj.tangible
-
-    # def reset(self):
-    #     joints = np.array([p.getJointInfo(self.sensor_owner.id, i, physicsClientId=self.sensor_owner.physics_client)[:2]\
-    #         for i in range(p.getNumJoints(self.sensor_owner.id, physicsClientId=self.sensor_owner.physics_client))])
-    #     self.sensors_idx = {i : np.where(np.array(joints) == bytes('base_to_IR'+str(i), 'utf-8'))[0][0]\
-    #             for i in range(self.n_sectors)}
-
-    # def get_position(self, idx):
-    #     return np.array(p.getLinkState(self.sensor_owner.id, idx, physicsClientId=self.sensor_owner.physics_client)[0])
-      

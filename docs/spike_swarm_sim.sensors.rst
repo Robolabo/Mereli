@@ -19,26 +19,19 @@ spike\_swarm\_sim.sensors.base\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.ble\_receiver module
-----------------------------------------------
+spike\_swarm\_sim.sensors.distance\_sensor module
+-------------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.ble_receiver
+.. automodule:: spike_swarm_sim.sensors.distance_sensor
     :members:
     :undoc-members:
     :show-inheritance:
+    :inherited-members:
 
-spike\_swarm\_sim.sensors.collision\_sensor module
---------------------------------------------------
-
-.. automodule:: spike_swarm_sim.sensors.collision_sensor
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-spike\_swarm\_sim.sensors.color\_sensor module
+spike\_swarm\_sim.sensors.light\_sensor module
 ----------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.color_sensor
+.. automodule:: spike_swarm_sim.sensors.light_sensor
     :members:
     :undoc-members:
     :show-inheritance:
@@ -51,21 +44,14 @@ spike\_swarm\_sim.sensors.communication\_receiver module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.distance\_sensor module
--------------------------------------------------
+spike\_swarm\_sim.sensors.color\_sensor module
+----------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.distance_sensor
+.. automodule:: spike_swarm_sim.sensors.color_sensor
     :members:
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.food\_sensor module
----------------------------------------------
-
-.. automodule:: spike_swarm_sim.sensors.food_sensor
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 spike\_swarm\_sim.sensors.ground\_sensor module
 -----------------------------------------------
@@ -83,10 +69,19 @@ spike\_swarm\_sim.sensors.joint\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.light\_sensor module
-----------------------------------------------
+spike\_swarm\_sim.sensors.collision\_sensor module
+--------------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.light_sensor
+.. automodule:: spike_swarm_sim.sensors.collision_sensor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+spike\_swarm\_sim.sensors.food\_sensor module
+---------------------------------------------
+
+.. automodule:: spike_swarm_sim.sensors.food_sensor
     :members:
     :undoc-members:
     :show-inheritance:
@@ -111,6 +106,14 @@ spike\_swarm\_sim.sensors.own\_position\_sensor module
 ------------------------------------------------------
 
 .. automodule:: spike_swarm_sim.sensors.own_position_sensor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+spike\_swarm\_sim.sensors.ble\_receiver module
+----------------------------------------------
+
+.. automodule:: spike_swarm_sim.sensors.ble_receiver
     :members:
     :undoc-members:
     :show-inheritance:

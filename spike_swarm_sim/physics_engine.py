@@ -2,6 +2,7 @@ import time
 import os
 import json
 import numpy as np
+import xml.etree.cElementTree as ET
 import pybullet as p
 import pybullet_data
 import pybullet_utils.bullet_client as bc
@@ -28,6 +29,7 @@ class Engine3D:
         self.connected = False
         self.render = global_states.RENDER
         self.engine = None
+        self.physical_sensors = {}
         self.gui_params = {}
 
 
@@ -74,6 +76,16 @@ class Engine3D:
         time.sleep(1/240.) # Fast mode
         # time.sleep(1/10) # Slow mode
 
+    def add_objects(self, objects):
+        """
+        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
+        during the simulation.
+
+        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
+        """
+        for obj in objects:
+            self.add_physics(obj)
+
     def add_physics(self, obj):
         """
         Adds the requested entity to the engine so that its physics can be taken into account 
@@ -99,23 +111,32 @@ class Engine3D:
         for i in range(2):
             p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
+        
+        self.parse_sensors(obj)
 
-    def add_objects(self, objects):
-        """
-        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
-        during the simulation.
-
-        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
-        """
-        for obj in objects:
-            self.add_physics(obj)
+    def parse_sensors(self, obj):
+        link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
+                for i in range(p.getNumJoints(obj.id, physicsClientId=self.client))]).astype(str)
+        tree = ET.parse(obj.model_file)
+        root = tree.getroot()
+        for sensor in root.findall(".//sensor"):
+            sensor_name = sensor.get('name')
+            self.physical_sensors[sensor_name] = {}
+            for sector in sensor.findall("sector"):
+                sector_idx = int(sector.get('index'))
+                link = sector.find('parent').get('link')
+                orientation = np.array(sector.find('origin').get('rpy').split(' ')).astype(float)
+                link_idx = np.where(link_names == link)[0][0]
+                self.physical_sensors[sensor_name][sector_idx] = {
+                    'link' : link, 'orientation' : orientation, 'idx' : link_idx 
+                }
 
     @property
     def client(self):
         """ Pybullet engine client used in the simulation. """
         return self.engine._client
 
-    def get_body_position(self, identifier, body_id):
+    def get_body_position(self, identifier, body_id, z_offset=0.0):
         """
         Getter method of the current position of the root link of an entity with the 
         given identifier.
@@ -219,6 +240,10 @@ class Engine3D:
         """
         pos, qt_ori =  p.getLinkState(obj_id, link_idx, physicsClientId=self.client)[:2]
         return (np.array(pos), np.array(p.getEulerFromQuaternion(qt_ori, physicsClientId=self.client)))
+
+    def get_sensor_position(self, obj_id, sensor_name, sector=0):
+        return np.array(self.get_link_state(obj_id, self.physical_sensors[sensor_name][sector]['idx'])[0])
+
 
     #! USELESS?
     # def initialize_render(self):
@@ -351,9 +376,11 @@ class Engine2D:
             self.add_physics(obj)
     
     def get_body_position(self, identifier, body_id):
-        return self.objects[identifier]['bodies'][body_id].position
+        pos = self.objects[identifier]['bodies'][body_id].position
+        return (np.array([pos.x, pos.y]) - 500) / 100 
 
     def reset_body_position(self, identifier, body_id, position):
+        position = position * 100 + 500  
         self.objects[identifier]['bodies'][body_id].position = position
 
     def get_body_orientation(self, identifier, body_id):

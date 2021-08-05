@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,9 +13,6 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
 
   
   
@@ -31,11 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -88,7 +95,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -96,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -203,14 +210,14 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.operators.crossover">
 <span id="spike-swarm-sim-algorithms-evolutionary-operators-crossover-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.operators.crossover module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.operators.crossover" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.neat_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">neat_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#neat_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.neat_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.neat_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">neat_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>fitness_values</em>, <em>crossover_prob=1.0</em>, <em>disable_prob=0.75</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#neat_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.neat_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.uniform_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">uniform_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#uniform_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.uniform_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.uniform_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">uniform_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>random_pairs=False</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#uniform_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.uniform_crossover" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uniform crossover of GA. Genotypes are pairwise grouped and 
 recombined, resulting in two children per recombination. A recombination 
 is applied with a fixed probability crossover_prob. In uniform crossover 
@@ -222,19 +229,19 @@ same probability.
 <div><p>parents [list of np.ndarray]: list of genotypes to be recombined.
 random_pairs [bool]: whether to shuffle the parents or mate them</p>
 <blockquote>
-<div><p>preserving the order. Note that the mating operation can be
-accomplished using the mating operators.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>crossover_prob [float]: probability of performing crossover between</dt><dd><p>two parents.</p>
-</dd>
+<div>preserving the order. Note that the mating operation can be
+accomplished using the mating operators.</div></blockquote>
+<dl class="docutils">
+<dt>crossover_prob [float]: probability of performing crossover between</dt>
+<dd>two parents.</dd>
 </dl>
 </div></blockquote>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>offspring [list of np.ndarray]: list of offspring genotypes </dt><dd><p>resulting from recombination.</p>
-</dd>
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>offspring [list of np.ndarray]: list of offspring genotypes </dt>
+<dd>resulting from recombination.</dd>
 </dl>
 </dd>
 </dl>
@@ -242,9 +249,9 @@ accomplished using the mating operators.</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.onepoint_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">onepoint_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#onepoint_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.onepoint_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.onepoint_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">onepoint_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>random_pairs=False</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#onepoint_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.onepoint_crossover" title="Permalink to this definition">¶</a></dt>
 <dd><p>One-point crossover of GA. Genotypes are pairwise grouped and 
 recombined, resulting in two children per recombination. A recombination 
 is applied with a fixed probability crossover_prob. In one-point 
@@ -257,23 +264,27 @@ See the following example:</p>
 <p>Parent 2: DE|F  -&gt; DE|C</p>
 </div></blockquote>
 <ul>
-<li><dl>
-<dt>Args:</dt><dd><p>parents [list of np.ndarray]: list of genotypes to be recombined.
+<li><dl class="first docutils">
+<dt>Args:</dt>
+<dd><p class="first">parents [list of np.ndarray]: list of genotypes to be recombined.
 random_pairs [bool]: whether to shuffle the parents or mate them</p>
 <blockquote>
 <div><p>preserving the order. Note that the mating operation can be
 accomplished using the mating operators.</p>
 </div></blockquote>
-<dl class="simple">
-<dt>crossover_prob [float]: probability of performing crossover between</dt><dd><p>two parents.</p>
+<dl class="last docutils">
+<dt>crossover_prob [float]: probability of performing crossover between</dt>
+<dd><p class="first last">two parents.</p>
 </dd>
 </dl>
 </dd>
 </dl>
 </li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>offspring [list of np.ndarray]: list of offspring genotypes </dt><dd><p>resulting from recombination.</p>
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>offspring [list of np.ndarray]: list of offspring genotypes </dt>
+<dd><p class="first last">resulting from recombination.</p>
 </dd>
 </dl>
 </dd>
@@ -282,121 +293,120 @@ accomplished using the mating operators.</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.blxalpha_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">blxalpha_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#blxalpha_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.blxalpha_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.blxalpha_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">blxalpha_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>random_pairs=False</em>, <em>crossover_prob=1.0</em>, <em>alpha=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#blxalpha_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.blxalpha_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.combination_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">combination_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_pairs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#combination_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.combination_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.combination_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">combination_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>random_pairs=False</em>, <em>crossover_prob=1.0</em>, <em>alpha=0.3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#combination_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.combination_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.multipoint_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">multipoint_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ncuts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#multipoint_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.multipoint_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.multipoint_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">multipoint_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>ncuts=3</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#multipoint_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.multipoint_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.simulated_binary_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">simulated_binary_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#simulated_binary_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.simulated_binary_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.simulated_binary_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">simulated_binary_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>eta=0.5</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#simulated_binary_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.simulated_binary_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">pcx_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#pcx_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">pcx_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#pcx_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.combined_crossover">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</span></span><span class="sig-name descname"><span class="pre">combined_crossover</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossover_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#combined_crossover"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.combined_crossover" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.crossover.combined_crossover">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.crossover.</code><code class="descname">combined_crossover</code><span class="sig-paren">(</span><em>parents</em>, <em>eta=1.0</em>, <em>crossover_prob=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/crossover.html#combined_crossover"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.crossover.combined_crossover" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.operators.mating">
 <span id="spike-swarm-sim-algorithms-evolutionary-operators-mating-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.operators.mating module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.operators.mating" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mating.random_mating">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mating.</span></span><span class="sig-name descname"><span class="pre">random_mating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#random_mating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.random_mating" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mating.random_mating">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mating.</code><code class="descname">random_mating</code><span class="sig-paren">(</span><em>parents</em>, <em>fitness=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#random_mating"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.random_mating" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_fitness">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mating.</span></span><span class="sig-name descname"><span class="pre">nearest_fitness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#nearest_fitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_fitness" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_fitness">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mating.</code><code class="descname">nearest_fitness</code><span class="sig-paren">(</span><em>parents</em>, <em>fitness</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#nearest_fitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_fitness" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_genotype">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mating.</span></span><span class="sig-name descname"><span class="pre">nearest_genotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#nearest_genotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_genotype" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_genotype">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mating.</code><code class="descname">nearest_genotype</code><span class="sig-paren">(</span><em>parents</em>, <em>fitness=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#nearest_genotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.nearest_genotype" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mating.speciation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mating.</span></span><span class="sig-name descname"><span class="pre">speciation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_species</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#speciation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.speciation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mating.speciation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mating.</code><code class="descname">speciation</code><span class="sig-paren">(</span><em>parents</em>, <em>fitness</em>, <em>n_species=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mating.html#speciation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mating.speciation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.operators.mutation">
 <span id="spike-swarm-sim-algorithms-evolutionary-operators-mutation-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.operators.mutation module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.operators.mutation" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.assign_unique_key">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">assign_unique_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#assign_unique_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.assign_unique_key" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.assign_unique_key">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">assign_unique_key</code><span class="sig-paren">(</span><em>keys</em>, <em>base_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#assign_unique_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.assign_unique_key" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_node">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_innovation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">innovation_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_variables</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#add_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_node" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_node">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">add_node</code><span class="sig-paren">(</span><em>genotype</em>, <em>current_innovation</em>, <em>innovation_history</em>, <em>node_variables</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#add_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new node in between an existing connection. The exisiting connection 
 is disabled and two new synapses are included.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_connection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">add_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_innovation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">innovation_history</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#add_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_connection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_connection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">add_connection</code><span class="sig-paren">(</span><em>genotype</em>, <em>input_nodes</em>, <em>current_innovation</em>, <em>innovation_history</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#add_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new gene connection to the genotype. The pre and post 
 synaptic nodes are selected randomly (validating that the connection does not 
 exist).</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_node">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">delete_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_nodes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#delete_node"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_node" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_node">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">delete_node</code><span class="sig-paren">(</span><em>genotype</em>, <em>input_nodes</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#delete_node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_node" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_connection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">delete_connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_nodes</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#delete_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_connection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_connection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">delete_connection</code><span class="sig-paren">(</span><em>genotype</em>, <em>input_nodes</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#delete_connection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_connection" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.neat_mutation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">neat_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_innovation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">innovation_history</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutable_variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_weight_mut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_node_mut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.03</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_conn_mut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#neat_mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.neat_mutation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.neat_mutation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">neat_mutation</code><span class="sig-paren">(</span><em>population</em>, <em>input_nodes</em>, <em>current_innovation</em>, <em>innovation_history</em>, <em>mutable_variables</em>, <em>p_weight_mut=0.75</em>, <em>p_node_mut=0.03</em>, <em>p_conn_mut=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#neat_mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.neat_mutation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.gaussian_mutation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">gaussian_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#gaussian_mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.gaussian_mutation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.gaussian_mutation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">gaussian_mutation</code><span class="sig-paren">(</span><em>population</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#gaussian_mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.gaussian_mutation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gaussian mutation operator for GA. Each genotype gene is mutated with a 
 probability mutation_prob. Mutation is accomplished by sampling a new gene value 
 from a gaussian dist. centered at the gene and with a std. dev. sigma.
 ================================================================================
 - Args:</p>
 <blockquote>
-<div><p>mutation_prob [float]: probability of mutating a gene.
-sigma [float]: std. dev. of the gaussian mutation.</p>
-</div></blockquote>
+<div>mutation_prob [float]: probability of mutating a gene.
+sigma [float]: std. dev. of the gaussian mutation.</div></blockquote>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Returns</dt><dd><p>new_pop [list of np.ndarray]: list of mutated genotypes.</p>
-</dd>
+<li><dl class="first docutils">
+<dt>Returns</dt>
+<dd>new_pop [list of np.ndarray]: list of mutated genotypes.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.uniform_mutation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">uniform_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#uniform_mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.uniform_mutation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.uniform_mutation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">uniform_mutation</code><span class="sig-paren">(</span><em>population</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#uniform_mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.uniform_mutation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Uniform mutation operator for GA. Each genotype gene is mutated with a 
 probability mutation_prob. Mutation is accomplished by uniformly resampling the
 gene within the interval [min_vals[g], max_vals[g]], where min_vals and max_vals 
@@ -407,27 +417,26 @@ are the bounds of each gene and g is the gene index.
 <div><p>mutation_prob [float]: probability of mutating a gene.
 min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be</p>
 <blockquote>
-<div><p>either a numpy array of same length as the genotype or a float. If float, 
-it is assumed that all genes have the same min value.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be </dt><dd><p>either a numpy array of same length as the genotype or a float. If float, 
-it is assumed that all genes have the same max value.</p>
-</dd>
+<div>either a numpy array of same length as the genotype or a float. If float, 
+it is assumed that all genes have the same min value.</div></blockquote>
+<dl class="docutils">
+<dt>max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be </dt>
+<dd>either a numpy array of same length as the genotype or a float. If float, 
+it is assumed that all genes have the same max value.</dd>
 </dl>
 </div></blockquote>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Returns</dt><dd><p>new_pop [list of np.ndarray]: list of mutated genotypes.</p>
-</dd>
+<li><dl class="first docutils">
+<dt>Returns</dt>
+<dd>new_pop [list of np.ndarray]: list of mutated genotypes.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.bitFlip_mutation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">bitFlip_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#bitFlip_mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.bitFlip_mutation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.bitFlip_mutation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">bitFlip_mutation</code><span class="sig-paren">(</span><em>population</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#bitFlip_mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.bitFlip_mutation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bit-Flip mutation operator for binary coded GA. Each genotype gene is mutated 
 with a probability mutation_prob. Mutation is accomplished by flipping the gene 
 bit (0 -&gt; 1 or 1 -&gt; 0).
@@ -437,49 +446,48 @@ bit (0 -&gt; 1 or 1 -&gt; 0).
 <div><p>mutation_prob [float]: probability of mutating a gene.
 min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be</p>
 <blockquote>
-<div><p>either a numpy array of same length as the genotype or a float. If float, 
-it is assumed that all genes have the same min value.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be </dt><dd><p>either a numpy array of same length as the genotype or a float. If float, 
-it is assumed that all genes have the same max value.</p>
-</dd>
+<div>either a numpy array of same length as the genotype or a float. If float, 
+it is assumed that all genes have the same min value.</div></blockquote>
+<dl class="docutils">
+<dt>max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be </dt>
+<dd>either a numpy array of same length as the genotype or a float. If float, 
+it is assumed that all genes have the same max value.</dd>
 </dl>
 </div></blockquote>
 <ul class="simple">
-<li><dl class="simple">
-<dt>Returns</dt><dd><p>new_pop [list of np.ndarray]: list of mutated genotypes.</p>
-</dd>
+<li><dl class="first docutils">
+<dt>Returns</dt>
+<dd>new_pop [list of np.ndarray]: list of mutated genotypes.</dd>
 </dl>
 </li>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.categorical_mutation">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</span></span><span class="sig-name descname"><span class="pre">categorical_mutation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#categorical_mutation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.categorical_mutation" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.mutation.categorical_mutation">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.mutation.</code><code class="descname">categorical_mutation</code><span class="sig-paren">(</span><em>population</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/mutation.html#categorical_mutation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.mutation.categorical_mutation" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.evolutionary.operators.selection">
 <span id="spike-swarm-sim-algorithms-evolutionary-operators-selection-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.operators.selection module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.evolutionary.operators.selection" title="Permalink to this headline">¶</a></h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.truncation_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">truncation_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#truncation_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.truncation_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.truncation_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">truncation_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#truncation_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.truncation_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Truncation selection operator of GA. The n_sel best individuals, 
 according to the fitness scores, are selected as parents.
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
-n_sel [int]: number of genotypes to be selected.</p>
-</div></blockquote>
+n_sel [int]: number of genotypes to be selected.</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 fitness_sel [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>
@@ -488,24 +496,24 @@ fitness_sel [list]: list of the fitness score corresponding to the</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.roulette_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">roulette_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#roulette_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.roulette_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.roulette_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">roulette_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#roulette_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.roulette_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Roulette selection operator of GA. It assigns a fitness proportionale 
 probability to each genotype and samples n_sel parents from a categorical 
 dist. with the computed probabilities.
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
-n_sel [int]: number of genotypes to be selected.</p>
-</div></blockquote>
+n_sel [int]: number of genotypes to be selected.</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 fitness_sel [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>
@@ -514,9 +522,9 @@ fitness_sel [list]: list of the fitness score corresponding to the</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.lin_rank_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">lin_rank_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#lin_rank_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.lin_rank_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.lin_rank_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">lin_rank_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em>, <em>sp=1.5</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#lin_rank_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.lin_rank_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Linear rank selection operator of GA. Samples stochastically n_sel 
 genotypes using ranks as probabilities in order to mitigate genetic drift.
 Ranks are computed linearly, so that the prob. decreases linearly with the 
@@ -524,16 +532,16 @@ fitness order of the individuals (fittest is the most probable).
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
 n_sel [int]: number of genotypes to be selected.
-sp [float]: defines the slope and intercept of the ranking computation.</p>
-</div></blockquote>
+sp [float]: defines the slope and intercept of the ranking computation.</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 fitness_sel [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>
@@ -542,9 +550,9 @@ fitness_sel [list]: list of the fitness score corresponding to the</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.nonlin_rank_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">nonlin_rank_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_best</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#nonlin_rank_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.nonlin_rank_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.nonlin_rank_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">nonlin_rank_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em>, <em>p_best=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#nonlin_rank_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.nonlin_rank_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Non-linear rank selection operator of GA. Samples stochastically n_sel 
 genotypes using ranks as probabilities in order to mitigate genetic drift.
 Ranks are computed non-linearly, so that the prob. decreases exponentially with the 
@@ -552,16 +560,16 @@ fitness order of the individuals (fittest is the most probable).
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
 n_sel [int]: number of genotypes to be selected.
-p_best [float]: prob. of the fittest individual (prob of rank 0).</p>
-</div></blockquote>
+p_best [float]: prob. of the fittest individual (prob of rank 0).</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 fitness_sel [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>
@@ -570,9 +578,9 @@ fitness_sel [list]: list of the fitness score corresponding to the</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.tournament_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">tournament_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournament_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#tournament_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.tournament_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.tournament_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">tournament_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em>, <em>tournament_size=3</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#tournament_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.tournament_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tournament selection operator of GA. Firstly, n_sel tournaments are 
 arraged, with tournament contestants elected randomly (with same prob., 
 regardless of their fitness). For each tournament, of sizes tournament_size,
@@ -580,16 +588,16 @@ a winner is selected deterministically as the fittest genotype in the group.
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
 n_sel [int]: number of genotypes to be selected.
-tournament_size [int]: size of each tournament.</p>
-</div></blockquote>
+tournament_size [int]: size of each tournament.</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 selected_fitness [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>
@@ -598,23 +606,23 @@ selected_fitness [list]: list of the fitness score corresponding to the</p>
 </ul>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.evolutionary.operators.selection.stochastic_universal_selection">
-<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.evolutionary.operators.selection.</span></span><span class="sig-name descname"><span class="pre">stochastic_universal_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">population</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fitness</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#stochastic_universal_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.stochastic_universal_selection" title="Permalink to this definition">¶</a></dt>
+<dl class="function">
+<dt id="spike_swarm_sim.algorithms.evolutionary.operators.selection.stochastic_universal_selection">
+<code class="descclassname">spike_swarm_sim.algorithms.evolutionary.operators.selection.</code><code class="descname">stochastic_universal_selection</code><span class="sig-paren">(</span><em>population</em>, <em>fitness</em>, <em>n_sel</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/evolutionary/operators/selection.html#stochastic_universal_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.evolutionary.operators.selection.stochastic_universal_selection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stochastic Universal Selection operator.
 #TODO Comment and test this selection operator (may have errors).
 =========================================================================
 - Args:</p>
 <blockquote>
-<div><p>population [list]: list of genotypes from which parents are selected.
+<div>population [list]: list of genotypes from which parents are selected.
 fitness [list]: evaluated fitness scores of the genotypes in population.
-n_sel [int]: number of genotypes to be selected.</p>
-</div></blockquote>
+n_sel [int]: number of genotypes to be selected.</div></blockquote>
 <ul>
-<li><dl>
-<dt>Returns:</dt><dd><p>selected [list]: list of selected genotypes.
+<li><dl class="first docutils">
+<dt>Returns:</dt>
+<dd><p class="first">selected [list]: list of selected genotypes.
 selected_fitness [list]: list of the fitness score corresponding to the</p>
-<blockquote>
+<blockquote class="last">
 <div><p>selected genotypes (respecting the same order)</p>
 </div></blockquote>
 </dd>

@@ -3,9 +3,9 @@ import logging
 def list_actuators(robot):
     actuator_list = []
     for name, act in robot.actuators.items():
-        if name == 'wireless_transmitter':
+        if name == 'IR_transmitter':
             comm_info = ['msg_' + str(i) for i in range(act.msg_length)] + ['state']
-            actuator_list.extend(['wireless_transmitter:' + str(key) for key in comm_info])
+            actuator_list.extend(['IR_transmitter:' + str(key) for key in comm_info])
         elif name == 'wheel_actuator':
             actuator_list.extend(['wheel_actuator_0', 'wheel_actuator_1'])
         elif name in ['joint_position_actuator', 'joint_velocity_actuator']:
@@ -27,7 +27,7 @@ def check_actuator_cfg(actuator_name, actuator_params):
             'must be greater than 0.'.format(actuator_name)))
 
 def autocomplete_actuator_cfg(actuator_name, actuator_params):
-    if actuator_name == 'wireless_transmitter':
+    if actuator_name == 'IR_transmitter':
         for var, default in zip(['msg_length', 'range', 'quantize'], [2, 100, True]):
             if var not in actuator_params.keys():
                 actuator_params[var] = default

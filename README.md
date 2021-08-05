@@ -92,9 +92,9 @@ models as building blocks of CTRNNs:
     # Set of ouputs, linking actuators to motor ensembles or neurons.
     "outputs" : {
         # OUT_COMM_ST generates the action of the IR communication state (RELAY or SEND).
-        "outC" : {"ensemble" : "OUT_COMM_ST", "actuator" : "wireless_transmitter:state", "enc": "cat"},
+        "outC" : {"ensemble" : "OUT_COMM_ST", "actuator" : "IR_transmitter:state", "enc": "cat"},
         # OUT_COMM generates the action of the IR communication 3D message.
-        "outA" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+        "outA" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
         # OUT_MOT generates the action of the wheel actuator (2D).
         "outB" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"}
     },
@@ -154,7 +154,7 @@ An example of `world` configuration is the following:
             # Set of actuators with their parameters (unspecified parameters are autocompleted with defaults).
             "actuators" : {
                 "wheel_actuator" : {}, 
-                "wireless_transmitter" : {"quantize":true, "range" : 150, "msg_length" : 3}
+                "IR_transmitter" : {"quantize":true, "range" : 150, "msg_length" : 3}
             },
             # Initialization of robots within the environment.
             "initializers" : {

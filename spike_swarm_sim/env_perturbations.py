@@ -57,7 +57,7 @@ class LeaderFailure(PostProcessingPerturbation):
             #! actions[idx]['led_actuator'] = 0
             actions[idx]['led_actuator_3D'] = 0
             # Impose relay mode 
-            actions[idx]['wireless_transmitter']['msg'] = states[idx]['IR_receiver']['msg']
+            actions[idx]['IR_transmitter']['msg'] = states[idx]['IR_receiver']['msg']
             tuple(robots.values())[idx].actuators['led_actuator_3D'].fault = True
             #! tuple(robots.values())[idx].update_colors(states[idx], actions[idx])
             #! tuple(robots.values())[idx].color2 = 'red'

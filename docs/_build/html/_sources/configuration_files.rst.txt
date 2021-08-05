@@ -41,7 +41,7 @@ World Configuration
     >>>     },
     >>>     "actuators" : {
     >>>         "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13},
-    >>>         "wireless_transmitter" : {"quantize": false, "range" : 15, "msg_length":1, "K" : 2}
+    >>>         "IR_transmitter" : {"quantize": false, "range" : 15, "msg_length":1, "K" : 2}
     >>>     },
     >>>     "initializers" : {
     >>>         "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -1], "high" : [1, 1], "size" : 2}},
@@ -271,7 +271,7 @@ Topology Configuration
 
     >>> "outputs" : {
     >>>    "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-    >>>    "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
+    >>>    "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
     >>> }
 
     +----------------------------+-----------------------------+----------------------------------------------------------------+
@@ -281,7 +281,7 @@ Topology Configuration
     +----------------------------+-----------------------------+----------------------------------------------------------------+
     |   joint_position_actuator  |   JointPositionActuator     | Actuator for the position control of joints.                   |
     +----------------------------+-----------------------------+----------------------------------------------------------------+
-    |   wireless_transmitter     |   CommunicationTransmitter  | IR-based Communication transmitter.                            |
+    |   IR_transmitter     |   CommunicationTransmitter  | IR-based Communication transmitter.                            |
     +----------------------------+-----------------------------+----------------------------------------------------------------+
     |   led_actuator             |   LedActuator3D/LedActuator | Actuator for controlling the LEDs of a robot.                  |
     +----------------------------+-----------------------------+----------------------------------------------------------------+
@@ -294,7 +294,7 @@ Topology Configuration
         until 2D and 3D classes are standardized.
 
     .. note::
-        The ``wireless_transmitter`` actuator name is provisional and it will eventually changed to a more descriptive name.
+        The ``IR_transmitter`` actuator name is provisional and it will eventually changed to a more descriptive name.
 
 * *encoding* (dict)
 

@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -165,6 +176,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
 <span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
 <span class="kn">import</span> <span class="nn">pybullet_data</span>
 <span class="kn">import</span> <span class="nn">pybullet_utils.bullet_client</span> <span class="k">as</span> <span class="nn">bc</span>
@@ -172,13 +184,13 @@
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYGAME_HIDE_SUPPORT_PROMPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hide&quot;</span>
 <span class="kn">import</span> <span class="nn">pymunk</span>
 <span class="kn">import</span> <span class="nn">pymunk.pygame_util</span>
-<span class="kn">from</span> <span class="nn">pygame.color</span> <span class="k">import</span> <span class="n">THECOLORS</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">colors</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">pygame.color</span> <span class="kn">import</span> <span class="n">THECOLORS</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">colors</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="kn">import</span> <span class="n">global_states</span>
 
 
 
-<div class="viewcode-block" id="Engine3D"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D">[docs]</a><span class="k">class</span> <span class="nc">Engine3D</span><span class="p">:</span>
+<div class="viewcode-block" id="Engine3D"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D">[docs]</a><span class="k">class</span> <span class="nc">Engine3D</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; 3D Physics and Render Engine class. Its role in the simulation is to iterate the </span>
 <span class="sd">    3D physic simulations and collision detections of the entities in the environment and render </span>
 <span class="sd">    the 3D graphics. For these purposes it uses the `pybullet library &lt;https://pybullet.org&gt;`_  .</span>
@@ -187,14 +199,15 @@
 <span class="sd">    :var bool render: flag indicating if the simulation is run in visual or render mode.</span>
 <span class="sd">    :var bool connected: whether the engine is connected or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">global_states</span><span class="o">.</span><span class="n">RENDER</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gui_params</span> <span class="o">=</span> <span class="p">{}</span>
 
 
-<div class="viewcode-block" id="Engine3D.connect"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.connect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Connects to the pybullet based physics and render engines. It starts the pybullet </span>
 <span class="sd">        client in either visual or direct mode, sets up all the physics constants (gravity, sampling period, etc.) </span>
 <span class="sd">        and adds all the ``WorldObjects`` to the engine.</span>
@@ -219,17 +232,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">resetDebugVisualizerCamera</span><span class="p">(</span><span class="n">cameraDistance</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">cameraYaw</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>\
                     <span class="n">cameraPitch</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span> <span class="n">cameraTargetPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Engine3D.disconnect"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.disconnect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Disconnects the pybullet based physics and render engines. &quot;&quot;&quot;</span>
         <span class="c1"># self.engine.resetSimulation(physicsClientId=self.engine._client)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="Engine3D.step_physics"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.step_physics">[docs]</a>    <span class="k">def</span> <span class="nf">step_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.step_physics"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.step_physics">[docs]</a>    <span class="k">def</span> <span class="nf">step_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Iterates all the 3D physics of the world entities using pybullet. &quot;&quot;&quot;</span>
         <span class="n">p</span><span class="o">.</span><span class="n">stepSimulation</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Engine3D.step_render"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.step_render">[docs]</a>    <span class="k">def</span> <span class="nf">step_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.step_render"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.step_render">[docs]</a>    <span class="k">def</span> <span class="nf">step_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Iterates the graphics visualization at give FPS. &quot;&quot;&quot;</span>
         <span class="c1"># if self.physics_client.readUserDebugParameter(self.gui_params[&#39;robot_focus&#39;]) == 1:</span>
         <span class="c1">#     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\</span>
@@ -237,7 +250,17 @@
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">240.</span><span class="p">)</span> <span class="c1"># Fast mode</span></div>
         <span class="c1"># time.sleep(1/10) # Slow mode</span>
 
-<div class="viewcode-block" id="Engine3D.add_physics"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.add_objects"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.add_objects">[docs]</a>    <span class="k">def</span> <span class="nf">add_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account </span>
+<span class="sd">        during the simulation.</span>
+
+<span class="sd">        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_physics</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Engine3D.add_physics"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds the requested entity to the engine so that its physics can be taken into account </span>
 <span class="sd">        during the simulation. It uses the pybullet function ``loadURDF``, that creates the pybullet </span>
@@ -261,24 +284,33 @@
         <span class="c1">#! Temporal loop</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
             <span class="n">p</span><span class="o">.</span><span class="n">changeDynamics</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lateralFriction</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>\
-                <span class="n">activationState</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ACTIVATION_STATE_DISABLE_WAKEUP</span><span class="p">)</span></div>
+                <span class="n">activationState</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ACTIVATION_STATE_DISABLE_WAKEUP</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_sensors</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Engine3D.add_objects"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.add_objects">[docs]</a>    <span class="k">def</span> <span class="nf">add_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account </span>
-<span class="sd">        during the simulation.</span>
-
-<span class="sd">        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_physics</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+<div class="viewcode-block" id="Engine3D.parse_sensors"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.parse_sensors">[docs]</a>    <span class="k">def</span> <span class="nf">parse_sensors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">link_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">getJointInfo</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">12</span><span class="p">]</span>\
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">))])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">model_file</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;.//sensor&quot;</span><span class="p">):</span>
+            <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">sensor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">sensor</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;sector&quot;</span><span class="p">):</span>
+                <span class="n">sector_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sector</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+                <span class="n">orientation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;origin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rpy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+                <span class="n">link_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">link_names</span> <span class="o">==</span> <span class="n">link</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">][</span><span class="n">sector_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;link&#39;</span> <span class="p">:</span> <span class="n">link</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span> <span class="p">:</span> <span class="n">orientation</span><span class="p">,</span> <span class="s1">&#39;idx&#39;</span> <span class="p">:</span> <span class="n">link_idx</span> 
+                <span class="p">}</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Pybullet engine client used in the simulation. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">_client</span>
 
-<div class="viewcode-block" id="Engine3D.get_body_position"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_body_position"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Getter method of the current position of the root link of an entity with the </span>
 <span class="sd">        given identifier.</span>
@@ -292,7 +324,7 @@
         <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span><span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">pos</span></div>
     
-<div class="viewcode-block" id="Engine3D.get_body_orientation"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_body_orientation"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Getter method of the current Euler orientation of the root link of an entity with the </span>
 <span class="sd">        given identifier.</span>
@@ -306,7 +338,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getEulerFromQuaternion</span><span class="p">(</span><span class="n">quaternion_orientation</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">))</span></div>
          
 
-<div class="viewcode-block" id="Engine3D.get_body_velocity"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_body_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_body_velocity"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Getter method of the current velocity of the root link of an entity with the </span>
 <span class="sd">        given identifier.</span>
@@ -318,7 +350,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">getBaseVelocity</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
     
-<div class="viewcode-block" id="Engine3D.get_body_angular_velocity"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_body_angular_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_body_angular_velocity"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_angular_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Getter method of the current angular velocity of the root link of an entity with the </span>
 <span class="sd">        given identifier.</span>
@@ -330,7 +362,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">getBaseVelocity</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Engine3D.set_body_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.set_body_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.set_body_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.set_body_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Sets the physics state (position and orientation) of a registered entity with the given</span>
 <span class="sd">        identifier. </span>
@@ -346,7 +378,7 @@
         <span class="n">p</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span>\
             <span class="n">p</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">(</span><span class="n">orientation</span><span class="p">),</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Engine3D.ray_cast"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.ray_cast"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Casts a ray between coordinates origin and destination and verifies if there is some </span>
 <span class="sd">        object in between. It returns the id of the first encountered object.</span>
 
@@ -358,7 +390,7 @@
         <span class="n">ray_res</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rayTest</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ray_res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
     
-<div class="viewcode-block" id="Engine3D.get_closest_point"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_closest_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">linkA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_closest_point"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_closest_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">linkA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Computes the closest points between two links of two registered entities.</span>
 
 <span class="sd">        :param int idA: identifier of the first WorldObject entity.</span>
@@ -372,7 +404,7 @@
         <span class="n">closest_points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">linkIndexA</span><span class="o">=</span><span class="n">linkA</span><span class="p">,</span> <span class="n">linkIndexB</span><span class="o">=</span><span class="n">linkB</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">closest_points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">6</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Engine3D.get_link_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine3D.get_link_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine3D.get_link_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_link_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Getter of the position and orientation of a given link in the specified entity.</span>
 <span class="sd">        </span>
 <span class="sd">        :param int obj_id: identifier of the WorldObject entity.</span>
@@ -381,7 +413,11 @@
 <span class="sd">        :returns: ``tuple`` with the 3D numpy position and 3D orientation of the link.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pos</span><span class="p">,</span> <span class="n">qt_ori</span> <span class="o">=</span>  <span class="n">p</span><span class="o">.</span><span class="n">getLinkState</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getEulerFromQuaternion</span><span class="p">(</span><span class="n">qt_ori</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)))</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getEulerFromQuaternion</span><span class="p">(</span><span class="n">qt_ori</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="Engine3D.get_sensor_position"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine3D.get_sensor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_link_state</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">][</span><span class="n">sector</span><span class="p">][</span><span class="s1">&#39;idx&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span></div></div>
+
 
     <span class="c1">#! USELESS?</span>
     <span class="c1"># def initialize_render(self):</span>
@@ -393,7 +429,7 @@
 
 
 
-<div class="viewcode-block" id="json_parser"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.json_parser">[docs]</a><span class="k">def</span> <span class="nf">json_parser</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
+<div class="viewcode-block" id="json_parser"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.json_parser">[docs]</a><span class="k">def</span> <span class="nf">json_parser</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Function that parses the json file describing the 2D entities.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;spike_swarm_sim/objects/urdf/&quot;</span> <span class="o">+</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span>
@@ -427,7 +463,7 @@
         <span class="k">pass</span>
     <span class="k">return</span> <span class="p">[</span><span class="o">*</span><span class="n">bodies</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="n">shapes</span></div>
 
-<div class="viewcode-block" id="Engine2D"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D">[docs]</a><span class="k">class</span> <span class="nc">Engine2D</span><span class="p">:</span>
+<div class="viewcode-block" id="Engine2D"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D">[docs]</a><span class="k">class</span> <span class="nc">Engine2D</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; 2D Physics and Render Engine class. Its role in the simulation is to iterate the </span>
 <span class="sd">    2D physic simulations and collision detections of the entities in the environment and render </span>
 <span class="sd">    the 2D graphics. For these purposes it uses the `pymunk library &lt;https://pymunk.org&gt;`_  for </span>
@@ -440,7 +476,7 @@
 <span class="sd">    :var bool render: flag indicating if the simulation is run in visual or render mode.</span>
 <span class="sd">    :var bool connected: whether the engine is connected or not.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">global_states</span><span class="o">.</span><span class="n">RENDER</span>
@@ -451,7 +487,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">cat_pointer</span> <span class="o">=</span> <span class="mb">0b01</span>
 
-<div class="viewcode-block" id="Engine2D.connect"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.connect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Connects to the pymunk and pygame based physics and render engines. </span>
 <span class="sd">        It creates the ``pymunk.Space``, sets up all the physics constants (gravity, etc.) </span>
 <span class="sd">        and adds all the ``WorldObjects`` to the engine. It also sets up the screen where </span>
@@ -470,7 +506,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="Engine2D.add_physics"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.add_physics"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds the requested entity to the engine so that its physics can be taken into account </span>
 <span class="sd">        during the simulation. It parses the entity 2D model from a json asset. </span>
@@ -498,7 +534,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bodies&#39;</span> <span class="p">:</span> <span class="n">links</span><span class="p">,</span> <span class="s1">&#39;shapes&#39;</span> <span class="p">:</span> <span class="n">shapes</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span> <span class="p">:</span> <span class="n">mask</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">:</span> <span class="n">cat_mask</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">*</span><span class="n">links</span><span class="p">,</span> <span class="o">*</span><span class="n">shapes</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Engine2D.add_objects"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.add_objects">[docs]</a>    <span class="k">def</span> <span class="nf">add_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.add_objects"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.add_objects">[docs]</a>    <span class="k">def</span> <span class="nf">add_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account </span>
 <span class="sd">        during the simulation.</span>
@@ -513,32 +549,34 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">cat_pointer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_pointer</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_physics</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
     
-<div class="viewcode-block" id="Engine2D.get_body_position"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.get_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">identifier</span><span class="p">][</span><span class="s1">&#39;bodies&#39;</span><span class="p">][</span><span class="n">body_id</span><span class="p">]</span><span class="o">.</span><span class="n">position</span></div>
+<div class="viewcode-block" id="Engine2D.get_body_position"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.get_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">identifier</span><span class="p">][</span><span class="s1">&#39;bodies&#39;</span><span class="p">][</span><span class="n">body_id</span><span class="p">]</span><span class="o">.</span><span class="n">position</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">])</span> <span class="o">-</span> <span class="mi">500</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span> </div>
 
-<div class="viewcode-block" id="Engine2D.reset_body_position"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.reset_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">reset_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.reset_body_position"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.reset_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">reset_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">position</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">500</span>  
         <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">identifier</span><span class="p">][</span><span class="s1">&#39;bodies&#39;</span><span class="p">][</span><span class="n">body_id</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span></div>
 
-<div class="viewcode-block" id="Engine2D.get_body_orientation"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.get_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.get_body_orientation"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.get_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">identifier</span><span class="p">][</span><span class="s1">&#39;bodies&#39;</span><span class="p">][</span><span class="n">body_id</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span></div>
 
-<div class="viewcode-block" id="Engine2D.reset_body_orientation"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.reset_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">reset_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.reset_body_orientation"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.reset_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">reset_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">identifier</span><span class="p">][</span><span class="s1">&#39;bodies&#39;</span><span class="p">][</span><span class="n">body_id</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="n">orientation</span></div>
 
-<div class="viewcode-block" id="Engine2D.get_link_state"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.get_link_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.get_link_state"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.get_link_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">):</span>
         <span class="n">sh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj_id</span><span class="p">][</span><span class="s1">&#39;shapes&#39;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="Engine2D.disconnect"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.disconnect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Engine2D.initialize_render"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.initialize_render">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.initialize_render"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.initialize_render">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="Engine2D.step_physics"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.step_physics">[docs]</a>    <span class="k">def</span> <span class="nf">step_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.step_physics"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.step_physics">[docs]</a>    <span class="k">def</span> <span class="nf">step_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># self.engine.step(1 / 60.0)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Engine2D.step_render"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.step_render">[docs]</a>    <span class="k">def</span> <span class="nf">step_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.step_render"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.step_render">[docs]</a>    <span class="k">def</span> <span class="nf">step_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
                 <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -550,13 +588,13 @@
 
 
 
-<div class="viewcode-block" id="Engine2D.get_closest_point"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.get_closest_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.get_closest_point"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.get_closest_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">):</span>
         <span class="k">pass</span></div>
         <span class="c1"># p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\</span>
         <span class="c1">#                     linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)</span>
 
 
-<div class="viewcode-block" id="Engine2D.ray_cast"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.physics_engine.Engine2D.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+<div class="viewcode-block" id="Engine2D.ray_cast"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.physics_engine.Engine2D.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">origin</span> <span class="o">=</span> <span class="n">origin</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>

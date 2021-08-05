@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -166,9 +177,9 @@
 <div class="viewcode-block" id="list_actuators"><a class="viewcode-back" href="../../../../spike_swarm_sim.actuators.utils.html#spike_swarm_sim.actuators.utils.utils.list_actuators">[docs]</a><span class="k">def</span> <span class="nf">list_actuators</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
     <span class="n">actuator_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">robot</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;wireless_transmitter&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;IR_transmitter&#39;</span><span class="p">:</span>
             <span class="n">comm_info</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;msg_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">act</span><span class="o">.</span><span class="n">msg_length</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span>
-            <span class="n">actuator_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;wireless_transmitter:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">comm_info</span><span class="p">])</span>
+            <span class="n">actuator_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;IR_transmitter:&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">comm_info</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;wheel_actuator&#39;</span><span class="p">:</span>
             <span class="n">actuator_list</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;wheel_actuator_0&#39;</span><span class="p">,</span> <span class="s1">&#39;wheel_actuator_1&#39;</span><span class="p">])</span>
         <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;joint_position_actuator&#39;</span><span class="p">,</span> <span class="s1">&#39;joint_velocity_actuator&#39;</span><span class="p">]:</span>
@@ -190,7 +201,7 @@
             <span class="s1">&#39;must be greater than 0.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">actuator_name</span><span class="p">)))</span></div>
 
 <div class="viewcode-block" id="autocomplete_actuator_cfg"><a class="viewcode-back" href="../../../../spike_swarm_sim.actuators.utils.html#spike_swarm_sim.actuators.utils.utils.autocomplete_actuator_cfg">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_actuator_cfg</span><span class="p">(</span><span class="n">actuator_name</span><span class="p">,</span> <span class="n">actuator_params</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">actuator_name</span> <span class="o">==</span> <span class="s1">&#39;wireless_transmitter&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">actuator_name</span> <span class="o">==</span> <span class="s1">&#39;IR_transmitter&#39;</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;msg_length&#39;</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span><span class="p">,</span> <span class="s1">&#39;quantize&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="kc">True</span><span class="p">]):</span>
             <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">actuator_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">actuator_params</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>

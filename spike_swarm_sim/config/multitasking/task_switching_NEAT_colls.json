@@ -6,7 +6,7 @@
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "red_light_sensor"},
-            "I6" : {"n" : 4, "sensor" : "distance_sensor3D"},
+            "I6" : {"n" : 4, "sensor" : "distance_sensor"},
             "I7" : {"n" : 4, "sensor" : "color_sensor"},
             "I8" : {"n" : 1, "sensor" : "ground_sensor"},
             "I9" : {"n" : 1, "sensor" : "object_grasped_sensor"},
@@ -89,7 +89,7 @@
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 20},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 3},
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 3},
                     "object_grasped_sensor" : {},
                     "ground_sensor" : {},
                     "task_sensor" : {},

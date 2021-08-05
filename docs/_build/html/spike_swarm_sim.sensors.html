@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,9 +13,6 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/tabs.css" type="text/css" />
 
   
   
@@ -31,11 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -88,7 +95,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -96,7 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -110,18 +117,18 @@
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
@@ -228,239 +235,173 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.base_sensor">
 <span id="spike-swarm-sim-sensors-base-sensor-module"></span><h2>spike_swarm_sim.sensors.base_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.base_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.Sensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.base_sensor.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_owner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Args:</dt><dd><p>sensor_owner [Robot] : instance of the agent executing the sensor.
-range [float] : range of coverage of the sensor.
-noise_sigma [float] : white noise std. dev.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Attribs:</dt><dd><p>sensor_owner [Robot] : robot object owning and reading from the sensor.</p>
-</dd>
-</dl>
-</li>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.base_sensor.Sensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.base_sensor.</code><code class="descname">Sensor</code><span class="sig-paren">(</span><em>sensor_owner</em>, <em>range=2</em>, <em>noise_sigma=0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#Sensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class of robot sensors.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
 </ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.Sensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#Sensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor.step" title="Permalink to this definition">¶</a></dt>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.Sensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#Sensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.base_sensor.</span></span><span class="sig-name descname"><span class="pre">DirectionalSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Args:</dt><dd><p>n_sectors [int] : number of sectors.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Attribs:</dt><dd><p>aperture [float] : aperture in radians of each sector of the sensor.
-sensors_idx [] :</p>
-</dd>
-</dl>
-</li>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.base_sensor.</code><code class="descname">DirectionalSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>n_sectors=8</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Base class for directional sensors. Directional or sectorized sensors are 
+sensors that can acquire the orientation from where the measurement was sensed.
+They have multiple sensor (one per sector), normally equally distributed around the
+robot perimeter, and can read the local surroundings of each sector area. In this 
+case, the sensor of each sector has a limited range and aperture in radians. Some 
+examples of directional sensors are the <code class="docutils literal"><span class="pre">light_sensor</span></code> and the <code class="docutils literal"><span class="pre">distance_sensor</span></code>.
+Excluding some exceptions such as the IR communication receiver, the reading of the 
+sensor is an numpy array with length equal to the number of sectors.</p>
+<p>This class is a base class for directional sensors. It only implements the <code class="docutils literal"><span class="pre">step</span></code> 
+method, which is, at first, common to every directional sensor. Nonetheless, when inheriting 
+from this sensor, the class methods <code class="docutils literal"><span class="pre">target_filter</span></code> and <code class="docutils literal"><span class="pre">step_direction</span></code> have to be 
+filled to implement the precise sensor. In brief, <code class="docutils literal"><span class="pre">target_filter</span></code> filters out the entites that 
+are targeted by the sensor (e.g. <code class="docutils literal"><span class="pre">LightSource</span></code> in the case of the <code class="docutils literal"><span class="pre">LightSensor</span></code>). 
+<code class="docutils literal"><span class="pre">step_direction</span></code> implements the reading of the sensor for a single direction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
+<li><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</li>
 </ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step" title="Permalink to this definition">¶</a></dt>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><p class="first last"><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean response revealing whether the obj should be explored by the sensor or not.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>direction</em>, <em>obj=None</em>, <em>diff_vector=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</li>
+<li><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</li>
+<li><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal"><span class="pre">dict</span></code>.</li>
+<li><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</li>
+<li><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reading of the sensor in the current direction.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main method for steping the sensor and capturing nearby environment events.
 It senses the environment independently in each of the sensing sectors. The 
 particular behavior of each sensor inheriting this class should be specified in 
-_step_direction method.
-================================================================================
-- Args:</p>
-<blockquote>
-<div><dl class="simple">
-<dt>neighborhood -&gt; List of  target neighboring WorldObjects (excluding the robot </dt><dd><p>reading the sensor).</p>
-</dd>
-</dl>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><p>Numpy array with the measurement in each direction. In exceptional cases 
-it may return a list of python dictionaries (see CommunicationReceiver).</p>
-</dd>
-</dl>
-</li>
-</ul>
+<code class="docutils literal"><span class="pre">step_direction</span></code> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal"><span class="pre">WorldObject</span></code> types) (excluding the robot 
+reading the sensor).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array with the measurement in each direction. In exceptional cases 
+it may return a list of python dictionaries (see <code class="docutils literal"><span class="pre">CommunicationReceiver</span></code>).</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">
-<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.directions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the vector of sensing directions of the sectors based on the robot heading orientation.
-- Args:</p>
-<blockquote>
-<div><p>theta [float] -&gt; orientation of the robots using the sensor.</p>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><p>Numpy Array with the absolute directions of each sensor (starting from theta).</p>
-</dd>
-</dl>
-</li>
-</ul>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">
+<code class="descname">directions</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.directions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing directions of the sectors based on the robot heading orientation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy Array with the absolute directions of each sensor (starting from theta).</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets the sensor.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_position">
-<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of each sector. Each sector is represented by a small 3D model 
-used  to cast rays and compute the readings wrt it. 
-TODO: For the moment only available in 3D.</p>
-</dd></dl>
-
-</dd></dl>
-
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">
+<code class="descname">get_sensor_position</code><span class="sig-paren">(</span><em>sector</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_sensor_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">TODO: For the moment only available in 3D. Create method in 2D engine.</p>
 </div>
-<div class="section" id="module-spike_swarm_sim.sensors.ble_receiver">
-<span id="spike-swarm-sim-sensors-ble-receiver-module"></span><h2>spike_swarm_sim.sensors.ble_receiver module<a class="headerlink" href="#module-spike_swarm_sim.sensors.ble_receiver" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.ble_receiver.</span></span><span class="sig-name descname"><span class="pre">RF_Receiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<ul>
-<li><dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>msg_length [int]<span class="classifier">number of components of the message. Must be the </span></dt><dd><p>same as in the Transmitter definition.</p>
-</dd>
-</dl>
-<p>max_hops [int] : maximum number of hops before frame discard.</p>
-</dd>
-</dl>
-</li>
-</ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
-firstly discards those with more hops than a thresh. Then, the selection of a 
-unique frame is carried out stochastically among those frames whose sender is not the receiver. 
-If no message is sensed, the measurement is an empty frame.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">empty_msg</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format of an empty message.</p>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.sensors.collision_sensor">
-<span id="spike-swarm-sim-sensors-collision-sensor-module"></span><h2>spike_swarm_sim.sensors.collision_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.collision_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.collision_sensor.CollisionSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.collision_sensor.</span></span><span class="sig-name descname"><span class="pre">CollisionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/collision_sensor.html#CollisionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.collision_sensor.CollisionSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.collision_sensor.CollisionSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hierarchy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/collision_sensor.html#CollisionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.collision_sensor.CollisionSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.sensors.color_sensor">
-<span id="spike-swarm-sim-sensors-color-sensor-module"></span><h2>spike_swarm_sim.sensors.color_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.color_sensor.ColorSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.color_sensor.</span></span><span class="sig-name descname"><span class="pre">ColorSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ColorSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ColorSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.color_sensor.</span></span><span class="sig-name descname"><span class="pre">ObjectGraspedSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ObjectGraspedSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ObjectGraspedSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.sensors.communication_receiver">
-<span id="spike-swarm-sim-sensors-communication-receiver-module"></span><h2>spike_swarm_sim.sensors.communication_receiver module<a class="headerlink" href="#module-spike_swarm_sim.sensors.communication_receiver" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.communication_receiver.</span></span><span class="sig-name descname"><span class="pre">IRCommunicationReceiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_hops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<ul>
-<li><dl>
-<dt>Args:</dt><dd><dl class="simple">
-<dt>msg_length [int]<span class="classifier">number of components of the message. Must be the </span></dt><dd><p>same as in the Transmitter definition.</p>
-</dd>
-</dl>
-<p>max_hops [int] : maximum number of hops before frame discard.</p>
-</dd>
-</dl>
-</li>
-</ul>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
-firstly discards those with more hops than a thresh. Then, the selection of a 
-unique frame is carried out stochastically among those frames whose sender is not the receiver.
-If no message is sensed, the measurement is an empty frame.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets the sensor.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.remove_duplicates">
-<span class="sig-name descname"><span class="pre">remove_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.remove_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.remove_duplicates" title="Permalink to this definition">¶</a></dt>
-<dd><p>#TODO: Remove received duplicate frames.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_msg">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">empty_msg</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_msg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Format of an empty message.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.communication_receiver.</span></span><span class="sig-name descname"><span class="pre">BufferedIRCommRX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver" title="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
-firstly discards those with more hops than a thresh. Then, the selection of a 
-unique frame is carried out stochastically among those frames whose sender is not the receiver.
-If no message is sensed, the measurement is an empty frame.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets the sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the numpy array position of the sensor within the robot model.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -468,173 +409,713 @@ If no message is sensed, the measurement is an empty frame.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.distance_sensor">
 <span id="spike-swarm-sim-sensors-distance-sensor-module"></span><h2>spike_swarm_sim.sensors.distance_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.distance_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.distance_sensor.</span></span><span class="sig-name descname"><span class="pre">DistanceSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<p>Directional distance sensor class. It mimics the IR distance sensor. 
-The sensor is partitioned into multiple sector that provide measurements 
-solely of their sector coverage.</p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.distance_sensor.</code><code class="descname">DistanceSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Directional distance sensor class. It mimics a IR based distance sensor. 
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an scalar bounded in [0, 1] that estimates the distance 
+to the closest solid entity within the correspoding sector. A reading of 1 means that 
+the target object is very close and a measurement near 0 indicates that there are no obstacles 
+in that direction.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal"><span class="pre">distance_sensor</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
+<li><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</li>
+<li><a class="reference internal" href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation" title="spike_swarm_sim.sensors.utils.propagation"><strong>propagation</strong></a> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation" title="spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal"><span class="pre">rho</span></code> and <code class="docutils literal"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction. Only objects that are within the range and 
+aperture are considered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</li>
+<li><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</li>
+<li><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal"><span class="pre">dict</span></code>.</li>
+<li><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</li>
+<li><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reading of the sensor in the current direction.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor3D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.distance_sensor.</span></span><span class="sig-name descname"><span class="pre">DistanceSensor3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor3D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<p>Directional distance sensor class. It mimics the IR distance sensor. 
-The sensor is partitioned into multiple sector that provide measurements 
-solely of their sector coverage.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the tangible (solid) entities.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean response revealing whether the obj should be explored by the sensor or not.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions">
+<code class="descname">directions</code><span class="sig-paren">(</span><em>theta</em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing directions of the sectors based on the robot heading orientation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy Array with the absolute directions of each sensor (starting from theta).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position">
+<code class="descname">get_sensor_position</code><span class="sig-paren">(</span><em>sector</em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">TODO: For the moment only available in 3D. Create method in 2D engine.</p>
 </div>
-<div class="section" id="module-spike_swarm_sim.sensors.food_sensor">
-<span id="spike-swarm-sim-sensors-food-sensor-module"></span><h2>spike_swarm_sim.sensors.food_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.food_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.food_sensor.FoodSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">FoodSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<p>Food sensor that detects whether the robot is 
-holding/transporting a food piece or not.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.food_sensor.FoodSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the numpy array position of the sensor within the robot model.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.food_sensor.FoodAreaSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">FoodAreaSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodAreaSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodAreaSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<p>Food area sensor that detects whether there is a food 
-area underneath the robot or not.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main method for steping the sensor and capturing nearby environment events.
+It senses the environment independently in each of the sensing sectors. The 
+particular behavior of each sensor inheriting this class should be specified in 
+<code class="docutils literal"><span class="pre">step_direction</span></code> method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal"><span class="pre">WorldObject</span></code> types) (excluding the robot 
+reading the sensor).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array with the measurement in each direction. In exceptional cases 
+it may return a list of python dictionaries (see <code class="docutils literal"><span class="pre">CommunicationReceiver</span></code>).</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.food_sensor.NestSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">NestSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#NestSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.NestSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<p>Nest area sensor that detects whether there is a nest 
-area underneath the robot or not.</p>
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.sensors.ground_sensor">
-<span id="spike-swarm-sim-sensors-ground-sensor-module"></span><h2>spike_swarm_sim.sensors.ground_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.ground_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.ground_sensor.GroundSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.ground_sensor.</span></span><span class="sig-name descname"><span class="pre">GroundSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ground_sensor.html#GroundSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ground_sensor.GroundSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<p>Sensor that detects if there is a ground area underneath the robot (binary reading). 
-Additionally, it only detects ground areas of a particular color.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.ground_sensor.GroundSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ground_sensor.html#GroundSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ground_sensor.GroundSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.sensors.joint_sensor">
-<span id="spike-swarm-sim-sensors-joint-sensor-module"></span><h2>spike_swarm_sim.sensors.joint_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.joint_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.joint_sensor.JointPositionSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.joint_sensor.</span></span><span class="sig-name descname"><span class="pre">JointPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointPositionSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.joint_sensor.JointPositionSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointPositionSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.joint_sensor.</span></span><span class="sig-name descname"><span class="pre">JointVelocitySensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointVelocitySensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointVelocitySensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.light_sensor">
 <span id="spike-swarm-sim-sensors-light-sensor-module"></span><h2>spike_swarm_sim.sensors.light_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.light_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">LightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.LightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">LightSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>color='red'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
 <p>Directional ambient light sensor that enables the sensing 
 of the light intensity resulting from the emission of luminous 
-WorldObjects (e.g. LightSource).</p>
+WorldObjects (e.g. <code class="docutils literal"><span class="pre">LightSource</span></code>).
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an scalar bounded in [0, 1] that estimates the received 
+light intensity within the correspoding sector.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal"><span class="pre">light_sensor</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
+<li><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</li>
+<li><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</li>
+<li><a class="reference internal" href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation" title="spike_swarm_sim.sensors.utils.propagation"><strong>propagation</strong></a> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation" title="spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal"><span class="pre">rho</span></code> and <code class="docutils literal"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.light_sensor.LightSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the light sources.</p>
+<div class="admonition-todo admonition" id="index-2">
+<p class="first admonition-title">Todo</p>
+<p class="last">#TODO Support for more luminous objects apart from light sources.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean response revealing whether the obj should be explored by the sensor or not.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor3D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">LightSensor3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor3D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
-<p>Directional ambient light sensor that enables the sensing 
-of the light intensity resulting from the emission of luminous 
-WorldObjects (e.g. LightSource). This sensor is sensitive to 
-light beams of any color.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor3D.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor3D.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor3D.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets the sensor.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.light_sensor.LightSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction. Only objects that are within the range and 
+aperture are considered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</li>
+<li><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</li>
+<li><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal"><span class="pre">dict</span></code>.</li>
+<li><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</li>
+<li><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reading of the sensor in the current direction.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor3D.get_position">
-<span class="sig-name descname"><span class="pre">get_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor3D.get_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor3D.get_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of each sector. Each sector is represented by a small 3D model 
-used  to cast rays and compute the readings wrt it. 
-TODO: For the moment only available in 3D.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">ColoredLightSensor</code><span class="sig-paren">(</span><em>color</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#ColoredLightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#ColoredLightSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filtering of potential target WorldObjects.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">ColoredLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#ColoredLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor3D" title="spike_swarm_sim.sensors.light_sensor.LightSensor3D"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor3D</span></code></a></p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.BlueLightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">BlueLightSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#BlueLightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.BlueLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.BlueLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">BlueLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#BlueLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.BlueLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.YellowLightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">YellowLightSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#YellowLightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.YellowLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.YellowLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">YellowLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#YellowLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.YellowLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.RedLightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">RedLightSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#RedLightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.RedLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.RedLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">RedLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#RedLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.RedLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.light_sensor.GreenLightSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.light_sensor.</code><code class="descname">GreenLightSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#GreenLightSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.GreenLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.GreenLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">GreenLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#GreenLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.GreenLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.communication_receiver">
+<span id="spike-swarm-sim-sensors-communication-receiver-module"></span><h2>spike_swarm_sim.sensors.communication_receiver module<a class="headerlink" href="#module-spike_swarm_sim.sensors.communication_receiver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRFrame">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.communication_receiver.</code><code class="descname">IRFrame</code><span class="sig-paren">(</span><em>msg_len=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.communication_receiver.</code><code class="descname">IRCommunicationReceiver</code><span class="sig-paren">(</span><em>*args</em>, <em>msg_length=1</em>, <em>max_hops=10</em>, <em>selection_scheme='random'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Communication Receiver based on IR technology.
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation.
+The reading of each sector is an message frame (python <code class="docutils literal"><span class="pre">dict</span></code>) with the message content 
+and different context information (signal strength, RX orientation, etc.). 
+This sensor is paired with the <code class="docutils literal"><span class="pre">IR_transmitter</span></code> actuator, meaning that robots must 
+be equipped with both RX and TX in order to work. Additionally, the IR receiver can only 
+sense a single frame per simulation cycle (even though there could be multiple senders 
+in the coverage). Within each sector area, the selected frame is the one sent by the closest 
+robot. Besides, there is a frame selection function to decide the sector whose perceived frame 
+is currently received. The implemented selection scheme are a random selection, that picks sectors 
+randomly, and the cyclic selection, that deterministically iterates the cyclic sequence of sectors 
+to be selected.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal"><span class="pre">IR_receiver</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
+<li><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</li>
+<li><strong>msg_length</strong> (<em>int</em>) – number of components of the message. Must be the 
+same as in the Transmitter definition.</li>
+<li><strong>max_hops</strong> (<em>int</em>) – maximum number of hops before frame discard.</li>
+<li><strong>selection_scheme</strong> (<em>str</em>) – As only one frame can be perceived by the sensor at each time step 
+from all directions, a frame selection scheme is required. This parameter indicates the 
+selection scheme to be employed. Possible values: <code class="docutils literal"><span class="pre">&quot;random&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;cyclic&quot;</span></code>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</li>
+<li><strong>current_direction</strong> (<em>int</em>) – indicates the last direction/sector from where a frame was received.
+It is only useful when using cyclic selection.</li>
+<li><a class="reference internal" href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation" title="spike_swarm_sim.sensors.utils.propagation"><strong>propagation</strong></a> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation" title="spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal"><span class="pre">rho</span></code> and <code class="docutils literal"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the robots with the IR transmitter 
+enabled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean response revealing whether the obj should be explored by the sensor or not.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>direction</em>, <em>obj=None</em>, <em>diff_vector=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the sensed frame of the current direction. Only objects that are within the range and 
+aperture are considered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</li>
+<li><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</li>
+<li><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal"><span class="pre">dict</span></code>.</li>
+<li><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</li>
+<li><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reading of the sensor in the current direction.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
+applies the selection of a 
+unique frame is carried out among those frames whose sender is not the receiver.
+If no message is sensed, the measurement is an empty frame. Notice that this method extends the 
+functionality of the method <code class="docutils literal"><span class="pre">DirectionalSensor.step</span></code> (it does not overwrite it).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal"><span class="pre">WorldObject</span></code> types) (excluding the robot 
+reading the sensor).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array with the measurement in each direction. In exceptional cases 
+it may return a list of python dictionaries (see <code class="docutils literal"><span class="pre">CommunicationReceiver</span></code>).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.random_selection">
+<code class="descname">random_selection</code><span class="sig-paren">(</span><em>frames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.random_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.random_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random selection scheme that selects a single frame from all possible frames.  
+The selection is purely random among those frames whose sender is not the robot owning the receiver. 
+Additionally, those frames with a large number of hops are discarded. The number of hops is only 
+considered if the communication state is used (see <code class="docutils literal"><span class="pre">IR_transmitter</span></code>), so that robots are able to 
+relay messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frames</strong> (<em>list</em>) – list of frame dicts (to be changed to frame objects) that are candidate to be selected.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a single selected frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.cyclic_selection">
+<code class="descname">cyclic_selection</code><span class="sig-paren">(</span><em>frames</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.cyclic_selection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.cyclic_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cyclic selection scheme that selects a single frame from all possible frames.  
+The selection is deterministic and selects frames following the cyclic sequence of sectors. 
+This means that, in an example with 4 sectors, the sequence of sectors whose frame is selected would be:</p>
+<p>Selection Sequence: S1 - S2 - S3 - S4 - S1 - S2 - S3 - S4- …..</p>
+<p>The drawback is that the sectors are selected even if there is no sender within their coverage area. In 
+these cases, the selected frame is an empty frame.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>frames</strong> (<em>list</em>) – list of frame dicts (to be changed to frame objects) that are candidate to be selected.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a single selected frame.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_msg">
+<code class="descname">empty_msg</code><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format of an empty message.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.communication_receiver.</code><code class="descname">BufferedIRCommRX</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver" title="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.color_sensor">
+<span id="spike-swarm-sim-sensors-color-sensor-module"></span><h2>spike_swarm_sim.sensors.color_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.color_sensor.ColorSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.color_sensor.</code><code class="descname">ColorSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>color='blue'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ColorSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ColorSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Directional color sensor that detects objects of a certain color in the local surroundings.
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an binary reading inticatin whether an object of the color was detected or 
+not in the sector coverage. The color sensor is a high level sensor that simplyfies the use of 
+a camara plus a postprocessing unit. The analogous postprocessing would be to detect the amount of 
+pixels of the color and detect an object of that color provided that the number of detected pixels 
+surpasses a certain threshold.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal"><span class="pre">color_sensor</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</li>
+<li><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</li>
+<li><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Variables:</th><td class="field-body"><ul class="first last simple">
+<li><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</li>
+<li><a class="reference internal" href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation" title="spike_swarm_sim.sensors.utils.propagation"><strong>propagation</strong></a> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation" title="spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal"><span class="pre">rho</span></code> and <code class="docutils literal"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.color_sensor.ColorSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ColorSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ColorSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the solid objects of the sentitive color.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean response revealing whether the obj should be explored by the sensor or not.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.color_sensor.ColorSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ColorSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ColorSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction. Only objects that are within the range and 
+aperture are considered.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</li>
+<li><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</li>
+<li><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal"><span class="pre">dict</span></code>.</li>
+<li><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</li>
+<li><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</li>
+<li><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Reading of the sensor in the current direction.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.color_sensor.</code><code class="descname">ObjectGraspedSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ObjectGraspedSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/color_sensor.html#ObjectGraspedSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.color_sensor.ObjectGraspedSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.ground_sensor">
+<span id="spike-swarm-sim-sensors-ground-sensor-module"></span><h2>spike_swarm_sim.sensors.ground_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.ground_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.ground_sensor.GroundSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.ground_sensor.</code><code class="descname">GroundSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ground_sensor.html#GroundSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ground_sensor.GroundSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor that detects if there is a ground area underneath the robot (binary reading). 
+Additionally, it only detects ground areas of a particular color.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal"><span class="pre">ground_sensor</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</li>
+<li><strong>noise_sigma</strong> (<em>float</em>) – TODO change to Bernoulli noise.</li>
+<li><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.ground_sensor.GroundSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ground_sensor.html#GroundSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ground_sensor.GroundSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method for reading the ground sensor.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>neighborhood</strong> (<em>list</em>) – <code class="docutils literal"><span class="pre">list</span></code> of entities in the surroundings of the robot.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">numpy array of length 1 with the binary reading. A reading of 1.0 means that a ground 
+area has been detected and a value of 0.0 means that no ground areas was detected.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.joint_sensor">
+<span id="spike-swarm-sim-sensors-joint-sensor-module"></span><h2>spike_swarm_sim.sensors.joint_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.joint_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.joint_sensor.JointPositionSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.joint_sensor.</code><code class="descname">JointPositionSensor</code><span class="sig-paren">(</span><em>*args, joints=[0], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointPositionSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.joint_sensor.JointPositionSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointPositionSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.joint_sensor.</code><code class="descname">JointVelocitySensor</code><span class="sig-paren">(</span><em>*args, joints=[0], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointVelocitySensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/joint_sensor.html#JointVelocitySensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.joint_sensor.JointVelocitySensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.collision_sensor">
+<span id="spike-swarm-sim-sensors-collision-sensor-module"></span><h2>spike_swarm_sim.sensors.collision_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.collision_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.collision_sensor.CollisionSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.collision_sensor.</code><code class="descname">CollisionSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/collision_sensor.html#CollisionSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.collision_sensor.CollisionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.collision_sensor.CollisionSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>hierarchy</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/collision_sensor.html#CollisionSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.collision_sensor.CollisionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.food_sensor">
+<span id="spike-swarm-sim-sensors-food-sensor-module"></span><h2>spike_swarm_sim.sensors.food_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.food_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.food_sensor.FoodSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.food_sensor.</code><code class="descname">FoodSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Food sensor that detects whether the robot is 
+holding/transporting a food piece or not.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.food_sensor.FoodSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.food_sensor.FoodAreaSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.food_sensor.</code><code class="descname">FoodAreaSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodAreaSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodAreaSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Food area sensor that detects whether there is a food 
+area underneath the robot or not.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.food_sensor.FoodAreaSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodAreaSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodAreaSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.food_sensor.FoodAreaSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#FoodAreaSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.FoodAreaSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.food_sensor.NestSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.food_sensor.</code><code class="descname">NestSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#NestSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.NestSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Nest area sensor that detects whether there is a nest 
+area underneath the robot or not.</p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.food_sensor.NestSensor.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#NestSensor.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.NestSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.food_sensor.NestSensor.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/food_sensor.html#NestSensor.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.food_sensor.NestSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.neighborhood_position_sensor">
 <span id="spike-swarm-sim-sensors-neighborhood-position-sensor-module"></span><h2>spike_swarm_sim.sensors.neighborhood_position_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.neighborhood_position_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.neighborhood_position_sensor.</span></span><span class="sig-name descname"><span class="pre">NeighborhoodPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.neighborhood_position_sensor.</code><code class="descname">NeighborhoodPositionSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -642,13 +1123,13 @@ TODO: For the moment only available in 3D.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.own_orientation_sensor">
 <span id="spike-swarm-sim-sensors-own-orientation-sensor-module"></span><h2>spike_swarm_sim.sensors.own_orientation_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.own_orientation_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.own_orientation_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnOrientationSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_orientation_sensor.html#OwnOrientationSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_orientation_sensor.html#OwnOrientationSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.own_orientation_sensor.</code><code class="descname">OwnOrientationSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_orientation_sensor.html#OwnOrientationSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_orientation_sensor.html#OwnOrientationSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -656,27 +1137,77 @@ TODO: For the moment only available in 3D.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.own_position_sensor">
 <span id="spike-swarm-sim-sensors-own-position-sensor-module"></span><h2>spike_swarm_sim.sensors.own_position_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.own_position_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.own_position_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_position_sensor.html#OwnPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_position_sensor.html#OwnPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.own_position_sensor.</code><code class="descname">OwnPositionSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_position_sensor.html#OwnPositionSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/own_position_sensor.html#OwnPositionSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.sensors.ble_receiver">
+<span id="spike-swarm-sim-sensors-ble-receiver-module"></span><h2>spike_swarm_sim.sensors.ble_receiver module<a class="headerlink" href="#module-spike_swarm_sim.sensors.ble_receiver" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.ble_receiver.</code><code class="descname">RF_Receiver</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<ul>
+<li><dl class="first docutils">
+<dt>Args:</dt>
+<dd><dl class="first docutils">
+<dt>msg_length [int] <span class="classifier-delimiter">:</span> <span class="classifier">number of components of the message. Must be the </span></dt>
+<dd><p class="first last">same as in the Transmitter definition.</p>
+</dd>
+</dl>
+<p class="last">max_hops [int] : maximum number of hops before frame discard.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.target_filter">
+<code class="descname">target_filter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver.target_filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filtering of potential sender robots.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step_direction">
+<code class="descname">step_direction</code><span class="sig-paren">(</span><em>rho</em>, <em>phi</em>, <em>direction_reading</em>, <em>direction</em>, <em>obj=None</em>, <em>diff_vector=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver.step_direction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the sensor of a sector, receiving the frame messages and the underlying
+context. For a detailed explanation of this method see DirectionalSensor._step_direction.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/ble_receiver.html#RF_Receiver.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
+firstly discards those with more hops than a thresh. Then, the selection of a 
+unique frame is carried out stochastically among those frames whose sender is not the receiver. 
+If no message is sensed, the measurement is an empty frame.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg">
+<code class="descname">empty_msg</code><a class="headerlink" href="#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format of an empty message.</p>
+</dd></dl>
 
 </dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.task_sensor">
 <span id="spike-swarm-sim-sensors-task-sensor-module"></span><h2>spike_swarm_sim.sensors.task_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.task_sensor" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.task_sensor.TaskSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.task_sensor.</span></span><span class="sig-name descname"><span class="pre">TaskSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/task_sensor.html#TaskSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.task_sensor.TaskSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.task_sensor.TaskSensor.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hierarchy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/task_sensor.html#TaskSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.task_sensor.TaskSensor.step" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="spike_swarm_sim.sensors.task_sensor.TaskSensor">
+<em class="property">class </em><code class="descclassname">spike_swarm_sim.sensors.task_sensor.</code><code class="descname">TaskSensor</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/task_sensor.html#TaskSensor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.task_sensor.TaskSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="method">
+<dt id="spike_swarm_sim.sensors.task_sensor.TaskSensor.step">
+<code class="descname">step</code><span class="sig-paren">(</span><em>hierarchy</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/task_sensor.html#TaskSensor.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.sensors.task_sensor.TaskSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

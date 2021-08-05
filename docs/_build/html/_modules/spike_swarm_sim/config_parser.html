@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -165,11 +176,11 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">as</span> <span class="nn">reg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors.utils</span> <span class="k">import</span> <span class="n">check_sensor_cfg</span><span class="p">,</span> <span class="n">autocomplete_sensor_cfg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.utils</span> <span class="k">import</span> <span class="n">check_actuator_cfg</span><span class="p">,</span> <span class="n">autocomplete_actuator_cfg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.utils</span> <span class="k">import</span> <span class="n">neural_net_checker</span><span class="p">,</span> <span class="n">autocomplete_neural_net</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors.utils</span> <span class="kn">import</span> <span class="n">check_sensor_cfg</span><span class="p">,</span> <span class="n">autocomplete_sensor_cfg</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.utils</span> <span class="kn">import</span> <span class="n">check_actuator_cfg</span><span class="p">,</span> <span class="n">autocomplete_actuator_cfg</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.utils</span> <span class="kn">import</span> <span class="n">neural_net_checker</span><span class="p">,</span> <span class="n">autocomplete_neural_net</span>
 
-<div class="viewcode-block" id="ExceptionDuplicates"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.config_parser.ExceptionDuplicates">[docs]</a><span class="k">def</span> <span class="nf">ExceptionDuplicates</span><span class="p">(</span><span class="n">kv_pairs</span><span class="p">):</span>
+<div class="viewcode-block" id="ExceptionDuplicates"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.config_parser.ExceptionDuplicates">[docs]</a><span class="k">def</span> <span class="nf">ExceptionDuplicates</span><span class="p">(</span><span class="n">kv_pairs</span><span class="p">):</span>
     <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kv_pairs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
@@ -178,7 +189,7 @@
             <span class="n">dct</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">dct</span></div>
 
-<div class="viewcode-block" id="json_parser"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.config_parser.json_parser">[docs]</a><span class="k">def</span> <span class="nf">json_parser</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+<div class="viewcode-block" id="json_parser"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.config_parser.json_parser">[docs]</a><span class="k">def</span> <span class="nf">json_parser</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Converts the JSON configuration file into a dictionary. &quot;&quot;&quot;</span>
     <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;spike_swarm_sim&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
@@ -187,7 +198,7 @@
     <span class="n">config_dict</span> <span class="o">=</span> <span class="n">config_autocompletion</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">config_dict</span></div>
 
-<div class="viewcode-block" id="config_checker"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.config_parser.config_checker">[docs]</a><span class="k">def</span> <span class="nf">config_checker</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="config_checker"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.config_parser.config_checker">[docs]</a><span class="k">def</span> <span class="nf">config_checker</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
     <span class="c1">#* General checks</span>
     <span class="c1">#! COmprobar que si neural controller =&gt; topology != None</span>
     <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -290,17 +301,17 @@
             <span class="k">for</span> <span class="n">sens_name</span><span class="p">,</span> <span class="n">sens_params</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">check_sensor_cfg</span><span class="p">(</span><span class="n">sens_name</span><span class="p">,</span> <span class="n">sens_params</span><span class="p">)</span>
             <span class="c1"># Check both comm. transmitter and receiver are created</span>
-            <span class="k">if</span> <span class="s1">&#39;wireless_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;A communication transmitter was created &#39;</span>\
                     <span class="s1">&#39;but no communication receiver was specified. &#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;wireless_transmitter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;A communication receiver was created &#39;</span>\
                     <span class="s1">&#39;but no communication transmitter was specified. &#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]):</span>
         <span class="n">neural_net_checker</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">cfg_dict</span>  </div>
 
-<div class="viewcode-block" id="config_autocompletion"><a class="viewcode-back" href="../../spike_swarm_sim.html#spike_swarm_sim.config_parser.config_autocompletion">[docs]</a><span class="k">def</span> <span class="nf">config_autocompletion</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="config_autocompletion"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.config_parser.config_autocompletion">[docs]</a><span class="k">def</span> <span class="nf">config_autocompletion</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Autocompletes omitted optional fields in the config file to </span>
 <span class="sd">    their default values. &quot;&quot;&quot;</span>
     <span class="c1">#* Autocomplete Algorithm config</span>
@@ -340,9 +351,9 @@
                     <span class="k">for</span> <span class="n">act_name</span><span class="p">,</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                         <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="n">act_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">autocomplete_actuator_cfg</span><span class="p">(</span><span class="n">act_name</span><span class="p">,</span> <span class="n">act</span><span class="p">)</span>
                 <span class="c1"># Set TX and RX msgs to the same length</span>
-                <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;wireless_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                    <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;wireless_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]:</span>
-                        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;wireless_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]:</span>
+                        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span>
                         <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The length of communication receiver and communication transmitter messages &#39;</span>\
                             <span class="s1">&#39;was not the same. Fixing message to a length of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]))</span>
                 <span class="c1"># Check robot env perturbations</span>

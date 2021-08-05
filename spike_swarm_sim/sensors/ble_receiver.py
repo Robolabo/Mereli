@@ -2,7 +2,7 @@ import numpy as np
 import pybullet as p
 from .base_sensor import DirectionalSensor
 from spike_swarm_sim.register import sensor_registry
-from spike_swarm_sim.objects import Robot, Robot3D
+from spike_swarm_sim.objects import Robot
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
 from .utils.propagation import ExpDecayPropagation, RSSI_Propagation
 
@@ -21,11 +21,11 @@ class RF_Receiver(DirectionalSensor):
         super(RF_Receiver, self).__init__(*args,  **kwargs)
         self.propagation = RSSI_Propagation(noise_sigma=self.noise_sigma)
 
-    def _target_filter(self, obj):
+    def target_filter(self, obj):
         """ Filtering of potential sender robots. """
-        return issubclass_of_any(obj, [Robot, Robot3D]) and 'RF_transmitter' in obj.actuators
+        return issubclass_of_any(obj, [Robot]) and 'RF_transmitter' in obj.actuators
 
-    def _step_direction(self, rho, phi, direction_reading, direction, obj=None, diff_vector=None):
+    def step_direction(self, rho, phi, direction_reading, direction, obj=None, diff_vector=None):
         """ Step the sensor of a sector, receiving the frame messages and the underlying
         context. For a detailed explanation of this method see DirectionalSensor._step_direction.
         """

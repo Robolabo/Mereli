@@ -272,7 +272,7 @@ class EvolutionaryAlgorithm:
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
         #! Change list_sensors and actuators to add comm:msg
         # sensor_names = [sens for sens in sensor_names if 'IR_receiver' not in sens]
-        # # actuator_names = [act for act in actuator_names if 'wireless_transmitter' not in act]
+        # # actuator_names = [act for act in actuator_names if 'IR_transmitter' not in act]
         # actuator_names = [act for act in actuator_names if 'state' not in act]
         #--------------------------------------------------
         lights = self.world.lights
