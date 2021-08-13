@@ -242,16 +242,36 @@ class Engine3D:
         return (np.array(pos), np.array(p.getEulerFromQuaternion(qt_ori, physicsClientId=self.client)))
 
     def get_sensor_position(self, obj_id, sensor_name, sector=0):
+        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
+
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param str sensor_name: reference name of the sensor.
+        :para int sector: index of the sensor's sector requested.
+
+        :returns: numpy array with the position. 
+        """
         return np.array(self.get_link_state(obj_id, self.physical_sensors[sensor_name][sector]['idx'])[0])
 
+    def set_color(self, obj_id, link_id, color, opacity=1.0):
+        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
 
-    #! USELESS?
-    # def initialize_render(self):
-    #     self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, 1)
-    #     self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-    #                 cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
-
-
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param int obj_id: identifier of the link of the robot owning the sensor whose color is changed.
+        :param list color: ``list`` with the RGB code of the color or ``str`` with the color name.
+        :para float opacity: opacity of the color.
+        """
+        if isinstance(color, str):
+            color = list(colors.to_rgb(color))
+        rgba_color = color + [opacity]
+        p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=rgba_color, physicsClientId=self.client)
 
 
 

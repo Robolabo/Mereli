@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Basic Examples &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#worlds">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#entities">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#initializers">Initializers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#sensors">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#directional-sensors">Directional Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#controllers">Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#communication-systems">Communication Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#artificial-neural-networks">Artificial Neural Networks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials.html#configuration-files">Configuration Files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials.html#examples">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples.html#basic-examples">Basic Examples</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples.html#intermediate-examples">Intermediate Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples.html#advanced-examples">Advanced Examples</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Basic Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../../_sources/examples/basic_examples/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="basic-examples">
+<h1>Basic Examples<a class="headerlink" href="#basic-examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="creating-worlds-and-entities">
+<h2>1. Creating worlds and entities.<a class="headerlink" href="#creating-worlds-and-entities" title="Permalink to this headline">¶</a></h2>
+<p>In this example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">USE_API</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1"># Whether to add entities using world API or config dict.</span>
+<span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots.</span>
+<span class="n">n_balls</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># Number of small balls.</span>
+
+<span class="c1"># Create empty world.</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">World3D</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">USE_API</span><span class="p">:</span>
+    <span class="c1"># Create and add robots</span>
+    <span class="n">ini_ori</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">6.28</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;orientations&#39;</span><span class="p">)</span>
+    <span class="n">ini_pos</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span>  <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;positions&#39;</span><span class="p">)</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">set_initializer</span><span class="p">(</span><span class="s1">&#39;swarm&#39;</span><span class="p">,</span> <span class="n">ini_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="n">ini_ori</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ini_pos</span><span class="p">(),</span> <span class="n">ini_ori</span><span class="p">())):</span>
+        <span class="n">robot</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">robot</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create blue and yellow lights</span>
+    <span class="n">blue_ls</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;light_blue&#39;</span><span class="p">,</span> <span class="n">blue_ls</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;lights&#39;</span><span class="p">)</span>
+    <span class="n">yellow_ls</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;light_yellow&#39;</span><span class="p">,</span> <span class="n">yellow_ls</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;lights&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create ground area</span>
+    <span class="n">grey_area</span> <span class="o">=</span> <span class="n">GroundArea</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">)</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;grey_area&#39;</span><span class="p">,</span> <span class="n">grey_area</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;ground_areas&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Create balls</span>
+    <span class="n">ini_pos</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_balls</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mf">1.3</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span>  <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;positions&#39;</span><span class="p">)</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">set_initializer</span><span class="p">(</span><span class="s1">&#39;balls&#39;</span><span class="p">,</span> <span class="n">ini_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pos</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ini_pos</span><span class="p">()):</span>
+        <span class="n">ball</span> <span class="o">=</span> <span class="n">Ball</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+        <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;ball_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ball</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;balls&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">world_cfg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;engine&quot;</span> <span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;world_delay&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;width&quot;</span><span class="p">:</span>  <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">&quot;objects&quot;</span> <span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;robotA&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;epuck&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="n">n_robots</span><span class="p">,</span>
+            <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="c1"># In the JSON file, use null instead.</span>
+            <span class="s2">&quot;sensors&quot;</span> <span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>
+                <span class="s2">&quot;orientations&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="mf">6.28</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;perturbations&quot;</span> <span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;trainable&quot;</span> <span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;balls&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;ball&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="n">n_balls</span><span class="p">,</span>
+            <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mf">1.3</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span> <span class="p">:</span> <span class="o">.</span><span class="mi">7</span><span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;light_blue&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;light_source&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span> <span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]]}},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;light_yellow&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;light_source&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span> <span class="p">:</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]]}},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s1">&#39;yellow&#39;</span><span class="p">}</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ground_areas&quot;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;ground_area&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;fixed_values&quot;</span> <span class="p">:</span> <span class="p">[[</span><span class="mf">3.5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]}},</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span> <span class="p">:</span> <span class="s1">&#39;grey&#39;</span><span class="p">,</span> <span class="s1">&#39;radius&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">world</span><span class="o">.</span><span class="n">build_from_dict</span><span class="p">(</span><span class="n">world_cfg</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p># Before executing the simulation for the first time, call the connect method.
+world.connect()
+# Simulate 10 independent times. It is important to reset the world at the beggining
+# of every trial. Here we can clearly see the importance of entity initializers, as
+# they are run at the beggining of every trial.
+for trial in range(10):</p>
+<blockquote>
+<div><p>print(‘STARTING TRIAL ‘, trial)
+world.reset()
+for t in range(1000):</p>
+<blockquote>
+<div><p>state, action = world.step()</p>
+</div></blockquote>
+</div></blockquote>
+<p>world.disconnect()</p>
+</div>
+<div class="section" id="basic-obstacle-avoider">
+<h2>2. Basic Obstacle Avoider<a class="headerlink" href="#basic-obstacle-avoider" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="braitenberg-vehicle-i">
+<h2>3. Braitenberg Vehicle I<a class="headerlink" href="#braitenberg-vehicle-i" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="basic-communication-among-robots">
+<h2>4. Basic Communication Among Robots<a class="headerlink" href="#basic-communication-among-robots" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="transporting-small-objects">
+<h2>5. Transporting Small Objects<a class="headerlink" href="#transporting-small-objects" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

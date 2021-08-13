@@ -9,6 +9,7 @@ Subpackages
     spike_swarm_sim.actuators
     spike_swarm_sim.algorithms
     spike_swarm_sim.controllers
+    spike_swarm_sim.communication
     spike_swarm_sim.neural_networks
     spike_swarm_sim.objectives
     spike_swarm_sim.objects

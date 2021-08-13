@@ -8,10 +8,18 @@ import pybullet_utils.bullet_client as bc
 
 
 from spike_swarm_sim.objects import  Robot, LightSource, Wall
-from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
+from spike_swarm_sim.register import (controllers, world_objects, initializers, 
+        env_perturbations, rewards, communication_systems)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
+
+
+def map_parser():
+    file = 'spike_swarm_sim/models/maps/map1.txt'
+    with open(file) as f:
+        map_mat = np.array([[int(ch) if ch != '' else 0 for ch in line.split(';')[0].split(' ')] for line in f.readlines()])
+    import pdb; pdb.set_trace()
 
 
 class MultiWorldWrapper:
@@ -140,7 +148,7 @@ class World(object):
         self.prev_states = None
         self.prev_actions = None
         self.t = 0
-
+        map_parser()
 
     @increase_time
     @mov_average_timeit
@@ -192,8 +200,10 @@ class World(object):
             #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
             states.append(state_obj)
             actions.append(action_obj)
-        states = np.stack(states)
-        actions = np.stack(actions)
+        if len(states) > 0:
+            states = np.stack(states)
+        if len(actions) > 0:
+            actions = np.stack(actions)
 
         #* Apply environmental perturbations (Postprocessing)
         if len(self.env_perturbations) > 0:
@@ -296,7 +306,7 @@ class World(object):
             object_cls = world_objects[engine][obj['type']]
             #! Prov implementation for TFM regarding the task scheduler
             if object_cls.__name__ == 'TaskScheduler':
-                world_obj = object_cls(**obj['params'])
+                world_obj = object_cls(None, np.zeros(3), np.zeros(3), **obj['params']) #! ojo 2D
                 self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                 continue
             #* Create group intializers.
@@ -321,6 +331,9 @@ class World(object):
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology)
                     robot = object_cls(position, orientation, controller=controller, **obj['params'])
+                    #* Add communication system (if any)
+                    if "comm_sys" in obj:
+                        robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))
                     self.register_entity(obj_name + '_' + str(i), robot, group=obj_name)
 
                 #* Add perturbations (if any) to the robot states and actions (not physical perturbs)
@@ -384,12 +397,12 @@ class World(object):
                 group_initializer = self.initializers[group]
                 group_elements = self.group_objects(group)
                 #* Initialize positions
-                if 'positions' in group_initializer.keys():
+                if 'positions' in group_initializer:
                     positions = group_initializer['positions']()
                     for pos, obj in zip(positions, group_elements):
                         obj.position = pos
                 #* Initialize orientations
-                if 'orientations' in group_initializer.keys():
+                if 'orientations' in group_initializer and group_initializer['orientations'] is not None:
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
                         obj.orientation = orientation
@@ -462,6 +475,38 @@ class World(object):
         """ Dict with all luminous objects. """
         return {name : obj for name, obj in self.hierarchy.items() if obj.luminous}
 
+
+
+class CustomWorld(World):
+    """ World class of 3D bounded arenas. """
+    def __init__(self, *args, **kwargs):
+        super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
+        #* Add world limits
+        self.add_map()
+
+    def add_map(self):
+        pass
+
+    def neighborhood(self, robot):
+        """ 
+        .. todo:: #TODO: Not finished
+        Method that returns the list of neighboring world objects of a robot.
+        An object is considered to be in the vicinity if it is contained in the ball
+        of radius equal to:
+            a) The maximum range of distance or comunication sensors if the object is a robot.
+            b) The range of the light sensor if the object is a light source.
+        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
+
+        :param Robot3D robot: The Robot object whose vicinity has to be computed.
+
+        :returns: List of neighboring WorldObject.
+        """
+
+        return self.hierarchy
+
+
+
+
 #TODO implementar p.disconnect(). Ctx manager?
 class World3D(World):
     """ World class of 3D bounded arenas. """
@@ -490,12 +535,6 @@ class World3D(World):
             and actuator names to actions. 
         """
         states, actions = super().step()
-        if self.render:
-            for l in self.lights.values():
-                if self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']) % 2 == 0:
-                    l.show_coverage()
-                else:
-                    l.hide_coverage()
         return states, actions
 
     def neighborhood(self, robot):

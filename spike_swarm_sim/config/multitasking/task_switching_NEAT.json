@@ -89,6 +89,7 @@
                 "type" : "robot",
                 "num_instances" : 2,
                 "controller" : "neural_controller",
+                "comm_sys" : {"name" : "IR_comm", "params" : {}},
                 "sensors" : {
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20},

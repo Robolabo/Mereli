@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -172,11 +164,12 @@
            <div itemprop="articleBody">
             
   <h1>Source code for spike_swarm_sim.objects.robot_3D</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="c1"># from shapely.geometry import Point</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="kn">import</span> <span class="n">WorldObject</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.base_actuator</span> <span class="kn">import</span> <span class="n">HighLevelActuator</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">world_object_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">WorldObject</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.base_actuator</span> <span class="k">import</span> <span class="n">HighLevelActuator</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">world_object_registry</span>
 
 
 <div class="viewcode-block" id="Robot"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;robot&#39;</span><span class="p">)</span>
@@ -192,19 +185,21 @@
 <span class="sd">    :var dict actuators:</span>
 <span class="sd">    :var dict planned_actions: </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_file</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_file</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Robot</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model_file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span>\
                         <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">luminous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> \
                         <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="c1">#* Initialize sensors and actuators according to controller requirements</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
-                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
-                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
-                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
-                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable</span><span class="p">:</span>
+            <span class="c1">#* Initialize sensors and actuators according to controller requirements</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+        <span class="c1">#* Communication system. Only used if receiver and transmitter sensors are used.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1">#* Storage for actions selected by the controllers to be fed to actuators</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
 
@@ -241,8 +236,16 @@
             <span class="k">for</span> <span class="n">pert</span> <span class="ow">in</span> <span class="n">perturbations</span><span class="p">:</span>
                 <span class="n">state</span> <span class="o">=</span> <span class="n">pert</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
 
+        <span class="c1">#* Apply communication system pre step (previous to controller) </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">rx_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">step_pre</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">rx_name</span><span class="p">])</span>
+
         <span class="c1">#* Obtain actions using controller.</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
+        <span class="c1">#* Apply communication system pre step (previous to controller) </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">step_post</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+
 
         <span class="c1">#* Plan actions for future execution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plan_actions</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
@@ -251,6 +254,10 @@
         <span class="c1">#     self.food = True</span>
         <span class="c1"># if &#39;nest_sensor&#39; in state.keys() and bool(state[&#39;nest_sensor&#39;][0]):</span>
         <span class="c1">#     self.food = False</span>
+
+        <span class="c1">#* Convert again tx frame to dict for its use in the opt. algs. </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">actions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">tx_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">actions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">tx_name</span><span class="p">]</span><span class="o">.</span><span class="n">as_dict</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;state&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">comm_state_code</span><span class="p">}}</span>
         <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">actions</span></div>
 
 <div class="viewcode-block" id="Robot.plan_actions"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot.plan_actions">[docs]</a>    <span class="k">def</span> <span class="nf">plan_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
@@ -289,28 +296,41 @@
 <span class="sd">        :param int seed: seed for random intialization.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_food</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="c1"># Check if new sensors or actuator has been enabled from the controller. If so, </span>
-        <span class="c1"># activate them.</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
-                        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
-                        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
-                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
-                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
-
-        <span class="c1">#* Reset Controller</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable</span><span class="p">:</span>
+            <span class="c1"># Check if new sensors or actuator has been enabled from the controller. If so, </span>
+            <span class="c1"># activate them.</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">s</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">a</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>\
+                                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                                <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
+            <span class="c1">#* Reset controller</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="c1">#* Reset Actuators</span>
-        <span class="k">for</span> <span class="n">actuator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">actuator</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
-                <span class="n">actuator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
-        <span class="c1">#* Reset Sensors</span>
-        <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sensor</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
-                <span class="n">sensor</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+            <span class="c1">#* Reset Actuators</span>
+            <span class="k">for</span> <span class="n">actuator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">actuator</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
+                    <span class="n">actuator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="c1">#* Reset Sensors</span>
+            <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">sensor</span><span class="p">,</span> <span class="s1">&#39;reset&#39;</span><span class="p">):</span>
+                    <span class="n">sensor</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="c1">#* Reset Comm Sys</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Robot.add_communication"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot.add_communication">[docs]</a>    <span class="k">def</span> <span class="nf">add_communication</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comm_sys</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">comm_sys</span><span class="o">.</span><span class="n">tx_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Trying to create communication system </span><span class="si">{}</span><span class="s1">, but sensor &#39;</span>\
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has not been enabled.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">comm_sys</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">comm_sys</span><span class="o">.</span><span class="n">tx_name</span><span class="p">)))</span>
+        <span class="c1"># if comm_sys.rx_name not in self.sensors:</span>
+        <span class="c1">#     raise Exception(logging.error(&#39;Trying to create communication system {}, but sensor &#39;\</span>
+        <span class="c1">#         &#39;{} has not been enabled.&#39;.format(type(comm_sys).__name__, comm_sys.rx_name)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span> <span class="o">=</span> <span class="n">comm_sys</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_sys</span><span class="o">.</span><span class="n">set_owner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">food</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -327,14 +347,14 @@
 <div class="viewcode-block" id="Minitaur"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Minitaur">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;minitaur&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Minitaur</span><span class="p">(</span><span class="n">Robot</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Class for the Minitaur robot. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Minitaur</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_file</span><span class="o">=</span><span class="s1">&#39;quadruped/minitaur&#39;</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Epuck3D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Epuck3D">[docs]</a><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">Epuck3D</span><span class="p">(</span><span class="n">Robot</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Class for the Epuck. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Epuck3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_file</span><span class="o">=</span><span class="s1">&#39;epuck&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </pre></div>
 

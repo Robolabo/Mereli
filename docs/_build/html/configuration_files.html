@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,19 +31,19 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="SpikeSwarmSim" href="modules.html" />
-    <link rel="prev" title="Tutorials" href="entities.html" /> 
+    <link rel="next" title="Customize Code" href="custom_classes.html" />
+    <link rel="prev" title="Artificial Neural Networks" href="tutorials/artificial_neural_networks.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,11 +88,32 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="entities.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/entities.html">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#initializers">Initializers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration Files</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#world-configuration">World Configuration</a></li>
@@ -99,10 +122,150 @@
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -171,34 +334,30 @@
            <div itemprop="articleBody">
             
   <div class="section" id="configuration-files">
-<span id="conf-files"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h1>
+<span id="id1"></span><h1>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="world-configuration">
 <h2>World Configuration<a class="headerlink" href="#world-configuration" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><dl class="first docutils">
-<dt><em>engine</em> (str)</dt>
-<dd><p class="first last">Physics and render engine to be used in the simulation. Currently, it can be either 2D and 3D.</p>
+<li><dl class="simple">
+<dt><em>engine</em> (str)</dt><dd><p>Physics and render engine to be used in the simulation. Currently, it can be either 2D and 3D.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><em>height</em> (float)</dt>
-<dd><p class="first last">Height in metres of the environment arena.</p>
+<li><dl class="simple">
+<dt><em>height</em> (float)</dt><dd><p>Height in metres of the environment arena.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><em>width</em> (float)</dt>
-<dd><p class="first last">Width in metres of the environment arena.</p>
+<li><dl class="simple">
+<dt><em>width</em> (float)</dt><dd><p>Width in metres of the environment arena.</p>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><em>objects</em> (dict)</dt>
-<dd><p class="first">Python <a href="#id1"><span class="problematic" id="id2">``</span></a>dict``gathering all the entites/objects instantiated in the arena. The entities are gathered in groups that
+<li><dl>
+<dt><em>objects</em> (dict)</dt><dd><p>Python <a href="#id2"><span class="problematic" id="id3">``</span></a>dict``gathering all the entites/objects instantiated in the arena. The entities are gathered in groups that
 share the same characteristics. Therefore, each key-value pair maps the name of the group of entities to the configuration
 of the group members. The most important configuration fields of each entity group are the type of the entities of the
 group, the number of instances and the initializers. Moreover, in the case of robot entities, the controller, the enabled sensors and
@@ -237,97 +396,81 @@ the employed actuators are also stated here.</p>
 <span class="gp">&gt;&gt;&gt; </span> <span class="p">}</span>
 </pre></div>
 </div>
-<table border="1" class="last docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="26%" />
-<col width="19%" />
-<col width="10%" />
-<col width="25%" />
+<col style="width: 20%" />
+<col style="width: 26%" />
+<col style="width: 19%" />
+<col style="width: 10%" />
+<col style="width: 25%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Sensor Reference</td>
-<td>Sensor Class</td>
-<td>Parameter</td>
-<td>Default</td>
-<td>Description</td>
+<tbody>
+<tr class="row-odd"><td><p>Sensor Reference</p></td>
+<td><p>Sensor Class</p></td>
+<td><p>Parameter</p></td>
+<td><p>Default</p></td>
+<td><p>Description</p></td>
 </tr>
-<tr class="row-even"><td rowspan="2"><div class="first last line-block">
-<div class="line">distance_sensor3D</div>
-<div class="line">distance_sensor</div>
-</div>
-</td>
-<td rowspan="2"><div class="first last line-block">
-<div class="line">DistanceSensor</div>
-<div class="line">DistanceSensor3D</div>
-</div>
-</td>
-<td>n_sectors</td>
-<td>4</td>
-<td>&#160;</td>
+<tr class="row-even"><td rowspan="2"><p>distance_sensor</p></td>
+<td rowspan="2"><p>DistanceSensor</p></td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>range</td>
-<td>2</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td rowspan="5"><div class="first last line-block">
+<tr class="row-even"><td rowspan="5"><div class="line-block">
 <div class="line">IR_receiver</div>
 </div>
 </td>
-<td rowspan="5"><div class="first last line-block">
+<td rowspan="5"><div class="line-block">
 <div class="line">IRCommunicationReceiver</div>
 <div class="line">BufferedIRCommRX</div>
 </div>
 </td>
-<td>n_sectors</td>
-<td>4</td>
-<td>&#160;</td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>range</td>
-<td>2</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>msg_length</td>
-<td>1</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>msg_length</p></td>
+<td><p>1</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>max_hops</td>
-<td>10</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>max_hops</p></td>
+<td><p>10</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>selection_scheme</td>
-<td>“cyclic”</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>selection_scheme</p></td>
+<td><p>“cyclic”</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td rowspan="2"><div class="first last line-block">
-<div class="line">light_sensor3D</div>
-<div class="line">distance_sensor</div>
-</div>
-</td>
-<td rowspan="2"><div class="first last line-block">
-<div class="line">LightSensor3D</div>
-<div class="line">DistanceSensor3D</div>
-</div>
-</td>
-<td>n_sectors</td>
-<td>4</td>
-<td>&#160;</td>
+<tr class="row-odd"><td rowspan="2"><p>light_sensor</p></td>
+<td rowspan="2"><p>LightSensor</p></td>
+<td><p>n_sectors</p></td>
+<td><p>4</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>range</td>
-<td>2</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>range</p></td>
+<td><p>2</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>ground_sensor</td>
-<td>GroundSensor</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-odd"><td><p>ground_sensor</p></td>
+<td><p>GroundSensor</p></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>color_sensor</td>
-<td>ColorSensor</td>
-<td>&#160;</td>
-<td>&#160;</td>
-<td>&#160;</td>
+<tr class="row-even"><td><p>color_sensor</p></td>
+<td><p>ColorSensor</p></td>
+<td></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -339,92 +482,88 @@ the employed actuators are also stated here.</p>
 <div class="section" id="topology-configuration">
 <h2>Topology Configuration<a class="headerlink" href="#topology-configuration" title="Permalink to this headline">¶</a></h2>
 <ul>
-<li><dl class="first docutils">
-<dt><strong>dt</strong> (float)</dt>
-<dd><p class="first last">Euler time step used to iteratively solve the differential equations of the neurons.</p>
+<li><dl class="simple">
+<dt><strong>dt</strong> (float)</dt><dd><p>Euler time step used to iteratively solve the differential equations of the neurons.</p>
 </dd>
 </dl>
 </li>
-<li><p class="first"><em>time_scale</em> (float)</p>
-</li>
-<li><dl class="first docutils">
-<dt><em>neuron_model</em> (str)</dt>
-<dd><table border="1" class="first docutils">
+<li><p><em>time_scale</em> (float)</p></li>
+<li><dl>
+<dt><em>neuron_model</em> (str)</dt><dd><table class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="23%" />
-<col width="57%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 57%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Reference Name</th>
-<th class="head">Python class</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference Name</p></th>
+<th class="head"><p>Python class</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>rate_model</td>
-<td>RateModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tbody>
+<tr class="row-even"><td><p>rate_model</p></td>
+<td><p>RateModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-odd"><td>adex</td>
-<td>AdExModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-odd"><td><p>adex</p></td>
+<td><p>AdExModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-even"><td>izhikevich</td>
-<td>IzhikevichModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-even"><td><p>izhikevich</p></td>
+<td><p>IzhikevichModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-odd"><td>lif</td>
-<td>LIFModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-odd"><td><p>lif</p></td>
+<td><p>LIFModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-even"><td>exp_lif</td>
-<td>ExpLIFModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-even"><td><p>exp_lif</p></td>
+<td><p>ExpLIFModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-odd"><td>morris_lecar</td>
-<td>MorrisLecarModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-odd"><td><p>morris_lecar</p></td>
+<td><p>MorrisLecarModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
 </tbody>
 </table>
-<div class="last admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last"><code class="docutils literal notranslate"><span class="pre">MorrisLecarModel</span></code> and <code class="docutils literal notranslate"><span class="pre">LIFModel</span></code> classes do exist in the simulator but cannot be used for the
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">MorrisLecarModel</span></code> and <code class="docutils literal notranslate"><span class="pre">LIFModel</span></code> classes do exist in the simulator but cannot be used for the
 moment.</p>
 </div>
 </dd>
 </dl>
 </li>
-<li><dl class="first docutils">
-<dt><em>synapse_model</em>  (str)</dt>
-<dd><table border="1" class="first last docutils">
+<li><dl>
+<dt><em>synapse_model</em>  (str)</dt><dd><table class="docutils align-default">
 <colgroup>
-<col width="20%" />
-<col width="23%" />
-<col width="57%" />
+<col style="width: 20%" />
+<col style="width: 23%" />
+<col style="width: 57%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Reference Name</th>
-<th class="head">Python class</th>
-<th class="head">Description</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Reference Name</p></th>
+<th class="head"><p>Python class</p></th>
+<th class="head"><p>Description</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>static</td>
-<td>RateModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tbody>
+<tr class="row-even"><td><p>static</p></td>
+<td><p>RateModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
-<tr class="row-odd"><td>adex</td>
-<td>AdExModel</td>
-<td>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
+<tr class="row-odd"><td><p>adex</p></td>
+<td><p>AdExModel</p></td>
+<td><p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p></td>
 </tr>
 </tbody>
 </table>
 </dd>
 </dl>
 </li>
-<li><p class="first"><em>stimuli</em> (dict)</p>
+<li><p><em>stimuli</em> (dict)</p>
 <blockquote>
 <div><p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;stimuli&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -438,9 +577,8 @@ moment.</p>
 </div>
 </div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt><em>ensembles</em> (dict)</dt>
-<dd><p class="first">Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> defining the neuron ensembles or layers of the architecture. For the moment,
+<li><dl>
+<dt><em>ensembles</em> (dict)</dt><dd><p>Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> defining the neuron ensembles or layers of the architecture. For the moment,
 all the ensembles’ neurons are based on the same neuron model established in the <code class="docutils literal notranslate"><span class="pre">neuron_model</span></code>
 field. Nonetheless, the neurons of each ensemble can have different neuron parameters (e.g. one
 can define an ensemble of fast rate model neurons with a small <span class="math notranslate nohighlight">\(\tau\)</span> and another ensemble composed
@@ -464,144 +602,144 @@ it they are not defined, the default value is used. Moreover, the parameters sho
 are specifically used only in the case of the <code class="docutils literal notranslate"><span class="pre">rate_model</span></code>. For other neuron models, the parameters
 are different according to the neuron requirements. The following table gathers the possible parameters
 of each of the available neuron models:</p>
-<table border="1" class="last docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="17%" />
-<col width="18%" />
-<col width="19%" />
-<col width="13%" />
-<col width="33%" />
+<col style="width: 17%" />
+<col style="width: 18%" />
+<col style="width: 19%" />
+<col style="width: 13%" />
+<col style="width: 33%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>Neuron Model</td>
-<td>Parameter</td>
-<td>Math Notation</td>
-<td>Default</td>
-<td>Description</td>
+<tbody>
+<tr class="row-odd"><td><p>Neuron Model</p></td>
+<td><p>Parameter</p></td>
+<td><p>Math Notation</p></td>
+<td><p>Default</p></td>
+<td><p>Description</p></td>
 </tr>
-<tr class="row-even"><td rowspan="4">rate_model</td>
-<td>tau</td>
-<td><span class="math notranslate nohighlight">\(\tau\)</span></td>
-<td>1.0</td>
-<td>Neuron’s time constant</td>
+<tr class="row-even"><td rowspan="4"><p>rate_model</p></td>
+<td><p>tau</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron’s time constant</p></td>
 </tr>
-<tr class="row-odd"><td>bias</td>
-<td><span class="math notranslate nohighlight">\(\beta\)</span></td>
-<td>0.0</td>
-<td>Neuron bias or offset</td>
+<tr class="row-odd"><td><p>bias</p></td>
+<td><p><span class="math notranslate nohighlight">\(\beta\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p>Neuron bias or offset</p></td>
 </tr>
-<tr class="row-even"><td>gain</td>
-<td><span class="math notranslate nohighlight">\(g\)</span></td>
-<td>1.0</td>
-<td>Neuron gain</td>
+<tr class="row-even"><td><p>gain</p></td>
+<td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron gain</p></td>
 </tr>
-<tr class="row-odd"><td>activation</td>
-<td><span class="math notranslate nohighlight">\(f\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-odd"><td><p>activation</p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-even"><td rowspan="9">adex</td>
-<td>tau_w</td>
-<td><span class="math notranslate nohighlight">\(\tau_w\)</span></td>
-<td>1.0</td>
-<td>Neuron’s time constant</td>
+<tr class="row-even"><td rowspan="9"><p>adex</p></td>
+<td><p>tau_w</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau_w\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron’s time constant</p></td>
 </tr>
-<tr class="row-odd"><td>tau_m</td>
-<td><span class="math notranslate nohighlight">\(\tau_m\)</span></td>
-<td>0.0</td>
-<td>Neuron bias or offset</td>
+<tr class="row-odd"><td><p>tau_m</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau_m\)</span></p></td>
+<td><p>0.0</p></td>
+<td><p>Neuron bias or offset</p></td>
 </tr>
-<tr class="row-even"><td>V_rest</td>
-<td><span class="math notranslate nohighlight">\(g\)</span></td>
-<td>1.0</td>
-<td>Neuron gain</td>
+<tr class="row-even"><td><p>V_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(g\)</span></p></td>
+<td><p>1.0</p></td>
+<td><p>Neuron gain</p></td>
 </tr>
-<tr class="row-odd"><td>V_reset</td>
-<td><span class="math notranslate nohighlight">\(f\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-odd"><td><p>V_reset</p></td>
+<td><p><span class="math notranslate nohighlight">\(f\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-even"><td>A</td>
-<td><span class="math notranslate nohighlight">\(A\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-even"><td><p>A</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-odd"><td>B</td>
-<td><span class="math notranslate nohighlight">\(B\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-odd"><td><p>B</p></td>
+<td><p><span class="math notranslate nohighlight">\(B\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-even"><td>theta_rest</td>
-<td><span class="math notranslate nohighlight">\(A\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-even"><td><p>theta_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-odd"><td>R</td>
-<td><span class="math notranslate nohighlight">\(R\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-odd"><td><p>R</p></td>
+<td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-even"><td>refractoriness</td>
-<td><span class="math notranslate nohighlight">\(A\)</span></td>
-<td>“sigmoid”</td>
-<td>Neuron activation function</td>
+<tr class="row-even"><td><p>refractoriness</p></td>
+<td><p><span class="math notranslate nohighlight">\(A\)</span></p></td>
+<td><p>“sigmoid”</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="4">izhikevich</td>
-<td>A</td>
-<td><span class="math notranslate nohighlight">\(a\)</span></td>
-<td>0.02</td>
-<td>Neuron’s time constant</td>
+<tr class="row-odd"><td rowspan="4"><p>izhikevich</p></td>
+<td><p>A</p></td>
+<td><p><span class="math notranslate nohighlight">\(a\)</span></p></td>
+<td><p>0.02</p></td>
+<td><p>Neuron’s time constant</p></td>
 </tr>
-<tr class="row-even"><td>B</td>
-<td><span class="math notranslate nohighlight">\(b\)</span></td>
-<td>0.2</td>
-<td>Neuron bias or offset</td>
+<tr class="row-even"><td><p>B</p></td>
+<td><p><span class="math notranslate nohighlight">\(b\)</span></p></td>
+<td><p>0.2</p></td>
+<td><p>Neuron bias or offset</p></td>
 </tr>
-<tr class="row-odd"><td>C</td>
-<td><span class="math notranslate nohighlight">\(c\)</span></td>
-<td>-65</td>
-<td>Neuron gain</td>
+<tr class="row-odd"><td><p>C</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\)</span></p></td>
+<td><p>-65</p></td>
+<td><p>Neuron gain</p></td>
 </tr>
-<tr class="row-even"><td>D</td>
-<td><span class="math notranslate nohighlight">\(d\)</span></td>
-<td>8.0</td>
-<td>Neuron activation function</td>
+<tr class="row-even"><td><p>D</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>8.0</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-odd"><td rowspan="5">exp_lif</td>
-<td>tau</td>
-<td><span class="math notranslate nohighlight">\(\tau\)</span></td>
-<td>20</td>
-<td>Neuron’s time constant</td>
+<tr class="row-odd"><td rowspan="5"><p>exp_lif</p></td>
+<td><p>tau</p></td>
+<td><p><span class="math notranslate nohighlight">\(\tau\)</span></p></td>
+<td><p>20</p></td>
+<td><p>Neuron’s time constant</p></td>
 </tr>
-<tr class="row-even"><td>R</td>
-<td><span class="math notranslate nohighlight">\(R\)</span></td>
-<td>1</td>
-<td>Neuron bias or offset</td>
+<tr class="row-even"><td><p>R</p></td>
+<td><p><span class="math notranslate nohighlight">\(R\)</span></p></td>
+<td><p>1</p></td>
+<td><p>Neuron bias or offset</p></td>
 </tr>
-<tr class="row-odd"><td>v_rest</td>
-<td><span class="math notranslate nohighlight">\(c\)</span></td>
-<td>-65.0</td>
-<td>Neuron gain</td>
+<tr class="row-odd"><td><p>v_rest</p></td>
+<td><p><span class="math notranslate nohighlight">\(c\)</span></p></td>
+<td><p>-65.0</p></td>
+<td><p>Neuron gain</p></td>
 </tr>
-<tr class="row-even"><td>time_refrac</td>
-<td><span class="math notranslate nohighlight">\(d\)</span></td>
-<td><ol class="first last arabic simple" start="10">
+<tr class="row-even"><td><p>time_refrac</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><ol class="arabic simple" start="10">
 <li></li>
 </ol>
 </td>
-<td>Neuron activation function</td>
+<td><p>Neuron activation function</p></td>
 </tr>
-<tr class="row-odd"><td>thresh</td>
-<td><span class="math notranslate nohighlight">\(d\)</span></td>
-<td>-40.0</td>
-<td>Neuron activation function</td>
+<tr class="row-odd"><td><p>thresh</p></td>
+<td><p><span class="math notranslate nohighlight">\(d\)</span></p></td>
+<td><p>-40.0</p></td>
+<td><p>Neuron activation function</p></td>
 </tr>
 </tbody>
 </table>
 </dd>
 </dl>
 </li>
-<li><p class="first"><strong>synapses</strong> (dict)</p>
+<li><p><strong>synapses</strong> (dict)</p>
 <blockquote>
 <div><p>Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> defining the groups of synapses connecting the neurons and input nodes in defined in
 <code class="docutils literal notranslate"><span class="pre">stimuli</span></code> and <code class="docutils literal notranslate"><span class="pre">ensembles</span></code> fields. Each key-value of the synapses dictionary defines the connections
@@ -632,47 +770,46 @@ the connection probability. Its meaning is that each synapse joining two ensembl
 with a probability <code class="docutils literal notranslate"><span class="pre">p</span></code>. This parameter is specially important when building large unstructured
 neural sparse meshes in which the connectivity is, say, 25%. In regular ANNs it is normally fixed
 to 1.0 (fully connected).</p>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="16%" />
-<col width="18%" />
-<col width="66%" />
+<col style="width: 16%" />
+<col style="width: 18%" />
+<col style="width: 66%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>Parameter</strong></td>
-<td><strong>Default</strong></td>
-<td><strong>Description</strong></td>
+<tbody>
+<tr class="row-odd"><td><p><strong>Parameter</strong></p></td>
+<td><p><strong>Default</strong></p></td>
+<td><p><strong>Description</strong></p></td>
 </tr>
-<tr class="row-even"><td>pre</td>
-<td>Compulsory</td>
-<td>Name of the pre-synaptic neuron ensemble.</td>
+<tr class="row-even"><td><p>pre</p></td>
+<td><p>Compulsory</p></td>
+<td><p>Name of the pre-synaptic neuron ensemble.</p></td>
 </tr>
-<tr class="row-odd"><td>post</td>
-<td>Compulsory</td>
-<td>Name of the post-synaptic neuron ensemble.</td>
+<tr class="row-odd"><td><p>post</p></td>
+<td><p>Compulsory</p></td>
+<td><p>Name of the post-synaptic neuron ensemble.</p></td>
 </tr>
-<tr class="row-even"><td>p</td>
-<td>1.0</td>
-<td>Connection probability among <code class="docutils literal notranslate"><span class="pre">pre</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> neurons.</td>
+<tr class="row-even"><td><p>p</p></td>
+<td><p>1.0</p></td>
+<td><p>Connection probability among <code class="docutils literal notranslate"><span class="pre">pre</span></code> and <code class="docutils literal notranslate"><span class="pre">post</span></code> neurons.</p></td>
 </tr>
-<tr class="row-odd"><td>neuroTX</td>
-<td>“AMPA+NDMA”</td>
-<td>Type of synapse neurotransmitter. Only valid if
+<tr class="row-odd"><td><p>neuroTX</p></td>
+<td><p>“AMPA+NDMA”</p></td>
+<td><p>Type of synapse neurotransmitter. Only valid if
 dynamic_synapse is used. Possible values: “AMPA+NDMA”,
-“AMPA”, “GABA” or “NDMA”.</td>
+“AMPA”, “GABA” or “NDMA”.</p></td>
 </tr>
-<tr class="row-even"><td>trainable</td>
-<td>True</td>
-<td>Flag indicating if the weights of the synapses
-can be optimized. Currently not used.</td>
+<tr class="row-even"><td><p>trainable</p></td>
+<td><p>True</p></td>
+<td><p>Flag indicating if the weights of the synapses
+can be optimized. Currently not used.</p></td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 </li>
-<li><dl class="first docutils">
-<dt><em>outputs</em> (dict)</dt>
-<dd><p class="first">The outputs field states which of the previously defined ensembles are output layers of the architecture.
+<li><dl>
+<dt><em>outputs</em> (dict)</dt><dd><p>The outputs field states which of the previously defined ensembles are output layers of the architecture.
 It also maps these output layers, responsible of generating actions, to the corresponding actuators.
 The <code class="docutils literal notranslate"><span class="pre">dict</span></code> maps output names (do not confuse with ensemble names) with the output configuration.
 The output configuration states the ensemble name (has to be defined) and the actuator name (has to be an
@@ -684,36 +821,36 @@ implemented actuator). The following example defines <code class="docutils liter
 <span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
 </pre></div>
 </div>
-<table border="1" class="docutils">
+<table class="docutils align-default">
 <colgroup>
-<col width="23%" />
-<col width="24%" />
-<col width="53%" />
+<col style="width: 23%" />
+<col style="width: 24%" />
+<col style="width: 53%" />
 </colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td><strong>Actuator Name</strong></td>
-<td><strong>Actuator Class</strong></td>
-<td><strong>Description</strong></td>
+<tbody>
+<tr class="row-odd"><td><p><strong>Actuator Name</strong></p></td>
+<td><p><strong>Actuator Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
 </tr>
-<tr class="row-even"><td>joint_velocity_actuator</td>
-<td>JointVelocityActuator</td>
-<td>Actuator for the velocity control of joints.</td>
+<tr class="row-even"><td><p>joint_velocity_actuator</p></td>
+<td><p>JointVelocityActuator</p></td>
+<td><p>Actuator for the velocity control of joints.</p></td>
 </tr>
-<tr class="row-odd"><td>joint_position_actuator</td>
-<td>JointPositionActuator</td>
-<td>Actuator for the position control of joints.</td>
+<tr class="row-odd"><td><p>joint_position_actuator</p></td>
+<td><p>JointPositionActuator</p></td>
+<td><p>Actuator for the position control of joints.</p></td>
 </tr>
-<tr class="row-even"><td>IR_transmitter</td>
-<td>CommunicationTransmitter</td>
-<td>IR-based Communication transmitter.</td>
+<tr class="row-even"><td><p>IR_transmitter</p></td>
+<td><p>CommunicationTransmitter</p></td>
+<td><p>IR-based Communication transmitter.</p></td>
 </tr>
-<tr class="row-odd"><td>led_actuator</td>
-<td>LedActuator3D/LedActuator</td>
-<td>Actuator for controlling the LEDs of a robot.</td>
+<tr class="row-odd"><td><p>led_actuator</p></td>
+<td><p>LedActuator3D/LedActuator</p></td>
+<td><p>Actuator for controlling the LEDs of a robot.</p></td>
 </tr>
-<tr class="row-even"><td>grasp_actuator</td>
-<td>GraspActuator</td>
-<td><div class="first last line-block">
+<tr class="row-even"><td><p>grasp_actuator</p></td>
+<td><p>GraspActuator</p></td>
+<td><div class="line-block">
 <div class="line">High level simplified actuator for grasping and dropping</div>
 <div class="line">small lightweight objects (TODO: for the moment only cubes).</div>
 </div>
@@ -722,20 +859,19 @@ implemented actuator). The following example defines <code class="docutils liter
 </tbody>
 </table>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Just like the sensor classes, some actuator classes have a 2D and 3D implementation. This feature is temporal
+<p class="admonition-title">Note</p>
+<p>Just like the sensor classes, some actuator classes have a 2D and 3D implementation. This feature is temporal
 until 2D and 3D classes are standardized.</p>
 </div>
-<div class="last admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> actuator name is provisional and it will eventually changed to a more descriptive name.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> actuator name is provisional and it will eventually changed to a more descriptive name.</p>
 </div>
 </dd>
 </dl>
 </li>
-<li><p class="first"><em>encoding</em> (dict)</p>
-</li>
-<li><p class="first"><em>decoding</em> (dict)</p>
+<li><p><em>encoding</em> (dict)</p></li>
+<li><p><em>decoding</em> (dict)</p>
 <blockquote>
 <div><p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="s2">&quot;decoding&quot;</span> <span class="p">:</span> <span class="p">{</span>
@@ -746,8 +882,7 @@ until 2D and 3D classes are standardized.</p>
 </div>
 </div></blockquote>
 </li>
-<li><p class="first"><em>learning_rule</em> (dict)</p>
-</li>
+<li><p><em>learning_rule</em> (dict)</p></li>
 </ul>
 </div>
 <div class="section" id="algorithm-configuration">
@@ -764,8 +899,8 @@ until 2D and 3D classes are standardized.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="modules.html" class="btn btn-neutral float-right" title="SpikeSwarmSim" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="entities.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="custom_classes.html" class="btn btn-neutral float-right" title="Customize Code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tutorials/artificial_neural_networks.html" class="btn btn-neutral float-left" title="Artificial Neural Networks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

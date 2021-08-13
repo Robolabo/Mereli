@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -174,15 +166,15 @@
   <h1>Source code for spike_swarm_sim.objectives.reward</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">angle_mean</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">increase_time</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">reward_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">angle_mean</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">increase_time</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">reward_registry</span>
 
 
 <div class="viewcode-block" id="AlignmentReward"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.reward.AlignmentReward">[docs]</a><span class="k">class</span> <span class="nc">AlignmentReward</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;robot_positions&quot;</span><span class="p">,</span> <span class="s2">&quot;robot_orientations&quot;</span><span class="p">,)</span>
     
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">thetas</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s1">&#39;robot_orientations&#39;</span><span class="p">]</span>
         <span class="n">angle_errs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">angle_diff</span><span class="p">(</span><span class="n">th1</span><span class="p">,</span> <span class="n">th2</span><span class="p">)</span>\
                             <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">th1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">thetas</span><span class="p">)</span>\
@@ -194,10 +186,10 @@
 
 <span class="nd">@reward_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;goto_light&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GoToLightReward</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;generation&quot;</span><span class="p">,</span> <span class="s2">&quot;robot_positions&quot;</span><span class="p">,</span> <span class="s2">&quot;light_positions&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="c1"># positions = info[&#39;robot_positions&#39;]</span>
         <span class="c1"># light_pos = info[&#39;light_positions&#39;]</span>
         <span class="c1"># distances = [LA.norm(robot_pos - light_pos) for robot_pos in positions]</span>
@@ -213,9 +205,9 @@
 
 <div class="viewcode-block" id="GoToLightReward"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.reward.GoToLightReward">[docs]</a><span class="nd">@reward_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;many_lights&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GoToLightReward</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">))</span>
         <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;Robot3D&#39;</span><span class="p">]</span>
         <span class="n">lights</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;Light_Source&#39;</span><span class="p">]</span>
@@ -232,13 +224,13 @@
 
 <div class="viewcode-block" id="TransportCubeReward"><a class="viewcode-back" href="../../../spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.reward.TransportCubeReward">[docs]</a><span class="nd">@reward_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;transport_cube&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">TransportCubeReward</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">required_info</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;generation&quot;</span><span class="p">,</span> <span class="s2">&quot;robot_positions&quot;</span><span class="p">,</span> <span class="s2">&quot;light_positions&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prev_cubes_pos</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@increase_time</span>
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">))</span>
         <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;Robot3D&#39;</span><span class="p">]</span>
         <span class="n">robots_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span><span class="o">.</span><span class="n">position</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">robots</span><span class="p">]</span>

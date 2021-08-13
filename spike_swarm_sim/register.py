@@ -18,6 +18,7 @@ env_perturbations = {}
 receptive_fields = {}
 learning_rules = {}
 rewards = {}
+communication_systems = {}
 
 def world_object_registry(*args, **kwargs):
     def wrapper(cls):
@@ -143,5 +144,14 @@ def reward_registry(*args, **kwargs):
     def decorator(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         rewards[name] = cls
+        return cls
+    return decorator
+
+
+
+def communication_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        communication_systems[name] = cls
         return cls
     return decorator

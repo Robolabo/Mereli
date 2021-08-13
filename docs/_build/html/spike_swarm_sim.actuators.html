@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -95,15 +87,70 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/entities.html">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#initializers">Initializers</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -120,13 +167,93 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
@@ -227,10 +354,10 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.RF_transmitter">
 <span id="spike-swarm-sim-actuators-rf-transmitter-module"></span><h2>spike_swarm_sim.actuators.RF_transmitter module<a class="headerlink" href="#module-spike_swarm_sim.actuators.RF_transmitter" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.RF_transmitter.</code><code class="descname">RF_Transmitter</code><span class="sig-paren">(</span><em>*args</em>, <em>range=10</em>, <em>msg_length=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.RF_transmitter.</span></span><span class="sig-name descname"><span class="pre">RF_Transmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>Communication transmitter actuator. It isotropically transmits a 
 frame with a message and its context. The propagation simulation is 
 implemented at the receiver side, this class only updates the transmitted 
@@ -242,16 +369,17 @@ frame of each robot.
 msg_length [int] : number of components of the message.
 quantize [bool] : whether to quantize the message to a set of possible</p>
 <blockquote>
-<div>symbols or not.</div></blockquote>
+<div><p>symbols or not.</p>
 </div></blockquote>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step" title="Permalink to this definition">¶</a></dt>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -259,33 +387,33 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.base_actuator">
 <span id="spike-swarm-sim-actuators-base-actuator-module"></span><h2>spike_swarm_sim.actuators.base_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.base_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.base_actuator.Actuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.base_actuator.</code><code class="descname">Actuator</code><span class="sig-paren">(</span><em>actuator_owner</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">Actuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <ul class="simple">
-<li><dl class="first docutils">
-<dt>Args:</dt>
-<dd>sensor_owner [Robot] : instance of the agent executing the sensor.
+<li><dl class="simple">
+<dt>Args:</dt><dd><p>sensor_owner [Robot] : instance of the agent executing the sensor.
 range [float] : range of coverage of the sensor.
-noise_sigma [float] : white noise std. dev.</dd>
+noise_sigma [float] : white noise std. dev.</p>
+</dd>
 </dl>
 </li>
 </ul>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.base_actuator.Actuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.base_actuator.</code><code class="descname">HighLevelActuator</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em>, <em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">HighLevelActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -293,10 +421,10 @@ noise_sigma [float] : white noise std. dev.</dd>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.communication_transmitter">
 <span id="spike-swarm-sim-actuators-communication-transmitter-module"></span><h2>spike_swarm_sim.actuators.communication_transmitter module<a class="headerlink" href="#module-spike_swarm_sim.actuators.communication_transmitter" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.communication_transmitter.</code><code class="descname">CommunicationTransmitter</code><span class="sig-paren">(</span><em>*args</em>, <em>range=2</em>, <em>msg_length=1</em>, <em>quantize=True</em>, <em>K=4</em>, <em>avoid_zero=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.communication_transmitter.</span></span><span class="sig-name descname"><span class="pre">CommunicationTransmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>Communication transmitter actuator. It isotropically transmits a 
 frame with a message and its context. The propagation simulation is 
 implemented at the receiver side, this class only updates the transmitted 
@@ -308,21 +436,17 @@ frame of each robot.
 msg_length [int] : number of components of the message.
 quantize [bool] : whether to quantize the message to a set of possible</p>
 <blockquote>
-<div>symbols or not.</div></blockquote>
+<div><p>symbols or not.</p>
 </div></blockquote>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step" title="Permalink to this definition">¶</a></dt>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.quantize_fn">
-<code class="descname">quantize_fn</code><span class="sig-paren">(</span><em>msg</em>, <em>tau=0.1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.quantize_fn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.quantize_fn" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -330,18 +454,18 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.grasp_actuator">
 <span id="spike-swarm-sim-actuators-grasp-actuator-module"></span><h2>spike_swarm_sim.actuators.grasp_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.grasp_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.grasp_actuator.</code><code class="descname">GraspActuator</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator" title="spike_swarm_sim.actuators.base_actuator.HighLevelActuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.HighLevelActuator</span></code></a></p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em>, <em>neighborhood</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.grasp_actuator.</span></span><span class="sig-name descname"><span class="pre">GraspActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator" title="spike_swarm_sim.actuators.base_actuator.HighLevelActuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.HighLevelActuator</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -349,31 +473,31 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.joint_actuator">
 <span id="spike-swarm-sim-actuators-joint-actuator-module"></span><h2>spike_swarm_sim.actuators.joint_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.joint_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.joint_actuator.</code><code class="descname">JointVelocityActuator</code><span class="sig-paren">(</span><em>*args, joint_ids=[0], inverse_mirrored=None, max_velocity=10.0, **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointVelocityActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse_mirrored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>Robot wheel actuator using a differential drive system.</p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.joint_actuator.</code><code class="descname">JointPositionActuator</code><span class="sig-paren">(</span><em>*args, joint_ids=[0], **kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointPositionActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>Robot wheel actuator using a differential drive system.</p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -381,38 +505,20 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.led_actuator">
 <span id="spike-swarm-sim-actuators-led-actuator-module"></span><h2>spike_swarm_sim.actuators.led_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.led_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.led_actuator.</code><code class="descname">LedActuator</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.led_actuator.</span></span><span class="sig-name descname"><span class="pre">LedActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'white'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>LED actuator that turns on or off the LED depending on 
 the action.</p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator3D">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.led_actuator.</code><code class="descname">LedActuator3D</code><span class="sig-paren">(</span><em>*args</em>, <em>color_on='blue'</em>, <em>color_off='white'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator3D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<p>LED actuator that turns on or off the LED depending on 
-the action.</p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator3D.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>action</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator3D.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator3D.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.led_actuator.LedActuator3D.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator3D.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator3D.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -420,14 +526,14 @@ the action.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.actuators.wheel_actuator">
 <span id="spike-swarm-sim-actuators-wheel-actuator-module"></span><h2>spike_swarm_sim.actuators.wheel_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.wheel_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.actuators.wheel_actuator.WheelActuator">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.actuators.wheel_actuator.</code><code class="descname">WheelActuator</code><span class="sig-paren">(</span><em>*args</em>, <em>robot_radius=0.11</em>, <em>dt=0.01</em>, <em>min_thresh=0.0</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/wheel_actuator.html#WheelActuator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.wheel_actuator.WheelActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.wheel_actuator.WheelActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.wheel_actuator.</span></span><span class="sig-name descname"><span class="pre">WheelActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/wheel_actuator.html#WheelActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.wheel_actuator.WheelActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
 <p>Robot wheel actuator using a differential drive system.</p>
-<dl class="method">
-<dt id="spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step">
-<code class="descname">step</code><span class="sig-paren">(</span><em>v_motors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/wheel_actuator.html#WheelActuator.step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_motors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/wheel_actuator.html#WheelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

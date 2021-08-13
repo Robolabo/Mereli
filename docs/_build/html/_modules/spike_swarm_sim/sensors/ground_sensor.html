@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -173,8 +165,8 @@
             
   <h1>Source code for spike_swarm_sim.sensors.ground_sensor</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">sensor_registry</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors</span> <span class="kn">import</span> <span class="n">DirectionalSensor</span><span class="p">,</span> <span class="n">Sensor</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensor_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors</span> <span class="k">import</span> <span class="n">DirectionalSensor</span><span class="p">,</span> <span class="n">Sensor</span>
 
 <div class="viewcode-block" id="GroundSensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.ground_sensor.GroundSensor">[docs]</a><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ground_sensor&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GroundSensor</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
@@ -187,7 +179,7 @@
 <span class="sd">    :param float noise_sigma: TODO change to Bernoulli noise.  </span>
 <span class="sd">    :param str color: color of the light to which the sensor is sensitive.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GroundSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GroundSensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.ground_sensor.GroundSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>

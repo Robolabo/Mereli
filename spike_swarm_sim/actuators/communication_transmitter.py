@@ -1,9 +1,12 @@
 import numpy as np
+import pybullet as p
+
 from .base_actuator import Actuator
 from spike_swarm_sim.register import actuator_registry
 from spike_swarm_sim.utils import softmax
 from spike_swarm_sim.globals import global_states
-import pybullet as p
+from spike_swarm_sim.communication import IRFrame
+
 
 @actuator_registry(name='IR_transmitter')
 class CommunicationTransmitter(Actuator):
@@ -18,56 +21,22 @@ class CommunicationTransmitter(Actuator):
         quantize [bool] : whether to quantize the message to a set of possible 
                 symbols or not.
     """
-    def __init__(self, *args, range=2, msg_length=1, quantize=True, K=4, avoid_zero=False, **kwargs):
+    def __init__(self, *args, range=2, msg_length=1, **kwargs):
         super(CommunicationTransmitter, self).__init__(*args, **kwargs)
         self.channel = 0
         self.msg_length = msg_length
         self.range = range
-        self.quantize = quantize
-        self.K = K
-        self.avoid_zero = avoid_zero #TODO Ignore symbol (0,...,0)^T
-        if self.quantize:
-            self.clusters = [centroid for centroid in zip(*map(lambda v: v.flatten(),\
-                    np.meshgrid(*[np.linspace(0, 1, self.K) for _ in np.arange(self.msg_length)])))]
-            self.clusters = np.array(self.clusters)
         self.frame = None
         self.reset()
         
-    def step(self, action):
+    def step(self, tx_frame):
         #* Select cluster using softmax on distances to clusters
-        if self.quantize:
-            action['msg'] = self.quantize_fn(action['msg'])
-        self.frame['msg'] = action['msg']
-        self.frame['priority'] = action.get('priority', 0)
-        self.frame['sender'] = action.get('sender', -1)
-        self.frame['sender'] = action.get('sender', -1)
-        self.frame['destination'] = action.get('destination', 0)
-        self.frame['enabled'] = action.get('enabled', True)
-        self.frame['n_hops'] = action.get('n_hops', 0)
-        self.frame['state'] = action.get('state', 1)
-        self.frame['sending_direction'] = action.get('sending_direction', 0.)
+        self.frame = tx_frame
         if global_states.RENDER:
-            color = [self.frame['msg'][0], 0, 0]
-            p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=color + [0.7],\
-                physicsClientId=self.actuator_owner.physics_client.client)
-
-    def quantize_fn(self, msg, tau=0.1):
-        dists = np.linalg.norm(msg - self.clusters, axis=1)
-        # Max. dist in hypercube is sqrt(dim(x))
-        max_distance = np.sqrt(len(msg))
-        probs = softmax(1 - dists / max_distance, tau=tau)
-        cluster = np.random.choice(range(len(self.clusters)), p=probs)
-        return self.clusters[cluster]
+            color = [self.frame.msg[0], 0, 0]
+            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, 3, color, opacity=0.7)
 
     def reset(self):
-        self.frame = {
-            'msg' : [0 for _ in range(self.msg_length)],
-            'enabled' : True,
-            'state' : 1,
-            'n_hops' : 1,
-            'sender' : -1,
-            'destination' : 0,
-            'source' : 0,
-            'priority' : 0,
-            'sending_direction' : 0,
-        }
+        self.frame = IRFrame(msg_len=self.msg_length)
+        self.frame.sender = self.actuator_owner.id
+        self.frame.original_sender = self.actuator_owner.id

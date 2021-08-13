@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.communication package &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="spike_swarm_sim.neural_networks package" href="spike_swarm_sim.neural_networks.html" />
+    <link rel="prev" title="spike_swarm_sim.controllers package" href="spike_swarm_sim.controllers.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/entities.html">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#initializers">Initializers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">SpikeSwarmSim Package</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.communication package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/spike_swarm_sim.communication.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spike-swarm-sim-communication-package">
+<h1>spike_swarm_sim.communication package<a class="headerlink" href="#spike-swarm-sim-communication-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-spike_swarm_sim.communication.IR_communication">
+<span id="spike-swarm-sim-communication-ir-communication-module"></span><h2>spike_swarm_sim.communication.IR_communication module<a class="headerlink" href="#module-spike_swarm_sim.communication.IR_communication" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.communication.IR_communication.</span></span><span class="sig-name descname"><span class="pre">IRFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Frame class used by IR_receiver and IR_transmitter of the robots to 
+communicate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg_len</strong> (<em>int</em>) – dimension of the message content vector.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>msg</strong> (<em>np.ndarray</em>) – message vector of dim <code class="docutils literal notranslate"><span class="pre">msg_len</span></code>.</p></li>
+<li><p><strong>signal_strength</strong> (<em>float</em>) – signal strength to be filled when the message is 
+received. If the message has not been received by any robot yet, then its
+value equals to 0.0.</p></li>
+<li><p><strong>enabled</strong> (<em>bool</em>) – flag indicating if the message is enabled and can be processed 
+by other robots.</p></li>
+<li><p><strong>rx_ori</strong> (<em>float</em>) – relative orientation (in radians) of the sector from where the 
+sender robot emitted the frame. The angle is relative to the heading orientation 
+of the sender robot.</p></li>
+<li><p><strong>tx_ori</strong> (<em>float</em>) – relative orientation (in radians) of the sector from where the 
+frame was received. The angle is relative to the heading orientation of the robot.</p></li>
+<li><p><strong>sender</strong> (<em>int</em>) – id of the last robot who sent the frame. In a multi-hop communication of 
+relayed messages it still equals to the last robot who last relayed the frame (see
+<code class="docutils literal notranslate"><span class="pre">original_sender</span></code> for the attribute corresponding to original robot generating the frame).</p></li>
+<li><p><strong>receiver</strong> (<em>int</em>) – id of the robot who last received the frame. Every time that an IR_receiver 
+captures a frame, it fills its id within this field. If no robot has received the frame yet 
+or a robot in process of transmitting it, then its value equals to <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>original_sender</strong> (<em>int</em>) – id of original sender of the frame. It is useful to keep track 
+of the original robot who elaborated the message when the frame has been relayed by 
+multiple robots (<code class="docutils literal notranslate"><span class="pre">RELAY</span></code> mode).</p></li>
+<li><p><strong>destination</strong> (<em>int</em>) – id of the final destination (robot) of the frame. The destination is 
+an intentional recipient of the message that can be multiple nodes away in the swarm. 
+Do not confuse with <code class="docutils literal notranslate"><span class="pre">receiver</span></code>, which corresponds to the robot receiving the frame in 
+a single hop communication (unintentional). This attribute is not used yet in any comm. 
+system</p></li>
+<li><p><strong>priority</strong> (<em>int</em>) – priority of the frame (not used yet).</p></li>
+<li><p><strong>n_hops</strong> (<em>int</em>) – number of hops since the frame was originally sent. 
+Only meaningful if robots can relay message (<code class="docutils literal notranslate"><span class="pre">RELAY</span></code> mode of comm. systems.).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame.encoded_tx_ori">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">encoded_tx_ori</span></span><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_tx_ori" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the attribute <code class="docutils literal notranslate"><span class="pre">tx_ori</span></code> in radians in the unit circle encoded vector</p>
+<div class="math notranslate nohighlight">
+\[`(\cos(     heta_{tx}),\, \sin(     heta_{tx}) )^T`\]</div>
+<p>If the angle <code class="docutils literal notranslate"><span class="pre">tx_ori</span></code> was <code class="docutils literal notranslate"><span class="pre">None</span></code>, then it returns the zero vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the encoded angle.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame.encoded_rx_ori">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">encoded_rx_ori</span></span><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_rx_ori" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the attribute <code class="docutils literal notranslate"><span class="pre">rx_ori</span></code> in radians in the unit circle encoded vector</p>
+<div class="math notranslate nohighlight">
+\[`(\cos(     heta_{rx}),\, \sin(     heta_{rx}) )^T`\]</div>
+<p>If the angle <code class="docutils literal notranslate"><span class="pre">rx_ori</span></code> was <code class="docutils literal notranslate"><span class="pre">None</span></code>, then it returns the zero vector.</p>
+<p>:returns</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame.as_dict">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">as_dict</span></span><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame.as_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the frame as a python <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame.increase_hops">
+<span class="sig-name descname"><span class="pre">increase_hops</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRFrame.increase_hops"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame.increase_hops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increase the number of hops of the frame.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRFrame.get_copy">
+<span class="sig-name descname"><span class="pre">get_copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRFrame.get_copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRFrame.get_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a copy of the frame object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>copied <code class="docutils literal notranslate"><span class="pre">IRFrame</span></code> object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.communication.IR_communication.</span></span><span class="sig-name descname"><span class="pre">IRCommunication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>IR communication system class. It provides the communication logic decoupled from the 
+transmitter and the receiver. It has two main methods <code class="docutils literal notranslate"><span class="pre">step_pre</span></code> and <code class="docutils literal notranslate"><span class="pre">step_post</span></code> that 
+are respectively applied to the states and actions before and after the controller execution. 
+Its main roles are to convert the <code class="docutils literal notranslate"><span class="pre">IRFrame</span></code> object to a <code class="docutils literal notranslate"><span class="pre">dict</span></code> that can be processed by the
+controllers and to elaborate the new frame to be transmitted using the controller actions (message, 
+new communication state, …). It also can quantize the message to be transmitted to a set of 
+fixed symbols or centroids.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class is not responsible for elaborating the message or changing the communication state. 
+These operations must be implemented in the controller to be used.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantize</strong> (<em>bool</em>) – whether the transmitted message is quantized or not.</p></li>
+<li><p><strong>K</strong> (<em>int</em>) – if <code class="docutils literal notranslate"><span class="pre">quantize=True</span></code>, it indicates the number of equispaced symbols of the quantization 
+in each message dimension. Provided that M is the message length, the total number of symbols 
+in the quantization dictionary is K^M.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>comm_state</strong> (<em>str</em>) – state of the communication. Currently, it can be <code class="docutils literal notranslate"><span class="pre">BCAST</span></code> or <code class="docutils literal notranslate"><span class="pre">RELAY</span></code>.</p></li>
+<li><p><strong>tx_name</strong> (<em>str</em>) – reference name of the communication transmitter linked to the communication system.</p></li>
+<li><p><strong>rx_name</strong> (<em>str</em>) – reference name of the communication receiver linked to the communication system.</p></li>
+<li><p><strong>owner_id</strong> (<em>int</em>) – identifier of the robot owning and executing the comm. sys.</p></li>
+<li><p><strong>rx_frame</strong> (<a class="reference internal" href="#spike_swarm_sim.communication.IR_communication.IRFrame" title="spike_swarm_sim.communication.IR_communication.IRFrame"><em>IRFrame</em></a>) – last frame received during the simulation. If no frame was received yet then its
+value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>tx_frame</strong> (<a class="reference internal" href="#spike_swarm_sim.communication.IR_communication.IRFrame" title="spike_swarm_sim.communication.IR_communication.IRFrame"><em>IRFrame</em></a>) – last frame transmitted during the simulation. If no frame was received yet then its
+value is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>registry</strong> (<em>dict</em>) – registry of the sequence of communication states <code class="docutils literal notranslate"><span class="pre">registry['comm_states']</span></code> and 
+of frames <code class="docutils literal notranslate"><span class="pre">registry['frames']</span></code>. Registry not implemented yet.</p></li>
+<li><p><strong>centroids</strong> (<em>np.ndarray</em>) – if <code class="docutils literal notranslate"><span class="pre">quantize=True</span></code> it stores the centroid or symbol dictionary of the msg quantization.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.step_pre">
+<span class="sig-name descname"><span class="pre">step_pre</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication.step_pre"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.step_pre" title="Permalink to this definition">¶</a></dt>
+<dd><p>Communication system logic to be applied before the controller execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frame</strong> (<a class="reference internal" href="#spike_swarm_sim.communication.IR_communication.IRFrame" title="spike_swarm_sim.communication.IR_communication.IRFrame"><em>IRFrame</em></a>) – IR frame received by the IR_receiver.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>frame <code class="docutils literal notranslate"><span class="pre">dict</span></code> to be fed to the controller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.step_post">
+<span class="sig-name descname"><span class="pre">step_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication.step_post"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.step_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Communication system logic to be applied after the controller execution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actions</strong> (<em>dict</em>) – <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the actions (keys are actuator names and values are the 
+actions). The action of the <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> must be included.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>frame <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the modified actions. The action corresponding to the <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> 
+is now an IRFrame object to be transmitted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.quantize_func">
+<span class="sig-name descname"><span class="pre">quantize_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication.quantize_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.quantize_func" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.comm_state_code">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">comm_state_code</span></span><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.comm_state_code" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the code of the current communication state. 
+The codes are:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">COMM_STATES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;RELAY&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;BCAST&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">int</span></code> with the code of the communication state.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.set_owner">
+<span class="sig-name descname"><span class="pre">set_owner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication.set_owner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.set_owner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the identifier of the robot owning and executing the comm. sys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – identifier of the robot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.communication.IR_communication.IRCommunication.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/communication/IR_communication.html#IRCommunication.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.communication.IR_communication.IRCommunication.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset method of the communication state.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.communication">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-spike_swarm_sim.communication" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="spike_swarm_sim.neural_networks.html" class="btn btn-neutral float-right" title="spike_swarm_sim.neural_networks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="spike_swarm_sim.controllers.html" class="btn btn-neutral float-left" title="spike_swarm_sim.controllers package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

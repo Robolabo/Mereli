@@ -4,19 +4,7 @@ from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.objects import Robot
 from spike_swarm_sim.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
 from .utils.propagation import ExpDecayPropagation
-
-
-class IRFrame:
-    def __init__(self, msg_len=1):
-        self.message = [0] * msg_len
-        self.signal_strength = 0.0
-        self.tx_ori = None
-        self.rx_ori = None
-        self.sender_id = None
-        self.dest_id = None
-        self.priority = None
-        self.n_hops = 0
-
+from spike_swarm_sim.communication import IRFrame
 
 @sensor_registry(name='IR_receiver')
 class IRCommunicationReceiver(DirectionalSensor):
@@ -77,7 +65,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         It must return the sensed frame of the current direction. Only objects that are within the range and 
         aperture are considered.
 
-        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.
+        :param float rho: Euclidean distance between the object sensing and the object (obj) sensed.
         :param float phi: angle between the direction of the sensor and the line passing through 
             both sensing and sensed object positions.
         :param float direction_reading: Current reading in the featured direction 
@@ -94,35 +82,34 @@ class IRCommunicationReceiver(DirectionalSensor):
                     and rho <= self.range\
                     and phi <= self.aperture\
                     and rho <= obj.actuators['IR_transmitter'].range\
-                    and obj.actuators['IR_transmitter'].frame['enabled']
+                    and obj.actuators['IR_transmitter'].frame.enabled
         
         #* Fill initial reading with empty frame
         if direction_reading is None:
-            direction_reading = self.empty_msg
+            direction_reading = self.empty_frame
         if condition:
             signal_strength = self.propagation(rho, phi)
-            if signal_strength > direction_reading['signal']:
+            if signal_strength > direction_reading.signal_strength:
                 # Cast a ray between my_pos and tar_pos to detect potential obstacles.
                 my_pos = self.get_sensor_position(direction) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
                 tar_pos = obj.position + np.r_[0, 0, 0.07] # my_pos[2]]
                 ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
                 if ray_res == obj.id:
+                    received_frame = obj.actuators['IR_transmitter'].frame
                     sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
-                    sending_angle = self.directions(0.)[sending_direction]
-                    receiving_angle = self.directions(0.)[direction]
-                    direction_reading['sending_direction'] = np.r_[np.cos(sending_angle), np.sin(sending_angle)].round(2)
-                    direction_reading['receiving_direction'] = np.r_[np.cos(receiving_angle), np.sin(receiving_angle)].round(2)
-                    direction_reading['receiving_direction'][np.abs(direction_reading['receiving_direction']) < 1e-5] = 0.0
-                    # msg = .actuators['IR_transmitter'].msg[send_dir] #! if directional transmission
-                    direction_reading['msg'] = np.array(obj.actuators['IR_transmitter'].frame['msg'])  #! if isotropic
-                    direction_reading['signal'] = np.array([signal_strength])
-                    direction_reading['priority'] = np.array([obj.actuators['IR_transmitter'].frame['priority']])
-                    direction_reading['destination'] = np.array([obj.actuators['IR_transmitter'].frame['destination']])
-                    direction_reading['sender'] = np.array([obj.id]) if obj.actuators['IR_transmitter'].frame['state'] \
-                                                else obj.actuators['IR_transmitter'].frame['sender']
-                    direction_reading['n_hops'] = obj.actuators['IR_transmitter'].frame['n_hops']
-                    if direction_reading['n_hops'] > 1:
-                        direction_reading['sending_direction'] = obj.actuators['IR_transmitter'].frame['sending_direction']
+                    received_frame.tx_ori = self.directions(0.)[sending_direction] #!
+                    received_frame.rx_ori = self.directions(0.)[direction]
+                    received_frame.receiver = self.sensor_owner.id
+                    received_frame.signal_strength = signal_strength
+                    # direction_reading['msg'] = np.array(obj.actuators['IR_transmitter'].frame['msg'])
+                    # direction_reading['priority'] = np.array([obj.actuators['IR_transmitter'].frame['priority']])
+                    # direction_reading['destination'] = np.array([obj.actuators['IR_transmitter'].frame['destination']])
+                    # direction_reading['sender'] = np.array([obj.id]) if obj.actuators['IR_transmitter'].frame['state'] \
+                    #                             else obj.actuators['IR_transmitter'].frame['sender']
+                    # direction_reading['n_hops'] = obj.actuators['IR_transmitter'].frame['n_hops']
+                    # if direction_reading['n_hops'] > 1:
+                    #     direction_reading['sending_direction'] = obj.actuators['IR_transmitter'].frame['sending_direction']
+                    direction_reading = received_frame
         return direction_reading
 
     def step(self, *args, **kwargs):
@@ -139,8 +126,8 @@ class IRCommunicationReceiver(DirectionalSensor):
             it may return a list of python dictionaries (see ``CommunicationReceiver``).
         """
         frames = super().step(*args, **kwargs)
-        if len(np.where(np.array(frames) == 0.0)[0]):
-            frames = [self.empty_msg for _ in range(len(frames))]
+        # if len(np.where(np.array(frames) == 0.0)[0]):
+        #     frames = [self.empty_frame for _ in range(len(frames))]
         selected_frame = {
             'cyclic' : self.cyclic_selection(frames),
             'random' : self.random_selection(frames),
@@ -158,23 +145,23 @@ class IRCommunicationReceiver(DirectionalSensor):
 
         :returns: a single selected frame.  
         """
-        # Discard very old frames (max 10 hops)
-        frames = [frame for frame in frames if frame['n_hops'] < self.max_hops and frame['sender'] != -1]
+        # Discard very old frames (max 10 hops) or empty frames
+        frames = [frame for frame in frames if frame.n_hops < self.max_hops and frame.sender is not None]
         if len(frames) == 0:
-            frames = [self.empty_msg]
+            frames = [self.empty_frame]
         #* Select only a direction
-        signal_strengths = np.hstack([frame['signal'] for frame in frames])
-        senders = np.hstack([frame['sender'].item() for frame in frames])
+        signal_strengths = np.hstack([frame.signal_strength for frame in frames])
+        senders = np.hstack([frame.sender for frame in frames])
         selected_direction = np.argmax(signal_strengths)
-        if any(np.logical_and(senders != self.sensor_owner.id, senders != -1)):
-            elements = np.where(np.logical_and(senders != self.sensor_owner.id, senders != -1))[0]
+        if any(np.logical_and(senders != self.sensor_owner.id, senders != None)):
+            elements = np.where(np.logical_and(senders != self.sensor_owner.id, senders != None))[0]
             selected_direction = np.random.choice(elements,)
-            frames[selected_direction]['am_i_sender'] = np.array([0])
+            # frames[selected_direction]['am_i_sender'] = np.array([0])
         else:
             selected_direction = 0
-            frames = [self.empty_msg]
-            frames[selected_direction]['am_i_sender'] = np.array([0])
-            frames[selected_direction]['am_i_targeted'] = np.array([0])
+            frames = [self.empty_frame]
+            # frames[selected_direction]['am_i_sender'] = np.array([0])
+            # frames[selected_direction]['am_i_targeted'] = np.array([0])
         return frames[selected_direction]
 
     def cyclic_selection(self, frames):
@@ -191,7 +178,7 @@ class IRCommunicationReceiver(DirectionalSensor):
 
         :returns: a single selected frame.  
         """
-        selected_frame = frames[self.current_direction].copy()
+        selected_frame = frames[self.current_direction].get_copy()
         self.current_direction = (self.current_direction + 1) % self.n_sectors
         return selected_frame
 
@@ -202,12 +189,13 @@ class IRCommunicationReceiver(DirectionalSensor):
     
      
     @property
-    def empty_msg(self):
+    def empty_frame(self):
         """ Returns an empty frame ``dict``. """
-        return {'signal' : np.array([0.0]), 'msg' : np.zeros(self.msg_length), \
-                'sending_direction' : np.zeros(2), 'receiving_direction' : np.zeros(2),\
-                'priority' : np.zeros(1), 'destination' : np.array([-1]), \
-                'sender' : -1 * np.ones(1), 'n_hops' : 1}
+        return IRFrame(msg_len=self.msg_length)
+        # return {'signal' : np.array([0.0]), 'msg' : np.zeros(self.msg_length), \
+        #         'sending_direction' : np.zeros(2), 'receiving_direction' : np.zeros(2),\
+        #         'priority' : np.zeros(1), 'destination' : np.array([-1]), \
+        #         'sender' : -1 * np.ones(1), 'n_hops' : 1}
 
 @sensor_registry(name='buffered_IR_receiver')
 class BufferedIRCommRX(IRCommunicationReceiver):

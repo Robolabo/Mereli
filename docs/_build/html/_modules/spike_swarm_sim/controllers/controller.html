@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -173,12 +165,12 @@
             
   <h1>Source code for spike_swarm_sim.controllers.controller</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">controller_registry</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">increase_time</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">controller_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">increase_time</span>
 
 <div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Base class for entity controllers. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
 <div class="viewcode-block" id="Controller.step"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.Controller.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
@@ -189,7 +181,7 @@
 
 <div class="viewcode-block" id="RobotController"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController">[docs]</a><span class="k">class</span> <span class="nc">RobotController</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Base class for Robot Controllers. &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_owner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_owner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_owner</span> <span class="o">=</span> <span class="n">controller_owner</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#{sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#{actuator : actuator_config for actuator, actuator_config in robot_actuators.items()}</span>
@@ -243,7 +235,7 @@
 <span class="sd">    based on the known positions of the predators. If a predator is at a distance </span>
 <span class="sd">    lower than 30 (3cm), then the prey is hunted and stops its motion.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PreyController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)]</span>

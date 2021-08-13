@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -176,9 +168,9 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">as</span> <span class="nn">reg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors.utils</span> <span class="kn">import</span> <span class="n">check_sensor_cfg</span><span class="p">,</span> <span class="n">autocomplete_sensor_cfg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.utils</span> <span class="kn">import</span> <span class="n">check_actuator_cfg</span><span class="p">,</span> <span class="n">autocomplete_actuator_cfg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.utils</span> <span class="kn">import</span> <span class="n">neural_net_checker</span><span class="p">,</span> <span class="n">autocomplete_neural_net</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.sensors.utils</span> <span class="k">import</span> <span class="n">check_sensor_cfg</span><span class="p">,</span> <span class="n">autocomplete_sensor_cfg</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.actuators.utils</span> <span class="k">import</span> <span class="n">check_actuator_cfg</span><span class="p">,</span> <span class="n">autocomplete_actuator_cfg</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.utils</span> <span class="k">import</span> <span class="n">neural_net_checker</span><span class="p">,</span> <span class="n">autocomplete_neural_net</span>
 
 <div class="viewcode-block" id="ExceptionDuplicates"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.config_parser.ExceptionDuplicates">[docs]</a><span class="k">def</span> <span class="nf">ExceptionDuplicates</span><span class="p">(</span><span class="n">kv_pairs</span><span class="p">):</span>
     <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>

@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 # from shapely.geometry import Point
 from spike_swarm_sim.objects import WorldObject
@@ -23,14 +24,16 @@ class Robot(WorldObject):
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
         self._food = False
-        #* Initialize sensors and actuators according to controller requirements
-        self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
-                            for k, s in sensors.items()\
-                            if k in self.controller.enabled_sensors.keys()}
-        self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
-                            for k, a in actuators.items()\
-                            if k in self.controller.enabled_actuators.keys()}
-
+        if self.controllable:
+            #* Initialize sensors and actuators according to controller requirements
+            self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                                for k, s in sensors.items()\
+                                if k in self.controller.enabled_sensors.keys()}
+            self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                                for k, a in actuators.items()\
+                                if k in self.controller.enabled_actuators.keys()}
+        #* Communication system. Only used if receiver and transmitter sensors are used.
+        self.comm_sys = None
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
 
@@ -67,8 +70,16 @@ class Robot(WorldObject):
             for pert in perturbations:
                 state = pert(state, self)
 
+        #* Apply communication system pre step (previous to controller) 
+        if self.comm_sys is not None:
+            state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
+
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
+        #* Apply communication system pre step (previous to controller) 
+        if self.comm_sys is not None:
+            actions = self.comm_sys.step_post(actions)
+
 
         #* Plan actions for future execution
         self.plan_actions(actions)
@@ -77,6 +88,10 @@ class Robot(WorldObject):
         #     self.food = True
         # if 'nest_sensor' in state.keys() and bool(state['nest_sensor'][0]):
         #     self.food = False
+
+        #* Convert again tx frame to dict for its use in the opt. algs. 
+        if self.comm_sys is not None:
+            actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
         return state, actions
 
     def plan_actions(self, actions):
@@ -115,28 +130,41 @@ class Robot(WorldObject):
         :param int seed: seed for random intialization.
         """
         self._food = False
-        # Check if new sensors or actuator has been enabled from the controller. If so, 
-        # activate them.
-        if not all(key in self.sensors.keys() for key in self.controller.enabled_sensors):
-            self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
-                        for k, s in sensors.items()\
-                        if k in self.controller.enabled_sensors.keys()}
-        if not all(key in self.actuators.keys() for key in self.controller.enabled_actuators):
-            self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
-                            for k, a in actuators.items()\
-                            if k in self.controller.enabled_actuators.keys()}
-
-        #* Reset Controller
-        if self.controller is not None:
+        if self.controllable:
+            # Check if new sensors or actuator has been enabled from the controller. If so, 
+            # activate them.
+            if not all(key in self.sensors.keys() for key in self.controller.enabled_sensors):
+                self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                            for k, s in sensors.items()\
+                            if k in self.controller.enabled_sensors.keys()}
+            if not all(key in self.actuators.keys() for key in self.controller.enabled_actuators):
+                self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                                for k, a in actuators.items()\
+                                if k in self.controller.enabled_actuators.keys()}
+            #* Reset controller
             self.controller.reset()
-        #* Reset Actuators
-        for actuator in self.actuators.values():
-            if hasattr(actuator, 'reset'):
-                actuator.reset()
-        #* Reset Sensors
-        for sensor in self.sensors.values():
-            if hasattr(sensor, 'reset'):
-                sensor.reset()
+            #* Reset Actuators
+            for actuator in self.actuators.values():
+                if hasattr(actuator, 'reset'):
+                    actuator.reset()
+            #* Reset Sensors
+            for sensor in self.sensors.values():
+                if hasattr(sensor, 'reset'):
+                    sensor.reset()
+        #* Reset Comm Sys
+        if self.comm_sys is not None:
+            self.comm_sys.reset()
+
+
+    def add_communication(self, comm_sys):
+        if comm_sys.tx_name not in self.actuators:
+            raise Exception(logging.error('Trying to create communication system {}, but sensor '\
+                '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.tx_name)))
+        # if comm_sys.rx_name not in self.sensors:
+        #     raise Exception(logging.error('Trying to create communication system {}, but sensor '\
+        #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
+        self.comm_sys = comm_sys
+        self.comm_sys.set_owner(self.id)
 
     @property
     def food(self):

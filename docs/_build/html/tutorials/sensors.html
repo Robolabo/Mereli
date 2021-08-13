@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Sensors &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Actuators" href="actuators.html" />
+    <link rel="prev" title="Entities" href="entities.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="entities.html">Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="entities.html#initializers">Initializers</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">SpikeSwarmSim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
+        
+      <li>Sensors</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/tutorials/sensors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sensors">
+<span id="tutorial-sensors"></span><h1>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h1>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 25%" />
+<col style="width: 54%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
+<td><p><strong>Python Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">DistanceSensor</span></code></p></td>
+<td><p>Sensor for estimating the distance to nearby solid objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">light_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LightSensor</span></code></p></td>
+<td><p>Sensor for estimating the light intensity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code></p></td>
+<td><div class="line-block">
+<div class="line"><code class="docutils literal notranslate"><span class="pre">IRCommunicationReceiver</span></code></div>
+<div class="line"><code class="docutils literal notranslate"><span class="pre">BufferedIRCommRX</span></code></div>
+</div>
+</td>
+<td><p>IR based communication receiver.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ground_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GroundSensor</span></code></p></td>
+<td><p>Sensor that detects the presence of a ground area underneath the robot.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">color_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ColorSensor</span></code></p></td>
+<td><p>High level sensor for detecting nearby objects of a precise color.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">joint_position_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">JointPositionSensor</span></code></p></td>
+<td><p>Sensor for measuring the position state of the joints of the robot.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">joint_velocity_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">JointVelocitySensor</span></code></p></td>
+<td><p>Sensor for measuring the velocity state of the joints of the robot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">collision_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CollisionSensor</span></code></p></td>
+<td><p>Sensor for detecting if the robot is colliding with a solid object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">own_position_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OwnPositionSensor</span></code></p></td>
+<td><p>High level sensor for obtaining the absolute position of the robot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">own_orientation_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">OwnOrientationSensor</span></code></p></td>
+<td><p>High level sensor for obtaining the absolute orientation of the robot.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">neighborhood_pos_sensor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">NeighborhoodPositionSensor</span></code></p></td>
+<td><p>High level sensor for obtaining the absolute position of the neighbors.</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">own_position_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">own_orientation_sensor</span></code> and <code class="docutils literal notranslate"><span class="pre">neighborhood_pos_sensor</span></code> are sensors that break the locality and
+partial observability principals by reading high level absolute information such as the robot coordinates or absolute heading orientation.</p>
+</div>
+<div class="section" id="creating-sensors">
+<h2>Creating Sensors<a class="headerlink" href="#creating-sensors" title="Permalink to this headline">¶</a></h2>
+<p>Sensors have to be enabled by the robot controller in order to be used afterwards. In other words, robots have a pool of sensors they can use and
+the controllers specify the subset of them that will be harnessed in each experiment. For instance, a single robot light pursuit experiment
+only uses the light sensor while an obstacle avoidance task only employs the distance sensor.
+The following extract of code shows how to add sensors one by one to an existing controller object. In the example, only
+the distance sensor.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;distance_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ent</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">add_sensor</span></code> method receives both the reference name of the sensor (do not confuse with the class name,
+see table above). Notice that the <code class="docutils literal notranslate"><span class="pre">add_sensor</span></code> method of the controller only requests the indicated sensor. It is
+the creation of the robot where the actual sensors are created (see <code class="docutils literal notranslate"><span class="pre">Robot</span></code> constructor). Alternatively, the sensors can
+be also created and activated through the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot.</p>
+<p>Alternatively, sensors can be added using <code class="docutils literal notranslate"><span class="pre">add_sensors_from_dict</span></code>. Using this method, the user can add all the robot
+sensors at once. The following code example shows how to add sensors using this method:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sensors_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;light_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">(</span><span class="n">sensors_dict</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ent</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Thereafter, once created, the sensors measurements are read by means of the <code class="docutils literal notranslate"><span class="pre">step</span></code> method that must be
+implemetented in each sensor class. However, this method must not be called directly because it is the method
+<code class="docutils literal notranslate"><span class="pre">perceive</span></code> of the class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> the one responsible of direcltly reading the sensor units. The method
+<code class="docutils literal notranslate"><span class="pre">perceive</span></code> is similarly called by the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method at each simulation cycle. The different readings
+of the enabled sensors are gathered to compose the current partially observable state (which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping
+sensor reference names to sensor reading vectors).</p>
+</div>
+<div class="section" id="directional-sensors">
+<h2>Directional Sensors<a class="headerlink" href="#directional-sensors" title="Permalink to this headline">¶</a></h2>
+<p>Directional sensors are a type of sensors that have independent sensing units for diferent sectors or coverage areas.
+The clearest example is the one of epucks or other similar mobile robots. In these cases multiple sensing units are placed
+at strategic points of the robot perimeter. Therefore, aside from having an independent measurement of what is happening on
+each sector, the robot can know the orientation from where an event was perceived.
+For example, the <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code> can be sectorized with, say, 4 sectors: the most sensitive direction of each
+sector would then be <span class="math notranslate nohighlight">\([\theta_r,\, \theta_r + \pi/2,\, \theta_r + \pi,\, \theta_r + 3\pi/4]\)</span>, where
+<span class="math notranslate nohighlight">\(\theta_r\)</span> is the robot heading orientation. Consequenlty, if the light is detected only in the third sector
+(the one pointing at <span class="math notranslate nohighlight">\(\theta_r + \pi\)</span>),  then the robot can both that there is a light source in the surroundings
+and that it is placed at its back.</p>
+<p>FIGURA, comentar ejemplo.</p>
+<p>The refence names of the directional sensors that are currently implemented are: <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code> and
+<code class="docutils literal notranslate"><span class="pre">color_sensor</span></code>.
+All the directional sensors inherit from the base class <code class="docutils literal notranslate"><span class="pre">DirectionalSensor</span></code>. This class implements the <code class="docutils literal notranslate"><span class="pre">step</span></code> method that
+is generally common to all directional sensors (it does not have to be overwritten unless needed).
+In contrast, any sensor inheriting from  <code class="docutils literal notranslate"><span class="pre">DirectionalSensor</span></code> must fill the methods <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> and
+<code class="docutils literal notranslate"><span class="pre">step_direction</span></code>, particularizing its behavior. Essentially, the <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> method filters out those entities
+(among all the entities in the surroundings) that are candidate to be perceived by the sensor. The <code class="docutils literal notranslate"><span class="pre">step_direction</span></code>
+method implements the actual sensor reading in each sector and for each perceived entitity.
+All the sectors have the same sensing procedure.
+For a detailed explanation of the method arguments, see <a class="reference internal" href="../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction()</span></code></a> .
+In the implemented directional sensors, such as <code class="docutils literal notranslate"><span class="pre">DistanceSensor</span></code> and <code class="docutils literal notranslate"><span class="pre">LightSensor</span></code>, the main steps of
+<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> are the following:</p>
+<ol class="arabic simple">
+<li><p>If the input argument <code class="docutils literal notranslate"><span class="pre">direction_reading</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (no object was perceived before), the initialize
+the reading.</p></li>
+<li><p>Filter out those objects that are very distant or in which the misalignment (<code class="docutils literal notranslate"><span class="pre">phi</span></code>) is lower than the sensor apeture.</p></li>
+<li><p>Compute the signal strength based on the Euclidean distance to the entity (<code class="docutils literal notranslate"><span class="pre">rho</span></code>) and the misalignment (<code class="docutils literal notranslate"><span class="pre">phi</span></code>) and
+using the corresponding propagation model.</p></li>
+<li><p>Cast an invisible ray between the physicsl sensor position and the perceived entity position (this may be changed in the
+future to the closest point of the perceived entity). This casted ray verifies the presence of obstacles.</p></li>
+<li><p>If no obstacle was detected then update the direction reading. The update can be selecting the maximum value
+between the previous measurement and the new one of as an additive field (among other options).</p></li>
+</ol>
+<p>There is a last explanation before going on to the next topic. When creating the URDF files of 3D entities, the directional
+sensors have to be defined and attached to established links. For that, we have designed a non-standardized xml tag structure,
+as it can be observed in the following example:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">sensor</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;distance_sensor&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR1&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR2&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR3&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;/</span><span class="n">sensor</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The tag sensor has an attribute that must hold the name of the sensor’s reference name. Thereafter,
+there is one inner tag per each sector of the sensor. In the example we show the <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>
+with 4 sectors. Each sector has the attribute index, indicating the index within [0, n_sectors-1] of the
+sector. The tag parent inside sectors denotes the physical link to which the sensor is attached.
+A link can have multiple sensors as it can observed in the source code of the epuck.urdf.
+The current use of this task is to access via the physics engine API to the precise positions of the
+physical 3D models (links) of the sensors. This positions are used for casting rays and detecting obstacles.
+This information can be accessed through the <code class="docutils literal notranslate"><span class="pre">get_sensor_position</span></code> method of the physics engine.
+Due to the fact that this part of the URDF files is not standardized, we process it manually at the
+<code class="docutils literal notranslate"><span class="pre">add_physics</span></code> method of the physics engine and using the <code class="docutils literal notranslate"><span class="pre">parse_sensors</span></code> method.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>The tag origin is not currently used, but its future use is to indicate the orientation (via quaternion
+or Euler angle) of the maximum sensor sensitivity. For the moment, only equiareal directional sectors of
+mobile robots are implemented.</p>
+</div>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>The sensor tags already mentioned are currently only processed and parsed for directional sensors. Nonetheless,
+the idea is to define any sensor of the robots and use the URDF to state the sensing equipment of robots.
+In this way, robot controllers could only make use of the sensors specified in the URDF file.</p>
+</div>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>The definition of sensors within the model files is only implemented in the 3D URD files. Due to its reduced
+relevance, it is currently in process in the case of the 2D JSON model files.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="actuators.html" class="btn btn-neutral float-right" title="Actuators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="entities.html" class="btn btn-neutral float-left" title="Entities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

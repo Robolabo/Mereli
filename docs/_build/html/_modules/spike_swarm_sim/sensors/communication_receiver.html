@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -101,7 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
@@ -173,24 +165,12 @@
             
   <h1>Source code for spike_swarm_sim.sensors.communication_receiver</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.base_sensor</span> <span class="kn">import</span> <span class="n">DirectionalSensor</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">sensor_registry</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="kn">import</span> <span class="n">Robot</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">issubclass_of_any</span><span class="p">,</span> <span class="n">circle_distance</span>
-<span class="kn">from</span> <span class="nn">.utils.propagation</span> <span class="kn">import</span> <span class="n">ExpDecayPropagation</span>
-
-
-<div class="viewcode-block" id="IRFrame"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRFrame">[docs]</a><span class="k">class</span> <span class="nc">IRFrame</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_len</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">msg_len</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">signal_strength</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tx_ori</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rx_ori</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sender_id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dest_id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_hops</span> <span class="o">=</span> <span class="mi">0</span></div>
-
+<span class="kn">from</span> <span class="nn">.base_sensor</span> <span class="k">import</span> <span class="n">DirectionalSensor</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">sensor_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">Robot</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">issubclass_of_any</span><span class="p">,</span> <span class="n">circle_distance</span>
+<span class="kn">from</span> <span class="nn">.utils.propagation</span> <span class="k">import</span> <span class="n">ExpDecayPropagation</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.communication</span> <span class="k">import</span> <span class="n">IRFrame</span>
 
 <div class="viewcode-block" id="IRCommunicationReceiver"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver">[docs]</a><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">IRCommunicationReceiver</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">):</span>
@@ -227,7 +207,7 @@
 <span class="sd">    :var ExpDecayPropagation propagation: propagation model to map ``rho`` and ``phi`` into the </span>
 <span class="sd">        distance estimation bounded in [0, 1]. </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">msg_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_hops</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">selection_scheme</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">msg_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_hops</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">selection_scheme</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IRCommunicationReceiver</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg_length</span> <span class="o">=</span> <span class="n">msg_length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="o">=</span> <span class="n">max_hops</span>
@@ -251,7 +231,7 @@
 <span class="sd">        It must return the sensed frame of the current direction. Only objects that are within the range and </span>
 <span class="sd">        aperture are considered.</span>
 
-<span class="sd">        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.</span>
+<span class="sd">        :param float rho: Euclidean distance between the object sensing and the object (obj) sensed.</span>
 <span class="sd">        :param float phi: angle between the direction of the sensor and the line passing through </span>
 <span class="sd">            both sensing and sensed object positions.</span>
 <span class="sd">        :param float direction_reading: Current reading in the featured direction </span>
@@ -268,35 +248,34 @@
                     <span class="ow">and</span> <span class="n">rho</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span>\
                     <span class="ow">and</span> <span class="n">phi</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span>\
                     <span class="ow">and</span> <span class="n">rho</span> <span class="o">&lt;=</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">range</span>\
-                    <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;enabled&#39;</span><span class="p">]</span>
+                    <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">enabled</span>
         
         <span class="c1">#* Fill initial reading with empty frame</span>
         <span class="k">if</span> <span class="n">direction_reading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">direction_reading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_msg</span>
+            <span class="n">direction_reading</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">empty_frame</span>
         <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
             <span class="n">signal_strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">signal_strength</span> <span class="o">&gt;</span> <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">signal_strength</span> <span class="o">&gt;</span> <span class="n">direction_reading</span><span class="o">.</span><span class="n">signal_strength</span><span class="p">:</span>
                 <span class="c1"># Cast a ray between my_pos and tar_pos to detect potential obstacles.</span>
-                <span class="n">my_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensors_idx</span><span class="p">[</span><span class="n">direction</span><span class="p">])</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="c1">#+ np.r_[0, 0, 0.017]</span>
+                <span class="n">my_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="c1">#+ np.r_[0, 0, 0.017]</span>
                 <span class="n">tar_pos</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">]</span> <span class="c1"># my_pos[2]]</span>
                 <span class="n">ray_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">(</span><span class="n">my_pos</span><span class="p">,</span> <span class="n">tar_pos</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">ray_res</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
+                    <span class="n">received_frame</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span>
                     <span class="n">sending_direction</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])</span>
-                    <span class="n">sending_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="mf">0.</span><span class="p">)[</span><span class="n">sending_direction</span><span class="p">]</span>
-                    <span class="n">receiving_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="mf">0.</span><span class="p">)[</span><span class="n">direction</span><span class="p">]</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;sending_direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sending_angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sending_angle</span><span class="p">)]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;receiving_direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">receiving_angle</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">receiving_angle</span><span class="p">)]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;receiving_direction&#39;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;receiving_direction&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
-                    <span class="c1"># msg = .actuators[&#39;IR_transmitter&#39;].msg[send_dir] #! if directional transmission</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">])</span>  <span class="c1">#! if isotropic</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">signal_strength</span><span class="p">])</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]])</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;destination&#39;</span><span class="p">]])</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">])</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> \
-                                                <span class="k">else</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span>
-                    <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;n_hops&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;n_hops&#39;</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;n_hops&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                        <span class="n">direction_reading</span><span class="p">[</span><span class="s1">&#39;sending_direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;sending_direction&#39;</span><span class="p">]</span>
+                    <span class="n">received_frame</span><span class="o">.</span><span class="n">tx_ori</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="mf">0.</span><span class="p">)[</span><span class="n">sending_direction</span><span class="p">]</span> <span class="c1">#!</span>
+                    <span class="n">received_frame</span><span class="o">.</span><span class="n">rx_ori</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="mf">0.</span><span class="p">)[</span><span class="n">direction</span><span class="p">]</span>
+                    <span class="n">received_frame</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span>
+                    <span class="n">received_frame</span><span class="o">.</span><span class="n">signal_strength</span> <span class="o">=</span> <span class="n">signal_strength</span>
+                    <span class="c1"># direction_reading[&#39;msg&#39;] = np.array(obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;msg&#39;])</span>
+                    <span class="c1"># direction_reading[&#39;priority&#39;] = np.array([obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;priority&#39;]])</span>
+                    <span class="c1"># direction_reading[&#39;destination&#39;] = np.array([obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;destination&#39;]])</span>
+                    <span class="c1"># direction_reading[&#39;sender&#39;] = np.array([obj.id]) if obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;state&#39;] \</span>
+                    <span class="c1">#                             else obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;sender&#39;]</span>
+                    <span class="c1"># direction_reading[&#39;n_hops&#39;] = obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;n_hops&#39;]</span>
+                    <span class="c1"># if direction_reading[&#39;n_hops&#39;] &gt; 1:</span>
+                    <span class="c1">#     direction_reading[&#39;sending_direction&#39;] = obj.actuators[&#39;IR_transmitter&#39;].frame[&#39;sending_direction&#39;]</span>
+                    <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">received_frame</span>
         <span class="k">return</span> <span class="n">direction_reading</span></div>
 
 <div class="viewcode-block" id="IRCommunicationReceiver.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -313,8 +292,8 @@
 <span class="sd">            it may return a list of python dictionaries (see ``CommunicationReceiver``).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">frames</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_msg</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">))]</span>
+        <span class="c1"># if len(np.where(np.array(frames) == 0.0)[0]):</span>
+        <span class="c1">#     frames = [self.empty_frame for _ in range(len(frames))]</span>
         <span class="n">selected_frame</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;cyclic&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cyclic_selection</span><span class="p">(</span><span class="n">frames</span><span class="p">),</span>
             <span class="s1">&#39;random&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_selection</span><span class="p">(</span><span class="n">frames</span><span class="p">),</span>
@@ -332,23 +311,23 @@
 
 <span class="sd">        :returns: a single selected frame.  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Discard very old frames (max 10 hops)</span>
-        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;n_hops&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="ow">and</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Discard very old frames (max 10 hops) or empty frames</span>
+        <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">n_hops</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="ow">and</span> <span class="n">frame</span><span class="o">.</span><span class="n">sender</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_msg</span><span class="p">]</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_frame</span><span class="p">]</span>
         <span class="c1">#* Select only a direction</span>
-        <span class="n">signal_strengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;signal&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">])</span>
-        <span class="n">senders</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">])</span>
+        <span class="n">signal_strengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">frame</span><span class="o">.</span><span class="n">signal_strength</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">])</span>
+        <span class="n">senders</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">frame</span><span class="o">.</span><span class="n">sender</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">])</span>
         <span class="n">selected_direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">signal_strengths</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">senders</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">senders</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)):</span>
-            <span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">senders</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">senders</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">senders</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">senders</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)):</span>
+            <span class="n">elements</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">senders</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">senders</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">selected_direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">elements</span><span class="p">,)</span>
-            <span class="n">frames</span><span class="p">[</span><span class="n">selected_direction</span><span class="p">][</span><span class="s1">&#39;am_i_sender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+            <span class="c1"># frames[selected_direction][&#39;am_i_sender&#39;] = np.array([0])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">selected_direction</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_msg</span><span class="p">]</span>
-            <span class="n">frames</span><span class="p">[</span><span class="n">selected_direction</span><span class="p">][</span><span class="s1">&#39;am_i_sender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
-            <span class="n">frames</span><span class="p">[</span><span class="n">selected_direction</span><span class="p">][</span><span class="s1">&#39;am_i_targeted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">empty_frame</span><span class="p">]</span>
+            <span class="c1"># frames[selected_direction][&#39;am_i_sender&#39;] = np.array([0])</span>
+            <span class="c1"># frames[selected_direction][&#39;am_i_targeted&#39;] = np.array([0])</span>
         <span class="k">return</span> <span class="n">frames</span><span class="p">[</span><span class="n">selected_direction</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="IRCommunicationReceiver.cyclic_selection"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.cyclic_selection">[docs]</a>    <span class="k">def</span> <span class="nf">cyclic_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frames</span><span class="p">):</span>
@@ -365,26 +344,28 @@
 
 <span class="sd">        :returns: a single selected frame.  </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">selected_frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_direction</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">selected_frame</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_direction</span><span class="p">]</span><span class="o">.</span><span class="n">get_copy</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_direction</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_direction</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span>
         <span class="k">return</span> <span class="n">selected_frame</span></div>
 
 <div class="viewcode-block" id="IRCommunicationReceiver.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; Reset method of the sensor. &quot;&quot;&quot;</span>
+        <span class="c1"># super().reset()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_direction</span> <span class="o">=</span> <span class="mi">0</span></div>
     
      
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">empty_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Format of an empty message. &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;signal&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span> <span class="s1">&#39;msg&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_length</span><span class="p">),</span> \
-                <span class="s1">&#39;sending_direction&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="s1">&#39;receiving_direction&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>\
-                <span class="s1">&#39;priority&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;destination&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> \
-                <span class="s1">&#39;sender&#39;</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;n_hops&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span></div>
+    <span class="k">def</span> <span class="nf">empty_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns an empty frame ``dict``. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">IRFrame</span><span class="p">(</span><span class="n">msg_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_length</span><span class="p">)</span></div>
+        <span class="c1"># return {&#39;signal&#39; : np.array([0.0]), &#39;msg&#39; : np.zeros(self.msg_length), \</span>
+        <span class="c1">#         &#39;sending_direction&#39; : np.zeros(2), &#39;receiving_direction&#39; : np.zeros(2),\</span>
+        <span class="c1">#         &#39;priority&#39; : np.zeros(1), &#39;destination&#39; : np.array([-1]), \</span>
+        <span class="c1">#         &#39;sender&#39; : -1 * np.ones(1), &#39;n_hops&#39; : 1}</span>
 
 <div class="viewcode-block" id="BufferedIRCommRX"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX">[docs]</a><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;buffered_IR_receiver&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">BufferedIRCommRX</span><span class="p">(</span><span class="n">IRCommunicationReceiver</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BufferedIRCommRX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prev_msg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)</span>
 

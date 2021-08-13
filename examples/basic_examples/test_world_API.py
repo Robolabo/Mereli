@@ -5,7 +5,7 @@ import pathlib
 from spike_swarm_sim.world import World3D
 from spike_swarm_sim.objects import Epuck3D
 from spike_swarm_sim.controllers import BasicObstacleAvoider
-from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
+from spike_swarm_sim.utils.initializers import RandomUniformInitializer
 
 """ EXAMPLE DESCRIPTION:
 The experiments can be defined in three different ways. The first and most common one is via the command 
@@ -23,7 +23,7 @@ With the variable USE_API you can switch between using 1) or 2).
 
 USE_API = True
 n_robots = 5
-world = World3D(height=10,  width=10)
+world = World3D(height=15,  width=15)
 
 if USE_API:
     ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')

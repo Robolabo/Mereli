@@ -11,8 +11,10 @@ from .utils import *
 from .env_perturbations import *
 from .neural_networks import *
 from .controllers import *
+from .communication import *
 from .sensors import *
 from .actuators import *
+
 
 from .objects import *
 from .config_parser import *
