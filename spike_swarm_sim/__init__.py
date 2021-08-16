@@ -20,7 +20,7 @@ from .objects import *
 from .config_parser import *
 
 from .physics_engine import Engine2D, Engine3D
-from .world import World3D, World2D, MultiWorldWrapper
+from .world import World3D, CustomWorld, MultiWorldWrapper
 from .objectives import *
 from .algorithms import *
 

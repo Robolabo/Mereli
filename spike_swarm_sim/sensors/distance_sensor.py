@@ -59,13 +59,17 @@ class DistanceSensor(DirectionalSensor):
                     and phi <= self.aperture)
         if direction_reading is None:
             direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
+        
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading:
                 my_pos = self.get_sensor_position(args[0]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
-                tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
+                if type(kwargs['obj']).__name__ in ['Map', 'Wall']:
+                    tar_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, kwargs['obj'].id,  
+                                    linkA=self.get_sensor_idx(args[0]), linkB=-1, max_dist=self.range)
+                else:
+                    tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
                 # Cast a ray between my_pos y tar_pos to verify if there are obstacles
-                #! ray_res = p.rayTest(my_pos, tar_pos, physicsClientId=self.sensor_owner.physics_client.client)[0][0]
                 ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
                 if ray_res == kwargs['obj'].id: 
                     # print('IR'+str(args[0]), type(kwargs['obj']).__name__, rho)

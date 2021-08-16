@@ -106,11 +106,13 @@ class DirectionalSensor(Sensor):
         #! Improve code
         for obj in featured_objects:
             # If Wall, detect the distance to the closest point to the wall (CoM would not work).
-            if type(obj).__name__ == 'Wall':
-                closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-                        linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client.client)
+            if type(obj).__name__ in ['Map', 'Wall']:
+                # closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
+                #         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client.client)
                 closest_pt_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, obj.id,  
-                                    linkA=-1, linkB=-1, max_dist=20)
+                                    linkA=-1, linkB=-1, max_dist=self.range)
+                if len(closest_pt_pos) == 0: 
+                    continue
                 # closest_pt_pos = np.array(closest_points[0][6])
                 v = closest_pt_pos - self.sensor_owner.position
             else:
@@ -154,9 +156,22 @@ class DirectionalSensor(Sensor):
         """
         sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
         return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
-                    sensor_name=sensor_name, sector=sector)
+                    sensor_name=sensor_name, sector=sector)[0]
     
+    def get_sensor_idx(self, sector):
+        """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
+        used to cast rays and compute the readings wrt it. 
+        
+        .. todo::
+            TODO: For the moment only available in 3D. Create method in 2D engine.
 
+        :param int sector: sector of a the sectorized sensor to be requested.
+
+        :returns: the numpy array position of the sensor within the robot model.
+        """
+        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
+        return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
+                    sensor_name=sensor_name, sector=sector)[1]
 
 
 

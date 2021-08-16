@@ -6,3 +6,4 @@ from .ball import Ball
 from .cube import Cube
 from .ground_area import GroundArea
 from .task_scheduler import TaskScheduler
+from .map import Map

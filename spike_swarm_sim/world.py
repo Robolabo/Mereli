@@ -7,7 +7,7 @@ import pybullet_data
 import pybullet_utils.bullet_client as bc
 
 
-from spike_swarm_sim.objects import  Robot, LightSource, Wall
+from spike_swarm_sim.objects import  Robot, LightSource, Wall, Map
 from spike_swarm_sim.register import (controllers, world_objects, initializers, 
         env_perturbations, rewards, communication_systems)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
@@ -148,7 +148,6 @@ class World(object):
         self.prev_states = None
         self.prev_actions = None
         self.t = 0
-        map_parser()
 
     @increase_time
     @mov_average_timeit
@@ -481,12 +480,10 @@ class CustomWorld(World):
     """ World class of 3D bounded arenas. """
     def __init__(self, *args, **kwargs):
         super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
-        #* Add world limits
-        self.add_map()
-
-    def add_map(self):
-        pass
-
+        self.map_file = 'spike_swarm_sim/models/maps/simple_map_1/simple_map_1'
+        self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
+        # self.add_map()
+    
     def neighborhood(self, robot):
         """ 
         .. todo:: #TODO: Not finished
@@ -502,7 +499,8 @@ class CustomWorld(World):
         :returns: List of neighboring WorldObject.
         """
 
-        return self.hierarchy
+        return self.hierarchy.values()
+
 
 
 

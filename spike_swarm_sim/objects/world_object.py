@@ -31,7 +31,7 @@ class WorldObject(ABC):
         if model_file is not None:
             self.model_file = model_file + ".urdf" # Hcer algo con esto
             if len(model_file.split('/')) < 2 or 'tmp' in model_file:
-                self.model_file = "spike_swarm_sim/objects/urdf/" + self.model_file            
+                self.model_file = "spike_swarm_sim/objects/urdf/" + self.model_file         
         self.init_position = position
         self.init_orientation = orientation
         self.z_offset = z_offset

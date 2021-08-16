@@ -228,6 +228,8 @@ class Engine3D:
         :returns: 3D numpy array with the coordinates of the closest point in linkB of entity with idB. 
         """
         closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, linkIndexB=linkB, physicsClientId=self.client)
+        if len(closest_points) == 0:
+            return closest_points
         return np.array(closest_points[0][6])
 
     def get_link_state(self, obj_id, link_idx):
@@ -254,7 +256,8 @@ class Engine3D:
 
         :returns: numpy array with the position. 
         """
-        return np.array(self.get_link_state(obj_id, self.physical_sensors[sensor_name][sector]['idx'])[0])
+        sensor_index = self.physical_sensors[sensor_name][sector]['idx']
+        return np.array(self.get_link_state(obj_id, sensor_index)[0]), sensor_index
 
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
