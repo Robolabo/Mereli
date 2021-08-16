@@ -4,9 +4,9 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
+            "I1" : {"n" : 4, "sensor" : "light_sensor"},
             "I2" : {"n" : 4, "sensor" : "IR_receiver:msg"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I5" : {"n" : 4, "sensor" : "distance_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -18,8 +18,8 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "real"}
         },
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
@@ -72,19 +72,19 @@
                 "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 10},
+                    "light_sensor" : {"n_sectors" : 4, "range" : 10},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 1.5}
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 1.5}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
+                    "IR_transmitter" : {"quantize": false, "range" : 1.5, "msg_length":1}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor3D"}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 3, "stimuli" : "light_sensor"}},
                 "params" : {"trainable" : true}
             },
             "light_red" : {

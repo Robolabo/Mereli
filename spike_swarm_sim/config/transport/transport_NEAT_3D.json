@@ -4,10 +4,10 @@
         "dt" : 0.1,
         "time_scale" : 20,
         "stimuli": {
-            "I1" : {"n" : 4, "sensor" : "light_sensor3D"},
+            "I1" : {"n" : 4, "sensor" : "light_sensor"},
             "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
             "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
-            "I5" : {"n" : 4, "sensor" : "distance_sensor3D"},
+            "I5" : {"n" : 4, "sensor" : "distance_sensor"},
             "I6" : {"n" : 4, "sensor" : "color_sensor"},
             "I7" : {"n" : 1, "sensor" : "ground_sensor"},
             "I8" : {"n" : 1, "sensor" : "object_grasped_sensor"}
@@ -21,7 +21,7 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
             "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
         },
         "synapses" :  {
@@ -95,15 +95,15 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "color_sensor" : {"n_sectors" : 4, "range" : 5},
-                    "light_sensor3D" : {"n_sectors" : 4, "range" : 20},
+                    "light_sensor" : {"n_sectors" : 4, "range" : 20},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2},
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 2},
                     "object_grasped_sensor" : {},
                     "ground_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": true, "range" : 10, "msg_length":2},
+                    "IR_transmitter" : {"quantize": true, "range" : 10, "msg_length":2},
                     "grasp_actuator" : {}
                 },
                 "initializers" : {

@@ -7,11 +7,19 @@ import pybullet_data
 import pybullet_utils.bullet_client as bc
 
 
-from spike_swarm_sim.objects import  Robot, Robot3D, LightSource, LightSource3D, Wall, Wall2D
-from spike_swarm_sim.register import controllers, world_objects, initializers, env_perturbations, rewards
+from spike_swarm_sim.objects import  Robot, LightSource, Wall, Map
+from spike_swarm_sim.register import (controllers, world_objects, initializers, 
+        env_perturbations, rewards, communication_systems)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
+
+
+def map_parser():
+    file = 'spike_swarm_sim/models/maps/map1.txt'
+    with open(file) as f:
+        map_mat = np.array([[int(ch) if ch != '' else 0 for ch in line.split(';')[0].split(' ')] for line in f.readlines()])
+    import pdb; pdb.set_trace()
 
 
 class MultiWorldWrapper:
@@ -98,7 +106,7 @@ class World(object):
     >>>            "num_instances" : n_robots,
     >>>            "controller" : "basic_obstable_avoider",
     >>>            "sensors" : {
-    >>>                "distance_sensor3D" : {"n_sectors" : 4, "range" : 1}
+    >>>                "distance_sensor" : {"n_sectors" : 4, "range" : 1}
     >>>            },  
     >>>            "actuators" : {
     >>>                "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}
@@ -141,7 +149,6 @@ class World(object):
         self.prev_actions = None
         self.t = 0
 
-
     @increase_time
     @mov_average_timeit
     def step(self):
@@ -180,7 +187,7 @@ class World(object):
 
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
-            if not isinstance_of_any(obj, [Robot, Robot3D]): #! Make both robot2D and 3D to have a common antecesor.
+            if not issubclass(type(obj), Robot):
                 obj.step(self.neighborhood(obj))
                 continue
             if len(self.env_perturbations) > 0:
@@ -192,8 +199,10 @@ class World(object):
             #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
             states.append(state_obj)
             actions.append(action_obj)
-        states = np.stack(states)
-        actions = np.stack(actions)
+        if len(states) > 0:
+            states = np.stack(states)
+        if len(actions) > 0:
+            actions = np.stack(actions)
 
         #* Apply environmental perturbations (Postprocessing)
         if len(self.env_perturbations) > 0:
@@ -296,7 +305,7 @@ class World(object):
             object_cls = world_objects[engine][obj['type']]
             #! Prov implementation for TFM regarding the task scheduler
             if object_cls.__name__ == 'TaskScheduler':
-                world_obj = object_cls(**obj['params'])
+                world_obj = object_cls(None, np.zeros(3), np.zeros(3), **obj['params']) #! ojo 2D
                 self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                 continue
             #* Create group intializers.
@@ -307,7 +316,7 @@ class World(object):
             #* Loop entities and add them to the world.
             #* Distinguish between robots and the other objects.
             entity_positions = self.initializers[obj_name]['positions']()
-            if issubclass(object_cls, Robot) or issubclass(object_cls, Robot3D):
+            if issubclass(object_cls, Robot):# or issubclass(object_cls, Robot3D):
                 entity_orientations = self.initializers[obj_name]['orientations']()
                 #* Add entities one by one at their position and orientation
                 for i, (position, orientation) in enumerate(zip(entity_positions, entity_orientations)):
@@ -321,6 +330,9 @@ class World(object):
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology)
                     robot = object_cls(position, orientation, controller=controller, **obj['params'])
+                    #* Add communication system (if any)
+                    if "comm_sys" in obj:
+                        robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))
                     self.register_entity(obj_name + '_' + str(i), robot, group=obj_name)
 
                 #* Add perturbations (if any) to the robot states and actions (not physical perturbs)
@@ -384,12 +396,12 @@ class World(object):
                 group_initializer = self.initializers[group]
                 group_elements = self.group_objects(group)
                 #* Initialize positions
-                if 'positions' in group_initializer.keys():
+                if 'positions' in group_initializer:
                     positions = group_initializer['positions']()
                     for pos, obj in zip(positions, group_elements):
                         obj.position = pos
                 #* Initialize orientations
-                if 'orientations' in group_initializer.keys():
+                if 'orientations' in group_initializer and group_initializer['orientations'] is not None:
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
                         obj.orientation = orientation
@@ -422,7 +434,7 @@ class World(object):
     def robots(self):
         """ Dict with all robots. """
         return {name : obj for name, obj in self.hierarchy.items()\
-            if issubclass(type(obj), Robot) or issubclass(type(obj), Robot3D)}
+            if issubclass(type(obj), Robot)}
 
     @property
     def lights(self):
@@ -462,6 +474,37 @@ class World(object):
         """ Dict with all luminous objects. """
         return {name : obj for name, obj in self.hierarchy.items() if obj.luminous}
 
+
+
+class CustomWorld(World):
+    """ World class of 3D bounded arenas. """
+    def __init__(self, *args, **kwargs):
+        super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
+        self.map_file = 'spike_swarm_sim/models/maps/simple_map_1/simple_map_1'
+        self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
+        # self.add_map()
+    
+    def neighborhood(self, robot):
+        """ 
+        .. todo:: #TODO: Not finished
+        Method that returns the list of neighboring world objects of a robot.
+        An object is considered to be in the vicinity if it is contained in the ball
+        of radius equal to:
+            a) The maximum range of distance or comunication sensors if the object is a robot.
+            b) The range of the light sensor if the object is a light source.
+        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
+
+        :param Robot3D robot: The Robot object whose vicinity has to be computed.
+
+        :returns: List of neighboring WorldObject.
+        """
+
+        return self.hierarchy.values()
+
+
+
+
+
 #TODO implementar p.disconnect(). Ctx manager?
 class World3D(World):
     """ World class of 3D bounded arenas. """
@@ -490,12 +533,6 @@ class World3D(World):
             and actuator names to actions. 
         """
         states, actions = super().step()
-        if self.render:
-            for l in self.lights.values():
-                if self.physics_engine.engine.readUserDebugParameter(self.physics_engine.gui_params['light_coverage']) % 2 == 0:
-                    l.show_coverage()
-                else:
-                    l.hide_coverage()
         return states, actions
 
     def neighborhood(self, robot):
@@ -511,29 +548,29 @@ class World3D(World):
         :param Robot3D robot: The Robot object whose vicinity has to be computed.
 
         :returns: List of neighboring WorldObject.
-        =========================================================================================================
         """
+
         neighbors = []
         #!
-        if isinstance_of_any(robot, [LightSource, LightSource3D]):
+        if isinstance_of_any(robot, [LightSource]):
             return self.robots.values()
-        if not isinstance(robot, Robot3D) or len(self.hierarchy) == 1:
+        if not issubclass(type(robot), Robot) or len(self.hierarchy) == 1:
             return neighbors
         max_robot_dist = None
         if len(self.robots) > 1:
             #! ---
             max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['IR_receiver', 'distance_sensor3D', 'RF_receiver'] \
+                            for sensor in ['IR_receiver', 'distance_sensor', 'RF_receiver'] \
                             if sensor in robot.sensors.keys()])
             #! ---
         #* Robots
         for obj in self.hierarchy.values():
             #!
-            if isinstance(obj, Robot3D) and obj.id != robot.id:
+            if issubclass(type(obj), Robot) and obj.id != robot.id:
                 if max_robot_dist is not None and obj.id != robot.id:
                     if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
                         neighbors.append(obj)
-            elif isinstance_of_any(obj, [LightSource, LightSource3D]):
+            elif isinstance(obj, LightSource):
                 # #! PROV
                 # ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}[type(obj).__name__]
 
@@ -557,13 +594,13 @@ class World2D(World):
 
     def add_limiting_walls(self):
         """ Creates the limiting walls of the 2D arena. """
-        self.register_entity('wall_side_up', Wall2D([self.width/2, 0], np.pi/2, height=0.5,\
+        self.register_entity('wall_side_up', Wall([self.width/2, 0], np.pi/2, height=0.5,\
             width=self.width), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall2D([-self.width/2,0], np.pi/2, height=0.5,\
+        self.register_entity('wall_side_bottom', Wall([-self.width/2,0], np.pi/2, height=0.5,\
             width=self.width), group='side_wall')
-        self.register_entity('wall_side_left', Wall2D([0, self.height/2], -np.pi/2, height=self.height-0.5,\
+        self.register_entity('wall_side_left', Wall([0, self.height/2], -np.pi/2, height=self.height-0.5,\
             width=0.5), group='side_wall')
-        self.register_entity('wall_side_right', Wall2D([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
+        self.register_entity('wall_side_right', Wall([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
             width=0.5), group='side_wall')
 
     def assign_unique_id(self):

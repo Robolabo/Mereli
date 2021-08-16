@@ -28,8 +28,8 @@
             "OUT" : {"n" : 2, "tau" : 10, "gain" : 2, "bias": 0, "activation":"sigmoid"}
         },
         "outputs" : {
-            "outC" : {"ensemble" : ["OUT_COMM_PR"], "actuator" : "wireless_transmitter:priority", "enc": "real"},
-            "outA" : {"ensemble" : ["OUT_COMM"], "actuator" : "wireless_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : ["OUT_COMM_PR"], "actuator" : "IR_transmitter:priority", "enc": "real"},
+            "outA" : {"ensemble" : ["OUT_COMM"], "actuator" : "IR_transmitter", "enc": "real"},
             "outB" : {"ensemble" : ["OUT"], "actuator" : "wheel_actuator", "enc": "real"}
         },
         "synapses" :  {
@@ -94,7 +94,7 @@
                 "num_instances" : 8,
                 "controller" : "neural_controller",
                 "sensors" : {"wireless_receiver" : {"n_sectors":4, "range" : 1200,  "msg_length" : 2}, "light_sensor" : {"rho_decay":2000, "range": 2000, "n_sectors" : 6}},
-                "actuators" : {"wheel_actuator" : {}, "wireless_transmitter" : {"range" : 1200, "msg_length" : 2}},
+                "actuators" : {"wheel_actuator" : {}, "IR_transmitter" : {"range" : 1200, "msg_length" : 2}},
                 "positions" : "random",
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low":500, "high" : 600, "size":2}},

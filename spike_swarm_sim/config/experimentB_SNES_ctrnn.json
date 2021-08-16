@@ -23,8 +23,8 @@
             "OUT_LED" : {"n" : 1, "params": {}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "cat"},
+            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "cat"},
             "outB" : {"ensemble" : "OUT_LED", "actuator" : "led_actuator", "enc": "cat"}
         },
         "synapses" :  {
@@ -79,7 +79,7 @@
                 "num_instances" : 20,
                 "controller" : "neural_controller",
                 "sensors" : {"wireless_receiver" : {"n_sectors" : 4, "range" : 100, "msg_length" : 2}},
-                "actuators" : {"led_actuator" : {}, "wireless_transmitter" : {"quantize": true, "range" : 100, "msg_length":2}},
+                "actuators" : {"led_actuator" : {}, "IR_transmitter" : {"quantize": true, "range" : 100, "msg_length":2}},
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":100, "initial_pos" : [500, 500]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}

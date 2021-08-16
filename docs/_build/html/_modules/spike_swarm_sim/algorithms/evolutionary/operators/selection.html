@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -163,7 +174,7 @@
   <h1>Source code for spike_swarm_sim.algorithms.evolutionary.operators.selection</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">evo_operator_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">evo_operator_registry</span>
 
 
 
@@ -239,7 +250,7 @@
     <span class="k">return</span> <span class="n">selected</span><span class="p">,</span> <span class="n">fitness_sel</span></div>
 
 <div class="viewcode-block" id="nonlin_rank_selection"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.selection.nonlin_rank_selection">[docs]</a><span class="nd">@evo_operator_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;nonlin_rank_selection&#39;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">nonlin_rank_selection</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">fitness</span><span class="p">,</span> <span class="n">n_sel</span><span class="p">,</span> <span class="n">p_best</span><span class="o">=.</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">nonlin_rank_selection</span><span class="p">(</span><span class="n">population</span><span class="p">,</span> <span class="n">fitness</span><span class="p">,</span> <span class="n">n_sel</span><span class="p">,</span> <span class="n">p_best</span><span class="o">=</span><span class="mf">.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Non-linear rank selection operator of GA. Samples stochastically n_sel </span>
 <span class="sd">    genotypes using ranks as probabilities in order to mitigate genetic drift.</span>
 <span class="sd">    Ranks are computed non-linearly, so that the prob. decreases exponentially with the </span>

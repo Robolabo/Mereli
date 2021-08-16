@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,11 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -84,15 +85,17 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -172,22 +175,114 @@
 <span class="sd">    implement positions, orientations, and so on. This class must not be directly instantiated </span>
 <span class="sd">    and all world objects have to inherit from it indirectly.</span>
 
+<span class="sd">    :param str model_file: name of the file where the model of the entity is stored.</span>
+<span class="sd">    :param position:</span>
+<span class="sd">    :param orientation: </span>
 <span class="sd">    :param bool static: whether the object is static or can move.</span>
 <span class="sd">    :param Controller controller: controller, if any, defining object behavior. </span>
 <span class="sd">        If the object cannot be controlled, then controller=None. </span>
 <span class="sd">    :param bool tangible: whether the object has collisions or not.</span>
 <span class="sd">    :param bool luminous: whether the object emits light or not.</span>
 <span class="sd">    :param bool trainable: whether the object controller can be trained (not really used yet).</span>
+<span class="sd">    :param float z_offset: z-axis offset of the entity position. It is only valid for 3D entities. </span>
+<span class="sd">        If entity is not 3D, then it should be left as ``None``.</span>
+
+<span class="sd">    :var Engine physics_client: physics and render client used in the simulations.</span>
+<span class="sd">    :var int id: unique identifier of the entity (should not be changed unless strictly needed). </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>\
-                    <span class="n">luminous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> 
+                    <span class="n">static</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tangible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">luminous</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="n">model_file</span>
+        <span class="k">if</span> <span class="n">model_file</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="n">model_file</span> <span class="o">+</span> <span class="s2">&quot;.urdf&quot;</span> <span class="c1"># Hcer algo con esto</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="s1">&#39;tmp&#39;</span> <span class="ow">in</span> <span class="n">model_file</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="s2">&quot;spike_swarm_sim/objects/urdf/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span>            
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_orientation</span> <span class="o">=</span> <span class="n">orientation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_offset</span> <span class="o">=</span> <span class="n">z_offset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">static</span> <span class="o">=</span> <span class="n">static</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tangible</span> <span class="o">=</span> <span class="n">tangible</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">luminous</span> <span class="o">=</span> <span class="n">luminous</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="WorldObject.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.step">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Abstract step method that is executed in every simulation cycle. The clearest function concerns </span>
+<span class="sd">        robots, that read sensors and execute the controller. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="WorldObject.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.reset">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Abstract reset method that is executed at the begginning of every simulation. It normally resets all </span>
+<span class="sd">        the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in </span>
+<span class="sd">        order to be reset at a precise random state.</span>
+
+<span class="sd">        :param int seed: seed to reset at a precise random state. None if no seed is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="nd">@property</span> 
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current position of the entity.</span>
+
+<span class="sd">        :returns: numpy array with the entities&#39; position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_offset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">pos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_offset</span>
+        <span class="k">return</span> <span class="n">pos</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current orientation of the entity.</span>
+
+<span class="sd">        :returns: numpy array with the entities&#39; orientation if 3D or</span>
+<span class="sd">            ``float`` if 2D.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current velocity of the entity.</span>
+
+<span class="sd">        :returns: numpy array with the entities&#39; velocity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current angular velocity of the entity.</span>
+
+<span class="sd">        :returns: numpy array with the entity angular velocity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="nd">@position</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Setter of the position of the entity. </span>
+<span class="sd">        </span>
+<span class="sd">        :param np.ndarray new_position: numpy array with the new position of the entity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">)</span>
+        
+    <span class="nd">@orientation</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Setter of the orientation of the entity. </span>
+<span class="sd">        </span>
+<span class="sd">        :param np.ndarray new_orientation: numpy array with the new orientation of the entity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -212,137 +307,112 @@
 
 <span class="sd">        :returns: bool stating if the entity is controllable.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="WorldObject.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.step">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Abstract step method that is executed in every simulation cycle. The clearest function concerns </span>
-<span class="sd">        robots, that read sensors and execute the controller. </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-    
-<div class="viewcode-block" id="WorldObject.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.reset">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Abstract reset method that is executed at the begginning of every simulation. It normally resets all </span>
-<span class="sd">        the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in </span>
-<span class="sd">        order to be reset at a precise random state.</span>
 
-<span class="sd">        :param int seed: seed to reset at a precise random state. None if no seed is used.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-    <span class="nd">@abstractproperty</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Abstract getter of the entity position. &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    
-    <span class="nd">@abstractproperty</span>
-    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Abstract getter of the entity orientation. &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
     
   
-<div class="viewcode-block" id="WorldObject2D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject2D">[docs]</a><span class="k">class</span> <span class="nc">WorldObject2D</span><span class="p">(</span><span class="n">WorldObject</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Base class for 2D world objects (robots, lights, walls, and so on). </span>
-<span class="sd">    This class must not be directly instantiated and all 2D world objects have to</span>
-<span class="sd">    inherit from it.</span>
+<span class="c1"># class WorldObject2D(WorldObject):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Base class for 2D world objects (robots, lights, walls, and so on). </span>
+<span class="c1">#     This class must not be directly instantiated and all 2D world objects have to</span>
+<span class="c1">#     inherit from it.</span>
 
-<span class="sd">    :param str model_file: name of the json file stored at spike_swarm_sim/objects/urdf describing </span>
-<span class="sd">        the entity 2D model.</span>
-<span class="sd">    :param np.ndarray position: 2D position vector of the entity.</span>
-<span class="sd">    :param float position: orientation in radians of the entity.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">WorldObject2D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="n">model_file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_position</span> <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="k">else</span> <span class="n">position</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_orientation</span> <span class="o">=</span> <span class="n">orientation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1">#     :param str model_file: name of the json file stored at spike_swarm_sim/objects/urdf describing </span>
+<span class="c1">#         the entity 2D model.</span>
+<span class="c1">#     :param np.ndarray position: 2D position vector of the entity.</span>
+<span class="c1">#     :param float position: orientation in radians of the entity.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def __init__(self, model_file, position, orientation, *args, **kwargs):</span>
+<span class="c1">#         super(WorldObject2D, self).__init__(*args, **kwargs)</span>
+<span class="c1">#         self.model_file = model_file</span>
+<span class="c1">#         self.init_position = position.astype(float) if isinstance(position, np.ndarray) else position</span>
+<span class="c1">#         self.init_orientation = orientation</span>
+<span class="c1">#         self.physics_client = None</span>
 
-<div class="viewcode-block" id="WorldObject2D.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject2D.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<span class="c1">#     def step(self):</span>
+<span class="c1">#         raise NotImplementedError</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">pos</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">.</span><span class="n">y</span><span class="p">])</span> <span class="o">-</span> <span class="mi">500</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span> 
+<span class="c1">#     @property</span>
+<span class="c1">#     def position(self):</span>
+<span class="c1">#         pos = self.physics_client.get_body_position(self.id, 0)</span>
+<span class="c1">#         return (np.array([pos.x, pos.y]) - 500) / 100 </span>
     
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1">#     @property</span>
+<span class="c1">#     def orientation(self):</span>
+<span class="c1">#         return self.physics_client.get_body_orientation(self.id, 0)</span>
 
-    <span class="nd">@position</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Setter of the position. &quot;&quot;&quot;</span>
-        <span class="n">new_position</span> <span class="o">=</span> <span class="n">new_position</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">500</span>        
-        <span class="c1"># if any(new_position &gt; 1000):import pdb; pdb.set_trace()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">reset_body_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_position</span><span class="p">))</span>
+<span class="c1">#     @position.setter</span>
+<span class="c1">#     def position(self, new_position):</span>
+<span class="c1">#         &quot;&quot;&quot; Setter of the position. &quot;&quot;&quot;</span>
+<span class="c1">#         new_position = new_position * 100 + 500        </span>
+<span class="c1">#         # if any(new_position &gt; 1000):import pdb; pdb.set_trace()</span>
+<span class="c1">#         self.physics_client.reset_body_position(self.id, 0, tuple(new_position))</span>
     
-    <span class="nd">@orientation</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Setter of the orientation. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">reset_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">)</span></div>
+<span class="c1">#     @orientation.setter</span>
+<span class="c1">#     def orientation(self, new_orientation):</span>
+<span class="c1">#         &quot;&quot;&quot; Setter of the orientation. &quot;&quot;&quot;</span>
+<span class="c1">#         self.physics_client.reset_body_orientation(self.id, 0, new_orientation)</span>
 
 
-<div class="viewcode-block" id="WorldObject3D"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject3D">[docs]</a><span class="k">class</span> <span class="nc">WorldObject3D</span><span class="p">(</span><span class="n">WorldObject</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Base class for 3D world objects (robots, lights, walls, and so on). </span>
-<span class="sd">    This class must not be directly instantiated and all 3D world objects have to</span>
-<span class="sd">    inherit from it.</span>
-<span class="sd">    ====================================================================================</span>
-<span class="sd">    - Params:</span>
-<span class="sd">        urdf_file [str]: extension less name of the URDF file defining the object.</span>
-<span class="sd">        position [np.ndarray or list]: position 3D vector of the object.</span>
-<span class="sd">        orientation [np.ndarray or list]: 3D Euler orientation vector.</span>
-<span class="sd">        physics_client [int]: identifier of the pybullet physics server.</span>
-<span class="sd">        z_offset [float]</span>
-<span class="sd">    ====================================================================================</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_file</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">WorldObject3D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="n">model_file</span> <span class="o">+</span> <span class="s2">&quot;.urdf&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="s1">&#39;tmp&#39;</span> <span class="ow">in</span> <span class="n">model_file</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span> <span class="o">=</span> <span class="s2">&quot;spike_swarm_sim/objects/urdf/&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_file</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_position</span> <span class="o">=</span> <span class="n">position</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">init_orientation</span> <span class="o">=</span> <span class="n">orientation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">z_offset</span> <span class="o">=</span> <span class="n">z_offset</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1"># class WorldObject3D(WorldObject):</span>
+<span class="c1">#     &quot;&quot;&quot; Base class for 3D world objects (robots, lights, walls, and so on). </span>
+<span class="c1">#     This class must not be directly instantiated and all 3D world objects have to</span>
+<span class="c1">#     inherit from it.</span>
+<span class="c1">#     ====================================================================================</span>
+<span class="c1">#     - Params:</span>
+<span class="c1">#         urdf_file [str]: extension less name of the URDF file defining the object.</span>
+<span class="c1">#         position [np.ndarray or list]: position 3D vector of the object.</span>
+<span class="c1">#         orientation [np.ndarray or list]: 3D Euler orientation vector.</span>
+<span class="c1">#         physics_client [int]: identifier of the pybullet physics server.</span>
+<span class="c1">#         z_offset [float]</span>
+<span class="c1">#     ====================================================================================</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def __init__(self, model_file, position, orientation, *args, z_offset=0, **kwargs):</span>
+<span class="c1">#         super(WorldObject3D, self).__init__(*args, **kwargs)</span>
+<span class="c1">#         self.model_file = model_file + &quot;.urdf&quot;</span>
+<span class="c1">#         if len(model_file.split(&#39;/&#39;)) &lt; 2 or &#39;tmp&#39; in model_file:</span>
+<span class="c1">#             self.model_file = &quot;spike_swarm_sim/objects/urdf/&quot; + self.model_file</span>
+<span class="c1">#         self.init_position = position</span>
+<span class="c1">#         self.init_orientation = orientation</span>
+<span class="c1">#         self.z_offset = z_offset</span>
+<span class="c1">#         self._id = None</span>
+<span class="c1">#         self.physics_client = None</span>
 
-<div class="viewcode-block" id="WorldObject3D.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject3D.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<span class="c1">#     def step(self):</span>
+<span class="c1">#         raise NotImplementedError</span>
     
-<div class="viewcode-block" id="WorldObject3D.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject3D.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+<span class="c1">#     def reset(self, seed=None):</span>
+<span class="c1">#         raise NotImplementedError</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#TODO: move z_offset to physics_engine 3D. </span>
-        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">pos</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">init_position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_offset</span>
-        <span class="k">return</span> <span class="n">pos</span>
+<span class="c1">#     @property</span>
+<span class="c1">#     def position(self):</span>
+<span class="c1">#         #TODO: move z_offset to physics_engine 3D. </span>
+<span class="c1">#         pos = self.physics_client.get_body_position(self.id, 0)</span>
+<span class="c1">#         pos[-1] = self.init_position[-1] + self.z_offset</span>
+<span class="c1">#         return pos</span>
  
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1">#     @property</span>
+<span class="c1">#     def orientation(self):</span>
+<span class="c1">#         return self.physics_client.get_body_orientation(self.id, 0)</span>
         
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1">#     @property</span>
+<span class="c1">#     def velocity(self):</span>
+<span class="c1">#         return self.physics_client.get_body_velocity(self.id, 0)</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_body_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1">#     @property</span>
+<span class="c1">#     def angular_velocity(self):</span>
+<span class="c1">#         return self.physics_client.get_body_angular_velocity(self.id, 0)</span>
 
-    <span class="nd">@position</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_position</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Setter of the position. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">new_position</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">orientation</span><span class="p">)</span>
+<span class="c1">#     @position.setter</span>
+<span class="c1">#     def position(self, new_position):</span>
+<span class="c1">#         &quot;&quot;&quot; Setter of the position. &quot;&quot;&quot;</span>
+<span class="c1">#         self.physics_client.set_body_state(self.id, 0, new_position, self.orientation)</span>
         
-    <span class="nd">@orientation</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Setter of the orientation. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">new_orientation</span><span class="p">)</span></div>
+<span class="c1">#     @orientation.setter</span>
+<span class="c1">#     def orientation(self, new_orientation):</span>
+<span class="c1">#         &quot;&quot;&quot; Setter of the orientation. &quot;&quot;&quot;</span>
+<span class="c1">#         self.physics_client.set_body_state(self.id, 0, self.position, new_orientation)</span>
 </pre></div>
 
            </div>

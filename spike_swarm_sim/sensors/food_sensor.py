@@ -19,7 +19,7 @@ class FoodAreaSensor(DirectionalSensor):
     def __init__(self, *args, **kwargs):
         super(FoodAreaSensor, self).__init__(n_sectors=1, *args, **kwargs)
     
-    def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
+    def step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         condition = (rho <= kwargs['obj'].range)
         if direction_reading is None:
             direction_reading = 0.
@@ -27,7 +27,7 @@ class FoodAreaSensor(DirectionalSensor):
             direction_reading = 1.
         return direction_reading
 
-    def _target_filter(self, obj):
+    def target_filter(self, obj):
         return type(obj).__name__ == 'FoodArea'
 
 @sensor_registry(name='nest_sensor')
@@ -37,7 +37,7 @@ class NestSensor(DirectionalSensor):
     def __init__(self, *args, **kwargs):
         super(NestSensor, self).__init__(n_sectors=1, *args, **kwargs)
 
-    def _step_direction(self, rho, phi, direction_reading, *args, **kwargs):
+    def step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         condition = (rho <= kwargs['obj'].range)
         if direction_reading is None:
             direction_reading = 0.
@@ -45,5 +45,5 @@ class NestSensor(DirectionalSensor):
             direction_reading = 1.
         return direction_reading
 
-    def _target_filter(self, obj):
+    def target_filter(self, obj):
         return type(obj).__name__ == 'Nest'

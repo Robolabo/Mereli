@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -164,19 +175,19 @@
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">.population</span> <span class="k">import</span> <span class="n">NEAT_Population</span>  
-<span class="kn">from</span> <span class="nn">.evolutionary_algorithm</span> <span class="k">import</span> <span class="n">EvolutionaryAlgorithm</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">NEATInterface</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">algorithm_registry</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="k">import</span> <span class="n">global_states</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">save_pickle</span><span class="p">,</span> <span class="n">load_pickle</span>
-<span class="kn">from</span> <span class="nn">.species</span> <span class="k">import</span> <span class="n">Species</span>
+<span class="kn">from</span> <span class="nn">.population</span> <span class="kn">import</span> <span class="n">NEAT_Population</span>  
+<span class="kn">from</span> <span class="nn">.evolutionary_algorithm</span> <span class="kn">import</span> <span class="n">EvolutionaryAlgorithm</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="kn">import</span> <span class="n">NEATInterface</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">algorithm_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.globals</span> <span class="kn">import</span> <span class="n">global_states</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">save_pickle</span><span class="p">,</span> <span class="n">load_pickle</span>
+<span class="kn">from</span> <span class="nn">.species</span> <span class="kn">import</span> <span class="n">Species</span>
 
 <div class="viewcode-block" id="NEAT"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.neat.NEAT">[docs]</a><span class="nd">@algorithm_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;NEAT&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">NEAT</span><span class="p">(</span><span class="n">EvolutionaryAlgorithm</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populations</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">populations</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">populations</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">NEAT_Population</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;population_size&#39;</span><span class="p">],</span>\
                 <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>\
                 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">populations</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>

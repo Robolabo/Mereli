@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.communication.IR_communication &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.communication.IR_communication</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.communication.IR_communication</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">communication_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils.activations</span> <span class="k">import</span> <span class="n">softmax</span>
+
+<span class="n">COMM_STATES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;RELAY&#39;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="s1">&#39;BCAST&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="IRFrame"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame">[docs]</a><span class="k">class</span> <span class="nc">IRFrame</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Frame class used by IR_receiver and IR_transmitter of the robots to </span>
+<span class="sd">    communicate. </span>
+
+<span class="sd">    :param int msg_len: dimension of the message content vector.</span>
+
+<span class="sd">    :var np.ndarray msg: message vector of dim ``msg_len``.</span>
+<span class="sd">    :var float signal_strength: signal strength to be filled when the message is </span>
+<span class="sd">        received. If the message has not been received by any robot yet, then its</span>
+<span class="sd">        value equals to 0.0.</span>
+<span class="sd">    :var bool enabled: flag indicating if the message is enabled and can be processed </span>
+<span class="sd">        by other robots.</span>
+<span class="sd">    :var float rx_ori: relative orientation (in radians) of the sector from where the </span>
+<span class="sd">        sender robot emitted the frame. The angle is relative to the heading orientation </span>
+<span class="sd">        of the sender robot.</span>
+<span class="sd">    :var float tx_ori: relative orientation (in radians) of the sector from where the </span>
+<span class="sd">        frame was received. The angle is relative to the heading orientation of the robot.      </span>
+<span class="sd">    :var int sender: id of the last robot who sent the frame. In a multi-hop communication of </span>
+<span class="sd">        relayed messages it still equals to the last robot who last relayed the frame (see</span>
+<span class="sd">        ``original_sender`` for the attribute corresponding to original robot generating the frame).</span>
+<span class="sd">    :var int receiver: id of the robot who last received the frame. Every time that an IR_receiver </span>
+<span class="sd">        captures a frame, it fills its id within this field. If no robot has received the frame yet </span>
+<span class="sd">        or a robot in process of transmitting it, then its value equals to ``None``.</span>
+<span class="sd">    :var int original_sender: id of original sender of the frame. It is useful to keep track </span>
+<span class="sd">        of the original robot who elaborated the message when the frame has been relayed by </span>
+<span class="sd">        multiple robots (``RELAY`` mode).    </span>
+<span class="sd">    :var int destination: id of the final destination (robot) of the frame. The destination is </span>
+<span class="sd">        an intentional recipient of the message that can be multiple nodes away in the swarm. </span>
+<span class="sd">        Do not confuse with ``receiver``, which corresponds to the robot receiving the frame in </span>
+<span class="sd">        a single hop communication (unintentional). This attribute is not used yet in any comm. </span>
+<span class="sd">        system</span>
+<span class="sd">    :var int priority: priority of the frame (not used yet).</span>
+<span class="sd">    :var int n_hops: number of hops since the frame was originally sent. </span>
+<span class="sd">        Only meaningful if robots can relay message (``RELAY`` mode of comm. systems.).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg_len</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg_len</span> <span class="o">=</span> <span class="n">msg_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">msg_len</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signal_strength</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_ori</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_ori</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receiver</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">original_sender</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_hops</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">encoded_tx_ori</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Transform the attribute ``tx_ori`` in radians in the unit circle encoded vector</span>
+<span class="sd">        </span>
+<span class="sd">        .. math::</span>
+
+<span class="sd">            `(\cos(\theta_{tx}),\, \sin(\theta_{tx}) )^T`</span>
+
+<span class="sd">        If the angle ``tx_ori`` was ``None``, then it returns the zero vector.</span>
+
+<span class="sd">        :returns: numpy array with the encoded angle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_ori</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+        <span class="n">enc_ori</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_ori</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_ori</span><span class="p">)]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">enc_ori</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">enc_ori</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">enc_ori</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">encoded_rx_ori</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Transform the attribute ``rx_ori`` in radians in the unit circle encoded vector</span>
+<span class="sd">        </span>
+<span class="sd">        .. math::</span>
+
+<span class="sd">            `(\cos(\theta_{rx}),\, \sin(\theta_{rx}) )^T`</span>
+
+<span class="sd">        If the angle ``rx_ori`` was ``None``, then it returns the zero vector.</span>
+
+<span class="sd">        :returns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rx_ori</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+        <span class="n">enc_ori</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rx_ori</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rx_ori</span><span class="p">)]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">enc_ori</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">enc_ori</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">return</span> <span class="n">enc_ori</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the frame as a python ``dict``.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;msg&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">,</span> <span class="s1">&#39;signal&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">signal_strength</span><span class="p">,</span> 
+            <span class="s1">&#39;receiving_direction&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded_rx_ori</span><span class="p">,</span> <span class="s1">&#39;sending_direction&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded_tx_ori</span><span class="p">}</span>
+
+<div class="viewcode-block" id="IRFrame.increase_hops"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.increase_hops">[docs]</a>    <span class="k">def</span> <span class="nf">increase_hops</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Increase the number of hops of the frame.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_hops</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="IRFrame.get_copy"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.get_copy">[docs]</a>    <span class="k">def</span> <span class="nf">get_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get a copy of the frame object.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: copied ``IRFrame`` object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+
+<div class="viewcode-block" id="IRCommunication"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication">[docs]</a><span class="nd">@communication_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;IR_comm&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IRCommunication</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; IR communication system class. It provides the communication logic decoupled from the </span>
+<span class="sd">    transmitter and the receiver. It has two main methods ``step_pre`` and ``step_post`` that </span>
+<span class="sd">    are respectively applied to the states and actions before and after the controller execution. </span>
+<span class="sd">    Its main roles are to convert the ``IRFrame`` object to a ``dict`` that can be processed by the</span>
+<span class="sd">    controllers and to elaborate the new frame to be transmitted using the controller actions (message, </span>
+<span class="sd">    new communication state, ...). It also can quantize the message to be transmitted to a set of </span>
+<span class="sd">    fixed symbols or centroids.</span>
+
+<span class="sd">    .. note::</span>
+<span class="sd">        This class is not responsible for elaborating the message or changing the communication state. </span>
+<span class="sd">        These operations must be implemented in the controller to be used.</span>
+
+<span class="sd">    :param bool quantize: whether the transmitted message is quantized or not.</span>
+<span class="sd">    :param int K: if ``quantize=True``, it indicates the number of equispaced symbols of the quantization </span>
+<span class="sd">        in each message dimension. Provided that M is the message length, the total number of symbols </span>
+<span class="sd">        in the quantization dictionary is K^M.  </span>
+<span class="sd">    </span>
+<span class="sd">    :var str comm_state: state of the communication. Currently, it can be ``BCAST`` or ``RELAY``.</span>
+<span class="sd">    :var str tx_name: reference name of the communication transmitter linked to the communication system.</span>
+<span class="sd">    :var str rx_name: reference name of the communication receiver linked to the communication system.</span>
+<span class="sd">    :var int owner_id: identifier of the robot owning and executing the comm. sys.</span>
+<span class="sd">    :var IRFrame rx_frame: last frame received during the simulation. If no frame was received yet then its</span>
+<span class="sd">        value is ``None``.</span>
+<span class="sd">    :var IRFrame tx_frame: last frame transmitted during the simulation. If no frame was received yet then its</span>
+<span class="sd">        value is ``None``.</span>
+<span class="sd">    :var dict registry: registry of the sequence of communication states ``registry[&#39;comm_states&#39;]`` and </span>
+<span class="sd">        of frames ``registry[&#39;frames&#39;]``. Registry not implemented yet.</span>
+<span class="sd">    :var np.ndarray centroids: if ``quantize=True`` it stores the centroid or symbol dictionary of the msg quantization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantize</span> <span class="o">=</span> <span class="n">quantize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span> <span class="o">=</span> <span class="s1">&#39;BCAST&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span> <span class="o">=</span> <span class="s1">&#39;IR_transmitter&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_name</span> <span class="o">=</span> <span class="s1">&#39;IR_receiver&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;comm_states&#39;</span> <span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;frames&#39;</span> <span class="p">:</span> <span class="p">[]}</span>
+        <span class="c1">#* If message quantization is enabled, create centroids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">K</span> <span class="o">=</span> <span class="n">K</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="p">[</span><span class="n">centroid</span> <span class="k">for</span> <span class="n">centroid</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>\
+                    <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">K</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_length</span><span class="p">)])))]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IRCommunication.step_pre"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.step_pre">[docs]</a>    <span class="k">def</span> <span class="nf">step_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Communication system logic to be applied before the controller execution. </span>
+<span class="sd">        </span>
+<span class="sd">        :param IRFrame frame: IR frame received by the IR_receiver.</span>
+
+<span class="sd">        :returns: frame ``dict`` to be fed to the controller. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">increase_hops</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span> <span class="o">=</span> <span class="n">frame</span> <span class="c1">#! copy or direct?</span>
+        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">frame</span><span class="o">.</span><span class="n">as_dict</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;state&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_state_code</span><span class="p">}}</span></div>
+
+<div class="viewcode-block" id="IRCommunication.step_post"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.step_post">[docs]</a>    <span class="k">def</span> <span class="nf">step_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Communication system logic to be applied after the controller execution. </span>
+
+<span class="sd">        :param dict actions: ``dict`` with all the actions (keys are actuator names and values are the </span>
+<span class="sd">            actions). The action of the ``IR_transmitter`` must be included.</span>
+
+<span class="sd">        :returns: frame ``dict`` with the modified actions. The action corresponding to the ``IR_transmitter`` </span>
+<span class="sd">            is now an IRFrame object to be transmitted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+            <span class="n">new_msg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize</span><span class="p">:</span>
+                <span class="n">new_msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantize_func</span><span class="p">(</span><span class="n">new_msg</span><span class="p">)</span>
+            <span class="c1">#* Update communication state according to controller</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span> <span class="o">+</span> <span class="s1">&#39;:state&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span><span class="p">)</span>
+            <span class="c1">#* Build the frame to be transmitted</span>
+            <span class="n">tx_frame</span> <span class="o">=</span> <span class="n">IRFrame</span><span class="p">(</span><span class="n">msg_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span><span class="o">.</span><span class="n">msg_len</span><span class="p">)</span>
+            <span class="n">tx_frame</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span> <span class="o">+</span> <span class="s1">&#39;:priority&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span><span class="o">.</span><span class="n">priority</span><span class="p">)</span>
+            <span class="n">tx_frame</span><span class="o">.</span><span class="n">enabled</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span> <span class="o">+</span> <span class="s1">&#39;:enabled&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">tx_frame</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;BCAST&#39;</span> <span class="p">:</span> <span class="n">new_msg</span><span class="p">,</span>
+                <span class="s1">&#39;RELAY&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span><span class="p">,</span> <span class="n">new_msg</span><span class="p">)</span>
+            <span class="n">tx_frame</span><span class="o">.</span><span class="n">sender</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span>
+            <span class="n">tx_frame</span><span class="o">.</span><span class="n">original_sender</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;BCAST&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span>
+                <span class="s1">&#39;RELAY&#39;</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span><span class="o">.</span><span class="n">sender</span>
+            <span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span><span class="p">,</span> <span class="n">new_msg</span><span class="p">)</span> 
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span> <span class="o">==</span> <span class="s1">&#39;BCAST&#39;</span><span class="p">:</span>
+                <span class="n">tx_frame</span><span class="o">.</span><span class="n">n_hops</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span><span class="o">.</span><span class="n">n_hops</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tx_frame</span> <span class="o">=</span> <span class="n">tx_frame</span><span class="o">.</span><span class="n">get_copy</span><span class="p">()</span>
+            <span class="n">actions</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">tx_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tx_frame</span>
+        <span class="k">return</span> <span class="n">actions</span></div>
+
+<div class="viewcode-block" id="IRCommunication.quantize_func"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.quantize_func">[docs]</a>    <span class="k">def</span> <span class="nf">quantize_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">msg</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Max. dist in hypercube is sqrt(dim(x))</span>
+        <span class="n">max_distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">distances</span> <span class="o">/</span> <span class="n">max_distance</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="n">tau</span><span class="p">)</span>
+        <span class="n">symbol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">)),</span> <span class="n">p</span><span class="o">=</span><span class="n">probs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">centroids</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">comm_state_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the code of the current communication state. </span>
+<span class="sd">        The codes are:</span>
+
+<span class="sd">        .. code-block:: python</span>
+<span class="sd">        </span>
+<span class="sd">            COMM_STATES = {</span>
+<span class="sd">                &#39;RELAY&#39; : 0,</span>
+<span class="sd">                &#39;BCAST&#39; : 1,</span>
+<span class="sd">            }</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: ``int`` with the code of the communication state. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">COMM_STATES</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span><span class="p">]</span>
+
+<div class="viewcode-block" id="IRCommunication.set_owner"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.set_owner">[docs]</a>    <span class="k">def</span> <span class="nf">set_owner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set the identifier of the robot owning and executing the comm. sys.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int idx: identifier of the robot.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span> <span class="o">=</span> <span class="n">idx</span></div>
+
+<div class="viewcode-block" id="IRCommunication.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reset method of the communication state. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comm_state</span> <span class="o">=</span> <span class="s1">&#39;BCAST&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rx_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tx_frame</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">registry</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;comm_states&#39;</span> <span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;frames&#39;</span> <span class="p">:</span> <span class="p">[]}</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

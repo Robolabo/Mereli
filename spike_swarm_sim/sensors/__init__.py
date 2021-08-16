@@ -1,6 +1,6 @@
 from .base_sensor import DirectionalSensor, Sensor
-from .distance_sensor import DistanceSensor, DistanceSensor3D
-from .light_sensor import LightSensor, LightSensor3D
+from .distance_sensor import DistanceSensor
+from .light_sensor import LightSensor
 from .communication_receiver import IRCommunicationReceiver
 from .ble_receiver import RF_Receiver
 from .own_position_sensor import OwnPositionSensor

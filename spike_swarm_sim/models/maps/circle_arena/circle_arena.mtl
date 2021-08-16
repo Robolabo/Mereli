@@ -1,0 +1,13 @@
+# Blender MTL File: 'circle_arena.blend'
+# Material Count: 1
+
+newmtl Material.001
+Ns 251.843094
+Ka 0.188406 0.188406 0.188406
+Kd 0.800000 0.800000 0.800000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 1
+map_Kd alabaster1.png

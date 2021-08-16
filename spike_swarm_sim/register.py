@@ -18,19 +18,21 @@ env_perturbations = {}
 receptive_fields = {}
 learning_rules = {}
 rewards = {}
+communication_systems = {}
 
 def world_object_registry(*args, **kwargs):
     def wrapper(cls):
         #!!!!!!! AUXILIAR HASTA STANDARIZACION 2D-3D
-        from spike_swarm_sim.objects.world_object import WorldObject3D, WorldObject, WorldObject2D
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
-        # if name == 'task_scheduler': import pdb; pdb.set_trace()
-        engine = '3D' if issubclass(cls, WorldObject3D) else '2D'
-        world_objects[engine][name] = cls
-        if all([not issubclass(cls, WorldObject3D), 
-                not issubclass(cls, WorldObject2D), 
-                issubclass(cls, WorldObject)]):
-            world_objects['3D'][name] = cls # Add to both 
+        # # if name == 'task_scheduler': import pdb; pdb.set_trace()
+        # engine = '3D' if issubclass(cls, WorldObject3D) else '2D'
+        # world_objects[engine][name] = cls
+        # if all([not issubclass(cls, WorldObject3D), 
+        #         not issubclass(cls, WorldObject2D), 
+        #         issubclass(cls, WorldObject)]):
+        #     world_objects['3D'][name] = cls # Add to both 
+        world_objects['3D'][name] = cls
+        world_objects['2D'][name] = cls
         return cls
     return wrapper
 
@@ -142,5 +144,14 @@ def reward_registry(*args, **kwargs):
     def decorator(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         rewards[name] = cls
+        return cls
+    return decorator
+
+
+
+def communication_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        communication_systems[name] = cls
         return cls
     return decorator

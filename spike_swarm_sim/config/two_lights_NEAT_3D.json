@@ -8,7 +8,7 @@
             "I1" : {"n" : 4, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 4, "sensor" : "green_light_sensor"},
             "I3" : {"n" : 4, "sensor" : "IR_receiver:msg"},
-            "I4" : {"n" : 4, "sensor" : "distance_sensor3D"}
+            "I4" : {"n" : 4, "sensor" : "distance_sensor"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -18,7 +18,7 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
         },
         "synapses" :  {
             "I0-MOT" : {"pre":"I0","post":"OUT_MOT", "trainable":true, "p":1.0},
@@ -83,11 +83,11 @@
                     "yellow_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "red_light_sensor" : {"n_sectors" : 4, "range" : 20, "noise_sigma" : 0.03},
                     "IR_receiver" : {"n_sectors" : 4, "range" : 2, "msg_length" : 1,  "noise_sigma" : 0.03},
-                    "distance_sensor3D" : {"n_sectors" : 4, "range" : 2, "noise_sigma" : 0.03}
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 2, "noise_sigma" : 0.03}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
-                    "wireless_transmitter" : {"quantize": false, "range" : 2, "msg_length":1}
+                    "IR_transmitter" : {"quantize": false, "range" : 2, "msg_length":1}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform", "params" : {"low": [-2, 0], "high" : [2, -2], "size" : 2 }},

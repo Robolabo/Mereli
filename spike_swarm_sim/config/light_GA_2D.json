@@ -20,8 +20,8 @@
         },
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "real"}
         },
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
@@ -89,7 +89,7 @@
                 },
                 "actuators" : {
                     "wheel_actuator" : {},
-                    "wireless_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
+                    "IR_transmitter" : {"quantize": true, "range" : 2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad": 3, "initial_pos" : [0, 0]}},

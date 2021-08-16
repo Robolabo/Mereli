@@ -2,6 +2,7 @@ import time
 import os
 import json
 import numpy as np
+import xml.etree.cElementTree as ET
 import pybullet as p
 import pybullet_data
 import pybullet_utils.bullet_client as bc
@@ -28,6 +29,7 @@ class Engine3D:
         self.connected = False
         self.render = global_states.RENDER
         self.engine = None
+        self.physical_sensors = {}
         self.gui_params = {}
 
 
@@ -74,6 +76,16 @@ class Engine3D:
         time.sleep(1/240.) # Fast mode
         # time.sleep(1/10) # Slow mode
 
+    def add_objects(self, objects):
+        """
+        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
+        during the simulation.
+
+        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
+        """
+        for obj in objects:
+            self.add_physics(obj)
+
     def add_physics(self, obj):
         """
         Adds the requested entity to the engine so that its physics can be taken into account 
@@ -99,23 +111,32 @@ class Engine3D:
         for i in range(2):
             p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
+        
+        self.parse_sensors(obj)
 
-    def add_objects(self, objects):
-        """
-        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
-        during the simulation.
-
-        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
-        """
-        for obj in objects:
-            self.add_physics(obj)
+    def parse_sensors(self, obj):
+        link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
+                for i in range(p.getNumJoints(obj.id, physicsClientId=self.client))]).astype(str)
+        tree = ET.parse(obj.model_file)
+        root = tree.getroot()
+        for sensor in root.findall(".//sensor"):
+            sensor_name = sensor.get('name')
+            self.physical_sensors[sensor_name] = {}
+            for sector in sensor.findall("sector"):
+                sector_idx = int(sector.get('index'))
+                link = sector.find('parent').get('link')
+                orientation = np.array(sector.find('origin').get('rpy').split(' ')).astype(float)
+                link_idx = np.where(link_names == link)[0][0]
+                self.physical_sensors[sensor_name][sector_idx] = {
+                    'link' : link, 'orientation' : orientation, 'idx' : link_idx 
+                }
 
     @property
     def client(self):
         """ Pybullet engine client used in the simulation. """
         return self.engine._client
 
-    def get_body_position(self, identifier, body_id):
+    def get_body_position(self, identifier, body_id, z_offset=0.0):
         """
         Getter method of the current position of the root link of an entity with the 
         given identifier.
@@ -207,6 +228,8 @@ class Engine3D:
         :returns: 3D numpy array with the coordinates of the closest point in linkB of entity with idB. 
         """
         closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, linkIndexB=linkB, physicsClientId=self.client)
+        if len(closest_points) == 0:
+            return closest_points
         return np.array(closest_points[0][6])
 
     def get_link_state(self, obj_id, link_idx):
@@ -220,13 +243,38 @@ class Engine3D:
         pos, qt_ori =  p.getLinkState(obj_id, link_idx, physicsClientId=self.client)[:2]
         return (np.array(pos), np.array(p.getEulerFromQuaternion(qt_ori, physicsClientId=self.client)))
 
-    #! USELESS?
-    # def initialize_render(self):
-    #     self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, 1)
-    #     self.engine.resetDebugVisualizerCamera(cameraDistance=10, cameraYaw=30,\
-    #                 cameraPitch=-60, cameraTargetPosition=[0, 0, 0])
+    def get_sensor_position(self, obj_id, sensor_name, sector=0):
+        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
 
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param str sensor_name: reference name of the sensor.
+        :para int sector: index of the sensor's sector requested.
 
+        :returns: numpy array with the position. 
+        """
+        sensor_index = self.physical_sensors[sensor_name][sector]['idx']
+        return np.array(self.get_link_state(obj_id, sensor_index)[0]), sensor_index
+
+    def set_color(self, obj_id, link_id, color, opacity=1.0):
+        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
+
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param int obj_id: identifier of the link of the robot owning the sensor whose color is changed.
+        :param list color: ``list`` with the RGB code of the color or ``str`` with the color name.
+        :para float opacity: opacity of the color.
+        """
+        if isinstance(color, str):
+            color = list(colors.to_rgb(color))
+        rgba_color = color + [opacity]
+        p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=rgba_color, physicsClientId=self.client)
 
 
 
@@ -351,9 +399,11 @@ class Engine2D:
             self.add_physics(obj)
     
     def get_body_position(self, identifier, body_id):
-        return self.objects[identifier]['bodies'][body_id].position
+        pos = self.objects[identifier]['bodies'][body_id].position
+        return (np.array([pos.x, pos.y]) - 500) / 100 
 
     def reset_body_position(self, identifier, body_id, position):
+        position = position * 100 + 500  
         self.objects[identifier]['bodies'][body_id].position = position
 
     def get_body_orientation(self, identifier, body_id):

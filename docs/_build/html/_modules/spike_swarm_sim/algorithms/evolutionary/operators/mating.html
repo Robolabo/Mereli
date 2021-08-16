@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -162,7 +173,7 @@
             
   <h1>Source code for spike_swarm_sim.algorithms.evolutionary.operators.mating</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">evo_operator_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">evo_operator_registry</span>
 
 <div class="viewcode-block" id="random_mating"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mating.random_mating">[docs]</a><span class="nd">@evo_operator_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;random_mating&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">random_mating</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">fitness</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -185,7 +196,7 @@
 
 <div class="viewcode-block" id="speciation"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mating.speciation">[docs]</a><span class="k">def</span> <span class="nf">speciation</span><span class="p">(</span><span class="n">parents</span><span class="p">,</span> <span class="n">fitness</span><span class="p">,</span> <span class="n">n_species</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
     <span class="n">parents_ordered</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="k">import</span> <span class="n">KMeans</span>
+    <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
     <span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="n">n_species</span><span class="p">)</span>
     <span class="n">kmeans</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
     <span class="n">species</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span> <span class="c1"># the index of the cluster (specie) of each genotype.</span>

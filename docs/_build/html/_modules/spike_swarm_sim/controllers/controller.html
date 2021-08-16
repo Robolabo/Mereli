@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,11 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script type="text/javascript" src="../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -84,15 +85,17 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -186,14 +189,23 @@
 <div class="viewcode-block" id="RobotController.add_sensors_from_dict"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_sensors_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">add_sensors_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_sensors</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Add the sensors that the controller can make use of in the form of a python dict.</span>
 <span class="sd">            The dict structure must be {&quot;sensor_name&quot; : sensor_params}.</span>
+<span class="sd">            Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
+<span class="sd">            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">            has to be called.</span>
+
 <span class="sd">            Example:</span>
 <span class="sd">                robot_sensors = {&#39;distance_sensor&#39; : {&#39;n_sectors&#39; : 4, &#39;range&#39; : 1}}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">sensor</span> <span class="p">:</span> <span class="n">sensor_config</span> <span class="k">for</span> <span class="n">sensor</span><span class="p">,</span> <span class="n">sensor_config</span> <span class="ow">in</span> <span class="n">robot_sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
     
 <div class="viewcode-block" id="RobotController.add_actuators_from_dict"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_actuators_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">add_actuators_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_actuators</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Add the actuators that the controller can make use of in the form of a python dict.</span>
+        <span class="sd">&quot;&quot;&quot; Add the actuators that the controller can make use of in the form of a python dict. </span>
+<span class="sd">            Notice that, at this point, the actuator is not yet activated by the robot. In order to </span>
+<span class="sd">            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">            has to be called.</span>
+
 <span class="sd">            The dict structure must be {&quot;actuator_name&quot; : actuator_params}.</span>
+<span class="sd">            </span>
 <span class="sd">            Example:</span>
 <span class="sd">                robot_actuators = {&#39;joint_velocity_actuator&#39; : {&#39;joint_ids&#39; : [0,1], &#39;max_velocity&#39; : 10}}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -201,10 +213,20 @@
 
 
 <div class="viewcode-block" id="RobotController.add_sensor"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_sensor">[docs]</a>    <span class="k">def</span> <span class="nf">add_sensor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sensor_params</span><span class="p">):</span>
-        <span class="k">pass</span></div>
+        <span class="sd">&quot;&quot;&quot; Adds a single sensor to the enabled sensors by the robot.             </span>
+<span class="sd">        Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
+<span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">        has to be called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">sensor_name</span> <span class="p">:</span> <span class="n">sensor_params</span><span class="p">})</span></div>
 
 <div class="viewcode-block" id="RobotController.add_actuator"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_actuator">[docs]</a>    <span class="k">def</span> <span class="nf">add_actuator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actuator_name</span><span class="p">,</span> <span class="n">actuator_params</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="sd">&quot;&quot;&quot; Adds a single sensor to the enabled actuators by the robot.             </span>
+<span class="sd">        Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
+<span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">        has to be called.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">actuator_name</span> <span class="p">:</span> <span class="n">actuator_params</span><span class="p">})</span></div></div>
 
 <div class="viewcode-block" id="PreyController"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.PreyController">[docs]</a><span class="nd">@controller_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;prey_controller&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">PreyController</span><span class="p">(</span><span class="n">RobotController</span><span class="p">):</span>

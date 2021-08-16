@@ -41,8 +41,8 @@
         },
         "outputs" : {
             "out" :  {"ensemble" : "OUT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "out2" :  {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "out3" :  {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter:state", "enc": "cat"}
+            "out2" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "out3" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter:state", "enc": "cat"}
         },     
         "decoding" : {
             "out" : {
@@ -114,7 +114,7 @@
                 "sensors" : {"IR_receiver" : {"n_sectors" : 4, "range" : 1.2, "msg_length" : 2}},
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":10}, 
-                    "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
+                    "IR_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":0.5, "initial_pos" : [0, 0]}},

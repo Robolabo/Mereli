@@ -13,6 +13,7 @@ Welcome to SpikeSwarmSim's documentation!
    overview
    installation
    tutorials
+   configuration_files
    custom_classes
    examples
    

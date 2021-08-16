@@ -23,14 +23,23 @@ class RobotController(Controller):
     def add_sensors_from_dict(self, robot_sensors):
         """ Add the sensors that the controller can make use of in the form of a python dict.
             The dict structure must be {"sensor_name" : sensor_params}.
+            Notice that, at this point, the sensor is not yet activated by the robot. In order to 
+            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot
+            has to be called.
+
             Example:
                 robot_sensors = {'distance_sensor' : {'n_sectors' : 4, 'range' : 1}}
         """
         self.enabled_sensors = {sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
     
     def add_actuators_from_dict(self, robot_actuators):
-        """ Add the actuators that the controller can make use of in the form of a python dict.
+        """ Add the actuators that the controller can make use of in the form of a python dict. 
+            Notice that, at this point, the actuator is not yet activated by the robot. In order to 
+            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot
+            has to be called.
+
             The dict structure must be {"actuator_name" : actuator_params}.
+            
             Example:
                 robot_actuators = {'joint_velocity_actuator' : {'joint_ids' : [0,1], 'max_velocity' : 10}}
         """
@@ -38,10 +47,20 @@ class RobotController(Controller):
 
 
     def add_sensor(self, sensor_name, sensor_params):
-        pass
+        """ Adds a single sensor to the enabled sensors by the robot.             
+        Notice that, at this point, the sensor is not yet activated by the robot. In order to 
+        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot
+        has to be called.
+        """
+        self.enabled_sensors.update({sensor_name : sensor_params})
 
     def add_actuator(self, actuator_name, actuator_params):
-        pass
+        """ Adds a single sensor to the enabled actuators by the robot.             
+        Notice that, at this point, the sensor is not yet activated by the robot. In order to 
+        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot
+        has to be called.
+        """
+        self.enabled_actuators.update({actuator_name : actuator_params})
 
 @controller_registry(name='prey_controller')
 class PreyController(RobotController):

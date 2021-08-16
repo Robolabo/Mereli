@@ -1,6 +1,10 @@
 import click
 import logging
-from mpi4py import MPI
+try:
+    from mpi4py import MPI
+    USE_MPI = True
+except:
+    USE_MPI = False
 from spike_swarm_sim import World2D, World3D, MultiWorldWrapper
 from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm, CMA_ES, xNES
 from spike_swarm_sim.register import fitness_functions
@@ -29,7 +33,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     elif verbose:
         logging.getLogger().level = logging.INFO
         logging.getLogger().info('Executing in VERBOSE mode.')
-    if ncpu > 1 or MPI.COMM_WORLD.Get_size() > 1:
+    if ncpu > 1 or USE_MPI and MPI.COMM_WORLD.Get_size() > 1:
         world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), 
                     height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
                     world_delay=cfg_dict['world']["world_delay"])

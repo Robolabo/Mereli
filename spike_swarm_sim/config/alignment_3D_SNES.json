@@ -23,8 +23,8 @@
             "OUT_MOT" : {"n" : 1, "params" : {"tau": 0.5, "activation":"tanh"}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "wireless_transmitter", "enc": "real"},
-            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "wireless_transmitter:state", "enc": "cat"},
+            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "cat"},
             "outB" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
         },
         "synapses" :  {
@@ -85,7 +85,7 @@
                 "sensors" : {"IR_receiver" : {"n_sectors" : 6, "range" : 1.2, "msg_length" : 2}},
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":5}, 
-                    "wireless_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
+                    "IR_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph", "params" : {"max_rad":0.5, "initial_pos" : [0, 0]}},

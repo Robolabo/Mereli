@@ -161,103 +161,131 @@
         <origin rpy="3.1415 1.57075 0" xyz="0.268 0.0 0.07" />
     </joint>
     
-<link name="IR0">
-                <visual>
-                    <geometry>
-                        <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                    <material name="black">
-                        <color rgba="0 0 0 1" />
-                    </material>
-                </visual>
-                <collision>
-                    <geometry>
-                    <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                </collision>
-                <inertial>
-                    <mass value="0.0" />
-                    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
-                </inertial>
-            </link><joint name="base_to_IR0" type="fixed">
-                <parent link="base_link" />
-                <child link="IR0" />
-                <origin rpy="1.2 0 1.5707963267948966" xyz="0.16 0.0 0.127" />
-            </joint><link name="IR1">
-                <visual>
-                    <geometry>
-                        <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                    <material name="black">
-                        <color rgba="0 0 0 1" />
-                    </material>
-                </visual>
-                <collision>
-                    <geometry>
-                    <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                </collision>
-                <inertial>
-                    <mass value="0.0" />
-                    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
-                </inertial>
-            </link><joint name="base_to_IR1" type="fixed">
-                <parent link="base_link" />
-                <child link="IR1" />
-                <origin rpy="1.2 0 3.141592653589793" xyz="9.797174393178826e-18 0.16 0.127" />
-            </joint><link name="IR2">
-                <visual>
-                    <geometry>
-                        <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                    <material name="black">
-                        <color rgba="0 0 0 1" />
-                    </material>
-                </visual>
-                <collision>
-                    <geometry>
-                    <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                </collision>
-                <inertial>
-                    <mass value="0.0" />
-                    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
-                </inertial>
-            </link><joint name="base_to_IR2" type="fixed">
-                <parent link="base_link" />
-                <child link="IR2" />
-                <origin rpy="1.2 0 4.71238898038469" xyz="-0.16 1.959434878635765e-17 0.127" />
-            </joint><link name="IR3">
-                <visual>
-                    <geometry>
-                        <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                    <material name="black">
-                        <color rgba="0 0 0 1" />
-                    </material>
-                </visual>
-                <collision>
-                    <geometry>
-                    <mesh filename="ir.obj" scale="1 1 1" />
-                    </geometry>
-                    <origin xyz="0 0 0" />
-                </collision>
-                <inertial>
-                    <mass value="0.0" />
-                    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
-                </inertial>
-            </link><joint name="base_to_IR3" type="fixed">
-                <parent link="base_link" />
-                <child link="IR3" />
-                <origin rpy="1.2 0 6.283185307179586" xyz="-2.9391523179536474e-17 -0.16 0.127" />
-            </joint>
+    <link name="IR0">
+        <visual>
+            <geometry>
+                <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+            <material name="black">
+                <color rgba="0 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+            <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.0" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+    <joint name="base_to_IR0" type="fixed">
+        <parent link="base_link" />
+        <child link="IR0" />
+        <origin rpy="1.2 0 1.5707963267948966" xyz="0.16 0.0 0.127" />
+    </joint>
+    <link name="IR1">
+        <visual>
+            <geometry>
+                <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+            <material name="black">
+                <color rgba="0 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+            <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.0" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+    <joint name="base_to_IR1" type="fixed">
+        <parent link="base_link" />
+        <child link="IR1" />
+        <origin rpy="1.2 0 3.141592653589793" xyz="9.797174393178826e-18 0.16 0.127" />
+    </joint>
+    <link name="IR2">
+        <visual>
+            <geometry>
+                <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+            <material name="black">
+                <color rgba="0 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+            <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.0" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+    <joint name="base_to_IR2" type="fixed">
+        <parent link="base_link" />
+        <child link="IR2" />
+        <origin rpy="1.2 0 4.71238898038469" xyz="-0.16 1.959434878635765e-17 0.127" />
+    </joint>
+    <link name="IR3">
+        <visual>
+            <geometry>
+                <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+            <material name="black">
+                <color rgba="0 0 0 1" />
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+            <mesh filename="ir.obj" scale="1 1 1" />
+            </geometry>
+            <origin xyz="0 0 0" />
+        </collision>
+        <inertial>
+            <mass value="0.0" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </link>
+    <joint name="base_to_IR3" type="fixed">
+        <parent link="base_link" />
+        <child link="IR3" />
+        <origin rpy="1.2 0 6.283185307179586" xyz="-2.9391523179536474e-17 -0.16 0.127" />
+    </joint>
+
+    <sensor name="directional_sensor_0">
+        <parent link="IR0"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </sensor>
+
+    <sensor name="directional_sensor_1">
+        <parent link="IR1"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </sensor>
+
+    <sensor name="directional_sensor_2">
+        <parent link="IR2"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </sensor>
+
+    <sensor name="directional_sensor_3">
+        <parent link="IR3"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </sensor>
+
     <!-- <link name="IR0">
         <visual>
             <geometry>

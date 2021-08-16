@@ -39,28 +39,17 @@ class NeuralController(RobotController):
     @increase_time
     def step(self, state, reward=0.0):
         if len(state):
-            state = flatten_dict(state)
-        state['IR_receiver:state'] = np.array([self.comm_state])
-        
-        #state = self.preprocessing(state.copy())
+            state = flatten_dict(state)        
         raw_actions = self.neural_network.step(state, reward)
 
-        actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
-                   if 'wireless_transmitter' not in self.out_act_mapping[name]}
-        if 'wireless_transmitter' in self.out_act_mapping.values():
-            msg = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter')]
-            is_response = 1
-            if 'wireless_transmitter:priority' in self.out_act_mapping.values():
-                is_response = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter:priority')]
-            if 'wireless_transmitter:state' in self.out_act_mapping.values() and self.t > 10:
-                self.comm_state = raw_actions[key_of(self.out_act_mapping, 'wireless_transmitter:state')]
+        # actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
+        #            if 'IR_transmitter' not in self.out_act_mapping[name]}
 
-            #* relay or bcast
-            msg = msg if self.comm_state else state['IR_receiver:msg'].copy()
-            n_hops = state['IR_receiver:n_hops'] + 1 if not self.comm_state else 1
-            destination = state['IR_receiver:sender'].item() if is_response and state['IR_receiver:sender'] > 0 else 0
-            actions['wireless_transmitter'] = {'destination': destination, 'sender' : state['IR_receiver:sender'], 'priority':is_response, 'en' : 1, \
-                    'n_hops': n_hops, 'state' : self.comm_state, 'msg' : msg, 'sending_direction' : state['IR_receiver:sending_direction']}
+        #* Map neuron output names to the corresponding actuator name
+        actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items()}
+        #* Convert all actions to numpy arrays
+        for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
+            actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
             
         if 'wheel_actuator' in actions.keys():
             if type(actions['wheel_actuator']) in [int, bool]:

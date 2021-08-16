@@ -4,12 +4,6 @@ import os
 from colorama import Fore, Style
 from pathlib import Path
 
-
-
-
-
-
-
 from .globals import Globals, global_states
 from .register import *
 from .utils import *
@@ -17,18 +11,16 @@ from .utils import *
 from .env_perturbations import *
 from .neural_networks import *
 from .controllers import *
+from .communication import *
 from .sensors import *
 from .actuators import *
+
 
 from .objects import *
 from .config_parser import *
 
-
-
-
-
 from .physics_engine import Engine2D, Engine3D
-from .world import World3D, World2D, MultiWorldWrapper
+from .world import World3D, CustomWorld, MultiWorldWrapper
 from .objectives import *
 from .algorithms import *
 

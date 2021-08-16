@@ -28,12 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
         <script type="text/javascript" src="../../../../_static/jquery.js"></script>
         <script type="text/javascript" src="../../../../_static/underscore.js"></script>
         <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="../../../../_static/language_data.js"></script>
-        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -89,10 +98,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a></li>
 </ul>
 
             
@@ -164,7 +175,7 @@
 <span></span><span class="kn">import</span> <span class="nn">csv</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
 
 <div class="viewcode-block" id="NeuralNetMonitor"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#spike_swarm_sim.neural_networks.utils.monitor.NeuralNetMonitor">[docs]</a><span class="k">class</span> <span class="nc">NeuralNetMonitor</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Monitor of the neural network variables.</span>
@@ -176,7 +187,7 @@
 <span class="sd">        output_neuron_names [list] : list of motor ensembles.</span>
 <span class="sd">    ==============================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensembles</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">,</span> <span class="n">encoded_inputs</span><span class="p">,</span> <span class="n">output_neuron_names</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensembles</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">,</span> <span class="n">encoded_inputs</span><span class="p">,</span> <span class="n">output_neuron_names</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ensembles</span> <span class="o">=</span> <span class="n">ensembles</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stimuli</span> <span class="o">=</span> <span class="n">stimuli</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encoded_inputs</span> <span class="o">=</span> <span class="n">encoded_inputs</span>
@@ -245,7 +256,7 @@
             <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">var_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">][</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;voltages&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span></div>
 
     <span class="c1"># def to_csv(self, csv_name, csv_path):</span>
