@@ -55,7 +55,7 @@ class Propagation:
             ax.set_title('Sector Coverage.')
         plt.show()
         
-    def plot_directivity(self, max_rad=5, sensor_name=None):
+    def plot_directivity(self, directions, max_rad=5, sensor_name=None):
         """ Illustrates the polar plot of a sector coverage.
         =============================================================
         -Args:
@@ -65,7 +65,6 @@ class Propagation:
                 it in the figure title.
         =============================================================
         """
-        directions = [0, np.pi/2, np.pi, 1.5*np.pi]#[0]
         theta_vals = np.radians(np.linspace(0, 360, 360))
         fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
         for direction in directions:

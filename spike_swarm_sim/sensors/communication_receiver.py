@@ -91,24 +91,20 @@ class IRCommunicationReceiver(DirectionalSensor):
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading.signal_strength:
                 # Cast a ray between my_pos and tar_pos to detect potential obstacles.
-                my_pos = self.get_sensor_position(direction) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
-                tar_pos = obj.position + np.r_[0, 0, 0.07] # my_pos[2]]
-                ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
+                my_pos = self.get_sensor_position(direction)# + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
+                tx_positions = np.vstack([self.sensor_owner.physics_client.get_link_state(obj.id, i)[0]\
+                            for i in range(self.n_sectors)])
+                tx_sector = np.argmin(np.linalg.norm(tx_positions - my_pos, axis=1))
+                ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tx_positions[tx_sector])
+                # import pybullet as p
+                # p.addUserDebugLine(my_pos, tx_positions[tx_sector], lineColorRGB=[1, 0, 0], lineWidth=2.0, lifeTime=0.25)
                 if ray_res == obj.id:
                     received_frame = obj.actuators['IR_transmitter'].frame
-                    sending_direction = 0 #!np.argmin([angle_diff(sdir, compute_angle(diff_vector) + np.pi) for sdir in self.directions(obj.orientation)])
+                    sending_direction = tx_sector
                     received_frame.tx_ori = self.directions(0.)[sending_direction] #!
                     received_frame.rx_ori = self.directions(0.)[direction]
                     received_frame.receiver = self.sensor_owner.id
                     received_frame.signal_strength = signal_strength
-                    # direction_reading['msg'] = np.array(obj.actuators['IR_transmitter'].frame['msg'])
-                    # direction_reading['priority'] = np.array([obj.actuators['IR_transmitter'].frame['priority']])
-                    # direction_reading['destination'] = np.array([obj.actuators['IR_transmitter'].frame['destination']])
-                    # direction_reading['sender'] = np.array([obj.id]) if obj.actuators['IR_transmitter'].frame['state'] \
-                    #                             else obj.actuators['IR_transmitter'].frame['sender']
-                    # direction_reading['n_hops'] = obj.actuators['IR_transmitter'].frame['n_hops']
-                    # if direction_reading['n_hops'] > 1:
-                    #     direction_reading['sending_direction'] = obj.actuators['IR_transmitter'].frame['sending_direction']
                     direction_reading = received_frame
         return direction_reading
 

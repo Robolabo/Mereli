@@ -15,7 +15,6 @@ from matplotlib import colors
 from spike_swarm_sim.globals import global_states
 
 
-
 class Engine3D:
     """ 3D Physics and Render Engine class. Its role in the simulation is to iterate the 
     3D physic simulations and collision detections of the entities in the environment and render 
@@ -30,6 +29,7 @@ class Engine3D:
         self.render = global_states.RENDER
         self.engine = None
         self.physical_sensors = {}
+        self.luminous_objects = {}
         self.gui_params = {}
 
 
@@ -48,6 +48,7 @@ class Engine3D:
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
+        p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0)
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True
@@ -66,7 +67,8 @@ class Engine3D:
 
     def step_physics(self):
         """ Iterates all the 3D physics of the world entities using pybullet. """
-        p.stepSimulation()
+        for i in range(5):
+            p.stepSimulation()
 
     def step_render(self):
         """ Iterates the graphics visualization at give FPS. """
@@ -100,8 +102,17 @@ class Engine3D:
         obj.physics_client = self
         obj.id = p.loadURDF(obj.model_file, obj.init_position,\
             p.getQuaternionFromEuler(obj.init_orientation),
-            globalScaling=obj.scaling if hasattr(obj, 'scaling') else 1., 
+            globalScaling=obj.scaling if hasattr(obj, 'scaling') else 1, 
             physicsClientId=self.client)
+
+
+        p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
+        p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
+        for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
+            p.setCollisionFilterGroupMask(obj.id, i, 0b001, 0b01, physicsClientId=self.client)
+            p.setCollisionFilterPair(0, obj.id, -1, i, 1, physicsClientId=self.client)
+
+
         if hasattr(obj, 'color'):
             color = list(colors.to_rgb(obj.color)) + [1.]
             p.changeVisualShape(obj.id, -1, rgbaColor=color, physicsClientId=self.client)
@@ -127,9 +138,25 @@ class Engine3D:
                 link = sector.find('parent').get('link')
                 orientation = np.array(sector.find('origin').get('rpy').split(' ')).astype(float)
                 link_idx = np.where(link_names == link)[0][0]
+                ghost_link = sector.find('ghost').get('link') if sector.find('ghost') is not None else None
+                ghost_link_idx = np.where(link_names == ghost_link)[0][0] if ghost_link is not None else None
+                if ghost_link_idx is not None:
+                    p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
+                    p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
+                    self.set_color(obj.id, ghost_link_idx, [0,0,0], opacity=0.0)
                 self.physical_sensors[sensor_name][sector_idx] = {
-                    'link' : link, 'orientation' : orientation, 'idx' : link_idx 
+                    'link' : link, 'ghost_link': ghost_link, 
+                    'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,
                 }
+        # if type(obj).__name__ == 'LightSource':import pdb; pdb.set_trace()
+        for ls in root.findall(".//lightsource"):
+            link = ls.get('link')
+            link_idx = np.where(link_names == link)[0][0] if len(link_names) else -1
+            lum = int(ls.get('luminosity'))
+            color = ls.get('color')
+            if hasattr(obj, 'color'):
+                color = obj.color
+            self.luminous_objects[obj.id] = {'link' : link, 'link_idx': link_idx, 'color' : color, 'luminosity' : lum}
 
     @property
     def client(self):
@@ -207,14 +234,25 @@ class Engine3D:
     def ray_cast(self, origin, destination):
         """ Casts a ray between coordinates origin and destination and verifies if there is some 
         object in between. It returns the id of the first encountered object.
+        #!UPDATE
 
         :param np.ndarray origin: 3D numpy array with the origin coordinates.
         :param np.ndarray destination: 3D numpy array with the destination coordinates.
 
         :returns: int identifier of the first intersected WorldObject by the casted ray.
         """
-        ray_res = p.rayTest(origin, destination, physicsClientId=self.client)
-        return ray_res[0][0]
+        origin, dest = zip(*[(o + 1.2 * (d - o), o + 0.1 * (d - o)) for o, d in zip(origin, destination)])
+        ray_res = p.rayTestBatch(origin, dest, collisionFilterMask=0b001, physicsClientId=self.client)
+        ray_res, ray_pos = zip(*[(ray[0], ray[3]) for ray in ray_res])
+        if len(ray_res) == 1:
+            ray_res = ray_res[0]
+            ray_pos = ray_pos[0]
+
+        # p.addUserDebugLine(origin[0], dest[0], lineColorRGB=[1, 0, 0], lineWidth=2.0, lifeTime=0.1, physicsClientId=self.client)
+        # if ray_res[0][0] == -1 and np.linalg.norm(dest - origin) < 0.8: 
+        #     p.addUserDebugLine(origin, dest, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0, physicsClientId=self.client)
+        #     import pdb; pdb.set_trace()
+        return ray_res, ray_pos
     
     def get_closest_point(self, idA, idB, linkA=-1, linkB=-1, max_dist=10):
         """ Computes the closest points between two links of two registered entities.
@@ -227,10 +265,13 @@ class Engine3D:
 
         :returns: 3D numpy array with the coordinates of the closest point in linkB of entity with idB. 
         """
-        closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, linkIndexB=linkB, physicsClientId=self.client)
+        if linkB is None:
+            closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, physicsClientId=self.client)
+        else:
+            closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, linkIndexB=linkB, physicsClientId=self.client)
         if len(closest_points) == 0:
             return closest_points
-        return np.array(closest_points[0][6])
+        return np.array(closest_points[np.argmin([v[8] for v in closest_points])][6])
 
     def get_link_state(self, obj_id, link_idx):
         """ Getter of the position and orientation of a given link in the specified entity.
@@ -259,6 +300,21 @@ class Engine3D:
         sensor_index = self.physical_sensors[sensor_name][sector]['idx']
         return np.array(self.get_link_state(obj_id, sensor_index)[0]), sensor_index
 
+    def get_sensor_orientation(self, obj_id, sensor_name, sector=0):
+        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
+
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param str sensor_name: reference name of the sensor.
+        :para int sector: index of the sensor's sector requested.
+
+        :returns: numpy array with the position. 
+        """
+        return self.physical_sensors[sensor_name][sector]['orientation'][-1] #!only yaw ftm
+
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.
@@ -274,8 +330,12 @@ class Engine3D:
         if isinstance(color, str):
             color = list(colors.to_rgb(color))
         rgba_color = color + [opacity]
-        p.changeVisualShape(self.actuator_owner.id, 3, rgbaColor=rgba_color, physicsClientId=self.client)
+        p.changeVisualShape(obj_id, link_id, rgbaColor=rgba_color, physicsClientId=self.client)
 
+    def set_camera_focus(self, position, distance):
+        if self.render:
+            self.engine.resetDebugVisualizerCamera(cameraDistance=distance, cameraYaw=0,\
+                    cameraPitch=-90, cameraTargetPosition=tuple(position))
 
 
 def json_parser(file, position, orientation):

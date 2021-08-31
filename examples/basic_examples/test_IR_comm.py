@@ -1,6 +1,6 @@
 import numpy as np
-from spike_swarm_sim.world import World3D
-from spike_swarm_sim.objects import Epuck3D, GroundArea
+from spike_swarm_sim.world import SquareArena
+from spike_swarm_sim.objects import Epuck, GroundArea
 from spike_swarm_sim.utils.initializers import RandomUniformInitializer
 from spike_swarm_sim.controllers import RobotController
 # from spike_swarm_sim.register import controller_registry
@@ -40,8 +40,8 @@ class TestIRCommController(RobotController):
                 }.get(max_dir, [1,1]))
         return {'joint_velocity_actuator' : action_joints, 'IR_transmitter' : tx_msg}
 
-n_robots = 10
-world = World3D(height=10,  width=10)
+n_robots = 2
+world = SquareArena(height=10,  width=10)
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
 ini_pos = RandomUniformInitializer(n_robots, low=[-3,-3], high=[3, 3], size=2, engine='3D',  variable='positions')
@@ -54,9 +54,9 @@ for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
     ctlr.add_sensor("IR_receiver", {"n_sectors" : 4, "range" : 1.5, "msg_length" : 1, "selection_scheme" : "random"})
     ctlr.add_sensor("ground_sensor", {})
     ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 13})
-    ctlr.add_actuator("IR_transmitter",  {"quantize": False, "range" : 1.5, "msg_length":1})
+    ctlr.add_actuator("IR_transmitter",  {"range" : 1.5, "msg_length":1})
     # Create and register epuck
-    ent = Epuck3D(pos, ori, controller=ctlr)
+    ent = Epuck(pos, ori, controller=ctlr)
     world.register_entity('swarm_' + str(i), ent, group='swarm')
 
 # Add ground area

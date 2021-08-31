@@ -18,7 +18,7 @@ class Cube(WorldObject):
     def __init__(self, position, orientation, *args, color='blue', mass=1., side_len=0.3, **kwargs):
         position = list(position)
         position[-1] = side_len / 2 - 0.1
-        super(Cube, self).__init__('cube', position, orientation,\
+        super(Cube, self).__init__('entities/cube/cube', position, orientation,\
                         *args, **kwargs)
         self.color = color
         self.mass = mass

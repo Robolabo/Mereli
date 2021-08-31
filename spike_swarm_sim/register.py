@@ -2,6 +2,7 @@ from functools import wraps
 # 
 
 # Set of registers for easing class and function automatic discovery
+worlds = {}
 world_objects = {'2D' : {}, '3D' : {}}
 sensors = {}
 actuators = {}
@@ -19,6 +20,14 @@ receptive_fields = {}
 learning_rules = {}
 rewards = {}
 communication_systems = {}
+
+
+def world_registry(*args, **kwargs):
+    def wrapper(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        worlds[name] = cls
+        return cls 
+    return wrapper 
 
 def world_object_registry(*args, **kwargs):
     def wrapper(cls):

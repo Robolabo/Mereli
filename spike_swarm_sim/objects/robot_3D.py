@@ -19,7 +19,7 @@ class Robot(WorldObject):
     :var dict actuators:
     :var dict planned_actions: 
     """
-    def __init__(self, position, orientation,  *args, model_file='epuck', **kwargs):
+    def __init__(self, position, orientation,  *args, model_file='entities/epuck/epuck', **kwargs):
         super(Robot, self).__init__(model_file, position, orientation,\
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
@@ -61,7 +61,6 @@ class Robot(WorldObject):
 
         :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
-        =====================
         """
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
@@ -186,7 +185,7 @@ class Minitaur(Robot):
 
 
 @world_object_registry(name='epuck')
-class Epuck3D(Robot):
+class Epuck(Robot):
     """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
-        super(Epuck3D, self).__init__(*args, model_file='epuck', **kwargs)
+        super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck', **kwargs)

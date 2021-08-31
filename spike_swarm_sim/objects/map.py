@@ -9,6 +9,7 @@ class Map(WorldObject):
     :param float width: width in metres of the wall.   
     """
     def __init__(self, map_file, *args, **kwargs):
+        map_file = 'maps/' + map_file
         super(Map, self).__init__(map_file, *args, static=True,\
             controller=None, tangible=True, luminous=False, **kwargs)
     

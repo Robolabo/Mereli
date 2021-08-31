@@ -34,7 +34,46 @@ class DistanceSensor(DirectionalSensor):
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
         # self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1.) # DS=
         # self.sensors_idx = None
-        self.aperture = 1.5 * np.pi / self.n_sectors
+        self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
+
+    def step(self, neighborhood):
+        import pybullet as p  
+        phy = self.sensor_owner.physics_client
+        reading = []
+        g_ids = [phy.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        for idx in g_ids:
+            p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b01, 0b01)
+        p.performCollisionDetection()
+        contact_points = p.getContactPoints(self.sensor_owner.id,)
+        for idx in g_ids:
+            p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b0, 0b0) 
+        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
+            tar_ents = [pt[2] for pt in contact_points if pt[3] == g_ids[i]]
+            signal_strength = 0.0
+            if len(tar_ents) > 0:
+                origin = self.get_sensor_position(i)
+                # ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
+                # ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
+                th_sp, phi_sp = np.linspace(-self.aperture/2, 0, 3), np.linspace(-self.aperture/2, self.aperture/2, 5)
+                th_mat, phi_mat = np.meshgrid(np.pi/2 + th_sp, ori + phi_sp)
+                X = self.range * np.cos(phi_mat) * np.sin(th_mat)
+                Y = self.range * np.sin(phi_mat) * np.sin(th_mat)
+                Z = self.range * np.cos(th_mat)
+                ray_dests = [origin + np.r_[x, y, z] for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
+                ray_angles = np.maximum(np.abs(th_mat.flatten()), np.abs(phi_mat.flatten()))
+
+                
+                # for o, d in zip([origin]*len(ray_dests), ray_dests):
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
+                # import pdb; pdb.set_trace()
+                ray_res, ray_positions = phy.ray_cast([origin]*len(ray_dests), ray_dests)
+                if any(np.array(ray_res) != -1):
+                    rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
+                    signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phi_mat.flatten())])
+            reading.append(signal_strength)
+        if len(reading) != 8: import pdb; pdb.set_trace()
+        return np.array(reading)
+            
 
     def step_direction(self, rho, phi, direction_reading, *args, **kwargs):
         """ Method that specifies the particular behavior of a directional sensor in each sensing direction.
@@ -63,14 +102,17 @@ class DistanceSensor(DirectionalSensor):
         if condition:
             signal_strength = self.propagation(rho, phi)
             if signal_strength > direction_reading:
-                my_pos = self.get_sensor_position(args[0]) + np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
+                
+                my_pos = self.get_sensor_position(args[0])#+ np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
                 if type(kwargs['obj']).__name__ in ['Map', 'Wall']:
                     tar_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, kwargs['obj'].id,  
-                                    linkA=self.get_sensor_idx(args[0]), linkB=-1, max_dist=self.range)
+                                    linkA=self.get_sensor_idx(args[0]), max_dist=self.range)
                 else:
                     tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
                 # Cast a ray between my_pos y tar_pos to verify if there are obstacles
-                ray_res = self.sensor_owner.physics_client.ray_cast(my_pos, tar_pos)
+                
+                ray_res = self.sensor_owner.physics_client.ray_cast([my_pos], [tar_pos])[0]
+                # print(args[0], rho, ray_res, kwargs['obj'].id, tar_pos)
                 if ray_res == kwargs['obj'].id: 
                     # print('IR'+str(args[0]), type(kwargs['obj']).__name__, rho)
                     direction_reading = signal_strength

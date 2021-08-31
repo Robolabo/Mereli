@@ -9,7 +9,7 @@ import pybullet_utils.bullet_client as bc
 
 from spike_swarm_sim.objects import  Robot, LightSource, Wall, Map
 from spike_swarm_sim.register import (controllers, world_objects, initializers, 
-        env_perturbations, rewards, communication_systems)
+        env_perturbations, rewards, communication_systems, world_registry)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from spike_swarm_sim.globals import global_states
 from .physics_engine import Engine3D, Engine2D
@@ -20,49 +20,6 @@ def map_parser():
     with open(file) as f:
         map_mat = np.array([[int(ch) if ch != '' else 0 for ch in line.split(';')[0].split(' ')] for line in f.readlines()])
     import pdb; pdb.set_trace()
-
-
-class MultiWorldWrapper:
-    """ Wrapper class for paralellizing genotype evaluations. 
-    
-    :param int n_cpu: number of cores (and parallel simulations).
-    :param float height: height in metres of the square arena.
-    :param float width: width in metres of the square arena.
-    :param float world_delay: deprecated, to be removed in next ver.
-
-    .. todo:: #TODO: Extend to 2D worlds.
-    """
-    def __init__(self, n_cpu, height=10, width=10, world_delay=1):
-        self.n_cpu = n_cpu
-        self._worlds = [World3D(height=height, width=width, world_delay=1) for _ in range(n_cpu + 1)]
-
-    def build_from_dict(self, world_dict, ann_topology=None):
-        """Build all the created worlds from the config dicts. """
-        for world in self._worlds:
-            world.build_from_dict(world_dict, ann_topology=ann_topology)
-
-    @property
-    def all(self):
-        """ Return all the worlds as a list. 
-
-        :returns: list of World instances of length N_worlds + 1.
-        """
-        return self._worlds
-
-    @property
-    def robots(self):
-        """ Return all the robots of the first world. """
-        return self._worlds[0].robots
-
-    def get_world(self, idx):
-        """ 
-        Get world by index. 
-        
-        :param int idx: index of the world queried within [0, N_worlds]
-
-        :returns: World instance requested.
-        """
-        return self._worlds[idx]
 
 
 class World(object):
@@ -89,12 +46,12 @@ class World(object):
     Example::
 
     >>> # Example of an obstacle avoidance experiment with 5 robots in 3D. 
-    >>> from spike_swarm_sim.world import World3D
+    >>> from spike_swarm_sim.world import SquareArena
     >>> from spike_swarm_sim.objects import Robot3D
     >>> from spike_swarm_sim.controllers import BasicObstacleAvoider
     >>> from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
     >>> n_robots = 5
-    >>> world = World3D(height=10, width=10)
+    >>> world = SquareArena(height=10, width=10)
     >>> world_cfg = {
     >>>     "engine" : "3D",
     >>>     "world_delay" : 1,
@@ -128,11 +85,10 @@ class World(object):
     >>>     state, action = world.step()
 
     """
-    def __init__(self, physics_engine, height=10, width=10, world_delay=1):
+    def __init__(self, physics_engine, height=10, width=10):
         self.physics_engine = physics_engine
         self.height = height
         self.width = width
-        self.world_delay = world_delay
         self.render = global_states.RENDER
 
         #* Dict storing all objects
@@ -430,6 +386,9 @@ class World(object):
         return {name : obj for name, obj in self.hierarchy.items()\
                 if isinstance(obj, obj_cls)}
 
+    def set_camera_focus(self, obj, distance):
+        self.physics_engine.set_camera_focus(obj.position, distance)
+
     @property
     def robots(self):
         """ Dict with all robots. """
@@ -440,7 +399,7 @@ class World(object):
     def lights(self):
         """ Dict with all light sources. """
         return {name : obj for name, obj in self.hierarchy.items()\
-                if type(obj).__name__ in ['LightSource', 'LightSource3D']}
+                if type(obj).__name__ in ['LightSource']}
     @property
     def controllable_objects(self):
         """ Dict with all controllable objects (ie with a controller). """
@@ -475,12 +434,18 @@ class World(object):
         return {name : obj for name, obj in self.hierarchy.items() if obj.luminous}
 
 
-
+@world_registry(name='custom_world')
 class CustomWorld(World):
-    """ World class of 3D bounded arenas. """
-    def __init__(self, *args, **kwargs):
+    """ World class for environments with custom map. The map is defined by means of a previously 
+    defined and stored URDF file (with the corresponding obj files). The map file must be stored 
+    in the folder 'spike_swarm_sim/models/maps/'.
+
+    :param str model_file: path to the URDF file defining the map. It is relative to 'spike_swarm_sim/models/maps/' 
+        and the file extension is not required
+    """
+    def __init__(self, map_file, *args, **kwargs):
         super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
-        self.map_file = 'spike_swarm_sim/models/maps/simple_map_1/simple_map_1'
+        self.map_file = map_file
         self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
         # self.add_map()
     
@@ -498,42 +463,80 @@ class CustomWorld(World):
 
         :returns: List of neighboring WorldObject.
         """
+        return self.hierarchy.values()
 
+@world_registry(name='circular_arena')
+class CircularArena(World):
+    """ World class for environments with an empty circular arena. 
+
+    :param float radius: radius of the circular wall contraining the arena.
+    """
+    def __init__(self, *args, radius=5.0, **kwargs):
+        super(CircularArena, self).__init__(Engine3D(), *args, **kwargs)
+        self.radius = radius
+        self.resize_circle_arena()
+        self.register_entity('map', Map('circle_arena/circle_arena', np.zeros(3), np.zeros(3)), group='maps')
+        
+    def resize_circle_arena(self):
+        file = 'spike_swarm_sim/models/maps/circle_arena/circle_arena.obj'
+        with open(file, "r") as f:
+            lines = f.readlines()
+            vertices = []
+            for line in lines:
+                elems = line.rstrip('\n').split(' ')
+                if elems[0] == 'v':
+                    vert = np.array(elems[1:]).astype(float)
+                    vertices.append(vert)
+            vertices = np.vstack(vertices)
+            old_rads = np.unique(np.sqrt(vertices[:,0] ** 2 + vertices[:,2] ** 2).round(3))
+            assert len(old_rads) == 2
+            scaling = self.radius / old_rads.min()
+            vertices[:,[0,2]] *= scaling
+
+        with open(file, "r+") as f:
+            lines = f.readlines()
+            f.seek(0)
+            vert_iter = iter(vertices)
+            lines = ['v {} {} {}\n'.format(*tuple(next(vert_iter))) if line.split(' ')[0] == 'v' else line for line in lines ]
+            f.writelines(lines)
+            f.truncate()
+
+    def neighborhood(self, robot):
+        """ 
+        .. todo:: #TODO: Not finished
+        Method that returns the list of neighboring world objects of a robot.
+        An object is considered to be in the vicinity if it is contained in the ball
+        of radius equal to:
+            a) The maximum range of distance or comunication sensors if the object is a robot.
+            b) The range of the light sensor if the object is a light source.
+        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
+
+        :param Robot3D robot: The Robot object whose vicinity has to be computed.
+
+        :returns: List of neighboring WorldObject.
+        """
         return self.hierarchy.values()
 
 
-
-
-
 #TODO implementar p.disconnect(). Ctx manager?
-class World3D(World):
+@world_registry(name='square_arena')
+class SquareArena(World):
     """ World class of 3D bounded arenas. """
     def __init__(self, *args, **kwargs):
-        super(World3D, self).__init__(Engine3D(), *args, **kwargs)
+        super(SquareArena, self).__init__(Engine3D(), *args, **kwargs)
         #* Add world limits
         self.add_limiting_walls()
 
     def add_limiting_walls(self):
         """ Creates the limiting walls of the 3D arena. """
-        self.register_entity('wall_side_up', Wall([self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, 1], [0, 0, np.pi/2], height=1,\
-            width=self.width-1), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
-             width=1), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height/2, 1], [0, 0, -np.pi/2], height=self.height+1,\
-            width=1), group='side_wall')
-
-    def step(self):
-        """ Step function of the world to run it one timestep.
-        Steps all objects are stores the state and actions.
-        It also renders new world.
-
-        :returns: A tuple with state and action dicts. These dicts map sensor names with observed states 
-            and actuator names to actions. 
-        """
-        states, actions = super().step()
-        return states, actions
+        self.register_entity('wall_side_up', Wall([self.width/2, 0, .5], [0, 0, np.pi/2], height=0.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .5], [0, 0, np.pi/2], height=.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_left', Wall([0, self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+             width=.5), group='side_wall')
+        self.register_entity('wall_side_right', Wall([0, -self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+            width=.5), group='side_wall')
 
     def neighborhood(self, robot):
         """ 
@@ -655,6 +658,47 @@ class World2D(World):
         return neighbors
 
 
+class MultiWorldWrapper:
+    """ Wrapper class for paralellizing genotype evaluations. 
+    
+    :param int n_cpu: number of cores (and parallel simulations).
+    :param float height: height in metres of the square arena.
+    :param float width: width in metres of the square arena.
+    :param float world_delay: deprecated, to be removed in next ver.
+
+    .. todo:: #TODO: Extend to 2D worlds.
+    """
+    def __init__(self, n_cpu, height=10, width=10, world_delay=1):
+        self.n_cpu = n_cpu
+        self._worlds = [SquareArena(height=height, width=width, world_delay=1) for _ in range(n_cpu + 1)]
+
+    def build_from_dict(self, world_dict, ann_topology=None):
+        """Build all the created worlds from the config dicts. """
+        for world in self._worlds:
+            world.build_from_dict(world_dict, ann_topology=ann_topology)
+
+    @property
+    def all(self):
+        """ Return all the worlds as a list. 
+
+        :returns: list of World instances of length N_worlds + 1.
+        """
+        return self._worlds
+
+    @property
+    def robots(self):
+        """ Return all the robots of the first world. """
+        return self._worlds[0].robots
+
+    def get_world(self, idx):
+        """ 
+        Get world by index. 
+        
+        :param int idx: index of the world queried within [0, N_worlds]
+
+        :returns: World instance requested.
+        """
+        return self._worlds[idx]
 
 
 

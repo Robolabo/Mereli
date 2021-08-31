@@ -14,7 +14,7 @@ class LightSource(WorldObject):
     :param int z_offset: offset of the z-axis position of the point light.  
     """
     def __init__(self, position, orientation, *args, color='red', range=1., z_offset=0., **kwargs):
-        super(LightSource, self).__init__('light', position, orientation, z_offset=z_offset,\
+        super(LightSource, self).__init__('entities/light_source/light', position, orientation, z_offset=z_offset,\
                         static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color

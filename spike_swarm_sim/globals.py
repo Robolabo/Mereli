@@ -1,3 +1,5 @@
+import logging
+
 class Globals:
     def __init__(self):
         self._EVAL = False
@@ -12,6 +14,10 @@ class Globals:
         self._RENDER = new_state
 
     def set_debug_state(self, new_state):
+        if new_state:
+            # logging.basicConfig(level=logging.DEBUG)
+            logging.getLogger().level = logging.DEBUG
+            logging.getLogger().debug('Executing in DEBUG mode.')
         self._DEBUG = new_state
 
     def set_states(self, render=True, eval=False, debug=False, info=False):
@@ -19,6 +25,13 @@ class Globals:
         self._RENDER = render
         self._DEBUG = debug
         self._INFO = info
+        if debug:
+            # logging.basicConfig(level=logging.DEBUG)
+            logging.getLogger().level = logging.DEBUG
+            logging.getLogger().debug('Executing in DEBUG mode.')
+        elif info:
+            logging.getLogger().level = logging.INFO
+            logging.getLogger().info('Executing in VERBOSE mode.')
 
     @property
     def EVAL(self):

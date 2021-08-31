@@ -99,7 +99,8 @@ class IRFrame:
     def as_dict(self):
         """ Return the frame as a python ``dict``."""
         return {'msg' : self.msg, 'signal' : self.signal_strength, 
-            'receiving_direction' : self.encoded_rx_ori, 'sending_direction' : self.encoded_tx_ori}
+            'receiving_direction' : self.encoded_rx_ori, 'sending_direction' : self.encoded_tx_ori, 
+            'raw_tx_angle' : self.tx_ori, 'raw_rx_angle' : self.rx_ori}
 
     def increase_hops(self):
         """ Increase the number of hops of the frame."""
