@@ -21,7 +21,7 @@ class LightSource(WorldObject):
         self.reset()
 
     def step(self, neighborhood):
-        """ Step method of the light source. Even though lights are not technically controlled, they can 
+        """ Step method of the light sou\rce. Even though lights are not technically controlled, they can 
         have a 'virtual controller' for allowing custom behaviours such as mobile lights or preys in the 
         predator and prey game. The controller can be implemented just as in the robots. 
         

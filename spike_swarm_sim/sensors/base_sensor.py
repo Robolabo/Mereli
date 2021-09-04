@@ -161,6 +161,7 @@ class DirectionalSensor(Sensor):
         return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
                     sensor_name=sensor_name, sector=sector)[0]
     
+    
     def get_sensor_idx(self, sector):
         """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
         used to cast rays and compute the readings wrt it. 

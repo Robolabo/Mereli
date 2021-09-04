@@ -41,9 +41,7 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Sensors" href="sensors.html" />
-    <link rel="prev" title="Worlds" href="worlds.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,22 +87,27 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#initializers">Initializers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensors.html">Robots, Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#robots">Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#sensors">Sensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sensors.html#directional-sensors">Directional Sensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#actuators">Actuators</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#transmitter">Transmitter</a></li>
@@ -314,8 +317,6 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
-        
       <li>Entities</li>
     
     
@@ -337,111 +338,6 @@
             
   <div class="section" id="entities">
 <span id="tutorial-entities"></span><h1>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h1>
-<p>Entities are any kind of world objects that are created in the world or environment space. Jointly with the physics and render engine, they
-define the variety experiments to be carried out. Every entity defined in the simulator inherits from the class <a class="reference internal" href="../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.world_object.WorldObject</span></code></a>.
-This base class cannot be directly instantiated and defines a set of abstract properties of entities. Even thought their names are descriptive, the
-following table defines the currently implemented entity properties:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 75%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>Property</strong></p></td>
-<td><p><strong>Description</strong></p></td>
-</tr>
-<tr class="row-even"><td><p>tangible</p></td>
-<td><p>Whether the object has collisions or not.</p></td>
-</tr>
-<tr class="row-odd"><td><p>static</p></td>
-<td><p>Whether the object is static or can move.</p></td>
-</tr>
-<tr class="row-even"><td><p>luminous</p></td>
-<td><p>Whether the object emits light or not.</p></td>
-</tr>
-<tr class="row-odd"><td><p>controllable</p></td>
-<td><p>Whether the object has a controller or not.</p></td>
-</tr>
-<tr class="row-even"><td><p>trainable</p></td>
-<td><p>Whether the object controller can be trained (not really used yet).</p></td>
-</tr>
-</tbody>
-</table>
-<p>Additionally, on top of <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code>, <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> are built. These classes inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code>
-and particularize the entities for 2D and 3D simulations. For the moment, 3D objects inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> and 2D entities inherit from <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code>.
-Nonetheless’, this implementation is temporal and, in future versions, it is expected that any entity will be decoupled from the type of physics and graphics it employs in
-a simulation. In this way, <code class="docutils literal notranslate"><span class="pre">WorldObject2D</span></code> and <code class="docutils literal notranslate"><span class="pre">WorldObject3D</span></code> would be removed and only <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> would act as base class.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>Several objects (robot, light_source, etc) have two classes devoted to 2D and 3D physics and graphics. This implementation
-is temporal until the 2D/3D standardization is fulfilled. The aim is that there is a single class for each entity and it is
-the physics engine the responsible for loading and executing the correct object model, physics and graphics.</p>
-</div>
-<p>The entities that are currently implemented in the simulator are gathered in the following table:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 19%" />
-<col style="width: 44%" />
-<col style="width: 20%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p>Entity Name</p></td>
-<td><p>Python Class</p></td>
-<td><p>Description</p></td>
-<td><p>Image</p></td>
-</tr>
-<tr class="row-even"><td><p>robot</p></td>
-<td><p>Robot</p></td>
-<td></td>
-<td><a class="reference internal image-reference" href="tutorials/figs/robot.png"><img alt="tutorials/figs/robot.png" src="tutorials/figs/robot.png" style="width: 50%;" /></a>
-</td>
-</tr>
-<tr class="row-odd"><td><p>light_source</p></td>
-<td><p>LightSource</p></td>
-<td></td>
-<td><a class="reference internal image-reference" href="tutorials/figs/light.png"><img alt="tutorials/figs/light.png" src="tutorials/figs/light.png" style="width: 50%;" /></a>
-</td>
-</tr>
-<tr class="row-even"><td><p>wall</p></td>
-<td><p>Wall</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-odd"><td><p>ground_area</p></td>
-<td><p>Ground Area</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>cube</p></td>
-<td><p>Cube</p></td>
-<td></td>
-<td><a class="reference internal image-reference" href="tutorials/figs/cube.png"><img alt="tutorials/figs/cube.png" src="tutorials/figs/cube.png" style="width: 50%;" /></a>
-</td>
-</tr>
-<tr class="row-odd"><td><p>ball</p></td>
-<td><p>Ball</p></td>
-<td></td>
-<td></td>
-</tr>
-<tr class="row-even"><td><p>epuck</p></td>
-<td><p>Epuck3D</p></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> and <code class="docutils literal notranslate"><span class="pre">Robot3D</span></code> are base classes for any simulated robot. Although these classes can be directly instantiated
-through the config. files, it is advisable to create a separate class inheriting from them for the precise robot model (epuck, minitaur, hexapod, etc.).
-Nonetheless, if instantiated directly,  <code class="docutils literal notranslate"><span class="pre">Robot</span></code> and <code class="docutils literal notranslate"><span class="pre">Robot3D</span></code> will load the epuck model by default.</p>
-</div>
-<p>Another important aspect about entities is that they are arranged in groups. Groups are useful for several reasons. Firstly, they ease the execution of
-many operations as a group instead of applying it object by object. The clearest example is the initialization of the position of the entities, allowing
-the initialization as group, forming an spatial graph, a grid or avoiding object overlapping. Initializers will be treated later in this tutorial. Secondly,
-they allow the instantiation of homogeneous groups of entities. By homogeneous we refer to the situation in which every entity has the same characteristics,
-equipment and capabilities. For example, a group would be a swarm of 10 mobile robots with the same controller, sensors and actuators.</p>
 <div class="section" id="entity-creation-and-modelling">
 <h2>Entity creation and modelling<a class="headerlink" href="#entity-creation-and-modelling" title="Permalink to this headline">¶</a></h2>
 <p>There are three different ways to instantiate entities in an experiment: using directly the API, using a configuration <code class="docutils literal notranslate"><span class="pre">dict</span></code> and
@@ -533,106 +429,10 @@ These aside from from  defining the geometry, inertia, masses, and so on, it als
 See <a class="reference external" href="_static/epuck.urdf">epuck.urdf</a> for an example of creating a simplified epuck through an URDF file.
 On the contrary, for creating 2D entities for <code class="docutils literal notranslate"><span class="pre">pymunk</span></code> based physics engine, we created a simple yet easily extensible JSON module syntax. An example of a JSON
 file modelling a simplified 2D epuck is shown in <a class="reference external" href="_static/epuck.json">epuck.json</a> .</p>
-<div class="admonition-todo admonition" id="id2">
+<div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>Explain the details the syntax of the JSON model files of 2D entities. To be done when 2D/3D standardization is finished.</p>
 </div>
-</div>
-<div class="section" id="initializers">
-<h2>Initializers<a class="headerlink" href="#initializers" title="Permalink to this headline">¶</a></h2>
-<p>Now, lets return to the entity initializers. Initializer are python classes that noticeably ease the selection of entity initial states of
-the positions and the orientations. For example it allows to sample positions uniformly within a square without physical overlapping or
-sample the 2D coordinates of robots in a swarm as a 2D spatial random graph (assuring swarm compactness).
-Initializers work at the group level, meaning that they initialize the positions and orientations considering whole groups of entities.
-This remarkably useful for avoiding initial overlapping or creating compact swarms of robots. The mapping between group names and initializers
-is an attribute of the class <code class="docutils literal notranslate"><span class="pre">World</span></code> that holds all the groups and entities. This attribute is called <code class="docutils literal notranslate"><span class="pre">initializers</span></code> of type <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
-An pseudocode example of this attribute is exposed below:</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">initializers</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;swarm&#39;</span> <span class="p">:</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer1</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;orientations&#39;</span> <span class="p">:</span> <span class="n">Initializer2</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;cubes&#39;</span> <span class="p">:</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer3</span><span class="p">,</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
-</pre></div>
-</div>
-<p>Note that <code class="docutils literal notranslate"><span class="pre">Initializer1</span></code>, <code class="docutils literal notranslate"><span class="pre">Initializer2</span></code> and  <code class="docutils literal notranslate"><span class="pre">Initializer3</span></code> are not actual classes. In practice, they should be instances of any of the
-available Initializer classes.</p>
-<p>The initializer classes that are currently implemented within the simulator are:</p>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 16%" />
-<col style="width: 19%" />
-<col style="width: 65%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
-<td><p><strong>Python Class</strong></p></td>
-<td><p><strong>Description</strong></p></td>
-</tr>
-<tr class="row-even"><td><p>fixed</p></td>
-<td><p>FixedInitializer</p></td>
-<td><p>Initializes the positions or orientations always at the given fixed values.</p></td>
-</tr>
-<tr class="row-odd"><td><p>fixed_random</p></td>
-<td><p>FixedRandomInitializer</p></td>
-<td><p>Randomly initializes the positions or orientations from a list of fixed possible values.</p></td>
-</tr>
-<tr class="row-even"><td><p>random_uniform</p></td>
-<td><p>RandomUniformInitializer</p></td>
-<td><p>Randomly initializes objects positions within a rectangle area (positions) or a segment
-orientations().</p></td>
-</tr>
-<tr class="row-odd"><td><p>random_circle</p></td>
-<td><p>RandomCircleInitializer</p></td>
-<td><p>Randomly initializes objects positions within a circle area.</p></td>
-</tr>
-<tr class="row-even"><td><p>random_circumference</p></td>
-<td><p>RandomCircumference</p></td>
-<td><p>Randomly initializes objects positions embedded in a circumference.</p></td>
-</tr>
-<tr class="row-odd"><td><p>random_graph</p></td>
-<td><p>RandomGraphInitializer</p></td>
-<td><p>Randomly initializes objects positions as a random spatial graph.</p></td>
-</tr>
-<tr class="row-even"><td><p>grid</p></td>
-<td><p>GridInitializer</p></td>
-<td><p>Deterministically initializes objects positions within a 2D regular lattice or grid.</p>
-<div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
-<p>Not implemented yet</p>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Finally, lets learn how initializers are used. In case of using configuration files or <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects, the initializers are used as in the  last
-example of the previous section, introducing for each object the initializer reference name and the parameters (see the API for an explanation of the
-class arguments). On the contrary, in order to understand its use with the API, lets observe the following example:</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create and register initializers</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_ori</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">6.28</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;orientations&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_pos</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span>  <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;positions&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">set_initializer</span><span class="p">(</span><span class="s1">&#39;swarm&#39;</span><span class="p">,</span> <span class="n">ini_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="n">ini_ori</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ini_pos</span><span class="p">(),</span> <span class="n">ini_ori</span><span class="p">())):</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">({</span><span class="s2">&quot;distance_sensor3D&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}})</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">({</span><span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}})</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ent</span> <span class="o">=</span> <span class="n">Robot3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ent</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>In the examples, we have created a group called <code class="docutils literal notranslate"><span class="pre">'swarm'</span></code> with 5 robots and with the following initialization:</p>
-<ol class="arabic simple">
-<li><p><strong>Positions</strong>:  are sampled randomly from the hypercube <span class="math notranslate nohighlight">\(\,[-3,\,3]^2\)</span>.</p></li>
-<li><p><strong>Orientations</strong>:  are sampled randomly from an uniform distribution <span class="math notranslate nohighlight">\(\,\mathcal{U}(0, 2\pi)\)</span>.</p></li>
-</ol>
-<p>Additionally, notice that, once created, the initializers are registered in the world and mapped to the corresponding group
-using the method <a class="reference internal" href="../modules.html#spike_swarm_sim.world.World.set_initializer" title="spike_swarm_sim.world.World.set_initializer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World.set_initializer()</span></code></a>.</p>
 </div>
 </div>
 
@@ -641,10 +441,6 @@ using the method <a class="reference internal" href="../modules.html#spike_swarm
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="sensors.html" class="btn btn-neutral float-right" title="Sensors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="worlds.html" class="btn btn-neutral float-left" title="Worlds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

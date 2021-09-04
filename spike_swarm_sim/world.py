@@ -63,10 +63,10 @@ class World(object):
     >>>            "num_instances" : n_robots,
     >>>            "controller" : "basic_obstable_avoider",
     >>>            "sensors" : {
-    >>>                "distance_sensor" : {"n_sectors" : 4, "range" : 1}
+    >>>                "distance_sensor" : {"n_sectors" : 8, "range" : 1}
     >>>            },  
     >>>            "actuators" : {
-    >>>                "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}
+    >>>                "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5}
     >>>            },
     >>>            "initializers" : {
     >>>                "positions" : {"name" : "random_uniform",  "params" : {"low" : [-3, -3], "high" : [3, 3], "size" : 2}},
@@ -85,10 +85,8 @@ class World(object):
     >>>     state, action = world.step()
 
     """
-    def __init__(self, physics_engine, height=10, width=10):
+    def __init__(self, physics_engine):
         self.physics_engine = physics_engine
-        self.height = height
-        self.width = width
         self.render = global_states.RENDER
 
         #* Dict storing all objects
@@ -144,13 +142,13 @@ class World(object):
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
             if not issubclass(type(obj), Robot):
-                obj.step(self.neighborhood(obj))
+                obj.step(self.hierarchy.values())
                 continue
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
             reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
-            state_obj, action_obj = obj.step(self.neighborhood(obj), reward=reward, perturbations=pre_perturbations) #!
+            state_obj, action_obj = obj.step(self.hierarchy.values(), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:
             #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
             states.append(state_obj)
@@ -206,9 +204,6 @@ class World(object):
         Therefore, every time that an experiment is reset, the settled initializers are used 
         to establish the positions and orientations (only if the entity is a robot) of 
         the world entities. 
-        The use of this method is compulsory if the experiment is created without using 
-        neither :py:meth:`spike_swarm_sim.World.build_from_dict` nor :py:meth:`spike_swarm_sim.World.add_group` 
-        (see e.g. examples/basic_examples). 
 
         :param str group_name: name of the group of entities to be created.
         :param Initializer initializer_pos: initializer class of the positions of the group.
@@ -333,11 +328,20 @@ class World(object):
 
     def connect(self):
         """ Connect to the physics engine. """
+        print('Connected')
         self.physics_engine.connect(self.hierarchy.values())
 
     def disconnect(self):
         """ Disconnect physics engine. """
+        print('Disconnected')
         self.physics_engine.disconnect()
+
+    def __enter__(self):
+        self.connect()
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.disconnect()
 
     def run_initializers(self, seed=None):
         """ Executes the initializers of the positions and orientations of each group of world entities.
@@ -386,9 +390,6 @@ class World(object):
         return {name : obj for name, obj in self.hierarchy.items()\
                 if isinstance(obj, obj_cls)}
 
-    def set_camera_focus(self, obj, distance):
-        self.physics_engine.set_camera_focus(obj.position, distance)
-
     @property
     def robots(self):
         """ Dict with all robots. """
@@ -433,37 +434,42 @@ class World(object):
         """ Dict with all luminous objects. """
         return {name : obj for name, obj in self.hierarchy.items() if obj.luminous}
 
+    def set_camera_focus(self, obj, distance):
+        """  Sets the focus of the camera of the render engine on the position of an entity.
 
-@world_registry(name='custom_world')
-class CustomWorld(World):
-    """ World class for environments with custom map. The map is defined by means of a previously 
-    defined and stored URDF file (with the corresponding obj files). The map file must be stored 
-    in the folder 'spike_swarm_sim/models/maps/'.
-
-    :param str model_file: path to the URDF file defining the map. It is relative to 'spike_swarm_sim/models/maps/' 
-        and the file extension is not required
-    """
-    def __init__(self, map_file, *args, **kwargs):
-        super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
-        self.map_file = map_file
-        self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
-        # self.add_map()
-    
-    def neighborhood(self, robot):
-        """ 
-        .. todo:: #TODO: Not finished
-        Method that returns the list of neighboring world objects of a robot.
-        An object is considered to be in the vicinity if it is contained in the ball
-        of radius equal to:
-            a) The maximum range of distance or comunication sensors if the object is a robot.
-            b) The range of the light sensor if the object is a light source.
-        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
-
-        :param Robot3D robot: The Robot object whose vicinity has to be computed.
-
-        :returns: List of neighboring WorldObject.
+        :param WorldObject obj: focused entity.
+        :param float distance: distance between the entity and the camera.
         """
-        return self.hierarchy.values()
+        self.physics_engine.set_camera_focus(obj.position, distance)
+
+
+@world_registry(name='square_arena')
+class SquareArena(World):
+    """ World class for square arenas of a given height and width. 
+
+    :param float width: width of the square arena in meters.
+    :param float height: height of the square arena in meters.
+    """
+    def __init__(self, *args, width=10, height=10, **kwargs):
+        super(SquareArena, self).__init__(Engine3D(), *args, **kwargs)
+        self.height = height
+        self.width = width
+        #* Add world limits
+        self.__add_limiting_walls()
+
+    def __add_limiting_walls(self):
+        """ Private method for customizing the size of the limiting walls of the arena. 
+        It creates the wall objects individually. They are stored under the group 'side_wall'.
+        """
+        self.register_entity('wall_side_up', Wall([self.width/2, 0, .5], [0, 0, np.pi/2], height=0.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .5], [0, 0, np.pi/2], height=.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_left', Wall([0, self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+             width=.5), group='side_wall')
+        self.register_entity('wall_side_right', Wall([0, -self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+            width=.5), group='side_wall')
+
 
 @world_registry(name='circular_arena')
 class CircularArena(World):
@@ -474,10 +480,13 @@ class CircularArena(World):
     def __init__(self, *args, radius=5.0, **kwargs):
         super(CircularArena, self).__init__(Engine3D(), *args, **kwargs)
         self.radius = radius
-        self.resize_circle_arena()
+        self.__resize_circle_arena()
         self.register_entity('map', Map('circle_arena/circle_arena', np.zeros(3), np.zeros(3)), group='maps')
         
-    def resize_circle_arena(self):
+    def __resize_circle_arena(self):
+        """ Private method for customizing the radius of the circular arena. 
+        It reads the 3D obj mesh file, modifies the vertex positions and saves the file with the changes.
+        """
         file = 'spike_swarm_sim/models/maps/circle_arena/circle_arena.obj'
         with open(file, "r") as f:
             lines = f.readlines()
@@ -492,7 +501,6 @@ class CircularArena(World):
             assert len(old_rads) == 2
             scaling = self.radius / old_rads.min()
             vertices[:,[0,2]] *= scaling
-
         with open(file, "r+") as f:
             lines = f.readlines()
             f.seek(0)
@@ -501,161 +509,20 @@ class CircularArena(World):
             f.writelines(lines)
             f.truncate()
 
-    def neighborhood(self, robot):
-        """ 
-        .. todo:: #TODO: Not finished
-        Method that returns the list of neighboring world objects of a robot.
-        An object is considered to be in the vicinity if it is contained in the ball
-        of radius equal to:
-            a) The maximum range of distance or comunication sensors if the object is a robot.
-            b) The range of the light sensor if the object is a light source.
-        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
 
-        :param Robot3D robot: The Robot object whose vicinity has to be computed.
+@world_registry(name='custom_world')
+class CustomWorld(World):
+    """ World class for environments with custom map. The map is defined by means of a previously 
+    defined and stored URDF file (with the corresponding obj files). The map file must be stored 
+    in the folder 'spike_swarm_sim/models/maps/'.
 
-        :returns: List of neighboring WorldObject.
-        """
-        return self.hierarchy.values()
-
-
-#TODO implementar p.disconnect(). Ctx manager?
-@world_registry(name='square_arena')
-class SquareArena(World):
-    """ World class of 3D bounded arenas. """
-    def __init__(self, *args, **kwargs):
-        super(SquareArena, self).__init__(Engine3D(), *args, **kwargs)
-        #* Add world limits
-        self.add_limiting_walls()
-
-    def add_limiting_walls(self):
-        """ Creates the limiting walls of the 3D arena. """
-        self.register_entity('wall_side_up', Wall([self.width/2, 0, .5], [0, 0, np.pi/2], height=0.5,\
-            width=self.width-.5), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .5], [0, 0, np.pi/2], height=.5,\
-            width=self.width-.5), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
-             width=.5), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
-            width=.5), group='side_wall')
-
-    def neighborhood(self, robot):
-        """ 
-        .. todo:: #TODO: Not finished
-        Method that returns the list of neighboring world objects of a robot.
-        An object is considered to be in the vicinity if it is contained in the ball
-        of radius equal to:
-            a) The maximum range of distance or comunication sensors if the object is a robot.
-            b) The range of the light sensor if the object is a light source.
-        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
-
-        :param Robot3D robot: The Robot object whose vicinity has to be computed.
-
-        :returns: List of neighboring WorldObject.
-        """
-
-        neighbors = []
-        #!
-        if isinstance_of_any(robot, [LightSource]):
-            return self.robots.values()
-        if not issubclass(type(robot), Robot) or len(self.hierarchy) == 1:
-            return neighbors
-        max_robot_dist = None
-        if len(self.robots) > 1:
-            #! ---
-            max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['IR_receiver', 'distance_sensor', 'RF_receiver'] \
-                            if sensor in robot.sensors.keys()])
-            #! ---
-        #* Robots
-        for obj in self.hierarchy.values():
-            #!
-            if issubclass(type(obj), Robot) and obj.id != robot.id:
-                if max_robot_dist is not None and obj.id != robot.id:
-                    if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
-                        neighbors.append(obj)
-            elif isinstance(obj, LightSource):
-                # #! PROV
-                # ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}[type(obj).__name__]
-
-                # ls_sensor = {'LightSource' : 'light_sensor', 'LightSource3D' : 'light_sensor3D'}
-                # if ls_sensor not in robot.sensors:
-                #     continue
-                # if np.linalg.norm(obj.position - robot.position) <= robot.sensors[ls_sensor].range:
-                    # neighbors.append(obj)
-                neighbors.append(obj) #TODO: Esto esta simplificado. TODO FIX.
-            else:
-                neighbors.append(obj)
-        return neighbors
-
-
-class World2D(World):
-    """ World class of 2D bounded arenas. """
-    def __init__(self, *args, **kwargs):
-        physics_engine = Engine2D()
-        super(World2D, self).__init__(physics_engine, *args, **kwargs)
-        self.add_limiting_walls()
-
-    def add_limiting_walls(self):
-        """ Creates the limiting walls of the 2D arena. """
-        self.register_entity('wall_side_up', Wall([self.width/2, 0], np.pi/2, height=0.5,\
-            width=self.width), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width/2,0], np.pi/2, height=0.5,\
-            width=self.width), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height/2], -np.pi/2, height=self.height-0.5,\
-            width=0.5), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
-            width=0.5), group='side_wall')
-
-    def assign_unique_id(self):
-        """ Returns a unique identifier to be assigned to a new entity. """
-        obj_id = np.random.randint(1000)
-        while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
-            obj_id = np.random.randint(1, 1000)
-        return obj_id
-
-    def register_entity(self, name, obj, group=None):
-        """ Adds entity to the world registry. """
-        obj.id = self.assign_unique_id()
-        super().register_entity(name, obj, group=group)
-
-    def neighborhood(self, robot):
-        """ 
-        .. todo:: #TODO: Not implemented yet
-        Method that returns the list of neighboring world objects of a robot.
-        An object is considered to be in the vicinity if it is contained in the ball
-        of radius equal to:
-            a) The maximum range of distance or comunication sensors if the object is a robot.
-            b) The range of the light sensor if the object is a light source.
-        If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).
-        
-        :param Robot2D robot: The Robot object whose vicinity has to be computed.
-
-        :returns: List of neighboring world objects.
-        """
-        return self.hierarchy
-        import pdb; pdb.set_trace()
-        neighbors = []
-        if isinstance(robot, LightSource):
-            return self.robots.values()
-        if not isinstance(robot, Robot) or len(self.hierarchy) == 1:
-            return neighbors
-        max_robot_dist = None
-        if len(self.robots) > 1:
-            max_robot_dist = np.max([robot.sensors[sensor].range \
-                            for sensor in ['IR_receiver', 'distance_sensor'] \
-                            if sensor in robot.sensors.keys()])
-        #* Robots
-        for obj in self.hierarchy.values():
-            if isinstance(obj, Robot) and obj.id != robot.id:
-                if max_robot_dist is not None and obj.id != robot.id:
-                    if np.linalg.norm(obj.position - robot.position) <= max_robot_dist:
-                        neighbors.append(obj)
-            elif isinstance(obj, LightSource) and 'light_sensor' in robot.sensors.keys():
-                if np.linalg.norm(obj.position - robot.position) <= robot.sensors['light_sensor'].range:
-                    neighbors.append(obj)
-            else:
-                neighbors.append(obj)
-        return neighbors
+    :param str model_file: path to the URDF file defining the map. It is relative to 'spike_swarm_sim/models/maps/' 
+        and the file extension is not required
+    """
+    def __init__(self, map_file, *args, **kwargs):
+        super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
+        self.map_file = map_file
+        self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
 
 
 class MultiWorldWrapper:
@@ -666,7 +533,7 @@ class MultiWorldWrapper:
     :param float width: width in metres of the square arena.
     :param float world_delay: deprecated, to be removed in next ver.
 
-    .. todo:: #TODO: Extend to 2D worlds.
+    .. todo:: #TODO: Needs to be revisited!
     """
     def __init__(self, n_cpu, height=10, width=10, world_delay=1):
         self.n_cpu = n_cpu
@@ -700,7 +567,35 @@ class MultiWorldWrapper:
         """
         return self._worlds[idx]
 
+# class World2D(World):
+#     """ World class of 2D bounded arenas. """
+#     def __init__(self, *args, **kwargs):
+#         physics_engine = Engine2D()
+#         super(World2D, self).__init__(physics_engine, *args, **kwargs)
+#         self.add_limiting_walls()
 
+#     def add_limiting_walls(self):
+#         """ Creates the limiting walls of the 2D arena. """
+#         self.register_entity('wall_side_up', Wall([self.width/2, 0], np.pi/2, height=0.5,\
+#             width=self.width), group='side_wall')
+#         self.register_entity('wall_side_bottom', Wall([-self.width/2,0], np.pi/2, height=0.5,\
+#             width=self.width), group='side_wall')
+#         self.register_entity('wall_side_left', Wall([0, self.height/2], -np.pi/2, height=self.height-0.5,\
+#             width=0.5), group='side_wall')
+#         self.register_entity('wall_side_right', Wall([0, -self.height/2], -np.pi/2, height=self.height-0.5,\
+#             width=0.5), group='side_wall')
+
+#     def assign_unique_id(self):
+#         """ Returns a unique identifier to be assigned to a new entity. """
+#         obj_id = np.random.randint(1000)
+#         while(len(self.hierarchy) > 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):
+#             obj_id = np.random.randint(1, 1000)
+#         return obj_id
+
+#     def register_entity(self, name, obj, group=None):
+#         """ Adds entity to the world registry. """
+#         obj.id = self.assign_unique_id()
+#         super().register_entity(name, obj, group=group)
 
 class GymWorld(object):
     def __init__(self, env_name):

@@ -91,7 +91,7 @@ class IRFrame:
         """
         if self.rx_ori is None:
             return np.array([0., 0.])
-        enc_ori =  np.r_[np.cos(self.rx_ori), np.sin(self.rx_ori)].round(2)
+        enc_ori = np.r_[np.cos(self.rx_ori), np.sin(self.rx_ori)].round(2)
         enc_ori[np.abs(enc_ori) < 1e-5] = 0.0
         return enc_ori
 

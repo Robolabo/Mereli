@@ -21,17 +21,8 @@ class BasicObstacleAvoider(RobotController):
         else:
             # print('GO straight')
             action = np.array([1., 1.])
-
-        # max_dir = np.argmax(st_ds[[0,1, 6, 7]])   
-        # if st_ds[max_dir] > sens:
-        #     action = np.array({
-        #         0 : [-1, 1],
-        #         1 : [-1, 1],
-        #         # 2 : [1, -1],
-        #         # 3 : [1, 1],
-        #         # 4 : [1, 1],
-        #         # 5 : [-1, 1],
-        #         2 : [1, -1],
-        #         3 : [1,-1],
-        #     }.get(max_dir, [1,1]))
-        return {'joint_velocity_actuator' : action}
+        if 'led_actuator' in self.enabled_actuators:
+            led_action = st_ds > sens
+            return {'joint_velocity_actuator' : action, 'led_actuator' : led_action.astype(int)}
+        else:    
+            return {'joint_velocity_actuator' : action}

@@ -33,8 +33,11 @@ def angle_diff(x, y):
     """ Compute the difference between two angles in radians."""
     # abs_diff = np.abs(x - y)
     # return min(abs_diff, 2 * np.pi - abs_diff)
-    return min((x - y) % (2 * np.pi), (y - x) % (2 * np.pi))
-
+    try:
+        return min((x - y) % (2 * np.pi), (y - x) % (2 * np.pi))
+    except:
+        import pdb; pdb.set_trace()
+        
 def normalize(v):
     """ Normalize a numpy array.""" 
     return v / np.linalg.norm(v)

@@ -15,6 +15,8 @@ from matplotlib import colors
 from spike_swarm_sim.globals import global_states
 
 
+    
+
 class Engine3D:
     """ 3D Physics and Render Engine class. Its role in the simulation is to iterate the 
     3D physic simulations and collision detections of the entities in the environment and render 
@@ -29,6 +31,7 @@ class Engine3D:
         self.render = global_states.RENDER
         self.engine = None
         self.physical_sensors = {}
+        self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
 
@@ -44,7 +47,7 @@ class Engine3D:
         self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
-        self.engine.setTimeStep(1/50.)
+        self.engine.setTimeStep(1/60.)
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
@@ -67,7 +70,7 @@ class Engine3D:
 
     def step_physics(self):
         """ Iterates all the 3D physics of the world entities using pybullet. """
-        for i in range(5):
+        for i in range(7):
             p.stepSimulation()
 
     def step_render(self):
@@ -77,6 +80,7 @@ class Engine3D:
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
         time.sleep(1/240.) # Fast mode
         # time.sleep(1/10) # Slow mode
+
 
     def add_objects(self, objects):
         """
@@ -105,7 +109,7 @@ class Engine3D:
             globalScaling=obj.scaling if hasattr(obj, 'scaling') else 1, 
             physicsClientId=self.client)
 
-
+        
         p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
         p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
         for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
@@ -118,14 +122,14 @@ class Engine3D:
             p.changeVisualShape(obj.id, -1, rgbaColor=color, physicsClientId=self.client)
         if hasattr(obj, 'mass'):
             p.changeDynamics(obj.id, -1, mass=obj.mass, physicsClientId=self.client)
-        #! Temporal loop
+        #! Prov loop
         for i in range(2):
             p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
         
-        self.parse_sensors(obj)
+        self.parse_urdf(obj) #
 
-    def parse_sensors(self, obj):
+    def parse_urdf(self, obj):
         link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
                 for i in range(p.getNumJoints(obj.id, physicsClientId=self.client))]).astype(str)
         tree = ET.parse(obj.model_file)
@@ -148,7 +152,17 @@ class Engine3D:
                     'link' : link, 'ghost_link': ghost_link, 
                     'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,
                 }
-        # if type(obj).__name__ == 'LightSource':import pdb; pdb.set_trace()
+        for actuator in root.findall(".//actuator"):
+            actuator_name = actuator.get('name')
+            self.physical_actuators[actuator_name] = {}
+            for sector in actuator.findall("sector"):
+                sector_idx = int(sector.get('index'))
+                link = sector.find('parent').get('link')
+                link_idx = np.where(link_names == link)[0][0]
+                self.physical_actuators[actuator_name][sector_idx] = {
+                    'link' : link,  'idx' : link_idx
+                }
+
         for ls in root.findall(".//lightsource"):
             link = ls.get('link')
             link_idx = np.where(link_names == link)[0][0] if len(link_names) else -1
@@ -273,6 +287,27 @@ class Engine3D:
             return closest_points
         return np.array(closest_points[np.argmin([v[8] for v in closest_points])][6])
 
+    def get_contact_points(self, obj_id, ghost_ids=None):
+        """ Computes the contact points between any link of the given entity and any other 
+        entity. It steps the collision detection engine to perform the query. The identifier 
+        of ghost links can be specified in order to momentarily activate collisions and detect 
+        obstacles.
+
+        :param int obj_id: identifier of the WorldObject entity.
+        :param list ghost_ids: list of the identifiers of the entity ghost links.
+
+        :returns: list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).
+        """
+        if ghost_ids is not None:
+            for idx in ghost_ids:
+                p.setCollisionFilterGroupMask(obj_id, idx, 0b01, 0b01,  physicsClientId=self.client)
+        p.performCollisionDetection(physicsClientId=self.client)
+        contact_points = p.getContactPoints(obj_id, physicsClientId=self.client)
+        if ghost_ids is not None:
+            for idx in ghost_ids:
+                p.setCollisionFilterGroupMask(obj_id, idx, 0b0, 0b0,  physicsClientId=self.client)
+        return [(pt[2], pt[3], pt[4]) for pt in contact_points]
+
     def get_link_state(self, obj_id, link_idx):
         """ Getter of the position and orientation of a given link in the specified entity.
         
@@ -300,6 +335,22 @@ class Engine3D:
         sensor_index = self.physical_sensors[sensor_name][sector]['idx']
         return np.array(self.get_link_state(obj_id, sensor_index)[0]), sensor_index
 
+    def get_actuator_position(self, obj_id, actuator_name, sector=0):
+        """TODO Getter of the physical position of a sensor within a robot. Sensors are attached to 
+        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
+
+        .. note::
+            For the moment only directional sensor positions can be queried.
+        
+        :param int obj_id: identifier of the robot owning the sensor.
+        :param str sensor_name: reference name of the sensor.
+        :para int sector: index of the sensor's sector requested.
+
+        :returns: tuple with the numpy array with the position and the actuator identifier.
+        """
+        actuator_index = self.physical_actuators[actuator_name][sector]['idx']
+        return np.array(self.get_link_state(obj_id, actuator_index)[0]), actuator_index
+
     def get_sensor_orientation(self, obj_id, sensor_name, sector=0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.
@@ -315,6 +366,7 @@ class Engine3D:
         """
         return self.physical_sensors[sensor_name][sector]['orientation'][-1] #!only yaw ftm
 
+    
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.

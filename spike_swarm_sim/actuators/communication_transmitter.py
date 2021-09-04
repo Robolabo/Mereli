@@ -32,9 +32,9 @@ class CommunicationTransmitter(Actuator):
     def step(self, tx_frame):
         #* Select cluster using softmax on distances to clusters
         self.frame = tx_frame
-        if global_states.RENDER:
-            color = [self.frame.msg[0], 0, 0]
-            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, 3, color, opacity=0.7)
+        # if global_states.RENDER:
+        #     color = [self.frame.msg[0], 0, 0]
+        #     self.actuator_owner.physics_client.set_color(self.actuator_owner.id, 3, color, opacity=0.7)
 
     def reset(self):
         self.frame = IRFrame(msg_len=self.msg_length)

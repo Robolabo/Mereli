@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Sensors &mdash; SpikeSwarmSim  documentation</title>
+  <title>Robots, Sensors and Actuators &mdash; SpikeSwarmSim  documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Actuators" href="actuators.html" />
-    <link rel="prev" title="Entities" href="entities.html" /> 
+    <link rel="next" title="Communication" href="communication_systems.html" />
+    <link rel="prev" title="Worlds and Entities" href="worlds.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -93,18 +93,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Robots, Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#robots">Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sensors">Sensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#actuators">Actuators</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#transmitter">Transmitter</a></li>
@@ -316,7 +321,7 @@
         
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
         
-      <li>Sensors</li>
+      <li>Robots, Sensors and Actuators</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -335,8 +340,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="sensors">
-<span id="tutorial-sensors"></span><h1>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="robots-sensors-and-actuators">
+<span id="tutorial-sensors"></span><h1>Robots, Sensors and Actuators<a class="headerlink" href="#robots-sensors-and-actuators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="robots">
+<h2>Robots<a class="headerlink" href="#robots" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="sensors">
+<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h2>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20%" />
@@ -404,7 +414,7 @@
 partial observability principals by reading high level absolute information such as the robot coordinates or absolute heading orientation.</p>
 </div>
 <div class="section" id="creating-sensors">
-<h2>Creating Sensors<a class="headerlink" href="#creating-sensors" title="Permalink to this headline">¶</a></h2>
+<h3>Creating Sensors<a class="headerlink" href="#creating-sensors" title="Permalink to this headline">¶</a></h3>
 <p>Sensors have to be enabled by the robot controller in order to be used afterwards. In other words, robots have a pool of sensors they can use and
 the controllers specify the subset of them that will be harnessed in each experiment. For instance, a single robot light pursuit experiment
 only uses the light sensor while an obstacle avoidance task only employs the distance sensor.
@@ -435,14 +445,14 @@ sensors at once. The following code example shows how to add sensors using this 
 </pre></div>
 </div>
 <p>Thereafter, once created, the sensors measurements are read by means of the <code class="docutils literal notranslate"><span class="pre">step</span></code> method that must be
-implemetented in each sensor class. However, this method must not be called directly because it is the method
-<code class="docutils literal notranslate"><span class="pre">perceive</span></code> of the class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> the one responsible of direcltly reading the sensor units. The method
+implemented in each sensor class. However, this method must not be called directly because it is the method
+<code class="docutils literal notranslate"><span class="pre">perceive</span></code> of the class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> the one responsible of directly reading the sensor units. The method
 <code class="docutils literal notranslate"><span class="pre">perceive</span></code> is similarly called by the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method at each simulation cycle. The different readings
 of the enabled sensors are gathered to compose the current partially observable state (which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping
 sensor reference names to sensor reading vectors).</p>
 </div>
 <div class="section" id="directional-sensors">
-<h2>Directional Sensors<a class="headerlink" href="#directional-sensors" title="Permalink to this headline">¶</a></h2>
+<h3>Directional Sensors<a class="headerlink" href="#directional-sensors" title="Permalink to this headline">¶</a></h3>
 <p>Directional sensors are a type of sensors that have independent sensing units for diferent sectors or coverage areas.
 The clearest example is the one of epucks or other similar mobile robots. In these cases multiple sensing units are placed
 at strategic points of the robot perimeter. Therefore, aside from having an independent measurement of what is happening on
@@ -529,6 +539,10 @@ relevance, it is currently in process in the case of the 2D JSON model files.</p
 </div>
 </div>
 </div>
+<div class="section" id="actuators">
+<h2>Actuators<a class="headerlink" href="#actuators" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
 
 
            </div>
@@ -536,8 +550,8 @@ relevance, it is currently in process in the case of the 2D JSON model files.</p
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="actuators.html" class="btn btn-neutral float-right" title="Actuators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="entities.html" class="btn btn-neutral float-left" title="Entities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="communication_systems.html" class="btn btn-neutral float-right" title="Communication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="worlds.html" class="btn btn-neutral float-left" title="Worlds and Entities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

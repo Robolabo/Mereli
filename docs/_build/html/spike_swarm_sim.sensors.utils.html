@@ -92,18 +92,23 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Robots, Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#robots">Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#sensors">Sensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#actuators">Actuators</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -365,7 +370,7 @@ propagation.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.utils.propagation.Propagation.plot_directivity">
-<span class="sig-name descname"><span class="pre">plot_directivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#Propagation.plot_directivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.Propagation.plot_directivity" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">plot_directivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#Propagation.plot_directivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.Propagation.plot_directivity" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>-Args:</dt><dd><dl class="simple">
 <dt>max_rad [float]<span class="classifier">maximum coverage range (to be ploted) </span></dt><dd><p>It is expressed in centimeters.</p>

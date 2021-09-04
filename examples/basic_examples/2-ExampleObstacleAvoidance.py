@@ -35,13 +35,10 @@ if USE_API:
     for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
         ctlr = BasicObstacleAvoider()
         ctlr.add_sensor("distance_sensor", {"n_sectors" : 8, "range" : 1.5})
-        # ctlr.add_sensor("camera", {})
-        ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 13})
-        # ctlr.add_sensors_from_dict({"distance_sensor" : {"n_sectors" : 4, "range" : 1}})
-        # ctlr.add_actuators_from_dict({"joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 13}})
+        ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 8})
+        ctlr.add_actuator("led_actuator",  {})
         ent = Epuck(pos, ori, controller=ctlr)
         world.register_entity('swarm_' + str(i), ent, group='swarm')
-    world.register_entity('ls' + str(i), LightSource([0,3,2], [0,0,0], color='red'), group='ls')    
 else:
     world_cfg = {
         "engine" : "3D",
@@ -77,10 +74,6 @@ world.reset()
 t0 = time.time()
 for _ in range(1000):
     state, action = world.step()
-    # import pdb; pdb.set_trace()
-    # print(state[0]['distance_sensor'])
-    # st1 = state[1]['distance_sensor']
-    # import pdb; pdb.set_trace()
 world.disconnect()
 print('\nSIMULATION DURATION: ', np.round(time.time() - t0, 4))
 

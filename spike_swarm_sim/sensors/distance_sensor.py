@@ -37,39 +37,24 @@ class DistanceSensor(DirectionalSensor):
         self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
 
     def step(self, neighborhood):
-        import pybullet as p  
-        phy = self.sensor_owner.physics_client
         reading = []
-        g_ids = [phy.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        for idx in g_ids:
-            p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b01, 0b01)
-        p.performCollisionDetection()
-        contact_points = p.getContactPoints(self.sensor_owner.id,)
-        for idx in g_ids:
-            p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b0, 0b0) 
+        g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            tar_ents = [pt[2] for pt in contact_points if pt[3] == g_ids[i]]
+            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
-                # ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
-                # ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
-                th_sp, phi_sp = np.linspace(-self.aperture/2, 0, 3), np.linspace(-self.aperture/2, self.aperture/2, 5)
-                th_mat, phi_mat = np.meshgrid(np.pi/2 + th_sp, ori + phi_sp)
-                X = self.range * np.cos(phi_mat) * np.sin(th_mat)
-                Y = self.range * np.sin(phi_mat) * np.sin(th_mat)
-                Z = self.range * np.cos(th_mat)
-                ray_dests = [origin + np.r_[x, y, z] for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
-                ray_angles = np.maximum(np.abs(th_mat.flatten()), np.abs(phi_mat.flatten()))
+                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
+                ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
 
-                
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
                 #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
                 # import pdb; pdb.set_trace()
-                ray_res, ray_positions = phy.ray_cast([origin]*len(ray_dests), ray_dests)
+                ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
-                    signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phi_mat.flatten())])
+                    signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
             reading.append(signal_strength)
         if len(reading) != 8: import pdb; pdb.set_trace()
         return np.array(reading)

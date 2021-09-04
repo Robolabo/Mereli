@@ -1,9 +1,16 @@
 .. _tutorial_sensors:
 
-Sensors
+
+Robots, Sensors and Actuators
 =============================
 
+Robots
+---------
 
+
+
+Sensors
+---------
 
 
 
@@ -39,7 +46,7 @@ Sensors
     partial observability principals by reading high level absolute information such as the robot coordinates or absolute heading orientation. 
 
 Creating Sensors
--------------------
+.................
 
 Sensors have to be enabled by the robot controller in order to be used afterwards. In other words, robots have a pool of sensors they can use and 
 the controllers specify the subset of them that will be harnessed in each experiment. For instance, a single robot light pursuit experiment 
@@ -74,15 +81,15 @@ Example::
 >>> ent = Epuck3D(pos, ori, controller=ctlr)
 
 Thereafter, once created, the sensors measurements are read by means of the ``step`` method that must be 
-implemetented in each sensor class. However, this method must not be called directly because it is the method 
-``perceive`` of the class ``Robot`` the one responsible of direcltly reading the sensor units. The method 
+implemented in each sensor class. However, this method must not be called directly because it is the method 
+``perceive`` of the class ``Robot`` the one responsible of directly reading the sensor units. The method 
 ``perceive`` is similarly called by the ``Robot.step`` method at each simulation cycle. The different readings 
 of the enabled sensors are gathered to compose the current partially observable state (which is a ``dict`` mapping 
 sensor reference names to sensor reading vectors).   
 
 
 Directional Sensors
--------------------  
+.................... 
 
 Directional sensors are a type of sensors that have independent sensing units for diferent sectors or coverage areas. 
 The clearest example is the one of epucks or other similar mobile robots. In these cases multiple sensing units are placed 
@@ -169,3 +176,10 @@ Due to the fact that this part of the URDF files is not standardized, we process
 .. todo:: 
     The definition of sensors within the model files is only implemented in the 3D URD files. Due to its reduced 
     relevance, it is currently in process in the case of the 2D JSON model files.
+
+
+Actuators
+------------
+
+
+

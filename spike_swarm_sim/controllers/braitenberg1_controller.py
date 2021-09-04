@@ -11,7 +11,9 @@ class Braitenberg2Controller(RobotController):
         action = np.zeros(2)
         action[0] = np.max(state['red_light_sensor'][[4, 5, 6, 7]])
         action[1] = np.max(state['red_light_sensor'][[0, 1, 2, 3]])
-        return {'joint_velocity_actuator' : np.clip(action, a_min=-1, a_max=1)}
+        if np.max(state['red_light_sensor']) == 0.0: # 
+            action = np.array([.2, .2])
+        return {'joint_velocity_actuator' : 2*np.clip(action, a_min=-1, a_max=1)}
 
 
 @controller_registry(name='Braitenberg2b')
@@ -23,4 +25,6 @@ class Braitenberg2bController(RobotController):
         action = np.zeros(2)
         action[0] = np.max(state['red_light_sensor'][[0, 1, 2, 3]])
         action[1] = np.max(state['red_light_sensor'][[4, 5, 6, 7]])
+        if np.max(state['red_light_sensor']) == 0.0:
+            action = np.array([1., 1.])
         return {'joint_velocity_actuator' : np.clip(2 * action, a_min=-1, a_max=1)}

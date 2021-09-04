@@ -105,10 +105,11 @@
         <child link="top" />
         <origin rpy="1.57075 0 0" xyz="0 -0.098 0.12" />
     </joint>
-    <link name="leds">
+
+    <link name="led0">
         <visual>
             <geometry>
-                <mesh filename="led_base.obj" scale="0.5 0.5 0.5" />
+                <mesh filename="led0.obj" scale="0.5 0.5 0.5" />
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
@@ -117,7 +118,7 @@
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_base.obj" scale="0.5 0.5 0.5" />
+               <mesh filename="led0.obj" scale="0.5 0.5 0.5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -127,9 +128,9 @@
         </inertial>
     </link>
 
-    <joint name="base_to_leds" type="fixed">
+    <joint name="base_to_led0" type="fixed">
         <parent link="base_link" />
-        <child link="leds" />
+        <child link="led0" />
         <origin rpy="1.57075 0 0" xyz="0 -0.098 0.12" />
     </joint>
 
@@ -557,7 +558,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -565,7 +566,7 @@
     </visual>
      <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="5 5 5" />
+            <mesh filename="cone.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -585,7 +586,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -593,7 +594,7 @@
     </visual>
     <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="5 5 5" />
+            <mesh filename="cone.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -613,7 +614,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -621,7 +622,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -643,7 +644,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -651,7 +652,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -671,7 +672,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -679,7 +680,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -699,7 +700,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -707,7 +708,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -727,7 +728,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -735,7 +736,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -755,7 +756,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="4 4 4"/>       
+			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
       <material name="red">
         <color rgba="1 0 0 0.5"/>
@@ -763,7 +764,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="4 4 4"/>  
+            <mesh filename="cone.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
