@@ -15,28 +15,28 @@ class Wall(WorldObject):
     :param float width: width in metres of the wall.   
     
     """
-    def __init__(self, *args, height=2, width=20, **kwargs):
+    def __init__(self, *args, height=1, width=5, **kwargs):
         self.height = height
         self.width = width
         # Tmp solution
         self.resize_wall()
         self.resize_wall2D()
-        super(Wall, self).__init__('tmp/wall_{}x{}x2'.format(width, height), *args, static=True,\
+        super(Wall, self).__init__('tmp/wall_{}x{}x{}'.format(width, height, 1), *args, static=True,\
             controller=None, tangible=True, luminous=False, **kwargs)
     
     def resize_wall(self):
-        if not os.path.isfile("spike_swarm_sim/objects/urdf/tmp/wall_{}x{}x2.urdf".format(self.width, self.height)): 
-            tree = ET.parse("spike_swarm_sim/objects/urdf/wall.urdf")
+        if not os.path.isfile("spike_swarm_sim/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height, 1)): 
+            tree = ET.parse("spike_swarm_sim/models/entities/wall/wall.urdf")
             root = tree.getroot()
             # aa = root.get('link').get('link')
-            root.findall(".//link/visual/geometry/box")[0].attrib['size'] = '{} {} 2'.format(self.width, self.height)
-            root.findall(".//link/collision/geometry/box")[0].attrib['size'] = '{} {} 2'.format(self.width, self.height)
-            tree.write(open("spike_swarm_sim/objects/urdf/tmp/wall_{}x{}x2.urdf".format(self.width, self.height), 'wb'))
+            root.findall(".//link/visual/geometry/box")[0].attrib['size'] = '{} {} 1'.format(self.width, self.height)
+            root.findall(".//link/collision/geometry/box")[0].attrib['size'] = '{} {} 1'.format(self.width, self.height)
+            tree.write(open("spike_swarm_sim/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height,1), 'wb'))
     
     def resize_wall2D(self):
-        file_tmp = "spike_swarm_sim/objects/urdf/tmp/wall_{}x{}x2.json".format(self.width, self.height)
+        file_tmp = "spike_swarm_sim/models/tmp/wall_{}x{}x2.json".format(self.width, self.height)
         if not os.path.isfile(file_tmp): 
-            with open("spike_swarm_sim/objects/urdf/wall.json") as json_file:
+            with open("spike_swarm_sim/models/entities/wall/wall.json") as json_file:
                 obj_dict = json.load(json_file)
             vertices = [[-100*(self.width/2), 100*(-self.height/2)], [100*(self.width/2), 100*(-self.height/2)], 
                         [100*(self.width/2), 100*(self.height/2)], [100*(-self.width/2), 100*(self.height/2)]]

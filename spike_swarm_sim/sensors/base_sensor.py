@@ -110,7 +110,7 @@ class DirectionalSensor(Sensor):
                 # closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
                 #         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client.client)
                 closest_pt_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, obj.id,  
-                                    linkA=-1, linkB=-1, max_dist=self.range)
+                                    linkA=-1, linkB=-1, max_dist=self.range + 0.11)
                 if len(closest_pt_pos) == 0: 
                     continue
                 # closest_pt_pos = np.array(closest_points[0][6])
@@ -141,7 +141,10 @@ class DirectionalSensor(Sensor):
         
         :returns: numpy Array with the absolute directions of each sensor (starting from theta).
         """
-        return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
+        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
+        return np.array([theta - self.sensor_owner.physics_client.get_sensor_orientation(self.sensor_owner.id, 
+                    sensor_name=sensor_name, sector=i) for i in range(self.n_sectors)])
+        # return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
 
     def get_sensor_position(self, sector):
         """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
@@ -158,6 +161,7 @@ class DirectionalSensor(Sensor):
         return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
                     sensor_name=sensor_name, sector=sector)[0]
     
+    
     def get_sensor_idx(self, sector):
         """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
         used to cast rays and compute the readings wrt it. 
@@ -172,47 +176,3 @@ class DirectionalSensor(Sensor):
         sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
         return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
                     sensor_name=sensor_name, sector=sector)[1]
-
-
-
-
-    # def step2(self, neighborhood):
-    #     """
-    #     Main method for steping the sensor and capturing nearby environment events.
-    #     It senses the environment independently in each of the sensing sectors. The 
-    #     particular behavior of each sensor inheriting this class should be specified in 
-    #     _step_direction method.
-    #     ================================================================================
-    #     - Args: 
-    #         neighborhood -> List of neighboring WorldObjects.
-
-    #     - Returns:
-    #         Numpy array with the measurement in each direction. In exceptional cases 
-    #         it may return a list of python dictionaries (see CommunicationReceiver).
-    #     ================================================================================
-    #     """
-    #     readings = [self._step_direction(0, 0, None, 0, obj=None) for _ in range(self.n_sectors)]
-    #     orientation = self.sensor_owner.orientation[-1]
-    #     featured_objects = [obj for obj in neighborhood \
-    #                         if self.target_filter(obj) and obj.id != self.sensor_owner.id]
-    #     for obj in featured_objects:
-    #         for k, direction in enumerate(self.directions(orientation)):
-    #             robot_sensor = self.sensors_idx[k]
-    #             if issubclass(type(obj), WorldObject3D):
-    #                 if obj.tangible:
-    #                     closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-    #                             linkIndexA=robot_sensor, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
-    #                     v = np.array(closest_points[0][6]) - self.sensor_owner.position
-    #                 else:
-    #                     v = obj.position - self.sensor_owner.position #!OJO: No pilla bien la altura de los objetos del URDF.
-    #                 orientation = self.sensor_owner.orientation[-1]
-    #             else:
-    #                 v = toroidal_difference(obj.position, self.sensor_owner.position)
-    #             rho = LA.norm(v)
-    #             phi = angle_diff(compute_angle(v[:2]), direction)
-    #             # import pdb; pdb.set_trace()
-    #             if rho < self.range and phi < self.aperture:
-    #                 readings[k] = self._step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
-    #     reading = np.array(readings) if not isinstance(readings[0], dict) else readings
-    #     self.reading = reading.copy()
-    #     return reading

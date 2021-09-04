@@ -5,11 +5,11 @@ try:
     USE_MPI = True
 except:
     USE_MPI = False
-from spike_swarm_sim import World2D, World3D, MultiWorldWrapper
+from spike_swarm_sim import MultiWorldWrapper
 from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm, CMA_ES, xNES
 from spike_swarm_sim.register import fitness_functions
 from spike_swarm_sim.config_parser import json_parser
-from spike_swarm_sim.register import algorithms
+from spike_swarm_sim.register import algorithms, worlds
 from spike_swarm_sim.globals import global_states
 
 @click.command()
@@ -26,23 +26,20 @@ from spike_swarm_sim.globals import global_states
 def main(render, resume, cfg, debug, eval, verbose, ncpu):
     global_states.set_states(render=render, eval=eval, debug=debug, info=verbose)
     cfg_dict = json_parser(cfg)
-    if debug:
-        # logging.basicConfig(level=logging.DEBUG)
-        logging.getLogger().level = logging.DEBUG
-        logging.getLogger().debug('Executing in DEBUG mode.')
-    elif verbose:
-        logging.getLogger().level = logging.INFO
-        logging.getLogger().info('Executing in VERBOSE mode.')
+    # if debug:
+    #     # logging.basicConfig(level=logging.DEBUG)
+    #     logging.getLogger().level = logging.DEBUG
+    #     logging.getLogger().debug('Executing in DEBUG mode.')
+    # elif verbose:
+    #     logging.getLogger().level = logging.INFO
+    #     logging.getLogger().info('Executing in VERBOSE mode.')
     if ncpu > 1 or USE_MPI and MPI.COMM_WORLD.Get_size() > 1:
         world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), 
                     height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
                     world_delay=cfg_dict['world']["world_delay"])
     else:
-        world_cls = {'2D' : World2D, '3D' : World3D}[cfg_dict['world']['engine']]
-        world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-             world_delay=cfg_dict['world']["world_delay"])
-        # world = World3D(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-        #                 world_delay=cfg_dict['world']["world_delay"],)
+        world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
+        world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"])
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
 
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):

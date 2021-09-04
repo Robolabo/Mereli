@@ -13,7 +13,7 @@ class GroundArea(WorldObject):
     :param float: total mass of the ball.
     """
     def __init__(self, position, orientation, *args, color='grey', radius=1., **kwargs):
-        super(GroundArea, self).__init__('ground_area', position, orientation,\
+        super(GroundArea, self).__init__('entities/ground_area/ground_area', position, orientation,\
                         *args, tangible=False, **kwargs)
         self.color = color
         self.radius = radius

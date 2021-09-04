@@ -27,5 +27,5 @@ class JointVelocitySensor(Sensor):
         
     def step(self, neighborhood):
         joint_vals = [p.getJointState(self.sensor_owner.id, joint, \
-            physicsClientId=self.sensor_owner.physics_client)[1] for joint in self.joints]
+            physicsClientId=self.sensor_owner.physics_client.client)[1] for joint in self.joints]
         return np.array(joint_vals)

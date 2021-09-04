@@ -29,10 +29,49 @@ class LightSensor(DirectionalSensor):
     def __init__(self, *args, color='red', **kwargs):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
-        self.aperture = 3 * np.pi / self.n_sectors
+        self.aperture = 0.785
         self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
         # self.propagation = ExpDecayPropagation(rho_att=0.15, phi_att=1)
     
+    def step(self, neighborhood):
+        phy = self.sensor_owner.physics_client
+        reading = []
+        g_ids = [self.sensor_owner.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        # for idx in g_ids:
+        #     p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b01, 0b01)
+        # p.performCollisionDetection()
+        # contact_points = p.getContactPoints(self.sensor_owner.id,)
+        # for idx in g_ids:
+        #     p.setCollisionFilterGroupMask(self.sensor_owner.id, idx, 0b0, 0b0)
+        contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
+            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
+            signal_strength = 0.0
+            if len(tar_ents) > 0 and any(ent_i in phy.luminous_objects for ent_i in tar_ents):
+                origin = self.get_sensor_position(i)
+                # ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
+                # ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
+                th_sp, phi_sp = np.linspace(-self.aperture/2, self.aperture/2, 4), np.linspace(-self.aperture/2, self.aperture/2, 5)
+                th_mat, phi_mat = np.meshgrid(np.pi/2 - 0.4 + th_sp, ori + phi_sp)
+                X = self.range * np.cos(phi_mat) * np.sin(th_mat)
+                Y = self.range * np.sin(phi_mat) * np.sin(th_mat)
+                Z = self.range * np.cos(th_mat)
+                ray_dests = [origin + np.r_[ x, y, z] for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
+                # for o, d in zip([origin]*len(ray_dests), ray_dests):
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
+                ray_res, ray_positions = phy.ray_cast([origin]*len(ray_dests), ray_dests) 
+                if any(ent_i in phy.luminous_objects for ent_i in ray_res):
+                    ref_vec = np.r_[np.cos(ori), np.sin(ori), 0] - origin
+                    angles = [np.arccos(np.r_[ x, y, z].dot(ref_vec) / (np.linalg.norm(ref_vec)*self.range))\
+                                for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
+                    rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, angles) if idx != -1])
+                    signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
+            reading.append(signal_strength)
+        if len(reading) != 8: import pdb; pdb.set_trace()
+        return np.array(reading)
+
+
+
     def target_filter(self, obj):
         """ Method devoted to filtering the world objects that should be targeted for a particular sensor.
         In this case it filters out, among all neighboring objects, only the light sources.
@@ -71,11 +110,11 @@ class LightSensor(DirectionalSensor):
         if direction_reading is None:
             direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
         if condition:
-            my_pos = self.get_sensor_position(args[0]) + np.r_[0,0,0.02]
-            tar_post = kwargs['obj'].position
-            ray_res = p.rayTest(my_pos, tar_post, physicsClientId=self.sensor_owner.physics_client.client)
+            my_pos = self.get_sensor_position(args[0]) # + np.r_[0,0,0.02]
+            tar_pos = kwargs['obj'].position
             signal_strength = self.propagation(rho, phi)
-            if ray_res[0][0] == -1:
+            ray_res = self.sensor_owner.physics_client.ray_cast([my_pos], [tar_pos])[0]
+            if ray_res == -1:
                 direction_reading += signal_strength
                 if self.noise_sigma > 0:
                     direction_reading += np.random.randn() * self.noise_sigma

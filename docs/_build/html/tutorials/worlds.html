@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Worlds &mdash; SpikeSwarmSim  documentation</title>
+  <title>Worlds and Entities &mdash; SpikeSwarmSim  documentation</title>
   
 
   
@@ -35,13 +35,14 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Entities" href="entities.html" />
+    <link rel="next" title="Robots, Sensors and Actuators" href="sensors.html" />
     <link rel="prev" title="Tutorials" href="../tutorials.html" /> 
 </head>
 
@@ -92,18 +93,23 @@
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensors.html">Robots, Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#robots">Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#sensors">Sensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sensors.html#directional-sensors">Directional Sensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="actuators.html">Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#actuators">Actuators</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="communication_systems.html#transmitter">Transmitter</a></li>
@@ -315,7 +321,7 @@
         
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
         
-      <li>Worlds</li>
+      <li>Worlds and Entities</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -334,8 +340,686 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="worlds">
-<span id="tutorial-worlds"></span><h1>Worlds<a class="headerlink" href="#worlds" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="worlds-and-entities">
+<span id="tutorial-worlds"></span><h1>Worlds and Entities<a class="headerlink" href="#worlds-and-entities" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="worlds">
+<h2>Worlds<a class="headerlink" href="#worlds" title="Permalink to this headline">¶</a></h2>
+<p>The world or environment is the most basic part of the simulation where the robots move and interact.
+The main function of World classes is to act as containers and orchestrators of the simulation.
+Essentially, it stores all the entities (like robots, walls, lights, etc) that have been added to the simulation.
+The class property used to store all the entities is called <code class="docutils literal notranslate"><span class="pre">hierarchy</span></code>, and it is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping entity names to
+entity python objects. Another feature that is important to introduce at this point are entity groups. As its name describes,
+groups arrange multiple entities (normally homogeneous entities) into a single set. In this way, the simulator can apply collective
+operations to all the members of the group jointly. The clearer use case of groups is related to position states initialization, so that
+the sampling of positions can be done as a group. For instance, the positions of an static swarm of mobile robots can be randomly sampled
+using an random spatial graph generator to preserve swarm compactness (see <a class="reference internal" href="../spike_swarm_sim.utils.html#spike_swarm_sim.utils.initializers.RandomGraphInitializer" title="spike_swarm_sim.utils.initializers.RandomGraphInitializer"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.utils.initializers.RandomGraphInitializer</span></code></a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The name <code class="docutils literal notranslate"><span class="pre">hierarchy</span></code> of the property used to store the registered entities may be changed to a more appropriate name
+in future versions.</p>
+</div>
+<p>Additionally, the world class also has access to a physics engine responsible of realistically simulating
+object physics, collisions and rendering the simulation. We will get back to physics engines further in this section.
+When creating a new simulation process, the world is the first object that must be instantiated. Thereafter, the main steps
+to accomplished in most simulations are the following:</p>
+<ol class="arabic simple">
+<li><p><strong>Create and register the entities</strong>: before setting up the world simulation, the user must create and register all the entities
+and objects that will take part of the simulation. There are two ways of registering entities: using the method <code class="docutils literal notranslate"><span class="pre">register_entity</span></code>
+to register entities one by one or the method <code class="docutils literal notranslate"><span class="pre">build_from_dict</span></code> to create and record all the entities at once. In the former case,
+the user must manually create the entity (importing and using the corresponding python class) beforehand. On the contrary, the latter
+scenario internally creates the instance of every requested entity. Nonetheless, when using <code class="docutils literal notranslate"><span class="pre">build_from_dict</span></code> the entities and their
+parametrization must be provided as a large python <code class="docutils literal notranslate"><span class="pre">dict</span></code>. The structure of the mentioned <code class="docutils literal notranslate"><span class="pre">dict</span></code> will be clarified in the examples
+along this tutorial or in the Configuration Files tutorial section.</p></li>
+<li><p><strong>Connect</strong>: once all the entities have been suitably registered, it is compulsory to call the <code class="docutils literal notranslate"><span class="pre">connect</span></code> method of the World class.
+It essentially prepares the world execution and connects to the physics and render engines. Aside from directly executing the <code class="docutils literal notranslate"><span class="pre">connect</span></code>
+method, it is also possible to connect to the world by means of a context manager (we will see examples later). In such a case, the connection
+is established internally and the <code class="docutils literal notranslate"><span class="pre">connect</span></code> method can be ignored.</p></li>
+<li><p><strong>Reset the simulation states</strong>: the last step before actually simulating environments is to reset the world by calling the method <code class="docutils literal notranslate"><span class="pre">World.reset</span></code>.
+This operation drives all the registered entities to their initial state (e.g. initial positions, orientation, etc). Unless a seed is specified, the
+initialization of most states and variables (particularly positions and orientations) may be random and different in each call. Even though we have
+not introduced the term yet, it is important to remember that the reset operation executes the registered initializers of groups of entities to
+greatly customize their initial states (we will get back to initializers later on this section).</p></li>
+<li><p><strong>Simulation step</strong>: runs a simulation iteration. It can be uniquely accomplished by calling the <code class="docutils literal notranslate"><span class="pre">World.step</span></code> method.
+Its main phases are: (i) call the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method of every robot (which, in turn, read from
+the sensors, execute the controller and plan actions), (ii) compute rewards (if required), (iii) apply perturbations to the state and/or
+the actions of the robots (if required), (iv) step robot actuators and (v) execute the physics and render engine simulation step.</p></li>
+<li><p><strong>Disconnect</strong>: disconnect the physics and render engine by means of the <code class="docutils literal notranslate"><span class="pre">World.disconnect</span></code> method. Call this method when the simulation is ended. The method is called automatically
+when using world class as context manager.</p></li>
+</ol>
+<p>Lets clarify all the previous phases using a very simple initial example:</p>
+<p><strong>Example 1.1</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">SquareArena</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># Create a robot at the arena origin</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_1&#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span> <span class="c1"># Register the robot in the simulation</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">world</span><span class="p">:</span> <span class="c1"># Context manager to automatically connect and disconnect.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Step a single simulation iteration.</span>
+</pre></div>
+</div>
+<p>In this example we have created a square arena of 10x10 with a single e-puck robot. The robot is positioned at coordinates
+[0,0,0] and with Euler orientation [0,0,0]. Thereafter, the robot is registered using the method <code class="docutils literal notranslate"><span class="pre">World.register_entity</span></code>
+with the name <code class="docutils literal notranslate"><span class="pre">'swarm_member_1'</span></code> and attached to the group <code class="docutils literal notranslate"><span class="pre">'swarm'</span></code>. Notice that in this simple example the robot is the only member of the group.
+The simulation is set up using the world as a context manager, so that the <code class="docutils literal notranslate"><span class="pre">World.connect</span></code> and <code class="docutils literal notranslate"><span class="pre">World.disconnect</span></code> methods are called
+internally. After resetting the world dynamics, the simulation is run for 2000 discrete time instants.</p>
+<p>Apart from the previously introduced main methods, the class <code class="docutils literal notranslate"><span class="pre">World</span></code> also has the methods summarized in the following table (for a detailed explanation
+see the API reference <a class="reference internal" href="../modules.html#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a>):</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Method</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_initializer</span></code></p></td>
+<td><p>Sets and attaches the initializer of positions and orientations to a given group. Every time that the method
+<code class="docutils literal notranslate"><span class="pre">run_initializers</span></code> is called, the entities of the group will be initialized according to the registered initializers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">run_initializers</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">group_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">list</span></code> with all the entities belonging to a group.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">group_of</span></code></p></td>
+<td><p>Returns the group of a given entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">entities</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the entities of given python type/class.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">robots</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the robots.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lights</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the light sources.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">controllable_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the objects that have a controller program.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uncontrollable_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the objects that cannot be controlled.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tangible_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the tangible objects.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">intangible_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the intangible objects.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">moving_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the objects that can alter their position.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">static_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the objects that are static.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">luminous_objects</span></code></p></td>
+<td><p>Returns a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with all the objects that emit light.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_camera_focus</span></code></p></td>
+<td><p>Set the focus of the camera of the render engine on the position of an entity.</p></td>
+</tr>
+</tbody>
+</table>
+<p>All the core functionalities of worlds is implemented in the <a class="reference internal" href="../modules.html#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a> base class. Nonetheless, this class is not
+thought to be instantiated directly as it just creates a completely empty world with merely a plane as floor. Besides, it is advisable to create the world
+using one of the higher level classes that inherit from <code class="docutils literal notranslate"><span class="pre">World</span></code> base class. In brief this classes are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 14%" />
+<col style="width: 29%" />
+<col style="width: 57%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
+<td><p><strong>Python Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>square_arena</p></td>
+<td><p><a class="reference internal" href="../modules.html#spike_swarm_sim.world.SquareArena" title="spike_swarm_sim.world.SquareArena"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.SquareArena</span></code></a></p></td>
+<td><p>World arena limited by 4 walls forming a square area.</p></td>
+</tr>
+<tr class="row-odd"><td><p>circular_arena</p></td>
+<td><p><a class="reference internal" href="../modules.html#spike_swarm_sim.world.CircularArena" title="spike_swarm_sim.world.CircularArena"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.CircularArena</span></code></a></p></td>
+<td><p>World arena limited a single circular wall forming a cicle area.</p></td>
+</tr>
+<tr class="row-even"><td><p>custom_world</p></td>
+<td><p><a class="reference internal" href="../modules.html#spike_swarm_sim.world.CustomWorld" title="spike_swarm_sim.world.CustomWorld"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.CustomWorld</span></code></a></p></td>
+<td><div class="line-block">
+<div class="line">World that can be highly customized by the user to any 3D map, arena or maze.</div>
+<div class="line">The only requirement is that the 3D mesh must have been previously created and stored</div>
+<div class="line">in the ‘spike_swarm_sim/models/maps/’ directory.</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>The following screenshots depict each of the currently implemented world classes:</p>
+<div class="row">
+    <div style="float: left;width:56%;padding: 5px;">
+        <img src="../_static/square_arena.png"  style="width:100%">
+        <p style="text-align:center;"><b>Square Arena</b></p>
+    </div>
+    <div style="float: left;width:44%;padding: 5px;">
+        <img src="../_static/circle_arena.png"  style="width:100%">
+        <p style="text-align:center;"><b>Circle Arena</b></p>
+    </div>
+    <div style="float: left;width:100%;padding: 5px;">
+        <img src="../_static/custom_world.png" style="width:100%">
+        <p style="text-align:center;"><b>Custom World</b></p>
+    </div>
+</div></div>
+<div class="section" id="entities">
+<h2>Entities<a class="headerlink" href="#entities" title="Permalink to this headline">¶</a></h2>
+<p>Entities are any kind of world objects that are created in the world or environment space. Jointly with the physics and render engine, they
+define the variety experiments to be carried out. Every entity defined in the simulator inherits from the class <a class="reference internal" href="../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.world_object.WorldObject</span></code></a>.
+This base class should not be directly instantiated. Even thought their names are descriptive, the
+following table defines the currently implemented entity properties:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 75%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Property</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tangible</span></code></p></td>
+<td><p>Whether the object has collisions or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">static</span></code></p></td>
+<td><p>Whether the object is static or can move.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">luminous</span></code></p></td>
+<td><p>Whether the object emits light or not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">controllable</span></code></p></td>
+<td><p>Whether the object has a controller or not.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">trainable</span></code></p></td>
+<td><p>Whether the object controller can be trained (not really used yet).</p></td>
+</tr>
+</tbody>
+</table>
+<p>Aside from the previous entity properties, there are several methods that are worth mentioning (see API reference for further details
+<a class="reference internal" href="../spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.world_object.WorldObject</span></code></a>):</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 81%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Method</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">step</span></code></p></td>
+<td><div class="line-block">
+<div class="line">Steps the entity control loop. This method is only implemented in those entities with sensors,</div>
+<div class="line">controller and actuators.</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reset</span></code></p></td>
+<td><div class="line-block">
+<div class="line">Resets the dynamics of the entity. If entity is controllable it also resets the controller. This method is not</div>
+<div class="line">implemented in the <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> base class.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">position</span></code> Getter</p></td>
+<td><p>Gets the current position coordinates of the entity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orientation</span></code> Getter</p></td>
+<td><p>Gets the current Euler orientation of the entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code> Getter</p></td>
+<td><p>Gets the current linear velocity of the entity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">angular_velocity</span></code> Getter</p></td>
+<td><p>Gets the current angular velocity of the entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">position</span></code> Setter</p></td>
+<td><p>Sets the current position coordinates of the entity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orientation</span></code> Setter</p></td>
+<td><p>Sets the current Euler orientation of the entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">velocity</span></code> Setter</p></td>
+<td><p>Sets the current linear velocity of the entity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">angular_velocity</span></code> Setter</p></td>
+<td><p>Sets the current angular velocity of the entity.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code> Getter</p></td>
+<td><p>Gets the unique identifier of the entity.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code> Setter</p></td>
+<td><p>Sets the unique identifier of the entity (<strong>Use this method carefully</strong>).</p></td>
+</tr>
+</tbody>
+</table>
+<p>When creating entities, in order to establish a 3D model for physics interactions and visualization, each class that inherits from <code class="docutils literal notranslate"><span class="pre">WorldObject</span></code>
+must provide an existing <a class="reference external" href="http://wiki.ros.org/urdf">URDF</a> file describing its geometry, visuals, collision, inertial, etc. In the case of robots, the URDF also specifies the links
+and joints of the robot. The URDF files must be stored in the directory ‘spike_swarm_sim/models/entities/’.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Even though its implementation is currently in process,  for creating 2D entities for the <code class="docutils literal notranslate"><span class="pre">pymunk</span></code> based physics engine (<a class="reference internal" href="../modules.html#spike_swarm_sim.physics_engine.Engine2D" title="spike_swarm_sim.physics_engine.Engine2D"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.physics_engine.Engine2D</span></code></a>),
+we established a simple yet easily extensible JSON module syntax. An example of a JSON file modelling a simplified 2D epuck is shown in <a class="reference external" href="_static/epuck.json">epuck.json</a> .</p>
+</div>
+<p>The precise entities that are currently implemented in the simulator are gathered in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 44%" />
+<col style="width: 20%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>Reference Name</p></td>
+<td><p>Python Class</p></td>
+<td><p>Description</p></td>
+<td><p>Image</p></td>
+</tr>
+<tr class="row-even"><td><p>robot</p></td>
+<td><p>Robot</p></td>
+<td><div class="line-block">
+<div class="line">Generic robot class. It should not be directly</div>
+<div class="line">instantiated.</div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="tutorials/figs/robot.png"><img alt="tutorials/figs/robot.png" src="tutorials/figs/robot.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-odd"><td><p>light_source</p></td>
+<td><p>LightSource</p></td>
+<td><div class="line-block">
+<div class="line">Point light source omnidirectionally emitting light</div>
+<div class="line">of a custom color.</div>
+</div>
+</td>
+<td><a class="reference internal image-reference" href="tutorials/figs/light.png"><img alt="tutorials/figs/light.png" src="tutorials/figs/light.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-even"><td><p>wall</p></td>
+<td><p>Wall</p></td>
+<td><p>Wall of customizable sizes.</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ground_area</p></td>
+<td><p>Ground Area</p></td>
+<td><div class="line-block">
+<div class="line">Floor cicular ground area of a customizable color and</div>
+<div class="line">radius.</div>
+</div>
+</td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>cube</p></td>
+<td><p>Cube</p></td>
+<td><p>Cube of a customizable side length, color and mass.</p></td>
+<td><a class="reference internal image-reference" href="tutorials/figs/cube.png"><img alt="tutorials/figs/cube.png" src="tutorials/figs/cube.png" style="width: 50%;" /></a>
+</td>
+</tr>
+<tr class="row-odd"><td><p>ball</p></td>
+<td><p>Ball</p></td>
+<td><p>Ball of a customizable radius, color and mass.</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>epuck</p></td>
+<td><p>Epuck</p></td>
+<td><p>Mobile Robot simulating the e-puck.</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>For the moment the only implemented robot is the e-puck (<code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.robot3D.Epuck</span></code>). Nonetheless, in order to create a custom robot,
+the main and most laborious part is to create the 3D mesh obj files and the URDF file describing its whole 3D model. Aside from that, the
+class can be readily coded as follows:</p>
+<p><strong>Example 1.2</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;minitaur&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Minitaur</span><span class="p">(</span><span class="n">Robot</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="sd">&quot;&quot;&quot; Class for the Minitaur robot. &quot;&quot;&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="nb">super</span><span class="p">(</span><span class="n">Minitaur</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_file</span><span class="o">=</span><span class="s1">&#39;quadruped/minitaur&#39;</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In this case, the examples creates the class corresponding to the minitaur robot using the 3D model supplied by the pybullet library.
+The decorator establishes the reference name used in the configuration files to refer to the entity. We address the topic of reference
+names in the following subsection.</p>
+<p>In order to create the entities, it must be also specified the initial position and the initial orientation. The orientation can be defined as
+a 3D Euler angle (roll, pitch, yaw) or as an scalar angle (only using yaw). In both cases the units of the orientations are in radians.
+If the entity is controllable,
+the previously instantiated controller is also supplied as a kwarg to the class constructor.</p>
+<p>Now that we have introduced the entities, lets extend the Example 1.1:</p>
+<p><strong>Example 1.3</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create controller and define sensors</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr1</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr2</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">ctrl</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ctlr1</span><span class="p">,</span> <span class="n">ctlr2</span><span class="p">]:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">({</span><span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">({</span><span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create objects instances</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot1</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot2</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mf">3.14</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cube</span> <span class="o">=</span> <span class="n">Cube</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">side_len</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ball</span> <span class="o">=</span> <span class="n">Ball</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yellow_ls</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Add objects to world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_1&#39;</span><span class="p">,</span> <span class="n">robot1</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_2&#39;</span><span class="p">,</span> <span class="n">robot2</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;cube&#39;</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;geom_objects&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;ball&#39;</span><span class="p">,</span> <span class="n">cube</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;geom_objects&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;light_yellow&#39;</span><span class="p">,</span> <span class="n">yellow_ls</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;lights&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Connect, reset and run simulation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">world</span><span class="p">:</span> <span class="c1"># Context manager to automatically connect and disconnect.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Step a single simulation iteration.</span>
+</pre></div>
+</div>
+<p>In this example we have created a circular arena with 2 robots, a blue cube, a red ball and a yellow light. Even though we
+have not yet introduced them, in order to build a more interesting example the robots are controlled by a basic obstacle avoidance
+controller. Moreover, they are equipped with the distance sensor (<a class="reference internal" href="../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor" title="spike_swarm_sim.sensors.distance_sensor.DistanceSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.distance_sensor.DistanceSensor</span></code></a>) to detect nearby obstacles
+and with the joint velocity actuator (<a class="reference internal" href="../spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator" title="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator</span></code></a>) to control the velocity of the two joints (one per
+wheel).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An important remark is that the z-axis coordinate of the light sources position has an implicit offset of 0.8m, which is fixed in the URDF file
+(spike_swarm_sim/models/entities/light_source/light.urdf). Therefore when creating a light, its z-coordinate is actually z+0.8 to guarantee a
+minimum light height.</p>
+</div>
+</div>
+<div class="section" id="initializers">
+<h2>Initializers<a class="headerlink" href="#initializers" title="Permalink to this headline">¶</a></h2>
+<p>Now, lets return to the entity initializers. Initializer are python classes that noticeably ease the selection of entity initial states of
+the positions and the orientations. For example it allows to sample positions uniformly within a square without physical overlapping or
+sample the 2D coordinates of robots in a swarm as a 2D spatial random graph (assuring swarm compactness).
+Initializers work at the group level, meaning that they initialize the positions and orientations considering whole groups of entities.
+This remarkably useful for avoiding initial overlapping or creating compact swarms of robots. The mapping between group names and initializers
+is an attribute of the class <code class="docutils literal notranslate"><span class="pre">World</span></code> that holds all the groups and entities. This attribute is called <code class="docutils literal notranslate"><span class="pre">initializers</span></code> of type <code class="docutils literal notranslate"><span class="pre">dict</span></code>.
+An pseudocode example of the content of this attribute is exposed below:</p>
+<p><strong>Example 1.4</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">initializers</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;swarm&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer1</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;orientations&#39;</span> <span class="p">:</span> <span class="n">Initializer2</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s1">&#39;cubes&#39;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">Initializer3</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">Initializer1</span></code>, <code class="docutils literal notranslate"><span class="pre">Initializer2</span></code> and  <code class="docutils literal notranslate"><span class="pre">Initializer3</span></code> are not actual classes. In practice, they should be instances of any of the
+available Initializer classes.</p>
+<p>The initializer classes that are currently implemented within the simulator are:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 20%" />
+<col style="width: 64%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
+<td><p><strong>Python Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>fixed</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">FixedInitializer</span></code></p></td>
+<td><p>Initializes the positions or orientations always at the given fixed values.</p></td>
+</tr>
+<tr class="row-odd"><td><p>fixed_random</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">FixedRandomInitializer</span></code></p></td>
+<td><p>Randomly initializes the positions or orientations from a list of fixed possible values.</p></td>
+</tr>
+<tr class="row-even"><td><p>random_uniform</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RandomUniformInitializer</span></code></p></td>
+<td><p>Randomly initializes objects positions within a rectangle area (positions) or a segment
+orientations().</p></td>
+</tr>
+<tr class="row-odd"><td><p>random_circle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RandomCircleInitializer</span></code></p></td>
+<td><p>Randomly initializes objects positions within a circle area.</p></td>
+</tr>
+<tr class="row-even"><td><p>random_circumference</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RandomCircumference</span></code></p></td>
+<td><p>Randomly initializes objects positions embedded in a circumference.</p></td>
+</tr>
+<tr class="row-odd"><td><p>random_graph</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RandomGraphInitializer</span></code></p></td>
+<td><p>Randomly initializes objects positions as a random spatial graph.</p></td>
+</tr>
+<tr class="row-even"><td><p>grid</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GridInitializer</span></code></p></td>
+<td><p>Deterministically initializes objects positions within a 2D regular lattice or grid.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Not implemented yet</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, lets learn how initializers are used with an example. In this example we will use API to create manually the simulation, examples using the
+method <code class="docutils literal notranslate"><span class="pre">World.build_from_dict</span></code> to construct the whole simulation using <code class="docutils literal notranslate"><span class="pre">dict</span></code> objects will be provided in the next subsection (as we need to
+understand how reference names work firstly).
+For the moment lets focus on the following example:</p>
+<p><strong>Example 1.5</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create and register initializers</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_ori</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">6.28</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;orientations&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ini_pos</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">high</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span>  <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;positions&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ini_pos</span><span class="p">(),</span> <span class="n">ini_ori</span><span class="p">())):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">({</span><span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">({</span><span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">ent</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">ent</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Set the initializer so that it is executed every time that the ``World.reset`` method is called.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">set_initializer</span><span class="p">(</span><span class="s1">&#39;swarm&#39;</span><span class="p">,</span> <span class="n">ini_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="n">ini_ori</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Connect, reset and run simulation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">world</span><span class="p">:</span> <span class="c1"># Context manager to automatically connect and disconnect.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Step a single simulation iteration.</span>
+</pre></div>
+</div>
+<p>In the example we have created a group called <code class="docutils literal notranslate"><span class="pre">'swarm'</span></code> with 5 robots and with the following initialization:</p>
+<ol class="arabic simple">
+<li><p><strong>Positions</strong>:  are sampled randomly from the hypercube <span class="math notranslate nohighlight">\(\,[-3,\,3]^2\)</span>.</p></li>
+<li><p><strong>Orientations</strong>:  are sampled randomly from an uniform distribution <span class="math notranslate nohighlight">\(\,\mathcal{U}(0, 2\pi)\)</span>.</p></li>
+</ol>
+<p>Additionally, notice that, once created, the initializers are registered in the world and mapped to the corresponding group
+using the method <a class="reference internal" href="../modules.html#spike_swarm_sim.world.World.set_initializer" title="spike_swarm_sim.world.World.set_initializer"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World.set_initializer()</span></code></a>.
+Once created, the initializer object can be called (e.g. <code class="docutils literal notranslate"><span class="pre">ini_pos()</span></code>). This action returns an iterable with the positions or
+orientations of all the group objects (with length equal to the group size).</p>
+<p>Lastly, there is another important method that is not mentioned in the previous example. This method is <a class="reference internal" href="../modules.html#spike_swarm_sim.world.World.run_initializers" title="spike_swarm_sim.world.World.run_initializers"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World.run_initializers()</span></code></a>,
+which is called every time that the world is reset. Its functionality is to call the initializer of every group and set the entity position and orientation (if required)
+to the new initial state.
+There is no actual need to call this method outside of the source code, because it is automatically executed within the reset method. Nonetheless, it
+is worth mentioning for completeness.</p>
+</div>
+<div class="section" id="reference-names">
+<h2>Reference Names<a class="headerlink" href="#reference-names" title="Permalink to this headline">¶</a></h2>
+<p>Reference names are a critical part of the simulator when using configuration files or creating entities by means of the <code class="docutils literal notranslate"><span class="pre">World.build_from_dict</span></code> method.
+In brief, reference names identify classes or functions through string names. Thereafter, the user can refer them within the configuration file or the configuration
+<code class="docutils literal notranslate"><span class="pre">dict</span></code> using this reference names. If a class has no reference name, it cannot be pointed in configuration files. Even through we have not explained this topic up
+to this point, we have already shown several reference names attached to worlds, entities or initializers in previous tables of this section. For example, the reference
+name of the classes <code class="docutils literal notranslate"><span class="pre">SquareArena</span></code>, <code class="docutils literal notranslate"><span class="pre">Epuck</span></code> and <code class="docutils literal notranslate"><span class="pre">RandomUniformInitializer</span></code> are <code class="docutils literal notranslate"><span class="pre">'square_arena'</span></code>, <code class="docutils literal notranslate"><span class="pre">'epuck'</span></code> and <code class="docutils literal notranslate"><span class="pre">'random_uniform'</span></code>, respectively.</p>
+<p>Lets redo the <strong>Example 1.5</strong> using the <code class="docutils literal notranslate"><span class="pre">build_from_dict</span></code> method and reference names (the final simulation should be equivalent):</p>
+<p><strong>Example 1.6</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world_cfg</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;engine&quot;</span> <span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;objects&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="s2">&quot;swarm&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;type&quot;</span> <span class="p">:</span> <span class="s2">&quot;epuck&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="n">n_robots</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="s2">&quot;basic_obstable_avoider&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="s2">&quot;sensors&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;orientations&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span> <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="mf">6.28</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">build_from_dict</span><span class="p">(</span><span class="n">world_cfg</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Connect, reset and run simulation.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">world</span><span class="p">:</span> <span class="c1"># Context manager to automatically connect and disconnect.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Step a single simulation iteration.</span>
+</pre></div>
+</div>
+<p>As it can be seen, we have used several reference names: <code class="docutils literal notranslate"><span class="pre">&quot;epuck&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;basic_obstable_avoider&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;distance_sensor&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;joint_velocity_actuator&quot;</span></code>
+and <code class="docutils literal notranslate"><span class="pre">&quot;random_uniform&quot;</span></code>. A detailed list of the reference names of sensors, actuators and controllers will be provided in their corresponding section.
+Nonetheless, the reference name is always specified on top of the corresponding class or function header as a parameter of a decorator (we will get back to
+this in a moment). Regarding the meaning of the configuration fields, we redirect to  <a class="reference external" href="configuration_files.html">Configuration Files</a> section.</p>
+<p>Besides knowing how to use them, it is important to understand how they internally work.
+In order to register a class of function with a certain reference name, a decorator must be placed on top of the class or function header.
+The decorator receives a single argument <code class="docutils literal notranslate"><span class="pre">name</span></code>, which corresponds to the reference name to be fixed.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The reference name can be any string, but it is advisable to select a name related to the class,
+in lowercase and with underscores to separate words.</p>
+</div>
+<p>Some examples are the following:</p>
+<p><strong>Example 1.6</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@world_object_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;ball&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Ball</span><span class="p">(</span><span class="n">WorldObject</span><span class="p">):</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@controller_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;basic_obstable_avoider&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">BasicObstacleAvoider</span><span class="p">(</span><span class="n">RobotController</span><span class="p">):</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@sensor_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;distance_sensor&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">DistanceSensor</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">):</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@actuator_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;joint_velocity_actuator&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">JointVelocityActuator</span><span class="p">(</span><span class="n">Actuator</span><span class="p">):</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nd">@world_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;custom_world&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">CustomWorld</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
+</pre></div>
+</div>
+<p>Notice that the decorator is different depending on the class to be registered. In fact, the implemented decorators are gathered and briefly described
+in the following table:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 69%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Decorator</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> <strong>variable</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">world_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">worlds</span></code></p></td>
+<td><p>Register decorator for world classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">world_object_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">world_objects</span></code></p></td>
+<td><p>Register decorator for entity or world object classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sensor_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sensors</span></code></p></td>
+<td><p>Register decorator for sensor classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">actuator_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">actuators</span></code></p></td>
+<td><p>Register decorator for actuator classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">controller_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">controllers</span></code></p></td>
+<td><p>Register decorator for controller classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">initializer_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">initializers</span></code></p></td>
+<td><p>Register decorator for initializer classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">env_perturbation_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">env_perturbations</span></code></p></td>
+<td><p>Register decorator for state or action perturbation classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">communication_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">communication_systems</span></code></p></td>
+<td><p>Register decorator for communication system classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fitness_func_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fitness_functions</span></code></p></td>
+<td><p>Register decorator for fitness function classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">algorithm_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">algorithms</span></code></p></td>
+<td><p>Register decorator for optimization algorithm classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reward_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rewards</span></code></p></td>
+<td><p>Register decorator for reward generator classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">neuron_model_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">neuron_models</span></code></p></td>
+<td><p>Register decorator for neuron model classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">synapse_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">synapse_models</span></code></p></td>
+<td><p>Register decorator for synapse model classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">encoding_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">encoders</span></code></p></td>
+<td><p>Register decorator for ANN input encoder classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">decoding_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">decoders</span></code></p></td>
+<td><p>Register decorator for ANN output decoder classes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">learning_rule_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">learning_rules</span></code></p></td>
+<td><p>Register decorator for ANN local learning rules (e.g. Hebbian) classes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">evo_operator_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">evo_operators</span></code></p></td>
+<td><p>Register decorator for evolutionary operator functions (crossover, mutation, etc).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">receptive_field_registry</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">receptive_fields</span></code></p></td>
+<td><p>Register decorator for ANN input receptive field classes (only if spiking neural nets).</p></td>
+</tr>
+</tbody>
+</table>
+<p>These decorators are coded in the module <code class="docutils literal notranslate"><span class="pre">spike_swarm_sim.register.py</span></code>. Its basic functioning is that when the decorated class is instantiated, the decorator
+function is called once, registering in a global <code class="docutils literal notranslate"><span class="pre">dict</span></code> (see second column of the table) the mapping between the reference name and the python class.
+Subsequently, to obtain the class corresponding to a given reference name (for example when decoding the configuration files), the user just has to import
+the correct <code class="docutils literal notranslate"><span class="pre">dict</span></code> and access the python class using the reference name as key:</p>
+<p><strong>Example 1.7</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from spike_swarm_sim.register import worlds
+&gt;&gt;&gt; print(worlds[&#39;custom_world&#39;])
+&gt;&gt;&gt; Console:
+&gt;&gt;&gt;     &lt;class &#39;spike_swarm_sim.world.CustomWorld&#39;&gt;
+&gt;&gt;&gt; print(worlds)
+&gt;&gt;&gt; Console:
+&gt;&gt;&gt;     {
+&gt;&gt;&gt;        &#39;square_arena&#39;: &lt;class &#39;spike_swarm_sim.world.SquareArena&#39;&gt;,
+&gt;&gt;&gt;        &#39;circular_arena&#39;: &lt;class &#39;spike_swarm_sim.world.CircularArena&#39;&gt;,
+&gt;&gt;&gt;        &#39;custom_world&#39;: &lt;class &#39;spike_swarm_sim.world.CustomWorld&#39;&gt;
+&gt;&gt;&gt;     }
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -344,7 +1028,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="entities.html" class="btn btn-neutral float-right" title="Entities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sensors.html" class="btn btn-neutral float-right" title="Robots, Sensors and Actuators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="../tutorials.html" class="btn btn-neutral float-left" title="Tutorials" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 

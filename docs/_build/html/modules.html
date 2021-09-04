@@ -92,18 +92,23 @@
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Robots, Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#robots">Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#sensors">Sensors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#actuators">Actuators</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -522,67 +527,14 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.world">
 <span id="spike-swarm-sim-world-module"></span><h2>spike_swarm_sim.world module<a class="headerlink" href="#module-spike_swarm_sim.world" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">MultiWorldWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Wrapper class for paralellizing genotype evaluations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>n_cpu</strong> (<em>int</em>) – number of cores (and parallel simulations).</p></li>
-<li><p><strong>height</strong> (<em>float</em>) – height in metres of the square arena.</p></li>
-<li><p><strong>width</strong> (<em>float</em>) – width in metres of the square arena.</p></li>
-<li><p><strong>world_delay</strong> (<em>float</em>) – deprecated, to be removed in next ver.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>#TODO: Extend to 2D worlds.</p>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.build_from_dict">
-<span class="sig-name descname"><span class="pre">build_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper.build_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.build_from_dict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build all the created worlds from the config dicts.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.all">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.all" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all the worlds as a list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list of World instances of length N_worlds + 1.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.robots">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">robots</span></span><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.robots" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return all the robots of the first world.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.get_world">
-<span class="sig-name descname"><span class="pre">get_world</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper.get_world"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.get_world" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get world by index.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – index of the world queried within [0, N_worlds]</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>World instance requested.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.map_parser">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">map_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#map_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.map_parser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.world.World">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">World</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physics_engine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">World</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">physics_engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class of the world or environment. This class is never used directly in an experiment but 
 any experiment environment/world must inherit from it. The main function of World classes is to act as
@@ -612,12 +564,12 @@ to robot states or actions.</p></li>
 </dl>
 <p>Example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example of an obstacle avoidance experiment with 5 robots in 3D. </span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spike_swarm_sim.world</span> <span class="k">import</span> <span class="n">World3D</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spike_swarm_sim.world</span> <span class="k">import</span> <span class="n">SquareArena</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="k">import</span> <span class="n">Robot3D</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spike_swarm_sim.controllers</span> <span class="k">import</span> <span class="n">BasicObstacleAvoider</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">spike_swarm_sim.utils.initializers</span> <span class="k">import</span> <span class="n">InitializerHandler</span><span class="p">,</span> <span class="n">RandomUniformInitializer</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">World3D</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">SquareArena</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">world_cfg</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;engine&quot;</span> <span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;world_delay&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -629,10 +581,10 @@ to robot states or actions.</p></li>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;num_instances&quot;</span> <span class="p">:</span> <span class="n">n_robots</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;controller&quot;</span> <span class="p">:</span> <span class="s2">&quot;basic_obstable_avoider&quot;</span><span class="p">,</span>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;sensors&quot;</span> <span class="p">:</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>  
 <span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;actuators&quot;</span> <span class="p">:</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="p">},</span>
 <span class="gp">&gt;&gt;&gt; </span>           <span class="s2">&quot;initializers&quot;</span> <span class="p">:</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>               <span class="s2">&quot;positions&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;random_uniform&quot;</span><span class="p">,</span>  <span class="s2">&quot;params&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;low&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;high&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;size&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}},</span>
@@ -706,10 +658,7 @@ obj as unique element.</p></li>
 <dd><p>Bounds and registers entity initializers to groups of entities. 
 Therefore, every time that an experiment is reset, the settled initializers are used 
 to establish the positions and orientations (only if the entity is a robot) of 
-the world entities. 
-The use of this method is compulsory if the experiment is created without using 
-neither <code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.World.build_from_dict()</span></code> nor <code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.World.add_group()</span></code> 
-(see e.g. examples/basic_examples).</p>
+the world entities.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -875,108 +824,116 @@ TODO: Not finished: 2D implementation pending</p>
 <dd><p>Dict with all luminous objects.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.World.set_camera_focus">
+<span class="sig-name descname"><span class="pre">set_camera_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World.set_camera_focus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World.set_camera_focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the focus of the camera of the render engine on the position of an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – focused entity.</p></li>
+<li><p><strong>distance</strong> (<em>float</em>) – distance between the entity and the camera.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World3D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">World3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World3D" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spike_swarm_sim.world.SquareArena">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">SquareArena</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#SquareArena"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.SquareArena" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a></p>
-<p>World class of 3D bounded arenas.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World3D.add_limiting_walls">
-<span class="sig-name descname"><span class="pre">add_limiting_walls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World3D.add_limiting_walls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World3D.add_limiting_walls" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the limiting walls of the 3D arena.</p>
+<p>World class for square arenas of a given height and width.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> (<em>float</em>) – width of the square arena in meters.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – height of the square arena in meters.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.CircularArena">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">CircularArena</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#CircularArena"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.CircularArena" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a></p>
+<p>World class for environments with an empty circular arena.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>radius</strong> (<em>float</em>) – radius of the circular wall contraining the arena.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.CustomWorld">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">CustomWorld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_file</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#CustomWorld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.CustomWorld" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a></p>
+<p>World class for environments with custom map. The map is defined by means of a previously 
+defined and stored URDF file (with the corresponding obj files). The map file must be stored 
+in the folder ‘spike_swarm_sim/models/maps/’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model_file</strong> (<em>str</em>) – path to the URDF file defining the map. It is relative to ‘spike_swarm_sim/models/maps/’ 
+and the file extension is not required</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">MultiWorldWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_cpu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world_delay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper class for paralellizing genotype evaluations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_cpu</strong> (<em>int</em>) – number of cores (and parallel simulations).</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – height in metres of the square arena.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – width in metres of the square arena.</p></li>
+<li><p><strong>world_delay</strong> (<em>float</em>) – deprecated, to be removed in next ver.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>#TODO: Needs to be revisited!</p>
+</div>
 <dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World3D.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World3D.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World3D.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Step function of the world to run it one timestep.
-Steps all objects are stores the state and actions.
-It also renders new world.</p>
+<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.build_from_dict">
+<span class="sig-name descname"><span class="pre">build_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ann_topology</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper.build_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.build_from_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build all the created worlds from the config dicts.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.all">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">all</span></span><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the worlds as a list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A tuple with state and action dicts. These dicts map sensor names with observed states 
-and actuator names to actions.</p>
+<dd class="field-odd"><p>list of World instances of length N_worlds + 1.</p>
 </dd>
 </dl>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.robots">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">robots</span></span><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.robots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the robots of the first world.</p>
+</dd></dl>
+
 <dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World3D.neighborhood">
-<span class="sig-name descname"><span class="pre">neighborhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World3D.neighborhood"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World3D.neighborhood" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition-todo admonition" id="id2">
-<p class="admonition-title">Todo</p>
-<p>#TODO: Not finished</p>
-</div>
-<p>Method that returns the list of neighboring world objects of a robot.
-An object is considered to be in the vicinity if it is contained in the ball
-of radius equal to:</p>
-<blockquote>
-<div><ol class="loweralpha simple">
-<li><p>The maximum range of distance or comunication sensors if the object is a robot.</p></li>
-<li><p>The range of the light sensor if the object is a light source.</p></li>
-</ol>
-</div></blockquote>
-<p>If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).</p>
+<dt class="sig sig-object py" id="spike_swarm_sim.world.MultiWorldWrapper.get_world">
+<span class="sig-name descname"><span class="pre">get_world</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#MultiWorldWrapper.get_world"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.MultiWorldWrapper.get_world" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get world by index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>robot</strong> (<em>Robot3D</em>) – The Robot object whose vicinity has to be computed.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<em>int</em>) – index of the world queried within [0, N_worlds]</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of neighboring WorldObject.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World2D">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.world.</span></span><span class="sig-name descname"><span class="pre">World2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World2D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.world.World" title="spike_swarm_sim.world.World"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.world.World</span></code></a></p>
-<p>World class of 2D bounded arenas.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World2D.add_limiting_walls">
-<span class="sig-name descname"><span class="pre">add_limiting_walls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World2D.add_limiting_walls"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World2D.add_limiting_walls" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates the limiting walls of the 2D arena.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World2D.assign_unique_id">
-<span class="sig-name descname"><span class="pre">assign_unique_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World2D.assign_unique_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World2D.assign_unique_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a unique identifier to be assigned to a new entity.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World2D.register_entity">
-<span class="sig-name descname"><span class="pre">register_entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World2D.register_entity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World2D.register_entity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds entity to the world registry.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.world.World2D.neighborhood">
-<span class="sig-name descname"><span class="pre">neighborhood</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/world.html#World2D.neighborhood"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.world.World2D.neighborhood" title="Permalink to this definition">¶</a></dt>
-<dd><div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
-<p>#TODO: Not implemented yet</p>
-</div>
-<p>Method that returns the list of neighboring world objects of a robot.
-An object is considered to be in the vicinity if it is contained in the ball
-of radius equal to:</p>
-<blockquote>
-<div><ol class="loweralpha simple">
-<li><p>The maximum range of distance or comunication sensors if the object is a robot.</p></li>
-<li><p>The range of the light sensor if the object is a light source.</p></li>
-</ol>
-</div></blockquote>
-<p>If the object is none of the abovementioned entities, then it is always in the vicinity (for simplicity).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>robot</strong> (<em>Robot2D</em>) – The Robot object whose vicinity has to be computed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of neighboring world objects.</p>
+<dd class="field-even"><p>World instance requested.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1066,8 +1023,8 @@ attribute of the corresponding WorldObject class.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.parse_sensors">
-<span class="sig-name descname"><span class="pre">parse_sensors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.parse_sensors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.parse_sensors" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.parse_urdf">
+<span class="sig-name descname"><span class="pre">parse_urdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.parse_urdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.parse_urdf" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
@@ -1170,7 +1127,8 @@ introduce an angle scalar in radians so that orientation = [0,0,orientation].</p
 <dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.ray_cast">
 <span class="sig-name descname"><span class="pre">ray_cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.ray_cast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.ray_cast" title="Permalink to this definition">¶</a></dt>
 <dd><p>Casts a ray between coordinates origin and destination and verifies if there is some 
-object in between. It returns the id of the first encountered object.</p>
+object in between. It returns the id of the first encountered object.
+#!UPDATE</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -1200,6 +1158,26 @@ object in between. It returns the id of the first encountered object.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>3D numpy array with the coordinates of the closest point in linkB of entity with idB.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.get_contact_points">
+<span class="sig-name descname"><span class="pre">get_contact_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.get_contact_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.get_contact_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the contact points between any link of the given entity and any other 
+entity. It steps the collision detection engine to perform the query. The identifier 
+of ghost links can be specified in order to momentarily activate collisions and detect 
+obstacles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the WorldObject entity.</p></li>
+<li><p><strong>ghost_ids</strong> (<em>list</em>) – list of the identifiers of the entity ghost links.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1247,6 +1225,56 @@ robot links and, therefore, it returns the 3D coordinates of the corresponding l
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.get_actuator_position">
+<span class="sig-name descname"><span class="pre">get_actuator_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actuator_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.get_actuator_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.get_actuator_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the moment only directional sensor positions can be queried.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>tuple with the numpy array with the position and the actuator identifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.get_sensor_orientation">
+<span class="sig-name descname"><span class="pre">get_sensor_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.get_sensor_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.get_sensor_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the moment only directional sensor positions can be queried.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.set_color">
 <span class="sig-name descname"><span class="pre">set_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.set_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.set_color" title="Permalink to this definition">¶</a></dt>
 <dd><p>Getter of the physical position of a sensor within a robot. Sensors are attached to 
@@ -1268,6 +1296,11 @@ robot links and, therefore, it returns the 3D coordinates of the corresponding l
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engine.Engine3D.set_camera_focus">
+<span class="sig-name descname"><span class="pre">set_camera_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engine.html#Engine3D.set_camera_focus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engine.Engine3D.set_camera_focus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -1455,6 +1488,11 @@ of time of consecutive leadership.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.register">
 <span id="spike-swarm-sim-register-module"></span><h2>spike_swarm_sim.register module<a class="headerlink" href="#module-spike_swarm_sim.register" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.register.world_registry">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.register.</span></span><span class="sig-name descname"><span class="pre">world_registry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/register.html#world_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.register.world_registry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="spike_swarm_sim.register.world_object_registry">
 <span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.register.</span></span><span class="sig-name descname"><span class="pre">world_object_registry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/register.html#world_object_registry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.register.world_object_registry" title="Permalink to this definition">¶</a></dt>

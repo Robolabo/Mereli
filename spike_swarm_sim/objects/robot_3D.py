@@ -19,7 +19,7 @@ class Robot(WorldObject):
     :var dict actuators:
     :var dict planned_actions: 
     """
-    def __init__(self, position, orientation,  *args, model_file='epuck', **kwargs):
+    def __init__(self, position, orientation,  *args, model_file='entities/epuck/epuck', **kwargs):
         super(Robot, self).__init__(model_file, position, orientation,\
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
@@ -42,7 +42,6 @@ class Robot(WorldObject):
         self.colorB = 'black'
         self.color2 = ('skyblue3', 'green')[self.trainable]
         # self.reset()
-        self.st_aux = [] #!
 
     def step(self, neighborhood, reward=None, perturbations=None):
         """ Step method of the robots. 
@@ -61,7 +60,6 @@ class Robot(WorldObject):
 
         :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
-        =====================
         """
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
@@ -80,14 +78,8 @@ class Robot(WorldObject):
         if self.comm_sys is not None:
             actions = self.comm_sys.step_post(actions)
 
-
         #* Plan actions for future execution
         self.plan_actions(actions)
-        # #* Handle robot food pickup
-        # if 'food_area_sensor' in state.keys() and bool(state['food_area_sensor'][0]):
-        #     self.food = True
-        # if 'nest_sensor' in state.keys() and bool(state['nest_sensor'][0]):
-        #     self.food = False
 
         #* Convert again tx frame to dict for its use in the opt. algs. 
         if self.comm_sys is not None:
@@ -119,8 +111,15 @@ class Robot(WorldObject):
         
         :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
-        return {sensor_name : sensor.step(neighborhood)\
-                for sensor_name, sensor in self.sensors.items()}
+        readings = {}
+        # IR receiver reads both the received frame and the distance sensor measurement to 
+        # optimize the simulation.
+        if 'IR_receiver' in self.sensors:
+            ir_reading = self.sensors['IR_receiver'].step(neighborhood)
+            readings.update({'IR_receiver' : ir_reading[0], 'distance_sensor' : ir_reading[1]})
+        readings.update({sensor_name : sensor.step(neighborhood)\
+                for sensor_name, sensor in self.sensors.items() if sensor_name != 'IR_receiver'})
+        return readings
 
     def reset(self, seed=None):
         """
@@ -153,6 +152,7 @@ class Robot(WorldObject):
                     sensor.reset()
         #* Reset Comm Sys
         if self.comm_sys is not None:
+            self.comm_sys.set_owner(self.id)
             self.comm_sys.reset()
 
 
@@ -164,7 +164,7 @@ class Robot(WorldObject):
         #     raise Exception(logging.error('Trying to create communication system {}, but sensor '\
         #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
         self.comm_sys = comm_sys
-        self.comm_sys.set_owner(self.id)
+        
 
     @property
     def food(self):
@@ -186,7 +186,7 @@ class Minitaur(Robot):
 
 
 @world_object_registry(name='epuck')
-class Epuck3D(Robot):
+class Epuck(Robot):
     """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
-        super(Epuck3D, self).__init__(*args, model_file='epuck', **kwargs)
+        super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)

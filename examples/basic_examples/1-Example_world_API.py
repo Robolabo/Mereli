@@ -1,6 +1,6 @@
 import numpy as np
-from spike_swarm_sim.world import World3D
-from spike_swarm_sim.objects import Epuck3D, LightSource, GroundArea, Ball
+from spike_swarm_sim.world import SquareArena
+from spike_swarm_sim.objects import Epuck, LightSource, GroundArea, Ball
 from spike_swarm_sim.utils.initializers import RandomUniformInitializer
 
 """ EXAMPLE DESCRIPTION:
@@ -17,30 +17,30 @@ problem without optimization involved.
 With the variable USE_API you can switch between using 1) or 2).
 """
 
-USE_API = False  # Whether to add entities using world API or config dict. 
+USE_API = True  # Whether to add entities using world API or config dict. 
 n_robots = 5 # Number of robots.
 n_balls = 3 # Number of small balls.
 
 # Create empty world.
-world = World3D(height=10,  width=10)
+world = SquareArena(height=10,  width=10)
 
 if USE_API:
     # Create and add robots
-    ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
+    ini_ori = RandomUniformInitializer(n_robots, low=6.27, high=6.28, size=1, engine='3D', variable='orientations')
     ini_pos = RandomUniformInitializer(n_robots, low=[-3,-3], high=[3,1], size=2, engine='3D',  variable='positions')
     world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
     for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
-        robot = Epuck3D(pos, ori, controller=None)
+        robot = Epuck(pos, ori, controller=None)
         world.register_entity('swarm_' + str(i), robot, group='swarm')
 
     # Create blue and yellow lights
-    blue_ls = LightSource(np.array([0,2,0]), np.zeros(3), color='blue')
+    blue_ls = LightSource([0, 2, 1], 0, color='blue')
     world.register_entity('light_blue', blue_ls, group='lights')
-    yellow_ls = LightSource(np.array([0,-2,0]), np.zeros(3), color='yellow')
+    yellow_ls = LightSource([0, -2, 3], 0, color='yellow')
     world.register_entity('light_yellow', yellow_ls, group='lights')
 
-    # Create ground area
-    grey_area = GroundArea(np.array([3.5,0,0]), np.zeros(3), radius=1, color='grey')
+    # Create ground area\
+    grey_area = GroundArea([3.5,0,0], 0, radius=1, color='grey')
     world.register_entity('grey_area', grey_area, group='ground_areas')
 
     # Create balls

@@ -14,14 +14,14 @@ class LightSource(WorldObject):
     :param int z_offset: offset of the z-axis position of the point light.  
     """
     def __init__(self, position, orientation, *args, color='red', range=1., z_offset=0., **kwargs):
-        super(LightSource, self).__init__('light', position, orientation, z_offset=z_offset,\
+        super(LightSource, self).__init__('entities/light_source/light', position, orientation, z_offset=z_offset,\
                         static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color
         self.reset()
 
     def step(self, neighborhood):
-        """ Step method of the light source. Even though lights are not technically controlled, they can 
+        """ Step method of the light sou\rce. Even though lights are not technically controlled, they can 
         have a 'virtual controller' for allowing custom behaviours such as mobile lights or preys in the 
         predator and prey game. The controller can be implemented just as in the robots. 
         

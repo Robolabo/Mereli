@@ -14,7 +14,7 @@ class Ball(WorldObject):
     """
     def __init__(self, position, orientation, *args, 
                     radius=0.3, color='red', mass=1., **kwargs):
-        super(Ball, self).__init__('ball', position, orientation,\
+        super(Ball, self).__init__('entities/ball/ball', position, orientation,\
                         *args, **kwargs)
         self.color = color
         self.mass = mass
