@@ -112,7 +112,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -134,7 +134,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -155,7 +155,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -176,7 +176,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -197,7 +197,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -218,7 +218,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -239,7 +239,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
@@ -260,7 +260,7 @@
             </geometry>
             <origin xyz="0 0 0" />
             <material name="white">
-                <color rgba="1 1 1 0.7" />
+                <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>

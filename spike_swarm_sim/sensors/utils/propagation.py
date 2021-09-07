@@ -4,34 +4,30 @@ import matplotlib.pyplot as plt
 
 class Propagation:
     """ Base class for the mathematical models simulating short range signal 
-    propagation.
+    propagation. This propagation models are used by the sensor step methods to 
+    map Euclidean distances and misalignment angles into signal strengths/readings.
     """
     def __init__(self):
         pass
 
     def __call__(self, rho, phi, theta=None):
-        """ Return the received signal strength (normalized for the moment) 
-        based on the reception radius and misalignment angle. 
-        =======================================================================
-        - Args:
-            rho [float] : the distance to the target position in centimeters.
-            phi [float] : the misalignment in radians of the receiver direction 
-                and the target position.
-        - Returns:
-            The normalized signal strength of the reception [float].
-        =======================================================================
+        """ Returns the received signal strength (normalized generally) 
+        based on the reception radius and misalignment angle. This method is 
+        empty in this base class and must be overwritten by other propagation 
+        model classes inheriting from it. 
+
+        :param float rho: distance to the target position (meters).
+        :param float phi: misalignment in radians of the received ray.
+
+        :returns: float representing the normalized signal strength of the reception [float].
         """
         raise NotImplementedError
     
     def plot(self, max_rad=5, sensor_name=None):
         """ Illustrates the polar plot of a sector coverage.
-        =============================================================
-        -Args:
-            max_rad [float] : maximum coverage range (to be ploted) 
-                It is expressed in centimeters.
-            sensor_name [str] : Name of type of the sensor to include 
-                it in the figure title.
-        =============================================================
+
+        :param float max_rad: maximum coverage range (to set the limits of the plot) 
+        :param str sensor_name: name of the sensor (to be set in the title). 
         """
         Rvals = np.linspace(0, max_rad, 200)
         theta_vals = np.radians(np.linspace(0, 360, 360))
@@ -56,14 +52,12 @@ class Propagation:
         plt.show()
         
     def plot_directivity(self, directions, max_rad=5, sensor_name=None):
-        """ Illustrates the polar plot of a sector coverage.
-        =============================================================
-        -Args:
-            max_rad [float] : maximum coverage range (to be ploted) 
-                It is expressed in centimeters.
-            sensor_name [str] : Name of type of the sensor to include 
-                it in the figure title.
-        =============================================================
+        """ Illustrates the polar plot with the directivity pattern of all the sectors at once. 
+        It only takes into account the losses due to misalignment, the distance attenuation is 
+        not depicted in this plot.
+
+        :param float max_rad: maximum coverage range (to set the limits of the plot) 
+        :param str sensor_name: name of the sensor (to be set in the title). 
         """
         theta_vals = np.radians(np.linspace(0, 360, 360))
         fig, ax = plt.subplots(subplot_kw=dict(projection='polar'))
@@ -81,21 +75,32 @@ class Propagation:
         plt.show()
 
 class ExpDecayPropagation(Propagation):
-    """ Simplified signal propagation using the exponential decaying 
+    r""" Simplified signal propagation using the exponential decaying 
     of the signal of both radius and phi. Both terms are combined as 
-    a product.
+    a product. Formally, the model is expressed as,
+
+    .. math::
+
+        f(\rho, \alpha) = \exp\left\{\lambda_{\rho}\,\rho - \lambda_{\alpha}\,\alpha^2\right\}
+
+    where :math:`\rho` is the distance and :math:`\alpha` is the misalignment.
+
+
+    :param float rho_att: coefficient tuning the attenuation due to the distance (:math:`\lambda_{\rho}`). 
+    :param float phi_att: coefficient tuning the attenuation due to the misalignment (:math:`\lambda_{\alpha}`). 
     """
     def __init__(self, rho_att=0.3, phi_att=1):
         self.rho_att = rho_att
         self.phi_att = phi_att
 
     def __call__(self, rho, phi):
-        return np.exp(-self.rho_att * rho)  * np.exp(-self.phi_att * phi)
-        # return np.exp(-self.rho_att * rho) * np.exp(-.75* phi ** 2)# 1.5 DS, 0.75 LS
-        # return signal
+        return np.exp(-self.rho_att * rho) * np.exp(-self.phi_att* phi ** 2)# 1.5 DS, 0.75 LS
 
 class RSSI_Propagation(Propagation):
     """ 
+    .. todo::
+
+        The implementation and testing of this class in currently in process. 
     """
     def __init__(self, noise_sigma=0.05):
         self.rssi_0 = -69

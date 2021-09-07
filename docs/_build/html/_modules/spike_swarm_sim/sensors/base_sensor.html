@@ -90,18 +90,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#sensors">Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#actuators">Actuators</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -349,10 +349,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">=</span> <span class="n">noise_sigma</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reading</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="c1"># self.sensor_idx = {}#!</span>
 
 <div class="viewcode-block" id="Sensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">physics_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the physics engine client of the robot owning the sensor. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">owner_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the identifier of the robot owning the sensor. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span></div>
 
 <div class="viewcode-block" id="DirectionalSensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor">[docs]</a><span class="k">class</span> <span class="nc">DirectionalSensor</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Base class for directional sensors. Directional or sectorized sensors are </span>
@@ -362,14 +371,8 @@
 <span class="sd">    case, the sensor of each sector has a limited range and aperture in radians. Some </span>
 <span class="sd">    examples of directional sensors are the ``light_sensor`` and the ``distance_sensor``.</span>
 <span class="sd">    Excluding some exceptions such as the IR communication receiver, the reading of the </span>
-<span class="sd">    sensor is an numpy array with length equal to the number of sectors.</span>
-<span class="sd">    </span>
-<span class="sd">    This class is a base class for directional sensors. It only implements the ``step`` </span>
-<span class="sd">    method, which is, at first, common to every directional sensor. Nonetheless, when inheriting </span>
-<span class="sd">    from this sensor, the class methods ``target_filter`` and ``step_direction`` have to be </span>
-<span class="sd">    filled to implement the precise sensor. In brief, ``target_filter`` filters out the entites that </span>
-<span class="sd">    are targeted by the sensor (e.g. ``LightSource`` in the case of the ``LightSensor``). </span>
-<span class="sd">    ``step_direction`` implements the reading of the sensor for a single direction.</span>
+<span class="sd">    sensor is an numpy array with length equal to the number of sectors. This class is a </span>
+<span class="sd">    base class for directional sensors.</span>
 
 <span class="sd">    :param Robot sensor_owner: robot object owning and reading from the sensor.</span>
 <span class="sd">    :param float range: range of coverage of the sensor.</span>
@@ -382,6 +385,50 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span> <span class="o">=</span> <span class="n">n_sectors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span>
+
+<div class="viewcode-block" id="DirectionalSensor.directions"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">[docs]</a>    <span class="k">def</span> <span class="nf">directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the vector of sensing orientations (in radians) of the sectors </span>
+<span class="sd">        relative to the robot heading orientation.</span>
+
+<span class="sd">        :param float theta: orientation of the robots using the sensor.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: numpy array with the absolute directions of each sensor (starting from theta).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.get_sensor_position"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the position of the physical sensing device of a sector. </span>
+<span class="sd">        Each sector device is represented by a physical robot link,  </span>
+<span class="sd">        which is used to cast rays and compute the readings wrt it. </span>
+<span class="sd">        </span>
+<span class="sd">        .. todo::</span>
+<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
+
+<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
+
+<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+    
+    
+<div class="viewcode-block" id="DirectionalSensor.get_sensor_idx"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the position of the sensor of a sector. Each sector is represented by a physical link  </span>
+<span class="sd">        used to cast rays and compute the readings wrt it. </span>
+<span class="sd">        </span>
+<span class="sd">        .. todo::</span>
+<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
+
+<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
+
+<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="DirectionalSensor.target_filter"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.target_filter">[docs]</a>    <span class="k">def</span> <span class="nf">target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Method devoted to filtering the world objects that should be targeted for a particular sensor.</span>
@@ -401,7 +448,7 @@
 <span class="sd">        This method must be overwritten in each directional sensor that inherits from DirectionalSensor </span>
 <span class="sd">        in order to particularize its functioning.</span>
 
-<span class="sd">        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.</span>
+<span class="sd">        :param float rho: Euclidean distance between the object sensing and the object (obj) sensed.</span>
 <span class="sd">        :param float phi: angle between the direction of the sensor and the line passing through </span>
 <span class="sd">            both sensing and sensed object positions.</span>
 <span class="sd">        :param float direction_reading: Current reading in the featured direction </span>
@@ -465,50 +512,7 @@
             <span class="c1"># For each sector with candidate targets to perceive, read the sector&#39;s sensor. </span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">featured_sensors</span><span class="p">,</span> <span class="n">phi_values</span><span class="p">):</span>
                 <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_direction</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">diff_vector</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">readings</span></div>
-
-<div class="viewcode-block" id="DirectionalSensor.directions"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">[docs]</a>    <span class="k">def</span> <span class="nf">directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns the vector of sensing directions of the sectors based on the robot heading orientation.</span>
-
-<span class="sd">        :param float theta: orientation of the robots using the sensor.</span>
-<span class="sd">        </span>
-<span class="sd">        :returns: numpy Array with the absolute directions of each sensor (starting from theta).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
-                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)])</span></div>
-        <span class="c1"># return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])</span>
-
-<div class="viewcode-block" id="DirectionalSensor.get_sensor_position"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Gets the position of the sensor of a sector. Each sector is represented by a small 3D model </span>
-<span class="sd">        used to cast rays and compute the readings wrt it. </span>
-<span class="sd">        </span>
-<span class="sd">        .. todo::</span>
-<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
-
-<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
-
-<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
-                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
-    
-    
-<div class="viewcode-block" id="DirectionalSensor.get_sensor_idx"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Gets the position of the sensor of a sector. Each sector is represented by a small 3D model </span>
-<span class="sd">        used to cast rays and compute the readings wrt it. </span>
-<span class="sd">        </span>
-<span class="sd">        .. todo::</span>
-<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
-
-<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
-
-<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
-                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">readings</span></div></div>
 </pre></div>
 
            </div>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Robots, Sensors and Actuators &mdash; SpikeSwarmSim  documentation</title>
+  <title>Sensors &mdash; SpikeSwarmSim  documentation</title>
   
 
   
@@ -100,14 +100,16 @@
 <li class="toctree-l3"><a class="reference internal" href="worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Robots, Sensors and Actuators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#robots">Robots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#sensors">Sensors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#actuators">Actuators</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
@@ -321,7 +323,7 @@
         
           <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
         
-      <li>Robots, Sensors and Actuators</li>
+      <li>Sensors</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -340,13 +342,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="robots-sensors-and-actuators">
-<span id="tutorial-sensors"></span><h1>Robots, Sensors and Actuators<a class="headerlink" href="#robots-sensors-and-actuators" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="robots">
-<h2>Robots<a class="headerlink" href="#robots" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="sensors">
-<h2>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="sensors">
+<span id="tutorial-sensors"></span><h1>Sensors<a class="headerlink" href="#sensors" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>Sensors are electronic devices that allow robots to perceive, in most cases, locally the environment. There are a variety of sensors that
+measure different aspects of the robot surroundings. For instance, the distance sensor estimates the distance and direction of an obstacle
+in the robot neighborhood.
+From a formal mathematical perspective, the sensor acts as a mapping between the overall
+global environment/world state (<span class="math notranslate nohighlight">\(s(t)\)</span>) and a partially observable state (<span class="math notranslate nohighlight">\(\phi(t)\)</span>) relative to the robot and constrained its surroundings.
+Depending on the sensor, the reading can be an scalar value (e.g. ground sensor), a vector (e.g. distance sensor or other directional sensors)
+or even a matrix or tensor (e.g. camera sensor).
+All the sensors inherit from the base class <code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.Sensor</span></code>. Moreover, directional sensors
+allow a decoupled sensing of the environment in multiple directions (resulting in a vector of direction measurements instead of an scalar reading).
+Directional sensors inherit from the class <code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.DirectionalSensor</span></code>.</p>
+<p>The sensors whose simulation is currently implemented in the simulator  are the gathered in the following table:</p>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 20%" />
@@ -360,11 +370,11 @@
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">DistanceSensor</span></code></p></td>
-<td><p>Sensor for estimating the distance to nearby solid objects.</p></td>
+<td><p>Directional Sensor for estimating the distance to nearby solid objects.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">light_sensor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">LightSensor</span></code></p></td>
-<td><p>Sensor for estimating the light intensity.</p></td>
+<td><p>Directional Sensor for estimating the light intensity.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code></p></td>
 <td><div class="line-block">
@@ -372,7 +382,7 @@
 <div class="line"><code class="docutils literal notranslate"><span class="pre">BufferedIRCommRX</span></code></div>
 </div>
 </td>
-<td><p>IR based communication receiver.</p></td>
+<td><p>Directional IR based communication receiver.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ground_sensor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">GroundSensor</span></code></p></td>
@@ -380,7 +390,11 @@
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">color_sensor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ColorSensor</span></code></p></td>
-<td><p>High level sensor for detecting nearby objects of a precise color.</p></td>
+<td><div class="line-block">
+<div class="line">High level directional sensor for detecting nearby objects</div>
+<div class="line">of a precise color.</div>
+</div>
+</td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">joint_position_sensor</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">JointPositionSensor</span></code></p></td>
@@ -406,6 +420,10 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">NeighborhoodPositionSensor</span></code></p></td>
 <td><p>High level sensor for obtaining the absolute position of the neighbors.</p></td>
 </tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">camera</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Camera</span></code></p></td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <div class="admonition warning">
@@ -413,134 +431,281 @@
 <p>The <code class="docutils literal notranslate"><span class="pre">own_position_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">own_orientation_sensor</span></code> and <code class="docutils literal notranslate"><span class="pre">neighborhood_pos_sensor</span></code> are sensors that break the locality and
 partial observability principals by reading high level absolute information such as the robot coordinates or absolute heading orientation.</p>
 </div>
+</div>
 <div class="section" id="creating-sensors">
-<h3>Creating Sensors<a class="headerlink" href="#creating-sensors" title="Permalink to this headline">¶</a></h3>
+<h2>Creating Sensors<a class="headerlink" href="#creating-sensors" title="Permalink to this headline">¶</a></h2>
 <p>Sensors have to be enabled by the robot controller in order to be used afterwards. In other words, robots have a pool of sensors they can use and
 the controllers specify the subset of them that will be harnessed in each experiment. For instance, a single robot light pursuit experiment
 only uses the light sensor while an obstacle avoidance task only employs the distance sensor.
-The following extract of code shows how to add sensors one by one to an existing controller object. In the example, only
-the distance sensor.</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;distance_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ent</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+The following extract of code shows how to add sensors one by one to an existing controller object (instantiation not shown). In the example, both
+the distance sensor and the light sensor are activated with the shown parameters:</p>
+<p><strong>Example 2.1</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;distance_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;light_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">add_sensor</span></code> method receives both the reference name of the sensor (do not confuse with the class name,
-see table above). Notice that the <code class="docutils literal notranslate"><span class="pre">add_sensor</span></code> method of the controller only requests the indicated sensor. It is
-the creation of the robot where the actual sensors are created (see <code class="docutils literal notranslate"><span class="pre">Robot</span></code> constructor). Alternatively, the sensors can
-be also created and activated through the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot.</p>
-<p>Alternatively, sensors can be added using <code class="docutils literal notranslate"><span class="pre">add_sensors_from_dict</span></code>. Using this method, the user can add all the robot
-sensors at once. The following code example shows how to add sensors using this method:</p>
-<p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">sensors_dict</span> <span class="o">=</span> <span class="p">{</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;light_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">Controller.add_sensor</span></code> method receives both the reference name of the sensor (do not confuse with the class name,
+see table above) and the parameters of the sensor (the accepted parameters are the same the ones in sensor class,
+which can be consulted in the reference API).</p>
+<p>Alternatively, multiple sensors can be activated at once using the <code class="docutils literal notranslate"><span class="pre">Controller.add_sensors_from_dict</span></code> method. It receives
+a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with the entire sensor configuration as in the following example:</p>
+<p><strong>Example 2.2</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sensor_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;distance_sensor&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;light_sensor&quot;</span>    <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">(</span><span class="n">sensors_dict</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">13</span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ent</span> <span class="o">=</span> <span class="n">Epuck3D</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">(</span><span class="n">sensor_dict</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Thereafter, once created, the sensors measurements are read by means of the <code class="docutils literal notranslate"><span class="pre">step</span></code> method that must be
+<p>Notice that the previous code extracts only enable the sensors to be read by the robot’s controller. The actual creation/instantiation
+of the sensors is accomplished when calling the robot class constructor. It is also possible to create the sensors by calling the <code class="docutils literal notranslate"><span class="pre">reset</span></code>
+method of the robot if they have not been previously created for whatever reason (so that the sensors are not instantiated twice).
+The following code examples clarifies this issue:</p>
+<p><strong>Example 2.3</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Activates the distance sensor.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;distance_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Creates an actual distance sensor object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Does not create the distance sensor again because it was instantiated in the</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous line.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Activates the light sensor.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">add_sensor</span><span class="p">(</span><span class="s2">&quot;light_sensor&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;n_sectors&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span> <span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Creates an actual light sensor object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Sensor instances belong to the robot class as an attribute of the class called <code class="docutils literal notranslate"><span class="pre">Robot.sensors</span></code>. This variable is a
+python <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping sensor reference names to actual python sensor class instantiations. For example, the following code
+block shows the content of <code class="docutils literal notranslate"><span class="pre">robot.sensors</span></code> after the executing of the Example 2.3:</p>
+<p><strong>Example 2.4</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">sensors</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="s1">&#39;distance_sensor&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">spike_swarm_sim</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">distance_sensor</span><span class="o">.</span><span class="n">DistanceSensor</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001153170F508</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="s1">&#39;light_sensor&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">spike_swarm_sim</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">light_sensor</span><span class="o">.</span><span class="n">LightSensor</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001153170F4C8</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="p">}</span>
+</pre></div>
+</div>
+<p>Thereafter, once created, the sensors measurements are read by means of the <code class="docutils literal notranslate"><span class="pre">Sensor.step</span></code> method that must be
 implemented in each sensor class. However, this method must not be called directly because it is the method
-<code class="docutils literal notranslate"><span class="pre">perceive</span></code> of the class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> the one responsible of directly reading the sensor units. The method
-<code class="docutils literal notranslate"><span class="pre">perceive</span></code> is similarly called by the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method at each simulation cycle. The different readings
+<code class="docutils literal notranslate"><span class="pre">perceive</span></code> of the class <code class="docutils literal notranslate"><span class="pre">Robot</span></code> the one responsible of directly reading all the sensor units. The method
+<code class="docutils literal notranslate"><span class="pre">Robot.perceive</span></code> is similarly called by the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method at each simulation cycle. The different readings
 of the enabled sensors are gathered to compose the current partially observable state (which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping
 sensor reference names to sensor reading vectors).</p>
 </div>
 <div class="section" id="directional-sensors">
-<h3>Directional Sensors<a class="headerlink" href="#directional-sensors" title="Permalink to this headline">¶</a></h3>
-<p>Directional sensors are a type of sensors that have independent sensing units for diferent sectors or coverage areas.
-The clearest example is the one of epucks or other similar mobile robots. In these cases multiple sensing units are placed
+<h2>Directional Sensors<a class="headerlink" href="#directional-sensors" title="Permalink to this headline">¶</a></h2>
+<p>Directional sensors are a type of sensors that have independent sensing units for each of its sectors or coverage areas.
+The clearest example is the one of e-pucks or other similar mobile robots. In these cases multiple sensing units are placed
 at strategic points of the robot perimeter. Therefore, aside from having an independent measurement of what is happening on
 each sector, the robot can know the orientation from where an event was perceived.
-For example, the <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code> can be sectorized with, say, 4 sectors: the most sensitive direction of each
-sector would then be <span class="math notranslate nohighlight">\([\theta_r,\, \theta_r + \pi/2,\, \theta_r + \pi,\, \theta_r + 3\pi/4]\)</span>, where
-<span class="math notranslate nohighlight">\(\theta_r\)</span> is the robot heading orientation. Consequenlty, if the light is detected only in the third sector
-(the one pointing at <span class="math notranslate nohighlight">\(\theta_r + \pi\)</span>),  then the robot can both that there is a light source in the surroundings
-and that it is placed at its back.</p>
-<p>FIGURA, comentar ejemplo.</p>
-<p>The refence names of the directional sensors that are currently implemented are: <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code> and
-<code class="docutils literal notranslate"><span class="pre">color_sensor</span></code>.
-All the directional sensors inherit from the base class <code class="docutils literal notranslate"><span class="pre">DirectionalSensor</span></code>. This class implements the <code class="docutils literal notranslate"><span class="pre">step</span></code> method that
-is generally common to all directional sensors (it does not have to be overwritten unless needed).
-In contrast, any sensor inheriting from  <code class="docutils literal notranslate"><span class="pre">DirectionalSensor</span></code> must fill the methods <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> and
-<code class="docutils literal notranslate"><span class="pre">step_direction</span></code>, particularizing its behavior. Essentially, the <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> method filters out those entities
-(among all the entities in the surroundings) that are candidate to be perceived by the sensor. The <code class="docutils literal notranslate"><span class="pre">step_direction</span></code>
-method implements the actual sensor reading in each sector and for each perceived entitity.
-All the sectors have the same sensing procedure.
-For a detailed explanation of the method arguments, see <a class="reference internal" href="../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction" title="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction"><code class="xref py py-meth docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.DirectionalSensor.step_direction()</span></code></a> .
-In the implemented directional sensors, such as <code class="docutils literal notranslate"><span class="pre">DistanceSensor</span></code> and <code class="docutils literal notranslate"><span class="pre">LightSensor</span></code>, the main steps of
-<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> are the following:</p>
-<ol class="arabic simple">
-<li><p>If the input argument <code class="docutils literal notranslate"><span class="pre">direction_reading</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> (no object was perceived before), the initialize
-the reading.</p></li>
-<li><p>Filter out those objects that are very distant or in which the misalignment (<code class="docutils literal notranslate"><span class="pre">phi</span></code>) is lower than the sensor apeture.</p></li>
-<li><p>Compute the signal strength based on the Euclidean distance to the entity (<code class="docutils literal notranslate"><span class="pre">rho</span></code>) and the misalignment (<code class="docutils literal notranslate"><span class="pre">phi</span></code>) and
-using the corresponding propagation model.</p></li>
-<li><p>Cast an invisible ray between the physicsl sensor position and the perceived entity position (this may be changed in the
-future to the closest point of the perceived entity). This casted ray verifies the presence of obstacles.</p></li>
-<li><p>If no obstacle was detected then update the direction reading. The update can be selecting the maximum value
-between the previous measurement and the new one of as an additive field (among other options).</p></li>
-</ol>
-<p>There is a last explanation before going on to the next topic. When creating the URDF files of 3D entities, the directional
-sensors have to be defined and attached to established links. For that, we have designed a non-standardized xml tag structure,
+The following figure shows the orientations around the robot perimeter at which distance sensor’s sectors are located:</p>
+<img src="../_static/epuck_DS_sectors.png" style="width:80%"><p>Notice that, in the figure, the e-puck is facing north. The orientation towards which a robot is facing (heading orientation) is denoted as
+<span class="math notranslate nohighlight">\(\theta(t)\)</span> along this documentation. Therefore, the orientations of the distance sensor’s sectors, relative to the robot heading orientation,
+are the following (starting from <span class="math notranslate nohighlight">\(S1\)</span> and thereafter iterating counter clockwise):</p>
+<div class="math notranslate nohighlight">
+\[\{\theta_r + 15°,\, \theta_r + 45°,\, \theta_r + 90°, \, \theta_r + 150°, \, \theta_r + 210°,  \, \theta_r + 270°,  \, \theta_r + 315°,  \, \theta_r + 345°\}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The angles are expressed above just for clarification purposes. Within the code, all the angles and orientations are
+in radians.</p>
+</div>
+<p>The reference names of the directional sensors that are currently implemented are: <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code>, <code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code> and
+<code class="docutils literal notranslate"><span class="pre">color_sensor</span></code>.</p>
+<p>In order to achieve a more realistic simulation of sensor, each sensing unit is attached to a physical link of the robot owning it. For instance,
+the following screenshot highlights the physical link mimicking the distance sensor electronic device.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>*******</strong> FIGURA SEÑALANDO SENSORS <strong>*******</strong></p>
+</div>
+<p>In this way, the sensor measurement is computed with respect to the established physical link (for computing distances, detecting obstacles, casting rays and so on).
+The mapping between physical links and sensors is accomplished within the URDF file of the robot (e.g. spike_swarm_sim/models/entities/epuck/epuck.urdf.xacro in the case of the
+Epuck robot). The syntax used within these URDF files has been designed by us as a non-standardized xml tag structure,
 as it can be observed in the following example:</p>
-<p>Example:</p>
+<p><strong>Example 2.5</strong>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;</span><span class="n">sensor</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;distance_sensor&quot;</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR0&quot;</span><span class="o">/&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0.26179&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS0&#39;</span><span class="o">/&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR1&quot;</span><span class="o">/&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR1&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0.78539&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS1&#39;</span><span class="o">/&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR2&quot;</span><span class="o">/&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 1.57079&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS2&#39;</span><span class="o">/&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR3&quot;</span><span class="o">/&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 2.61799&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS3&#39;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;4&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR4&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 3.66519&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS4&#39;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR5&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 4.71238&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS5&#39;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;6&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR6&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 5.49778&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS6&#39;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;</span><span class="n">sector</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;7&quot;</span><span class="o">&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">parent</span> <span class="n">link</span><span class="o">=</span><span class="s2">&quot;IR7&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">origin</span> <span class="n">xyz</span><span class="o">=</span><span class="s2">&quot;0 0 0&quot;</span> <span class="n">rpy</span><span class="o">=</span><span class="s2">&quot;0 0 6.0213&quot;</span><span class="o">/&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="o">&lt;</span><span class="n">ghost</span> <span class="n">link</span><span class="o">=</span><span class="s1">&#39;ghost_cone_DS7&#39;</span><span class="o">/&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="o">&lt;/</span><span class="n">sector</span><span class="o">&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="o">&lt;/</span><span class="n">sensor</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>The tag sensor has an attribute that must hold the name of the sensor’s reference name. Thereafter,
-there is one inner tag per each sector of the sensor. In the example we show the <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>
-with 4 sectors. Each sector has the attribute index, indicating the index within [0, n_sectors-1] of the
-sector. The tag parent inside sectors denotes the physical link to which the sensor is attached.
-A link can have multiple sensors as it can observed in the source code of the epuck.urdf.
-The current use of this task is to access via the physics engine API to the precise positions of the
-physical 3D models (links) of the sensors. This positions are used for casting rays and detecting obstacles.
-This information can be accessed through the <code class="docutils literal notranslate"><span class="pre">get_sensor_position</span></code> method of the physics engine.
-Due to the fact that this part of the URDF files is not standardized, we process it manually at the
-<code class="docutils literal notranslate"><span class="pre">add_physics</span></code> method of the physics engine and using the <code class="docutils literal notranslate"><span class="pre">parse_sensors</span></code> method.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>The tag origin is not currently used, but its future use is to indicate the orientation (via quaternion
-or Euler angle) of the maximum sensor sensitivity. For the moment, only equiareal directional sectors of
-mobile robots are implemented.</p>
-</div>
-<div class="admonition-todo admonition" id="id2">
-<p class="admonition-title">Todo</p>
+<p>As you can observe, there is an outer tag declaring the sensor, with the <strong>reference name</strong> of the sensor within the tag attribute <code class="docutils literal notranslate"><span class="pre">name</span></code>.
+Thereafter, when the sensor is directional, there is a new tag per sector. Notice that in the case of the Epuck IR distance sensors, there are a
+total of 8 sectors pointing to the previously mentioned orientations. The subtag inside the sectors called <code class="docutils literal notranslate"><span class="pre">parent</span></code> represents the physical link to
+which the sensor is bonded. The link name, as established in the same URDF file, is set in the <code class="docutils literal notranslate"><span class="pre">link</span></code> attribute. Of course, the referenced link must
+exist within the robot model. Regarding the origin tag, it sets the sensor positioning relative the parent link. For the moment, the attribute <code class="docutils literal notranslate"><span class="pre">xyz</span></code> is
+not used at all. Nonetheless, the attribute rpy (standing for roll, pitch and yaw angles) settles the orientation of maximum sensitivity of the sector. Notice
+that the angles (in radians) of the Example 2.5 equal the orientations in degrees mentioned before in this section. For the moment only the yaw angle is actually
+parsed and used because it is sufficient for e-puck robots. However, in future upgrades, the idea is to use also the roll and pitch for designing the sensors of other
+robots.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>The sensor tags already mentioned are currently only processed and parsed for directional sensors. Nonetheless,
 the idea is to define any sensor of the robots and use the URDF to state the sensing equipment of robots.
 In this way, robot controllers could only make use of the sensors specified in the URDF file.</p>
 </div>
-<div class="admonition-todo admonition" id="id3">
+<div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
-<p>The definition of sensors within the model files is only implemented in the 3D URD files. Due to its reduced
+<p>The definition of sensors within the model files is only implemented in the 3D URDF files. Due to its reduced
 relevance, it is currently in process in the case of the 2D JSON model files.</p>
 </div>
+<p>The last xml subtag inside the sector tag is the ghost tag. This part is critical for the execution/reading of some sensors
+and useless for others. Essentially, it assigns an existing physical link to the sector, acting as ghost object to detect obstacles.
+By a ghost object we refer to a generally low poly 3D model with is invisible and does not have collisions. Under the frame of sensors,
+its main purpose is to readily detect other objects inside the coverage area of the sensor. We will clarify this implementation below, as
+we introduce the available sensors.
+For instance, in the case of the distance sensor,
+a cone is used as ghost object in each of the 8 sectors. The cones try to approximate the sector sensing area by means of setting its dimensions according
+to the sensor aperture angle and the range. The following screenshot shows the ghost links of the distance sensor:</p>
+<img src="../_static/ghost_DS.png" style="width:70%"><p>With this information in mind, most of the directional sensors use ghost links for their readings.</p>
 </div>
+<div class="section" id="distance-sensor">
+<h2>Distance Sensor<a class="headerlink" href="#distance-sensor" title="Permalink to this headline">¶</a></h2>
+<p>In order to understant the
+underlying code, we will make use of the <code class="docutils literal notranslate"><span class="pre">DistanceSensor.step</span></code> method (code explained below):</p>
+<p><strong>Example 2.6</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">reading</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Collect the link ids of the ghost links of the sensor.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">g_ids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="s1">&#39;distance_sensor&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;ghost_link_idx&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Request the ids of any object intersecting any of the ghost links</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># of the sensor owner (robot) to the physics engine.</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">contact_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_contact_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ghost_ids</span><span class="o">=</span><span class="n">g_ids</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="c1"># Iterate sensor sectors (i means sector index and ori means sector orientation (only yaw)).</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ori</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="c1"># Filter out only the entities intersecting the ghost link of the i-th sector.</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">tar_ents</span> <span class="o">=</span> <span class="p">[</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">contact_points</span> <span class="k">if</span> <span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">g_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">signal_strength</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tar_ents</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="c1"># Postion of the physical sensor link.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="c1"># Cast a batch of rays within the coverage cone to detect obstacles and distances to</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="c1"># obstacles.</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">ray_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">ray_dests</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ang</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ang</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">origin</span> <span class="k">for</span> <span class="n">ang</span> <span class="ow">in</span> <span class="n">ori</span> <span class="o">+</span> <span class="n">ray_angles</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="n">ray_res</span><span class="p">,</span> <span class="n">ray_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">([</span><span class="n">origin</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ray_dests</span><span class="p">),</span> <span class="n">ray_dests</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ray_res</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="n">rhos</span><span class="p">,</span> <span class="n">phis</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">pos</span> <span class="o">-</span> <span class="n">origin</span><span class="p">),</span> <span class="n">phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ray_res</span><span class="p">,</span> <span class="n">ray_positions</span><span class="p">,</span> <span class="n">ray_angles</span><span class="p">)</span> <span class="k">if</span> <span class="n">idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span>                <span class="n">signal_strength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rhos</span><span class="p">,</span> <span class="n">ray_angles</span><span class="o">.</span><span class="n">flatten</span><span class="p">())])</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="n">reading</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">signal_strength</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span>
+</pre></div>
 </div>
-<div class="section" id="actuators">
-<h2>Actuators<a class="headerlink" href="#actuators" title="Permalink to this headline">¶</a></h2>
+<p>The general steps accomplished within the are  the <code class="docutils literal notranslate"><span class="pre">DistanceSensor.step</span></code> method are the following:</p>
+<ol class="arabic">
+<li><p>The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids,
+it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other
+entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In
+turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</p></li>
+<li><p>We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1)
+and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code>,
+filters out the identifiers of the overlapping entities within the sector ghost cone of the i-th sector. If this new list is empty, the
+measured signal strength is zero (no entities within the sensing area of this sector). Otherwise, if there are entities within the sector area,
+then the signal strength reading is calculated (see below).</p></li>
+<li><p>Provided that <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> is not empty, the computation of the distance and misalignment estimation to solid objects is accomplished as follows.
+The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points
+of a sector area of a total angle given by the sensor aperture and a radius given by the sensor range. The following screenshot displays the mentioned
+ray batchs of a sector:</p>
+<blockquote>
+<div><img src="../_static/demo_DS_rays.png" style="width:70%;text-align: center;"><p>In terms of code, the destination of the rays are computed as follows:</p>
+<blockquote>
+<div><ol class="arabic">
+<li><p>Using the function <code class="docutils literal notranslate"><span class="pre">np.linspace(-self.aperture/2,</span> <span class="pre">self.aperture/2,</span> <span class="pre">5)</span></code> we obtain 5 equispaced angle points inside the interval <span class="math notranslate nohighlight">\([-A/2,\, A/2]\)</span> rad,
+where <span class="math notranslate nohighlight">\(A\)</span> is the aperture of the sector in radians. Even though in the code we use a total of 5 rays, generically speaking lets denote <span class="math notranslate nohighlight">\(N\)</span> to the
+total number of rays casted from each sensor’s sector.</p></li>
+<li><p>Provided that <span class="math notranslate nohighlight">\(R\)</span> stands for the range in meters of the sensor and <span class="math notranslate nohighlight">\(\mathbf{o}\)</span> is the position of the physical sensor, the destination positions are</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{d} = \mathbf{o} + R \left(\begin{array}{c}\cos(\alpha_i)\\ \sin(\alpha_i) \end{array}\right)\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\alpha_i, \, \forall i\in\{1,\,\dots,\,N\}\)</span> are the angles previously computed using <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code>.</p>
+</li>
+</ol>
+</div></blockquote>
+<p>The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the
+position of the intersection to the first intersecting solid object.</p>
+</div></blockquote>
+</li>
+<li><p>Using the information provided by the ray cast, the signal strength is computed using the Euclidean distance between the hit position and the ray’s origin (<span class="math notranslate nohighlight">\(\mathbf{o}\)</span>) and
+the misalignment (using <span class="math notranslate nohighlight">\(\alpha_i\)</span> directly). The final reading of the sector is:</p>
+<div class="math notranslate nohighlight">
+\[\phi_j(t) = \frac{1}{N_{hit}}\sum_{i=1}^{N_{hit}-1} \exp\left\{-0.7\, \rho_i(t) - \alpha_i^2(t)\right\}\]</div>
+<p>This operation essentially estimates the signal strength based on an exponential decaying model. This propagation model is defined at the python class
+<a class="reference internal" href="../spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation" title="spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation</span></code></a>. Other propagation models can be used by defining the corresponiding propagation class
+and attaching it to the sensor as the property <code class="docutils literal notranslate"><span class="pre">self.propagation</span></code>.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="light-sensor">
+<h2>Light Sensor<a class="headerlink" href="#light-sensor" title="Permalink to this headline">¶</a></h2>
+<p>The light sensor enables the sensing of the light intensity resulting from the emission of luminous
+WorldObjects (e.g. <code class="docutils literal notranslate"><span class="pre">LightSource</span></code>). It is a directional sensor, so that it is partitioned into multiple sectors that provide independent measurements
+of their sector coverage and at the corresponding sensing orientation. The orientations of the sectors are exacly the same as in the distance sensor.
+The light sensor is sensitive to light of a precise color, which can be set through a class argument.</p>
+<p>The implementation of the <code class="docutils literal notranslate"><span class="pre">LightSensor.step</span></code> method is an adaptation of the <code class="docutils literal notranslate"><span class="pre">DistanceSensor.step</span></code>. Even though it is slightly more complex, we
+here only expose the main differences with respect to the distance_sensor. Firslty, the ghost links of the light sensor are different that those of the
+distance sensor. In this case, they are cones with the same origins and axes but with greater generatrix and aperture. Additionally,
+after obtaining the overlapping entities, we also verify if they emit light of the color towards which the light sensor is sensitive.
+This verification is accomplished using the attribute <code class="docutils literal notranslate"><span class="pre">luminous_objects</span></code> of the physics engine, which is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> storing which entities emit light
+and the color of the light. If there are no entities that emit light within the sector sensing area, the reading of the sector will be zero even if there are
+other kind of obstacles. Another major difference is related to the rays that are casted to compute distances. In this case, we cast rays with
+destination equispaced spherical sector. An example of the casted rays can be checked in the following screenshot:</p>
+<img src="../_static/demo_LS_rays.png" style="width:70%;text-align: center;"><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The explanation on how to compute the spherical grid of ray destiantions is a little bit complex. We provisionally omited it
+for the moment.</p>
+</div>
+<p>As in the distance_sensor, the light sensor uses the same exponential decaying propagation model but with different coeficients:</p>
+<div class="math notranslate nohighlight">
+\[\phi_j(t) = \frac{1}{N_{hit}}\sum_{i=1}^{N_{hit}-1} \exp\left\{-0.1\, \rho_i(t) - \alpha_i^2(t)\right\}\]</div>
+</div>
+<div class="section" id="joint-position-and-velocity-sensors">
+<h2>Joint Position and Velocity Sensors<a class="headerlink" href="#joint-position-and-velocity-sensors" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="ground-sensor">
+<h2>Ground Sensor<a class="headerlink" href="#ground-sensor" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="color-sensor">
+<h2>Color Sensor<a class="headerlink" href="#color-sensor" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="camera-sensor">
+<h2>Camera Sensor<a class="headerlink" href="#camera-sensor" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

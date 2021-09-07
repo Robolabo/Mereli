@@ -90,18 +90,18 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors and Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#sensors">Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#actuators">Actuators</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -370,6 +370,56 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="mf">0.61</span> <span class="c1">#1.5 * np.pi / self.n_sectors</span>
 
 <div class="viewcode-block" id="DistanceSensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. </span>
+<span class="sd">        It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. </span>
+<span class="sd">        The main steps of the reading are the following:</span>
+
+<span class="sd">        1. The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, </span>
+<span class="sd">           it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other </span>
+<span class="sd">           entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In </span>
+<span class="sd">           turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</span>
+<span class="sd">        </span>
+<span class="sd">        2. We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) </span>
+<span class="sd">           and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list ``tar_ents``, </span>
+<span class="sd">           filters out the identifiers of the overlapping entities within the sector ghost cone of the i-th sector. If this new list is empty, the </span>
+<span class="sd">           measured signal strength is zero (no entities within the sensing area of this sector). Otherwise, if there are entities within the sector area, </span>
+<span class="sd">           then the signal strength reading is calculated (see below).</span>
+
+<span class="sd">        3. Provided that ``tar_ents`` is not empty, the computation of the distance and misalignment estimation to solid objects is accomplished as follows. </span>
+<span class="sd">           The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points </span>
+<span class="sd">           of a sector area of a total angle given by the sensor aperture and a radius given by the sensor range. The following screenshot displays the mentioned </span>
+<span class="sd">           ray batchs of a sector:</span>
+
+<span class="sd">           .. raw:: html</span>
+
+<span class="sd">                &lt;img src=&quot;../../_static/demo_DS_rays.png&quot; style=&quot;width:70%;text-align: center;&quot;&gt;</span>
+
+<span class="sd">           In terms of code, the destination of the rays are computed as follows:</span>
+<span class="sd">        </span>
+<span class="sd">                * Using the function ``np.linspace(-self.aperture/2, self.aperture/2, 5)`` we obtain 5 equispaced angle points inside the interval :math:`[-A/2,\, A/2]` rad, </span>
+<span class="sd">                  where :math:`A` is the aperture of the sector in radians. Even though in the code we use a total of 5 rays, generically speaking lets denote :math:`N` to the </span>
+<span class="sd">                  total number of rays casted from each sensor&#39;s sector.  </span>
+<span class="sd">        </span>
+<span class="sd">                * Provided that :math:`R` stands for the range in meters of the sensor and :math:`\mathbf{o}` is the position of the physical sensor, the destination positions are:</span>
+
+<span class="sd">                  .. math::</span>
+<span class="sd">                      :nowrap:</span>
+<span class="sd">                  </span>
+<span class="sd">                      \[ \mathbf{d} = \mathbf{o} + R \left(\begin{array}{c}\cos(\alpha_i)\\ \sin(\alpha_i) \end{array}\right) \]</span>
+<span class="sd">  </span>
+<span class="sd">                  where :math:`\alpha_i, \, \forall i\in\{1,\,\dots,\,N\}` are the angles previously computed using ``np.linspace``.</span>
+<span class="sd">    </span>
+<span class="sd">        The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the </span>
+<span class="sd">        position of the intersection to the first intersecting solid object. </span>
+<span class="sd">        </span>
+
+
+<span class="sd">        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is </span>
+<span class="sd">            kept as a parameter because other sensors may need to use it.</span>
+
+<span class="sd">        :returns: np.ndarray with the reading of each sector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">reading</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">g_ids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="s1">&#39;distance_sensor&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;ghost_link_idx&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>
         <span class="n">contact_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_contact_points</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ghost_ids</span><span class="o">=</span><span class="n">g_ids</span><span class="p">)</span>
@@ -390,63 +440,7 @@
                     <span class="n">signal_strength</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span> <span class="k">for</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rhos</span><span class="p">,</span> <span class="n">ray_angles</span><span class="o">.</span><span class="n">flatten</span><span class="p">())])</span>
             <span class="n">reading</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">signal_strength</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">8</span><span class="p">:</span> <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span></div>
-            
-
-<div class="viewcode-block" id="DistanceSensor.step_direction"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction">[docs]</a>    <span class="k">def</span> <span class="nf">step_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">direction_reading</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Method that specifies the particular behavior of a directional sensor in each sensing direction.</span>
-<span class="sd">        It must return the reading of the current direction. Only objects that are within the range and </span>
-<span class="sd">        aperture are considered.</span>
-
-<span class="sd">        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.</span>
-<span class="sd">        :param float phi: angle between the direction of the sensor and the line passing through </span>
-<span class="sd">            both sensing and sensed object positions.</span>
-<span class="sd">        :param float direction_reading: Current reading in the featured direction </span>
-<span class="sd">            to be potentially overwritten. In some cases such as the communication receiver it can be a ``dict``.</span>
-<span class="sd">        :param int direction: integer refering to the current sensing direction between 0 and n_sectors - 1.</span>
-<span class="sd">        :param WorldObject obj: Optionally, the object that is being sensed can be used.</span>
-<span class="sd">        :param np.ndarray diff_vector: Optionally, the vector resulting from the difference </span>
-<span class="sd">            of the between object positions can be used. However, most of the times, </span>
-<span class="sd">            rho and phi are sufficient. Notice that rho=|diff_vector|.</span>
-<span class="sd">        </span>
-<span class="sd">        :returns: Reading of the sensor in the current direction.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">condition</span> <span class="o">=</span> <span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>\
-                    <span class="ow">and</span> <span class="n">rho</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span>\
-                    <span class="ow">and</span> <span class="n">phi</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">direction_reading</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span>
-        
-        <span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
-            <span class="n">signal_strength</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">signal_strength</span> <span class="o">&gt;</span> <span class="n">direction_reading</span><span class="p">:</span>
-                
-                <span class="n">my_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="c1">#+ np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]</span>
-                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Map&#39;</span><span class="p">,</span> <span class="s1">&#39;Wall&#39;</span><span class="p">]:</span>
-                    <span class="n">tar_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>  
-                                    <span class="n">linkA</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_sensor_idx</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">max_dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">tar_pos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">]</span> <span class="c1"># my_pos[2]]</span>
-                <span class="c1"># Cast a ray between my_pos y tar_pos to verify if there are obstacles</span>
-                
-                <span class="n">ray_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">([</span><span class="n">my_pos</span><span class="p">],</span> <span class="p">[</span><span class="n">tar_pos</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="c1"># print(args[0], rho, ray_res, kwargs[&#39;obj&#39;].id, tar_pos)</span>
-                <span class="k">if</span> <span class="n">ray_res</span> <span class="o">==</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> 
-                    <span class="c1"># print(&#39;IR&#39;+str(args[0]), type(kwargs[&#39;obj&#39;]).__name__, rho)</span>
-                    <span class="n">direction_reading</span> <span class="o">=</span> <span class="n">signal_strength</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">direction_reading</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span>
-        <span class="k">return</span> <span class="n">direction_reading</span></div>
-
-<div class="viewcode-block" id="DistanceSensor.target_filter"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter">[docs]</a>    <span class="k">def</span> <span class="nf">target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Method devoted to filtering the world objects that should be targeted for a particular sensor.</span>
-<span class="sd">        In this case it filters out, among all neighboring objects, only the tangible (solid) entities.</span>
-
-<span class="sd">        :param WorldObject obj: Potential world object to be sensed.</span>
-<span class="sd">        </span>
-<span class="sd">        :returns: Boolean response revealing whether the obj should be explored by the sensor or not.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">reading</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

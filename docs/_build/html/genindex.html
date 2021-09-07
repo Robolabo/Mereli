@@ -97,14 +97,16 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Robots, Sensors and Actuators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#robots">Robots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#sensors">Sensors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -562,8 +564,6 @@
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES">CMA_ES (class in spike_swarm_sim.algorithms.evolutionary.cma_es)</a>
 </li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.collision_sensor.CollisionSensor">CollisionSensor (class in spike_swarm_sim.sensors.collision_sensor)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor">ColoredLightSensor (class in spike_swarm_sim.sensors.light_sensor)</a>
 </li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.color_sensor.ColorSensor">ColorSensor (class in spike_swarm_sim.sensors.color_sensor)</a>
 </li>
@@ -1446,14 +1446,20 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.openai_es.OpenAI_ES">OpenAI_ES (class in spike_swarm_sim.algorithms.evolutionary.openai_es)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.openai_es_population.OpenAI_ES_Population">OpenAI_ES_Population (class in spike_swarm_sim.algorithms.evolutionary.population.openai_es_population)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.orientation">orientation (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.orientation">orientation() (spike_swarm_sim.objects.task_scheduler.TaskScheduler method)</a>
 </li>
+      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.owner_id">owner_id (spike_swarm_sim.sensors.base_sensor.Sensor property)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.owner_id">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor property)</a>
+</li>
+      </ul></li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor">OwnOrientationSensor (class in spike_swarm_sim.sensors.own_orientation_sensor)</a>
 </li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.own_position_sensor.OwnPositionSensor">OwnPositionSensor (class in spike_swarm_sim.sensors.own_position_sensor)</a>
@@ -1473,7 +1479,13 @@
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot.perceive">perceive() (spike_swarm_sim.objects.robot_3D.Robot method)</a>
 </li>
       <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client">physics_client (spike_swarm_sim.actuators.led_actuator.LedActuator property)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.physics_client">(spike_swarm_sim.sensors.base_sensor.Sensor property)</a>
 </li>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.physics_client">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor property)</a>
+</li>
+      </ul></li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot.plan_actions">plan_actions() (spike_swarm_sim.objects.robot_3D.Robot method)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder.plot">plot() (spike_swarm_sim.neural_networks.encoding.Encoder method)</a>
@@ -2732,8 +2744,6 @@
 </li>
         <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.food_sensor.NestSensor.step_direction">(spike_swarm_sim.sensors.food_sensor.NestSensor method)</a>
 </li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.LightSensor.step_direction">(spike_swarm_sim.sensors.light_sensor.LightSensor method)</a>
-</li>
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.step_gaba">step_gaba() (spike_swarm_sim.neural_networks.synapses.DynamicSynapses method)</a>
 </li>
@@ -2810,10 +2820,6 @@
 </li>
         <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.food_sensor.NestSensor.target_filter">(spike_swarm_sim.sensors.food_sensor.NestSensor method)</a>
 </li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor.target_filter">(spike_swarm_sim.sensors.light_sensor.ColoredLightSensor method)</a>
-</li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.LightSensor.target_filter">(spike_swarm_sim.sensors.light_sensor.LightSensor method)</a>
-</li>
       </ul></li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler">TaskScheduler (class in spike_swarm_sim.objects.task_scheduler)</a>
 </li>
@@ -2825,8 +2831,6 @@
 </li>
       <li><a href="spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.TaskSwitching3">TaskSwitching3 (class in spike_swarm_sim.objectives.fitness)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel.theta">theta (spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel property)</a>
 
       <ul>
@@ -2839,6 +2843,8 @@
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel.theta">(spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel property)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ThresholdDecoding">ThresholdDecoding (class in spike_swarm_sim.neural_networks.decoding)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.decorators.time_elapsed">time_elapsed() (in module spike_swarm_sim.utils.decorators)</a>
