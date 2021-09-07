@@ -37,6 +37,56 @@ class DistanceSensor(DirectionalSensor):
         self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
 
     def step(self, neighborhood):
+        r""" 
+        Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
+        It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
+        The main steps of the reading are the following:
+
+        1. The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
+           it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
+           entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
+           turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.
+        
+        2. We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
+           and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list ``tar_ents``, 
+           filters out the identifiers of the overlapping entities within the sector ghost cone of the i-th sector. If this new list is empty, the 
+           measured signal strength is zero (no entities within the sensing area of this sector). Otherwise, if there are entities within the sector area, 
+           then the signal strength reading is calculated (see below).
+
+        3. Provided that ``tar_ents`` is not empty, the computation of the distance and misalignment estimation to solid objects is accomplished as follows. 
+           The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
+           of a sector area of a total angle given by the sensor aperture and a radius given by the sensor range. The following screenshot displays the mentioned 
+           ray batchs of a sector:
+
+           .. raw:: html
+
+                <img src="../../_static/demo_DS_rays.png" style="width:70%;text-align: center;">
+
+           In terms of code, the destination of the rays are computed as follows:
+        
+                * Using the function ``np.linspace(-self.aperture/2, self.aperture/2, 5)`` we obtain 5 equispaced angle points inside the interval :math:`[-A/2,\, A/2]` rad, 
+                  where :math:`A` is the aperture of the sector in radians. Even though in the code we use a total of 5 rays, generically speaking lets denote :math:`N` to the 
+                  total number of rays casted from each sensor's sector.  
+        
+                * Provided that :math:`R` stands for the range in meters of the sensor and :math:`\mathbf{o}` is the position of the physical sensor, the destination positions are:
+
+                  .. math::
+                      :nowrap:
+                  
+                      \[ \mathbf{d} = \mathbf{o} + R \left(\begin{array}{c}\cos(\alpha_i)\\ \sin(\alpha_i) \end{array}\right) \]
+  
+                  where :math:`\alpha_i, \, \forall i\in\{1,\,\dots,\,N\}` are the angles previously computed using ``np.linspace``.
+    
+        The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the 
+        position of the intersection to the first intersecting solid object. 
+        
+
+
+        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
+            kept as a parameter because other sensors may need to use it.
+
+        :returns: np.ndarray with the reading of each sector.
+        """
         reading = []
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
@@ -58,59 +108,3 @@ class DistanceSensor(DirectionalSensor):
             reading.append(signal_strength)
         if len(reading) != 8: import pdb; pdb.set_trace()
         return np.array(reading)
-            
-
-    def step_direction(self, rho, phi, direction_reading, *args, **kwargs):
-        """ Method that specifies the particular behavior of a directional sensor in each sensing direction.
-        It must return the reading of the current direction. Only objects that are within the range and 
-        aperture are considered.
-
-        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.
-        :param float phi: angle between the direction of the sensor and the line passing through 
-            both sensing and sensed object positions.
-        :param float direction_reading: Current reading in the featured direction 
-            to be potentially overwritten. In some cases such as the communication receiver it can be a ``dict``.
-        :param int direction: integer refering to the current sensing direction between 0 and n_sectors - 1.
-        :param WorldObject obj: Optionally, the object that is being sensed can be used.
-        :param np.ndarray diff_vector: Optionally, the vector resulting from the difference 
-            of the between object positions can be used. However, most of the times, 
-            rho and phi are sufficient. Notice that rho=|diff_vector|.
-        
-        :returns: Reading of the sensor in the current direction.
-        """
-        condition = (kwargs['obj'] is not None\
-                    and rho <= self.range\
-                    and phi <= self.aperture)
-        if direction_reading is None:
-            direction_reading = np.random.randn() * self.noise_sigma if self.noise_sigma > 0 else 0.
-        
-        if condition:
-            signal_strength = self.propagation(rho, phi)
-            if signal_strength > direction_reading:
-                
-                my_pos = self.get_sensor_position(args[0])#+ np.r_[0, 0, 0.1] #+ np.r_[0, 0, 0.017]
-                if type(kwargs['obj']).__name__ in ['Map', 'Wall']:
-                    tar_pos = self.sensor_owner.physics_client.get_closest_point(self.sensor_owner.id, kwargs['obj'].id,  
-                                    linkA=self.get_sensor_idx(args[0]), max_dist=self.range)
-                else:
-                    tar_pos = kwargs['obj'].position + np.r_[0, 0, 0.07] # my_pos[2]]
-                # Cast a ray between my_pos y tar_pos to verify if there are obstacles
-                
-                ray_res = self.sensor_owner.physics_client.ray_cast([my_pos], [tar_pos])[0]
-                # print(args[0], rho, ray_res, kwargs['obj'].id, tar_pos)
-                if ray_res == kwargs['obj'].id: 
-                    # print('IR'+str(args[0]), type(kwargs['obj']).__name__, rho)
-                    direction_reading = signal_strength
-                    if self.noise_sigma > 0:
-                        direction_reading += np.random.randn() * self.noise_sigma
-        return direction_reading
-
-    def target_filter(self, obj):
-        """ Method devoted to filtering the world objects that should be targeted for a particular sensor.
-        In this case it filters out, among all neighboring objects, only the tangible (solid) entities.
-
-        :param WorldObject obj: Potential world object to be sensed.
-        
-        :returns: Boolean response revealing whether the obj should be explored by the sensor or not.
-        """
-        return obj.tangible

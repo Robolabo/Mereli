@@ -35,6 +35,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -99,14 +100,16 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Robots, Sensors and Actuators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#robots">Robots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#sensors">Sensors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -379,6 +382,18 @@
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#Sensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.Sensor.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.Sensor.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.Sensor.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the sensor.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -392,13 +407,8 @@ robot perimeter, and can read the local surroundings of each sector area. In thi
 case, the sensor of each sector has a limited range and aperture in radians. Some 
 examples of directional sensors are the <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code> and the <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>.
 Excluding some exceptions such as the IR communication receiver, the reading of the 
-sensor is an numpy array with length equal to the number of sectors.</p>
-<p>This class is a base class for directional sensors. It only implements the <code class="docutils literal notranslate"><span class="pre">step</span></code> 
-method, which is, at first, common to every directional sensor. Nonetheless, when inheriting 
-from this sensor, the class methods <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> and <code class="docutils literal notranslate"><span class="pre">step_direction</span></code> have to be 
-filled to implement the precise sensor. In brief, <code class="docutils literal notranslate"><span class="pre">target_filter</span></code> filters out the entites that 
-are targeted by the sensor (e.g. <code class="docutils literal notranslate"><span class="pre">LightSource</span></code> in the case of the <code class="docutils literal notranslate"><span class="pre">LightSensor</span></code>). 
-<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> implements the reading of the sensor for a single direction.</p>
+sensor is an numpy array with length equal to the number of sectors. This class is a 
+base class for directional sensors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -412,6 +422,60 @@ are targeted by the sensor (e.g. <code class="docutils literal notranslate"><spa
 <dd class="field-even"><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">
+<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.directions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing orientations (in radians) of the sectors 
+relative to the robot heading orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the absolute directions of each sensor (starting from theta).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">
+<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_sensor_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the physical sensing device of a sector. 
+Each sector device is represented by a physical robot link,  
+which is used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx">
+<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_sensor_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a physical link  
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.target_filter">
 <span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.target_filter" title="Permalink to this definition">¶</a></dt>
@@ -439,7 +503,7 @@ in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
 <li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
 both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
@@ -472,58 +536,6 @@ reading the sensor).</p>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases 
 it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions">
-<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.directions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the vector of sensing directions of the sectors based on the robot heading orientation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>numpy Array with the absolute directions of each sensor (starting from theta).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">
-<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_sensor_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-used to cast rays and compute the readings wrt it.</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx">
-<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/base_sensor.html#DirectionalSensor.get_sensor_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-used to cast rays and compute the readings wrt it.</p>
-<div class="admonition-todo admonition" id="id2">
-<p class="admonition-title">Todo</p>
-<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -565,32 +577,127 @@ distance estimation bounded in [0, 1].</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main method for steping the sensor and capturing nearby environment events.
-It senses the environment independently in each of the sensing sectors. The 
-particular behavior of each sensor inheriting this class should be specified in 
-<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> method.</p>
+<dd><p>Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
+It returns a numpy array of length equal to <code class="docutils literal notranslate"><span class="pre">n_sectors</span></code> with the reading of each independent sector. 
+The main steps of the reading are the following:</p>
+<ol class="arabic">
+<li><p>The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
+it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
+entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
+turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</p></li>
+<li><p>We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
+and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code>, 
+filters out the identifiers of the overlapping entities within the sector ghost cone of the i-th sector. If this new list is empty, the 
+measured signal strength is zero (no entities within the sensing area of this sector). Otherwise, if there are entities within the sector area, 
+then the signal strength reading is calculated (see below).</p></li>
+<li><p>Provided that <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> is not empty, the computation of the distance and misalignment estimation to solid objects is accomplished as follows. 
+The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
+of a sector area of a total angle given by the sensor aperture and a radius given by the sensor range. The following screenshot displays the mentioned 
+ray batchs of a sector:</p>
+<img src="../../_static/demo_DS_rays.png" style="width:70%;text-align: center;"><p>In terms of code, the destination of the rays are computed as follows:</p>
+<blockquote>
+<div><ul>
+<li><p>Using the function <code class="docutils literal notranslate"><span class="pre">np.linspace(-self.aperture/2,</span> <span class="pre">self.aperture/2,</span> <span class="pre">5)</span></code> we obtain 5 equispaced angle points inside the interval <span class="math notranslate nohighlight">\([-A/2,\, A/2]\)</span> rad, 
+where <span class="math notranslate nohighlight">\(A\)</span> is the aperture of the sector in radians. Even though in the code we use a total of 5 rays, generically speaking lets denote <span class="math notranslate nohighlight">\(N\)</span> to the 
+total number of rays casted from each sensor’s sector.</p></li>
+<li><p>Provided that <span class="math notranslate nohighlight">\(R\)</span> stands for the range in meters of the sensor and <span class="math notranslate nohighlight">\(\mathbf{o}\)</span> is the position of the physical sensor, the destination positions are:</p>
+<div class="math notranslate nohighlight">
+\[ \mathbf{d} = \mathbf{o} + R \left(\begin{array}{c}\cos(\alpha_i)\\ \sin(\alpha_i) \end{array}\right) \]</div><p>where <span class="math notranslate nohighlight">\(\alpha_i, \, \forall i\in\{1,\,\dots,\,N\}\)</span> are the angles previously computed using <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code>.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the 
+position of the intersection to the first intersecting solid object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> types) (excluding the robot 
-reading the sensor).</p>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases 
-it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions">
+<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing orientations (in radians) of the sectors 
+relative to the robot heading orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the absolute directions of each sensor (starting from theta).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_idx">
+<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a physical link  
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position">
+<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the physical sensing device of a sector. 
+Each sector device is represented by a physical robot link,  
+which is used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction">
-<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.step_direction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
-It must return the reading of the current direction. Only objects that are within the range and 
-aperture are considered.</p>
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
 <li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
 both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
@@ -610,67 +717,17 @@ rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter">
-<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/distance_sensor.html#DistanceSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.target_filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
-In this case it filters out, among all neighboring objects, only the tangible (solid) entities.</p>
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions">
-<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.directions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the vector of sensing directions of the sectors based on the robot heading orientation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>numpy Array with the absolute directions of each sensor (starting from theta).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_idx">
-<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-used to cast rays and compute the readings wrt it.</p>
-<div class="admonition-todo admonition" id="id3">
-<p class="admonition-title">Todo</p>
-<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position">
-<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-used to cast rays and compute the readings wrt it.</p>
-<div class="admonition-todo admonition" id="id4">
-<p class="admonition-title">Todo</p>
-<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -729,88 +786,30 @@ it may return a list of python dictionaries (see <code class="docutils literal n
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor.target_filter">
-<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.target_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
-In this case it filters out, among all neighboring objects, only the light sources.</p>
-<div class="admonition-todo admonition" id="id5">
-<p class="admonition-title">Todo</p>
-<p>#TODO Support for more luminous objects apart from light sources.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor.step_direction">
-<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.step_direction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
-It must return the reading of the current direction. Only objects that are within the range and 
-aperture are considered.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
-<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
-both sensing and sensed object positions.</p></li>
-<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
-to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
-<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
-<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
-of the between object positions can be used. However, most of the times, 
-rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">ColoredLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#ColoredLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor.target_filter">
-<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#ColoredLightSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor.target_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filtering of potential target WorldObjects.</p>
-</dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.BlueLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">BlueLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#BlueLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.BlueLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.YellowLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">YellowLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#YellowLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.YellowLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.RedLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">RedLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#RedLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.RedLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.GreenLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">GreenLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#GreenLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.GreenLightSensor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.ColoredLightSensor" title="spike_swarm_sim.sensors.light_sensor.ColoredLightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.ColoredLightSensor</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
 </dd></dl>
 
 </div>
@@ -1201,7 +1200,7 @@ in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
 <li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
 both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
@@ -1254,7 +1253,7 @@ in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
 <li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
 both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 

@@ -16,10 +16,19 @@ class Sensor:
         self.noise_sigma = noise_sigma
         self.range = range
         self.reading = None
-        # self.sensor_idx = {}#!
 
     def step(self, neighborhood):
         raise NotImplementedError
+
+    @property
+    def physics_client(self):
+        """ Returns the physics engine client of the robot owning the sensor. """
+        return self.sensor_owner.physics_client
+
+    @property
+    def owner_id(self):
+        """ Returns the identifier of the robot owning the sensor. """
+        return self.sensor_owner.id
 
 class DirectionalSensor(Sensor):
     """ Base class for directional sensors. Directional or sectorized sensors are 
@@ -29,14 +38,8 @@ class DirectionalSensor(Sensor):
     case, the sensor of each sector has a limited range and aperture in radians. Some 
     examples of directional sensors are the ``light_sensor`` and the ``distance_sensor``.
     Excluding some exceptions such as the IR communication receiver, the reading of the 
-    sensor is an numpy array with length equal to the number of sectors.
-    
-    This class is a base class for directional sensors. It only implements the ``step`` 
-    method, which is, at first, common to every directional sensor. Nonetheless, when inheriting 
-    from this sensor, the class methods ``target_filter`` and ``step_direction`` have to be 
-    filled to implement the precise sensor. In brief, ``target_filter`` filters out the entites that 
-    are targeted by the sensor (e.g. ``LightSource`` in the case of the ``LightSensor``). 
-    ``step_direction`` implements the reading of the sensor for a single direction.
+    sensor is an numpy array with length equal to the number of sectors. This class is a 
+    base class for directional sensors.
 
     :param Robot sensor_owner: robot object owning and reading from the sensor.
     :param float range: range of coverage of the sensor.
@@ -49,6 +52,50 @@ class DirectionalSensor(Sensor):
         super(DirectionalSensor, self).__init__(*args, **kwargs)
         self.n_sectors = n_sectors
         self.aperture = np.pi / self.n_sectors
+
+    def directions(self, theta):
+        """ Returns the vector of sensing orientations (in radians) of the sectors 
+        relative to the robot heading orientation.
+
+        :param float theta: orientation of the robots using the sensor.
+        
+        :returns: numpy array with the absolute directions of each sensor (starting from theta).
+        """
+        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
+        return np.array([theta - self.sensor_owner.physics_client.get_sensor_orientation(self.sensor_owner.id, 
+                    sensor_name=sensor_name, sector=i) for i in range(self.n_sectors)])
+
+    def get_sensor_position(self, sector):
+        """ Gets the position of the physical sensing device of a sector. 
+        Each sector device is represented by a physical robot link,  
+        which is used to cast rays and compute the readings wrt it. 
+        
+        .. todo::
+            TODO: For the moment only available in 3D. Create method in 2D engine.
+
+        :param int sector: sector of a the sectorized sensor to be requested.
+
+        :returns: the numpy array position of the sensor within the robot model.
+        """
+        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
+        return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
+                    sensor_name=sensor_name, sector=sector)[0]
+    
+    
+    def get_sensor_idx(self, sector):
+        """ Gets the position of the sensor of a sector. Each sector is represented by a physical link  
+        used to cast rays and compute the readings wrt it. 
+        
+        .. todo::
+            TODO: For the moment only available in 3D. Create method in 2D engine.
+
+        :param int sector: sector of a the sectorized sensor to be requested.
+
+        :returns: the numpy array position of the sensor within the robot model.
+        """
+        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
+        return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
+                    sensor_name=sensor_name, sector=sector)[1]
 
     def target_filter(self, obj):
         """ Method devoted to filtering the world objects that should be targeted for a particular sensor.
@@ -68,7 +115,7 @@ class DirectionalSensor(Sensor):
         This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
         in order to particularize its functioning.
 
-        :param float rho: Eucliden distance between the object sensing and the object (obj) sensed.
+        :param float rho: Euclidean distance between the object sensing and the object (obj) sensed.
         :param float phi: angle between the direction of the sensor and the line passing through 
             both sensing and sensed object positions.
         :param float direction_reading: Current reading in the featured direction 
@@ -133,46 +180,3 @@ class DirectionalSensor(Sensor):
             for k, phi in zip(featured_sensors, phi_values):
                 readings[k] = self.step_direction(rho, phi, readings[k], k, obj=obj, diff_vector=v)
         return np.array(readings) if not isinstance(readings[0], dict) else readings
-
-    def directions(self, theta):
-        """ Returns the vector of sensing directions of the sectors based on the robot heading orientation.
-
-        :param float theta: orientation of the robots using the sensor.
-        
-        :returns: numpy Array with the absolute directions of each sensor (starting from theta).
-        """
-        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
-        return np.array([theta - self.sensor_owner.physics_client.get_sensor_orientation(self.sensor_owner.id, 
-                    sensor_name=sensor_name, sector=i) for i in range(self.n_sectors)])
-        # return np.array([theta + i * (2 * np.pi / self.n_sectors) for i in range(self.n_sectors)])
-
-    def get_sensor_position(self, sector):
-        """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-        used to cast rays and compute the readings wrt it. 
-        
-        .. todo::
-            TODO: For the moment only available in 3D. Create method in 2D engine.
-
-        :param int sector: sector of a the sectorized sensor to be requested.
-
-        :returns: the numpy array position of the sensor within the robot model.
-        """
-        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
-        return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
-                    sensor_name=sensor_name, sector=sector)[0]
-    
-    
-    def get_sensor_idx(self, sector):
-        """ Gets the position of the sensor of a sector. Each sector is represented by a small 3D model 
-        used to cast rays and compute the readings wrt it. 
-        
-        .. todo::
-            TODO: For the moment only available in 3D. Create method in 2D engine.
-
-        :param int sector: sector of a the sectorized sensor to be requested.
-
-        :returns: the numpy array position of the sensor within the robot model.
-        """
-        sensor_name = [ref_name for ref_name, sens_cls in sensors.items() if isinstance(self,sens_cls)][0]
-        return self.sensor_owner.physics_client.get_sensor_position(self.sensor_owner.id, 
-                    sensor_name=sensor_name, sector=sector)[1]

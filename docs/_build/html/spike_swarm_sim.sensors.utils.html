@@ -35,6 +35,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -99,14 +100,16 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Robots, Sensors and Actuators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#robots">Robots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#sensors">Sensors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -353,17 +356,18 @@
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.utils.propagation.</span></span><span class="sig-name descname"><span class="pre">Propagation</span></span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#Propagation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.Propagation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for the mathematical models simulating short range signal 
-propagation.</p>
+propagation. This propagation models are used by the sensor step methods to 
+map Euclidean distances and misalignment angles into signal strengths/readings.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.utils.propagation.Propagation.plot">
 <span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#Propagation.plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.Propagation.plot" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>-Args:</dt><dd><dl class="simple">
-<dt>max_rad [float]<span class="classifier">maximum coverage range (to be ploted) </span></dt><dd><p>It is expressed in centimeters.</p>
-</dd>
-<dt>sensor_name [str]<span class="classifier">Name of type of the sensor to include </span></dt><dd><p>it in the figure title.</p>
-</dd>
-</dl>
+<dd><p>Illustrates the polar plot of a sector coverage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_rad</strong> (<em>float</em>) – maximum coverage range (to set the limits of the plot)</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – name of the sensor (to be set in the title).</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -371,13 +375,15 @@ propagation.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.utils.propagation.Propagation.plot_directivity">
 <span class="sig-name descname"><span class="pre">plot_directivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_rad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#Propagation.plot_directivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.Propagation.plot_directivity" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>-Args:</dt><dd><dl class="simple">
-<dt>max_rad [float]<span class="classifier">maximum coverage range (to be ploted) </span></dt><dd><p>It is expressed in centimeters.</p>
-</dd>
-<dt>sensor_name [str]<span class="classifier">Name of type of the sensor to include </span></dt><dd><p>it in the figure title.</p>
-</dd>
-</dl>
+<dd><p>Illustrates the polar plot with the directivity pattern of all the sectors at once. 
+It only takes into account the losses due to misalignment, the distance attenuation is 
+not depicted in this plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>max_rad</strong> (<em>float</em>) – maximum coverage range (to set the limits of the plot)</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – name of the sensor (to be set in the title).</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -390,13 +396,28 @@ propagation.</p>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.utils.propagation.Propagation" title="spike_swarm_sim.sensors.utils.propagation.Propagation"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.utils.propagation.Propagation</span></code></a></p>
 <p>Simplified signal propagation using the exponential decaying 
 of the signal of both radius and phi. Both terms are combined as 
-a product.</p>
+a product. Formally, the model is expressed as,</p>
+<div class="math notranslate nohighlight">
+\[f(\rho, \alpha) = \exp\left\{\lambda_{\rho}\,\rho - \lambda_{\alpha}\,\alpha^2\right\}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho\)</span> is the distance and <span class="math notranslate nohighlight">\(\alpha\)</span> is the misalignment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_att</strong> (<em>float</em>) – coefficient tuning the attenuation due to the distance (<span class="math notranslate nohighlight">\(\lambda_{\rho}\)</span>).</p></li>
+<li><p><strong>phi_att</strong> (<em>float</em>) – coefficient tuning the attenuation due to the misalignment (<span class="math notranslate nohighlight">\(\lambda_{\alpha}\)</span>).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.utils.propagation.RSSI_Propagation">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.utils.propagation.</span></span><span class="sig-name descname"><span class="pre">RSSI_Propagation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">noise_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/utils/propagation.html#RSSI_Propagation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.utils.propagation.RSSI_Propagation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.utils.propagation.Propagation" title="spike_swarm_sim.sensors.utils.propagation.Propagation"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.utils.propagation.Propagation</span></code></a></p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>The implementation and testing of this class in currently in process.</p>
+</div>
 </dd></dl>
 
 </div>
