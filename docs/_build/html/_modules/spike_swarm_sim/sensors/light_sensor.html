@@ -109,6 +109,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -373,6 +381,35 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">propagation</span> <span class="o">=</span> <span class="n">ExpDecayPropagation</span><span class="p">(</span><span class="n">rho_att</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">phi_att</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="c1"># TFM</span>
     
 <div class="viewcode-block" id="LightSensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.LightSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. </span>
+<span class="sd">        It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. </span>
+<span class="sd">        The main steps of the reading are the following:</span>
+
+<span class="sd">        1. The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, </span>
+<span class="sd">           it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other </span>
+<span class="sd">           entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In </span>
+<span class="sd">           turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area. </span>
+
+<span class="sd">        2. We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) </span>
+<span class="sd">           and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list ``tar_ents`` </span>
+<span class="sd">           is filtered out so that only overlapping objects that emit light of the requested color are kept.           </span>
+<span class="sd">           If this new filtered list is empty, the measured signal strength is zero (no entities within the sensing area of this sector). </span>
+<span class="sd">           Otherwise, if there are luminous entities within the sector area, then the signal strength reading is calculated (see below).</span>
+
+<span class="sd">        3. Provided that ``tar_ents`` is not empty, the computation of the distance and misalignment estimation to light sources is accomplished as follows. </span>
+<span class="sd">           The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points </span>
+<span class="sd">           within an spherical sector determined by the sensor aperture and range.  The following screenshot displays the mentioned </span>
+<span class="sd">           ray batchs of a sector:</span>
+<span class="sd">            </span>
+<span class="sd">           .. raw:: html</span>
+
+<span class="sd">                &lt;img src=&quot;../../_static/demo_LS_rays.png&quot; style=&quot;width:70%;text-align: center;&quot;&gt;</span>
+<span class="sd">        </span>
+<span class="sd">        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is </span>
+<span class="sd">            kept as a parameter because other sensors may need to use it.</span>
+
+<span class="sd">        :returns: np.ndarray with the reading of each sector. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">phy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span>
         <span class="n">reading</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">g_ids</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="s1">&#39;light_sensor&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;ghost_link_idx&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>
@@ -390,9 +427,9 @@
                     <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi_mat</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">th_mat</span><span class="p">)</span>
                     <span class="n">Z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">th_mat</span><span class="p">)</span>
                     <span class="n">ray_dests</span> <span class="o">=</span> <span class="p">[</span><span class="n">origin</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">Z</span><span class="o">.</span><span class="n">flatten</span><span class="p">())]</span>
-                    <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">origin</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ray_dests</span><span class="p">),</span> <span class="n">ray_dests</span><span class="p">):</span>
-                        <span class="n">p</span><span class="o">.</span><span class="n">addUserDebugLine</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">lineColorRGB</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">lifeTime</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span>
-                    <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+                    <span class="c1"># for o, d in zip([origin]*len(ray_dests), ray_dests):</span>
+                    <span class="c1">#     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)</span>
+                    <span class="c1"># import pdb; pdb.set_trace()</span>
                     <span class="n">ray_res</span><span class="p">,</span> <span class="n">ray_positions</span> <span class="o">=</span> <span class="n">phy</span><span class="o">.</span><span class="n">ray_cast</span><span class="p">([</span><span class="n">origin</span><span class="p">]</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">ray_dests</span><span class="p">),</span> <span class="n">ray_dests</span><span class="p">)</span> 
                     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">ent_i</span> <span class="ow">in</span> <span class="n">phy</span><span class="o">.</span><span class="n">luminous_objects</span> <span class="k">for</span> <span class="n">ent_i</span> <span class="ow">in</span> <span class="n">ray_res</span><span class="p">):</span>
                         <span class="n">ref_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ori</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ori</span><span class="p">),</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">origin</span>

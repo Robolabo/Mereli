@@ -1,76 +1,65 @@
-import os
+import logging
 import numpy as np
-import pymunk
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-from pygame.color import THECOLORS
 # from shapely.geometry import Point
-from spike_swarm_sim.objects import WorldObject2D
+from spike_swarm_sim.objects import WorldObject
+from spike_swarm_sim.actuators.base_actuator import HighLevelActuator
 from spike_swarm_sim.register import sensors, actuators, world_object_registry
 
-class Robot_deprecated(WorldObject2D):
+
+@world_object_registry(name='robot')
+class Robot(WorldObject):
     """
-    Base class for the robot world object.
+    Base class for the robot entity. Any robot should inherit from this class. 
+
+    :param position: 
+    :param orientation:
+    :param str model_file: name of the file where the robot model is defined.
+
+    :var dict sensors:
+    :var dict actuators:
+    :var dict planned_actions: 
     """
-    def __init__(self, position, orientation, *args, **kwargs):
-        super(Robot, self).__init__('epuck', position, orientation, static=False, luminous=False,\
-                        tangible=True, *args, **kwargs)
-        self.radius = .11
+    def __init__(self, position, orientation,  *args, model_file='entities/epuck/epuck', **kwargs):
+        super(Robot, self).__init__(model_file, position, orientation,\
+                        static=False, luminous=False, tangible=True, \
+                        *args, **kwargs)
         self._food = False
-
-        #* Initialize sensors and actuators according to controller requirements
-        self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
-                            for k, s in sensors.items()\
-                            if k in self.controller.enabled_sensors.keys()}
-        self.actuators = {k : k == 'wheel_actuator' and a(self, robot_radius=self.radius, **self.controller.enabled_actuators[k])\
-                            or a(self, **self.controller.enabled_actuators[k])\
-                            for k, a in actuators.items()\
-                            if k in self.controller.enabled_actuators.keys()}
-
+        if self.controllable:
+            #* Initialize sensors and actuators according to controller requirements
+            self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                                for k, s in sensors.items()\
+                                if k in self.controller.enabled_sensors.keys()}
+            self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                                for k, a in actuators.items()\
+                                if k in self.controller.enabled_actuators.keys()}
+        #* Communication system. Only used if receiver and transmitter sensors are used.
+        self.comm_sys = None
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
-        self.reset()
 
-    # def add_physics(self, engine):
-    #     super().add_physics(engine)
-    #     mass = 1
-    #     rad = self.radius * 100
-    #     # Body
-    #     inertia = pymunk.moment_for_circle(mass, 0, rad, (0, 0))
-    #     body = pymunk.Body(mass, inertia)
-    #     body.position = tuple(self.init_position * 100 + 500)
-    #     body.orientation = self.init_orientation
-    #     shape = pymunk.Circle(body, rad, (0, 0))
-    #     # Wheels
-    #     w, h = 3, 11+2
-    #     vert = ((-w/2,-h/2), (w/2,-h/2), (w/2,h/2), (-w/2,h/2))
-        
-    #     # wh_right_body = pymunk.Body(0.2, pymunk.moment_for_poly(0.2, vert)
-    #     wh_right_sh = pymunk.Poly(body, vert, transform=pymunk.Transform(a=np.cos(np.pi/2), b=-np.sin(np.pi/2), c=-np.sin(np.pi/2), d=np.cos(np.pi/2), ty=-rad-2))
-    #     wh_right_sh.color = THECOLORS['black']
-    #     wh_left_sh = pymunk.Poly(body, vert, transform=pymunk.Transform(a=np.cos(np.pi/2), b=-np.sin(np.pi/2), c=-np.sin(np.pi/2), d=np.cos(np.pi/2), ty=rad+2))
-    #     wh_left_sh.color = THECOLORS['black']
-
-    #     shape.friction = 1
-    #     shape.color = (0, 255,0, 255)
-    #     engine.add(self.id, [body], [shape, wh_right_sh, wh_left_sh])
-
+        #* Rendering colors (TO BE MOVED TO RENDER FILE IN THE FUTURE)
+        self.colorA = 'black'
+        self.colorB = 'black'
+        self.color2 = ('skyblue3', 'green')[self.trainable]
+        # self.reset()
 
     def step(self, neighborhood, reward=None, perturbations=None):
-        """
-        Firstly steps all the sensors in order to perceive the environment.
-        Secondly, the robot executes its controller in order to compute the
-        actions based on the sensory information.
-        Lastly, the actions are stored as planned actions to be eventually executed.
-        =====================
-        - Args:
-            neighborhood [list] -> list filled with the neighboring world objects.
-            reward [float] -> reward to be fed to the controller update rules, if any.
-            perturbations [list of PostProcessingPerturbation or None] -> perturbation to apply 
-                        to the stimuli before controller step.
-        - Returns:
-            State and action tuple of the current timestep. Both of them are expressed as 
+        """ Step method of the robots. 
+        It is composed by the following main steps:
+
+        1. Firstly steps and reads all the sensors in order to perceive the environment.
+        2. The robot executes its controller in order to compute the
+           actions based on the sensory information.
+        3. The actions are stored as planned actions to be eventually executed.
+
+        :param list neighborhood: list filled with the neighboring world objects.
+        :param float reward: reward to be fed to the controller update rules, if any.
+        :param list perturbations: list of ``PostProcessingPerturbation`` to apply 
+            to the stimuli before controller step. If there are no perturbations
+            to apply the paramter is ``None``.
+
+        :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
-        =====================
         """
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
@@ -78,95 +67,126 @@ class Robot_deprecated(WorldObject2D):
         if perturbations is not None:
             for pert in perturbations:
                 state = pert(state, self)
+
+        #* Apply communication system pre step (previous to controller) 
+        if self.comm_sys is not None:
+            state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
+
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
+        #* Apply communication system pre step (previous to controller) 
+        if self.comm_sys is not None:
+            actions = self.comm_sys.step_post(actions)
+
         #* Plan actions for future execution
         self.plan_actions(actions)
 
-        # #* Render robot LED
-        # self.update_colors(state, actions)
-        # print(self.orientation)
+        #* Convert again tx frame to dict for its use in the opt. algs. 
+        if self.comm_sys is not None:
+            actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
         return state, actions
 
-    def update_colors(self, state, action):
-        colors = ['black', 'red', 'yellow', 'blue']
-        if 'IR_transmitter' in self.actuators.keys():
-            for k, msg in enumerate(action['IR_transmitter']['msg']):
-                symbol = np.argmin([np.abs(sym - msg) for sym in [0, 0.33, 0.66, 1]])
-                if k == 0:
-                    self.colorA = colors[symbol]
-                if k == 1:
-                    self.colorB = colors[symbol]
-    
-        if 'led_actuator' in self.actuators.keys():
-            self.color2 = ('green', 'white', 'red')[action['led_actuator']] #[actions['IR_transmitter']['state']]#
-      
     def plan_actions(self, actions):
         for actuator, action in actions.items():
-            self.planned_actions[actuator] = action
-            # self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
-            #     and [action, self.position, self.orientation]  or [action]
+            self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
+                    and [action, self.position, self.orientation]  or [action]
 
     def actuate(self, neighborhood):
-        """
-        Executes the previously planned actions in order to be processed in the world.
-        =====================
-        - Args: None
-        - Returns: None
-        =====================
+        """ Executes the previously planned actions in order to be processed in the world.
+        
+        :param list neighborhood: list of neighoboring entities to be used by some high level 
+            actuators.
         """
         for actuator_name, actuator in self.actuators.items():
-            # if actuator_name not in self.planned_actions:
-            #     raise Exception('Error: Actuator does not have corresponding planned action.')
-            #! actuator.step(*iter(self.planned_actions[actuator_name]))
-            actuator.step(self.planned_actions[actuator_name])
+            if issubclass(type(actuator), HighLevelActuator):
+                actuator.step(*iter(self.planned_actions[actuator_name]), neighborhood)
+            else:
+                actuator.step(*iter(self.planned_actions[actuator_name]))
 
     def perceive(self, neighborhood):
         """
-        Computes the observed stimuli by steping each of the active sensors.
-        =====================
-        - Args:
-            neighborhood [list] -> list filled with the neighboring world objects.
-        -Returns:
-            A dict with each sensor name as key and the sensor readings as value.
-        =====================
+        Computes the observed stimuli by steping each of the active sensors one by one.
+        
+        :param list neighborhood:  list filled with the neighboring world objects.
+        
+        :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
-        return {sensor_name : sensor.step(neighborhood)\
-                for sensor_name, sensor in self.sensors.items()}
+        readings = {}
+        # IR receiver reads both the received frame and the distance sensor measurement to 
+        # optimize the simulation.
+        if 'IR_receiver' in self.sensors:
+            ir_reading = self.sensors['IR_receiver'].step(neighborhood)
+            readings.update({'IR_receiver' : ir_reading[0], 'distance_sensor' : ir_reading[1]})
+        readings.update({sensor_name : sensor.step(neighborhood)\
+                for sensor_name, sensor in self.sensors.items() if sensor_name != 'IR_receiver'})
+        return readings
 
     def reset(self, seed=None):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
         can be randomly initialized or fixed. In the former case a seed can be specified.
-        =====================
-        - Args:
-            seed [int] -> seed for random intialization.
-        - Returns: None
-        =====================
+
+        :param int seed: seed for random intialization.
         """
-        self.delta_pos = np.zeros(2)
-        self.delta_theta = 0.0
         self._food = False
-        #* Reset Controller
-        if self.controller is not None:
+        if self.controllable:
+            # Check if new sensors or actuator has been enabled from the controller. If so, 
+            # activate them.
+            if not all(key in self.sensors.keys() for key in self.controller.enabled_sensors):
+                self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                            for k, s in sensors.items()\
+                            if k in self.controller.enabled_sensors.keys()}
+            if not all(key in self.actuators.keys() for key in self.controller.enabled_actuators):
+                self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                                for k, a in actuators.items()\
+                                if k in self.controller.enabled_actuators.keys()}
+            #* Reset controller
             self.controller.reset()
-        #* Reset Actuators
-        for actuator in self.actuators.values():
-            if hasattr(actuator, 'reset'):
-                actuator.reset()
-        #* Reset Sensors
-        for sensor in self.sensors.values():
-            if hasattr(sensor, 'reset'):
-                sensor.reset()
+            #* Reset Actuators
+            for actuator in self.actuators.values():
+                if hasattr(actuator, 'reset'):
+                    actuator.reset()
+            #* Reset Sensors
+            for sensor in self.sensors.values():
+                if hasattr(sensor, 'reset'):
+                    sensor.reset()
+        #* Reset Comm Sys
+        if self.comm_sys is not None:
+            self.comm_sys.set_owner(self.id)
+            self.comm_sys.reset()
+
+
+    def add_communication(self, comm_sys):
+        if comm_sys.tx_name not in self.actuators:
+            raise Exception(logging.error('Trying to create communication system {}, but sensor '\
+                '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.tx_name)))
+        # if comm_sys.rx_name not in self.sensors:
+        #     raise Exception(logging.error('Trying to create communication system {}, but sensor '\
+        #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
+        self.comm_sys = comm_sys
+        
 
     @property
     def food(self):
-        """Getter for the food attribute. It is a boolean attribute active if the robot stores food.
+        """ Getter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         return self._food
 
     @food.setter
     def food(self, hasfood):
-        """Setter for the food attribute. It is a boolean attribute active if the robot stores food.
+        """ Setter for the food attribute. It is a boolean attribute active if the robot stores food.
         """
         self._food = hasfood
+
+@world_object_registry(name='minitaur')
+class Minitaur(Robot):
+    """ Class for the Minitaur robot. """
+    def __init__(self, *args, **kwargs):
+        super(Minitaur, self).__init__(*args, model_file='quadruped/minitaur', z_offset=0.5,**kwargs)
+
+
+@world_object_registry(name='epuck')
+class Epuck(Robot):
+    """ Class for the Epuck. """
+    def __init__(self, *args, **kwargs):
+        super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)

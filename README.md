@@ -26,6 +26,10 @@ command:
 python setup.py install
 ```
 
+Momentarily, the in-process documentation of the simulator can be checked by running the html file in 
+`docs/_build/html/index.html` locally through a web browser of your choice.
+
+
 ## Basic Usage
 The simulator can be run from the command line using the following command:
 ``` 

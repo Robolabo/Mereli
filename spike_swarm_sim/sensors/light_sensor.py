@@ -33,6 +33,35 @@ class LightSensor(DirectionalSensor):
         self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
     
     def step(self, neighborhood):
+        """ Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
+        It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
+        The main steps of the reading are the following:
+
+        1. The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
+           it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
+           entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
+           turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area. 
+
+        2. We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
+           and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list ``tar_ents`` 
+           is filtered out so that only overlapping objects that emit light of the requested color are kept.           
+           If this new filtered list is empty, the measured signal strength is zero (no entities within the sensing area of this sector). 
+           Otherwise, if there are luminous entities within the sector area, then the signal strength reading is calculated (see below).
+
+        3. Provided that ``tar_ents`` is not empty, the computation of the distance and misalignment estimation to light sources is accomplished as follows. 
+           The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
+           within an spherical sector determined by the sensor aperture and range.  The following screenshot displays the mentioned 
+           ray batchs of a sector:
+            
+           .. raw:: html
+
+                <img src="../../_static/demo_LS_rays.png" style="width:70%;text-align: center;">
+        
+        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
+            kept as a parameter because other sensors may need to use it.
+
+        :returns: np.ndarray with the reading of each sector. 
+        """
         phy = self.sensor_owner.physics_client
         reading = []
         g_ids = [self.sensor_owner.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
@@ -50,9 +79,9 @@ class LightSensor(DirectionalSensor):
                     Y = self.range * np.sin(phi_mat) * np.sin(th_mat)
                     Z = self.range * np.cos(th_mat)
                     ray_dests = [origin + np.r_[x, y, z] for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
-                    for o, d in zip([origin]*len(ray_dests), ray_dests):
-                        p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
-                    import pdb; pdb.set_trace()
+                    # for o, d in zip([origin]*len(ray_dests), ray_dests):
+                    #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
+                    # import pdb; pdb.set_trace()
                     ray_res, ray_positions = phy.ray_cast([origin]*len(ray_dests), ray_dests) 
                     if any(ent_i in phy.luminous_objects for ent_i in ray_res):
                         ref_vec = np.r_[np.cos(ori), np.sin(ori), 0] - origin
