@@ -1,6 +1,6 @@
 from .world_object import WorldObject
 from .light_source import LightSource
-from .robot_3D import Robot, Epuck, Minitaur
+from .robot import Robot, Epuck, Minitaur
 from .wall import Wall
 from .ball import Ball
 from .cube import Cube

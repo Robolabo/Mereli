@@ -40,7 +40,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Communication" href="communication_systems.html" />
+    <link rel="prev" title="Sensors" href="sensors.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,10 +88,10 @@
             
             
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l1 current"><a class="reference internal" href="../tutorials.html">Tutorials</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="worlds.html">Worlds and Entities</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="worlds.html#worlds">Worlds</a></li>
 <li class="toctree-l3"><a class="reference internal" href="worlds.html#entities">Entities</a></li>
@@ -107,6 +109,15 @@
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#color-sensor">Color Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="communication_systems.html">Communication</a><ul>
@@ -162,13 +173,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -318,6 +329,8 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
+          <li><a href="../tutorials.html">Tutorials</a> &raquo;</li>
+        
       <li>Actuators</li>
     
     
@@ -339,6 +352,145 @@
             
   <div class="section" id="actuators">
 <span id="tutorial-actuators"></span><h1>Actuators<a class="headerlink" href="#actuators" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 25%" />
+<col style="width: 54%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><strong>Reference Name</strong></p></td>
+<td><p><strong>Python Class</strong></p></td>
+<td><p><strong>Description</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">joint_velocity_actuator</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">JointVelocityActuator</span></code></p></td>
+<td><p>Actuator for controlling the velocity of the joints of the robots.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">joint_position_actuator</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">JointPositionActuator</span></code></p></td>
+<td><p>Actuator for controlling the angle position of the joints of the robots.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">led_actuator</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LedActuator</span></code></p></td>
+<td><p>Actuator that controls the LEDs of a robot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CommunicationTransmitter</span></code></p></td>
+<td><div class="line-block">
+<div class="line">Communication transmitter based on IR technology to enable</div>
+<div class="line">inter-robot interactions.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">grasp_actuator</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">GraspActuator</span></code></p></td>
+<td><div class="line-block">
+<div class="line">High level actuator for simplying the action of grasping and dropping</div>
+<div class="line">small objects scattered in the arena.</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">RF_transmitter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RF_Transmitter</span></code></p></td>
+<td><p>RF based communication transmitter. <strong>Currently in process</strong>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="creating-actuators">
+<h2>Creating Actuators<a class="headerlink" href="#creating-actuators" title="Permalink to this headline">¶</a></h2>
+<p>Even though we have already mentioned how to create and register actuators within a simulation in previous examples,
+lets introduce it formally and in detail. As sensor, actuators are enabled in the robot controller, so that
+the subset of actuators executed in a simulator is customizable. You can enable actuators in a previously
+created controller <code class="docutils literal notranslate"><span class="pre">ctlr</span></code> as follows:</p>
+<p><strong>Example 3.1</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span>  <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;led_actuator&quot;</span><span class="p">,</span>  <span class="p">{})</span>
+</pre></div>
+</div>
+<p>It works exactly as its <code class="docutils literal notranslate"><span class="pre">Controller.add_sensor</span></code> counterpart, yet accepting actuator reference names and the proper
+actuator arguments or parameters.</p>
+<p>Alternatively, multiple sensors can be activated at once using the <code class="docutils literal notranslate"><span class="pre">Controller.add_actuator_from_dict</span></code>.
+For example:</p>
+<p><strong>Example 3.2</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">actuator_dict</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;joint_velocity_actuator&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">},</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s2">&quot;led_actuator&quot;</span>    <span class="p">:</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">(</span><span class="n">actuator_dict</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Enabled actuators must be created before the simulation is started.  The actual creation/instantiation
+of the actuators is accomplished when calling the robot class constructor. It is also possible to create the actuators by calling the <code class="docutils literal notranslate"><span class="pre">Robot.reset</span></code>
+if they have not been previously created for whatever reason (so that the actuators are not instantiated twice).
+The following code examples clarifies this issue:</p>
+<p><strong>Example 3.3</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Activates the joint velocity actuator.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;joint_velocity_actuator&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;joint_ids&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;max_velocity&quot;</span> <span class="p">:</span> <span class="mi">8</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Creates an actual joint velocity actuator object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">ctlr</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Does not create the actuator again because it was instantiated in the</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># previous line.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Activates the LED actuator.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">add_actuator</span><span class="p">(</span><span class="s2">&quot;led_actuator&quot;</span><span class="p">,</span> <span class="p">{})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Creates an actual LED actuator object.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Actuator instances are stored inside the robot class owning them, as an attribute of the class called <code class="docutils literal notranslate"><span class="pre">Robot.actuators</span></code>. This variable is a
+python <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping actuator reference names to actual python actuator class instantiations. For example, the following code
+block shows the content of <code class="docutils literal notranslate"><span class="pre">robot.actuators</span></code> after the executing of the Example 3.3:</p>
+<p><strong>Example 3.4</strong>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">robot</span><span class="o">.</span><span class="n">actuators</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="s1">&#39;led_actuator&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">spike_swarm_sim</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">led_actuator</span><span class="o">.</span><span class="n">LedActuator</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001F3E7997408</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="s1">&#39;joint_velocity_actuator&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">spike_swarm_sim</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">joint_actuator</span><span class="o">.</span><span class="n">JointVelocityActuator</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x000001F3E79972C8</span><span class="o">&gt;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="p">}</span>
+</pre></div>
+</div>
+<p>Thereafter, once created, the actuator actions are firslty planned inside the <code class="docutils literal notranslate"><span class="pre">Robot.step</span></code> method by calling <code class="docutils literal notranslate"><span class="pre">Robot.plan_actions</span></code>. Planning
+an action essentially means registering it in order to “maybe” be executed later by the world class. Once all the robot <code class="docutils literal notranslate"><span class="pre">step</span></code> methods have
+been executed (and all the actions are planned), it is the world the one responsible for calling the <code class="docutils literal notranslate"><span class="pre">Actuator.step</span></code> method through its own
+<code class="docutils literal notranslate"><span class="pre">actuate</span></code> method. This division of action planning and actual executing will be revisited in the future (an maybe modified).</p>
+</div>
+<div class="section" id="joint-velocity-actuator">
+<h2>Joint Velocity Actuator<a class="headerlink" href="#joint-velocity-actuator" title="Permalink to this headline">¶</a></h2>
+<p>The joint velocity actuator controls the velocity of the joints of a robot.
+Given a reference velocity (action), the actuator drives the velocity of the joint towards
+the desired target value. All its functionality is collected inside the <code class="docutils literal notranslate"><span class="pre">JointVelocityActuator.step</span></code>
+method. The velocity control is accomplished using the pybullet <code class="docutils literal notranslate"><span class="pre">setJointMotorControl2</span></code> function
+(with <code class="docutils literal notranslate"><span class="pre">controlMode=p.VELOCITY_CONTROL</span></code>), which internally implements all the control systems for us.
+The action argument provided to the <code class="docutils literal notranslate"><span class="pre">step</span></code> method is a vector settling the desired reference velocity of
+each joint to be controlled. The action references are contrained within [-1, 1], meaning that an
+action of 1 means maximum velocity in one sense and -1 represents maximum velocity in the opposite
+sense. An action of 0 means no rotation at all.
+As an example, in order to control a two wheeled mobile robot (e.g. the e-puck), one would set the
+<code class="docutils literal notranslate"><span class="pre">joint_id</span></code> argument of the class to <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>, specifying that there are two joints to be controlled
+(and their ids are 0 and 1).</p>
+</div>
+<div class="section" id="joint-position-actuator">
+<h2>Joint Position Actuator<a class="headerlink" href="#joint-position-actuator" title="Permalink to this headline">¶</a></h2>
+<p>The joint position actuator controls the angle position of the joints of a robot.
+Given a reference angle position (action), the actuator drives the position of the joint towards
+the desired target value.All its functionality is collected inside the <code class="docutils literal notranslate"><span class="pre">JointPositionActuator.step</span></code>
+method. The velocity control is accomplished using the pybullet <code class="docutils literal notranslate"><span class="pre">setJointMotorControl2</span></code> function
+(with <code class="docutils literal notranslate"><span class="pre">controlMode=p.POSITION_CONTROL</span></code>), which internally implements all the control systems for us.
+The action argument provided to the <code class="docutils literal notranslate"><span class="pre">step</span></code> method is a vector settling the desired reference velocity of
+each joint to be controlled. The action argument is a vector settling the desired reference positions of
+each joint. The action references are contrained within [-1, 1], which are mapped
+into [-pi, pi] inside the <code class="docutils literal notranslate"><span class="pre">step</span></code> method.</p>
+</div>
+<div class="section" id="led-actuator">
+<h2>LED Actuator<a class="headerlink" href="#led-actuator" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="grasp-and-drop-actuator">
+<h2>Grasp and Drop Actuator<a class="headerlink" href="#grasp-and-drop-actuator" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 
 
@@ -346,6 +498,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="communication_systems.html" class="btn btn-neutral float-right" title="Communication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="sensors.html" class="btn btn-neutral float-left" title="Sensors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

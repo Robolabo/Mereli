@@ -112,6 +112,15 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -165,13 +174,13 @@
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -770,18 +779,32 @@ distance estimation bounded in [0, 1].</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Main method for steping the sensor and capturing nearby environment events.
-It senses the environment independently in each of the sensing sectors. The 
-particular behavior of each sensor inheriting this class should be specified in 
-<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> method.</p>
+<dd><p>Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
+It returns a numpy array of length equal to <code class="docutils literal notranslate"><span class="pre">n_sectors</span></code> with the reading of each independent sector. 
+The main steps of the reading are the following:</p>
+<ol class="arabic">
+<li><p>The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
+it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
+entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
+turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</p></li>
+<li><p>We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
+and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> 
+is filtered out so that only overlapping objects that emit light of the requested color are kept.           
+If this new filtered list is empty, the measured signal strength is zero (no entities within the sensing area of this sector). 
+Otherwise, if there are luminous entities within the sector area, then the signal strength reading is calculated (see below).</p></li>
+<li><p>Provided that <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> is not empty, the computation of the distance and misalignment estimation to light sources is accomplished as follows. 
+The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
+within an spherical sector determined by the sensor aperture and range.  The following screenshot displays the mentioned 
+ray batchs of a sector:</p>
+<img src="../../_static/demo_LS_rays.png" style="width:70%;text-align: center;"></li>
+</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> types) (excluding the robot 
-reading the sensor).</p>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases 
-it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
 </dd>
 </dl>
 </dd></dl>

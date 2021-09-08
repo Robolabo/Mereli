@@ -11,34 +11,10 @@ Subpackages
 Submodules
 ----------
 
-spike\_swarm\_sim.actuators.RF\_transmitter module
---------------------------------------------------
-
-.. automodule:: spike_swarm_sim.actuators.RF_transmitter
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 spike\_swarm\_sim.actuators.base\_actuator module
 -------------------------------------------------
 
 .. automodule:: spike_swarm_sim.actuators.base_actuator
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-spike\_swarm\_sim.actuators.communication\_transmitter module
--------------------------------------------------------------
-
-.. automodule:: spike_swarm_sim.actuators.communication_transmitter
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-spike\_swarm\_sim.actuators.grasp\_actuator module
---------------------------------------------------
-
-.. automodule:: spike_swarm_sim.actuators.grasp_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -59,6 +35,23 @@ spike\_swarm\_sim.actuators.led\_actuator module
     :undoc-members:
     :show-inheritance:
 
+spike\_swarm\_sim.actuators.communication\_transmitter module
+-------------------------------------------------------------
+
+.. automodule:: spike_swarm_sim.actuators.communication_transmitter
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+spike\_swarm\_sim.actuators.grasp\_actuator module
+--------------------------------------------------
+
+.. automodule:: spike_swarm_sim.actuators.grasp_actuator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 spike\_swarm\_sim.actuators.wheel\_actuator module
 --------------------------------------------------
 
@@ -67,6 +60,13 @@ spike\_swarm\_sim.actuators.wheel\_actuator module
     :undoc-members:
     :show-inheritance:
 
+spike\_swarm\_sim.actuators.RF\_transmitter module
+--------------------------------------------------
+
+.. automodule:: spike_swarm_sim.actuators.RF_transmitter
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------

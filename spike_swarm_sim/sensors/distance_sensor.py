@@ -2,10 +2,8 @@ import numpy as np
 import numpy.linalg as LA
 import pybullet as p
 
-# from shapely.geometry import LineString
 from spike_swarm_sim.sensors import DirectionalSensor
 from spike_swarm_sim.register import sensor_registry
-from spike_swarm_sim.utils import compute_angle, angle_diff
 from .utils.propagation import ExpDecayPropagation
 
 @sensor_registry(name='distance_sensor')
@@ -32,13 +30,10 @@ class DistanceSensor(DirectionalSensor):
     def __init__(self, *args, **kwargs):
         super(DistanceSensor, self).__init__(*args, **kwargs)
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
-        # self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=1.) # DS=
-        # self.sensors_idx = None
         self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
 
     def step(self, neighborhood):
-        r""" 
-        Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
+        r""" Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
         It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
         The main steps of the reading are the following:
 

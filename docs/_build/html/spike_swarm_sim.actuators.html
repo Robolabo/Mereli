@@ -111,6 +111,15 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -164,13 +173,13 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -359,58 +368,44 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-spike_swarm_sim.actuators.RF_transmitter">
-<span id="spike-swarm-sim-actuators-rf-transmitter-module"></span><h2>spike_swarm_sim.actuators.RF_transmitter module<a class="headerlink" href="#module-spike_swarm_sim.actuators.RF_transmitter" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.RF_transmitter.</span></span><span class="sig-name descname"><span class="pre">RF_Transmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<p>Communication transmitter actuator. It isotropically transmits a 
-frame with a message and its context. The propagation simulation is 
-implemented at the receiver side, this class only updates the transmitted 
-frame of each robot. 
-=========================================================================
-- Params:</p>
-<blockquote>
-<div><p>range [float] : maximum distance of message reception, in centimeters.
-msg_length [int] : number of components of the message.
-quantize [bool] : whether to quantize the message to a set of possible</p>
-<blockquote>
-<div><p>symbols or not.</p>
-</div></blockquote>
-</div></blockquote>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-spike_swarm_sim.actuators.base_actuator">
 <span id="spike-swarm-sim-actuators-base-actuator-module"></span><h2>spike_swarm_sim.actuators.base_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.base_actuator" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">Actuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Args:</dt><dd><p>sensor_owner [Robot] : instance of the agent executing the sensor.
-range [float] : range of coverage of the sensor.
-noise_sigma [float] : white noise std. dev.</p>
+<p>Base class for actuators. Any actuator to be implemented in the simulator must 
+inherit (directly or indirectly) from this base class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actuator_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – instance of the agent executing the actuator.</p>
 </dd>
 </dl>
-</li>
-</ul>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#Actuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the actuator.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.Actuator.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.Actuator.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the actuator.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -418,9 +413,154 @@ noise_sigma [float] : white noise std. dev.</p>
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">HighLevelActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Base class for high level actuators. A high level actuator is an actuator that either 
+makes use of global information that would not be available in reality or that simplifies 
+the implementation of an more complex actuator for easing simulation. For the moment this 
+class is completely void and it is merely used to keep track of which actuators are high 
+level and which are not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actuator_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – instance of the agent executing the actuator.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/base_actuator.html#HighLevelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by high level actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.actuators.joint_actuator">
+<span id="spike-swarm-sim-actuators-joint-actuator-module"></span><h2>spike_swarm_sim.actuators.joint_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.joint_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointVelocityActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse_mirrored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<p>The joint velocity actuator controls the velocity of the joints of a robot. 
+Given a reference velocity (action), the actuator drives the velocity of the joint towards 
+the desired target value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ids</strong> (<em>list joint</em>) – list of the joint ids to be controlled.</p></li>
+<li><p><strong>max_velocity</strong> (<em>float</em>) – maximum velocity of the joint (CHECK).</p></li>
+<li><p><strong>inverse_mirrored</strong> (<em>bool</em>) – Whether to control two joints with the same velocity reference 
+but with opposite sign. For example, this feature is useful when controlling two-wheeled 
+mobile robots that only rotate. In this case, the robot controller would only plan an scalar 
+action with the velocity and sign.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the actuator by transforming the action planed by the robot controller into an actual 
+joint rotation speed. The action argument is a vector settling the desired reference velocity of 
+each joint to be controlled. The action references are contrained within [-1, 1], meaning that an 
+action of 1 means maximum velocity in one sense and -1 represents maximum velocity in the opposite 
+sense. An action of 0 means no rotation at all.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – numpy array collection the normalized reference velocities of each joint 
+to be controlled.</p>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Quitar llamada explicita a pybullet y usar request a physics_client.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the actuator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointPositionActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<p>The joint position actuator controls the position of the joints of a robot. 
+Given a reference angle position (action), the actuator drives the position of the joint towards 
+the desired target value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ids</strong> (<em>list joint</em>) – list of the joint ids to be controlled.</p></li>
+<li><p><strong>max_velocity</strong> (<em>float</em>) – maximum velocity of the joint (CHECK).</p></li>
+<li><p><strong>inverse_mirrored</strong> (<em>bool</em>) – Whether to control two joints with the same velocity reference 
+but with opposite sign. For example, this feature is useful when controlling two-wheeled 
+mobile robots that only rotate. In this case, the robot controller would only plan an scalar 
+action with the velocity and sign.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the actuator by transforming the action planed by the robot controller into an actual 
+joint angle position. The action argument is a vector settling the desired reference positions of 
+each joint to be controlled. The action references are contrained within [-1, 1], which are mapped 
+into [-pi, pi] inside the method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – numpy array collection the normalized reference velocities of each joint 
+to be controlled.</p>
+</dd>
+</dl>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>Quitar llamada explicita a pybullet y usar request a physics_client.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.actuators.led_actuator">
+<span id="spike-swarm-sim-actuators-led-actuator-module"></span><h2>spike_swarm_sim.actuators.led_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.led_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.led_actuator.</span></span><span class="sig-name descname"><span class="pre">LedActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'white'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<p>LED actuator that turns on or off the LED depending on 
+the action.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the actuator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -449,7 +589,16 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/communication_transmitter.html#CommunicationTransmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset">
@@ -468,69 +617,20 @@ quantize [bool] : whether to quantize the message to a set of possible</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by high level actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/grasp_actuator.html#GraspActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.actuators.joint_actuator">
-<span id="spike-swarm-sim-actuators-joint-actuator-module"></span><h2>spike_swarm_sim.actuators.joint_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.joint_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointVelocityActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse_mirrored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<p>Robot wheel actuator using a differential drive system.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointVelocityActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointPositionActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<p>Robot wheel actuator using a differential drive system.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/joint_actuator.html#JointPositionActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.actuators.led_actuator">
-<span id="spike-swarm-sim-actuators-led-actuator-module"></span><h2>spike_swarm_sim.actuators.led_actuator module<a class="headerlink" href="#module-spike_swarm_sim.actuators.led_actuator" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.led_actuator.</span></span><span class="sig-name descname"><span class="pre">LedActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'white'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
-<p>LED actuator that turns on or off the LED depending on 
-the action.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.actuators.led_actuator.LedActuator.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/led_actuator.html#LedActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.led_actuator.LedActuator.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -546,6 +646,57 @@ the action.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_motors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/wheel_actuator.html#WheelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.actuators.RF_transmitter">
+<span id="spike-swarm-sim-actuators-rf-transmitter-module"></span><h2>spike_swarm_sim.actuators.RF_transmitter module<a class="headerlink" href="#module-spike_swarm_sim.actuators.RF_transmitter" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.actuators.RF_transmitter.</span></span><span class="sig-name descname"><span class="pre">RF_Transmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.actuators.base_actuator.Actuator" title="spike_swarm_sim.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Communication transmitter actuator. It isotropically transmits a 
+frame with a message and its context. The propagation simulation is 
+implemented at the receiver side, this class only updates the transmitted 
+frame of each robot. 
+=========================================================================
+- Params:</p>
+<blockquote>
+<div><p>range [float] : maximum distance of message reception, in centimeters.
+msg_length [int] : number of components of the message.
+quantize [bool] : whether to quantize the message to a set of possible</p>
+<blockquote>
+<div><p>symbols or not.</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/actuators/RF_transmitter.html#RF_Transmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
