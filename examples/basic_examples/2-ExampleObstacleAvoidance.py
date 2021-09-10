@@ -20,7 +20,7 @@ ini_pos = RandomUniformInitializer(n_robots, low=[-3, -3], high=[3, 3], size=2, 
 world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
 for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
     ctlr = BasicObstacleAvoider()
-    ctlr.add_sensor("distance_sensor", {"n_sectors" : 8, "range" : 1.5})
+    ctlr.add_sensor("distance_sensor", {"n_sectors" : 8, "range" : 0.7})
     ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 8})
     ctlr.add_actuator("led_actuator",  {})
     ent = Epuck(pos, ori, controller=ctlr)
@@ -32,4 +32,3 @@ with world:
     for _ in range(1000):
         state, action = world.step()
 print('\nSIMULATION DURATION: ', np.round(time.time() - t0, 4))
-

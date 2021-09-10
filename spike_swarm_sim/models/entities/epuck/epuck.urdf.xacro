@@ -21,7 +21,7 @@
         </inertial>
     </link>
 
-     <link name="right_wheel">
+    <link name="right_wheel">
         <visual>
             <geometry>
                 <mesh filename="wheel.obj" scale="0.5 0.25 0.5" />
@@ -791,7 +791,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0."/>
@@ -799,7 +799,7 @@
     </visual>
      <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -819,7 +819,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -827,7 +827,7 @@
     </visual>
     <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -847,7 +847,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -855,7 +855,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>  
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -877,7 +877,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -885,7 +885,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>  
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -905,7 +905,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -913,7 +913,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>  
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -933,7 +933,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -941,7 +941,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>  
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -961,7 +961,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="1 1 1"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -969,7 +969,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="1 1 1"/>  
+            <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -989,7 +989,7 @@
         <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-                <mesh filename="cone.obj" scale="1 1 1"/>       
+                <mesh filename="ghost_DS.obj" scale="1 1 1"/>       
         </geometry>
         <material name="transparent_red">
             <color rgba="1 0 0 0"/>
@@ -997,7 +997,7 @@
         </visual>
             <collision>
                 <geometry>
-                <mesh filename="cone.obj" scale="1 1 1"/>  
+                <mesh filename="ghost_DS.obj" scale="1 1 1"/>  
                 </geometry>
                 <origin xyz="0 0 0" />
         </collision>
@@ -1020,7 +1020,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1028,7 +1028,7 @@
     </visual>
      <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -1048,7 +1048,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1056,7 +1056,7 @@
     </visual>
     <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -1076,7 +1076,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1084,7 +1084,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>  
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -1104,7 +1104,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1132,7 +1132,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1140,7 +1140,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>  
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -1160,7 +1160,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1168,7 +1168,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>  
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -1188,7 +1188,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="cone.obj" scale="3 3 3"/>       
+			 <mesh filename="ghost_LS.obj" scale="1 1 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -1196,7 +1196,7 @@
     </visual>
         <collision>
             <geometry>
-                <mesh filename="cone.obj" scale="3 3 3"/>  
+                <mesh filename="ghost_LS.obj" scale="1 1 1"/>  
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -1216,7 +1216,7 @@
         <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-            <mesh filename="cone.obj" scale="3 3 3"/>      
+            <mesh filename="ghost_LS.obj" scale="1 1 1"/>      
         </geometry>
         <material name="transparent_red">
             <color rgba="1 0 0 0"/>
@@ -1224,7 +1224,7 @@
         </visual>
             <collision>
                 <geometry>
-                <mesh filename="cone.obj" scale="3 3 3"/>  
+                <mesh filename="ghost_LS.obj" scale="1 1 1"/>  
                 </geometry>
                 <origin xyz="0 0 0" />
         </collision>
