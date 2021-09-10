@@ -108,16 +108,16 @@
     <link name="led0">
         <visual>
             <geometry>
-                <mesh filename="led_0.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_0.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_0.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_0.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -130,16 +130,16 @@
     <link name="led1">
         <visual>
             <geometry>
-                <mesh filename="led_1.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_1.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_1.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_1.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -151,16 +151,16 @@
     <link name="led2">
         <visual>
             <geometry>
-                <mesh filename="led_2.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_2.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_2.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_2.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -172,16 +172,16 @@
     <link name="led3">
         <visual>
             <geometry>
-                <mesh filename="led_3.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_3.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_3.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_3.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -193,16 +193,16 @@
     <link name="led4">
         <visual>
             <geometry>
-                <mesh filename="led_4.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_4.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_4.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_4.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -214,16 +214,16 @@
     <link name="led5">
         <visual>
             <geometry>
-                <mesh filename="led_5.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_5.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_5.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_5.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -235,16 +235,16 @@
     <link name="led6">
         <visual>
             <geometry>
-                <mesh filename="led_6.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_6.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_6.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_6.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -256,16 +256,16 @@
     <link name="led7">
         <visual>
             <geometry>
-                <mesh filename="led_7.obj" scale="1.5 1.5 1.5" />
+                <mesh filename="led_7.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
-            <material name="white">
+            <material name="transparent_white">
                 <color rgba="1 1 1 0.5" />
             </material>
         </visual>
         <collision>
             <geometry>
-               <mesh filename="led_7.obj" scale="1.5 1.5 1.5" />
+               <mesh filename="led_7.obj" scale=".5 .5 .5" />
             </geometry>
             <origin xyz="0 0 0" />
         </collision>
@@ -277,42 +277,42 @@
     <joint name="base_to_led0" type="fixed">
         <parent link="base_link" />
         <child link="led0" />
-        <origin rpy="1.57 0 -1.57" xyz="0.0 0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 0.12" />
     </joint>
     <joint name="base_to_led1" type="fixed">
         <parent link="base_link" />
         <child link="led1" />
-        <origin rpy="1.57 0 -1.5" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led2" type="fixed">
         <parent link="base_link" />
         <child link="led2" />
-        <origin rpy="1.57 0 -1.43" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led3" type="fixed">
         <parent link="base_link" />
         <child link="led3" />
-        <origin rpy="1.57 0 -1.37" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led4" type="fixed">
         <parent link="base_link" />
         <child link="led4" />
-        <origin rpy="1.57 0 -1.31" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led5" type="fixed">
         <parent link="base_link" />
         <child link="led5" />
-        <origin rpy="1.57 0 -1.25" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led6" type="fixed">
         <parent link="base_link" />
         <child link="led6" />
-        <origin rpy="1.57 0 -1.19" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
     <joint name="base_to_led7" type="fixed">
         <parent link="base_link" />
         <child link="led7" />
-        <origin rpy="1.57 0 -1.13" xyz="0.0 0.0 .1" />
+        <origin rpy="1.57 0 -1.5" xyz="-0.1 -0.01 .12" />
     </joint>
 
     <link name="cam">
@@ -793,7 +793,7 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
+      <material name="transparent_red">
         <color rgba="1 0 0 0."/>
       </material>
     </visual>
@@ -821,7 +821,7 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
+      <material name="transparent_red">
         <color rgba="1 0 0 0"/>
       </material>
     </visual>
@@ -849,7 +849,7 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
+      <material name="transparent_red">
         <color rgba="1 0 0 0"/>
       </material>
     </visual>
@@ -879,7 +879,7 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
+      <material name="transparent_red">
         <color rgba="1 0 0 0"/>
       </material>
     </visual>
@@ -907,7 +907,7 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
+      <material name="transparent_red">
         <color rgba="1 0 0 0"/>
       </material>
     </visual>
@@ -935,8 +935,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -963,8 +963,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="1 1 1"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -991,8 +991,8 @@
         <geometry>
                 <mesh filename="cone.obj" scale="1 1 1"/>       
         </geometry>
-        <material name="red">
-            <color rgba="0 0 0 0"/>
+        <material name="transparent_red">
+            <color rgba="1 0 0 0"/>
         </material>
         </visual>
             <collision>
@@ -1022,8 +1022,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
      <collision>
@@ -1050,8 +1050,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
     <collision>
@@ -1078,8 +1078,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -1106,8 +1106,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -1134,8 +1134,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -1162,8 +1162,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
          <collision>
@@ -1190,8 +1190,8 @@
       <geometry>
 			 <mesh filename="cone.obj" scale="3 3 3"/>       
       </geometry>
-      <material name="red">
-        <color rgba="0 0 0 0"/>
+      <material name="transparent_red">
+        <color rgba="1 0 0 0"/>
       </material>
     </visual>
         <collision>
@@ -1218,8 +1218,8 @@
         <geometry>
             <mesh filename="cone.obj" scale="3 3 3"/>      
         </geometry>
-        <material name="red">
-            <color rgba="0 0 0 0"/>
+        <material name="transparent_red">
+            <color rgba="1 0 0 0"/>
         </material>
         </visual>
             <collision>

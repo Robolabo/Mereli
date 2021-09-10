@@ -126,7 +126,7 @@ class Robot(WorldObject):
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
         can be randomly initialized or fixed. In the former case a seed can be specified.
 
-        :param int seed: seed for random intialization.
+        :param int seed: seed for random initialization.
         """
         self._food = False
         if self.controllable:
