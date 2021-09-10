@@ -147,7 +147,7 @@ class Engine3D:
                 if ghost_link_idx is not None:
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
-                    self.set_color(obj.id, ghost_link_idx, [0,0,0], opacity=0.0)
+                    self.set_color(obj.id, ghost_link_idx, [0,0,0], opacity=.0)
                 self.physical_sensors[sensor_name][sector_idx] = {
                     'link' : link, 'ghost_link': ghost_link, 
                     'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,

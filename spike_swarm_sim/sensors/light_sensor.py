@@ -29,11 +29,60 @@ class LightSensor(DirectionalSensor):
     def __init__(self, *args, color='red', **kwargs):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
-        self.aperture = 0.785
+        self.aperture = 0.785 + .2
         self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
     
+
+
     def step(self, neighborhood):
-        """ Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
+        """
+        
+        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
+            kept as a parameter because other sensors may need to use it.
+
+        :returns: np.ndarray with the reading of each sector. 
+        """
+        reading = []
+        g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        # List the entities that overlap with the robot ghost cones.
+        contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
+        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
+            luminous_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i] \
+                        and pt[0] in self.physics_client.luminous_objects]
+            signal_strength = 0.0
+            origin = self.get_sensor_position(i) # Coordinates of the physical link of sensor (in the i-th sector).
+            # Cast a ray for each luminous object in the sector cone.
+            for ent_id in luminous_ents: 
+                # Query target entity position
+                tar_pos = self.physics_client.get_body_position(ent_id, -1)
+                # Cast a ray between the sensor position and the target entity position.
+                ray_res, ray_position = self.sensor_owner.physics_client.ray_cast([origin], [tar_pos])
+                # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.07)
+                if ray_res == ent_id: # If no obstacles (aside from target)
+                    # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.07)
+                    # Compute distance to light.
+                    rho = np.linalg.norm(np.array(ray_position) - origin)
+                    if rho > self.range: # Exit if distance greater than range (may be redundant with ghost cones)
+                        continue
+                    # Compute misalignment as the angle between the following vectors: the vector of the already
+                    # casted ray and the vector pointing at the maximum sensitivity orientation of the sensor in 
+                    # i-th sector.
+                    vector1 = np.r_[np.cos(ori), np.sin(ori), 0]
+                    vector2 = np.array(ray_position) - origin
+                    phi = np.arccos(vector1.dot(vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2)))
+    
+                    # Compute actual reading wrt the target light using the fixed propagation model.
+                    signal_strength += self.propagation(rho, phi)
+              
+            reading.append(signal_strength)
+        if len(reading) != 8: import pdb; pdb.set_trace()
+        return np.array(reading)
+
+    def ___step_heavy(self, neighborhood):
+
+        """ WARNING: This class method is an old implementation.
+
+        Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
         It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
         The main steps of the reading are the following:
 
@@ -64,8 +113,8 @@ class LightSensor(DirectionalSensor):
         """
         phy = self.sensor_owner.physics_client
         reading = []
-        g_ids = [self.sensor_owner.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
         for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
             tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
             signal_strength = 0.0

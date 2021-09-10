@@ -81,7 +81,6 @@ class RegexpDict(dict):
         raise KeyError
 
 
-
 def remove_duplicates(lst):
     """ Return input list without duplicates. """
     seen = []
