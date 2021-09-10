@@ -59,7 +59,7 @@ class Engine3D:
         if self.render:
             self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, -1)
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.engine.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
+            self.engine.resetDebugVisualizerCamera(cameraDistance=4, cameraYaw=30,\
                     cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
 
     def disconnect(self):
