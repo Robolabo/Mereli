@@ -37,25 +37,6 @@ class GoToLightReward:
 
 
 
-@reward_registry(name='many_lights')
-class GoToLightReward:
-    def __init__(self):
-        pass
-    def __call__(self, actions, states, info=None):
-        rewards = np.zeros(len(actions))
-        robots = [obj for obj in info.values() if type(obj).__name__ == 'Robot3D']
-        lights = [obj for obj in info.values() if type(obj).__name__ == 'Light_Source']
-        # Assume only one of each
-        green_ls_pos = [ls.position for ls in lights if ls.color == 'green'][0]
-        red_ls_pos = [ls.position for ls in lights if ls.color == 'red'][0]
-        yellow_ls_pos = [ls.position for ls in lights if ls.color == 'yellow'][0]
-        for i, robot in enumerate(robots):
-            mask_ls = [LA.norm(robot.position[:2] - ls.pos[:2]) < 1 for ls in [green_ls_pos, red_ls_pos, yellow_ls_pos]]
-            nearest_robot = np.min([LA.norm(robot.position - robotB.position) for j, robotB in enumerate(robots)])
-            
-        # return  rew_obst + rew_ls
-
-
 @reward_registry(name='transport_cube')
 class TransportCubeReward:
     def __init__(self):
@@ -95,11 +76,33 @@ class TransportCubeReward:
         self.prev_cubes_pos = None
 
 
-@reward_registry(name='taskswitching_lights')
-class TaskSwitchingLights:
-    def __init__(self):
-        self.t = 0
-        self.required_info = ("generation", "robot_positions", "light_positions")
+@reward_registry(name='many_lights')
+class GoToLightReward:
+    def __init__(self, color='red'):
+        self.color=color
 
-    def __call__(self, actions, states, info=None):
+    def __call__(self, actions, states, robot,  info=None):
+        lights = [obj for obj in info if type(obj).__name__ == 'LightSource' and obj.color == self.color]
+        distances_ls = np.array([np.linalg.norm(ls.position[:2] - robot.position[:2]) for ls in lights])
+        return np.array([int(any(distances_ls < 1.0) if len(distances_ls) > 0 else 0.0)])
+            
+        # return  rew_obst + rew_ls
+    def reset(self):
+        pass
+
+
+@reward_registry(name='task_switching_lights')
+class TaskSwitchingLights:
+
+    def __init__(self):
+        self.tasks = [GoToLightReward(color='red'), GoToLightReward(color='yellow')]
+        # self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+        self.buffered_fitnesses = []
+
+    def __call__(self, actions, states, robot, info=None):
+        task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
+        current_task = task_scheduler.current_task
+        return self.tasks[current_task](actions, states, robot, info=info)
+    
+    def reset(self):
         pass

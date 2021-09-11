@@ -136,9 +136,9 @@ class World(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
-        #* Compute rewards
-        rewards = self.reward_generator(self.prev_actions, self.prev_states, info=self.hierarchy)\
-                if self.t > 0 and self.reward_generator is not None else None
+        #* Compute rewards (swarm rewards)
+        # rewards = self.reward_generator(self.prev_actions, self.prev_states, info=self.hierarchy)\
+        #         if self.t > 0 and self.reward_generator is not None else None
 
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
@@ -148,7 +148,8 @@ class World(object):
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
-            reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
+            # reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
+            reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())
             state_obj, action_obj = obj.step(self.hierarchy.values(), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:
             #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)

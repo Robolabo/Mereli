@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_task_switching_NEAT_3Dcomm_ver2_HEBB",
+    "checkpoint_file" : "chk_ts_reward_NEAT_NOcomm",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -7,7 +7,7 @@
             "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
             "I3" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I4" : {"n" : 1, "sensor" : "task_sensor"}
+            "I4" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -27,6 +27,7 @@
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         },
         "learning_rule" : { 
+            "reward" : "task_switching_lights"
         }
     },
     "algorithm" : {
