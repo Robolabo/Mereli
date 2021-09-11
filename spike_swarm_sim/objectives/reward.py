@@ -93,3 +93,13 @@ class TransportCubeReward:
     def reset(self):
         self.t = 0
         self.prev_cubes_pos = None
+
+
+@reward_registry(name='taskswitching_lights')
+class TaskSwitchingLights:
+    def __init__(self):
+        self.t = 0
+        self.required_info = ("generation", "robot_positions", "light_positions")
+
+    def __call__(self, actions, states, info=None):
+        pass

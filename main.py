@@ -35,8 +35,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     #     logging.getLogger().info('Executing in VERBOSE mode.')
     if ncpu > 1 or USE_MPI and MPI.COMM_WORLD.Get_size() > 1:
         world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), 
-                    height=cfg_dict['world']["height"], width=cfg_dict['world']["width"],\
-                    world_delay=cfg_dict['world']["world_delay"])
+                    height=cfg_dict['world']["height"], width=cfg_dict['world']["width"])
     else:
         world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
         world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"])

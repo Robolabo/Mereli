@@ -289,6 +289,32 @@ class TaskSwitching3:
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
         return fitness + 1e-5
 
+@fitness_func_registry(name='task_switching3')
+class TaskSwitching4Lights:
+    """Fitness function for the exploration task."""
+    def __init__(self):
+        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
+        #! Add current task info
+        self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
+
+    def __call__(self, actions, states, info=None):
+        tasks = np.array(info['task_scheduler:current_task']).flatten()
+        n_slots = info['task_scheduler:num_slots'][0].item()
+        n_collisions = np.sum([[st['collision_sensor'] for st in state_t] for state_t in states], 0)
+        if any(n_collisions > 200):
+            return 1e-5
+        fitness_tasks = []
+        for i in range(n_slots):
+            t_init = int(i * len(actions) / n_slots)
+            t_end = int((i + 1)  * len(actions) / n_slots)
+            task_actions = np.array(actions)[t_init:t_end]
+            task_states = np.array(states)[t_init:t_end]
+            task_info = {key : np.array(values)[t_init:t_end]\
+                if key != 'generation' else values for key, values in info.items()}
+            task = self.tasks[tasks[t_init+1]]
+            fitness_tasks.append(task(task_actions, task_states, info=task_info))
+        fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
+        return fitness + 1e-5
 
 
 

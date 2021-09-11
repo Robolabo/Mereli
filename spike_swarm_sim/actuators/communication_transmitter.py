@@ -14,7 +14,7 @@ class CommunicationTransmitter(Actuator):
     frame with a message and its context. The propagation simulation is 
     implemented at the receiver side, this class only updates the transmitted 
     frame of each robot.
-    =========================================================================
+
     - Params:
         range [float] : maximum distance of message reception, in centimeters.
         msg_length [int] : number of components of the message.

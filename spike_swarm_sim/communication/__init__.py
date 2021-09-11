@@ -1,1 +1,1 @@
-from .IR_communication import IRCommunication, IRFrame
+from .IR_communication import IRCommunication, IRFrame, BufferedIRCommunication

@@ -72,11 +72,9 @@ class NEAT_Population(Population):
         
     def step(self, fitness_vector, generation):
         """
-        ==================================================================================
-        - Args:
-            fitness_vector [np.ndarray or list]: array of computed fitness values.
-        - Returns: None
-        ==================================================================================
+        
+        :param list fitness_vector: vector collecting the achieved fitness score of every individual.
+        :param int generation: current generation of the evolution process.
         """
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
@@ -92,7 +90,8 @@ class NEAT_Population(Population):
             #* Filter out genotypes from species.
             spc_fitness, spc_genotypes = zip(*filter(lambda x: x[1]['species'] == spc.id, zip(fitness_vector, self.population)))
             #* Apply species elitism
-            if self.species_elites > 0:
+            if self.species_elites > 0 and n_offspring > self.species_elites:
+                # Use dummy iterable range(self.species_elites) to set the loop length to the number of elites
                 for _, (elite_gnt, _) in zip(range(self.species_elites), sorted(zip(spc_genotypes, spc_fitness), key=lambda x: x[1])[::-1]):
                     n_offspring -= 1
                     offspring.append(copy.deepcopy(elite_gnt))
@@ -100,7 +99,10 @@ class NEAT_Population(Population):
             n_sel = max(1, round(0.3 * len(spc_genotypes)))
             parents, fitness_parents = truncation_selection(spc_genotypes, np.array(spc_fitness), n_sel)
             #* Random Mating (OJO REPLACEMENT)
-            parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
+            try:
+                parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
+            except:
+                import pdb; pdb.set_trace()
             parents = [parents[idx] for idx in parents_mating] # shuffle parents
             fitness_parents = [fitness_parents[idx] for idx in parents_mating]
             #* NEAT Crossover
