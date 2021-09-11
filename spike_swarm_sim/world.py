@@ -1,5 +1,6 @@
 import logging
 import time
+import copy
 from collections import deque
 import numpy as np
 import pybullet as p
@@ -449,7 +450,7 @@ class SquareArena(World):
     :param float height: height of the square arena in meters.
     """
     def __init__(self, *args, width=10, height=10, **kwargs):
-        super(SquareArena, self).__init__(Engine3D(), *args, **kwargs)
+        super(SquareArena, self).__init__(*args, **kwargs)
         self.height = height
         self.width = width
         #* Add world limits
@@ -476,7 +477,7 @@ class CircularArena(World):
     :param float radius: radius of the circular wall contraining the arena.
     """
     def __init__(self, *args, radius=5.0, **kwargs):
-        super(CircularArena, self).__init__(Engine3D(), *args, **kwargs)
+        super(CircularArena, self).__init__(*args, **kwargs)
         self.radius = radius
         self.__resize_circle_arena()
         self.register_entity('map', Map('circle_arena/circle_arena', np.zeros(3), np.zeros(3)), group='maps')
@@ -517,25 +518,25 @@ class CustomWorld(World):
     :param str model_file: path to the URDF file defining the map. It is relative to 'spike_swarm_sim/models/maps/' 
         and the file extension is not required
     """
-    def __init__(self, map_file, *args, **kwargs):
-        super(CustomWorld, self).__init__(Engine3D(), *args, **kwargs)
+    def __init__(self, *args, map_file='simple_map_1/simple_map_1', **kwargs):
+        super(CustomWorld, self).__init__(*args, **kwargs)
         self.map_file = map_file
         self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
 
 
 class MultiWorldWrapper:
-    """ Wrapper class for paralellizing genotype evaluations. 
+    """ Wrapper class for parallelizing genotype evaluations. 
     
     :param int n_cpu: number of cores (and parallel simulations).
-    :param float height: height in metres of the square arena.
-    :param float width: width in metres of the square arena.
-    :param float world_delay: deprecated, to be removed in next ver.
+    :param World world: created instance of world or environment to be 
+        cloned and parallelized.
 
     .. todo:: #TODO: Needs to be revisited!
     """
-    def __init__(self, n_cpu, height=10, width=10):
+    def __init__(self, n_cpu, world):
         self.n_cpu = n_cpu
-        self._worlds = [SquareArena(height=height, width=width) for _ in range(n_cpu + 1)]
+        #! Mucho ojo. Son objetos totalmente desacoplados?
+        self._worlds = [copy.deepcopy(world)] * (n_cpu + 1)
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """Build all the created worlds from the config dicts. """

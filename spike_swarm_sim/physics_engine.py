@@ -22,11 +22,19 @@ class Engine3D:
     3D physic simulations and collision detections of the entities in the environment and render 
     the 3D graphics. For these purposes it uses the `pybullet library <https://pybullet.org>`_  .
 
+    :param float dt: time step of the physics simulation (in seconds).
+    :param float T_control: period of the sensing+control+action loop. It cannot be lower than dt and 
+        it is set to 5*dt by default. Essentially this means that the physics are updated 5 times 
+        in between every executing of sensors, controllers and actuators.
+
     :var BulletClient engine: pybullet client engine.
     :var bool render: flag indicating if the simulation is run in visual or render mode.
     :var bool connected: whether the engine is connected or not.
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, dt=0.02, T_control=0.1):
+        self.dt = dt
+        self.T_control = T_control
+        assert T_control >= dt
         self.connected = False
         self.render = global_states.RENDER
         self.engine = None
@@ -47,7 +55,7 @@ class Engine3D:
         self.engine.resetSimulation(physicsClientId=self.engine._client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
-        self.engine.setTimeStep(1/60.)
+        self.engine.setTimeStep(self.dt)
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
@@ -70,7 +78,7 @@ class Engine3D:
 
     def step_physics(self):
         """ Iterates all the 3D physics of the world entities using pybullet. """
-        for i in range(7):
+        for i in range(int(self.T_control//self.dt)):
             p.stepSimulation()
 
     def step_render(self):
@@ -176,6 +184,7 @@ class Engine3D:
     def client(self):
         """ Pybullet engine client used in the simulation. """
         return self.engine._client
+
 
     def get_body_position(self, identifier, body_id, z_offset=0.0):
         """

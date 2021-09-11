@@ -1,7 +1,7 @@
 import time
 import numpy as np
 from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.world import SquareArena, CircularArena, CustomWorld
+from spike_swarm_sim import Engine3D, SquareArena, CircularArena, CustomWorld
 from spike_swarm_sim.objects import Epuck, LightSource
 from spike_swarm_sim.controllers import BasicObstacleAvoider
 from spike_swarm_sim.utils.initializers import FixedInitializer, RandomUniformInitializer
@@ -10,8 +10,11 @@ from spike_swarm_sim.utils.initializers import FixedInitializer, RandomUniformIn
 global_states.set_states(render=True, debug=True)
 
 n_robots = 10
-# world = CustomWorld(map_file='simple_map_1/simple_map_1')
-world = SquareArena(height=10, width=10)
+# Create physics engine with 0.02sec of discretization and a period the robot
+# control loop of 0.14sec.
+phy_engine = Engine3D(dt=0.02, T_control=0.14)
+# world = CustomWorld(phy_engine, map_file='simple_map_1/simple_map_1')
+world = SquareArena(phy_engine, height=10, width=10)
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
 ini_pos = RandomUniformInitializer(n_robots, low=[-3, -3], high=[3, 3], size=2, engine='3D',  variable='positions')
