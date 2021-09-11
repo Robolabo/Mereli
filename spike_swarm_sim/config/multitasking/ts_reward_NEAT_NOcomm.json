@@ -59,8 +59,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height":10,
-            "width": 10
+            "height":7,
+            "width": 7
         },
         "engine" : "3D",
         "physics_dt" : 0.02,
@@ -90,7 +90,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[3, 3, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
                 },
                 "params" : {"range" : 10, "color" : "yellow"}
             },
@@ -98,7 +98,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-3, -3, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
                 },
                 "params" : {"range" : 10, "color" : "red"}
             }, 

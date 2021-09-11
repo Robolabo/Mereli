@@ -78,7 +78,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
-    print('Entered WORKER')
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
@@ -110,7 +109,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         info['generation'] = generation
         survival_time = 0
         done = False
-        print('EVALUATING')
         while (not done and survival_time <= eval_steps):
             states, actions = world.step()
             for key, val in info.items():
@@ -119,7 +117,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             actions_history.append(actions)
             states_history.append(states)
             survival_time += 1
-            print('EVALUATING 2')
             if done:
                 break
         mean_survival_time += survival_time
@@ -158,7 +155,6 @@ class EvolutionaryAlgorithm:
         if resume:
             self.load_population()
         else:
-            print('ALG INIT')
             use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
             #* Only one core is responsible of initialization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:

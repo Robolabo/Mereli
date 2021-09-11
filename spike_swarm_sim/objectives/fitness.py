@@ -158,8 +158,8 @@ class GotoLight:
             fA = (distances < 1).mean()
             if len(distances) > 1:
                 fA *= (np.sum(distances < 1) > 1)
-            if t < 100:
-                rad_ball = -(3/100) * t + 3
+            if t < 50:#antes a 100
+                rad_ball = -(3/50) * t + 3
                 fA = np.clip(1 - (distances / rad_ball), a_max=1, a_min=0).mean()
             fitness += fA 
         return (fitness / len(states)) + 1e-5
