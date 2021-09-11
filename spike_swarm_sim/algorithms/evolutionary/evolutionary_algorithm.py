@@ -78,6 +78,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
+    print('Entered WORKER')
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
@@ -100,6 +101,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     t0 = time.time()
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
+        print('EVALUATING')
         seed += 1
         world.reset(seed=seed)
         actions_history = deque()
@@ -154,6 +156,7 @@ class EvolutionaryAlgorithm:
         if resume:
             self.load_population()
         else:
+            print('ALG INIT')
             use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
             #* Only one core is responsible of initialization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
