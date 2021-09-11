@@ -1,5 +1,5 @@
 import numpy as np
-from spike_swarm_sim.world import SquareArena
+from spike_swarm_sim import SquareArena, Engine3D
 from spike_swarm_sim.objects import Epuck
 from spike_swarm_sim.utils.initializers import RandomUniformInitializer, FixedInitializer, RandomGraphInitializer
 from spike_swarm_sim.controllers import RobotController
@@ -45,7 +45,10 @@ class WOSPLeader(RobotController):
         return {'IR_transmitter' : tx_msg, 'led_actuator' : led_action}
 
 n_robots = 3
-world = SquareArena(height=10,  width=10)
+# Create physics engine with 0.02sec of discretization and a period the robot
+# control loop of 0.14sec.
+phy_engine = Engine3D(dt=0.02, T_control=0.14)
+world = SquareArena(phy_engine, height=10,  width=10)
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
 ini_pos = RandomGraphInitializer(n_robots, max_rad=3, initial_pos=[0, 0], engine='3D',  variable='positions')

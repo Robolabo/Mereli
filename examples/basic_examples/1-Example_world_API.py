@@ -1,5 +1,5 @@
 import numpy as np
-from spike_swarm_sim.world import SquareArena
+from spike_swarm_sim import SquareArena, Engine3D
 from spike_swarm_sim.objects import Epuck, LightSource, GroundArea, Ball
 from spike_swarm_sim.utils.initializers import RandomUniformInitializer
 
@@ -17,12 +17,14 @@ problem without optimization involved.
 With the variable USE_API you can switch between using 1) or 2).
 """
 
-USE_API = True  # Whether to add entities using world API or config dict. 
+USE_API = False  # Whether to add entities using world API or config dict. 
 n_robots = 5 # Number of robots.
 n_balls = 3 # Number of small balls.
 
-# Create empty world.
-world = SquareArena(height=10,  width=10)
+# Create physics engine with 0.02sec of discretization.
+phy_engine = Engine3D(dt=0.02)
+# Create empty world with physics Engine
+world = SquareArena(phy_engine, height=10,  width=10)
 
 if USE_API:
     # Create and add robots
@@ -53,10 +55,6 @@ if USE_API:
 
 else:
     world_cfg = {
-        "engine" : "3D",
-        "world_delay" : 1,
-        "height": 10,
-        "width":  10,
         "objects" : {
             "robotA" : {
                 "type" : "epuck",

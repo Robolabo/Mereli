@@ -6,6 +6,8 @@ from spike_swarm_sim.objects import Epuck
 from spike_swarm_sim.controllers import BasicObstacleAvoider
 
 
+#### NOT FINISHED########
+
 global_states.set_states(render=True)
 world = SquareArena(height=5, width=5)
 # world = CircularArena()

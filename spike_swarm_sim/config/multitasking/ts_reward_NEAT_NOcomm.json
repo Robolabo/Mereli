@@ -32,7 +32,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 100,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
@@ -56,11 +56,15 @@
             }          
         }
     },
-    "world":{
+    "world": {
+        "name" : "square_arena",
+        "arena_params" : {
+            "height":10,
+            "width": 10
+        },
         "engine" : "3D",
-        "world_delay" : 1,
-        "height":10,
-        "width": 10,
+        "physics_dt" : 0.02,
+        "T_control" : 0.14,
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
@@ -85,7 +89,6 @@
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : null,
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[3, 3, 1]]}}
                 },
@@ -94,7 +97,6 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-                "controller" : "light_orbit_controller",
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-3, -3, 1]]}}
                 },

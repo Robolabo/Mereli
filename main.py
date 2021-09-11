@@ -5,8 +5,7 @@ try:
     USE_MPI = True
 except:
     USE_MPI = False
-from spike_swarm_sim import MultiWorldWrapper
-from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm, CMA_ES, xNES
+from spike_swarm_sim import MultiWorldWrapper, Engine3D
 from spike_swarm_sim.register import fitness_functions
 from spike_swarm_sim.config_parser import json_parser
 from spike_swarm_sim.register import algorithms, worlds
@@ -33,12 +32,14 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     # elif verbose:
     #     logging.getLogger().level = logging.INFO
     #     logging.getLogger().info('Executing in VERBOSE mode.')
+    #* Create the world
+    physics_engine = Engine3D(dt=cfg_dict['world'].get('physics_dt', 0.02), 
+                            T_control=cfg_dict['world'].get('T_control', 0.1))
+    world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
+    arena_params = cfg_dict['world'].get('arena_params', {})
+    world = world_cls(physics_engine, **arena_params)
     if ncpu > 1 or USE_MPI and MPI.COMM_WORLD.Get_size() > 1:
-        world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), 
-                    height=cfg_dict['world']["height"], width=cfg_dict['world']["width"])
-    else:
-        world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
-        world = world_cls(height=cfg_dict['world']["height"], width=cfg_dict['world']["width"])
+        world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), world)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
 
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
