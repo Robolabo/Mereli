@@ -101,7 +101,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     t0 = time.time()
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
-        print('EVALUATING')
+        
         seed += 1
         world.reset(seed=seed)
         actions_history = deque()
@@ -110,6 +110,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         info['generation'] = generation
         survival_time = 0
         done = False
+        print('EVALUATING')
         while (not done and survival_time <= eval_steps):
             states, actions = world.step()
             for key, val in info.items():
@@ -118,6 +119,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             actions_history.append(actions)
             states_history.append(states)
             survival_time += 1
+            print('EVALUATING 2')
             if done:
                 break
         mean_survival_time += survival_time
