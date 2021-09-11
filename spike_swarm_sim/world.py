@@ -328,12 +328,10 @@ class World(object):
 
     def connect(self):
         """ Connect to the physics engine. """
-        print('Connected')
         self.physics_engine.connect(self.hierarchy.values())
 
     def disconnect(self):
         """ Disconnect physics engine. """
-        print('Disconnected')
         self.physics_engine.disconnect()
 
     def __enter__(self):
@@ -535,9 +533,9 @@ class MultiWorldWrapper:
 
     .. todo:: #TODO: Needs to be revisited!
     """
-    def __init__(self, n_cpu, height=10, width=10, world_delay=1):
+    def __init__(self, n_cpu, height=10, width=10):
         self.n_cpu = n_cpu
-        self._worlds = [SquareArena(height=height, width=width, world_delay=1) for _ in range(n_cpu + 1)]
+        self._worlds = [SquareArena(height=height, width=width) for _ in range(n_cpu + 1)]
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """Build all the created worlds from the config dicts. """

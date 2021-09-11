@@ -63,6 +63,10 @@ class Robot(WorldObject):
         """
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
+        #* Add reward as a new state entry.
+        if reward is not None:
+            state['reward'] = reward
+
         #* Apply perturbations to stimuli 
         if perturbations is not None:
             for pert in perturbations:
@@ -117,8 +121,14 @@ class Robot(WorldObject):
         if 'IR_receiver' in self.sensors:
             ir_reading = self.sensors['IR_receiver'].step(neighborhood)
             readings.update({'IR_receiver' : ir_reading[0], 'distance_sensor' : ir_reading[1]})
-        readings.update({sensor_name : sensor.step(neighborhood)\
-                for sensor_name, sensor in self.sensors.items() if sensor_name != 'IR_receiver'})
+        for sensor_name, sensor in self.sensors.items():
+            if sensor_name == 'IR_receiver':
+                continue
+            reading = sensor.step(neighborhood)
+            if isinstance(reading, dict):
+                readings.update(reading)
+            else:
+                readings[sensor_name] = reading
         return readings
 
     def reset(self, seed=None):

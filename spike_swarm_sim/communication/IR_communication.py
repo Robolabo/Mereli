@@ -245,3 +245,45 @@ class IRCommunication:
         self.rx_frame = None
         self.tx_frame = None
         self.registry = {'comm_states' : [], 'frames' : []}
+
+@communication_registry(name='buffered_IR_comm')
+class BufferedIRCommunication(IRCommunication):
+    """ """
+    def __init__(self, *args, **kwargs):
+        super(BufferedIRCommunication, self).__init__(*args, **kwargs)
+        self.prev_msg = None
+
+    def step_post(self, actions):
+        """ Communication system logic to be applied after the controller execution. 
+
+        :param dict actions: ``dict`` with all the actions (keys are actuator names and values are the 
+            actions). The action of the ``IR_transmitter`` must be included.
+
+        :returns: frame ``dict`` with the modified actions. The action corresponding to the ``IR_transmitter`` 
+            is now an IRFrame object to be transmitted.
+        """
+        import pdb; pdb.set_trace()
+        if self.tx_name in actions:
+            new_msg = np.array(actions[self.tx_name])
+            if self.quantize:
+                new_msg = self.quantize_func(new_msg)
+            #* Update communication state according to controller
+            self.comm_state = actions.get(self.tx_name + ':state', self.comm_state)
+            #* Build the frame to be transmitted
+            tx_frame = IRFrame(msg_len=self.rx_frame.msg_len)
+            tx_frame.priority = actions.get(self.tx_name + ':priority', self.rx_frame.priority)
+            tx_frame.enabled = actions.get(self.tx_name + ':enabled', True)
+            tx_frame.msg = {
+                'BCAST' : new_msg,
+                'RELAY' : self.rx_frame.msg.copy()
+            }.get(self.comm_state, new_msg)
+            tx_frame.sender = self.owner_id
+            tx_frame.original_sender = {
+                'BCAST' : self.owner_id,
+                'RELAY' : self.rx_frame.sender
+            }.get(self.comm_state, new_msg) 
+            if self.comm_state == 'BCAST':
+                tx_frame.n_hops = self.rx_frame.n_hops
+            self.tx_frame = tx_frame.get_copy()
+            actions[self.tx_name] = tx_frame
+        return actions

@@ -28,7 +28,7 @@ def check_actuator_cfg(actuator_name, actuator_params):
 
 def autocomplete_actuator_cfg(actuator_name, actuator_params):
     if actuator_name == 'IR_transmitter':
-        for var, default in zip(['msg_length', 'range', 'quantize'], [2, 100, True]):
+        for var, default in zip(['msg_length', 'range'], [2, 100]):
             if var not in actuator_params.keys():
                 actuator_params[var] = default
                 logging.warning('Parameter {} of Communication Transmitter was not specified. '\

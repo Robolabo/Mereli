@@ -4,6 +4,7 @@ from spike_swarm_sim.register import sensor_registry
 from spike_swarm_sim.sensors import DirectionalSensor
 from .utils.propagation import ExpDecayPropagation
 
+
 @sensor_registry(name='light_sensor')
 class LightSensor(DirectionalSensor):
     """ Directional ambient light sensor that enables the sensing 
@@ -49,7 +50,7 @@ class LightSensor(DirectionalSensor):
         for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
             luminous_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i] \
                         and pt[0] in self.physics_client.luminous_objects]
-            signal_strength = 0.0
+            signal_strength = {'red' : 0., 'yellow': 0., 'blue' : 0., 'green' : 0.}
             origin = self.get_sensor_position(i) # Coordinates of the physical link of sensor (in the i-th sector).
             # Cast a ray for each luminous object in the sector cone.
             for ent_id in luminous_ents: 
@@ -72,97 +73,70 @@ class LightSensor(DirectionalSensor):
                     phi = np.arccos(vector1.dot(vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2)))
     
                     # Compute actual reading wrt the target light using the fixed propagation model.
-                    signal_strength += self.propagation(rho, phi)
-              
+                    light_color = self.physics_client.luminous_objects[ent_id]['color']
+                    if light_color in signal_strength:
+                        signal_strength[light_color] += self.propagation(rho, phi)
+                    else:
+                        signal_strength[light_color] = self.propagation(rho, phi)
             reading.append(signal_strength)
         if len(reading) != 8: import pdb; pdb.set_trace()
-        return np.array(reading)
+        #* Convert dict to the type {color : vector}, where vector is the measurement of all sectors (dim=n_sectors)
+        #* taking into account only the color set by the key.
+        reading = {color : np.array([x[color] for x in reading]) for color in reading[0].keys()}
+        #* Rename keys according to state notation (e.g. red_light_sensor).
+        reading = {color + '_light_sensor' : vec for color, vec in reading.items()}
+        reading['light_sensor'] = np.sum([x for x in reading.values()], 0)
+        return reading
 
-    def ___step_heavy(self, neighborhood):
 
-        """ WARNING: This class method is an old implementation.
 
-        Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
-        It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
-        The main steps of the reading are the following:
 
-        1. The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
-           it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
-           entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
-           turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area. 
 
-        2. We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
-           and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list ``tar_ents`` 
-           is filtered out so that only overlapping objects that emit light of the requested color are kept.           
-           If this new filtered list is empty, the measured signal strength is zero (no entities within the sensing area of this sector). 
-           Otherwise, if there are luminous entities within the sector area, then the signal strength reading is calculated (see below).
-
-        3. Provided that ``tar_ents`` is not empty, the computation of the distance and misalignment estimation to light sources is accomplished as follows. 
-           The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
-           within an spherical sector determined by the sensor aperture and range.  The following screenshot displays the mentioned 
-           ray batchs of a sector:
-            
-           .. raw:: html
-
-                <img src="../../_static/demo_LS_rays.png" style="width:70%;text-align: center;">
-        
-        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
-            kept as a parameter because other sensors may need to use it.
-
-        :returns: np.ndarray with the reading of each sector. 
-        """
-        phy = self.sensor_owner.physics_client
-        reading = []
-        g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
-        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
-            signal_strength = 0.0
-            if len(tar_ents) > 0 and any(ent_i in phy.luminous_objects for ent_i in tar_ents):
-                if any(phy.luminous_objects.get(ent_i, {}).get('color') == self.color for ent_i in tar_ents):
-                    origin = self.get_sensor_position(i)
-                
-                    th_sp, phi_sp = np.linspace(-self.aperture/2, self.aperture/2, 4), np.linspace(-self.aperture/2, self.aperture/2, 5)
-                    th_mat, phi_mat = np.meshgrid(np.pi/2 - 0.4 + th_sp, ori + phi_sp)
-                    X = self.range * np.cos(phi_mat) * np.sin(th_mat)
-                    Y = self.range * np.sin(phi_mat) * np.sin(th_mat)
-                    Z = self.range * np.cos(th_mat)
-                    ray_dests = [origin + np.r_[x, y, z] for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
-                    # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                    #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
-                    # import pdb; pdb.set_trace()
-                    ray_res, ray_positions = phy.ray_cast([origin]*len(ray_dests), ray_dests) 
-                    if any(ent_i in phy.luminous_objects for ent_i in ray_res):
-                        ref_vec = np.r_[np.cos(ori), np.sin(ori), 0] - origin
-                        angles = [np.arccos(np.r_[ x, y, z].dot(ref_vec) / (np.linalg.norm(ref_vec)*self.range))\
-                                    for x, y, z in zip(X.flatten(), Y.flatten(), Z.flatten())]
-                        rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, angles) if idx != -1])
-                        signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
-            reading.append(signal_strength)
-        if len(reading) != 8: import pdb; pdb.set_trace()
-        return np.array(reading)
-    
 
 @sensor_registry(name='blue_light_sensor')
 class BlueLightSensor(LightSensor):
     def __init__(self, *args, **kwargs):
         super(BlueLightSensor, self).__init__(*args, color='blue', **kwargs)
+    
+    def step(self, *args):
+        #* Get readings from all colors (using parent class step method).
+        readings = super().step(*args)
+        #* Return just blue reading 
+        return readings['blue']
 
 @sensor_registry(name='yellow_light_sensor')
 class YellowLightSensor(LightSensor):
     def __init__(self, *args, **kwargs):
         super(YellowLightSensor, self).__init__(*args, color='yellow', **kwargs)
+        
+    def step(self, *args):
+        #* Get readings from all colors (using parent class step method).
+        readings = super().step(*args)
+        #* Return just yellow reading 
+        import pdb; pdb.set_trace()
+        return readings['yellow']
     
 @sensor_registry(name='red_light_sensor')
 class RedLightSensor(LightSensor):
     def __init__(self, *args, **kwargs):
-        super(RedLightSensor, self).__init__(*args, color='red', **kwargs)
+        super(RedLightSensor, self).__init__(*args, **kwargs)
+    
+    def step(self, *args):
+        #* Get readings from all colors (using parent class step method).
+        readings = super().step(*args)
+        #* Return just red reading 
+        return readings['red']
 
 @sensor_registry(name='green_light_sensor')
 class GreenLightSensor(LightSensor):
     def __init__(self, *args, **kwargs):
         super(GreenLightSensor, self).__init__(*args, color='green', **kwargs)
 
+    def step(self, *args):
+        #* Get readings from all colors (using parent class step method).
+        readings = super().step(*args)
+        #* Return just green reading 
+        return readings['green']
 
 # class ColoredLightSensor(LightSensor):
 #     def __init__(self, color, *args, **kwargs):
