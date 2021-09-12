@@ -6,8 +6,10 @@
         "stimuli": {
             "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
-            "I3" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I4" : {"n" : 1, "sensor" : "reward"}
+            "I3" : {"n" : 8, "sensor" : "blue_light_sensor"},
+            "I4" : {"n" : 8, "sensor" : "green_light_sensor"},
+            "I5" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I6" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -21,7 +23,9 @@
             "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0}
+            "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I5-O" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I6-O" : {"pre":"I6","post":"OUT_MOT", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
@@ -37,7 +41,7 @@
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
-        "fitness_function" : "task_switching2",
+        "fitness_function" : "task_switching3",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
@@ -103,11 +107,28 @@
                 },
                 "params" : {"range" : 10, "color" : "red"}
             }, 
+            "light_blue" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, -2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "blue"}
+            },
+            "light_green" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, 2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "green"}
+            },
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1000, "replacement" : false}
-            }   
+                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 1000, 
+                            "replacement" : false, "task_names" : ["red", "yellow", "blue", "green"]}
+            }
         }
     }
 }

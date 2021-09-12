@@ -95,7 +95,8 @@ class GoToLightReward:
 class TaskSwitchingLights:
 
     def __init__(self):
-        self.tasks = [GoToLightReward(color='red'), GoToLightReward(color='yellow')]
+        self.tasks = [GoToLightReward(color='red'), GoToLightReward(color='yellow'),\
+                    GoToLightReward(color='blue'), GoToLightReward(color='green')]
         # self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
         self.buffered_fitnesses = []
 
