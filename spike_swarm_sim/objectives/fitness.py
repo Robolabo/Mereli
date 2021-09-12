@@ -300,9 +300,6 @@ class TaskSwitching4Lights:
     def __call__(self, actions, states, info=None):
         tasks = np.array(info['task_scheduler:current_task']).flatten()
         n_slots = info['task_scheduler:num_slots'][0].item()
-        n_collisions = np.sum([[st['collision_sensor'] for st in state_t] for state_t in states], 0)
-        if any(n_collisions > 200):
-            return 1e-5
         fitness_tasks = []
         for i in range(n_slots):
             t_init = int(i * len(actions) / n_slots)
@@ -313,7 +310,9 @@ class TaskSwitching4Lights:
                 if key != 'generation' else values for key, values in info.items()}
             task = self.tasks[tasks[t_init+1]]
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
+        
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
+        self.buffered_fitnesses.append(fitness_tasks)
         return fitness + 1e-5
 
 
