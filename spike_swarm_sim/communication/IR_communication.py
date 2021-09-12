@@ -26,7 +26,9 @@ class IRFrame:
         sender robot emitted the frame. The angle is relative to the heading orientation 
         of the sender robot.
     :var float tx_ori: relative orientation (in radians) of the sector from where the 
-        frame was received. The angle is relative to the heading orientation of the robot.      
+        frame was received. The angle is relative to the heading orientation of the robot.    
+    :var int rx_sector: number of the sector in [0, N_sectors-1] from where the frame was received.
+    :var int tx_sector: number of the sector in [0, N_sectors-1] from where the frame was transmitted.
     :var int sender: id of the last robot who sent the frame. In a multi-hop communication of 
         relayed messages it still equals to the last robot who last relayed the frame (see
         ``original_sender`` for the attribute corresponding to original robot generating the frame).
@@ -52,6 +54,8 @@ class IRFrame:
         self.enabled = True
         self.tx_ori = None
         self.rx_ori = None
+        self.rx_sector = None
+        self.tx_sector = None
         self.sender = None
         self.receiver = None
         self.destination = None
@@ -100,7 +104,8 @@ class IRFrame:
         """ Return the frame as a python ``dict``."""
         return {'msg' : self.msg, 'signal' : self.signal_strength, 
             'receiving_direction' : self.encoded_rx_ori, 'sending_direction' : self.encoded_tx_ori, 
-            'raw_tx_angle' : self.tx_ori, 'raw_rx_angle' : self.rx_ori}
+            'raw_tx_angle' : self.tx_ori, 'raw_rx_angle' : self.rx_ori, 'tx_sector' : self.tx_sector, 
+            'rx_sector' : self.rx_sector}
 
     def increase_hops(self):
         """ Increase the number of hops of the frame."""
@@ -249,41 +254,30 @@ class IRCommunication:
 @communication_registry(name='buffered_IR_comm')
 class BufferedIRCommunication(IRCommunication):
     """ """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, n_sectors=8, **kwargs):
         super(BufferedIRCommunication, self).__init__(*args, **kwargs)
-        self.prev_msg = None
+        self.n_sectors = n_sectors
+        self.prev_msg = np.zeros(n_sectors)
 
-    def step_post(self, actions):
-        """ Communication system logic to be applied after the controller execution. 
+    def step_pre(self, frame):
+        """ Communication system logic to be applied before the controller execution. 
+        
+        :param IRFrame frame: IR frame received by the IR_receiver.
 
-        :param dict actions: ``dict`` with all the actions (keys are actuator names and values are the 
-            actions). The action of the ``IR_transmitter`` must be included.
-
-        :returns: frame ``dict`` with the modified actions. The action corresponding to the ``IR_transmitter`` 
-            is now an IRFrame object to be transmitted.
+        :returns: frame ``dict`` to be fed to the controller. 
         """
-        import pdb; pdb.set_trace()
-        if self.tx_name in actions:
-            new_msg = np.array(actions[self.tx_name])
-            if self.quantize:
-                new_msg = self.quantize_func(new_msg)
-            #* Update communication state according to controller
-            self.comm_state = actions.get(self.tx_name + ':state', self.comm_state)
-            #* Build the frame to be transmitted
-            tx_frame = IRFrame(msg_len=self.rx_frame.msg_len)
-            tx_frame.priority = actions.get(self.tx_name + ':priority', self.rx_frame.priority)
-            tx_frame.enabled = actions.get(self.tx_name + ':enabled', True)
-            tx_frame.msg = {
-                'BCAST' : new_msg,
-                'RELAY' : self.rx_frame.msg.copy()
-            }.get(self.comm_state, new_msg)
-            tx_frame.sender = self.owner_id
-            tx_frame.original_sender = {
-                'BCAST' : self.owner_id,
-                'RELAY' : self.rx_frame.sender
-            }.get(self.comm_state, new_msg) 
-            if self.comm_state == 'BCAST':
-                tx_frame.n_hops = self.rx_frame.n_hops
-            self.tx_frame = tx_frame.get_copy()
-            actions[self.tx_name] = tx_frame
-        return actions
+        dict_frame = super().step_pre(frame)
+        curr_msg = dict_frame['msg']
+        curr_sector = dict_frame['rx_sector']
+        total_msg = self.prev_msg.copy()
+        total_msg[curr_sector] = curr_msg
+        dict_frame['msg'] = total_msg.copy()
+        self.prev_msg = total_msg
+        # if self.noise_sigma > 0:
+        #     frame['msg'] += np.random.randn(len(frame['msg'])) * self.noise_sigma
+        #     frame['signal'] += np.random.randn() * self.noise_sigma
+        return dict_frame
+
+    def reset(self):
+        super().reset()
+        self.prev_msg = np.zeros(self.n_sectors)

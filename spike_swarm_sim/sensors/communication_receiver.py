@@ -1,3 +1,4 @@
+from spike_swarm_sim.utils.utils import remove_duplicates
 import numpy as np
 from .base_sensor import DirectionalSensor
 from spike_swarm_sim.register import sensor_registry
@@ -108,7 +109,7 @@ class IRCommunicationReceiver(DirectionalSensor):
                     direction_reading = received_frame
         return direction_reading
 
-    def step(self, *args, **kwargs):
+    def step(self, neighborhood):
         """ Steps the communication receiver. With the sensed frames from all directions it 
         applies the selection of a 
         unique frame is carried out among those frames whose sender is not the receiver.
@@ -121,12 +122,14 @@ class IRCommunicationReceiver(DirectionalSensor):
         :returns: numpy array with the measurement in each direction. In exceptional cases 
             it may return a list of python dictionaries (see ``CommunicationReceiver``).
         """
+        #* Ids of all robots (used later)
+        robot_ids = [ent.id for ent in neighborhood if self.target_filter(ent)]
         frames = [self.empty_frame for _ in range(self.n_sectors)]
         signal_strengths = []
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
+            tar_ents = np.array([pt[0] for pt in contact_points if pt[1] == g_ids[i]])
             signal_strength_ds = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
@@ -135,35 +138,46 @@ class IRCommunicationReceiver(DirectionalSensor):
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
                 #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
-                if any(np.array(ray_res) != -1):
+                ray_res = np.array(ray_res)
+                if any(ray_res != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
                     #* Seize the sensor execution and compute the distance sensor reading as well.
                     signal_strength_ds = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
-                    tmp_idx = np.argmin(rhos)
-                    tx_idx = ray_res[np.where(np.array(ray_res) != -1)[0][tmp_idx]]
-                    rx_sensor_pos = self.get_sensor_position(i)
-                    tx_sensors_positions = np.vstack([self.sensor_owner.physics_client.get_sensor_position(tx_idx, 
-                                sensor_name='IR_receiver', sector=j)[0] for j in range(self.n_sectors)])
-                    tx_rx_distances = np.linalg.norm(tx_sensors_positions - rx_sensor_pos, axis=1)
-                    tx_sector = np.argmin(tx_rx_distances)
-                    tx_sensor_pos = tx_sensors_positions[tx_sector]
-                    comm_rho = tx_rx_distances[tx_sector]
-                    comm_phi = angle_diff(compute_angle(tx_sensor_pos[:2] - rx_sensor_pos[:2]), ori)
-                    #* Compute both signal strength of distance sensor and communication reception (to optimize simulation).
-                    signal_strength_comm = self.propagation(comm_rho, comm_phi)
+                    #* Only if there are robots.
+                    comm_conditions = [True if idx in robot_ids else False for idx in ray_res if idx != -1]                    
+                    if any(comm_conditions):
+                        rhos = np.array(rhos)[comm_conditions]
+                        ray_res = ray_res[ray_res != -1]
+                        tmp_idx = np.argmin(rhos)
+                        try:
+                            tx_idx = ray_res[np.where(comm_conditions)[0][tmp_idx]]
+                            rx_sensor_pos = self.get_sensor_position(i)
+                            tx_sensors_positions = np.vstack([self.sensor_owner.physics_client.get_sensor_position(tx_idx, 
+                                    sensor_name='IR_receiver', sector=j)[0] for j in range(self.n_sectors)])
+                        except:
+                            import pdb; pdb.set_trace()
+                        tx_rx_distances = np.linalg.norm(tx_sensors_positions - rx_sensor_pos, axis=1)
+                        tx_sector = np.argmin(tx_rx_distances)
+                        tx_sensor_pos = tx_sensors_positions[tx_sector]
+                        comm_rho = tx_rx_distances[tx_sector]
+                        comm_phi = angle_diff(compute_angle(tx_sensor_pos[:2] - rx_sensor_pos[:2]), ori)
+                        #* Compute both signal strength of distance sensor and communication reception (to optimize simulation).
+                        signal_strength_comm = self.propagation(comm_rho, comm_phi)
 
-                    #* Get the received frame. Update the rx dependent info.
-                    #! Provisional implementation. The idea would be to code a comm. medium or queue shared by all the tx and rx of
-                    #! the robots.
-                    sender_entities = [*filter(lambda ent: ent.id == tx_idx , args[0])]
-                    if len(sender_entities):
-                        received_frame = sender_entities[0].actuators['IR_transmitter'].frame
-                        sending_direction = tx_sector #! prov
-                        received_frame.tx_ori = self.directions(0.)[sending_direction] #!
-                        received_frame.rx_ori = self.directions(0.)[i]
-                        received_frame.receiver = self.sensor_owner.id
-                        received_frame.signal_strength = signal_strength_comm
-                        frames[i] = received_frame
+                        #* Get the received frame. Update the rx dependent info.
+                        #! Provisional implementation. The idea would be to code a comm. medium or queue shared by all the tx and rx of
+                        #! the robots.
+                        sender_entities = [*filter(lambda ent: ent.id == tx_idx , neighborhood)]
+                        if len(sender_entities):
+                            received_frame = sender_entities[0].actuators['IR_transmitter'].frame
+                            sending_direction = tx_sector #! prov
+                            received_frame.rx_sector = i
+                            received_frame.tx_sector = tx_sector
+                            received_frame.tx_ori = self.directions(0.)[sending_direction] #!
+                            received_frame.rx_ori = self.directions(0.)[i]
+                            received_frame.receiver = self.sensor_owner.id
+                            received_frame.signal_strength = signal_strength_comm
+                            frames[i] = received_frame
             signal_strengths.append(signal_strength_ds)
         #!frames = super().step(*args, **kwargs)
 
@@ -229,27 +243,3 @@ class IRCommunicationReceiver(DirectionalSensor):
     def empty_frame(self):
         """ Returns an empty frame ``dict``. """
         return IRFrame(msg_len=self.msg_length)
-
-
-
-@sensor_registry(name='buffered_IR_receiver')
-class BufferedIRCommRX(IRCommunicationReceiver):
-    def __init__(self,  *args, **kwargs):
-        super(BufferedIRCommRX, self).__init__(*args, **kwargs)
-        self.prev_msg = np.zeros(self.n_sectors)
-
-    def step(self, *args, **kwargs):
-        curr_dir = self.current_direction
-        frame = super().step(*args, **kwargs)
-        curr_msg = self.prev_msg.copy()
-        curr_msg[curr_dir] = frame['msg'][0]
-        frame['msg'] = curr_msg.copy()
-        self.prev_msg = curr_msg
-        if self.noise_sigma > 0:
-            frame['msg'] += np.random.randn(len(frame['msg'])) * self.noise_sigma
-            frame['signal'] += np.random.randn() * self.noise_sigma
-        return frame
-
-    def reset(self):
-        super().reset()
-        self.prev_msg = np.zeros(self.n_sectors)

@@ -315,8 +315,6 @@ class TaskSwitching4Lights:
         return fitness + 1e-5
 
 
-
-
 @fitness_func_registry(name='grouping')
 class Grouping:
     """Fitness function for the aggrupation task."""
