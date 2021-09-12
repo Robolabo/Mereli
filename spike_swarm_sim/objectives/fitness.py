@@ -312,7 +312,6 @@ class TaskSwitching4Lights:
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
         
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        self.buffered_fitnesses.append(fitness_tasks)
         return fitness + 1e-5
 
 
