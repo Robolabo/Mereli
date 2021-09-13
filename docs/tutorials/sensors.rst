@@ -332,8 +332,8 @@ The general steps accomplished within the are  the ``DistanceSensor.step`` metho
 
 
 
-Light Sensor
-------------
+Light Sensor (old implementation)
+---------------------------------
 
 The light sensor enables the sensing of the light intensity resulting from the emission of luminous 
 WorldObjects (e.g. ``LightSource``). It is a directional sensor, so that it is partitioned into multiple sectors that provide independent measurements 

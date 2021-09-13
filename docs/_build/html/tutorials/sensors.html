@@ -105,7 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#color-sensor">Color Sensor</a></li>
@@ -228,7 +228,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -255,6 +255,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -681,8 +682,8 @@ and attaching it to the sensor as the property <code class="docutils literal not
 </li>
 </ol>
 </div>
-<div class="section" id="light-sensor">
-<h2>Light Sensor<a class="headerlink" href="#light-sensor" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="light-sensor-old-implementation">
+<h2>Light Sensor (old implementation)<a class="headerlink" href="#light-sensor-old-implementation" title="Permalink to this headline">¶</a></h2>
 <p>The light sensor enables the sensing of the light intensity resulting from the emission of luminous
 WorldObjects (e.g. <code class="docutils literal notranslate"><span class="pre">LightSource</span></code>). It is a directional sensor, so that it is partitioned into multiple sectors that provide independent measurements
 of their sector coverage and at the corresponding sensing orientation. The orientations of the sectors are exacly the same as in the distance sensor.

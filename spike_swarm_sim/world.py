@@ -47,12 +47,14 @@ class World(object):
     Example::
 
     >>> # Example of an obstacle avoidance experiment with 5 robots in 3D. 
-    >>> from spike_swarm_sim.world import SquareArena
+    >>> from spike_swarm_sim import SquareArena, Engine3D
     >>> from spike_swarm_sim.objects import Robot3D
     >>> from spike_swarm_sim.controllers import BasicObstacleAvoider
     >>> from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
+    >>>
     >>> n_robots = 5
-    >>> world = SquareArena(height=10, width=10)
+    >>> phy_engine = Engine3D(dt=0.02)
+    >>> world = SquareArena(phy_engine, height=10, width=10)
     >>> world_cfg = {
     >>>     "engine" : "3D",
     >>>     "world_delay" : 1,
@@ -80,10 +82,9 @@ class World(object):
     >>>     }
     >>> }
     >>> world.build_from_dict(world_cfg)
-    >>> world.connect()
-    >>> world.reset()
-    >>> while(True):
-    >>>     state, action = world.step()
+    >>> with world:
+    >>>     while(True):
+    >>>         state, action = world.step()
 
     """
     def __init__(self, physics_engine):
@@ -136,9 +137,6 @@ class World(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
-        #* Compute rewards (swarm rewards)
-        # rewards = self.reward_generator(self.prev_actions, self.prev_states, info=self.hierarchy)\
-        #         if self.t > 0 and self.reward_generator is not None else None
 
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
@@ -148,7 +146,7 @@ class World(object):
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
-            # reward = rewards[idx] if rewards is not None and self.reward_generator is not None else None
+            #* Compute robot reward 
             reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())
             state_obj, action_obj = obj.step(self.hierarchy.values(), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:

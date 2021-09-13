@@ -37,10 +37,9 @@ class Robot(WorldObject):
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
 
-        #* Rendering colors (TO BE MOVED TO RENDER FILE IN THE FUTURE)
-        self.colorA = 'black'
-        self.colorB = 'black'
-        self.color2 = ('skyblue3', 'green')[self.trainable]
+        #* Current Reward perceived by the robot.
+        self.reward = None
+
         # self.reset()
 
     def step(self, neighborhood, reward=None, perturbations=None):
@@ -61,6 +60,7 @@ class Robot(WorldObject):
         :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
         """
+        self.reward = reward
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Add reward as a new state entry.
@@ -139,6 +139,7 @@ class Robot(WorldObject):
         :param int seed: seed for random initialization.
         """
         self._food = False
+        self.reward = None #* Current Reward perceived by the robot.
         if self.controllable:
             # Check if new sensors or actuator has been enabled from the controller. If so, 
             # activate them.

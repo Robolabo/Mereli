@@ -13,5 +13,6 @@ from .joint_sensor import JointPositionSensor, JointVelocitySensor
 from .task_sensor import TaskSensor
 from .collision_sensor import CollisionSensor
 from .camera import Camera
+from .reward_sensor import GroupRewardSensor
 
 from .utils import *

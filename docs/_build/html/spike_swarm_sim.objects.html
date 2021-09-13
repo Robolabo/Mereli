@@ -104,7 +104,7 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -227,7 +227,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -254,6 +254,7 @@
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -479,127 +480,8 @@ can be controlled or not.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-spike_swarm_sim.objects.robot_3D">
-<span id="spike-swarm-sim-objects-robot-3d-module"></span><h2>spike_swarm_sim.objects.robot_3D module<a class="headerlink" href="#module-spike_swarm_sim.objects.robot_3D" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objects.robot_3D.</span></span><span class="sig-name descname"><span class="pre">Robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'entities/epuck/epuck'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.world_object.WorldObject</span></code></a></p>
-<p>Base class for the robot entity. Any robot should inherit from this class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>position</strong> – </p></li>
-<li><p><strong>orientation</strong> – </p></li>
-<li><p><strong>model_file</strong> (<em>str</em>) – name of the file where the robot model is defined.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Variables</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>sensors</strong> (<em>dict</em>) – </p></li>
-<li><p><strong>actuators</strong> (<em>dict</em>) – </p></li>
-<li><p><strong>planned_actions</strong> (<em>dict</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbations</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Step method of the robots. 
-It is composed by the following main steps:</p>
-<ol class="arabic simple">
-<li><p>Firstly steps and reads all the sensors in order to perceive the environment.</p></li>
-<li><p>The robot executes its controller in order to compute the
-actions based on the sensory information.</p></li>
-<li><p>The actions are stored as planned actions to be eventually executed.</p></li>
-</ol>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>neighborhood</strong> (<em>list</em>) – list filled with the neighboring world objects.</p></li>
-<li><p><strong>reward</strong> (<em>float</em>) – reward to be fed to the controller update rules, if any.</p></li>
-<li><p><strong>perturbations</strong> (<em>list</em>) – list of <code class="docutils literal notranslate"><span class="pre">PostProcessingPerturbation</span></code> to apply 
-to the stimuli before controller step. If there are no perturbations
-to apply the paramter is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>state and action tuple of the current timestep. Both of them are expressed as 
-a dict with the sensor/actuator name and the corresponding stimuli/action.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.plan_actions">
-<span class="sig-name descname"><span class="pre">plan_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.plan_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.plan_actions" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.actuate">
-<span class="sig-name descname"><span class="pre">actuate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.actuate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.actuate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes the previously planned actions in order to be processed in the world.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of neighoboring entities to be used by some high level 
-actuators.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.perceive">
-<span class="sig-name descname"><span class="pre">perceive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.perceive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.perceive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the observed stimuli by steping each of the active sensors one by one.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list filled with the neighboring world objects.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with each sensor name as key and the sensor readings as value.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
-can be randomly initialized or fixed. In the former case a seed can be specified.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed for random intialization.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.add_communication">
-<span class="sig-name descname"><span class="pre">add_communication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comm_sys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Robot.add_communication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.add_communication" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Robot.food">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">food</span></span><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Robot.food" title="Permalink to this definition">¶</a></dt>
-<dd><p>Getter for the food attribute. It is a boolean attribute active if the robot stores food.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Minitaur">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objects.robot_3D.</span></span><span class="sig-name descname"><span class="pre">Minitaur</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Minitaur"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Minitaur" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.robot_3D.Robot</span></code></a></p>
-<p>Class for the Minitaur robot.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.objects.robot_3D.Epuck">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objects.robot_3D.</span></span><span class="sig-name descname"><span class="pre">Epuck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objects/robot_3D.html#Epuck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objects.robot_3D.Epuck" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.objects.robot_3D.Robot</span></code></a></p>
-<p>Class for the Epuck.</p>
-</dd></dl>
-
+<div class="section" id="spike-swarm-sim-objects-robot-3d-module">
+<h2>spike_swarm_sim.objects.robot_3D module<a class="headerlink" href="#spike-swarm-sim-objects-robot-3d-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-spike_swarm_sim.objects.light_source">
 <span id="spike-swarm-sim-objects-light-source-module"></span><h2>spike_swarm_sim.objects.light_source module<a class="headerlink" href="#module-spike_swarm_sim.objects.light_source" title="Permalink to this headline">¶</a></h2>

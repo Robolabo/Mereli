@@ -126,6 +126,15 @@ spike\_swarm\_sim.sensors.task\_sensor module
     :undoc-members:
     :show-inheritance:
 
+spike\_swarm\_sim.sensors.reward\_sensor module
+---------------------------------------------
+
+.. automodule:: spike_swarm_sim.sensors.reward_sensor
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 
 Module contents
 ---------------

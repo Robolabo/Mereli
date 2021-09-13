@@ -97,13 +97,25 @@
 <li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../tutorials/sensors.html">Sensors and Actuators</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#sensors">Sensors</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#actuators">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../tutorials/communication_systems.html">Communication</a><ul>
@@ -159,13 +171,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -213,7 +225,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -337,6 +349,7 @@
   <h1>Source code for spike_swarm_sim.world</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
@@ -383,12 +396,14 @@
 <span class="sd">    Example::</span>
 
 <span class="sd">    &gt;&gt;&gt; # Example of an obstacle avoidance experiment with 5 robots in 3D. </span>
-<span class="sd">    &gt;&gt;&gt; from spike_swarm_sim.world import SquareArena</span>
+<span class="sd">    &gt;&gt;&gt; from spike_swarm_sim import SquareArena, Engine3D</span>
 <span class="sd">    &gt;&gt;&gt; from spike_swarm_sim.objects import Robot3D</span>
 <span class="sd">    &gt;&gt;&gt; from spike_swarm_sim.controllers import BasicObstacleAvoider</span>
 <span class="sd">    &gt;&gt;&gt; from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer</span>
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; n_robots = 5</span>
-<span class="sd">    &gt;&gt;&gt; world = SquareArena(height=10, width=10)</span>
+<span class="sd">    &gt;&gt;&gt; phy_engine = Engine3D(dt=0.02)</span>
+<span class="sd">    &gt;&gt;&gt; world = SquareArena(phy_engine, height=10, width=10)</span>
 <span class="sd">    &gt;&gt;&gt; world_cfg = {</span>
 <span class="sd">    &gt;&gt;&gt;     &quot;engine&quot; : &quot;3D&quot;,</span>
 <span class="sd">    &gt;&gt;&gt;     &quot;world_delay&quot; : 1,</span>
@@ -416,10 +431,9 @@
 <span class="sd">    &gt;&gt;&gt;     }</span>
 <span class="sd">    &gt;&gt;&gt; }</span>
 <span class="sd">    &gt;&gt;&gt; world.build_from_dict(world_cfg)</span>
-<span class="sd">    &gt;&gt;&gt; world.connect()</span>
-<span class="sd">    &gt;&gt;&gt; world.reset()</span>
-<span class="sd">    &gt;&gt;&gt; while(True):</span>
-<span class="sd">    &gt;&gt;&gt;     state, action = world.step()</span>
+<span class="sd">    &gt;&gt;&gt; with world:</span>
+<span class="sd">    &gt;&gt;&gt;     while(True):</span>
+<span class="sd">    &gt;&gt;&gt;         state, action = world.step()</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_engine</span><span class="p">):</span>
@@ -472,9 +486,6 @@
         <span class="n">states</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="n">actions</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
         <span class="n">pre_perturbations</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1">#* Compute rewards</span>
-        <span class="n">rewards</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="p">)</span>\
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="c1">#* Step controllers</span>
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controllable_objects</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -484,7 +495,8 @@
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">pre_perturbations</span> <span class="o">=</span> <span class="p">[</span><span class="n">pert</span> <span class="k">for</span> <span class="n">pert</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_of</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)]</span>\
                             <span class="k">if</span> <span class="ow">not</span> <span class="n">pert</span><span class="o">.</span><span class="n">postprocessing</span> <span class="ow">and</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">pert</span><span class="o">.</span><span class="n">affected_robots</span><span class="p">]</span>
-            <span class="n">reward</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="k">if</span> <span class="n">rewards</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="c1">#* Compute robot reward </span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
             <span class="n">state_obj</span><span class="p">,</span> <span class="n">action_obj</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="n">pre_perturbations</span><span class="p">)</span> <span class="c1">#!</span>
             <span class="c1"># if self.reward_generator is not None:</span>
             <span class="c1">#     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)</span>
@@ -665,12 +677,10 @@
 
 <div class="viewcode-block" id="World.connect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Connect to the physics engine. &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Connected&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="World.disconnect"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.World.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Disconnect physics engine. &quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Disconnected&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
 
     <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -788,7 +798,7 @@
 <span class="sd">    :param float height: height of the square arena in meters.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">SquareArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Engine3D</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SquareArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
         <span class="c1">#* Add world limits</span>
@@ -815,7 +825,7 @@
 <span class="sd">    :param float radius: radius of the circular wall contraining the arena.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">CircularArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Engine3D</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CircularArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__resize_circle_arena</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">Map</span><span class="p">(</span><span class="s1">&#39;circle_arena/circle_arena&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;maps&#39;</span><span class="p">)</span>
@@ -856,25 +866,25 @@
 <span class="sd">    :param str model_file: path to the URDF file defining the map. It is relative to &#39;spike_swarm_sim/models/maps/&#39; </span>
 <span class="sd">        and the file extension is not required</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_file</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">CustomWorld</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">Engine3D</span><span class="p">(),</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">map_file</span><span class="o">=</span><span class="s1">&#39;simple_map_1/simple_map_1&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomWorld</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">map_file</span> <span class="o">=</span> <span class="n">map_file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">Map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_file</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;maps&#39;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MultiWorldWrapper"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.MultiWorldWrapper">[docs]</a><span class="k">class</span> <span class="nc">MultiWorldWrapper</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Wrapper class for paralellizing genotype evaluations. </span>
+    <span class="sd">&quot;&quot;&quot; Wrapper class for parallelizing genotype evaluations. </span>
 <span class="sd">    </span>
 <span class="sd">    :param int n_cpu: number of cores (and parallel simulations).</span>
-<span class="sd">    :param float height: height in metres of the square arena.</span>
-<span class="sd">    :param float width: width in metres of the square arena.</span>
-<span class="sd">    :param float world_delay: deprecated, to be removed in next ver.</span>
+<span class="sd">    :param World world: created instance of world or environment to be </span>
+<span class="sd">        cloned and parallelized.</span>
 
 <span class="sd">    .. todo:: #TODO: Needs to be revisited!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_cpu</span> <span class="o">=</span> <span class="n">n_cpu</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">SquareArena</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">world_delay</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="c1">#! Mucho ojo. Son objetos totalmente desacoplados?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">world</span><span class="p">)]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MultiWorldWrapper.build_from_dict"><a class="viewcode-back" href="../../modules.html#spike_swarm_sim.world.MultiWorldWrapper.build_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">build_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">,</span> <span class="n">ann_topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Build all the created worlds from the config dicts. &quot;&quot;&quot;</span>

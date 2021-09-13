@@ -57,7 +57,8 @@ Lets clarify all the previous phases using a very simple initial example:
 
 **Example 1.1**::
 
->>> world = SquareArena(height=10,  width=10) # Create the world
+>>> phy_engine = Engine3D(dt=0.02) # Create physics engine with 0.02 sec of refresh period.
+>>> world = SquareArena(phy_engine, height=10,  width=10) # Create the world
 >>> robot = Epuck([0,0,0], [0,0,0]) # Create a robot at the arena origin
 >>> world.register_entity('swarm_member_1', robot, group='swarm') # Register the robot in the simulation
 >>> with world: # Context manager to automatically connect and disconnect.
@@ -65,7 +66,11 @@ Lets clarify all the previous phases using a very simple initial example:
 >>>     for t in range(2000):
 >>>         world.step() # Step a single simulation iteration.
 
-In this example we have created a square arena of 10x10 with a single e-puck robot. The robot is positioned at coordinates 
+In this example we have created a square arena of 10x10 with a single e-puck robot. 
+Before creating any world, the physics engine to be used must be instantiated. In this case the ``Engine3D`` physics engine 
+implements realistic 3D physics simulation and renderings by means of the pybullet library. Other physics engines can be 
+created and used to narrow the gap between simulation and reality (for instance, underwater dynamics, aerial dynamics, etc). 
+The robot is positioned at coordinates 
 [0,0,0] and with Euler orientation [0,0,0]. Thereafter, the robot is registered using the method ``World.register_entity`` 
 with the name ``'swarm_member_1'`` and attached to the group ``'swarm'``. Notice that in this simple example the robot is the only member of the group.
 The simulation is set up using the world as a context manager, so that the ``World.connect`` and ``World.disconnect`` methods are called 
@@ -145,8 +150,6 @@ The following screenshots depict each of the currently implemented world classes
             <p style="text-align:center;"><b>Custom World</b></p>
         </div>
     </div>
-
-
 
 
 Entities
@@ -266,7 +269,8 @@ Now that we have introduced the entities, lets extend the Example 1.1:
 
 **Example 1.3**::
 
->>> world = CircularArena(radius=5) # Create the world
+>>> phy_engine = Engine3D(dt=0.02) # Create physics engine with 0.02 sec of refresh period.
+>>> world = CircularArena(phy_engine, radius=5) # Create the world
 >>> # Create controller and define sensors
 >>> ctlr1 = BasicObstacleAvoider()
 >>> ctlr2 = BasicObstacleAvoider()
@@ -364,7 +368,8 @@ For the moment lets focus on the following example:
 
 **Example 1.5**::
 
->>> world = CircularArena(radius=5) # Create the world
+>>> phy_engine = Engine3D(dt=0.02) # Create physics engine with 0.02 sec of refresh period.
+>>> world = CircularArena(phy_engine, radius=5) # Create the world
 >>> n_robots = 5 # Number of robots in the group 'swarm'.
 >>> # Create and register initializers 
 >>> ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
@@ -412,7 +417,8 @@ Lets redo the **Example 1.5** using the ``build_from_dict`` method and reference
 
 **Example 1.6**::
 
->>> world = CircularArena(radius=5) # Create the world
+>>> phy_engine = Engine3D(dt=0.02) # Create physics engine with 0.02 sec of refresh period.
+>>> world = CircularArena(phy_engine, radius=5) # Create the world
 >>> n_robots = 5 # Number of robots in the group 'swarm'.
 >>> world_cfg = {
 >>>     "engine" : "3D",

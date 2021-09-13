@@ -105,7 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sensors.html#color-sensor">Color Sensor</a></li>
@@ -228,7 +228,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -255,6 +255,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -399,7 +400,8 @@ when using world class as context manager.</p></li>
 </ol>
 <p>Lets clarify all the previous phases using a very simple initial example:</p>
 <p><strong>Example 1.1</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">SquareArena</span><span class="p">(</span><span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phy_engine</span> <span class="o">=</span> <span class="n">Engine3D</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="c1"># Create physics engine with 0.02 sec of refresh period.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">SquareArena</span><span class="p">(</span><span class="n">phy_engine</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>  <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># Create the world</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">robot</span> <span class="o">=</span> <span class="n">Epuck</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="c1"># Create a robot at the arena origin</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">world</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;swarm_member_1&#39;</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;swarm&#39;</span><span class="p">)</span> <span class="c1"># Register the robot in the simulation</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">world</span><span class="p">:</span> <span class="c1"># Context manager to automatically connect and disconnect.</span>
@@ -408,7 +410,11 @@ when using world class as context manager.</p></li>
 <span class="gp">&gt;&gt;&gt; </span>        <span class="n">world</span><span class="o">.</span><span class="n">step</span><span class="p">()</span> <span class="c1"># Step a single simulation iteration.</span>
 </pre></div>
 </div>
-<p>In this example we have created a square arena of 10x10 with a single e-puck robot. The robot is positioned at coordinates
+<p>In this example we have created a square arena of 10x10 with a single e-puck robot.
+Before creating any world, the physics engine to be used must be instantiated. In this case the <code class="docutils literal notranslate"><span class="pre">Engine3D</span></code> physics engine
+implements realistic 3D physics simulation and renderings by means of the pybullet library. Other physics engines can be
+created and used to narrow the gap between simulation and reality (for instance, underwater dynamics, aerial dynamics, etc).
+The robot is positioned at coordinates
 [0,0,0] and with Euler orientation [0,0,0]. Thereafter, the robot is registered using the method <code class="docutils literal notranslate"><span class="pre">World.register_entity</span></code>
 with the name <code class="docutils literal notranslate"><span class="pre">'swarm_member_1'</span></code> and attached to the group <code class="docutils literal notranslate"><span class="pre">'swarm'</span></code>. Notice that in this simple example the robot is the only member of the group.
 The simulation is set up using the world as a context manager, so that the <code class="docutils literal notranslate"><span class="pre">World.connect</span></code> and <code class="docutils literal notranslate"><span class="pre">World.disconnect</span></code> methods are called
@@ -703,7 +709,8 @@ If the entity is controllable,
 the previously instantiated controller is also supplied as a kwarg to the class constructor.</p>
 <p>Now that we have introduced the entities, lets extend the Example 1.1:</p>
 <p><strong>Example 1.3</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phy_engine</span> <span class="o">=</span> <span class="n">Engine3D</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="c1"># Create physics engine with 0.02 sec of refresh period.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">phy_engine</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create controller and define sensors</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr1</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ctlr2</span> <span class="o">=</span> <span class="n">BasicObstacleAvoider</span><span class="p">()</span>
@@ -817,7 +824,8 @@ method <code class="docutils literal notranslate"><span class="pre">World.build_
 understand how reference names work firstly).
 For the moment lets focus on the following example:</p>
 <p><strong>Example 1.5</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phy_engine</span> <span class="o">=</span> <span class="n">Engine3D</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="c1"># Create physics engine with 0.02 sec of refresh period.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">phy_engine</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create and register initializers</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ini_ori</span> <span class="o">=</span> <span class="n">RandomUniformInitializer</span><span class="p">(</span><span class="n">n_robots</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mf">6.28</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;3D&#39;</span><span class="p">,</span> <span class="n">variable</span><span class="o">=</span><span class="s1">&#39;orientations&#39;</span><span class="p">)</span>
@@ -861,7 +869,8 @@ to this point, we have already shown several reference names attached to worlds,
 name of the classes <code class="docutils literal notranslate"><span class="pre">SquareArena</span></code>, <code class="docutils literal notranslate"><span class="pre">Epuck</span></code> and <code class="docutils literal notranslate"><span class="pre">RandomUniformInitializer</span></code> are <code class="docutils literal notranslate"><span class="pre">'square_arena'</span></code>, <code class="docutils literal notranslate"><span class="pre">'epuck'</span></code> and <code class="docutils literal notranslate"><span class="pre">'random_uniform'</span></code>, respectively.</p>
 <p>Lets redo the <strong>Example 1.5</strong> using the <code class="docutils literal notranslate"><span class="pre">build_from_dict</span></code> method and reference names (the final simulation should be equivalent):</p>
 <p><strong>Example 1.6</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phy_engine</span> <span class="o">=</span> <span class="n">Engine3D</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span> <span class="c1"># Create physics engine with 0.02 sec of refresh period.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">CircularArena</span><span class="p">(</span><span class="n">phy_engine</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># Create the world</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">n_robots</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1"># Number of robots in the group &#39;swarm&#39;.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">world_cfg</span> <span class="o">=</span> <span class="p">{</span>
 <span class="gp">&gt;&gt;&gt; </span>    <span class="s2">&quot;engine&quot;</span> <span class="p">:</span> <span class="s2">&quot;3D&quot;</span><span class="p">,</span>

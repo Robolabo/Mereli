@@ -105,7 +105,7 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -228,7 +228,7 @@
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -255,6 +255,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -380,7 +381,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 </ul>
@@ -421,7 +422,7 @@ base class for directional sensors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 <li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
@@ -569,7 +570,7 @@ in that direction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 <li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
@@ -761,7 +762,7 @@ light intensity within the correspoding sector.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 <li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
@@ -779,26 +780,7 @@ distance estimation bounded in [0, 1].</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.LightSensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#LightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.LightSensor.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Step method of the light sensor that estimates the distances to nearby light sources at the current time instant. 
-It returns a numpy array of length equal to <code class="docutils literal notranslate"><span class="pre">n_sectors</span></code> with the reading of each independent sector. 
-The main steps of the reading are the following:</p>
-<ol class="arabic">
-<li><p>The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
-it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
-entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
-turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</p></li>
-<li><p>We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
-and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> 
-is filtered out so that only overlapping objects that emit light of the requested color are kept.           
-If this new filtered list is empty, the measured signal strength is zero (no entities within the sensing area of this sector). 
-Otherwise, if there are luminous entities within the sector area, then the signal strength reading is calculated (see below).</p></li>
-<li><p>Provided that <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> is not empty, the computation of the distance and misalignment estimation to light sources is accomplished as follows. 
-The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
-within an spherical sector determined by the sensor aperture and range.  The following screenshot displays the mentioned 
-ray batchs of a sector:</p>
-<img src="../../_static/demo_LS_rays.png" style="width:70%;text-align: center;"></li>
-</ol>
-<dl class="field-list simple">
+<dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
 kept as a parameter because other sensors may need to use it.</p>
@@ -815,24 +797,80 @@ kept as a parameter because other sensors may need to use it.</p>
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.BlueLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">BlueLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#BlueLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.BlueLightSensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.BlueLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#BlueLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.BlueLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.YellowLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">YellowLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#YellowLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.YellowLightSensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.YellowLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#YellowLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.YellowLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.RedLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">RedLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#RedLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.RedLightSensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.RedLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#RedLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.RedLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.GreenLightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">GreenLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#GreenLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.GreenLightSensor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.light_sensor.LightSensor" title="spike_swarm_sim.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.light_sensor.GreenLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/light_sensor.html#GreenLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.light_sensor.GreenLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -859,7 +897,7 @@ to be selected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 <li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
@@ -926,7 +964,7 @@ rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#IRCommunicationReceiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Steps the communication receiver. With the sensed frames from all directions it 
 applies the selection of a 
 unique frame is carried out among those frames whose sender is not the receiver.
@@ -995,38 +1033,6 @@ these cases, the selected frame is an empty frame.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.communication_receiver.</span></span><span class="sig-name descname"><span class="pre">BufferedIRCommRX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver" title="spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.step" title="Permalink to this definition">¶</a></dt>
-<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
-applies the selection of a 
-unique frame is carried out among those frames whose sender is not the receiver.
-If no message is sensed, the measurement is an empty frame. Notice that this method extends the 
-functionality of the method <code class="docutils literal notranslate"><span class="pre">DirectionalSensor.step</span></code> (it does not overwrite it).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> types) (excluding the robot 
-reading the sensor).</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases 
-it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/communication_receiver.html#BufferedIRCommRX.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.communication_receiver.BufferedIRCommRX.reset" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reset method of the sensor.</p>
-</dd></dl>
-
-</dd></dl>
-
 </div>
 <div class="section" id="module-spike_swarm_sim.sensors.color_sensor">
 <span id="spike-swarm-sim-sensors-color-sensor-module"></span><h2>spike_swarm_sim.sensors.color_sensor module<a class="headerlink" href="#module-spike_swarm_sim.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
@@ -1046,7 +1052,7 @@ surpasses a certain threshold.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
 <li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
@@ -1129,7 +1135,7 @@ Additionally, it only detects ground areas of a particular color.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_owner</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot_3D.Robot" title="spike_swarm_sim.objects.robot_3D.Robot"><em>Robot</em></a>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
 <li><p><strong>noise_sigma</strong> (<em>float</em>) – TODO change to Bernoulli noise.</p></li>
 <li><p><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</p></li>
 </ul>
@@ -1414,6 +1420,40 @@ If no message is sensed, the measurement is an empty frame.</p>
 <dt class="sig sig-object py" id="spike_swarm_sim.sensors.task_sensor.TaskSensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hierarchy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/task_sensor.html#TaskSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.task_sensor.TaskSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spike-swarm-sim-sensors-reward-sensor-module">
+<h2>spike_swarm_sim.sensors.reward_sensor module<a class="headerlink" href="#spike-swarm-sim-sensors-reward-sensor-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-spike_swarm_sim.sensors.reward_sensor"></span><dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.reward_sensor.GroupRewardSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.sensors.reward_sensor.</span></span><span class="sig-name descname"><span class="pre">GroupRewardSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/reward_sensor.html#GroupRewardSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.reward_sensor.GroupRewardSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.sensors.base_sensor.Sensor" title="spike_swarm_sim.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor that measures the mean reward obtained by all the robots in the 
+vicinity of the sensor owner. The vicinity is established as a sphere of a radius 
+determinied by the <code class="docutils literal notranslate"><span class="pre">range</span></code> argument. The sensor simplifies and abstracts the underlying 
+use of communication technologies such as Bluetooth or Zigbee. An important note is that 
+the receiving robot is not aware of the neighboring robot that sent the reward because there is 
+no directionality awareness and rewards are averaged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>range</strong> (<em>float</em>) – radius of the vicinity. Only rewards within this range can be perceived by 
+the robot.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.sensors.reward_sensor.GroupRewardSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/sensors/reward_sensor.html#GroupRewardSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.sensors.reward_sensor.GroupRewardSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method of th Group Reward Sensor. It collects the rewards of any robot within an 
+Euclidean distance lower that <code class="docutils literal notranslate"><span class="pre">range</span></code> and returns the mean reward of the vicinity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
