@@ -1,6 +1,7 @@
 import time
 import os
 import json
+import logging
 import numpy as np
 import xml.etree.cElementTree as ET
 import pybullet as p
@@ -59,7 +60,7 @@ class Engine3D:
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
         # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
-        p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0)
+        p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True
@@ -73,13 +74,13 @@ class Engine3D:
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
         # self.engine.resetSimulation(physicsClientId=self.engine._client)
-        self.engine.disconnect()
+        self.engine.disconnect(physicsClientId=self.client)
         self.connected = False
 
     def step_physics(self):
         """ Iterates all the 3D physics of the world entities using pybullet. """
         for i in range(int(self.T_control//self.dt)):
-            p.stepSimulation()
+            p.stepSimulation(physicsClientId=self.client)
 
     def step_render(self):
         """ Iterates the graphics visualization at give FPS. """
@@ -309,7 +310,7 @@ class Engine3D:
         """
         if ghost_ids is not None:
             for idx in ghost_ids:
-                p.setCollisionFilterGroupMask(obj_id, idx, 0b01, 0b01,  physicsClientId=self.client)
+                p.setCollisionFilterGroupMask(obj_id, idx, 0b01, 0b01, physicsClientId=self.client)
         p.performCollisionDetection(physicsClientId=self.client)
         contact_points = p.getContactPoints(obj_id, physicsClientId=self.client)
         if ghost_ids is not None:
@@ -375,7 +376,40 @@ class Engine3D:
         """
         return self.physical_sensors[sensor_name][sector]['orientation'][-1] #!only yaw ftm
 
-    
+    def control_joints(self, obj_id, joints, actions, control_type='velocity'):
+        """ Control a series of robot joints either in velocity or in position.
+        
+        :param int obj_id: identifier of the robot whose joints will be controlled.
+        :param list joints: list of identifiers of the joints of the robot to be controlled.
+        :param list actions: list or np.ndarray of actions to control each joint.
+        :param str control_type: type of joint control (either "velocity" or "position").
+        """
+        assert len(joints) == len(actions)
+        for action, joint in zip(actions, joints):
+            if control_type == 'velocity':
+                p.setJointMotorControl2(obj_id, joint, targetVelocity=action, velocityGain=1.1,
+                    controlMode=p.VELOCITY_CONTROL, physicsClientId=self.client)
+            elif control_type == 'position':
+                p.setJointMotorControl2(obj_id, joint, targetPosition=action, controlMode=p.POSITION_CONTROL,
+                    positionGain=1.1, velocityGain=1.1, physicsClientId=self.client)
+            else:
+                raise Exception(logging.error('Joints cannot be controlled by {}.'\
+                     'Please Select either "velocity" or "position".'.format(control_type)))
+
+    def read_joints(self, obj_id, joints):
+        """ Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
+        a tuple (joint_velocities, joint_positions) with the arrays of the measurements of each kind.
+
+        :param int obj_id: identifier of the robot whose joints will be read.
+        :param list joints: list of identifiers of the joints of the robot to be read.
+
+        :returns: tuple of the form (joint_velocities, joint_positions) with the arrays of the measurements of each kind.
+        """
+        positions, velocities = map(np.array, zip(*[p.getJointState(obj_id, joint, 
+                                    physicsClientId=self.client)[:2] for joint in joints]))
+        positions = (positions + np.pi) % (2 * np.pi) - np.pi #! Check
+        return (positions, velocities)
+     
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.
@@ -397,6 +431,12 @@ class Engine3D:
         if self.render:
             self.engine.resetDebugVisualizerCamera(cameraDistance=distance, cameraYaw=0,\
                     cameraPitch=-90, cameraTargetPosition=tuple(position))
+
+
+
+
+
+
 
 
 def json_parser(file, position, orientation):

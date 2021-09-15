@@ -32,29 +32,21 @@ class JointVelocityActuator(Actuator):
 
         :param np.ndarray action: numpy array collection the normalized reference velocities of each joint 
             to be controlled.
-
-        .. todo::
-
-            Quitar llamada explicita a pybullet y usar request a physics_client.
-
         """
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-        for ac, joint in zip(action, self.joint_ids):
-            p.setJointMotorControl2(self.owner_id, joint, targetVelocity=ac * self.max_velocity,\
-                controlMode=p.VELOCITY_CONTROL, physicsClientId=self.physics_client.client, velocityGain=1.1)
+        action *= self.max_velocity # Convert range [-1,1] to [-w_max, w_max].
+        self.physics_client.control_joints(self.owner_id, self.joint_ids, action, control_type='velocity')
         if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
-            p.setJointMotorControl2(self.owner_id, self.inverse_mirrored,\
-                targetVelocity=-action[0] * self.max_velocity, controlMode=p.VELOCITY_CONTROL,\
-                physicsClientId=self.physics_client.client, velocityGain=1.1)
-
+            self.physics_client.control_joints(self.owner_id, [self.inverse_mirrored], 
+                    [-action[0]], control_type='velocity')
+            
     def reset(self,):
         """ Resets the actuator."""
         if self.physics_client is not None:
-            for joint in self.joint_ids:
-                p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
-                    controlMode=p.VELOCITY_CONTROL, physicsClientId=self.physics_client.client)
+            self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
+
 
 @actuator_registry(name='joint_position_actuator')
 class JointPositionActuator(Actuator):
@@ -81,22 +73,14 @@ class JointPositionActuator(Actuator):
         into [-pi, pi] inside the method.
 
         :param np.ndarray action: numpy array collection the normalized reference velocities of each joint 
-            to be controlled.
-
-        .. todo::
-
-            Quitar llamada explicita a pybullet y usar request a physics_client.
-            
+            to be controlled.            
         """
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-
-        for ac, joint in zip(action, self.joint_ids):
-            p.setJointMotorControl2(self.actuator_owner.id, joint, targetPosition=ac * np.pi,\
-                controlMode=p.POSITION_CONTROL, physicsClientId=self.actuator_owner.physics_client.client,\
-                positionGain=1.1, velocityGain=1.1, maxVelocity=self.max_velocity)
-    
+        action *= np.pi # Convert range [-1,1] to [-pi, pi].
+        self.physics_client.control_joints(self.owner_id, self.joint_ids, action, control_type='position')
+        
     # def reset(self,):
     #     for joint in self.joint_ids:
     #         p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
