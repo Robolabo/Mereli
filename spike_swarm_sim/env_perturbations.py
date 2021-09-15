@@ -106,7 +106,7 @@ class StimuliInhibition(PreProcessingPerturbation):
     @increase_time
     def __call__(self, state, robot):
         stim_val = reduce(lambda x, y: x[y], self.stimuli, state)
-        noise_sigma = robot.sensors[self.stimuli[0]].noise_sigma if hasattr(robot.sensors[self.stimuli[0]], 'noise_sigma') else 0.
+        noise_sigma = robot.sensors[self.stimuli[0]].noise_sigma if hasattr(robot.sensors.get(self.stimuli[0]), 'noise_sigma') else 0.
         if len(self.stimuli) > 1:
             state[self.stimuli[0]][self.stimuli[1]] = np.random.randn(len(stim_val)) * noise_sigma\
                     if noise_sigma > 0 else np.zeros_like(stim_val)

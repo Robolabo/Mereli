@@ -63,19 +63,20 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 2, "msg_length" : 1, "selection_scheme" : "cyclic", "noise_sigma" : 0.05},
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 2, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
                     "task_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
-                    "IR_transmitter" : {"range" : 2, "msg_length":1}
+                    "IR_transmitter" : {"range" : 2, "msg_length":1},
+                    "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1], "high" : [1,1], "size" : 2}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-2,-2],"high" : [1,1], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "comm_sys" : {"name" :"buffered_IR_comm", "params" : {}},
-                "perturbations" : {},
+                "comm_sys" : {"name" :"IR_comm", "params" : {}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [0,1], "stimuli" : "reward", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -113,7 +114,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 1000, 
+                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 800, 
                             "replacement" : false, "task_names" : ["red", "yellow", "blue", "green"]}
             }
         }
@@ -123,7 +124,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 1000,
+        "evaluation_steps" : 800,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching3",
         "populations" : {
@@ -140,7 +141,7 @@
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 0.6,
-                    "species_elites" : 1
+                    "species_elites" : 2
                 }
             }          
         }

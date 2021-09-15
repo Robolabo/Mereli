@@ -100,7 +100,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     t0 = time.time()
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
-        
         seed += 1
         world.reset(seed=seed)
         actions_history = deque()

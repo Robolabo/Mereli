@@ -322,15 +322,16 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 1000 and self.monitor is not None:
-            vv = np.stack(tuple(self.monitor.get('outputs').values()))
+        if self.t == self.time_scale * 800 and self.monitor is not None:
+            oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
-            aa = np.stack(tuple(self.monitor.get('voltages').values()))
+            vv = np.stack(tuple(self.monitor.get('voltages').values()))
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
             import pdb; pdb.set_trace()
         # actions['outA'] = [0,0]
+        # actions['outB'] = [0.75]
         return actions
     
     @property
