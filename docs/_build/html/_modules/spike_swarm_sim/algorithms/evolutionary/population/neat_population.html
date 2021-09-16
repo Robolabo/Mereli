@@ -102,7 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/controllers.html">Controllers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -252,6 +253,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -425,6 +427,7 @@
 <span class="sd">        :param list fitness_vector: vector collecting the achieved fitness score of every individual.</span>
 <span class="sd">        :param int generation: current generation of the evolution process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">offspring</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">best</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">fitness_vector</span><span class="p">)])</span>
         <span class="c1">#* Update species fitness statistics</span>
@@ -475,7 +478,8 @@
         <span class="c1">#     self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)</span>
         <span class="c1">#     for sp in self.species:</span>
         <span class="c1">#         sp.compatib_thresh = self.compatib_thresh</span>
-                
+        <span class="c1"># print(&#39;NEAT &#39;, time.time() - t0)</span>
+        <span class="c1"># import pdb; pdb.set_trace()        </span>
        
     
 <div class="viewcode-block" id="NEAT_Population.update_species"><a class="viewcode-back" href="../../../../../spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.update_species">[docs]</a>    <span class="k">def</span> <span class="nf">update_species</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generation</span><span class="p">):</span>

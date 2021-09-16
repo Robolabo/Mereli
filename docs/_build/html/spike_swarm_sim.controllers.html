@@ -35,6 +35,7 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -120,6 +121,11 @@
 <li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -190,13 +196,13 @@
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">spike_swarm_sim.controllers package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-controllers-basic-obstacle-avoider-module">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-controllers-light-position-controller-module">spike_swarm_sim.controllers.light_position_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.controllers">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
@@ -219,9 +225,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#spike-swarm-sim-objectives-fitness-module">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#spike-swarm-sim-objectives-reward-module">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
@@ -273,13 +279,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#spike-swarm-sim-world-module">spike_swarm_sim.world module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#spike-swarm-sim-config-parser-module">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -356,45 +362,6 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-spike_swarm_sim.controllers.basic_obstacle_avoider">
-<span id="spike-swarm-sim-controllers-basic-obstacle-avoider-module"></span><h2>spike_swarm_sim.controllers.basic_obstacle_avoider module<a class="headerlink" href="#module-spike_swarm_sim.controllers.basic_obstacle_avoider" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.basic_obstacle_avoider.BasicObstacleAvoider">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.basic_obstacle_avoider.</span></span><span class="sig-name descname"><span class="pre">BasicObstacleAvoider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/basic_obstacle_avoider.html#BasicObstacleAvoider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.basic_obstacle_avoider.BasicObstacleAvoider" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.basic_obstacle_avoider.BasicObstacleAvoider.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/basic_obstacle_avoider.html#BasicObstacleAvoider.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.basic_obstacle_avoider.BasicObstacleAvoider.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-<div class="section" id="module-spike_swarm_sim.controllers.braitenberg1_controller">
-<span id="spike-swarm-sim-controllers-braitenberg1-controller-module"></span><h2>spike_swarm_sim.controllers.braitenberg1_controller module<a class="headerlink" href="#module-spike_swarm_sim.controllers.braitenberg1_controller" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2Controller">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.braitenberg1_controller.</span></span><span class="sig-name descname"><span class="pre">Braitenberg2Controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2Controller" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2Controller.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2Controller.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2Controller.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2bController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.braitenberg1_controller.</span></span><span class="sig-name descname"><span class="pre">Braitenberg2bController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2bController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2bController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2bController.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2bController.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2bController.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
 <div class="section" id="module-spike_swarm_sim.controllers.controller">
 <span id="spike-swarm-sim-controllers-controller-module"></span><h2>spike_swarm_sim.controllers.controller module<a class="headerlink" href="#module-spike_swarm_sim.controllers.controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -418,7 +385,26 @@
 <dt class="sig sig-object py" id="spike_swarm_sim.controllers.controller.RobotController">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.controller.</span></span><span class="sig-name descname"><span class="pre">RobotController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_owner</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/controller.html#RobotController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.controller.RobotController" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.Controller" title="spike_swarm_sim.controllers.controller.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.Controller</span></code></a></p>
-<p>Base class for Robot Controllers.</p>
+<p>Base class for Robot Controllers. Any Controller devoted to the management of robot 
+actions must inherit from this class. The controller functionality must be implemented 
+within the overwritten <code class="docutils literal notranslate"><span class="pre">Controller.step</span></code> method. In order to use them, sensors and actuators 
+must be enabled by the controller first (controllers normally use only a subset of all available 
+sensors and actuators). Sensor can be activated through either <code class="docutils literal notranslate"><span class="pre">add_sensor</span></code> to enable them one 
+by one or using <code class="docutils literal notranslate"><span class="pre">add_sensors_from_dict</span></code>, to activate all at once. Similarly, actuators can be 
+included using either <code class="docutils literal notranslate"><span class="pre">add_actuator</span></code> or <code class="docutils literal notranslate"><span class="pre">add_actuators_from_dict</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>controller_owner</strong> (<em>Robot</em>) – Instance of the robot owning the controller.</p>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>enabled_sensors</strong> (<em>dict</em>) – dict with storing the sensors enabled by the controller. 
+It maps sensor reference names to a dict with the paramters of the sensor.</p></li>
+<li><p><strong>enabled_actuators</strong> (<em>dict</em>) – dict with storing the actuators enabled by the controller. 
+It maps sensor reference names to a dict with the paramters of the actuators.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="spike_swarm_sim.controllers.controller.RobotController.add_sensors_from_dict">
 <span class="sig-name descname"><span class="pre">add_sensors_from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot_sensors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/controller.html#RobotController.add_sensors_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.controller.RobotController.add_sensors_from_dict" title="Permalink to this definition">¶</a></dt>
@@ -427,10 +413,10 @@ The dict structure must be {“sensor_name” : sensor_params}.
 Notice that, at this point, the sensor is not yet activated by the robot. In order to 
 activate it, the robot object has to be created afterwards or the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot
 has to be called.</p>
-<dl class="simple">
-<dt>Example:</dt><dd><p>robot_sensors = {‘distance_sensor’ : {‘n_sectors’ : 4, ‘range’ : 1}}</p>
-</dd>
-</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot_sensors</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;distance_sensor&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;n_sectors&#39;</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;range&#39;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -441,10 +427,10 @@ Notice that, at this point, the actuator is not yet activated by the robot. In o
 activate it, the robot object has to be created afterwards or the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot
 has to be called.</p>
 <p>The dict structure must be {“actuator_name” : actuator_params}.</p>
-<dl class="simple">
-<dt>Example:</dt><dd><p>robot_actuators = {‘joint_velocity_actuator’ : {‘joint_ids’ : [0,1], ‘max_velocity’ : 10}}</p>
-</dd>
-</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">robot_actuators</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;joint_velocity_actuator&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;joint_ids&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;max_velocity&#39;</span> <span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -454,6 +440,14 @@ has to be called.</p>
 Notice that, at this point, the sensor is not yet activated by the robot. In order to 
 activate it, the robot object has to be created afterwards or the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot
 has to be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_name</strong> (<em>dict</em>) – reference name of the sensor to be enabled.</p></li>
+<li><p><strong>sensor_name</strong> – dict with the parameters of the sensor to be enabled.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -463,71 +457,85 @@ has to be called.</p>
 Notice that, at this point, the sensor is not yet activated by the robot. In order to 
 activate it, the robot object has to be created afterwards or the <code class="docutils literal notranslate"><span class="pre">reset</span></code> method of the robot
 has to be called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>actuator_name</strong> (<em>str</em>) – reference name of the actuator to be enabled.</p></li>
+<li><p><strong>actuator_params</strong> (<em>dict</em>) – dict with the parameters of the actuator to be enabled.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.controller.PreyController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.controller.</span></span><span class="sig-name descname"><span class="pre">PreyController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/controller.html#PreyController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.controller.PreyController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
-<p>Class for the control of light sources mimicking prey escape. 
-The controller deterministically computes the escape direction (steering) 
-based on the known positions of the predators. If a predator is at a distance 
-lower than 30 (3cm), then the prey is hunted and stops its motion.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.controller.PreyController.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rew</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/controller.html#PreyController.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.controller.PreyController.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.controller.PreyController.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/controller.html#PreyController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.controller.PreyController.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 </div>
-<div class="section" id="module-spike_swarm_sim.controllers.light_position_controller">
-<span id="spike-swarm-sim-controllers-light-position-controller-module"></span><h2>spike_swarm_sim.controllers.light_position_controller module<a class="headerlink" href="#module-spike_swarm_sim.controllers.light_position_controller" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="spike-swarm-sim-controllers-basic-obstacle-avoider-module">
+<h2>spike_swarm_sim.controllers.basic_obstacle_avoider module<a class="headerlink" href="#spike-swarm-sim-controllers-basic-obstacle-avoider-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-spike_swarm_sim.controllers.braitenberg1_controller">
+<span id="spike-swarm-sim-controllers-braitenberg1-controller-module"></span><h2>spike_swarm_sim.controllers.braitenberg1_controller module<a class="headerlink" href="#module-spike_swarm_sim.controllers.braitenberg1_controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightOrbitController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.light_position_controller.</span></span><span class="sig-name descname"><span class="pre">LightOrbitController</span></span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightOrbitController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightOrbitController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.Controller" title="spike_swarm_sim.controllers.controller.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.Controller</span></code></a></p>
-<p>Class for the control of light sources as orbits
-around a central position.
-There is a small probability of rotation sense inversion.</p>
+<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2B">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.braitenberg1_controller.</span></span><span class="sig-name descname"><span class="pre">Braitenberg2B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2B" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
+<p>Controller based on the Braitenberg vehicle 2B. This vehicle reacts to incoming 
+light by following the light gradient.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightOrbitController.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightOrbitController.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightOrbitController.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightOrbitController.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightOrbitController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightOrbitController.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2B.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2B.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2B.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute once the controller program. It reads the current light sensor measurement, 
+and plans the action as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}a_{wr} = \max\{ls_4, ls_5, ls_6, ls_7\}\\a_{wl} = \max\{ls_0, ls_1, ls_2, ls_3\}\end{aligned}\end{align} \]</div>
+<p>where :math`a_{wr}` and <span class="math notranslate nohighlight">\(a_{wl}\)</span> are the right and left wheel actions and <span class="math notranslate nohighlight">\(ls_i\)</span> 
+is the light sensor of the <span class="math notranslate nohighlight">\(i\)</span>-th sector. If no light is detected at all, then the 
+actions are :math`a_{wr}=a_{wl}=0.2`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>dict</em>) – state with the sensor reading. The dict maps the reference name of the sensor to 
+the sensor np.ndarray reading.</p></li>
+<li><p><strong>reward</strong> (<em>float</em>) – reward (if any). Not used in this controller.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightRndPositionController">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.light_position_controller.</span></span><span class="sig-name descname"><span class="pre">LightRndPositionController</span></span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightRndPositionController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightRndPositionController" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.Controller" title="spike_swarm_sim.controllers.controller.Controller"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.Controller</span></code></a></p>
-<p>Class for the control of light sources as straight 
-trajectories to randomly sampled goal locations. Every 
-200 time steps the goal location is resampled.</p>
+<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2A">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.controllers.braitenberg1_controller.</span></span><span class="sig-name descname"><span class="pre">Braitenberg2A</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2A"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2A" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.controllers.controller.RobotController" title="spike_swarm_sim.controllers.controller.RobotController"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.controllers.controller.RobotController</span></code></a></p>
+<p>Controller based on the Braitenberg vehicle 2b. This vehicle reacts to incoming 
+light by escaping from the light source.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightRndPositionController.step">
-<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightRndPositionController.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightRndPositionController.step" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="spike_swarm_sim.controllers.light_position_controller.LightRndPositionController.reset">
-<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/light_position_controller.html#LightRndPositionController.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.light_position_controller.LightRndPositionController.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2A.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reward</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/controllers/braitenberg1_controller.html#Braitenberg2A.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.controllers.braitenberg1_controller.Braitenberg2A.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute once the controller program. It reads the current light sensor measurement, 
+and plans the action as follows:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}a_{wl} = \max\{ls_4, ls_5, ls_6, ls_7\}\\a_{wr} = \max\{ls_0, ls_1, ls_2, ls_3\}\end{aligned}\end{align} \]</div>
+<p>where :math`a_{wr}` and <span class="math notranslate nohighlight">\(a_{wl}\)</span> are the right and left wheel actions and <span class="math notranslate nohighlight">\(ls_i\)</span> 
+is the light sensor of the <span class="math notranslate nohighlight">\(i\)</span>-th sector. If no light is detected at all, then the 
+actions are :math`a_{wr}=a_{wl}=0.2`.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>state</strong> (<em>dict</em>) – state with the sensor reading. The dict maps the reference name of the sensor to 
+the sensor np.ndarray reading.</p></li>
+<li><p><strong>reward</strong> (<em>float</em>) – reward (if any). Not used in this controller.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
+</div>
+<div class="section" id="spike-swarm-sim-controllers-light-position-controller-module">
+<h2>spike_swarm_sim.controllers.light_position_controller module<a class="headerlink" href="#spike-swarm-sim-controllers-light-position-controller-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-spike_swarm_sim.controllers.neural_controller">
 <span id="spike-swarm-sim-controllers-neural-controller-module"></span><h2>spike_swarm_sim.controllers.neural_controller module<a class="headerlink" href="#module-spike_swarm_sim.controllers.neural_controller" title="Permalink to this headline">¶</a></h2>
@@ -599,8 +607,8 @@ comm_state [int] : State or mode of the communication (if any).</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-spike_swarm_sim.controllers">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-spike_swarm_sim.controllers" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contents">
+<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

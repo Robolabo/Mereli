@@ -102,7 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/controllers.html">Controllers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -252,6 +253,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -427,15 +429,19 @@
 <span class="sd">        and the resulting fitness.</span>
 <span class="sd">    =====================================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">worlds</span><span class="p">,</span> <span class="n">MultiWorldWrapper</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">rank</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="o">.</span><span class="n">Get_rank</span><span class="p">()</span>
+            <span class="c1"># print(&#39;INFO: &#39;, env_id, rank, flush=True)</span>
             <span class="n">world</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">worlds</span><span class="o">.</span><span class="n">all</span><span class="p">[</span><span class="n">rank</span><span class="p">])</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">rank</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">current_process</span><span class="p">()</span><span class="o">.</span><span class="n">_identity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">world</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">worlds</span><span class="o">.</span><span class="n">all</span><span class="p">[(</span><span class="n">rank</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">worlds</span><span class="o">.</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">else</span><span class="p">:</span>        
         <span class="n">world</span> <span class="o">=</span> <span class="n">worlds</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">world</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">connected</span> 
+    
     <span class="n">world</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
     <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">robots</span> <span class="o">=</span> <span class="p">[</span><span class="n">robot</span> <span class="k">for</span> <span class="n">robot</span> <span class="ow">in</span> <span class="n">world</span><span class="o">.</span><span class="n">robots</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
@@ -449,7 +455,6 @@
     <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
     <span class="c1">#* Evaluate gentoype several times and average</span>
     <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_evaluations</span><span class="p">):</span>
-        
         <span class="n">seed</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">world</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
         <span class="n">actions_history</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>

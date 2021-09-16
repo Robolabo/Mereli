@@ -90,18 +90,39 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -155,13 +176,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -172,13 +193,13 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#spike-swarm-sim-controllers-basic-obstacle-avoider-module">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#spike-swarm-sim-controllers-braitenberg1-controller-module">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#spike-swarm-sim-controllers-light-position-controller-module">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#spike-swarm-sim-controllers-neural-controller-module">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#spike-swarm-sim-controllers-random-movement-controller-module">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
@@ -201,15 +222,15 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#spike-swarm-sim-objectives-fitness-module">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#spike-swarm-sim-objectives-reward-module">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -236,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -254,13 +276,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-world-module">spike_swarm_sim.world module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-config-parser-module">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -313,8 +335,6 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
-        
       <li>spike_swarm_sim.controllers.controller</li>
     
     
@@ -336,7 +356,8 @@
 <span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">increase_time</span>
 
 <div class="viewcode-block" id="Controller"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.Controller">[docs]</a><span class="k">class</span> <span class="nc">Controller</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; Base class for entity controllers. &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Base class for entity controllers. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
@@ -347,34 +368,50 @@
         <span class="k">pass</span></div></div>
 
 <div class="viewcode-block" id="RobotController"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController">[docs]</a><span class="k">class</span> <span class="nc">RobotController</span><span class="p">(</span><span class="n">Controller</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Base class for Robot Controllers. &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Base class for Robot Controllers. Any Controller devoted to the management of robot </span>
+<span class="sd">    actions must inherit from this class. The controller functionality must be implemented </span>
+<span class="sd">    within the overwritten ``Controller.step`` method. In order to use them, sensors and actuators </span>
+<span class="sd">    must be enabled by the controller first (controllers normally use only a subset of all available </span>
+<span class="sd">    sensors and actuators). Sensor can be activated through either ``add_sensor`` to enable them one </span>
+<span class="sd">    by one or using ``add_sensors_from_dict``, to activate all at once. Similarly, actuators can be </span>
+<span class="sd">    included using either ``add_actuator`` or ``add_actuators_from_dict``.</span>
+<span class="sd">    </span>
+<span class="sd">    :param Robot controller_owner: Instance of the robot owning the controller.</span>
+
+<span class="sd">    :var dict enabled_sensors: dict with storing the sensors enabled by the controller. </span>
+<span class="sd">        It maps sensor reference names to a dict with the paramters of the sensor.</span>
+<span class="sd">    :var dict enabled_actuators: dict with storing the actuators enabled by the controller. </span>
+<span class="sd">        It maps sensor reference names to a dict with the paramters of the actuators.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">controller_owner</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller_owner</span> <span class="o">=</span> <span class="n">controller_owner</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#{sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#{actuator : actuator_config for actuator, actuator_config in robot_actuators.items()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span> <span class="o">=</span> <span class="p">{}</span>
     
 <div class="viewcode-block" id="RobotController.add_sensors_from_dict"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_sensors_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">add_sensors_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_sensors</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Add the sensors that the controller can make use of in the form of a python dict.</span>
-<span class="sd">            The dict structure must be {&quot;sensor_name&quot; : sensor_params}.</span>
-<span class="sd">            Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
-<span class="sd">            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
-<span class="sd">            has to be called.</span>
+<span class="sd">        The dict structure must be {&quot;sensor_name&quot; : sensor_params}.</span>
+<span class="sd">        Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
+<span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">        has to be called.</span>
 
-<span class="sd">            Example:</span>
-<span class="sd">                robot_sensors = {&#39;distance_sensor&#39; : {&#39;n_sectors&#39; : 4, &#39;range&#39; : 1}}</span>
+<span class="sd">        Example::</span>
+
+<span class="sd">        &gt;&gt;&gt; robot_sensors = {&#39;distance_sensor&#39; : {&#39;n_sectors&#39; : 4, &#39;range&#39; : 1}}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">sensor</span> <span class="p">:</span> <span class="n">sensor_config</span> <span class="k">for</span> <span class="n">sensor</span><span class="p">,</span> <span class="n">sensor_config</span> <span class="ow">in</span> <span class="n">robot_sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
     
 <div class="viewcode-block" id="RobotController.add_actuators_from_dict"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_actuators_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">add_actuators_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_actuators</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Add the actuators that the controller can make use of in the form of a python dict. </span>
-<span class="sd">            Notice that, at this point, the actuator is not yet activated by the robot. In order to </span>
-<span class="sd">            activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
-<span class="sd">            has to be called.</span>
+<span class="sd">        Notice that, at this point, the actuator is not yet activated by the robot. In order to </span>
+<span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
+<span class="sd">        has to be called.</span>
 
-<span class="sd">            The dict structure must be {&quot;actuator_name&quot; : actuator_params}.</span>
-<span class="sd">            </span>
-<span class="sd">            Example:</span>
-<span class="sd">                robot_actuators = {&#39;joint_velocity_actuator&#39; : {&#39;joint_ids&#39; : [0,1], &#39;max_velocity&#39; : 10}}</span>
+<span class="sd">        The dict structure must be {&quot;actuator_name&quot; : actuator_params}.</span>
+<span class="sd">        </span>
+<span class="sd">        Example::</span>
+
+<span class="sd">        &gt;&gt;&gt; robot_actuators = {&#39;joint_velocity_actuator&#39; : {&#39;joint_ids&#39; : [0,1], &#39;max_velocity&#39; : 10}}</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span> <span class="o">=</span> <span class="p">{</span><span class="n">actuator</span> <span class="p">:</span> <span class="n">actuator_config</span> <span class="k">for</span> <span class="n">actuator</span><span class="p">,</span> <span class="n">actuator_config</span> <span class="ow">in</span> <span class="n">robot_actuators</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 
@@ -384,6 +421,9 @@
 <span class="sd">        Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
 <span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
 <span class="sd">        has to be called.</span>
+
+<span class="sd">        :param str sensor_name: reference name of the sensor to be enabled.</span>
+<span class="sd">        :param dict sensor_name: dict with the parameters of the sensor to be enabled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_sensors</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">sensor_name</span> <span class="p">:</span> <span class="n">sensor_params</span><span class="p">})</span></div>
 
@@ -392,51 +432,58 @@
 <span class="sd">        Notice that, at this point, the sensor is not yet activated by the robot. In order to </span>
 <span class="sd">        activate it, the robot object has to be created afterwards or the ``reset`` method of the robot</span>
 <span class="sd">        has to be called.</span>
+
+<span class="sd">        :param str actuator_name: reference name of the actuator to be enabled.</span>
+<span class="sd">        :param dict actuator_params: dict with the parameters of the actuator to be enabled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">enabled_actuators</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">actuator_name</span> <span class="p">:</span> <span class="n">actuator_params</span><span class="p">})</span></div></div>
 
-<div class="viewcode-block" id="PreyController"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.PreyController">[docs]</a><span class="nd">@controller_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;prey_controller&#39;</span><span class="p">)</span>
-<span class="k">class</span> <span class="nc">PreyController</span><span class="p">(</span><span class="n">RobotController</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Class for the control of light sources mimicking prey escape. </span>
-<span class="sd">    The controller deterministically computes the escape direction (steering) </span>
-<span class="sd">    based on the known positions of the predators. If a predator is at a distance </span>
-<span class="sd">    lower than 30 (3cm), then the prey is hunted and stops its motion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">PreyController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hunted</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="PreyController.step"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.PreyController.step">[docs]</a>    <span class="nd">@increase_time</span>
-    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">rew</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span></div>
-        <span class="c1"># new_pos = my_pos[:2].copy()</span>
-        <span class="c1"># if len(robot_positions) == 0:</span>
-        <span class="c1">#     return my_pos</span>
-        <span class="c1"># # robot_light_vecs = np.stack([toroidal_difference(robot_pos[:2], my_pos[:2]) for robot_pos in robot_positions])</span>
-        <span class="c1"># robot_light_vecs = np.stack([robot_pos[:2] - my_pos[:2] for robot_pos in robot_positions])</span>
-        <span class="c1"># distances = np.array([np.linalg.norm(v) for v in robot_light_vecs])</span>
-        <span class="c1"># near_robots = [d &lt; 1 for d in distances]</span>
-        <span class="c1"># if any(near_robots):</span>
-        <span class="c1">#     weights = (5 - distances[near_robots]) / 5</span>
-        <span class="c1">#     weights /= sum(weights)</span>
-        <span class="c1">#     self.direction = -normalize(np.dot(weights, robot_light_vecs[near_robots]))</span>
-        <span class="c1"># if not self.hunted:</span>
-        <span class="c1">#     new_pos += 0.01 * self.direction</span>
-        <span class="c1">#     self.hunted = any([np.linalg.norm(v) &lt; 0.2 for v in robot_light_vecs])</span>
+
+
+
+<span class="c1"># @controller_registry(name=&#39;prey_controller&#39;)</span>
+<span class="c1"># class PreyController(RobotController):</span>
+<span class="c1">#     &quot;&quot;&quot; Class for the control of light sources mimicking prey escape. </span>
+<span class="c1">#     The controller deterministically computes the escape direction (steering) </span>
+<span class="c1">#     based on the known positions of the predators. If a predator is at a distance </span>
+<span class="c1">#     lower than 30 (3cm), then the prey is hunted and stops its motion.</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     def __init__(self,  *args, **kwargs):</span>
+<span class="c1">#         super(PreyController, self).__init__(*args, **kwargs)</span>
+<span class="c1">#         self.t = 1</span>
+<span class="c1">#         self.direction = np.r_[np.cos(np.pi/4), np.sin(np.pi/4)]</span>
+<span class="c1">#         self.hunted = 0</span>
+
+<span class="c1">#     @increase_time</span>
+<span class="c1">#     def step(self, state, rew=0.0):</span>
+<span class="c1">#         import pdb; pdb.set_trace()</span>
+<span class="c1">#         # new_pos = my_pos[:2].copy()</span>
+<span class="c1">#         # if len(robot_positions) == 0:</span>
+<span class="c1">#         #     return my_pos</span>
+<span class="c1">#         # # robot_light_vecs = np.stack([toroidal_difference(robot_pos[:2], my_pos[:2]) for robot_pos in robot_positions])</span>
+<span class="c1">#         # robot_light_vecs = np.stack([robot_pos[:2] - my_pos[:2] for robot_pos in robot_positions])</span>
+<span class="c1">#         # distances = np.array([np.linalg.norm(v) for v in robot_light_vecs])</span>
+<span class="c1">#         # near_robots = [d &lt; 1 for d in distances]</span>
+<span class="c1">#         # if any(near_robots):</span>
+<span class="c1">#         #     weights = (5 - distances[near_robots]) / 5</span>
+<span class="c1">#         #     weights /= sum(weights)</span>
+<span class="c1">#         #     self.direction = -normalize(np.dot(weights, robot_light_vecs[near_robots]))</span>
+<span class="c1">#         # if not self.hunted:</span>
+<span class="c1">#         #     new_pos += 0.01 * self.direction</span>
+<span class="c1">#         #     self.hunted = any([np.linalg.norm(v) &lt; 0.2 for v in robot_light_vecs])</span>
         
-        <span class="c1"># if len(my_pos) == 3:</span>
-        <span class="c1">#     new_pos = np.r_[new_pos, my_pos[-1].copy()]</span>
+<span class="c1">#         # if len(my_pos) == 3:</span>
+<span class="c1">#         #     new_pos = np.r_[new_pos, my_pos[-1].copy()]</span>
 
-        <span class="c1"># #! luz no puede pasar de la pared.</span>
+<span class="c1">#         # #! luz no puede pasar de la pared.</span>
 
 
-        <span class="c1"># return new_pos</span>
+<span class="c1">#         # return new_pos</span>
 
-<div class="viewcode-block" id="PreyController.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.PreyController.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hunted</span> <span class="o">=</span> <span class="mi">0</span></div></div>
+<span class="c1">#     def reset(self):</span>
+<span class="c1">#         self.t = 1</span>
+<span class="c1">#         self.hunted = 0</span>
 </pre></div>
 
            </div>

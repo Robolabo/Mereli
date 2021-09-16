@@ -102,7 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -252,6 +253,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -381,29 +383,21 @@
 
 <span class="sd">        :param np.ndarray action: numpy array collection the normalized reference velocities of each joint </span>
 <span class="sd">            to be controlled.</span>
-
-<span class="sd">        .. todo::</span>
-
-<span class="sd">            Quitar llamada explicita a pybullet y usar request a physics_client.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Size of the action in Joint Actuator differs from &#39;</span>\
             	<span class="s1">&#39;the number of controllable joints.&#39;</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">ac</span><span class="p">,</span> <span class="n">joint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">):</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> <span class="n">targetVelocity</span><span class="o">=</span><span class="n">ac</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span><span class="p">,</span>\
-                <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">VELOCITY_CONTROL</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span> <span class="c1"># Convert range [-1,1] to [-w_max, w_max].</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">control_joints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">control_type</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_mirrored</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1">#! mejorar</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_mirrored</span><span class="p">,</span>\
-                <span class="n">targetVelocity</span><span class="o">=-</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span><span class="p">,</span> <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">VELOCITY_CONTROL</span><span class="p">,</span>\
-                <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span></div>
-
+            <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">control_joints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">inverse_mirrored</span><span class="p">],</span> 
+                    <span class="p">[</span><span class="o">-</span><span class="n">action</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">control_type</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">)</span></div>
+            
 <div class="viewcode-block" id="JointVelocityActuator.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,):</span>
         <span class="sd">&quot;&quot;&quot; Resets the actuator.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">:</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actuator_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> <span class="n">targetVelocity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>\
-                    <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">VELOCITY_CONTROL</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">control_joints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">)),</span> <span class="n">control_type</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">)</span></div></div>
+
 
 <div class="viewcode-block" id="JointPositionActuator"><a class="viewcode-back" href="../../../spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.joint_actuator.JointPositionActuator">[docs]</a><span class="nd">@actuator_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;joint_position_actuator&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">JointPositionActuator</span><span class="p">(</span><span class="n">Actuator</span><span class="p">):</span>
@@ -430,22 +424,14 @@
 <span class="sd">        into [-pi, pi] inside the method.</span>
 
 <span class="sd">        :param np.ndarray action: numpy array collection the normalized reference velocities of each joint </span>
-<span class="sd">            to be controlled.</span>
-
-<span class="sd">        .. todo::</span>
-
-<span class="sd">            Quitar llamada explicita a pybullet y usar request a physics_client.</span>
-<span class="sd">            </span>
+<span class="sd">            to be controlled.            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Size of the action in Joint Actuator differs from &#39;</span>\
             	<span class="s1">&#39;the number of controllable joints.&#39;</span><span class="p">))</span>
-
-        <span class="k">for</span> <span class="n">ac</span><span class="p">,</span> <span class="n">joint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">):</span>
-            <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actuator_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> <span class="n">targetPosition</span><span class="o">=</span><span class="n">ac</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span>\
-                <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">POSITION_CONTROL</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">actuator_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>\
-                <span class="n">positionGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">maxVelocity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_velocity</span><span class="p">)</span></div></div>
-    
+        <span class="n">action</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># Convert range [-1,1] to [-pi, pi].</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">control_joints</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owner_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">joint_ids</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">control_type</span><span class="o">=</span><span class="s1">&#39;position&#39;</span><span class="p">)</span></div></div>
+        
     <span class="c1"># def reset(self,):</span>
     <span class="c1">#     for joint in self.joint_ids:</span>
     <span class="c1">#         p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\</span>

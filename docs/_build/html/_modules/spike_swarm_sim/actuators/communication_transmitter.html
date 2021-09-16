@@ -102,7 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor">Light Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
@@ -118,6 +118,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -252,6 +253,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -380,10 +382,11 @@
         
 <div class="viewcode-block" id="CommunicationTransmitter.step"><a class="viewcode-back" href="../../../spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx_frame</span><span class="p">):</span>
         <span class="c1">#* Select cluster using softmax on distances to clusters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tx_frame</span></div>
-        <span class="c1"># if global_states.RENDER:</span>
-        <span class="c1">#     color = [self.frame.msg[0], 0, 0]</span>
-        <span class="c1">#     self.actuator_owner.physics_client.set_color(self.actuator_owner.id, 3, color, opacity=0.7)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tx_frame</span>
+        <span class="k">if</span> <span class="n">global_states</span><span class="o">.</span><span class="n">RENDER</span> <span class="ow">and</span> <span class="s1">&#39;led_actuator&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuator_owner</span><span class="o">.</span><span class="n">actuators</span><span class="p">:</span>
+            <span class="n">led</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">tx_frame</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span> <span class="o">/</span><span class="mi">4</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">actuator_owner</span><span class="o">.</span><span class="n">actuators</span><span class="p">[</span><span class="s1">&#39;led_actuator&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">led</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span></div>
+       
 
 <div class="viewcode-block" id="CommunicationTransmitter.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">IRFrame</span><span class="p">(</span><span class="n">msg_len</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">msg_length</span><span class="p">)</span>

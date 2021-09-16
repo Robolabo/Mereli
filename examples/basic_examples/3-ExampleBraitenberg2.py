@@ -3,16 +3,14 @@ import numpy as np
 from spike_swarm_sim.globals import global_states
 from spike_swarm_sim import CircularArena, Engine3D
 from spike_swarm_sim.objects import Epuck, LightSource
-from spike_swarm_sim.controllers import Braitenberg2Controller
+from spike_swarm_sim.controllers import Braitenberg2B
 
-
-# global_states.set_states(render=True)
-# Create physics engine with 0.02sec of discretization and a period the robot
-# control loop of 0.14sec.
+#* Create physics engine with 0.02sec of discretization and a period the robot
+#* control loop of 0.14sec.
 phy_engine = Engine3D(dt=0.02, T_control=0.14)
 world = CircularArena(phy_engine, radius=7)
 
-ctlr = Braitenberg2Controller()
+ctlr = Braitenberg2B()
 ctlr.add_sensor("light_sensor", {"n_sectors" : 8, "range" : 10})
 ctlr.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 7})
 ent = Epuck([0,0,0], [0,0,0], controller=ctlr)
