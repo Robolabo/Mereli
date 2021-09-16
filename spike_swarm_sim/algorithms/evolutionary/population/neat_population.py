@@ -76,6 +76,7 @@ class NEAT_Population(Population):
         :param list fitness_vector: vector collecting the achieved fitness score of every individual.
         :param int generation: current generation of the evolution process.
         """
+
         offspring = []
         self.best = copy.deepcopy(self.population[np.argmax(fitness_vector)])
         #* Update species fitness statistics
@@ -126,7 +127,8 @@ class NEAT_Population(Population):
         #     self.compatib_thresh = np.clip(self.compatib_thresh, a_min=0.5, a_max=5)
         #     for sp in self.species:
         #         sp.compatib_thresh = self.compatib_thresh
-                
+        # print('NEAT ', time.time() - t0)
+        # import pdb; pdb.set_trace()        
        
     
     def update_species(self, generation):

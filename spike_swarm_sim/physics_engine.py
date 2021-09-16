@@ -53,7 +53,8 @@ class Engine3D:
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
         self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        self.engine.resetSimulation(physicsClientId=self.engine._client)
+        self.engine.resetSimulation(physicsClientId=self.client)
+        # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
         self.engine.setTimeStep(self.dt)
@@ -74,7 +75,7 @@ class Engine3D:
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
         # self.engine.resetSimulation(physicsClientId=self.engine._client)
-        self.engine.disconnect(physicsClientId=self.client)
+        self.engine.disconnect()
         self.connected = False
 
     def step_physics(self):

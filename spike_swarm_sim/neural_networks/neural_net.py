@@ -291,7 +291,7 @@ class NeuralNetwork:
         - Returns:
             actions [dict]: dict mapping output names and actions.
         ===============================================================
-        """  
+        """
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0:
             raise Exception(logging.error('The ANN received empty stimuli.'))

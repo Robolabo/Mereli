@@ -78,15 +78,19 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
+    
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
+            # print('INFO: ', env_id, rank, flush=True)
             world = copy.deepcopy(worlds.all[rank])
         else:
             rank = multiprocessing.current_process()._identity[0]
             world = copy.deepcopy(worlds.all[(rank - 1) % worlds.n_cpu + 1])
-    else:
+    else:        
         world = worlds
+    assert not world.physics_engine.connected 
+    
     world.connect()
     world.reset(seed=seed)
     robots = [robot for robot in world.robots.values()]

@@ -9,12 +9,12 @@ from spike_swarm_sim.utils.initializers import FixedInitializer, RandomUniformIn
 
 global_states.set_states(render=True, debug=True)
 
-n_robots = 10
+n_robots = 5
 # Create physics engine with 0.02sec of discretization and a period the robot
 # control loop of 0.14sec.
 phy_engine = Engine3D(dt=0.02, T_control=0.14)
 # world = CustomWorld(phy_engine, map_file='simple_map_1/simple_map_1')
-world = SquareArena(phy_engine, height=10, width=10)
+world = SquareArena(phy_engine, height=7, width=7)
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
 ini_pos = RandomUniformInitializer(n_robots, low=[-3, -3], high=[3, 3], size=2, engine='3D',  variable='positions')
@@ -32,6 +32,6 @@ for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
 with world:
     world.reset()
     t0 = time.time()
-    for _ in range(1000):
+    for _ in range(100):
         state, action = world.step()
 print('\nSIMULATION DURATION: ', np.round(time.time() - t0, 4))

@@ -55,6 +55,7 @@ if USE_API:
 
 else:
     world_cfg = {
+        "engine" : "3D",
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
@@ -108,13 +109,13 @@ else:
 
 # Before executing the simulation for the first time, call the connect method.
 world.connect()
-# Simulate 10 independent times. It is important to reset the world at the beggining
+# Simulate 3 independent times. It is important to reset the world at the beggining
 # of every trial. Here we can clearly see the importance of entity initializers, as 
 # they are run at the beggining of every trial.
-for trial in range(10):
+for trial in range(3):
     print('STARTING TRIAL ', trial)
     world.reset()
-    for t in range(1000):
+    for t in range(200):
         state, action = world.step()
 
 world.disconnect()

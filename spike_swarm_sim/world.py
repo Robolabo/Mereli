@@ -147,7 +147,8 @@ class World(object):
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
             #* Compute robot reward 
-            reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())
+            reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
+                    if self.reward_generator is not None else None
             state_obj, action_obj = obj.step(self.hierarchy.values(), reward=reward, perturbations=pre_perturbations) #!
             # if self.reward_generator is not None:
             #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
@@ -535,7 +536,8 @@ class MultiWorldWrapper:
     def __init__(self, n_cpu, world):
         self.n_cpu = n_cpu
         #! Mucho ojo. Son objetos totalmente desacoplados?
-        self._worlds = [copy.deepcopy(world)] * (n_cpu + 1)
+        self._worlds = [SquareArena(Engine3D(), height=7, width=7) for _ in range(n_cpu + 1)]
+        # self._worlds = [copy.deepcopy(world)] * (n_cpu + 1)
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """Build all the created worlds from the config dicts. """
