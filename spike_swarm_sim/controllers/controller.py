@@ -3,15 +3,20 @@ from spike_swarm_sim.register import sensors, actuators, controller_registry
 from spike_swarm_sim.utils import increase_time
 
 class Controller:
-    """ Base class for entity controllers. 
-    """
+    """ Base class for entity controllers. """
     def __init__(self):
         raise NotImplementedError
     
     def step(self, state):
+        """ Base step method for executing once the controller. 
+        Precise Controllers must overwrite this method with the corresponding 
+        initialization."""
         raise NotImplementedError
 
     def reset(self):
+        """ Base reset method for initializing the dynamical variables of the controller 
+        (if any). Precise Controllers must overwrite this method with the corresponding 
+        initialization."""
         pass
 
 class RobotController(Controller):
@@ -42,9 +47,12 @@ class RobotController(Controller):
         activate it, the robot object has to be created afterwards or the ``reset`` method of the robot
         has to be called.
 
+        :param dict robot_sensors: dict with all the sensors to be activated, mapping the sensor reference 
+            name and another dict (subdict) with the sensor parameters.
+
         Example::
 
-        >>> robot_sensors = {'distance_sensor' : {'n_sectors' : 4, 'range' : 1}}
+        >>> robot_sensors = {'distance_sensor' : {'n_sectors' : 8, 'range' : 1}}
         """
         self.enabled_sensors = {sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
     
@@ -55,6 +63,9 @@ class RobotController(Controller):
         has to be called.
 
         The dict structure must be {"actuator_name" : actuator_params}.
+
+        :param dict robot_actuators: dict with all the actuators to be activated, mapping the actuator reference 
+            name and another dict (subdict) with the actuator parameters.
         
         Example::
 

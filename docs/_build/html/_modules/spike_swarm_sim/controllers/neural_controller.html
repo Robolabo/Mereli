@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -30,11 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -85,23 +93,44 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/entities.html">Entities</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#entity-creation-and-modelling">Entity creation and modelling</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/entities.html#initializers">Initializers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -148,20 +177,20 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
 </ul>
 </li>
@@ -172,9 +201,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
@@ -209,7 +238,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.robot_3D">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
@@ -236,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
 </ul>
 </li>
@@ -332,10 +362,10 @@
             
   <h1>Source code for spike_swarm_sim.controllers.neural_controller</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.controllers</span> <span class="k">import</span> <span class="n">RobotController</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks</span> <span class="k">import</span> <span class="n">NeuralNetwork</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">controller_registry</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">flatten_dict</span><span class="p">,</span> <span class="n">key_of</span><span class="p">,</span> <span class="n">increase_time</span><span class="p">,</span> <span class="n">RegexpDict</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.controllers</span> <span class="kn">import</span> <span class="n">RobotController</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks</span> <span class="kn">import</span> <span class="n">NeuralNetwork</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">controller_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">flatten_dict</span><span class="p">,</span> <span class="n">key_of</span><span class="p">,</span> <span class="n">increase_time</span><span class="p">,</span> <span class="n">RegexpDict</span>
 
 <div class="viewcode-block" id="NeuralController"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.neural_controller.NeuralController">[docs]</a><span class="nd">@controller_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;neural_controller&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">NeuralController</span><span class="p">(</span><span class="n">RobotController</span><span class="p">):</span>
@@ -351,7 +381,7 @@
 <span class="sd">                The currently implemented states are 0 (RELAY) and 1 (SEND/BROADCAST).</span>
 <span class="sd">    ===================================================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">NeuralController</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="c1">#self.preprocessing = Preprocessing([sens[&#39;sensor&#39;] for sens in topology[&#39;stimuli&#39;].values()])</span>
         <span class="c1">#for val in topology[&#39;stimuli&#39;].values():</span>
@@ -372,7 +402,7 @@
 <div class="viewcode-block" id="NeuralController.step"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.neural_controller.NeuralController.step">[docs]</a>    <span class="nd">@increase_time</span>
     <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
-            <span class="n">state</span> <span class="o">=</span> <span class="n">flatten_dict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>        
+            <span class="n">state</span> <span class="o">=</span> <span class="n">flatten_dict</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
         <span class="n">raw_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">reward</span><span class="p">)</span>
 
         <span class="c1"># actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \</span>
@@ -386,7 +416,7 @@
             
         <span class="k">if</span> <span class="s1">&#39;wheel_actuator&#39;</span> <span class="ow">in</span> <span class="n">actions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">])</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-                <span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="o">-.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="o">-.</span><span class="mi">5</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">])[</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">]])</span>
+                <span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">.5</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mf">.5</span><span class="p">,</span> <span class="mf">.5</span><span class="p">])[</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">]])</span>
             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">])</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                <span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">actions</span><span class="p">[</span><span class="s1">&#39;wheel_actuator&#39;</span><span class="p">])</span>
             <span class="k">else</span><span class="p">:</span>
@@ -400,34 +430,37 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">neural_network</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
 
 
-<div class="viewcode-block" id="Postprocessing"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.neural_controller.Postprocessing">[docs]</a><span class="k">class</span> <span class="nc">Postprocessing</span><span class="p">:</span>
-    <span class="k">pass</span></div>
 
-<span class="kn">import</span> <span class="nn">copy</span>
 
-<span class="c1">#! PROV: MOVER A OTRO FICHERO</span>
-<div class="viewcode-block" id="Preprocessing"><a class="viewcode-back" href="../../../spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.neural_controller.Preprocessing">[docs]</a><span class="k">class</span> <span class="nc">Preprocessing</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensors</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">operations</span> <span class="o">=</span> <span class="n">RegexpDict</span><span class="p">({</span>
-            <span class="s1">&#39;max&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span>
-            <span class="s1">&#39;mean&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-            <span class="s1">&#39;min&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="kc">None</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
-            <span class="s1">&#39;index=[0-9]{1,2}$&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])],</span>
-            <span class="s1">&#39;index=([0-9]{1,2}:[0-9]{1,2})&#39;</span> <span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;=&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)))]),</span>
-            <span class="c1">#&#39;index=(([0-9]{1,2}),){1,20}[0-9]{1,2}$&#39; : lambda x, key: np.array([x[i] for i in key.split(&#39;,&#39;)])</span>
-        <span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span> <span class="o">=</span> <span class="p">{</span><span class="n">sens</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="n">sens</span> <span class="k">for</span> <span class="n">sens</span> <span class="ow">in</span> <span class="n">sensors</span><span class="p">}</span>
-        <span class="c1"># self.sensor_preproc = {sens : self.operations.get(op, lambda x: x)\</span>
-        <span class="c1">#         for sens, op in map(lambda z: z.split(&#39;@&#39;), filter(lambda x: &#39;@&#39; in x, copy(sensors)))}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_preproc</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">({</span><span class="n">sens</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sens</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;@&#39;</span> <span class="ow">in</span> <span class="n">sens</span> <span class="k">else</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">sens</span> <span class="ow">in</span> <span class="n">sensors</span><span class="p">})</span>
-    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="c1"># if key == &#39;yellow_light_sensor&#39; : import pdb; pdb.set_trace()</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;@&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-                <span class="n">ope</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">operations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;@&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]]</span>
-                <span class="n">stimuli</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ope</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">stimuli</span>        </div>
+
+<span class="c1"># class Postprocessing:</span>
+<span class="c1">#     pass</span>
+
+<span class="c1"># import copy</span>
+
+<span class="c1"># #! PROV: MOVER A OTRO FICHERO</span>
+<span class="c1"># class Preprocessing:</span>
+<span class="c1">#     def __init__(self, sensors):</span>
+<span class="c1">#         self.operations = RegexpDict({</span>
+<span class="c1">#             &#39;max&#39; : lambda x, key=None: np.array(max(x)),</span>
+<span class="c1">#             &#39;mean&#39; : lambda x, key=None: np.mean(x),</span>
+<span class="c1">#             &#39;min&#39; : lambda x, key=None: min(x),</span>
+<span class="c1">#             &#39;index=[0-9]{1,2}$&#39; : lambda x, key: x[int(key.split(&#39;=&#39;)[1])],</span>
+<span class="c1">#             &#39;index=([0-9]{1,2}:[0-9]{1,2})&#39; : lambda x, key: np.array([x[i] for i in range(*map(int, key.split(&#39;=&#39;)[1].split(&#39;:&#39;)))]),</span>
+<span class="c1">#             #&#39;index=(([0-9]{1,2}),){1,20}[0-9]{1,2}$&#39; : lambda x, key: np.array([x[i] for i in key.split(&#39;,&#39;)])</span>
+<span class="c1">#         })</span>
+<span class="c1">#         self.sensors = {sens.split(&#39;@&#39;)[0] : sens for sens in sensors}</span>
+<span class="c1">#         # self.sensor_preproc = {sens : self.operations.get(op, lambda x: x)\</span>
+<span class="c1">#         #         for sens, op in map(lambda z: z.split(&#39;@&#39;), filter(lambda x: &#39;@&#39; in x, copy(sensors)))}</span>
+<span class="c1">#         self.sensor_preproc = copy.deepcopy({sens.split(&#39;@&#39;)[0] : self.operations.get(sens.split(&#39;@&#39;)[1], None)</span>
+<span class="c1">#         if &#39;@&#39; in sens else None for sens in sensors})</span>
+<span class="c1">#     def __call__(self, stimuli):</span>
+<span class="c1">#         for key, stim in stimuli.items():</span>
+<span class="c1">#             # if key == &#39;yellow_light_sensor&#39; : import pdb; pdb.set_trace()</span>
+<span class="c1">#             if self.sensors.get(key) and &#39;@&#39; in self.sensors.get(key):</span>
+<span class="c1">#                 ope = self.operations[self.sensors[key].split(&#39;@&#39;)[1]]</span>
+<span class="c1">#                 stimuli[key] = ope(stim)</span>
+<span class="c1">#         return stimuli        </span>
 
 </pre></div>
 

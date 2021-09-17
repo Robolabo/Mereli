@@ -39,7 +39,7 @@ class NeuralController(RobotController):
     @increase_time
     def step(self, state, reward=0.0):
         if len(state):
-            state = flatten_dict(state)        
+            state = flatten_dict(state)
         raw_actions = self.neural_network.step(state, reward)
 
         # actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
@@ -67,32 +67,35 @@ class NeuralController(RobotController):
             self.neural_network.reset()
 
 
-class Postprocessing:
-    pass
 
-import copy
 
-#! PROV: MOVER A OTRO FICHERO
-class Preprocessing:
-    def __init__(self, sensors):
-        self.operations = RegexpDict({
-            'max' : lambda x, key=None: np.array(max(x)),
-            'mean' : lambda x, key=None: np.mean(x),
-            'min' : lambda x, key=None: min(x),
-            'index=[0-9]{1,2}$' : lambda x, key: x[int(key.split('=')[1])],
-            'index=([0-9]{1,2}:[0-9]{1,2})' : lambda x, key: np.array([x[i] for i in range(*map(int, key.split('=')[1].split(':')))]),
-            #'index=(([0-9]{1,2}),){1,20}[0-9]{1,2}$' : lambda x, key: np.array([x[i] for i in key.split(',')])
-        })
-        self.sensors = {sens.split('@')[0] : sens for sens in sensors}
-        # self.sensor_preproc = {sens : self.operations.get(op, lambda x: x)\
-        #         for sens, op in map(lambda z: z.split('@'), filter(lambda x: '@' in x, copy(sensors)))}
-        self.sensor_preproc = copy.deepcopy({sens.split('@')[0] : self.operations.get(sens.split('@')[1], None)
-        if '@' in sens else None for sens in sensors})
-    def __call__(self, stimuli):
-        for key, stim in stimuli.items():
-            # if key == 'yellow_light_sensor' : import pdb; pdb.set_trace()
-            if self.sensors.get(key) and '@' in self.sensors.get(key):
-                ope = self.operations[self.sensors[key].split('@')[1]]
-                stimuli[key] = ope(stim)
-        return stimuli        
+
+# class Postprocessing:
+#     pass
+
+# import copy
+
+# #! PROV: MOVER A OTRO FICHERO
+# class Preprocessing:
+#     def __init__(self, sensors):
+#         self.operations = RegexpDict({
+#             'max' : lambda x, key=None: np.array(max(x)),
+#             'mean' : lambda x, key=None: np.mean(x),
+#             'min' : lambda x, key=None: min(x),
+#             'index=[0-9]{1,2}$' : lambda x, key: x[int(key.split('=')[1])],
+#             'index=([0-9]{1,2}:[0-9]{1,2})' : lambda x, key: np.array([x[i] for i in range(*map(int, key.split('=')[1].split(':')))]),
+#             #'index=(([0-9]{1,2}),){1,20}[0-9]{1,2}$' : lambda x, key: np.array([x[i] for i in key.split(',')])
+#         })
+#         self.sensors = {sens.split('@')[0] : sens for sens in sensors}
+#         # self.sensor_preproc = {sens : self.operations.get(op, lambda x: x)\
+#         #         for sens, op in map(lambda z: z.split('@'), filter(lambda x: '@' in x, copy(sensors)))}
+#         self.sensor_preproc = copy.deepcopy({sens.split('@')[0] : self.operations.get(sens.split('@')[1], None)
+#         if '@' in sens else None for sens in sensors})
+#     def __call__(self, stimuli):
+#         for key, stim in stimuli.items():
+#             # if key == 'yellow_light_sensor' : import pdb; pdb.set_trace()
+#             if self.sensors.get(key) and '@' in self.sensors.get(key):
+#                 ope = self.operations[self.sensors[key].split('@')[1]]
+#                 stimuli[key] = ope(stim)
+#         return stimuli        
 

@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html4" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -30,11 +28,21 @@
   <![endif]-->
   
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/doctools.js"></script>
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'../../../',
+              VERSION:'',
+              LANGUAGE:'None',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true,
+              SOURCELINK_SUFFIX: '.txt'
+          };
+      </script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -85,7 +93,7 @@
               
             
             
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
@@ -118,7 +126,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
@@ -165,7 +177,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<p class="caption"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul>
@@ -189,9 +201,9 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
@@ -351,19 +363,19 @@
   <h1>Source code for spike_swarm_sim.neural_networks.neural_net</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="k">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="c1"># Own imports</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">neuron_models</span><span class="p">,</span> <span class="n">synapse_models</span><span class="p">,</span> <span class="n">learning_rules</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">increase_time</span><span class="p">,</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">remove_duplicates</span>
-<span class="kn">from</span> <span class="nn">.neuron_models</span> <span class="k">import</span> <span class="n">NonSpikingNeuronModel</span><span class="p">,</span> <span class="n">SpikingNeuronModel</span>
-<span class="kn">from</span> <span class="nn">.decoding</span> <span class="k">import</span> <span class="n">DecodingWrapper</span>
-<span class="kn">from</span> <span class="nn">.encoding</span> <span class="k">import</span> <span class="n">EncodingWrapper</span>
-<span class="kn">from</span> <span class="nn">.utils.monitor</span> <span class="k">import</span> <span class="n">NeuralNetMonitor</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">neuron_models</span><span class="p">,</span> <span class="n">synapse_models</span><span class="p">,</span> <span class="n">learning_rules</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">increase_time</span><span class="p">,</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">remove_duplicates</span>
+<span class="kn">from</span> <span class="nn">.neuron_models</span> <span class="kn">import</span> <span class="n">NonSpikingNeuronModel</span><span class="p">,</span> <span class="n">SpikingNeuronModel</span>
+<span class="kn">from</span> <span class="nn">.decoding</span> <span class="kn">import</span> <span class="n">DecodingWrapper</span>
+<span class="kn">from</span> <span class="nn">.encoding</span> <span class="kn">import</span> <span class="n">EncodingWrapper</span>
+<span class="kn">from</span> <span class="nn">.utils.monitor</span> <span class="kn">import</span> <span class="n">NeuralNetMonitor</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.utils.visualization</span> <span class="k">import</span> <span class="o">*</span>
+    <span class="kn">from</span> <span class="nn">.utils.visualization</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="k">except</span><span class="p">:</span>
     <span class="k">pass</span>
 
@@ -425,7 +437,7 @@
 <span class="sd">        action_decoding [dict] :  dict of action_name : Decoding object storing all the neural decoders.</span>
 <span class="sd">    ==========================================================================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">neuron_model</span><span class="o">=</span><span class="s1">&#39;rate_model&#39;</span><span class="p">,</span> <span class="n">synapse_model</span><span class="o">=</span><span class="s1">&#39;static_synapse&#39;</span><span class="p">,</span> <span class="n">time_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">neuron_model</span><span class="o">=</span><span class="s1">&#39;rate_model&#39;</span><span class="p">,</span> <span class="n">synapse_model</span><span class="o">=</span><span class="s1">&#39;static_synapse&#39;</span><span class="p">,</span> <span class="n">time_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span> <span class="c1">#* Euler Step</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="n">time_scale</span> <span class="c1">#* ANN steps per world step.</span>
@@ -442,9 +454,9 @@
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The combination of dynamic synapses and &#39;</span>\
                 <span class="s1">&#39;non-spiking neuron models is not currently implemented.&#39;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">synapses</span> <span class="o">=</span> <span class="n">synapse_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">synapse_model</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span> <span class="o">=</span> <span class="n">neuron_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neuron_model</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span>  <span class="o">=</span> <span class="n">neuron_models</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">neuron_model</span><span class="p">](</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span> <span class="o">=</span> <span class="n">EncodingWrapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">decoders</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoders</span> <span class="o">=</span> <span class="n">DecodingWrapper</span><span class="p">()</span> <span class="c1"># None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">learning_rule</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1">#* Monitor that, if in DEBUG mode, will store all the relevant neural </span>
         <span class="c1">#* variables.</span>
@@ -462,8 +474,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">weight_registry</span> <span class="o">=</span> <span class="kc">None</span>
     
 <div class="viewcode-block" id="NeuralNetwork.build"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#! BUILD NEURONS</span>
+        <span class="c1">#! BUILD NEURONS?</span>
+        <span class="c1">#* Build synapses</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">synapses</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
+        <span class="c1">#* Add Identity encoders to every stimuli without </span>
+        <span class="c1">#* an encoder previously set.</span>
+        <span class="k">for</span> <span class="n">stim</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimuli_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoders</span><span class="o">.</span><span class="n">all</span><span class="p">:</span>
+                	<span class="bp">self</span><span class="o">.</span><span class="n">add_encoder</span><span class="p">(</span><span class="s1">&#39;IdentityEncoding&#39;</span><span class="p">,</span> <span class="n">stim</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">learning_rule</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">learning_rule</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
         <span class="c1">#TODO --- Create Monitor (DEBUG MODE) ---</span>
@@ -502,7 +520,7 @@
                     <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;trainable&#39;</span><span class="p">]}</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">],</span> <span class="n">conn_prob</span><span class="o">=</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">syn_params</span><span class="p">)</span>
         <span class="c1">#* Add Decoders</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">decoders</span> <span class="o">=</span> <span class="n">DecodingWrapper</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoders</span><span class="o">.</span><span class="n">build</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
         <span class="c1">#* Build ANN</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
 
@@ -516,12 +534,14 @@
             <span class="k">if</span> <span class="n">neuron</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">ensemble_name</span><span class="p">:</span>
                 <span class="n">neuron</span><span class="p">[</span><span class="s1">&#39;is_motor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div>
 
-<div class="viewcode-block" id="NeuralNetwork.add_stimuli"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_stimuli">[docs]</a>    <span class="k">def</span> <span class="nf">add_stimuli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">,</span> <span class="n">sensor</span><span class="p">):</span>
+<div class="viewcode-block" id="NeuralNetwork.add_stimuli"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_stimuli">[docs]</a>    <span class="k">def</span> <span class="nf">add_stimuli</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">num_nodes</span><span class="p">,</span> <span class="n">sensor</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_nodes</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
                 <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ensemble&#39;</span> <span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;sensor&#39;</span> <span class="p">:</span> <span class="n">sensor</span><span class="p">,</span> <span class="s1">&#39;idx&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">])}</span>
             <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">input_ensemble_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sensor</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sensor</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stimuli_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sensor</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NeuralNetwork.add_ensemble"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">add_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">num_neurons</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -529,7 +549,6 @@
         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_neurons</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_neuron</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">n</span><span class="p">),</span> <span class="n">ensemble</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
         
-
 <div class="viewcode-block" id="NeuralNetwork.add_neuron"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_neuron">[docs]</a>    <span class="k">def</span> <span class="nf">add_neuron</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">ensemble</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="c1">#!</span>
         <span class="n">ensemble</span> <span class="o">=</span> <span class="n">ensemble</span> <span class="k">if</span> <span class="n">ensemble</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">name</span>
@@ -611,6 +630,11 @@
                         <span class="n">inp_node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ensemble_name</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="p">:</span>\
                         <span class="p">{</span><span class="s1">&#39;ensemble&#39;</span> <span class="p">:</span> <span class="n">ensemble_name</span><span class="p">,</span> <span class="s1">&#39;sensor&#39;</span> <span class="p">:</span> <span class="n">sensor</span><span class="p">,</span> <span class="s1">&#39;idx&#39;</span><span class="p">:</span> <span class="n">prev_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">}})</span></div>
+
+<div class="viewcode-block" id="NeuralNetwork.add_decoder"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_decoder">[docs]</a>    <span class="k">def</span> <span class="nf">add_decoder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">,</span> <span class="n">ensemble_name</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">decoder_params</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="n">output_dim</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_ensemble_neurons</span><span class="p">(</span><span class="n">ensemble_name</span><span class="p">)</span> <span class="c1"># Num. Output Neurons in ensemble</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoders</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">scheme</span><span class="p">,</span> <span class="n">ensemble_name</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">decoder_params</span><span class="o">=</span><span class="n">decoder_params</span><span class="p">)</span></div>
+
     <span class="nd">@increase_time</span>
     <span class="nd">@monitor</span>
     <span class="k">def</span> <span class="nf">_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
@@ -625,6 +649,7 @@
 <span class="sd">        ====================================================================================</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">soma_currents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">synapses</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">stimuli</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">spikes</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">voltages</span><span class="p">)</span>
+        <span class="c1"># import pdb; pdb.set_trace()</span>
         <span class="n">spikes</span><span class="p">,</span> <span class="n">voltages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">soma_currents</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">spikes</span><span class="p">,</span> <span class="n">soma_currents</span><span class="p">,</span> <span class="n">voltages</span>
 
@@ -732,6 +757,11 @@
         <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">node</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;inputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">input_name</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">indices</span></div>
 
+<div class="viewcode-block" id="NeuralNetwork.voltage_of"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.voltage_of">[docs]</a>    <span class="k">def</span> <span class="nf">voltage_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensemble</span><span class="p">,</span> <span class="n">neuron</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">ensemble</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">neuron</span><span class="p">)][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">voltages</span><span class="p">[</span><span class="n">index</span><span class="p">]</span></div>
+
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">is_spiking</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Whether the neural network is a spiking neural network or not. &quot;&quot;&quot;</span>
@@ -742,12 +772,11 @@
         <span class="sd">&quot;&quot;&quot;Getter instantaneous voltage vector (membrane voltage of each neuron membrane)</span>
 <span class="sd">        at current simulation timestep.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">voltages</span>
-
+    
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="s2">&quot;Getter of the numpy weight matrix.&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">synapses</span><span class="o">.</span><span class="n">weights</span>
-
 
 <div class="viewcode-block" id="NeuralNetwork.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Reset process of all the neural network dynamics. &quot;&quot;&quot;</span>
