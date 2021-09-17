@@ -91,9 +91,9 @@ class NeuralNetwork:
             raise Exception(logging.error('The combination of dynamic synapses and '\
                 'non-spiking neuron models is not currently implemented.'))
         self.synapses = synapse_models[self.synapse_model](self.dt)
-        self.neurons = neuron_models[self.neuron_model](self.dt)
+        self.neurons  = neuron_models[self.neuron_model](self.dt)
         self.encoders = EncodingWrapper(self.time_scale)
-        self.decoders = None
+        self.decoders = DecodingWrapper() # None
         self.learning_rule = None
         #* Monitor that, if in DEBUG mode, will store all the relevant neural 
         #* variables.
@@ -111,8 +111,14 @@ class NeuralNetwork:
         self.weight_registry = None
     
     def build(self):
-        #! BUILD NEURONS
+        #! BUILD NEURONS?
+        #* Build synapses
         self.synapses.build(self.graph)
+        #* Add Identity encoders to every stimuli without 
+        #* an encoder previously set.
+        for stim in self.stimuli_names:
+            if stim not in self.encoders.all:
+                	self.add_encoder('IdentityEncoding', stim)
         if self.learning_rule is not None:
             self.learning_rule.build(self.graph)
         #TODO --- Create Monitor (DEBUG MODE) ---
@@ -151,7 +157,7 @@ class NeuralNetwork:
                     if key not in ['pre', 'post', 'p', 'trainable']}
             self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], **syn_params)
         #* Add Decoders
-        self.decoders = DecodingWrapper(topology)
+        self.decoders.build(topology)
         #* Build ANN
         self.build()
 
@@ -165,12 +171,14 @@ class NeuralNetwork:
             if neuron['ensemble'] == ensemble_name:
                 neuron['is_motor'] = True
 
-    def add_stimuli(self, name, num_nodes, sensor):
+    def add_stimuli(self, name, num_nodes, sensor=None):
         for n in range(num_nodes):
             self.graph['inputs'].update({
                 '{}_{}'.format(name, n) : {'ensemble' : name, 'sensor' : sensor, 'idx': len(self.graph['inputs'])}
             })
         self.input_ensemble_names.append(name)
+        if sensor is None:
+            sensor = name
         self.stimuli_names.append(sensor)
 
     def add_ensemble(self, name, num_neurons, **kwargs):
@@ -178,7 +186,6 @@ class NeuralNetwork:
         for n in range(num_neurons):
             self.add_neuron('{}_{}'.format(name, n), ensemble=name, **kwargs)
         
-
     def add_neuron(self, name, ensemble=None, **kwargs):
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
@@ -260,6 +267,11 @@ class NeuralNetwork:
                         inp_node['idx'] += 1
                     self.graph['inputs'].update({'{}_{}'.format(ensemble_name, n) :\
                         {'ensemble' : ensemble_name, 'sensor' : sensor, 'idx': prev_idx + 1}})
+
+    def add_decoder(self, scheme, ensemble_name, action_name, decoder_params={}):
+        output_dim = self.num_ensemble_neurons(ensemble_name) # Num. Output Neurons in ensemble
+        self.decoders.add(scheme, ensemble_name, action_name, output_dim, decoder_params=decoder_params)
+
     @increase_time
     @monitor
     def _step(self, stimuli):
@@ -274,6 +286,7 @@ class NeuralNetwork:
         ====================================================================================
         """
         soma_currents = self.synapses.step(np.r_[stimuli, self.spikes], self.voltages)
+        # import pdb; pdb.set_trace()
         spikes, voltages = self.neurons.step(soma_currents)
         return spikes, soma_currents, voltages
 
@@ -381,6 +394,11 @@ class NeuralNetwork:
         indices = np.array([node['idx'] for node in self.graph['inputs'].values() if node['ensemble'] == input_name])
         return indices
 
+    def voltage_of(self, ensemble, neuron):
+        """ """
+        index = self.graph['neurons'][ensemble + '_' + str(neuron)]['idx']
+        return self.neurons.voltages[index]
+
     @property
     def is_spiking(self):
         """ Whether the neural network is a spiking neural network or not. """
@@ -391,12 +409,11 @@ class NeuralNetwork:
         """Getter instantaneous voltage vector (membrane voltage of each neuron membrane)
         at current simulation timestep."""
         return self.neurons.voltages
-
+    
     @property
     def weights(self):
         "Getter of the numpy weight matrix."
         return self.synapses.weights
-
 
     def reset(self):
         """ Reset process of all the neural network dynamics. """

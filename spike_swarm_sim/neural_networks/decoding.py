@@ -18,13 +18,13 @@ class DecodingWrapper:
         act_ens_map [dict] : dict mapping output names to motor ensemble names.
     =============================================================================
     """
-    def __init__(self, topology=None):
-        self.motor_ensembles = None
-        self.decoding_config = None
-        self.act_ens_map = None
+    def __init__(self):
+        self.motor_ensembles = {} # Maps output neuron ensembles to num. of neurons in the ensemble.
+        self.act_ens_map = {}
         self._decoders = {}
-        if topology is not None:
-            self.build(topology)
+        self.decoding_config = None #! TO be removed, useless attr.
+        # if topology is not None:
+        #     self.build(topology)
 
     def step(self, spikes):
         """ Steps all the decoders with the corresponding spikes or activities. """
@@ -38,6 +38,11 @@ class DecodingWrapper:
             actions.update({name : decoder.step(dec_spikes)})
             current_idx += self.motor_ensembles[self.act_ens_map[name]]
         return actions        
+
+    def add(self, scheme, output_name, action_name, output_dim, decoder_params={}):
+        self.act_ens_map.update({action_name : output_name})
+        self.motor_ensembles.update({output_name : output_dim})
+        self._decoders.update({action_name : decoders[scheme]({output_name : output_dim}, **decoder_params)})
 
     def build(self, topology):
         """ Builds the decoders using the topology config. dict. """

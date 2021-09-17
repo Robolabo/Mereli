@@ -33,7 +33,7 @@ class Braitenberg2B(RobotController):
         action[1] = np.max(state['light_sensor'][[0, 1, 2, 3]])
         if np.max(state['light_sensor']) == 0.0: # 
             action = np.array([.2, .2])
-        return {'joint_velocity_actuator' : 2*np.clip(action, a_min=-1, a_max=1)}
+        return {'joint_velocity_actuator' : 2 * np.clip(action, a_min=-1, a_max=1)}
 
 
 @controller_registry(name='Braitenberg2a')
