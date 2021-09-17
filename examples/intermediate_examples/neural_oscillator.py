@@ -46,6 +46,3 @@ plt.xlabel('Time (s)')
 plt.ylabel('Measure')
 plt.legend([ 'Output/Action', 'Voltage/Neuron State'])
 plt.show()
-
-
-
