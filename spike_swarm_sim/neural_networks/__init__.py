@@ -1,4 +1,5 @@
 from .neural_net import NeuralNetwork
+from .mlp import MLP
 from .synapses import StaticSynapses, DynamicSynapses
 from .neuron_models import RateModel, IzhikevichModel, LIFModel, AdExModel
 from .receptive_field import IdentityReceptiveField, GaussianReceptiveField, TriangularReceptiveField, ConicReceptiveField

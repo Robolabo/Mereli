@@ -63,6 +63,22 @@ def tanh(x):
     """
     return (np.exp(2*x) - 1) / (np.exp(2*x) + 1)
 
+def gaussian(x, scale=50):
+    """ Applies a gaussian function to the input x.
+
+    .. math::
+        :nowrap:
+
+        \[\mathrm{gaussian}(x) = e^{-\mathrm{scale}\,x^2}\]
+
+    :param np.ndarray x: input vector to which the activation is applied.
+    :param np.ndarray x: input vector to which the activation is applied.
+
+    :returns: numpy array with the element-wise transformed vector.
+    """
+    return np.exp(-scale * x **2)
+
+
 def softmax(x, tau=1):
     r""" Applies a softmax activation function to the input vector.
     

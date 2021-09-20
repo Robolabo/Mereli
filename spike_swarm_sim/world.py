@@ -364,7 +364,8 @@ class World(object):
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
                         obj.orientation = orientation
-        np.random.seed()
+        if seed is not None:
+            np.random.seed()
 
     def group_objects(self, group):
         """ List all the objects belonging to a group.

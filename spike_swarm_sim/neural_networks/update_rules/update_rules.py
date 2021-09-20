@@ -30,10 +30,13 @@ class GeneralizedHebbian:
                         self.A * np.outer(activities, act_inpt_cat)\
                         + self.B * np.outer(activities, np.ones_like(act_inpt_cat))\
                         + self.C * np.outer(np.ones_like(activities), act_inpt_cat)\
-                        + self.D) 
+                        + self.D)
         return weight_update * reward if reward is not None else weight_update
     
     def step(self, inputs, activities, reward=None):
+        #!
+        return self.__step(inputs, activities, reward=reward)
+        #!
         if not self.modulated:
             return self.__step(inputs, activities, reward=1.)
         if self.t < self.timesteps_update:
@@ -52,6 +55,7 @@ class GeneralizedHebbian:
             value_fn = np.sum([rew * self.gamma ** k for k, rew in enumerate(self.reward_queue)])
             weight_update = self.__step(self.inputs_queue[0], self.activities_queue[0], reward=value_fn)
         else:
+            import pdb; pdb.set_trace()
             weight_update = self.__step(inputs, activities, reward=reward)
         self.t += 1
         return weight_update

@@ -19,7 +19,7 @@ def delay(func):
     return wrapper  
 
 class Synapses(ABC):
-    def __init__(self, dt):
+    def __init__(self, dt=0.1):
         self.dt = dt
         #* Weighted adjacency matrix.
         self.weights = None
@@ -37,21 +37,40 @@ class Synapses(ABC):
         raise NotImplementedError
 
     def build(self, ann_graph):
-        mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
-        trainable_mask = mask.copy()
-        weights = mask.copy().astype(float)
-        for name, node in ann_graph['neurons'].items():
-            in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
-            for syn in in_connections:
-                if syn['enabled']:
-                    pre_idx = ann_graph['inputs'][syn['pre']]['idx'] if syn['pre'] in ann_graph['inputs']\
-                                else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
-                    mask[node['idx'], pre_idx] = True
-                    trainable_mask[node['idx'], pre_idx] = True
-                    weights[node['idx'], pre_idx] = syn['weight']
-        self.weights = weights
-        self.mask = mask
-        self.trainable_mask = trainable_mask
+        """ Builds the ANN synapses by converting the ANN graph into the adjacency matrix. """
+        self.mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
+        self.trainable_mask = self.mask.copy()
+        self.weights = self.mask.copy().astype(float)
+        n_inputs = len(ann_graph['inputs'])
+        for syn in ann_graph['synapses'].values():
+            if syn['enabled']:
+                if syn['pre'] in ann_graph['inputs']:
+                    pre_idx = ann_graph['inputs'][syn['pre']]['idx']
+                else:
+                    pre_idx = ann_graph['neurons'][syn['pre']]['idx'] + n_inputs
+                post_idx = ann_graph['neurons'][syn['post']]['idx'] 
+                self.mask[post_idx, pre_idx] = True
+                self.trainable_mask[post_idx, pre_idx] = syn['trainable']
+                self.weights[post_idx, pre_idx] = syn['weight']
+
+    # def build(self, ann_graph):
+    #     #! Old ineficient implementation of build
+    #     mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
+    #     trainable_mask = mask.copy()
+    #     weights = mask.copy().astype(float)
+    #     for name, node in ann_graph['neurons'].items():
+    #         in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
+    #         for syn in in_connections:
+    #             if syn['enabled']:
+    #                 pre_idx = ann_graph['inputs'][syn['pre']]['idx']\
+    #                             if syn['pre'] in ann_graph['inputs']\
+    #                             else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
+    #                 mask[node['idx'], pre_idx] = True
+    #                 trainable_mask[node['idx'], pre_idx] = True
+    #                 weights[node['idx'], pre_idx] = syn['weight']
+    #     self.weights = weights
+    #     self.mask = mask
+    #     self.trainable_mask = trainable_mask
 
     @GET("synapses:weights")
     def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):

@@ -4,6 +4,7 @@ from itertools import product
 from functools import wraps
 import numpy as np
 import matplotlib.pyplot as plt
+from numpy.lib.function_base import delete
 # Own imports
 from spike_swarm_sim.register import neuron_models, synapse_models, learning_rules
 from spike_swarm_sim.utils import increase_time, merge_dicts, remove_duplicates
@@ -43,6 +44,9 @@ def monitor(func):
             self.monitor.update(**monitor_vars)
         return spikes, Isynapses, voltages
     return wrapper
+
+
+
 
 class NeuralNetwork:
     """ Class for the artificial neural networks. This class is mainly a wrapper that creates and executes 
@@ -114,6 +118,10 @@ class NeuralNetwork:
         #! BUILD NEURONS?
         #* Build synapses
         self.synapses.build(self.graph)
+
+        #* Add dummy input if the ANN has no input.
+        if len(self.stimuli_names) == 0: 
+            self.stimuli_names.append('dummy_input')
         #* Add Identity encoders to every stimuli without 
         #* an encoder previously set.
         for stim in self.stimuli_names:
@@ -155,7 +163,7 @@ class NeuralNetwork:
         for name, syn in topology['synapses'].items():
             syn_params = {key : val for key, val in syn.items()\
                     if key not in ['pre', 'post', 'p', 'trainable']}
-            self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], **syn_params)
+            self.add_synapse(name, syn['pre'], syn['post'], conn_prob=syn['p'], use_seed=True, **syn_params)
         #* Add Decoders
         self.decoders.build(topology)
         #* Build ANN
@@ -211,8 +219,16 @@ class NeuralNetwork:
             if syn['pre'] == name or syn['post'] == name:
                 self.delete_synapse(syn_name)
 
-    def add_synapse(self, name, pre, post, weight=1., conn_prob=1., trainable=True, **kwargs):
+
+    def add_learning_rule(self):
+        #! OJO PROVISIONAL.
+        self.learning_rule = learning_rules['generalized_hebbian']() #TODO decouple, improve.
+
+
+    def add_synapse(self, name, pre, post, weight=1., conn_prob=1., 
+            trainable=True, use_seed=False, **kwargs):
         """ Adds synapses between pre and post ensembles. """
+
         if post in self.graph['inputs'] or post in self.input_ensemble_names:
             raise Exception(logging.error('An input node or ensemble cannot be '\
                 'a postsynaptic neuron or ensemble.'))
@@ -232,23 +248,30 @@ class NeuralNetwork:
             post = [name for name, node in merge_dicts([self.graph['inputs'], self.graph['neurons']]).items() if node['ensemble'] == post]
         else:
             post = [post]
+
+
         #* Add connections (note: not compatible with previous implementation checkpoints).
         #! REVISAR SEED
-        np.random.seed(44 + len(self.graph['synapses']))
+        if use_seed:
+            np.random.seed(44 + len(self.graph['synapses']))
         for i, (pre_node, post_node) in enumerate(product(pre, post)):
             if np.random.random() < conn_prob:
-                synapse_config = merge_dicts([{
-                    'pre' : pre_node, 'post' : post_node,
-                    'weight': weight, 'trainable' : trainable,
-                    'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}, kwargs])
+                synapse_config = {
+                    'pre' : pre_node, 
+                    'post' : post_node,
+                    'weight': weight if weight is not 'random' else  0.1 * np.random.randn(), 
+                    'trainable' : trainable,
+                    'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}
                 if self.learning_rule is not None:
                     synapse_config.update({'learning_rule' : {p : 0. for p in ['A', 'B', 'C', 'D']}})
                 if self.synapse_model == 'dynamic_synapse':
                     #! Add min and max possible delays?
                     synapse_config.update({'delay' : np.random.randint(1, 10)})
-                syn_name = "{}_{}".format(name, i) if len(pre + post) > 2 else name
-                self.graph['synapses'].update({syn_name : synapse_config})
-        np.random.seed()
+                syn_name = name+'_'+str(i) if len(pre + post) > 2 else name #  "{}_{}".format(name, i) 
+                self.graph['synapses'][syn_name] = {**synapse_config, **kwargs}
+        if use_seed:
+            np.random.seed(None)
+
 
     def delete_synapse(self, name):
         self.graph['synapses'].pop(name, None)
@@ -271,6 +294,8 @@ class NeuralNetwork:
     def add_decoder(self, scheme, ensemble_name, action_name, decoder_params={}):
         output_dim = self.num_ensemble_neurons(ensemble_name) # Num. Output Neurons in ensemble
         self.decoders.add(scheme, ensemble_name, action_name, output_dim, decoder_params=decoder_params)
+
+
 
     @increase_time
     @monitor
@@ -306,8 +331,10 @@ class NeuralNetwork:
         ===============================================================
         """
         #* --- Convert stimuli into spikes (Encoders Step) ---
-        if len(stimuli) == 0:
-            raise Exception(logging.error('The ANN received empty stimuli.'))
+        if len(stimuli) == 0 or stimuli is None:
+            stimuli = {'dummy_input' : np.array([])}
+            # raise Exception(logging.error('The ANN received empty stimuli.'))
+        
         stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
         inputs = self.encoders.step(stimuli)
         self.stimuli = stimuli.copy()
@@ -320,9 +347,18 @@ class NeuralNetwork:
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            self.synapses.weights += self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
-            self.synapses.weights = np.clip(self.synapses.weights, a_min=-6, a_max=6)
-            
+            m = 0.0
+            Delta_W = self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
+            Delta_W = Delta_W * np.sign(self.synapses.weights)
+            # print(Delta_W)
+            # print(np.max(Delta_W))
+            # print(Delta_W)
+            self.synapses.weights += (Delta_W)
+            # self.synapses.weights += (0.001)*(-self.synapses.weights)
+            # Delta_W = self.learnng_rule.step(self.prev_input, self.spikes, reward=reward)
+            # self.synapses.weights += Delta_W
+            self.synapses.weights = np.clip(self.synapses.weights, a_min=-10, a_max=10)
+            # print(np.max(self.synapses.weights))
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):
@@ -335,7 +371,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 800 and self.monitor is not None:
+        if self.t == self.time_scale * 1100 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -418,7 +454,7 @@ class NeuralNetwork:
     def reset(self):
         """ Reset process of all the neural network dynamics. """
         self.t = 0
-        self.build()
+        #! self.build()
         self.neurons.reset()
         self.synapses.reset()
         self.encoders.reset()

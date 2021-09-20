@@ -140,7 +140,7 @@ def neural_net_checker(topology):
     the execution.
     """
     # Check compulsory variables.
-    for var in ['stimuli', 'ensembles', 'synapses', 'outputs']:
+    for var in ['ensembles', 'synapses', 'outputs']:
         if var not in topology or len(topology[var]) == 0:
             raise ConfigException('Required field {} not specified in config. file.'.format(var))
     if 'dt' in topology and topology['dt'] <= 0.:

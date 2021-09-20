@@ -53,7 +53,7 @@ class OpenAI_ES_Population(Population):
         self.segment_lengths = [interface.submit_query(query, primitive='LEN') for query in self.objects]
         genotype_length = interface.toGenotype(self.objects, self.min_vector, self.max_vector).shape[0]
         # self.mu = np.random.uniform(low=self.min_vector, high=self.max_vector, size=genotype_length)
-        np.random.seed()
+        # np.random.seed()
 
         self.sigma = 0.05
         self.learning_rate = 1

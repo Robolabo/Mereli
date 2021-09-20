@@ -3,7 +3,7 @@ import matplotlib.pyplot as plot
 import numpy as np
 from spike_swarm_sim.algorithms.interfaces import GET, SET, LEN, INIT
 from spike_swarm_sim.register import neuron_model_registry
-from spike_swarm_sim.utils import sigmoid, tanh, increase_time
+from spike_swarm_sim.utils import sigmoid, tanh, increase_time, without_duplicates
 
 class BaseNeuronModel(ABC):
     """ Base abstract class for neuron models."""
@@ -89,6 +89,41 @@ class NonSpikingNeuronModel(BaseNeuronModel):
         random_biases = 0.5 * np.random.randn(biases_len) * 0.3
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
+
+@neuron_model_registry(name='perceptron')
+class Perceptron(NonSpikingNeuronModel):
+    def __init__(self, *args):
+        super(Perceptron, self).__init__(*args)
+        self.bias = np.empty(0)
+        self.gain = np.empty(0)
+        self.activation = np.empty(0)
+
+    def step(self, Isyn):
+        self._volt = self.gain * Isyn + self.bias
+        function_map = {
+            'sigmoid' : sigmoid,
+            'tanh' : tanh,
+            'sin' : np.sin, 
+            'cos' : np.cos, 
+        }
+        for func in without_duplicates(self.activation):
+            self._volt[self.activation == func] = function_map[func](self._volt[self.activation == func])
+        return self._volt, None
+
+    #! pasarlo a base
+    def add(self, gain=1., bias=0., activation='sigmoid'):
+        self._volt = np.hstack((self._volt, 0))
+        self.bias = np.hstack((self.bias, bias))
+        self.gain = np.hstack((self.gain, gain))
+        self.activation = np.hstack((self.activation, activation))
+
+    def delete(self, index):
+        self.bias = np.delete(self.bias, index)
+        self.gain = np.delete(self.gain, index)
+        self.activation = np.delete(self.activation, index)
+        
+    def reset(self):
+        self._volt = np.zeros(len(self))
 
 @neuron_model_registry(name='rate_model')
 class RateModel(NonSpikingNeuronModel):

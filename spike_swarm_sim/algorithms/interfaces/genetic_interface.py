@@ -159,7 +159,7 @@ class NEATInterface:
         for key in effective_genotype['connections']:
             if key not in self.neural_net.graph['synapses']:
                 syn = effective_genotype['connections'][key]
-                self.neural_net.add_synapse(key, syn['pre'], syn['post'], syn['weight'], conn_prob=1.)
+                self.neural_net.add_synapse(key, syn['pre'], syn['post'], syn['weight'], conn_prob=1., use_seed=True)
             self.neural_net.graph['synapses'].update({key : effective_genotype['connections'][key].copy()})
         #* Update parameters (Decoders and encoders not supported yet).
         # counter = 0
