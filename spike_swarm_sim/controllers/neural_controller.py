@@ -36,6 +36,10 @@ class NeuralController(RobotController):
         self.out_act_mapping = {out_name : snn_output['actuator'] \
                     for out_name, snn_output in topology['outputs'].items()}
 
+    def add_neural_network(self, neural_network, actuator_mapping):
+        self.neural_network = neural_network
+        self.out_act_mapping = actuator_mapping
+
     @increase_time
     def step(self, state, reward=0.0):
         if len(state):

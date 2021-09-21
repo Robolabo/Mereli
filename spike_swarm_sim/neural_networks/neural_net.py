@@ -182,7 +182,7 @@ class NeuralNetwork:
     def add_stimuli(self, name, num_nodes, sensor=None):
         for n in range(num_nodes):
             self.graph['inputs'].update({
-                '{}_{}'.format(name, n) : {'ensemble' : name, 'sensor' : sensor, 'idx': len(self.graph['inputs'])}
+                f'{name}_{n}' : {'ensemble' : name, 'sensor' : sensor, 'idx': len(self.graph['inputs'])}
             })
         self.input_ensemble_names.append(name)
         if sensor is None:
@@ -191,16 +191,26 @@ class NeuralNetwork:
 
     def add_ensemble(self, name, num_neurons, **kwargs):
         self.ensemble_names.append(name)
+        for name_kwarg, kwarg in kwargs.items():
+            if not (isinstance(kwarg, np.ndarray) or isinstance(kwarg, list)):
+               kwargs[name_kwarg] = [kwarg] * num_neurons 
         for n in range(num_neurons):
-            self.add_neuron('{}_{}'.format(name, n), ensemble=name, **kwargs)
+            self.add_neuron(f'{name}_{n}', ensemble=name,
+                **{k : val[n] for k, val in kwargs.items()})
         
     def add_neuron(self, name, ensemble=None, **kwargs):
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
         if ensemble not in self.ensemble_names:
             self.ensemble_names.append(ensemble)
-        self.graph['neurons'].update({name : merge_dicts([{'ensemble' : ensemble,
-                'idx' : len(self.neurons)-1, 'is_motor' : False}, kwargs])})
+        
+        extra_params = {param : getattr(self.neurons, param)[-1] 
+                        for param in self.neurons.__dict__.keys()\
+                        if not param.startswith('_') and param != 'dt'}
+        self.graph['neurons'].update({name : 
+            {**{'ensemble' : ensemble, 'idx' : len(self.neurons)-1, 'is_motor' : False}, 
+            **extra_params} 
+        })
 
     def delete_neuron(self, name):
         neuron_index = self.graph['neurons'][name]['idx']

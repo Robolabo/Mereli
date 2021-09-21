@@ -23,15 +23,11 @@ from spike_swarm_sim.globals import global_states
 @click.option('-n', '--ncpu', default=1, help='Number of CPU cores.')
 @click.option('-f', '--cfg', default='default', help='Name of the JSON config. file.')
 def main(render, resume, cfg, debug, eval, verbose, ncpu):
+    #* Set globals
     global_states.set_states(render=render, eval=eval, debug=debug, info=verbose)
+    #* Parse JSON
     cfg_dict = json_parser(cfg)
-    # if debug:
-    #     # logging.basicConfig(level=logging.DEBUG)
-    #     logging.getLogger().level = logging.DEBUG
-    #     logging.getLogger().debug('Executing in DEBUG mode.')
-    # elif verbose:
-    #     logging.getLogger().level = logging.INFO
-    #     logging.getLogger().info('Executing in VERBOSE mode.')
+
     #* Create the world
     physics_engine = Engine3D(dt=cfg_dict['world'].get('physics_dt', 0.02), 
                             T_control=cfg_dict['world'].get('T_control', 0.1))

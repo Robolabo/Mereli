@@ -357,7 +357,7 @@ class Grouping:
 class ObstacleAvoidance:
     """Fitness function for the Obstacle Avoidance task."""
     def __init__(self):
-        self.required_info = ("robot_positions",)
+        self.required_info = ("robot:position",)
 
     def __call__(self, actions, states, info=None):
         """Computes the fitness function based on trial actions and states. 
@@ -372,10 +372,10 @@ class ObstacleAvoidance:
         =======================================================================================
         """
         fitness = 0
-        robot_positions = np.stack(info["robot_positions"]).copy()
+        robot_positions = np.stack(info["robot:position"]).copy()
         for _, (states_t, actions_t, pos)  in enumerate(zip(states, actions, robot_positions)):
             fA = np.mean([np.max(st['distance_sensor']) == 0.0 for st in states_t])
-            fB = np.mean([0.5*LA.norm(ac['joint_actuator'], ord=1) * (1 - np.abs(np.diff(ac['joint_actuator'])) / 2) ** 2 for ac in actions_t])
+            fB = np.mean([0.5*LA.norm(ac['joint_velocity_actuator'], ord=1) * (1 - np.abs(np.diff(ac['joint_velocity_actuator'])) / 2) ** 2 for ac in actions_t])
             fitness += fA * fB
         fitness /= len(states)
         return fitness + 1e-5
