@@ -1,6 +1,5 @@
 import numpy as np
 from spike_swarm_sim.register import evo_operators
-from spike_swarm_sim.algorithms.evolutionary.gene import FixedLenGenotype
 
 def exp_schedule(value, min_value, tau=20, dt=1):
     return value - (dt/tau)*(value-min_value)
