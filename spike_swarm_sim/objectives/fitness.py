@@ -373,9 +373,12 @@ class ObstacleAvoidance:
         """
         fitness = 0
         robot_positions = np.stack(info["robot:position"]).copy()
-        for _, (states_t, actions_t, pos)  in enumerate(zip(states, actions, robot_positions)):
-            fA = np.mean([np.max(st['distance_sensor']) == 0.0 for st in states_t])
-            fB = np.mean([0.5*LA.norm(ac['joint_velocity_actuator'], ord=1) * (1 - np.abs(np.diff(ac['joint_velocity_actuator'])) / 2) ** 2 for ac in actions_t])
+        for t, (states_t, actions_t, pos)  in enumerate(zip(states, actions, robot_positions)):
+            # fA = np.mean([np.max(st['distance_sensor']) == 0.0 for st in states_t])
+            fA = np.mean([0 if np.max(st['distance_sensor']) > 0.2 else 1. for st in states_t])
+            # fB = np.mean([2*np.linalg.norm(pos - robot_positions[t-5, i]) for i, pos in enumerate(robot_positions)])
+            fB =  np.mean([np.abs(ac['joint_velocity_actuator'][0] - ac['joint_velocity_actuator'][1]) < 0.1 for ac in actions_t])
+            # fB = np.mean([0.5*LA.norm(ac['joint_velocity_actuator'], ord=1) * (1 - np.abs(np.diff(ac['joint_velocity_actuator'])) / 2) ** 2 for ac in actions_t])
             fitness += fA * fB
         fitness /= len(states)
         return fitness + 1e-5

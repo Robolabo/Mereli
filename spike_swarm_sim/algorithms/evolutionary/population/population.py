@@ -1,5 +1,6 @@
 import numpy as np
 from spike_swarm_sim.register import evo_operators
+from spike_swarm_sim.algorithms.evolutionary.gene import FixedLenGenotype
 
 def exp_schedule(value, min_value, tau=20, dt=1):
     return value - (dt/tau)*(value-min_value)
@@ -74,5 +75,3 @@ class Population:
     @property
     def max_vector(self):
         return  np.hstack([max_val * np.ones(seg_len) for seg_len, max_val in zip(self.segment_lengths, self.max_vals)])
-
-  

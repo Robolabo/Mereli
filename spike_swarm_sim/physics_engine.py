@@ -4,19 +4,21 @@ import json
 import logging
 import numpy as np
 import xml.etree.cElementTree as ET
-import pybullet as p
-import pybullet_data
-import pybullet_utils.bullet_client as bc
-import pygame
+import contextlib
+with contextlib.redirect_stdout(None):
+    import pybullet as p
+    import pybullet_data
+    import pybullet_utils.bullet_client as bc
+    import pygame
+
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pymunk
 import pymunk.pygame_util
 from pygame.color import THECOLORS
 from matplotlib import colors
+
 from spike_swarm_sim.globals import global_states
 
-
-    
 
 class Engine3D:
     """ 3D Physics and Render Engine class. Its role in the simulation is to iterate the 
