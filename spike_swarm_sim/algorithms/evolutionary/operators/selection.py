@@ -5,7 +5,7 @@ from spike_swarm_sim.register import evo_operator_registry
 
 
 @evo_operator_registry(name='truncation_selection')
-def truncation_selection(population, fitness, n_sel):
+def truncation_selection(population, n_sel):
     """ Truncation selection operator of GA. The n_sel best individuals, 
     according to the fitness scores, are selected as parents.
     =========================================================================
@@ -19,10 +19,7 @@ def truncation_selection(population, fitness, n_sel):
             selected genotypes (respecting the same order)
     =========================================================================
     """
-    f_order = np.argsort(fitness.copy())[::-1]
-    selected = [copy.deepcopy(population[i]) for i in f_order[:n_sel]]
-    fitness_sel = [fitness[i] for i in f_order[:n_sel]]
-    return selected, fitness_sel
+    return sorted(population, key=lambda x: x.fitness, reverse=True)[:n_sel]
 
 @evo_operator_registry(name='roulette_selection')
 def roulette_selection(population, fitness, n_sel):
@@ -76,32 +73,33 @@ def lin_rank_selection(population, fitness, n_sel, sp=1.5):
     return selected, fitness_sel
 
 @evo_operator_registry(name='nonlin_rank_selection')
-def nonlin_rank_selection(population, fitness, n_sel, p_best=.1):
+def nonlin_rank_selection(population, n_sel, p_best=.1):
     """ Non-linear rank selection operator of GA. Samples stochastically n_sel 
     genotypes using ranks as probabilities in order to mitigate genetic drift.
     Ranks are computed non-linearly, so that the prob. decreases exponentially with the 
     fitness order of the individuals (fittest is the most probable).
-    =========================================================================
+
     - Args:
         population [list]: list of genotypes from which parents are selected.
         fitness [list]: evaluated fitness scores of the genotypes in population.
         n_sel [int]: number of genotypes to be selected.
         p_best [float]: prob. of the fittest individual (prob of rank 0). 
+
     - Returns:
         selected [list]: list of selected genotypes.
-        fitness_sel [list]: list of the fitness score corresponding to the 
-            selected genotypes (respecting the same order)
-    =========================================================================
     """
-    fitness_order = np.argsort(fitness)[::-1]
-    population = [population[ii] for ii in fitness_order]
-    probs = [p_best * (1 - p_best) ** i for i in range(len(population))]
-    probs[0] += 1 - sum(probs)
+    ordered_pop = sorted(population, key=lambda genotype: genotype.fitness, reverse=True) 
+    # fitness_order = np.argsort(fitness)[::-1]
+    # population = [population[ii] for ii in fitness_order]
+
+    probs = p_best * (1 - p_best) ** np.arange(len(population))
+    probs /= sum(probs)
+    # probs[0] += 1 - sum(probs)
+
     sel_idxs = np.random.choice(len(population), p=probs, replace=True, size=n_sel)
-    selected = [population[i] for i in sel_idxs]
-    fitness_sel = [fitness[i] for i in sel_idxs]
+    selected = [ordered_pop[i] for i in sel_idxs]
     # selected = [v for v, _ in sorted(zip(selected, fitness_sel), key=lambda x: x[1])]
-    return selected, fitness_sel
+    return selected
 
 
 @evo_operator_registry(name='tournament_selection')

@@ -6,3 +6,4 @@ from .neat import NEAT
 from .openai_es import OpenAI_ES
 from .operators import *
 from .species import Species
+from .gene import FixedLenGenotype, GraphGenotype

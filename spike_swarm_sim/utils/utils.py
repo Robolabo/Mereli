@@ -1,3 +1,4 @@
+import sys, os
 import copy
 import re
 import csv
@@ -135,3 +136,22 @@ class DataLogger:
             writer.writeheader()
             for row in np.stack(*[self.data.values()]).T:
                 writer.writerow({key : val for key, val in zip(self.fieldnames, row)})
+
+class HidePrintf(object):
+    def __init__(self):
+        sys.stdout.flush()
+        self._origstdout = sys.stdout
+        self._oldstdout_fno = os.dup(sys.stdout.fileno())
+        self._devnull = os.open(os.devnull, os.O_WRONLY)
+
+    def __enter__(self):
+        self._newstdout = os.dup(1)
+        os.dup2(self._devnull, 1)
+        os.close(self._devnull)
+        sys.stdout = os.fdopen(self._newstdout, 'w')
+
+    def __exit__(self, *args):
+        sys.stdout = self._origstdout
+        sys.stdout.flush()
+        os.dup2(self._oldstdout_fno, 1)
+

@@ -9,7 +9,7 @@ class Species:
         self.c2 = c2
         self.c3 = c3
         self.num_genotypes = 0
-        self.representative = {}
+        self.representative = None
         self.mean_fitness = {'raw' : 0, 'adjusted' : 0}
         self.max_fitness = {'raw' : 0, 'adjusted' : 0}
         self.min_fitness = {'raw' : 0, 'adjusted' : 0}
@@ -32,17 +32,19 @@ class Species:
                     representative.
         ============================================================================
         """
-        if self.representative is None or len(self.representative) == 0:
+        if self.representative is None:
             return (False, 1000.)
-        repr_innovations = set([g['innovation'] for g in self.representative['connections'].values()])
-        genotype_innovations = set([g['innovation'] for g in genotype['connections'].values()])
+
+        repr_innovations = set(g.innovation for g in self.representative.connections)
+        genotype_innovations = set(g.innovation for g in genotype.connections)
+
         # Do not care about disjoint and excess. For the moment we use same weights.
         diff_genes = genotype_innovations - repr_innovations
         common_genes = genotype_innovations.intersection(repr_innovations)
-        weights_repr = np.array([g['weight'] for g in self.representative['connections'].values()
-                        if g['innovation'] in common_genes])
-        weights_genotype = np.array([g['weight'] for g in genotype['connections'].values()
-                        if g['innovation'] in common_genes])
+        weights_repr = np.array([g.weight for g in self.representative.connections
+                        if g.innovation in common_genes])
+        weights_genotype = np.array([g.weight for g in genotype.connections
+                        if g.innovation in common_genes])
         assert len(weights_repr) == len(weights_genotype)
         # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
         W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(len(weights_genotype))

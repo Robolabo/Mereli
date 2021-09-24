@@ -1,3 +1,4 @@
+
 import time
 import os
 import json
@@ -18,6 +19,7 @@ from pygame.color import THECOLORS
 from matplotlib import colors
 
 from spike_swarm_sim.globals import global_states
+from spike_swarm_sim.utils.utils import HidePrintf
 
 
 class Engine3D:
@@ -54,7 +56,8 @@ class Engine3D:
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        with HidePrintf():
+            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.client)
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())

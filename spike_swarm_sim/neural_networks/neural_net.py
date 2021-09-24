@@ -199,6 +199,8 @@ class NeuralNetwork:
                 **{k : val[n] for k, val in kwargs.items()})
         
     def add_neuron(self, name, ensemble=None, **kwargs):
+        if ensemble not in self.ensemble_names:
+            self.ensemble_names.append(ensemble)
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
         if ensemble not in self.ensemble_names:
@@ -224,12 +226,24 @@ class NeuralNetwork:
         #* Remove ensemble if neuron was the only unit.
         if not any([neuron['ensemble'] == ensemble for neuron in self.graph['neurons'].values()]):
             self.ensemble_names.remove(ensemble)
+            if ensemble in self.motor_ensemble_names:
+                self.motor_ensemble_names.remove(ensemble)
         #* Remove any synapse with the neuron as pre or post
         for syn_name, syn in [*self.graph['synapses'].items()]:
             if syn['pre'] == name or syn['post'] == name:
                 self.delete_synapse(syn_name)
 
 
+    def reset_graph(self):
+        neuron_names = tuple(self.graph['neurons'].keys())
+        synapse_names = tuple(self.graph['synapses'].keys())
+        for neuron in neuron_names:
+            if not self.is_motor(neuron):
+                self.delete_neuron(neuron)
+        for syn in synapse_names:
+            self.delete_synapse(syn)
+        self.build()
+        
     def add_learning_rule(self):
         #! OJO PROVISIONAL.
         self.learning_rule = learning_rules['generalized_hebbian']() #TODO decouple, improve.
@@ -416,7 +430,10 @@ class NeuralNetwork:
         weight matrix or any kind of ANN adj. mat., the number of inputs MUST be added.
         """
         return np.hstack([self.ensemble_indices(motor) for motor in self.motor_ensemble_names])
-    
+
+    def is_motor(self, neuron_name):
+        return self.graph['neurons'][neuron_name]['is_motor']
+
     def num_ensemble_neurons(self, ensemble):
         return len(self.ensemble_indices(ensemble))
 

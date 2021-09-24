@@ -73,7 +73,7 @@ class NEAT(EvolutionaryAlgorithm):
                 spc.history = copy.deepcopy(spc_chk['history'])
                 self.populations[key].species.append(spc)
                 spc.representative = spc_chk['representative']
-                spc.num_genotypes = np.sum([genotype['species'] == spc.id  for genotype in pop['genotypes']])
+                spc.num_genotypes = np.sum([genotype.species == spc.id  for genotype in pop['genotypes']])
             robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
             interface = NEATInterface(robots[0].controller.neural_network)
             # #!
