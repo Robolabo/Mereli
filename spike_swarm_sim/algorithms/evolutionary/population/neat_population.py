@@ -23,7 +23,6 @@ def compute_spawn(species, pop_size, min_species_size):
             s = max(min_species_size, af / af_sum * pop_size)
         else:
             s = min_species_size
-
         d = (s - ps) * 0.5
         c = int(round(d))
         spawn = ps
@@ -178,7 +177,7 @@ class NEAT_Population(Population):
         raise NotImplementedError
 
     def initialize(self, interface):
-        """ Initializes the parameters and population of SNES.
+        """ Initializes the parameters and population of NEAT.
 
         - Args:
             interface [GeneticInterface] : Phenotype to genotype interface of 

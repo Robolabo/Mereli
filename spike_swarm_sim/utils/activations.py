@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def heaviside(x):
     r""" Applies a Heaviside activation function.
 
@@ -15,7 +16,8 @@ def heaviside(x):
 
     :returns: numpy array with the element-wise transformed vector.
     """
-    return x * float(x >= 0.0)
+    # return x * (x >= 0.0)
+    return (x >= 0.0).astype(float)
 
 def relu(x):
     """  Applies a ReLU () activation function to the input vector.
@@ -76,7 +78,50 @@ def gaussian(x, scale=50):
 
     :returns: numpy array with the element-wise transformed vector.
     """
-    return np.exp(-scale * x **2)
+    return np.exp(-scale * (x) ** 2)
+
+
+def sin(x, freq=5):
+    """ 
+
+    :param np.ndarray x: input vector to which the activation is applied.
+    :param float freq:
+
+    :returns: numpy array with the element-wise transformed vector.
+    """
+    return np.sin(2*np.pi*freq*x)
+
+
+def cos(x, freq=5):
+    """ 
+
+    :param np.ndarray x: input vector to which the activation is applied.
+    :param float freq:
+
+    :returns: numpy array with the element-wise transformed vector.
+    """
+    return np.cos(2*np.pi*freq*x)
+
+def square_sin(x, freq=5):
+    """ 
+
+    :param np.ndarray x: input vector to which the activation is applied.
+    :param float freq:
+
+    :returns: numpy array with the element-wise transformed vector.
+    """
+    return sin(x, freq=freq)
+
+
+def square_cos(x, freq=5):
+    """ 
+
+    :param np.ndarray x: input vector to which the activation is applied.
+    :param float freq:
+
+    :returns: numpy array with the element-wise transformed vector.
+    """
+    return cos(x, freq=freq)
 
 
 def softmax(x, tau=1):

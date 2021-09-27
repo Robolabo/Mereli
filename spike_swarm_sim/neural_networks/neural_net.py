@@ -8,7 +8,7 @@ from numpy.lib.function_base import delete
 # Own imports
 from spike_swarm_sim.register import neuron_models, synapse_models, learning_rules
 from spike_swarm_sim.utils import increase_time, merge_dicts, remove_duplicates
-from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel
+from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .utils.monitor import NeuralNetMonitor
@@ -16,6 +16,7 @@ try:
     from .utils.visualization import *
 except:
     pass
+
 
 def monitor(func):
     """ Decorator for recording and monitoring the relevant neuronal variables. 
@@ -44,6 +45,7 @@ def monitor(func):
             self.monitor.update(**monitor_vars)
         return spikes, Isynapses, voltages
     return wrapper
+
 
 
 
@@ -169,6 +171,14 @@ class NeuralNetwork:
         #* Build ANN
         self.build()
 
+    def build_from_adjmat(self, w_matrix):
+        #! OJO NORMALIZACION weights !!!
+        assert w_matrix.shape[1] - w_matrix.shape[0] == self.num_inputs
+        for i in range(w_matrix.shape[0]):
+            name = f'H_{i}'
+            import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
+
     def set_motor(self, ensemble_name):
         if ensemble_name not in self.ensemble_names:
             raise Exception(logging.error('Ensemble "{}" does not exist').format(ensemble_name))
@@ -193,7 +203,7 @@ class NeuralNetwork:
         self.ensemble_names.append(name)
         for name_kwarg, kwarg in kwargs.items():
             if not (isinstance(kwarg, np.ndarray) or isinstance(kwarg, list)):
-               kwargs[name_kwarg] = [kwarg] * num_neurons 
+               kwargs[name_kwarg] = [kwarg] * num_neurons
         for n in range(num_neurons):
             self.add_neuron(f'{name}_{n}', ensemble=name,
                 **{k : val[n] for k, val in kwargs.items()})
@@ -201,6 +211,8 @@ class NeuralNetwork:
     def add_neuron(self, name, ensemble=None, **kwargs):
         if ensemble not in self.ensemble_names:
             self.ensemble_names.append(ensemble)
+        if 'activation' in kwargs:
+            kwargs['activation'] = Activation.from_name(kwargs['activation'])
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
         if ensemble not in self.ensemble_names:
