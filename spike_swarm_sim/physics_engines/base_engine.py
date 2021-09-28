@@ -1,8 +1,31 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 from spike_swarm_sim.globals import global_states
 
+# class EngineDim(Enum):
+#     Engine3D 
+
 class BaseEngine(ABC):
-    def __init__(self, dt=0.02, T_control=0.1):
+    """ Base abstract class of physics and render Engines. 
+    Its role in the simulation is to iterate the physic simulations and collision detections of the 
+    entities in the environment and render the graphics. Precise engine implementations 
+    must inherit from this class, properly overwritting the required abstract methods to cover the 
+    engine's basic functionalities. The implementation can be either supported on an extern physics simulations
+    library or coded from zero. 
+
+    :param str engine_type: either 2D or 3D indicating the dimensions of the space where physics are simulated.
+        TODO: change to Enum.
+    :param float dt: time step of the physics simulation (in seconds).
+    :param float T_control: period of the sensing+control+action loop. It cannot be lower than dt and 
+        it is set to 5*dt by default. Essentially this means that the physics are updated 5 times 
+        in between every executing of sensors, controllers and actuators.
+
+    :var BulletClient engine: pybullet client engine.
+    :var bool render: flag indicating if the simulation is run in visual or render mode.
+    :var bool connected: whether the engine is connected or not.
+    """
+    def __init__(self, engine_type, dt=0.02, T_control=0.1):
+        self._engine_type = engine_type
         self.dt = 0.02
         self.T_control = T_control
         assert T_control >= dt
@@ -10,7 +33,12 @@ class BaseEngine(ABC):
         self.engine = None
 
     @property
+    def engine_type(self):
+        return self._engine_type
+
+    @property
     def render(self):
+        """ Flag indicating whether the simulation is running in visual or in compute mode."""
         return global_states.RENDER
 
     @abstractmethod

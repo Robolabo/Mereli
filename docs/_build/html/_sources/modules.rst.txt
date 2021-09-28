@@ -13,6 +13,7 @@ Subpackages
     spike_swarm_sim.neural_networks
     spike_swarm_sim.objectives
     spike_swarm_sim.objects
+    spike_swarm_sim.physics_engines
     spike_swarm_sim.sensors
     spike_swarm_sim.utils
 

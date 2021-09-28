@@ -5,10 +5,10 @@ try:
     USE_MPI = True
 except:
     USE_MPI = False
-from spike_swarm_sim import MultiWorldWrapper, Engine3D
+from spike_swarm_sim import MultiWorldWrapper
 from spike_swarm_sim.register import fitness_functions
 from spike_swarm_sim.config_parser import json_parser
-from spike_swarm_sim.register import algorithms, worlds
+from spike_swarm_sim.register import algorithms, worlds, physics_engines
 from spike_swarm_sim.globals import global_states
 
 @click.command()
@@ -27,10 +27,10 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     global_states.set_states(render=render, eval=eval, debug=debug, info=verbose)
     #* Parse JSON
     cfg_dict = json_parser(cfg)
-
     #* Create the world
-    physics_engine = Engine3D(dt=cfg_dict['world'].get('physics_dt', 0.02), 
-                            T_control=cfg_dict['world'].get('T_control', 0.1))
+    physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
+                        dt=cfg_dict['world'].get('physics_dt', 0.02), 
+                        T_control=cfg_dict['world'].get('T_control', 0.1))
     world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)

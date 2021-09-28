@@ -8,21 +8,50 @@ with contextlib.redirect_stdout(None):
     import pybullet_data
     import pybullet_utils.bullet_client as bc
 from matplotlib import colors
-from spike_swarm_sim.utils.utils import HidePrintf
+# from spike_swarm_sim.utils.utils import HidePrintf
 from .base_engine import BaseEngine
+from spike_swarm_sim.register import physics_engine_registry
 
 
-
+@physics_engine_registry(name='pybullet')
 class PybulletEngine(BaseEngine):
+    """ 3D Physics and Render Engine class based on the `pybullet library <https://pybullet.org>`_. 
+    Its role in the simulation is to iterate the 3D physic simulations and collision detections of the 
+    entities in the environment and render the 3D graphics. 
+
+    :param float dt: time step of the physics simulation (in seconds).
+    :param float T_control: period of the sensing+control+action loop. It cannot be lower than dt and 
+        it is set to 5*dt by default. Essentially this means that the physics are updated 5 times 
+        in between every executing of sensors, controllers and actuators.
+
+    :var BulletClient engine: pybullet client engine.
+    :var bool render: flag indicating if the simulation is run in visual or render mode.
+    :var bool connected: whether the engine is connected or not.
+    :var dict physical_sensors: maps sensor reference names to actual physical links of the robot. Specifically, each key of the dict 
+        corresponds to a sensor (`'distance_sensor'`, `'light_sensor'`, ...), which in turn have a subdict as value. The subdict of 
+        each sensor has another int key per each of the available sectors (e.g. from 0 to 7). Finally, the value of each sector contains 
+        information about the physical link of the corresponding sensor sector (link name, link idx, orientation, ghost link, etc.).
+        For example, the value of the sector 0 of the `'distance sensor'` would be:
+
+        Example::
+        
+        >>> print(self.physical_sensors['distance_sensor'][0])
+        >>>     {'link': 'IR0', 'ghost_link': 'ghost_cone_DS0', 'orientation': array([0.     , 0.     , 0.26179]), 'idx': 33, 'ghost_link_idx': 34}
+
+    :var dict physical_actuators: maps actuator reference names to actual physical links of the robot. 
+    :var dict luminous_objects: dict that gathers all the entities with one or more links that emit light. 
+        It maps entity identifiers to physical information, such as the luminous link id, the color of the light 
+        or the luminosity. TODO: The complete integration of this feature and actual use of it in the simulation 
+        is in process.  
+    :var dict gui_params: unused ftm.
+    """
     def __init__(self, *args, **kwargs):
-        super(PybulletEngine, self).__init__(*args, **kwargs)
+        super(PybulletEngine, self).__init__('3D', *args, **kwargs)
         self.physical_sensors = {}
         self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
 
-
-    
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
         client in either visual or direct mode, sets up all the physics constants (gravity, sampling period, etc.) 
@@ -30,8 +59,8 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        with HidePrintf():
-            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        # with HidePrintf():
+        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.client)
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
@@ -44,9 +73,7 @@ class PybulletEngine(BaseEngine):
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True
-        # self.gui_params = {}
         if self.render:
-            self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, -1)
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
             self.engine.resetDebugVisualizerCamera(cameraDistance=4, cameraYaw=30,\
                     cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
@@ -117,6 +144,7 @@ class PybulletEngine(BaseEngine):
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
         
         self.parse_urdf(obj) #
+
 
     def parse_urdf(self, obj):
         link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
