@@ -1,5 +1,6 @@
 import numpy as np
-from spike_swarm_sim import SquareArena, Engine3D
+from spike_swarm_sim import SquareArena
+from spike_swarm_sim.physics_engines import PybulletEngine
 from spike_swarm_sim.objects import Epuck, LightSource, GroundArea, Ball
 from spike_swarm_sim.utils.initializers import RandomUniformInitializer
 
@@ -22,7 +23,7 @@ n_robots = 5 # Number of robots.
 n_balls = 3 # Number of small balls.
 
 # Create physics engine with 0.02sec of discretization.
-phy_engine = Engine3D(dt=0.02)
+phy_engine = PybulletEngine(dt=0.02)
 # Create empty world with physics Engine
 world = SquareArena(phy_engine, height=10,  width=10)
 

@@ -13,7 +13,6 @@ from spike_swarm_sim.register import (controllers, world_objects, initializers,
         env_perturbations, rewards, communication_systems, world_registry)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from spike_swarm_sim.globals import global_states
-from .physics_engine import Engine3D, Engine2D
 
 
 def map_parser():
@@ -47,16 +46,16 @@ class World(object):
     Example::
 
     >>> # Example of an obstacle avoidance experiment with 5 robots in 3D. 
-    >>> from spike_swarm_sim import SquareArena, Engine3D
+    >>> from spike_swarm_sim import SquareArena
+    >>> from spike_swarm_sim.physics_engines import PybulletEngine
     >>> from spike_swarm_sim.objects import Robot3D
     >>> from spike_swarm_sim.controllers import BasicObstacleAvoider
     >>> from spike_swarm_sim.utils.initializers import InitializerHandler, RandomUniformInitializer
     >>>
     >>> n_robots = 5
-    >>> phy_engine = Engine3D(dt=0.02)
+    >>> phy_engine = PybulletEngine(dt=0.02)
     >>> world = SquareArena(phy_engine, height=10, width=10)
     >>> world_cfg = {
-    >>>     "engine" : "3D",
     >>>     "world_delay" : 1,
     >>>     "height": 10,
     >>>     "width":  10,
@@ -249,12 +248,11 @@ class World(object):
         :param dict world_dict: configuration ``dict`` of the environment (parameters, objects, ...).
         :param dict ann_topology:  configuration ``dict`` of the neural network.
         """
-        engine = world_dict['engine']
         #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
         if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
             self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
         for obj_name, obj in world_dict['objects'].items():
-            object_cls = world_objects[engine][obj['type']]
+            object_cls = world_objects[self.physics_engine.engine_type][obj['type']]
             #! Prov implementation for TFM regarding the task scheduler
             if object_cls.__name__ == 'TaskScheduler':
                 world_obj = object_cls(None, np.zeros(3), np.zeros(3), **obj['params']) #! ojo 2D
@@ -262,8 +260,8 @@ class World(object):
                 continue
             #* Create group intializers.
             self.initializers[obj_name] = {
-                key : initializers[value['name']](obj['num_instances'], engine=engine, variable=key, **value['params']) 
-                        for key, value in obj['initializers'].items()
+                key : initializers[value['name']](obj['num_instances'], engine=self.physics_engine.engine_type, 
+                        variable=key, **value['params']) for key, value in obj['initializers'].items()
             }
             #* Loop entities and add them to the world.
             #* Distinguish between robots and the other objects.

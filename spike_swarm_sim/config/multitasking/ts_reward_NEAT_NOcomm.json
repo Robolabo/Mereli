@@ -67,7 +67,7 @@
             "height":7,
             "width": 7
         },
-        "engine" : "3D",
+        "engine" : "pybullet",
         "physics_dt" : 0.02,
         "T_control" : 0.14,
         "objects" : {

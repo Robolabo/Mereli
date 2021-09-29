@@ -1,8 +1,7 @@
 
 
-
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -14,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -94,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -178,7 +169,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul>
@@ -247,6 +238,12 @@
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.physics_engines.html">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
@@ -406,6 +403,8 @@
 </li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.add">(spike_swarm_sim.neural_networks.neuron_models.LIFModel method)</a>
 </li>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.Perceptron.add">(spike_swarm_sim.neural_networks.neuron_models.Perceptron method)</a>
+</li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.RateModel.add">(spike_swarm_sim.neural_networks.neuron_models.RateModel method)</a>
 </li>
       </ul></li>
@@ -425,6 +424,10 @@
 </li>
       <li><a href="modules.html#spike_swarm_sim.world.World.add_group">add_group() (spike_swarm_sim.world.World method)</a>
 </li>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_learning_rule">add_learning_rule() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
+</li>
+      <li><a href="spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.neural_controller.NeuralController.add_neural_network">add_neural_network() (spike_swarm_sim.controllers.neural_controller.NeuralController method)</a>
+</li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_neuron">add_neuron() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mutation.add_node">add_node() (in module spike_swarm_sim.algorithms.evolutionary.operators.mutation)</a>
@@ -434,6 +437,10 @@
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.add_objects">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_objects">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_objects">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.add_physics">add_physics() (spike_swarm_sim.objects.task_scheduler.TaskScheduler method)</a>
 
@@ -442,13 +449,17 @@
 </li>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.add_physics">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_physics">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_physics">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_sensor">add_sensor() (spike_swarm_sim.controllers.controller.RobotController method)</a>
 </li>
       <li><a href="spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController.add_sensors_from_dict">add_sensors_from_dict() (spike_swarm_sim.controllers.controller.RobotController method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_stimuli">add_stimuli() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.add_synapse">add_synapse() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
@@ -459,19 +470,19 @@
 </li>
       <li><a href="spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.Alignment">Alignment (class in spike_swarm_sim.objectives.fitness)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.all">all (spike_swarm_sim.neural_networks.decoding.DecodingWrapper attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.all">all (spike_swarm_sim.neural_networks.decoding.DecodingWrapper property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.EncodingWrapper.all">(spike_swarm_sim.neural_networks.encoding.EncodingWrapper attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.EncodingWrapper.all">(spike_swarm_sim.neural_networks.encoding.EncodingWrapper property)</a>
 </li>
-        <li><a href="modules.html#spike_swarm_sim.world.MultiWorldWrapper.all">(spike_swarm_sim.world.MultiWorldWrapper attribute)</a>
+        <li><a href="modules.html#spike_swarm_sim.world.MultiWorldWrapper.all">(spike_swarm_sim.world.MultiWorldWrapper property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.alg_utils.angle_diff">angle_diff() (in module spike_swarm_sim.utils.alg_utils)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.alg_utils.angle_mean">angle_mean() (in module spike_swarm_sim.utils.alg_utils)</a>
 </li>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.angular_velocity">angular_velocity (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.angular_velocity">angular_velocity (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.utils.any_duplicates">any_duplicates() (in module spike_swarm_sim.utils.utils)</a>
 </li>
@@ -481,7 +492,7 @@
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ArgmaxDecoding">ArgmaxDecoding (class in spike_swarm_sim.neural_networks.decoding)</a>
 </li>
-      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.as_dict">as_dict (spike_swarm_sim.communication.IR_communication.IRFrame attribute)</a>
+      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.as_dict">as_dict (spike_swarm_sim.communication.IR_communication.IRFrame property)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mutation.assign_unique_key">assign_unique_key() (in module spike_swarm_sim.algorithms.evolutionary.operators.mutation)</a>
 </li>
@@ -506,6 +517,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.ball.Ball">Ball (class in spike_swarm_sim.objects.ball)</a>
+</li>
+      <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine">BaseEngine (class in spike_swarm_sim.physics_engines.base_engine)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.BaseNeuronModel">BaseNeuronModel (class in spike_swarm_sim.neural_networks.neuron_models)</a>
 </li>
@@ -579,8 +592,12 @@
 </li>
       <li><a href="modules.html#spike_swarm_sim.world.CircularArena">CircularArena (class in spike_swarm_sim.world)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.client">client (spike_swarm_sim.physics_engine.Engine3D attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.client">client (spike_swarm_sim.physics_engine.Engine3D property)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.client">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine property)</a>
 </li>
+      </ul></li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population.CMA_EA_Population">CMA_EA_Population (class in spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.cma_es.CMA_ES">CMA_ES (class in spike_swarm_sim.algorithms.evolutionary.cma_es)</a>
@@ -593,7 +610,7 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.crossover.combined_crossover">combined_crossover() (in module spike_swarm_sim.algorithms.evolutionary.operators.crossover)</a>
 </li>
-      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.comm_state_code">comm_state_code (spike_swarm_sim.communication.IR_communication.IRCommunication attribute)</a>
+      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.comm_state_code">comm_state_code (spike_swarm_sim.communication.IR_communication.IRCommunication property)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.register.communication_registry">communication_registry() (in module spike_swarm_sim.register)</a>
 </li>
@@ -607,10 +624,10 @@
 </li>
       <li><a href="modules.html#spike_swarm_sim.config_parser.config_autocompletion">config_autocompletion() (in module spike_swarm_sim.config_parser)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules.html#spike_swarm_sim.config_parser.config_checker">config_checker() (in module spike_swarm_sim.config_parser)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.exceptions.ConfigException">ConfigException</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.receptive_field.ConicReceptiveField">ConicReceptiveField (class in spike_swarm_sim.neural_networks.receptive_field)</a>
@@ -620,16 +637,26 @@
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.connect">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.connect">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.connect">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
         <li><a href="modules.html#spike_swarm_sim.world.World.connect">(spike_swarm_sim.world.World method)</a>
 </li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.control_joints">control_joints() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.control_joints">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.controllable">controllable (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.control_joints">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.controllable">controllable (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.controllable">controllable() (spike_swarm_sim.objects.task_scheduler.TaskScheduler method)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.world.World.controllable_objects">controllable_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.controllable_objects">controllable_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.Controller">Controller (class in spike_swarm_sim.controllers.controller)</a>
 </li>
@@ -643,7 +670,7 @@
 </li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.cube.Cube">Cube (class in spike_swarm_sim.objects.cube)</a>
 </li>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.current_task">current_task (spike_swarm_sim.objects.task_scheduler.TaskScheduler attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.current_task">current_task (spike_swarm_sim.objects.task_scheduler.TaskScheduler property)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.world.CustomWorld">CustomWorld (class in spike_swarm_sim.world)</a>
 </li>
@@ -657,9 +684,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.utils.DataLogger">DataLogger (class in spike_swarm_sim.utils.utils)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.globals.Globals.DEBUG">DEBUG (spike_swarm_sim.globals.Globals attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.globals.Globals.DEBUG">DEBUG (spike_swarm_sim.globals.Globals property)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding.decoded_activities">decoded_activities (spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding.decoded_activities">decoded_activities (spike_swarm_sim.neural_networks.decoding.LinearPopulationDecoding property)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.Decoder">Decoder (class in spike_swarm_sim.neural_networks.decoding)</a>
 </li>
@@ -674,15 +701,17 @@
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.AdExModel.delete">delete() (spike_swarm_sim.neural_networks.neuron_models.AdExModel method)</a>
 
       <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.Perceptron.delete">(spike_swarm_sim.neural_networks.neuron_models.Perceptron method)</a>
+</li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.RateModel.delete">(spike_swarm_sim.neural_networks.neuron_models.RateModel method)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_connection">delete_connection() (in module spike_swarm_sim.algorithms.evolutionary.operators.mutation)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.delete_neuron">delete_neuron() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mutation.delete_node">delete_node() (in module spike_swarm_sim.algorithms.evolutionary.operators.mutation)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.delete_synapse">delete_synapse() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
@@ -699,6 +728,10 @@
 
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.disconnect">(spike_swarm_sim.physics_engine.Engine3D method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.disconnect">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.disconnect">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
 </li>
         <li><a href="modules.html#spike_swarm_sim.world.World.disconnect">(spike_swarm_sim.world.World method)</a>
 </li>
@@ -717,13 +750,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.alg_utils.eigendecomposition">eigendecomposition() (in module spike_swarm_sim.utils.alg_utils)</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_frame">empty_frame (spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver attribute)</a>
+      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver.empty_frame">empty_frame (spike_swarm_sim.sensors.communication_receiver.IRCommunicationReceiver property)</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg">empty_msg (spike_swarm_sim.sensors.ble_receiver.RF_Receiver attribute)</a>
+      <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.ble_receiver.RF_Receiver.empty_msg">empty_msg (spike_swarm_sim.sensors.ble_receiver.RF_Receiver property)</a>
 </li>
-      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_rx_ori">encoded_rx_ori (spike_swarm_sim.communication.IR_communication.IRFrame attribute)</a>
+      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_rx_ori">encoded_rx_ori (spike_swarm_sim.communication.IR_communication.IRFrame property)</a>
 </li>
-      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_tx_ori">encoded_tx_ori (spike_swarm_sim.communication.IR_communication.IRFrame attribute)</a>
+      <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.encoded_tx_ori">encoded_tx_ori (spike_swarm_sim.communication.IR_communication.IRFrame property)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder">Encoder (class in spike_swarm_sim.neural_networks.encoding)</a>
 </li>
@@ -749,7 +782,7 @@
 </li>
       <li><a href="modules.html#spike_swarm_sim.env_perturbations.EnvironmentalPerturbation">EnvironmentalPerturbation (class in spike_swarm_sim.env_perturbations)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.globals.Globals.EVAL">EVAL (spike_swarm_sim.globals.Globals attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.globals.Globals.EVAL">EVAL (spike_swarm_sim.globals.Globals property)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm.evaluate">evaluate() (spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.EvolutionaryAlgorithm method)</a>
 </li>
@@ -803,6 +836,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.activations.gaussian">gaussian() (in module spike_swarm_sim.utils.activations)</a>
+</li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.mutation.gaussian_mutation">gaussian_mutation() (in module spike_swarm_sim.algorithms.evolutionary.operators.mutation)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.receptive_field.GaussianReceptiveField">GaussianReceptiveField (class in spike_swarm_sim.neural_networks.receptive_field)</a>
@@ -813,7 +848,7 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface">GeneticInterface (class in spike_swarm_sim.algorithms.interfaces.genetic_interface)</a>
 </li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.genotype_length">genotype_length (spike_swarm_sim.algorithms.evolutionary.population.population.Population attribute)</a>
+      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.genotype_length">genotype_length (spike_swarm_sim.algorithms.evolutionary.population.population.Population property)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.alg_utils.geom_mean">geom_mean() (in module spike_swarm_sim.utils.alg_utils)</a>
 </li>
@@ -828,17 +863,33 @@
 </li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_actuator_position">get_actuator_position() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_actuator_position">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_actuator_position">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.math_utils.get_alphashape">get_alphashape() (in module spike_swarm_sim.utils.math_utils)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.NonSpikingNeuronModel.get_bias">get_bias() (spike_swarm_sim.neural_networks.neuron_models.NonSpikingNeuronModel method)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_angular_velocity">get_body_angular_velocity() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_angular_velocity">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_angular_velocity">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine2D.get_body_orientation">get_body_orientation() (spike_swarm_sim.physics_engine.Engine2D method)</a>
 
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_orientation">(spike_swarm_sim.physics_engine.Engine3D method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_orientation">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_orientation">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
 </li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine2D.get_body_position">get_body_position() (spike_swarm_sim.physics_engine.Engine2D method)</a>
@@ -846,19 +897,41 @@
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_position">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_position">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_position">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_body_velocity">get_body_velocity() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_velocity">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_velocity">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine2D.get_closest_point">get_closest_point() (spike_swarm_sim.physics_engine.Engine2D method)</a>
 
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_closest_point">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_closest_point">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_closest_point">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_contact_points">get_contact_points() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_contact_points">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_contact_points">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame.get_copy">get_copy() (spike_swarm_sim.communication.IR_communication.IRFrame method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.get_decoding_weights">get_decoding_weights() (spike_swarm_sim.neural_networks.decoding.DecodingWrapper method)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.DynamicSynapses.get_delays">get_delays() (spike_swarm_sim.neural_networks.synapses.DynamicSynapses method)</a>
@@ -869,8 +942,6 @@
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.RateModel.get_gain">get_gain() (spike_swarm_sim.neural_networks.neuron_models.RateModel method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info">get_info() (in module spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm.get_info_old">get_info_old() (in module spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm)</a>
@@ -879,6 +950,10 @@
 
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_link_state">(spike_swarm_sim.physics_engine.Engine3D method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_link_state">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_link_state">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.update_rules.html#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.get_params">get_params() (spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian method)</a>
@@ -890,10 +965,20 @@
 </li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_sensor_orientation">get_sensor_orientation() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_orientation">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_orientation">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.get_sensor_position">get_sensor_position() (spike_swarm_sim.physics_engine.Engine3D method)</a>
 
       <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_position">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_position">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
         <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.DirectionalSensor.get_sensor_position">(spike_swarm_sim.sensors.base_sensor.DirectionalSensor method)</a>
 </li>
         <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.get_sensor_position">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor method)</a>
@@ -953,7 +1038,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.id">id (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.id">id (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.fitness.IdentifyBorderline">IdentifyBorderline (class in spike_swarm_sim.objectives.fitness)</a>
 </li>
@@ -969,7 +1054,7 @@
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.decorators.increase_time">increase_time() (in module spike_swarm_sim.utils.decorators)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.globals.Globals.INFO">INFO (spike_swarm_sim.globals.Globals attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.globals.Globals.INFO">INFO (spike_swarm_sim.globals.Globals property)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.interpreter.INIT">INIT() (in module spike_swarm_sim.algorithms.interfaces.interpreter)</a>
 </li>
@@ -1019,7 +1104,7 @@
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.input_ensemble_indices">input_ensemble_indices() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.world.World.intangible_objects">intangible_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.intangible_objects">intangible_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory">InterfaceFactory (class in spike_swarm_sim.algorithms.interfaces.genetic_interface)</a>
 </li>
@@ -1029,9 +1114,9 @@
 </li>
       <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRFrame">IRFrame (class in spike_swarm_sim.communication.IR_communication)</a>
 </li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.species.Species.is_extinct">is_extinct (spike_swarm_sim.algorithms.evolutionary.species.Species attribute)</a>
+      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.species.Species.is_extinct">is_extinct (spike_swarm_sim.algorithms.evolutionary.species.Species property)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.is_spiking">is_spiking (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.is_spiking">is_spiking (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.utils.isinstance_of_any">isinstance_of_any() (in module spike_swarm_sim.utils.utils)</a>
 </li>
@@ -1111,7 +1196,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules.html#spike_swarm_sim.world.World.lights">lights (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.lights">lights (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.LightSensor">LightSensor (class in spike_swarm_sim.sensors.light_sensor)</a>
 </li>
@@ -1143,7 +1228,7 @@
         <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.xnes.xNES.load_population">(spike_swarm_sim.algorithms.evolutionary.xnes.xNES method)</a>
 </li>
       </ul></li>
-      <li><a href="modules.html#spike_swarm_sim.world.World.luminous_objects">luminous_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.luminous_objects">luminous_objects (spike_swarm_sim.world.World property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1153,18 +1238,235 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="modules.html#spike_swarm_sim.world.map_parser">map_parser() (in module spike_swarm_sim.world)</a>
 </li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.max_vector">max_vector (spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population attribute)</a>
+      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.max_vector">max_vector (spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.max_vector">(spike_swarm_sim.algorithms.evolutionary.population.population.Population attribute)</a>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.max_vector">(spike_swarm_sim.algorithms.evolutionary.population.population.Population property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.utils.merge_dicts">merge_dicts() (in module spike_swarm_sim.utils.utils)</a>
 </li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.min_vector">min_vector (spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population attribute)</a>
+      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population.min_vector">min_vector (spike_swarm_sim.algorithms.evolutionary.population.neat_population.NEAT_Population property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.min_vector">(spike_swarm_sim.algorithms.evolutionary.population.population.Population attribute)</a>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population.min_vector">(spike_swarm_sim.algorithms.evolutionary.population.population.Population property)</a>
+</li>
+      </ul></li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim">spike_swarm_sim</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">spike_swarm_sim.actuators</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils">spike_swarm_sim.actuators.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils.utils">spike_swarm_sim.actuators.utils.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">spike_swarm_sim.algorithms</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary">spike_swarm_sim.algorithms.evolutionary</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.cma_es">spike_swarm_sim.algorithms.evolutionary.cma_es</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.genetic_algorithm">spike_swarm_sim.algorithms.evolutionary.genetic_algorithm</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.neat">spike_swarm_sim.algorithms.evolutionary.neat</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.openai_es">spike_swarm_sim.algorithms.evolutionary.openai_es</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators">spike_swarm_sim.algorithms.evolutionary.operators</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.crossover">spike_swarm_sim.algorithms.evolutionary.operators.crossover</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mating">spike_swarm_sim.algorithms.evolutionary.operators.mating</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mutation">spike_swarm_sim.algorithms.evolutionary.operators.mutation</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.selection">spike_swarm_sim.algorithms.evolutionary.operators.selection</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population">spike_swarm_sim.algorithms.evolutionary.population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population">spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.neat_population">spike_swarm_sim.algorithms.evolutionary.population.neat_population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.openai_es_population">spike_swarm_sim.algorithms.evolutionary.population.openai_es_population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.population">spike_swarm_sim.algorithms.evolutionary.population.population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.snes_population">spike_swarm_sim.algorithms.evolutionary.population.snes_population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.xnes_population">spike_swarm_sim.algorithms.evolutionary.population.xnes_population</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.snes">spike_swarm_sim.algorithms.evolutionary.snes</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.species">spike_swarm_sim.algorithms.evolutionary.species</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.xnes">spike_swarm_sim.algorithms.evolutionary.xnes</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces">spike_swarm_sim.algorithms.interfaces</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.genetic_interface">spike_swarm_sim.algorithms.interfaces.genetic_interface</a>
+</li>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.interpreter">spike_swarm_sim.algorithms.interfaces.interpreter</a>
+</li>
+        <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">spike_swarm_sim.communication</a>
+</li>
+        <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">spike_swarm_sim.controllers</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller</a>
+</li>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">spike_swarm_sim.neural_networks</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules">spike_swarm_sim.neural_networks.update_rules</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules.update_rules">spike_swarm_sim.neural_networks.update_rules.update_rules</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils">spike_swarm_sim.neural_networks.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.builder">spike_swarm_sim.neural_networks.utils.builder</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.monitor">spike_swarm_sim.neural_networks.utils.monitor</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.utils">spike_swarm_sim.neural_networks.utils.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">spike_swarm_sim.objectives</a>
+</li>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness</a>
+</li>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">spike_swarm_sim.objects</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ground_area">spike_swarm_sim.objects.ground_area</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall</a>
+</li>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">spike_swarm_sim.physics_engines</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines.base_engine">spike_swarm_sim.physics_engines.base_engine</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines.pybullet_engine">spike_swarm_sim.physics_engines.pybullet_engine</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">spike_swarm_sim.sensors</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.reward_sensor">spike_swarm_sim.sensors.reward_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils">spike_swarm_sim.sensors.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation">spike_swarm_sim.sensors.utils.propagation</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.utils">spike_swarm_sim.sensors.utils.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">spike_swarm_sim.utils</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils</a>
+</li>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils</a>
+</li>
+        <li><a href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1173,11 +1475,11 @@
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel">MorrisLecarModel (class in spike_swarm_sim.neural_networks.neuron_models)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.motor_neurons">motor_neurons (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.motor_neurons">motor_neurons (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.decorators.mov_average_timeit">mov_average_timeit() (in module spike_swarm_sim.utils.decorators)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.world.World.moving_objects">moving_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.moving_objects">moving_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.crossover.multipoint_crossover">multipoint_crossover() (in module spike_swarm_sim.algorithms.evolutionary.operators.crossover)</a>
 </li>
@@ -1229,18 +1531,18 @@
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_ensemble_neurons">num_ensemble_neurons() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_hidden">num_hidden (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_hidden">num_hidden (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_input_nodes">num_input_nodes() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_inputs">num_inputs (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_inputs">num_inputs (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_motor">num_motor (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_motor">num_motor (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder.num_neurons">num_neurons (spike_swarm_sim.neural_networks.encoding.Encoder attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder.num_neurons">num_neurons (spike_swarm_sim.neural_networks.encoding.Encoder property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_neurons">(spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.num_neurons">(spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1259,18 +1561,18 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.openai_es_population.OpenAI_ES_Population">OpenAI_ES_Population (class in spike_swarm_sim.algorithms.evolutionary.population.openai_es_population)</a>
 </li>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.orientation">orientation (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.orientation">orientation (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.orientation">orientation() (spike_swarm_sim.objects.task_scheduler.TaskScheduler method)</a>
 </li>
-      <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.Actuator.owner_id">owner_id (spike_swarm_sim.actuators.base_actuator.Actuator attribute)</a>
+      <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.Actuator.owner_id">owner_id (spike_swarm_sim.actuators.base_actuator.Actuator property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.owner_id">(spike_swarm_sim.sensors.base_sensor.Sensor attribute)</a>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.owner_id">(spike_swarm_sim.sensors.base_sensor.Sensor property)</a>
 </li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.owner_id">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor attribute)</a>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.owner_id">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.own_orientation_sensor.OwnOrientationSensor">OwnOrientationSensor (class in spike_swarm_sim.sensors.own_orientation_sensor)</a>
@@ -1286,17 +1588,23 @@
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.receptive_field.ParabolicReceptiveField">ParabolicReceptiveField (class in spike_swarm_sim.neural_networks.receptive_field)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.parse_urdf">parse_urdf() (spike_swarm_sim.physics_engine.Engine3D method)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover">pcx_crossover() (in module spike_swarm_sim.algorithms.evolutionary.operators.crossover)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.Actuator.physics_client">physics_client (spike_swarm_sim.actuators.base_actuator.Actuator attribute)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client">(spike_swarm_sim.actuators.led_actuator.LedActuator attribute)</a>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.parse_urdf">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
 </li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.physics_client">(spike_swarm_sim.sensors.base_sensor.Sensor attribute)</a>
+      </ul></li>
+      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.crossover.pcx_crossover">pcx_crossover() (in module spike_swarm_sim.algorithms.evolutionary.operators.crossover)</a>
 </li>
-        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.physics_client">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.Perceptron">Perceptron (class in spike_swarm_sim.neural_networks.neuron_models)</a>
+</li>
+      <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.Actuator.physics_client">physics_client (spike_swarm_sim.actuators.base_actuator.Actuator property)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.led_actuator.LedActuator.physics_client">(spike_swarm_sim.actuators.led_actuator.LedActuator property)</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.base_sensor.Sensor.physics_client">(spike_swarm_sim.sensors.base_sensor.Sensor property)</a>
+</li>
+        <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.distance_sensor.DistanceSensor.physics_client">(spike_swarm_sim.sensors.distance_sensor.DistanceSensor property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder.plot">plot() (spike_swarm_sim.neural_networks.encoding.Encoder method)</a>
@@ -1327,7 +1635,7 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#spike_swarm_sim.algorithms.evolutionary.population.population.Population">Population (class in spike_swarm_sim.algorithms.evolutionary.population.population)</a>
 </li>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.position">position (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.position">position (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.task_scheduler.TaskScheduler.position">position() (spike_swarm_sim.objects.task_scheduler.TaskScheduler method)</a>
 </li>
@@ -1336,6 +1644,8 @@
       <li><a href="modules.html#spike_swarm_sim.env_perturbations.PreProcessingPerturbation">PreProcessingPerturbation (class in spike_swarm_sim.env_perturbations)</a>
 </li>
       <li><a href="spike_swarm_sim.sensors.utils.html#spike_swarm_sim.sensors.utils.propagation.Propagation">Propagation (class in spike_swarm_sim.sensors.utils.propagation)</a>
+</li>
+      <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine">PybulletEngine (class in spike_swarm_sim.physics_engines.pybullet_engine)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1378,9 +1688,19 @@
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.ray_cast">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.ray_cast">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.ray_cast">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.read_joints">read_joints() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.read_joints">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.read_joints">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.register.receptive_field_registry">receptive_field_registry() (in module spike_swarm_sim.register)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.receptive_field.ConicReceptiveField.receptive_function">receptive_function() (spike_swarm_sim.neural_networks.receptive_field.ConicReceptiveField method)</a>
@@ -1399,12 +1719,12 @@
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.receptive_field.ReceptiveField">ReceptiveField (class in spike_swarm_sim.neural_networks.receptive_field)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel.recovery">recovery (spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel.recovery">recovery (spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.recovery">(spike_swarm_sim.neural_networks.neuron_models.LIFModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.recovery">(spike_swarm_sim.neural_networks.neuron_models.LIFModel property)</a>
 </li>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel.recovery">(spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel.recovery">(spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.sensors.html#spike_swarm_sim.sensors.light_sensor.RedLightSensor">RedLightSensor (class in spike_swarm_sim.sensors.light_sensor)</a>
@@ -1417,18 +1737,20 @@
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.utils.remove_duplicates">remove_duplicates() (in module spike_swarm_sim.utils.utils)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.globals.Globals.RENDER">RENDER (spike_swarm_sim.globals.Globals attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.globals.Globals.RENDER">RENDER (spike_swarm_sim.globals.Globals property)</a>
+</li>
+      <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.render">render (spike_swarm_sim.physics_engines.base_engine.BaseEngine property)</a>
 </li>
       <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.reset">reset() (spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter method)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">(spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter method)</a>
-</li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.grasp_actuator.GraspActuator.reset">(spike_swarm_sim.actuators.grasp_actuator.GraspActuator method)</a>
 </li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.reset">(spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator method)</a>
 </li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.led_actuator.LedActuator.reset">(spike_swarm_sim.actuators.led_actuator.LedActuator method)</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.reset">(spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter method)</a>
 </li>
         <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.BufferedIRCommunication.reset">(spike_swarm_sim.communication.IR_communication.BufferedIRCommunication method)</a>
 </li>
@@ -1473,6 +1795,8 @@
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.reset">(spike_swarm_sim.neural_networks.neuron_models.LIFModel method)</a>
 </li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel.reset">(spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel method)</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.Perceptron.reset">(spike_swarm_sim.neural_networks.neuron_models.Perceptron method)</a>
 </li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.RateModel.reset">(spike_swarm_sim.neural_networks.neuron_models.RateModel method)</a>
 </li>
@@ -1529,10 +1853,10 @@
 </li>
       <li><a href="spike_swarm_sim.controllers.html#spike_swarm_sim.controllers.controller.RobotController">RobotController (class in spike_swarm_sim.controllers.controller)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.world.MultiWorldWrapper.robots">robots (spike_swarm_sim.world.MultiWorldWrapper attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.MultiWorldWrapper.robots">robots (spike_swarm_sim.world.MultiWorldWrapper property)</a>
 
       <ul>
-        <li><a href="modules.html#spike_swarm_sim.world.World.robots">(spike_swarm_sim.world.World attribute)</a>
+        <li><a href="modules.html#spike_swarm_sim.world.World.robots">(spike_swarm_sim.world.World property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#spike_swarm_sim.algorithms.evolutionary.operators.selection.roulette_selection">roulette_selection() (in module spike_swarm_sim.algorithms.evolutionary.operators.selection)</a>
@@ -1588,15 +1912,31 @@
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.NonSpikingNeuronModel.set_bias">set_bias() (spike_swarm_sim.neural_networks.neuron_models.NonSpikingNeuronModel method)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.set_body_state">set_body_state() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_body_state">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_body_state">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.set_camera_focus">set_camera_focus() (spike_swarm_sim.physics_engine.Engine3D method)</a>
 
       <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_camera_focus">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_camera_focus">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
         <li><a href="modules.html#spike_swarm_sim.world.World.set_camera_focus">(spike_swarm_sim.world.World method)</a>
 </li>
       </ul></li>
       <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.set_color">set_color() (spike_swarm_sim.physics_engine.Engine3D method)</a>
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_color">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_color">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
+      </ul></li>
       <li><a href="modules.html#spike_swarm_sim.globals.Globals.set_debug_state">set_debug_state() (spike_swarm_sim.globals.Globals method)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.DecodingWrapper.set_decoding_weights">set_decoding_weights() (spike_swarm_sim.neural_networks.decoding.DecodingWrapper method)</a>
@@ -1643,227 +1983,761 @@
 </li>
       <li><a href="spike_swarm_sim.algorithms.evolutionary.html#spike_swarm_sim.algorithms.evolutionary.species.Species">Species (class in spike_swarm_sim.algorithms.evolutionary.species)</a>
 </li>
-      <li><a href="modules.html#module-spike_swarm_sim">spike_swarm_sim (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">spike_swarm_sim.actuators (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils">spike_swarm_sim.actuators.utils (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils.utils">spike_swarm_sim.actuators.utils.utils (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">spike_swarm_sim.algorithms (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary">spike_swarm_sim.algorithms.evolutionary (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.cma_es">spike_swarm_sim.algorithms.evolutionary.cma_es (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm">spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.genetic_algorithm">spike_swarm_sim.algorithms.evolutionary.genetic_algorithm (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.neat">spike_swarm_sim.algorithms.evolutionary.neat (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.openai_es">spike_swarm_sim.algorithms.evolutionary.openai_es (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators">spike_swarm_sim.algorithms.evolutionary.operators (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.crossover">spike_swarm_sim.algorithms.evolutionary.operators.crossover (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mating">spike_swarm_sim.algorithms.evolutionary.operators.mating (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mutation">spike_swarm_sim.algorithms.evolutionary.operators.mutation (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.selection">spike_swarm_sim.algorithms.evolutionary.operators.selection (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population">spike_swarm_sim.algorithms.evolutionary.population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population">spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.neat_population">spike_swarm_sim.algorithms.evolutionary.population.neat_population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.openai_es_population">spike_swarm_sim.algorithms.evolutionary.population.openai_es_population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.population">spike_swarm_sim.algorithms.evolutionary.population.population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.snes_population">spike_swarm_sim.algorithms.evolutionary.population.snes_population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.xnes_population">spike_swarm_sim.algorithms.evolutionary.population.xnes_population (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.snes">spike_swarm_sim.algorithms.evolutionary.snes (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.species">spike_swarm_sim.algorithms.evolutionary.species (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.xnes">spike_swarm_sim.algorithms.evolutionary.xnes (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces">spike_swarm_sim.algorithms.interfaces (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.genetic_interface">spike_swarm_sim.algorithms.interfaces.genetic_interface (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.interpreter">spike_swarm_sim.algorithms.interfaces.interpreter (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">spike_swarm_sim.communication (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication (module)</a>
-</li>
-      <li><a href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">spike_swarm_sim.controllers (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller (module)</a>
-</li>
-      <li><a href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations (module)</a>
-</li>
-      <li><a href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">spike_swarm_sim.neural_networks (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules">spike_swarm_sim.neural_networks.update_rules (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules.update_rules">spike_swarm_sim.neural_networks.update_rules.update_rules (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils">spike_swarm_sim.neural_networks.utils (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.builder">spike_swarm_sim.neural_networks.utils.builder (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.monitor">spike_swarm_sim.neural_networks.utils.monitor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.utils">spike_swarm_sim.neural_networks.utils.utils (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">spike_swarm_sim.objectives (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">spike_swarm_sim.objects (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ground_area">spike_swarm_sim.objects.ground_area (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object (module)</a>
-</li>
-      <li><a href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine (module)</a>
-</li>
-      <li><a href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">spike_swarm_sim.sensors (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor (module)</a>
-</li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor (module)</a>
-</li>
+      <li>
+    spike_swarm_sim
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.base_actuator
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.communication_transmitter
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.grasp_actuator
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.joint_actuator
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.led_actuator
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.RF_transmitter
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.utils.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.utils.html#module-spike_swarm_sim.actuators.utils.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.actuators.wheel_actuator
+
+      <ul>
+        <li><a href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.cma_es
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.cma_es">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.genetic_algorithm
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.genetic_algorithm">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.neat
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.neat">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.openai_es
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.openai_es">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.operators
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.operators.crossover
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.crossover">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.operators.mating
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mating">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.operators.mutation
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.mutation">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.operators.selection
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.operators.html#module-spike_swarm_sim.algorithms.evolutionary.operators.selection">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.cma_ea_population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.neat_population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.neat_population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.openai_es_population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.openai_es_population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.snes_population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.snes_population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.population.xnes_population
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.population.html#module-spike_swarm_sim.algorithms.evolutionary.population.xnes_population">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.snes
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.snes">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.species
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.species">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.evolutionary.xnes
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.evolutionary.html#module-spike_swarm_sim.algorithms.evolutionary.xnes">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.interfaces
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.interfaces.genetic_interface
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.genetic_interface">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.algorithms.interfaces.interpreter
+
+      <ul>
+        <li><a href="spike_swarm_sim.algorithms.interfaces.html#module-spike_swarm_sim.algorithms.interfaces.interpreter">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.communication
+
+      <ul>
+        <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.communication.IR_communication
+
+      <ul>
+        <li><a href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.config_parser
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.config_parser">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.basic_obstacle_avoider
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.braitenberg1_controller
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.controller
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.light_position_controller
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.neural_controller
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.controllers.random_movement_controller
+
+      <ul>
+        <li><a href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.env_perturbations
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.env_perturbations">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.globals
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.globals">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.decoding
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.encoding
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.neural_net
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.neuron_models
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.receptive_field
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.synapses
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.update_rules
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.update_rules.update_rules
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.update_rules.html#module-spike_swarm_sim.neural_networks.update_rules.update_rules">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.utils.builder
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.builder">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.utils.monitor
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.monitor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.neural_networks.utils.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.neural_networks.utils.html#module-spike_swarm_sim.neural_networks.utils.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objectives
+
+      <ul>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objectives.fitness
+
+      <ul>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objectives.reward
+
+      <ul>
+        <li><a href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.ball
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.cube
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.ground_area
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ground_area">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.light_source
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.task_scheduler
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor (module)</a>
+      <li>
+    spike_swarm_sim.objects.wall
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.objects.world_object
+
+      <ul>
+        <li><a href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.reward_sensor">spike_swarm_sim.sensors.reward_sensor (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.physics_engine
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.physics_engine">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.physics_engines
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils">spike_swarm_sim.sensors.utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.physics_engines.base_engine
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines.base_engine">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation">spike_swarm_sim.sensors.utils.propagation (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.physics_engines.pybullet_engine
+
+      <ul>
+        <li><a href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines.pybullet_engine">module</a>
 </li>
-      <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.utils">spike_swarm_sim.sensors.utils.utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.register
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.register">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">spike_swarm_sim.utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.base_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.ble_receiver
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.collision_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.color_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.communication_receiver
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.distance_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.food_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">module</a>
 </li>
-      <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.ground_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">module</a>
 </li>
-      <li><a href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world (module)</a>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.joint_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">module</a>
 </li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.light_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.neighborhood_position_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.own_orientation_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.own_position_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.reward_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.reward_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.task_sensor
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.utils.propagation
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.propagation">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.sensors.utils.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.sensors.utils.html#module-spike_swarm_sim.sensors.utils.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.activations
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.alg_utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.decorators
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.exceptions
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.graph_utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.initializers
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.math_utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.utils.utils
+
+      <ul>
+        <li><a href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    spike_swarm_sim.world
+
+      <ul>
+        <li><a href="modules.html#module-spike_swarm_sim.world">module</a>
+</li>
+      </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel">SpikingNeuronModel (class in spike_swarm_sim.neural_networks.neuron_models)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.world.SquareArena">SquareArena (class in spike_swarm_sim.world)</a>
 </li>
-      <li><a href="modules.html#spike_swarm_sim.world.World.static_objects">static_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.static_objects">static_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.synapses.StaticSynapses">StaticSynapses (class in spike_swarm_sim.neural_networks.synapses)</a>
 </li>
       <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.Actuator.step">step() (spike_swarm_sim.actuators.base_actuator.Actuator method)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">(spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter method)</a>
-</li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.base_actuator.HighLevelActuator.step">(spike_swarm_sim.actuators.base_actuator.HighLevelActuator method)</a>
 </li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter.step">(spike_swarm_sim.actuators.communication_transmitter.CommunicationTransmitter method)</a>
@@ -1875,6 +2749,8 @@
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator.step">(spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator method)</a>
 </li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.led_actuator.LedActuator.step">(spike_swarm_sim.actuators.led_actuator.LedActuator method)</a>
+</li>
+        <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter.step">(spike_swarm_sim.actuators.RF_transmitter.RF_Transmitter method)</a>
 </li>
         <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.wheel_actuator.WheelActuator.step">(spike_swarm_sim.actuators.wheel_actuator.WheelActuator method)</a>
 </li>
@@ -1947,6 +2823,8 @@
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.step">(spike_swarm_sim.neural_networks.neuron_models.LIFModel method)</a>
 </li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel.step">(spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel method)</a>
+</li>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.Perceptron.step">(spike_swarm_sim.neural_networks.neuron_models.Perceptron method)</a>
 </li>
         <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.RateModel.step">(spike_swarm_sim.neural_networks.neuron_models.RateModel method)</a>
 </li>
@@ -2046,6 +2924,10 @@
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.step_physics">(spike_swarm_sim.physics_engine.Engine3D method)</a>
 </li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_physics">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_physics">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
+</li>
       </ul></li>
       <li><a href="spike_swarm_sim.communication.html#spike_swarm_sim.communication.IR_communication.IRCommunication.step_post">step_post() (spike_swarm_sim.communication.IR_communication.IRCommunication method)</a>
 </li>
@@ -2059,6 +2941,10 @@
 
       <ul>
         <li><a href="modules.html#spike_swarm_sim.physics_engine.Engine3D.step_render">(spike_swarm_sim.physics_engine.Engine3D method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_render">(spike_swarm_sim.physics_engines.base_engine.BaseEngine method)</a>
+</li>
+        <li><a href="spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_render">(spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine method)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.encoding.Encoder.stim_rate_curve">stim_rate_curve() (spike_swarm_sim.neural_networks.encoding.Encoder method)</a>
@@ -2097,7 +2983,7 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules.html#spike_swarm_sim.world.World.tangible_objects">tangible_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.tangible_objects">tangible_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="spike_swarm_sim.utils.html#spike_swarm_sim.utils.activations.tanh">tanh() (in module spike_swarm_sim.utils.activations)</a>
 </li>
@@ -2133,16 +3019,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.objectives.html#spike_swarm_sim.objectives.reward.TaskSwitchingLights">TaskSwitchingLights (class in spike_swarm_sim.objectives.reward)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel.theta">theta (spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel.theta">theta (spike_swarm_sim.neural_networks.neuron_models.ExpLIFModel property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.IzhikevichModel.theta">(spike_swarm_sim.neural_networks.neuron_models.IzhikevichModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.IzhikevichModel.theta">(spike_swarm_sim.neural_networks.neuron_models.IzhikevichModel property)</a>
 </li>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.theta">(spike_swarm_sim.neural_networks.neuron_models.LIFModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.LIFModel.theta">(spike_swarm_sim.neural_networks.neuron_models.LIFModel property)</a>
 </li>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel.theta">(spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel.theta">(spike_swarm_sim.neural_networks.neuron_models.MorrisLecarModel property)</a>
 </li>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel.theta">(spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel.theta">(spike_swarm_sim.neural_networks.neuron_models.SpikingNeuronModel property)</a>
 </li>
       </ul></li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.decoding.ThresholdDecoding">ThresholdDecoding (class in spike_swarm_sim.neural_networks.decoding)</a>
@@ -2173,7 +3059,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="modules.html#spike_swarm_sim.world.World.uncontrollable_objects">uncontrollable_objects (spike_swarm_sim.world.World attribute)</a>
+      <li><a href="modules.html#spike_swarm_sim.world.World.uncontrollable_objects">uncontrollable_objects (spike_swarm_sim.world.World property)</a>
 </li>
       <li><a href="modules.html#spike_swarm_sim.env_perturbations.UncontrollableRotation">UncontrollableRotation (class in spike_swarm_sim.env_perturbations)</a>
 </li>
@@ -2201,16 +3087,16 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.velocity">velocity (spike_swarm_sim.objects.world_object.WorldObject attribute)</a>
+      <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject.velocity">velocity (spike_swarm_sim.objects.world_object.WorldObject property)</a>
 </li>
       <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.voltage_of">voltage_of() (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.voltages">voltages (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.voltages">voltages (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 
       <ul>
-        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.BaseNeuronModel.voltages">(spike_swarm_sim.neural_networks.neuron_models.BaseNeuronModel attribute)</a>
+        <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neuron_models.BaseNeuronModel.voltages">(spike_swarm_sim.neural_networks.neuron_models.BaseNeuronModel property)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -2221,7 +3107,7 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.wall.Wall">Wall (class in spike_swarm_sim.objects.wall)</a>
 </li>
-      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.weights">weights (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork attribute)</a>
+      <li><a href="spike_swarm_sim.neural_networks.html#spike_swarm_sim.neural_networks.neural_net.NeuralNetwork.weights">weights (spike_swarm_sim.neural_networks.neural_net.NeuralNetwork property)</a>
 </li>
       <li><a href="spike_swarm_sim.actuators.html#spike_swarm_sim.actuators.wheel_actuator.WheelActuator">WheelActuator (class in spike_swarm_sim.actuators.wheel_actuator)</a>
 </li>
