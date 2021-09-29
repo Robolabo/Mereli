@@ -1,6 +1,4 @@
 import time
-import os
-import json
 import logging
 import numpy as np
 import xml.etree.cElementTree as ET
@@ -9,21 +7,17 @@ with contextlib.redirect_stdout(None):
     import pybullet as p
     import pybullet_data
     import pybullet_utils.bullet_client as bc
-    import pygame
-
-os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
-import pymunk
-import pymunk.pygame_util
-from pygame.color import THECOLORS
 from matplotlib import colors
+# from spike_swarm_sim.utils.utils import HidePrintf
+from .base_engine import BaseEngine
+from spike_swarm_sim.register import physics_engine_registry
 
-from spike_swarm_sim.globals import global_states
 
-
-class Engine3D:
-    """ 3D Physics and Render Engine class. Its role in the simulation is to iterate the 
-    3D physic simulations and collision detections of the entities in the environment and render 
-    the 3D graphics. For these purposes it uses the `pybullet library <https://pybullet.org>`_  .
+@physics_engine_registry(name='pybullet')
+class PybulletEngine(BaseEngine):
+    """ 3D Physics and Render Engine class based on the `pybullet library <https://pybullet.org>`_. 
+    Its role in the simulation is to iterate the 3D physic simulations and collision detections of the 
+    entities in the environment and render the 3D graphics. 
 
     :param float dt: time step of the physics simulation (in seconds).
     :param float T_control: period of the sensing+control+action loop. It cannot be lower than dt and 
@@ -33,19 +27,30 @@ class Engine3D:
     :var BulletClient engine: pybullet client engine.
     :var bool render: flag indicating if the simulation is run in visual or render mode.
     :var bool connected: whether the engine is connected or not.
+    :var dict physical_sensors: maps sensor reference names to actual physical links of the robot. Specifically, each key of the dict 
+        corresponds to a sensor (`'distance_sensor'`, `'light_sensor'`, ...), which in turn have a subdict as value. The subdict of 
+        each sensor has another int key per each of the available sectors (e.g. from 0 to 7). Finally, the value of each sector contains 
+        information about the physical link of the corresponding sensor sector (link name, link idx, orientation, ghost link, etc.).
+        For example, the value of the sector 0 of the `'distance sensor'` would be:
+
+        Example::
+        
+        >>> print(self.physical_sensors['distance_sensor'][0])
+        >>>     {'link': 'IR0', 'ghost_link': 'ghost_cone_DS0', 'orientation': array([0.     , 0.     , 0.26179]), 'idx': 33, 'ghost_link_idx': 34}
+
+    :var dict physical_actuators: maps actuator reference names to actual physical links of the robot. 
+    :var dict luminous_objects: dict that gathers all the entities with one or more links that emit light. 
+        It maps entity identifiers to physical information, such as the luminous link id, the color of the light 
+        or the luminosity. TODO: The complete integration of this feature and actual use of it in the simulation 
+        is in process.  
+    :var dict gui_params: unused ftm.
     """
-    def __init__(self, dt=0.02, T_control=0.1):
-        self.dt = dt
-        self.T_control = T_control
-        assert T_control >= dt
-        self.connected = False
-        self.render = global_states.RENDER
-        self.engine = None
+    def __init__(self, *args, **kwargs):
+        super(PybulletEngine, self).__init__('3D', *args, **kwargs)
         self.physical_sensors = {}
         self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
-
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -54,6 +59,7 @@ class Engine3D:
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
+        # with HidePrintf():
         self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.client)
         # p.resetSimulation(physicsClientId=self.client)
@@ -67,9 +73,7 @@ class Engine3D:
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
         self.add_objects(objects)
         self.connected = True
-        # self.gui_params = {}
         if self.render:
-            self.gui_params['light_coverage'] = self.engine.addUserDebugParameter("Show lights' coverage", 1, -1, -1)
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
             self.engine.resetDebugVisualizerCamera(cameraDistance=4, cameraYaw=30,\
                     cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
@@ -86,7 +90,7 @@ class Engine3D:
             p.stepSimulation(physicsClientId=self.client)
 
     def step_render(self):
-        """ Iterates the graphics visualization at give FPS. """
+        """ Iterates the graphics visualization at given FPS. """
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
@@ -140,6 +144,7 @@ class Engine3D:
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
         
         self.parse_urdf(obj) #
+
 
     def parse_urdf(self, obj):
         link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
@@ -259,14 +264,26 @@ class Engine3D:
             p.getQuaternionFromEuler(orientation), physicsClientId=self.client)
 
     def ray_cast(self, origin, destination):
-        """ Casts a ray between coordinates origin and destination and verifies if there is some 
-        object in between. It returns the id of the first encountered object.
-        #!UPDATE
+        """ Casts a batch of rays between pairwise coordinates in origin and destination lists
+        and verifies if there is some object/obstacle in between. 
+        It returns the id of the first encountered object.
 
-        :param np.ndarray origin: 3D numpy array with the origin coordinates.
-        :param np.ndarray destination: 3D numpy array with the destination coordinates.
+        Example::
+        
+        >>> # Cast two rays, both of them starting at [0,0,0] and with destinations
+        >>> # [1,0,0] and [1,1,0] respectively.  
+        >>> origins = [np.array([0,0,0])] * 2
+        >>> destinations = [np.array([1,0,0]), np.array([1,1,0])]
+        >>> # The result is a list with 2 components, each storing the id of the first 
+        >>> # obstacle detected in the ray trajectory (or -1 if no object was detected). 
+        >>> ids_list = ray_cast(origins, destinations) 
 
-        :returns: int identifier of the first intersected WorldObject by the casted ray.
+        :param list origin: list of numpy arrays with the set of origin coordinates.
+        :param list destination: list of numpy arrays with the set of destination coordinates.
+
+        :returns: list of int identifiers of the first intersected WorldObject by each of the casted rays
+            between pairwise origins and destinations. For each ray, if no obstacle was detected it returns 
+            a -1.
         """
         origin, dest = zip(*[(o + 1.2 * (d - o), o + 0.1 * (d - o)) for o, d in zip(origin, destination)])
         ray_res = p.rayTestBatch(origin, dest, collisionFilterMask=0b001, physicsClientId=self.client)
@@ -274,11 +291,6 @@ class Engine3D:
         if len(ray_res) == 1:
             ray_res = ray_res[0]
             ray_pos = ray_pos[0]
-
-        # p.addUserDebugLine(origin[0], dest[0], lineColorRGB=[1, 0, 0], lineWidth=2.0, lifeTime=0.1, physicsClientId=self.client)
-        # if ray_res[0][0] == -1 and np.linalg.norm(dest - origin) < 0.8: 
-        #     p.addUserDebugLine(origin, dest, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0, physicsClientId=self.client)
-        #     import pdb; pdb.set_trace()
         return ray_res, ray_pos
     
     def get_closest_point(self, idA, idB, linkA=-1, linkB=-1, max_dist=10):
@@ -380,7 +392,7 @@ class Engine3D:
         return self.physical_sensors[sensor_name][sector]['orientation'][-1] #!only yaw ftm
 
     def control_joints(self, obj_id, joints, actions, control_type='velocity'):
-        """ Control a series of robot joints either in velocity or in position.
+        """ Control a series of robot joints either by velocity or by position.
         
         :param int obj_id: identifier of the robot whose joints will be controlled.
         :param list joints: list of identifiers of the joints of the robot to be controlled.
@@ -414,11 +426,7 @@ class Engine3D:
         return (positions, velocities)
      
     def set_color(self, obj_id, link_id, color, opacity=1.0):
-        """ Getter of the physical position of a sensor within a robot. Sensors are attached to 
-        robot links and, therefore, it returns the 3D coordinates of the corresponding link.
-
-        .. note::
-            For the moment only directional sensor positions can be queried.
+        """ Sets the color and opacity of a link of an entity. 
         
         :param int obj_id: identifier of the robot owning the sensor.
         :param int obj_id: identifier of the link of the robot owning the sensor whose color is changed.
@@ -430,191 +438,17 @@ class Engine3D:
         rgba_color = color + [opacity]
         p.changeVisualShape(obj_id, link_id, rgbaColor=rgba_color, physicsClientId=self.client)
 
-    def set_camera_focus(self, position, distance):
+    def set_camera_focus(self, position, distance, yaw=0, pitch=-90):
+        """ Sets of the camera target position and distance in the environment. 
+        The camera spotlight is set to the given position and the camera it placed at the given 
+        distance wrt to that position. Yaw and pitch in degrees can be also specified. 
+        This method is only applied in render mode.
+
+        :param np.ndarray position: new spotlight of the camera.
+        :param float distance: distance of the camera wrt to the spotlight.
+        :param float yaw: yaw angle of the camera.
+        :param float pitch: pitch angle of the camera.
+        """
         if self.render:
-            self.engine.resetDebugVisualizerCamera(cameraDistance=distance, cameraYaw=0,\
-                    cameraPitch=-90, cameraTargetPosition=tuple(position))
-
-
-
-
-
-
-
-
-def json_parser(file, position, orientation):
-    """ Function that parses the json file describing the 2D entities.
-    """
-    file = "spike_swarm_sim/objects/urdf/" + file + '.json'
-    with open(file) as json_file:
-        obj_dict = json.load(json_file)
-    #* Parse Links
-    bodies = {}
-    for body_cfg in obj_dict['links']:
-        moment = pymunk.moment_for_circle(body_cfg['mass'], body_cfg['moment']['params']['radius'],  body_cfg['moment']['params']['radius'])\
-                if body_cfg['moment']['type'] == 'circle' else pymunk.moment_for_poly(body_cfg['mass'], body_cfg['moment']['params']['vertices'])
-        body = pymunk.Body(body_cfg['mass'], moment)
-        body.position = tuple(position + np.array(body_cfg['xy']))
-        body.angle = orientation + body_cfg['rpy']
-        bodies.update({body_cfg['name'] : body})
-    #* Parse Shapes
-    shapes = []
-    for shape_cfg in obj_dict['shapes']:
-        body = bodies[shape_cfg['body']]
-        shape = None
-        if shape_cfg['type'] == 'circle':
-            shape = pymunk.Circle(body, shape_cfg['params']['radius'], shape_cfg['params'].get('offset', (0,0)))
-        elif shape_cfg['type'] == 'poly':
-            shape = pymunk.Poly(body, shape_cfg['params']['vertices'], transform=pymunk.Transform(**shape_cfg['params'].get('transform', {})))
-        shape.color = [*map(int, shape_cfg['color'].split(','))] + [255]
-        shape.friction = shape_cfg.get('friction', 0.0)
-        shape.mass = body.mass
-        shapes.append(shape)
-    #TODO Parse Joints
-    joints = []
-    for joint_cfg in obj_dict['joints']:
-        pass
-    return [*bodies.values()], shapes
-
-class Engine2D:
-    """ 2D Physics and Render Engine class. Its role in the simulation is to iterate the 
-    2D physic simulations and collision detections of the entities in the environment and render 
-    the 2D graphics. For these purposes it uses the `pymunk library <https://pymunk.org>`_  for 
-    as physics engine and `pygame library <https://pygame.org>`_ as render engine.
-
-    :param float height: height of the graphics screen.
-    :param float width: width of the graphics screen.
-    
-    :var pymunk.Space engine: pymunk client engine.
-    :var bool render: flag indicating if the simulation is run in visual or render mode.
-    :var bool connected: whether the engine is connected or not.
-    """
-    def __init__(self, height=1000, width=1000):
-        self.height = height
-        self.width = width
-        self.render = global_states.RENDER
-        self.screen = None
-        self.engine = None
-        self.draw_options = None
-        self.objects = {}
-        self.groups = {}
-        self.cat_pointer = 0b01
-
-    def connect(self, objects):
-        """ Connects to the pymunk and pygame based physics and render engines. 
-        It creates the ``pymunk.Space``, sets up all the physics constants (gravity, etc.) 
-        and adds all the ``WorldObjects`` to the engine. It also sets up the screen where 
-        graphics will be rendered.
-
-        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
-        """
-        self.engine = pymunk.Space()
-        self.engine.gravity = (0.0, 0.0)
-        self.add_objects(objects)
-        self.connected = True
-        if self.render:
-            pygame.init()
-            self.screen = pygame.display.set_mode((self.height, self.width))
-            self.draw_options = pymunk.pygame_util.DrawOptions(self.screen)
-            self.clock = pygame.time.Clock()
-
-
-    def add_physics(self, obj):
-        """
-        Adds the requested entity to the engine so that its physics can be taken into account 
-        during the simulation. It parses the entity 2D model from a json asset. 
-        The precise json file describing the entity is an attribute of the corresponding WorldObject class. 
-        Besides, it assigns the mask and category mask of pymunk to filter the object individually of within 
-        a group of entities. For example, the robots of a swarm would belong to the same group and would have 
-        the same category mask. However, each swarm member would have a different mask. Untangible entities 
-        (e.g. ``LightSources``) have the 0b0 mask to ignore collisions. 
-
-        :param WorldObject obj: entity to be added to the engine.
-        """
-        if obj.model_file is None:
-            return
-        obj.physics_client = self
-        pos = np.r_[obj.init_position.copy()] * 100 + 500 
-        links, shapes = json_parser(obj.model_file, pos.tolist(), obj.init_orientation)
-        cat_mask = self.groups[obj.group]['cat']
-        mask = self.groups[obj.group]['last_mask']
-        for sh in shapes:
-            sh.filter = pymunk.ShapeFilter(categories=cat_mask, mask=mask)
-            if hasattr(obj, 'color'):
-                sh.color = THECOLORS[obj.color]
-        if obj.tangible:
-            self.groups[obj.group]['last_mask'] = mask << 1
-        self.objects[obj.id] = {'bodies' : links, 'shapes' : shapes, 'mask' : mask, 'cat': cat_mask}
-        self.engine.add(*links, *shapes)
-
-    def add_objects(self, objects):
-        """
-        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
-        during the simulation.
-
-        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
-        """
-        for obj in objects:
-            # Update group masks
-            if obj.group not in self.groups:
-                self.groups[obj.group] = {'cat' : obj.tangible and self.cat_pointer or 0b0, 'last_mask' : obj.tangible and 0b01 or 0b0}
-                if obj.tangible:
-                    self.cat_pointer = self.cat_pointer << 1
-            self.add_physics(obj)
-    
-    def get_body_position(self, identifier, body_id):
-        pos = self.objects[identifier]['bodies'][body_id].position
-        return (np.array([pos.x, pos.y]) - 500) / 100 
-
-    def reset_body_position(self, identifier, body_id, position):
-        position = position * 100 + 500  
-        self.objects[identifier]['bodies'][body_id].position = position
-
-    def get_body_orientation(self, identifier, body_id):
-        return self.objects[identifier]['bodies'][body_id].angle
-
-    def reset_body_orientation(self, identifier, body_id, orientation):
-        self.objects[identifier]['bodies'][body_id].angle = orientation
-
-    def get_link_state(self, obj_id, link_idx):
-        sh = self.objects[obj_id]['shapes']
-
-    def disconnect(self):
-        pass
-
-    def initialize_render(self):
-        pass
-
-    def step_physics(self):
-        # self.engine.step(1 / 60.0)
-        self.engine.step(1 / 30.0)
-
-    def step_render(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                import sys; sys.exit(0)
-        pygame.event.get()
-        self.screen.fill((123,123,123))
-        self.engine.debug_draw(self.draw_options)
-        pygame.display.flip()
-        self.clock.tick(60)
-
-
-
-    def get_closest_point(self, obj_id):
-        pass
-        # p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\
-        #                     linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client)
-
-
-    def ray_cast(self, origin, destination):
-        if len(origin) == 3:
-            origin = origin[:2]
-        if len(destination) == 3:
-            destination = destination[:2]
-        ray_res = self.engine.segment_query_first(origin, destination, 1, pymunk.ShapeFilter())
-        if ray_res is not None:
-            # Find ID of body
-            ray_res.shape.body
-        #* 
-        return ray_res[0][0]
+            self.engine.resetDebugVisualizerCamera(cameraDistance=distance, cameraYaw=yaw,\
+                    cameraPitch=pitch, cameraTargetPosition=tuple(position))

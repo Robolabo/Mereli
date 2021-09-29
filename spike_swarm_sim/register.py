@@ -20,13 +20,13 @@ receptive_fields = {}
 learning_rules = {}
 rewards = {}
 communication_systems = {}
-
+physics_engines = {}
 
 def world_registry(*args, **kwargs):
     def wrapper(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         worlds[name] = cls
-        return cls 
+        return cls
     return wrapper 
 
 def world_object_registry(*args, **kwargs):
@@ -156,11 +156,16 @@ def reward_registry(*args, **kwargs):
         return cls
     return decorator
 
-
-
 def communication_registry(*args, **kwargs):
     def decorator(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         communication_systems[name] = cls
+        return cls
+    return decorator
+
+def physics_engine_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        physics_engines[name] = cls
         return cls
     return decorator

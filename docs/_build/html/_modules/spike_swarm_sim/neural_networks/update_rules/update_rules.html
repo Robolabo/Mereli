@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
@@ -177,7 +169,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul>
@@ -361,10 +353,10 @@
            <div itemprop="articleBody">
             
   <h1>Source code for spike_swarm_sim.neural_networks.update_rules.update_rules</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">deque</span>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="kn">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">SET</span><span class="p">,</span> <span class="n">LEN</span><span class="p">,</span> <span class="n">INIT</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">learning_rule_registry</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.algorithms.interfaces</span> <span class="k">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">SET</span><span class="p">,</span> <span class="n">LEN</span><span class="p">,</span> <span class="n">INIT</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">import</span> <span class="n">learning_rule_registry</span>
 
 <div class="viewcode-block" id="append_and_pop"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.update_rules.html#spike_swarm_sim.neural_networks.update_rules.update_rules.append_and_pop">[docs]</a><span class="k">def</span> <span class="nf">append_and_pop</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">new_elem</span><span class="p">):</span>
     <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_elem</span><span class="p">)</span>
@@ -373,7 +365,7 @@
 
 <div class="viewcode-block" id="GeneralizedHebbian"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.update_rules.html#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian">[docs]</a><span class="nd">@learning_rule_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;generalized_hebbian&#39;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GeneralizedHebbian</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modulated</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#!</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">5e-3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -393,10 +385,13 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">A</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">activities</span><span class="p">,</span> <span class="n">act_inpt_cat</span><span class="p">)</span>\
                         <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">activities</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">act_inpt_cat</span><span class="p">))</span>\
                         <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">activities</span><span class="p">),</span> <span class="n">act_inpt_cat</span><span class="p">)</span>\
-                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span> 
+                        <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">weight_update</span> <span class="o">*</span> <span class="n">reward</span> <span class="k">if</span> <span class="n">reward</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">weight_update</span>
     
 <div class="viewcode-block" id="GeneralizedHebbian.step"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.update_rules.html#spike_swarm_sim.neural_networks.update_rules.update_rules.GeneralizedHebbian.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">activities</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1">#!</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__step</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">activities</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
+        <span class="c1">#!</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">modulated</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__step</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">activities</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesteps_update</span><span class="p">:</span>
@@ -415,6 +410,7 @@
             <span class="n">value_fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">rew</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">**</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">rew</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reward_queue</span><span class="p">)])</span>
             <span class="n">weight_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">activities_queue</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reward</span><span class="o">=</span><span class="n">value_fn</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
             <span class="n">weight_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__step</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">activities</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">return</span> <span class="n">weight_update</span></div>
@@ -509,7 +505,7 @@
 
 
 <div class="viewcode-block" id="BufferedHebb"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.update_rules.html#spike_swarm_sim.neural_networks.update_rules.update_rules.BufferedHebb">[docs]</a><span class="k">class</span> <span class="nc">BufferedHebb</span><span class="p">(</span><span class="n">GeneralizedHebbian</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">BufferedHebb</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer_len</span> <span class="o">=</span> <span class="mi">30</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.9</span>

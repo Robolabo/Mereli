@@ -1,7 +1,8 @@
 import time
 import numpy as np
 from spike_swarm_sim.globals import global_states
-from spike_swarm_sim import Engine3D, SquareArena, CircularArena, CustomWorld
+from spike_swarm_sim import SquareArena, CircularArena, CustomWorld
+from spike_swarm_sim.physics_engines import PybulletEngine
 from spike_swarm_sim.objects import Epuck, LightSource
 from spike_swarm_sim.controllers import BasicObstacleAvoider
 from spike_swarm_sim.utils.initializers import FixedInitializer, RandomUniformInitializer
@@ -12,7 +13,7 @@ global_states.set_states(render=True, debug=True)
 n_robots = 5
 # Create physics engine with 0.02sec of discretization and a period the robot
 # control loop of 0.14sec.
-phy_engine = Engine3D(dt=0.02, T_control=0.14)
+phy_engine = PybulletEngine(dt=0.02, T_control=0.14)
 # world = CustomWorld(phy_engine, map_file='simple_map_1/simple_map_1')
 world = SquareArena(phy_engine, height=7, width=7)
 
@@ -32,6 +33,6 @@ for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
 with world:
     world.reset()
     t0 = time.time()
-    for _ in range(100):
+    for _ in range(1000):
         state, action = world.step()
 print('\nSIMULATION DURATION: ', np.round(time.time() - t0, 4))

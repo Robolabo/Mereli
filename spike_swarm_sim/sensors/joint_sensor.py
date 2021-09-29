@@ -16,7 +16,7 @@ class JointPositionSensor(Sensor):
         
     def step(self, neighborhood):
         """ Reads the current position of the requested joints. It queries this operation 
-        to the physics engine by calling the method ``Engine3D.read_joints``.
+        to the physics engine by calling the method ``Engine.read_joints``.
 
         :returns: numpy array with the position reading of each joint.
         
@@ -36,7 +36,7 @@ class JointVelocitySensor(Sensor):
         
     def step(self, neighborhood):
         """ Reads the current velocity of the requested joints. It queries this operation 
-        to the physics engine by calling the method ``Engine3D.read_joints``.
+        to the physics engine by calling the method ``Engine.read_joints``.
         
         :returns: numpy array with the velocity reading of each joint.
         """
