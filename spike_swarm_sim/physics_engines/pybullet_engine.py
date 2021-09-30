@@ -9,7 +9,7 @@ with contextlib.redirect_stdout(None):
     import pybullet_data
     import pybullet_utils.bullet_client as bc
 from matplotlib import colors
-# from spike_swarm_sim.utils.utils import HidePrintf
+from spike_swarm_sim.utils.utils import HidePrintf
 from .base_engine import BaseEngine
 from spike_swarm_sim.register import physics_engine_registry
 
@@ -60,8 +60,8 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        # with HidePrintf():
-        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        with HidePrintf():
+            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.client)
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())

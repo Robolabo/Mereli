@@ -45,6 +45,8 @@ class Species:
                         if g.innovation in common_genes])
         weights_genotype = np.array([g.weight for g in genotype.connections
                         if g.innovation in common_genes])
+        if len(weights_repr) != len(weights_genotype):
+            import pdb; pdb.set_trace()
         assert len(weights_repr) == len(weights_genotype)
         # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
         W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(len(weights_genotype))

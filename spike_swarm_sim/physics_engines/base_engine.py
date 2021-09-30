@@ -26,7 +26,7 @@ class BaseEngine(ABC):
     """
     def __init__(self, engine_type, dt=0.02, T_control=0.1):
         self._engine_type = engine_type
-        self.dt = 0.02
+        self.dt = dt
         self.T_control = T_control
         assert T_control >= dt
         self.connected = False

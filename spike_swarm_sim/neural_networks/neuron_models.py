@@ -153,7 +153,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
     @INIT('neurons:activation')
     def init_activation(self, neuron_name, ann_graph):
         activ_len = self.len_activation(neuron_name, ann_graph)
-        random_activs = np.array([Activation.sample(ignore=[Activation.SOFTMAX]) for _ in range(activ_len)]) 
+        random_activs = np.array([Activation.sample(ignore=[Activation.SOFTMAX]) for _ in range(activ_len)])
         return self.set_activation(neuron_name, ann_graph, random_activs)
 
 @neuron_model_registry(name='perceptron')
@@ -206,8 +206,9 @@ class RateModel(NonSpikingNeuronModel):
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
         outputs = self.gain * self._volt.copy() + self.bias
-        outputs[self.activation == 'sigmoid'] = sigmoid(outputs[self.activation == 'sigmoid'])
-        outputs[self.activation == 'tanh'] = tanh(outputs[self.activation == 'tanh'])
+    
+        for func in without_duplicates(self.activation):
+            outputs[self.activation == func] = Activation.function_of(func)(outputs[self.activation == func])
         return outputs, self._volt.copy()
 
     #! pasarlo a base
