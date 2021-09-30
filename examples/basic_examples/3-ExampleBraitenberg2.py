@@ -1,13 +1,14 @@
 import time
 import numpy as np
 from spike_swarm_sim.globals import global_states
-from spike_swarm_sim import CircularArena, Engine3D
+from spike_swarm_sim import CircularArena
+from spike_swarm_sim.physics_engines import PybulletEngine
 from spike_swarm_sim.objects import Epuck, LightSource
 from spike_swarm_sim.controllers import Braitenberg2B
 
 #* Create physics engine with 0.02sec of discretization and a period the robot
 #* control loop of 0.14sec.
-phy_engine = Engine3D(dt=0.02, T_control=0.14)
+phy_engine = PybulletEngine(dt=0.02, T_control=0.14)
 world = CircularArena(phy_engine, radius=7)
 
 ctlr = Braitenberg2B()

@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../_static/jquery.js"></script>
-        <script type="text/javascript" src="../_static/underscore.js"></script>
-        <script type="text/javascript" src="../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../_static/js/theme.js"></script>
 
@@ -95,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
@@ -179,7 +171,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../modules.html#subpackages">Subpackages</a><ul>
@@ -248,6 +240,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.physics_engines.html">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
@@ -374,12 +372,12 @@ of environment context are the reception signal strength or the relative orienta
 from where the message was received.</p>
 <p>The main parts of a communication system are the following:</p>
 <ol class="arabic simple">
-<li><strong>Receiver</strong>: the communication receiver is a robot sensor responsible of perceiving the messages
+<li><p><strong>Receiver</strong>: the communication receiver is a robot sensor responsible of perceiving the messages
 transmitted by other robots in the surroundings. Some receivers can be sectorized sensors, so that
 the robot can be aware of the orientation from the message was perceived. The most relevant example
-of a sectorized receiver is the the IR receiver, which has a separate IR photodiode in each sector.</li>
-<li><strong>Transmitter</strong>:</li>
-<li><strong>Communication system</strong>:</li>
+of a sectorized receiver is the the IR receiver, which has a separate IR photodiode in each sector.</p></li>
+<li><p><strong>Transmitter</strong>:</p></li>
+<li><p><strong>Communication system</strong>:</p></li>
 </ol>
 <p>All of these parts must be included in order to correctly use the inter-robot communication. As
 we will see below, the receiver is implemented and enabled as a sensor and the actuator is

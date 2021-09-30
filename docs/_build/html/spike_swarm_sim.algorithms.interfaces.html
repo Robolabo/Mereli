@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -95,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -179,7 +171,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -248,6 +240,12 @@
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.physics_engines.html">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
@@ -373,41 +371,41 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.interfaces.genetic_interface">
 <span id="spike-swarm-sim-algorithms-interfaces-genetic-interface-module"></span><h2>spike_swarm_sim.algorithms.interfaces.genetic_interface module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.interfaces.genetic_interface" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.algorithms.interfaces.genetic_interface.</code><code class="descname">GeneticInterface</code><span class="sig-paren">(</span><em>neural_net</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.genetic_interface.</span></span><span class="sig-name descname"><span class="pre">GeneticInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neural_net</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface used by all the evolutionary algorithms to manage phenotype to 
 genotype transactions (bijectively), genotype initialization and so on.
 ================================================================================
 - Params:</p>
 <blockquote>
-<div>neural_net [NeuralNetwork] : ANN of a robot.</div></blockquote>
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query">
-<code class="descname">submit_query</code><span class="sig-paren">(</span><em>query</em>, <em>primitive='GET'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.submit_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query" title="Permalink to this definition">¶</a></dt>
+<div><p>neural_net [NeuralNetwork] : ANN of a robot.</p>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query">
+<span class="sig-name descname"><span class="pre">submit_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GET'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.submit_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submits a query to read or write the ANN. The operation is of the syntax 
 “PRIMITIVE query data” (data if primitive is write). 
 - Args:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>query [str] <span class="classifier-delimiter">:</span> <span class="classifier">query subject to the primitive. The query addresses some </span></dt>
-<dd><dl class="first last docutils">
-<dt>variable of the ANN and it has the following syntax:</dt>
-<dd>“ANN_part:variable:name”</dd>
-<dt>Some examples are:</dt>
-<dd><p class="first">“synapses:weights:all” -&gt; weights of all the synapses.
+<div><dl>
+<dt>query [str]<span class="classifier">query subject to the primitive. The query addresses some </span></dt><dd><dl>
+<dt>variable of the ANN and it has the following syntax:</dt><dd><p>“ANN_part:variable:name”</p>
+</dd>
+<dt>Some examples are:</dt><dd><p>“synapses:weights:all” -&gt; weights of all the synapses.
 “synapses:weights:S1” -&gt; weights of synapse with name S1 (must be)</p>
 <blockquote>
-<div>defined</div></blockquote>
-<p class="last">“neurons:tau:all” -&gt; time constants of all neuron models.
+<div><p>defined</p>
+</div></blockquote>
+<p>“neurons:tau:all” -&gt; time constants of all neuron models.
 “neurons:gain:sensory” -&gt; gains of sensory neurons.
 “decoding:weights:all” -&gt; weights of all decoders (in SNN).</p>
 </dd>
 </dl>
 </dd>
-<dt>primitive [str]: action or primitive of the query. Possible primitives </dt>
-<dd>are GET, SET, LEN, INIT.</dd>
+<dt>primitive [str]: action or primitive of the query. Possible primitives </dt><dd><p>are GET, SET, LEN, INIT.</p>
+</dd>
 </dl>
 <p>data [np.ndarray]: genotype array only supplied when the primitive is SET.
 min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.
@@ -415,59 +413,58 @@ max_vals [np.ndarray]: max. bound of the search space. In GET it is None.</p>
 </div></blockquote>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype">
-<code class="descname">toGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.toGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype">
+<span class="sig-name descname"><span class="pre">toGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.toGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a phenotype or structured ANN into a vector genotype. 
 It performs a series of queries (depending on the population segments) 
 and gathers the results as the final genotype.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype">
-<code class="descname">fromGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>genotype</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.fromGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype">
+<span class="sig-name descname"><span class="pre">fromGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.fromGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a genotype into a phenotype or, in this case, structured ANN. 
 It iterates across population opt. vars. with the corresponding queries and 
 submits a SET operation towards the ANN.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype">
-<code class="descname">initGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.initGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype">
+<span class="sig-name descname"><span class="pre">initGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#GeneticInterface.initGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method for initializing the values of the genotype.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.algorithms.interfaces.genetic_interface.</code><code class="descname">NEATInterface</code><span class="sig-paren">(</span><em>neural_net</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query">
-<code class="descname">submit_query</code><span class="sig-paren">(</span><em>query</em>, <em>primitive='GET'</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.submit_query"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.genetic_interface.</span></span><span class="sig-name descname"><span class="pre">NEATInterface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neural_net</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query">
+<span class="sig-name descname"><span class="pre">submit_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primitive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'GET'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.submit_query"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query" title="Permalink to this definition">¶</a></dt>
 <dd><p>Submits a query to read or write the ANN. The operation is of the syntax 
 “PRIMITIVE query data” (data if primitive is write). 
 - Args:</p>
 <blockquote>
-<div><dl class="docutils">
-<dt>query [str] <span class="classifier-delimiter">:</span> <span class="classifier">query subject to the primitive. The query addresses some </span></dt>
-<dd><dl class="first last docutils">
-<dt>variable of the ANN and it has the following syntax:</dt>
-<dd>“ANN_part:variable:name”</dd>
-<dt>Some examples are:</dt>
-<dd><p class="first">“synapses:weights:all” -&gt; weights of all the synapses.
+<div><dl>
+<dt>query [str]<span class="classifier">query subject to the primitive. The query addresses some </span></dt><dd><dl>
+<dt>variable of the ANN and it has the following syntax:</dt><dd><p>“ANN_part:variable:name”</p>
+</dd>
+<dt>Some examples are:</dt><dd><p>“synapses:weights:all” -&gt; weights of all the synapses.
 “synapses:weights:S1” -&gt; weights of synapse with name S1 (must be)</p>
 <blockquote>
-<div>defined</div></blockquote>
-<p class="last">“neurons:tau:all” -&gt; time constants of all neuron models.
+<div><p>defined</p>
+</div></blockquote>
+<p>“neurons:tau:all” -&gt; time constants of all neuron models.
 “neurons:gain:sensory” -&gt; gains of sensory neurons.
 “decoding:weights:all” -&gt; weights of all decoders (in SNN).</p>
 </dd>
 </dl>
 </dd>
-<dt>primitive [str]: action or primitive of the query. Possible primitives </dt>
-<dd>are GET, SET, LEN, INIT.</dd>
+<dt>primitive [str]: action or primitive of the query. Possible primitives </dt><dd><p>are GET, SET, LEN, INIT.</p>
+</dd>
 </dl>
 <p>data [np.ndarray]: genotype array only supplied when the primitive is SET.
 min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.
@@ -475,35 +472,35 @@ max_vals [np.ndarray]: max. bound of the search space. In GET it is None.</p>
 </div></blockquote>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.toGenotype">
-<code class="descname">toGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.toGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.toGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.toGenotype">
+<span class="sig-name descname"><span class="pre">toGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.toGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.toGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a phenotype or structured ANN into a vector genotype. 
 It performs a series of queries (depending on the population segments)
 and gathers the results as the final genotype.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype">
-<code class="descname">fromGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>genotype</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.fromGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype">
+<span class="sig-name descname"><span class="pre">fromGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genotype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.fromGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a genotype into a phenotype or, in this case, structured ANN.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype">
-<code class="descname">initGenotype</code><span class="sig-paren">(</span><em>queries</em>, <em>min_vals</em>, <em>max_vals</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.initGenotype"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype">
+<span class="sig-name descname"><span class="pre">initGenotype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">queries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_vals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#NEATInterface.initGenotype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method for initializing the values of the genotype.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.algorithms.interfaces.genetic_interface.</code><code class="descname">InterfaceFactory</code><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#InterfaceFactory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory.create">
-<code class="descname">create</code><span class="sig-paren">(</span><em>algorithm</em>, <em>neural_net</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#InterfaceFactory.create"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory.create" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.genetic_interface.</span></span><span class="sig-name descname"><span class="pre">InterfaceFactory</span></span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#InterfaceFactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neural_net</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/genetic_interface.html#InterfaceFactory.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.genetic_interface.InterfaceFactory.create" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -511,9 +508,9 @@ and gathers the results as the final genotype.</p>
 </div>
 <div class="section" id="module-spike_swarm_sim.algorithms.interfaces.interpreter">
 <span id="spike-swarm-sim-algorithms-interfaces-interpreter-module"></span><h2>spike_swarm_sim.algorithms.interfaces.interpreter module<a class="headerlink" href="#module-spike_swarm_sim.algorithms.interfaces.interpreter" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="spike_swarm_sim.algorithms.interfaces.interpreter.GET">
-<code class="descclassname">spike_swarm_sim.algorithms.interfaces.interpreter.</code><code class="descname">GET</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#GET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.GET" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.interpreter.GET">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.interpreter.</span></span><span class="sig-name descname"><span class="pre">GET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#GET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.GET" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator that marks a method as a GET query handler for some 
 variable in the genotype-phenotype interface. The decorator 
 receives as argument the name of the query. For instace, this 
@@ -521,9 +518,9 @@ decorator is applied to the Synapses.get_weights method as
 &#64;GET(“synapses:weights”).</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="spike_swarm_sim.algorithms.interfaces.interpreter.SET">
-<code class="descclassname">spike_swarm_sim.algorithms.interfaces.interpreter.</code><code class="descname">SET</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#SET"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.SET" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.interpreter.SET">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.interpreter.</span></span><span class="sig-name descname"><span class="pre">SET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#SET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.SET" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator that marks a method as a SET query handler for some 
 variable in the genotype-phenotype interface. The decorator 
 receives as argument the name of the query. For instace, this 
@@ -531,9 +528,9 @@ decorator is applied to the Synapses.set_weights method as
 &#64;SET(“synapses:weights”).</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="spike_swarm_sim.algorithms.interfaces.interpreter.LEN">
-<code class="descclassname">spike_swarm_sim.algorithms.interfaces.interpreter.</code><code class="descname">LEN</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#LEN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.LEN" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.interpreter.LEN">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.interpreter.</span></span><span class="sig-name descname"><span class="pre">LEN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#LEN"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.LEN" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator that marks a method as a LET query handler for some 
 variable in the genotype-phenotype interface. The decorator 
 receives as argument the name of the query. For instace, this 
@@ -541,9 +538,9 @@ decorator is applied to the Synapses.len_weights method as
 &#64;LEN(“synapses:weights”).</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="spike_swarm_sim.algorithms.interfaces.interpreter.INIT">
-<code class="descclassname">spike_swarm_sim.algorithms.interfaces.interpreter.</code><code class="descname">INIT</code><span class="sig-paren">(</span><em>query</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#INIT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.INIT" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="spike_swarm_sim.algorithms.interfaces.interpreter.INIT">
+<span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.algorithms.interfaces.interpreter.</span></span><span class="sig-name descname"><span class="pre">INIT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/algorithms/interfaces/interpreter.html#INIT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.algorithms.interfaces.interpreter.INIT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decorator that marks a method as an INIT query handler for some 
 variable in the genotype-phenotype interface. The decorator 
 receives as argument the name of the query. For instace, this 

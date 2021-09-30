@@ -1,0 +1,1233 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.physics_engines package &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="spike_swarm_sim.sensors package" href="spike_swarm_sim.sensors.html" />
+    <link rel="prev" title="spike_swarm_sim.objects package" href="spike_swarm_sim.objects.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-spike_swarm_sim.physics_engines">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">SpikeSwarmSim Package</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.physics_engines package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/spike_swarm_sim.physics_engines.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="spike-swarm-sim-physics-engines-package">
+<h1>spike_swarm_sim.physics_engines package<a class="headerlink" href="#spike-swarm-sim-physics-engines-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="spike-swarm-sim-physics-engines-base-engine-module">
+<h2>spike_swarm_sim.physics_engines.base_engine module<a class="headerlink" href="#spike-swarm-sim-physics-engines-base-engine-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-spike_swarm_sim.physics_engines.base_engine"></span><dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.physics_engines.base_engine.</span></span><span class="sig-name descname"><span class="pre">BaseEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.02</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_control</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base abstract class of physics and render Engines. 
+Its role in the simulation is to iterate the physic simulations and collision detections of the 
+entities in the environment and render the graphics. Precise engine implementations 
+must inherit from this class, properly overwritting the required abstract methods to cover the 
+engine’s basic functionalities. The implementation can be either supported on an extern physics simulations
+library or coded from zero.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – time step of the physics simulation (in seconds).</p></li>
+<li><p><strong>T_control</strong> (<em>float</em>) – period of the sensing+control+action loop. It cannot be lower than dt and 
+it is set to 5*dt by default. Essentially this means that the physics are updated 5 times 
+in between every executing of sensors, controllers and actuators.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>engine</strong> (<em>BulletClient</em>) – pybullet client engine.</p></li>
+<li><p><strong>render</strong> (<em>bool</em>) – flag indicating if the simulation is run in visual or render mode.</p></li>
+<li><p><strong>connected</strong> (<em>bool</em>) – whether the engine is connected or not.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.render">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">render</span></span><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.render" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.connect">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for connecting to physics and render engines. 
+Some common actions to be taken, apart from creating the engine client, are to set 
+either visual or direct mode, set up all the physics constants (gravity, sampling period, etc.) 
+or adding all the <code class="docutils literal notranslate"><span class="pre">WorldObjects</span></code> to the engine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>objects</strong> (<em>iterable</em>) – iterable of WorldObjects whose physics have to be simulated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.disconnect">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for disconnecting the physics and render engines.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_physics">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">step_physics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.step_physics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_physics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for iterating all the 3D physics and dynamical states of the 
+world entities using the implemented engine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_render">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">step_render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.step_render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.step_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for iterating the graphics or renderings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_physics">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">add_physics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.add_physics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_physics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for adding the requested entity to the engine so that its physics can be taken into account 
+during the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – entity to be added to the engine.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_objects">
+<span class="sig-name descname"><span class="pre">add_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.add_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.add_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
+during the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>objects</strong> (<em>iterable</em>) – iterable of WorldObjects whose physics have to be simulated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_position">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_body_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_body_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract getter method of the current position of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of shape N (N=2 if 2D or N=3 if 3D)  with the entities’ position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_orientation">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_body_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_body_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract getter method of the current Euler orientation of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the entities’ Euler orientation (if 2D then only yaw angle).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_velocity">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_body_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_body_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract getter method of the current velocity of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the entities’ velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_angular_velocity">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_body_angular_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_body_angular_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_body_angular_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract getter method of the current angular velocity of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array  with the entities’ angular velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_body_state">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">set_body_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.set_body_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_body_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract setter of the physics state (position and orientation) of a registered entity with the given
+identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>position</strong> (<em>np.ndarray</em>) – new 3D or 2D position of the entity.</p></li>
+<li><p><strong>orientation</strong> (<em>np.ndarray</em>) – new 3D or scalar (yaw) Euler orientation of the entity. It is also possible to 
+introduce an angle scalar in radians so that orientation = [0,0,orientation].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.ray_cast">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">ray_cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.ray_cast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.ray_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for casting a batch of rays between pairwise coordinates in origin and destination lists
+and verifies if there is some object/obstacle in between. 
+It returns the id of the first encountered object.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Cast two rays, both of them starting at [0,0,0] and with destinations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># [1,0,0] and [1,1,0] respectively.  </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">origins</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">destinations</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The result is a list with 2 components, each storing the id of the first </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># obstacle detected in the ray trajectory (or -1 if no object was detected). </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids_list</span> <span class="o">=</span> <span class="n">ray_cast</span><span class="p">(</span><span class="n">origins</span><span class="p">,</span> <span class="n">destinations</span><span class="p">)</span> 
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>list</em>) – list of numpy arrays with the set of origin coordinates.</p></li>
+<li><p><strong>destination</strong> (<em>list</em>) – list of numpy arrays with the set of destination coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of int identifiers of the first intersected WorldObject by each of the casted rays
+between pairwise origins and destinations. For each ray, if no obstacle was detected it returns 
+a -1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_link_state">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_link_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_link_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_link_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract getter of the position and orientation of a given link in the specified entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the WorldObject entity.</p></li>
+<li><p><strong>link_idx</strong> (<em>int</em>) – identifier of the link of the WorldObject entity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code> with the numpy position and orientation of the link.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_position">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_sensor_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_actuator_position">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_actuator_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actuator_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_actuator_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_actuator_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_orientation">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">get_sensor_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_sensor_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_sensor_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.control_joints">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">control_joints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'velocity'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.control_joints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.control_joints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract method for controlling a series of robot joints either by velocity or by position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot whose joints will be controlled.</p></li>
+<li><p><strong>joints</strong> (<em>list</em>) – list of identifiers of the joints of the robot to be controlled.</p></li>
+<li><p><strong>actions</strong> (<em>list</em>) – list or np.ndarray of actions to control each joint.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – type of joint control (either “velocity” or “position”).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.read_joints">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">read_joints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.read_joints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.read_joints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
+a tuple (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot whose joints will be read.</p></li>
+<li><p><strong>joints</strong> (<em>list</em>) – list of identifiers of the joints of the robot to be read.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of the form (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_closest_point">
+<span class="sig-name descname"><span class="pre">get_closest_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_closest_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_closest_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the closest points between two links of two registered entities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idA</strong> (<em>int</em>) – identifier of the first WorldObject entity.</p></li>
+<li><p><strong>idB</strong> (<em>int</em>) – identifier of the second WorldObject entity.</p></li>
+<li><p><strong>linkA</strong> (<em>int</em>) – identifier of the link of the first WorldObject entity.</p></li>
+<li><p><strong>linkB</strong> (<em>int</em>) – identifier of the link of the second WorldObject entity.</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – maximum distance between the objects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the coordinates of the closest point in linkB of entity with idB.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_contact_points">
+<span class="sig-name descname"><span class="pre">get_contact_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.get_contact_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.get_contact_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the contact points between any link of the given entity and any other 
+entity. It steps the collision detection engine to perform the query. The identifier 
+of ghost links can be specified in order to momentarily activate collisions and detect 
+obstacles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the WorldObject entity.</p></li>
+<li><p><strong>ghost_ids</strong> (<em>list</em>) – list of the identifiers of the entity ghost links.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_color">
+<span class="sig-name descname"><span class="pre">set_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.set_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract setter of the color and opacity of a link of an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>obj_id</strong> – identifier of the link of the robot owning the sensor whose color is changed.</p></li>
+<li><p><strong>color</strong> (<em>list</em>) – <code class="docutils literal notranslate"><span class="pre">list</span></code> with the RGB code of the color or <code class="docutils literal notranslate"><span class="pre">str</span></code> with the color name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para float opacity</dt>
+<dd class="field-even"><p>opacity of the color.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_camera_focus">
+<span class="sig-name descname"><span class="pre">set_camera_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/base_engine.html#BaseEngine.set_camera_focus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine.set_camera_focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract setter of the camera target position and distance in the environment. 
+The camera spotlight is set to the given position and the camera it placed at the given 
+distance wrt to that position. Yaw and pitch in degrees can be also specified. 
+This method must only be applied in render mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>np.ndarray</em>) – new spotlight of the camera.</p></li>
+<li><p><strong>distance</strong> (<em>float</em>) – distance of the camera wrt to the spotlight.</p></li>
+<li><p><strong>yaw</strong> (<em>float</em>) – yaw angle of the camera.</p></li>
+<li><p><strong>pitch</strong> (<em>float</em>) – pitch angle of the camera.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="spike-swarm-sim-physics-engines-pybullet-engine-module">
+<h2>spike_swarm_sim.physics_engines.pybullet_engine module<a class="headerlink" href="#spike-swarm-sim-physics-engines-pybullet-engine-module" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-spike_swarm_sim.physics_engines.pybullet_engine"></span><dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.physics_engines.pybullet_engine.</span></span><span class="sig-name descname"><span class="pre">PybulletEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#spike_swarm_sim.physics_engines.base_engine.BaseEngine" title="spike_swarm_sim.physics_engines.base_engine.BaseEngine"><code class="xref py py-class docutils literal notranslate"><span class="pre">spike_swarm_sim.physics_engines.base_engine.BaseEngine</span></code></a></p>
+<p>3D Physics and Render Engine class based on the <a class="reference external" href="https://pybullet.org">pybullet library</a>. 
+Its role in the simulation is to iterate the 3D physic simulations and collision detections of the 
+entities in the environment and render the 3D graphics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – time step of the physics simulation (in seconds).</p></li>
+<li><p><strong>T_control</strong> (<em>float</em>) – period of the sensing+control+action loop. It cannot be lower than dt and 
+it is set to 5*dt by default. Essentially this means that the physics are updated 5 times 
+in between every executing of sensors, controllers and actuators.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>engine</strong> (<em>BulletClient</em>) – pybullet client engine.</p></li>
+<li><p><strong>render</strong> (<em>bool</em>) – flag indicating if the simulation is run in visual or render mode.</p></li>
+<li><p><strong>connected</strong> (<em>bool</em>) – whether the engine is connected or not.</p></li>
+<li><p><strong>physical_sensors</strong> (<em>dict</em>) – <p>maps sensor reference names to actual physical links of the robot. Specifically, each key of the dict 
+corresponds to a sensor (<cite>‘distance_sensor’</cite>, <cite>‘light_sensor’</cite>, …), which in turn have a subdict as value. The subdict of 
+each sensor has another int key per each of the available sectors (e.g. from 0 to 7). Finally, the value of each sector contains 
+information about the physical link of the corresponding sensor sector (link name, link idx, ghost link, etc.).
+For example, the value of the sector 0 of the <cite>‘distance sensor’</cite> would be:</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="s1">&#39;distance_sensor&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="p">{</span><span class="s1">&#39;link&#39;</span><span class="p">:</span> <span class="s1">&#39;IR0&#39;</span><span class="p">,</span> <span class="s1">&#39;ghost_link&#39;</span><span class="p">:</span> <span class="s1">&#39;ghost_cone_DS0&#39;</span><span class="p">,</span> <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mf">0.</span>     <span class="p">,</span> <span class="mf">0.</span>     <span class="p">,</span> <span class="mf">0.26179</span><span class="p">]),</span> <span class="s1">&#39;idx&#39;</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span> <span class="s1">&#39;ghost_link_idx&#39;</span><span class="p">:</span> <span class="mi">34</span><span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>physical_actuators</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>luminous_objects</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>gui_params</strong> (<em>dict</em>) – unused ftm.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects to the pybullet based physics and render engines. It starts the pybullet 
+client in either visual or direct mode, sets up all the physics constants (gravity, sampling period, etc.) 
+and adds all the <code class="docutils literal notranslate"><span class="pre">WorldObjects</span></code> to the engine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>objects</strong> (<em>iterable</em>) – iterable of WorldObjects whose physics have to be simulated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.disconnect">
+<span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects the pybullet based physics and render engines.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_physics">
+<span class="sig-name descname"><span class="pre">step_physics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.step_physics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_physics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates all the 3D physics of the world entities using pybullet.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_render">
+<span class="sig-name descname"><span class="pre">step_render</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.step_render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates the graphics visualization at given FPS.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_objects">
+<span class="sig-name descname"><span class="pre">add_objects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.add_objects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_objects" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account 
+during the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>objects</strong> (<em>iterable</em>) – iterable of WorldObjects whose physics have to be simulated.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_physics">
+<span class="sig-name descname"><span class="pre">add_physics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.add_physics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_physics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the requested entity to the engine so that its physics can be taken into account 
+during the simulation. It uses the pybullet function <code class="docutils literal notranslate"><span class="pre">loadURDF</span></code>, that creates the pybullet 
+entity described in the form of an URDF file. The precise file describing the entity is an 
+attribute of the corresponding WorldObject class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#spike_swarm_sim.objects.world_object.WorldObject" title="spike_swarm_sim.objects.world_object.WorldObject"><em>WorldObject</em></a>) – entity to be added to the engine.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.parse_urdf">
+<span class="sig-name descname"><span class="pre">parse_urdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.parse_urdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.parse_urdf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">client</span></span><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pybullet engine client used in the simulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_position">
+<span class="sig-name descname"><span class="pre">get_body_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_body_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current position of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>body_id</strong> (<em>int</em>) – deprecated, to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of shape (3,) with the entities’ position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_orientation">
+<span class="sig-name descname"><span class="pre">get_body_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_body_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current Euler orientation of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>body_id</strong> (<em>int</em>) – deprecated, to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of shape (3,) with the entities’ Euler orientation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_velocity">
+<span class="sig-name descname"><span class="pre">get_body_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_body_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current velocity of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>body_id</strong> (<em>int</em>) – deprecated, to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of shape (3,) with the entities’ velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_angular_velocity">
+<span class="sig-name descname"><span class="pre">get_body_angular_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_body_angular_velocity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_angular_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current angular velocity of the root link of an entity with the 
+given identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>body_id</strong> (<em>int</em>) – deprecated, to be removed</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of shape (3,) with the entities’ angular velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_body_state">
+<span class="sig-name descname"><span class="pre">set_body_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">identifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.set_body_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_body_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the physics state (position and orientation) of a registered entity with the given
+identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>identifier</strong> (<em>int</em>) – identifier of the entity whose position is requested.</p></li>
+<li><p><strong>body_id</strong> (<em>int</em>) – deprecated, to be removed</p></li>
+<li><p><strong>position</strong> (<em>np.ndarray</em>) – new 3D position of the entity.</p></li>
+<li><p><strong>orientation</strong> (<em>np.ndarray</em>) – new 3D Euler orientation of the entity. It is also possible to 
+introduce an angle scalar in radians so that orientation = [0,0,orientation].</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.ray_cast">
+<span class="sig-name descname"><span class="pre">ray_cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.ray_cast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.ray_cast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Casts a batch of rays between pairwise coordinates in origin and destination lists
+and verifies if there is some object/obstacle in between. 
+It returns the id of the first encountered object.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Cast two rays, both of them starting at [0,0,0] and with destinations</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># [1,0,0] and [1,1,0] respectively.  </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">origins</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">destinations</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The result is a list with 2 components, each storing the id of the first </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># obstacle detected in the ray trajectory (or -1 if no object was detected). </span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ids_list</span> <span class="o">=</span> <span class="n">ray_cast</span><span class="p">(</span><span class="n">origins</span><span class="p">,</span> <span class="n">destinations</span><span class="p">)</span> 
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin</strong> (<em>list</em>) – list of numpy arrays with the set of origin coordinates.</p></li>
+<li><p><strong>destination</strong> (<em>list</em>) – list of numpy arrays with the set of destination coordinates.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of int identifiers of the first intersected WorldObject by each of the casted rays
+between pairwise origins and destinations. For each ray, if no obstacle was detected it returns 
+a -1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_closest_point">
+<span class="sig-name descname"><span class="pre">get_closest_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idB</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkA</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linkB</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_closest_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_closest_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the closest points between two links of two registered entities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>idA</strong> (<em>int</em>) – identifier of the first WorldObject entity.</p></li>
+<li><p><strong>idB</strong> (<em>int</em>) – identifier of the second WorldObject entity.</p></li>
+<li><p><strong>linkA</strong> (<em>int</em>) – identifier of the link of the first WorldObject entity.</p></li>
+<li><p><strong>linkB</strong> (<em>int</em>) – identifier of the link of the second WorldObject entity.</p></li>
+<li><p><strong>max_dist</strong> (<em>float</em>) – maximum distance between the objects.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>3D numpy array with the coordinates of the closest point in linkB of entity with idB.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_contact_points">
+<span class="sig-name descname"><span class="pre">get_contact_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_contact_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_contact_points" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the contact points between any link of the given entity and any other 
+entity. It steps the collision detection engine to perform the query. The identifier 
+of ghost links can be specified in order to momentarily activate collisions and detect 
+obstacles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the WorldObject entity.</p></li>
+<li><p><strong>ghost_ids</strong> (<em>list</em>) – list of the identifiers of the entity ghost links.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_link_state">
+<span class="sig-name descname"><span class="pre">get_link_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_link_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_link_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of the position and orientation of a given link in the specified entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the WorldObject entity.</p></li>
+<li><p><strong>link_idx</strong> (<em>int</em>) – identifier of the link of the WorldObject entity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">tuple</span></code> with the 3D numpy position and 3D orientation of the link.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_position">
+<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_sensor_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the moment only directional sensor positions can be queried.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_actuator_position">
+<span class="sig-name descname"><span class="pre">get_actuator_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actuator_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_actuator_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_actuator_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the moment only directional sensor positions can be queried.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>tuple with the numpy array with the position and the actuator identifier.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_orientation">
+<span class="sig-name descname"><span class="pre">get_sensor_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.get_sensor_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of the physical position of a sensor within a robot. Sensors are attached to 
+robot links and, therefore, it returns the 3D coordinates of the corresponding link.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the moment only directional sensor positions can be queried.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>sensor_name</strong> (<em>str</em>) – reference name of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para int sector</dt>
+<dd class="field-even"><p>index of the sensor’s sector requested.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.control_joints">
+<span class="sig-name descname"><span class="pre">control_joints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'velocity'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.control_joints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.control_joints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Control a series of robot joints either by velocity or by position.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot whose joints will be controlled.</p></li>
+<li><p><strong>joints</strong> (<em>list</em>) – list of identifiers of the joints of the robot to be controlled.</p></li>
+<li><p><strong>actions</strong> (<em>list</em>) – list or np.ndarray of actions to control each joint.</p></li>
+<li><p><strong>control_type</strong> (<em>str</em>) – type of joint control (either “velocity” or “position”).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.read_joints">
+<span class="sig-name descname"><span class="pre">read_joints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.read_joints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.read_joints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
+a tuple (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot whose joints will be read.</p></li>
+<li><p><strong>joints</strong> (<em>list</em>) – list of identifiers of the joints of the robot to be read.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of the form (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_color">
+<span class="sig-name descname"><span class="pre">set_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opacity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.set_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the color and opacity of a link of an entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>obj_id</strong> (<em>int</em>) – identifier of the robot owning the sensor.</p></li>
+<li><p><strong>obj_id</strong> – identifier of the link of the robot owning the sensor whose color is changed.</p></li>
+<li><p><strong>color</strong> (<em>list</em>) – <code class="docutils literal notranslate"><span class="pre">list</span></code> with the RGB code of the color or <code class="docutils literal notranslate"><span class="pre">str</span></code> with the color name.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Para float opacity</dt>
+<dd class="field-even"><p>opacity of the color.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_camera_focus">
+<span class="sig-name descname"><span class="pre">set_camera_focus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yaw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pitch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">90</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/physics_engines/pybullet_engine.html#PybulletEngine.set_camera_focus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_camera_focus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets of the camera target position and distance in the environment. 
+The camera spotlight is set to the given position and the camera it placed at the given 
+distance wrt to that position. Yaw and pitch in degrees can be also specified. 
+This method is only applied in render mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> (<em>np.ndarray</em>) – new spotlight of the camera.</p></li>
+<li><p><strong>distance</strong> (<em>float</em>) – distance of the camera wrt to the spotlight.</p></li>
+<li><p><strong>yaw</strong> (<em>float</em>) – yaw angle of the camera.</p></li>
+<li><p><strong>pitch</strong> (<em>float</em>) – pitch angle of the camera.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spike_swarm_sim.physics_engines">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-spike_swarm_sim.physics_engines" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="spike_swarm_sim.sensors.html" class="btn btn-neutral float-right" title="spike_swarm_sim.sensors package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="spike_swarm_sim.objects.html" class="btn btn-neutral float-left" title="spike_swarm_sim.objects package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

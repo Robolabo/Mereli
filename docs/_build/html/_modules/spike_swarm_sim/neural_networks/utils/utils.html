@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
@@ -177,7 +169,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul>
@@ -363,11 +355,11 @@
   <h1>Source code for spike_swarm_sim.neural_networks.utils.utils</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="kn">import</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">any_duplicates</span><span class="p">,</span> <span class="n">ConfigException</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.utils</span> <span class="k">import</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">any_duplicates</span><span class="p">,</span> <span class="n">ConfigException</span>
 <span class="kn">import</span> <span class="nn">spike_swarm_sim.register</span> <span class="k">as</span> <span class="nn">reg</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.receptive_field</span> <span class="kn">import</span> <span class="n">ReceptiveField</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.decoding</span> <span class="kn">import</span> <span class="n">Decoder</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.neuron_models</span> <span class="kn">import</span> <span class="n">SpikingNeuronModel</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.receptive_field</span> <span class="k">import</span> <span class="n">ReceptiveField</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.decoding</span> <span class="k">import</span> <span class="n">Decoder</span>
+<span class="kn">from</span> <span class="nn">spike_swarm_sim.neural_networks.neuron_models</span> <span class="k">import</span> <span class="n">SpikingNeuronModel</span>
 
 <span class="c1">#* ---- CONFIGURATION CHECK FUNCTIONS ---- #</span>
 <div class="viewcode-block" id="ensembles_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#spike_swarm_sim.neural_networks.utils.utils.ensembles_checker">[docs]</a><span class="k">def</span> <span class="nf">ensembles_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
@@ -503,7 +495,7 @@
 <span class="sd">    the execution.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Check compulsory variables.</span>
-    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;stimuli&#39;</span><span class="p">,</span> <span class="s1">&#39;ensembles&#39;</span><span class="p">,</span> <span class="s1">&#39;synapses&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">,</span> <span class="s1">&#39;synapses&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
         <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="n">var</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Required field </span><span class="si">{}</span><span class="s1"> not specified in config. file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
     <span class="k">if</span> <span class="s1">&#39;dt&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">:</span>
