@@ -9,6 +9,7 @@ import pybullet_utils.bullet_client as bc
 
 
 from spike_swarm_sim.objects import  Robot, LightSource, Wall, Map
+from spike_swarm_sim.physics_engines.pybullet_engine import PybulletEngine
 from spike_swarm_sim.register import (controllers, world_objects, initializers, 
         env_perturbations, rewards, communication_systems, world_registry)
 from spike_swarm_sim.utils import (increase_time, mov_average_timeit, isinstance_of_any)
@@ -535,7 +536,7 @@ class MultiWorldWrapper:
     def __init__(self, n_cpu, world):
         self.n_cpu = n_cpu
         #! Mucho ojo. Son objetos totalmente desacoplados?
-        self._worlds = [SquareArena(Engine3D(), height=7, width=7) for _ in range(n_cpu + 1)]
+        self._worlds = [SquareArena(PybulletEngine(), height=7, width=7) for _ in range(n_cpu + 1)]
         # self._worlds = [copy.deepcopy(world)] * (n_cpu + 1)
 
     def build_from_dict(self, world_dict, ann_topology=None):
