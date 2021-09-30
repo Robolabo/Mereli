@@ -1,9 +1,42 @@
 from abc import ABC, abstractmethod, abstractproperty
-import matplotlib.pyplot as plot
+from enum import Enum, auto
 import numpy as np
 from spike_swarm_sim.algorithms.interfaces import GET, SET, LEN, INIT
 from spike_swarm_sim.register import neuron_model_registry
-from spike_swarm_sim.utils import sigmoid, tanh, increase_time, without_duplicates
+from spike_swarm_sim.utils import increase_time, without_duplicates
+from spike_swarm_sim.utils.activations import *
+
+class Activation(Enum):
+    SIGMOID = auto()
+    TANH = auto()
+    GAUSSIAN = auto()
+    HEAVISIDE = auto()
+    RELU = auto()
+    SOFTMAX = auto()
+    SIN = auto()
+    COS = auto()
+    SQUARE_SIN = auto()
+    SQUARE_COS = auto()
+    LINEAR = auto()
+    
+    @classmethod
+    def function_of(self, value):
+        mapping = {idx : func for idx, func in zip(self, [sigmoid, tanh, gaussian, heaviside,\
+                        relu, softmax, sin, cos, square_sin, square_cos, lambda x: x])}
+        return mapping.get(value)
+
+    @classmethod
+    def from_name(self, name):
+        mapping = {name : idx for idx, name in zip(self, ['sigmoid', 'tanh', 'gaussian', 'heaviside',\
+                        'relu', 'softmax', 'sin', 'cos', 'square_sin', 'square_cos', 'linear'])}
+        return mapping.get(name)
+
+    @classmethod
+    def sample(self, ignore=None):
+        if ignore is not None:
+            assert isinstance(ignore, list)
+            return np.random.choice([x for x in self if x not in ignore])
+        return np.random.choice(self)
 
 class BaseNeuronModel(ABC):
     """ Base abstract class for neuron models."""
@@ -19,9 +52,6 @@ class BaseNeuronModel(ABC):
     def __len__(self):
         return len(self._volt)
 
-    # @abstractmethod
-    # def add(self, Isyn):
-    #     pass
 
     def build(self, **kwargs):
         for var, val in kwargs.items():
@@ -56,6 +86,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
     def __init__(self, *args, **kwargs):
         super(NonSpikingNeuronModel, self).__init__(*args, **kwargs)
         self.bias = np.empty(0)
+        self.activation = np.empty(0)
         
     @GET('neurons:bias')
     def get_bias(self, neuron_name, ann_graph, min_val=0, max_val=1):
@@ -76,7 +107,10 @@ class NonSpikingNeuronModel(BaseNeuronModel):
         }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
         for bias, neuron in zip(data, neuron_iterable):
             neuron['bias'] = bias * (max_val - min_val) + min_val
-            self.bias[neuron['idx']] = neuron['bias']
+            try:
+                self.bias[neuron['idx']] = neuron['bias']
+            except:
+                import pdb; pdb.set_trace()
         return ann_graph
     
     @LEN('neurons:bias')
@@ -86,9 +120,41 @@ class NonSpikingNeuronModel(BaseNeuronModel):
     @INIT('neurons:bias')
     def init_bias(self, neuron_name, ann_graph, min_val=-1., max_val=1.):
         biases_len = self.len_bias(neuron_name, ann_graph)
-        random_biases = 0.5 * np.random.randn(biases_len) * 0.3
+        random_biases = 0.5 + np.random.randn(biases_len) * 0.1
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
+
+    @GET('neurons:activation')
+    def get_activation(self, neuron_name, ann_graph, min_val=0, max_val=1):
+        activ_vals = np.array({
+            'all' : [neuron['activation'] for neuron in ann_graph['neurons'].values()],
+            'hidden' : [neuron['activation'] for neuron in ann_graph['neurons'].values() if not neuron['is_motor']], 
+            'motor' : [neuron['activation'] for neuron in ann_graph['neurons'].values() if neuron['is_motor']]
+        }.get(neuron_name,  [neuron['activation'] for neuron in ann_graph['neurons'].values() \
+                if neuron['ensemble'] == neuron_name]))
+        return activ_vals
+
+    @SET('neurons:activation')
+    def set_activation(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
+        neuron_iterable = {
+            'all' : ann_graph['neurons'].values(),
+            'hidden' : filter(lambda x: not x['is_motor'], ann_graph['neurons'].values()),
+            'motor' : filter(lambda x: x['is_motor'], ann_graph['neurons'].values())
+        }.get(neuron_name, filter(lambda x: x['ensemble'] == neuron_name, ann_graph['neurons'].values()))
+        for activation, neuron in zip(data, neuron_iterable):
+            neuron['activation'] = activation
+            self.activation[neuron['idx']] = activation
+        return ann_graph
+    
+    @LEN('neurons:activation')
+    def len_activation(self, neuron_name, ann_graph):
+        return len(self.get_activation(neuron_name, ann_graph))
+
+    @INIT('neurons:activation')
+    def init_activation(self, neuron_name, ann_graph):
+        activ_len = self.len_activation(neuron_name, ann_graph)
+        random_activs = np.array([Activation.sample(ignore=[Activation.SOFTMAX]) for _ in range(activ_len)]) 
+        return self.set_activation(neuron_name, ann_graph, random_activs)
 
 @neuron_model_registry(name='perceptron')
 class Perceptron(NonSpikingNeuronModel):
@@ -100,24 +166,22 @@ class Perceptron(NonSpikingNeuronModel):
 
     def step(self, Isyn):
         self._volt = self.gain * Isyn + self.bias
-        function_map = {
-            'sigmoid' : sigmoid,
-            'tanh' : tanh,
-            'sin' : np.sin, 
-            'cos' : np.cos, 
-        }
         for func in without_duplicates(self.activation):
-            self._volt[self.activation == func] = function_map[func](self._volt[self.activation == func])
+            self._volt[self.activation == func] = Activation.function_of(func)(self._volt[self.activation == func])
         return self._volt, None
 
     #! pasarlo a base
-    def add(self, gain=1., bias=0., activation='sigmoid'):
+    def add(self, gain=1., bias=0., activation=Activation.LINEAR):
         self._volt = np.hstack((self._volt, 0))
         self.bias = np.hstack((self.bias, bias))
         self.gain = np.hstack((self.gain, gain))
+        if isinstance(activation, str): 
+            activation = Activation.from_name(activation)
+        assert activation is not None
         self.activation = np.hstack((self.activation, activation))
 
     def delete(self, index):
+        self._volt = np.delete(self._volt, index)
         self.bias = np.delete(self.bias, index)
         self.gain = np.delete(self.gain, index)
         self.activation = np.delete(self.activation, index)

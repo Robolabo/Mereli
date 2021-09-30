@@ -2,7 +2,7 @@ import numpy as np
 from spike_swarm_sim.register import evo_operator_registry
 
 @evo_operator_registry(name='random_mating')
-def random_mating(parents, fitness=None):
+def random_mating(parents):
     np.random.shuffle(parents)
     return parents
 
