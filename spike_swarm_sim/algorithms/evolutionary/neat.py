@@ -1,6 +1,8 @@
 import copy
 import logging
 import numpy as np
+
+from spike_swarm_sim.algorithms.evolutionary.gene import GraphGenotype
 from .population import NEAT_Population  
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from spike_swarm_sim.algorithms.interfaces import NEATInterface
@@ -50,6 +52,18 @@ class NEAT(EvolutionaryAlgorithm):
         save_pickle(pop_checkpoint, file_name)
         logging.info('Successfully saved evolution checkpoint.')
         
+    # def migration(self, population):
+    #     new_pop = []
+    #     for geno in population:
+    #         genotype = GraphGenotype()
+    #         genotype.species = geno['species']
+    #         for name, node in geno['nodes'].items():
+    #             genotype.add_node_from_dict(name, **node)
+    #         for name, conn in geno['connections'].items():
+    #             genotype.add_conn_from_dict(name, **conn)
+    #         new_pop.append(genotype)
+    #     return new_pop
+        
     def load_population(self):
         """ Loads a previously saved checkpoint to resume evolution.
         """
@@ -60,7 +74,9 @@ class NEAT(EvolutionaryAlgorithm):
             self.populations[key].p_weight_mut = checkpoint['p_weight_mut'][key]
             self.populations[key].p_node_mut = checkpoint['p_node_mut'][key]
             self.populations[key].p_conn_mut = checkpoint['p_conn_mut'][key]
+
             self.populations[key].population = pop['genotypes']
+            
             self.populations[key].best = pop.get('best', None)
             self.populations[key].current_innovation = pop['current_innovation']
             self.populations[key].innovation_history = pop['innovation_history']
