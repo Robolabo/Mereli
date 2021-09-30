@@ -2,8 +2,7 @@ import logging
 from itertools import product
 import numpy as np
 
-
-from spike_swarm_sim.neural_networks.neural_net import NeuralNetwork 
+# from .neural_net import NeuralNetwork
 from .synapses import StaticSynapses
 from .neuron_models import Perceptron
 from spike_swarm_sim.register import neuron_models, synapse_models
@@ -31,7 +30,6 @@ class MLP:
             ready[len(inputs):] = np.logical_or(ready[len(inputs):], self.weights[:, ready].sum(1) != 0.0)
         #! No decoders ftm
         return outputs[np.array([self.ensemble_indices(out) for out in self.motor_ensemble_names]).flatten()]
-
 
 
     def build_from_dict(self, topology):
@@ -89,7 +87,7 @@ class MLP:
         if ensemble not in self.ensemble_names:
             self.ensemble_names.append(ensemble)
         self.graph['neurons'].update({name : merge_dicts([{'ensemble' : ensemble,
-                'idx' : len(self.neurons)-1, 'is_motor' : False}, kwargs])})
+                'idx' : self.num_neurons-1, 'is_motor' : False}, kwargs])})
 
     def delete_neuron(self, name):
         neuron_index = self.graph['neurons'][name]['idx']
@@ -103,10 +101,22 @@ class MLP:
         #* Remove ensemble if neuron was the only unit.
         if not any([neuron['ensemble'] == ensemble for neuron in self.graph['neurons'].values()]):
             self.ensemble_names.remove(ensemble)
+            if ensemble in self.motor_ensemble_names:
+                self.motor_ensemble_names.remove(ensemble)
         #* Remove any synapse with the neuron as pre or post
         for syn_name, syn in [*self.graph['synapses'].items()]:
             if syn['pre'] == name or syn['post'] == name:
                 self.delete_synapse(syn_name)
+
+    def reset_graph(self):
+        neuron_names = tuple(self.graph['neurons'].keys())
+        synapse_names = tuple(self.graph['synapses'].keys())
+        for neuron in neuron_names:
+            if not self.is_motor(neuron):
+                self.delete_neuron(neuron)
+        for syn in synapse_names:
+            self.delete_synapse(syn)
+        self.build()
 
     def add_synapse(self, name, pre, post, weight=1., conn_prob=1., 
             trainable=True, use_seed=False, **kwargs):
@@ -195,3 +205,5 @@ class MLP:
     def num_hidden(self):
         return self.num_neurons - self.num_motor
 
+    def is_motor(self, neuron_name):
+        return self.graph['neurons'][neuron_name]['is_motor']

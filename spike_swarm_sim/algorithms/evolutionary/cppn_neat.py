@@ -1,23 +1,22 @@
 import copy
 import logging
 import numpy as np
-from .population import NEAT_Population  
+from .population import CPPN_NEAT_Population  
 from .evolutionary_algorithm import EvolutionaryAlgorithm
-from spike_swarm_sim.algorithms.interfaces import NEATInterface
+from spike_swarm_sim.algorithms.interfaces import CPPN_NEAT_Interface
 from spike_swarm_sim.register import algorithm_registry
-from spike_swarm_sim.globals import global_states
 from spike_swarm_sim.utils import save_pickle, load_pickle
 from .species import Species
 
-@algorithm_registry(name='NEAT')
-class NEAT(EvolutionaryAlgorithm):
+@algorithm_registry(name='CPPN_NEAT')
+class CPPN_NEAT(EvolutionaryAlgorithm):
     """ 
     """
     def __init__(self, populations, *args, **kwargs):
-        populations = {name : NEAT_Population(kwargs['population_size'],\
+        populations = {name : CPPN_NEAT_Population(kwargs['population_size'],\
                 pop['min_vals'], pop['max_vals'], pop['objects'], **pop['params'])\
                 for name, pop in populations.items()}
-        super(NEAT, self).__init__(populations, *args, **kwargs)
+        super(CPPN_NEAT, self).__init__(populations, *args, **kwargs)
 
     def save_population(self, generation):
         """ Saves the checkpoint with the necessary information to resume the evolution. 
@@ -54,7 +53,7 @@ class NEAT(EvolutionaryAlgorithm):
         """ Loads a previously saved checkpoint to resume evolution.
         """
         checkpoint = load_pickle('spike_swarm_sim/checkpoints/populations/' + self.checkpoint_name)
-        logging.info('Resuming NEAT evolution using checkpoint ' +  self.checkpoint_name)
+        logging.info('Resuming CPPN-NEAT evolution using checkpoint ' +  self.checkpoint_name)
         key = tuple(self.populations.keys())[0]
         for key, pop in checkpoint['populations'].items():
             self.populations[key].p_weight_mut = checkpoint['p_weight_mut'][key]
@@ -69,13 +68,14 @@ class NEAT(EvolutionaryAlgorithm):
             self.populations[key].species = []
             for spc_chk in pop['species']:
                 spc = Species(spc_chk['id'], spc_chk['creation_generation'],
-                        compatib_thresh=spc_chk['thresh'], c1=spc_chk['c1'], c2=spc_chk['c2'], c3=spc_chk['c3'])
+                        compatib_thresh=spc_chk['thresh'], c1=spc_chk['c1'], 
+                        c2=spc_chk['c2'], c3=spc_chk['c3'])
                 spc.history = copy.deepcopy(spc_chk['history'])
                 self.populations[key].species.append(spc)
                 spc.representative = spc_chk['representative']
                 spc.num_genotypes = np.sum([genotype.species == spc.id  for genotype in pop['genotypes']])
             robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
-            interface = NEATInterface(robots[0].controller.neural_network)
+            interface = CPPN_NEAT_Interface(robots[0].controller.neural_network)
             # #!
             # self.populations[key].segment_lengths = [interface.submit_query(query, primitive='LEN')\
             #             for query in self.populations[key].objects]         

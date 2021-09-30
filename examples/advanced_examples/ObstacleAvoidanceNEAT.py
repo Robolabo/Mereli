@@ -5,9 +5,9 @@ from spike_swarm_sim.controllers import NeuralController
 from spike_swarm_sim.objects import Epuck
 from spike_swarm_sim.neural_networks import NeuralNetwork
 from spike_swarm_sim.objectives import ObstacleAvoidance
-from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm
+from spike_swarm_sim.algorithms.evolutionary import NEAT
 
-global_states.set_states(render=False)
+global_states.set_states(render=False, info=True)
 
 n_robots = 1
 
@@ -32,7 +32,7 @@ phy_engine = Engine3D(dt=0.02, T_control=0.14)
 world = SquareArena(phy_engine, height=5, width=5)
 # Set initializers
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
-ini_pos = RandomUniformInitializer(n_robots, low=[-1, -1], high=[1, 1], size=2, engine='3D',  variable='positions')
+ini_pos = RandomUniformInitializer(n_robots, low=[-1, -1], high=[1, 1], size=2, engine='3D', variable='positions')
 world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
 
 for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
@@ -44,35 +44,37 @@ for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
     world.register_entity('swarm_' + str(i), ent, group='swarm')
 
 populations = {
-    "p1" : {
+    "p1" : {    
         "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
         "max_vals" : [5,  3, 0.5],
         "min_vals" : [-5, -3, -1],
         "params" : {
             "encoding" : "real",
-            "selection_operator" : "nonlin_rank",
-            "crossover_operator" : "blxalpha",
-            "mutation_operator" : "gaussian",
-            "mating_operator" : "random",
-            "mutation_prob" : 0.05,
-            "crossover_prob" : 0.9,
-            "num_elite" : 5
+            "p_weight_mut" : 0.05,
+            "p_node_mut" : 0.01,
+            "p_conn_mut" : 0.1,
+            "compatib_thresh" : 0.4,
+            "c1" : 1,
+            "c2" : 1,
+            "c3" : 0.6,
+            "species_elites" : 1
         }
     }
 }      
 
 #* --- CREATE GENETIC ALGORITHM ------
+RESUME = True
 fitness_fn = ObstacleAvoidance()
-genetic_alg = GeneticAlgorithm(populations, world,
-                population_size=10, n_generations=50, 
+neat = NEAT(populations, world,
+                population_size=20, n_generations=50, 
                 eval_steps=100, num_evaluations=1,
-                fitness_fn=fitness_fn)
+                fitness_fn=fitness_fn, resume=RESUME)
 
+if not RESUME:
+    neat.run()
 
-genetic_alg.run()
-world.physics_engine.render = True 
-import pdb; pdb.set_trace()
-with world:
-    world.reset()
-    for _ in range(1000):
-        state, action = world.step()
+else:
+    world.physics_engine.render = True
+    neat.evaluate()
+
+    import pdb; pdb.set_trace()

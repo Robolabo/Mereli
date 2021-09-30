@@ -1,9 +1,10 @@
+from .utils import *
 from .neural_net import NeuralNetwork
-from .mlp import MLP
 from .synapses import StaticSynapses, DynamicSynapses
-from .neuron_models import RateModel, IzhikevichModel, LIFModel, AdExModel
+from .neuron_models import Activation, RateModel, IzhikevichModel, LIFModel, AdExModel, SpikingNeuronModel, NonSpikingNeuronModel
 from .receptive_field import IdentityReceptiveField, GaussianReceptiveField, TriangularReceptiveField, ConicReceptiveField
 from .encoding import RankOrderCoding, PoissonRateCoding
 from .decoding import LinearPopulationDecoding, FirstToSpike, RankOrderDecoding
 from .update_rules.update_rules import *
-from .utils import *
+
+from .mlp import MLP

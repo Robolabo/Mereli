@@ -262,7 +262,7 @@ class EvolutionaryAlgorithm:
         """
         # import pdb; pdb.set_trace()
         world = self.world
-        robots = [robot for robot in world.hierarchy.values() if robot.trainable]
+        robots = [*world.robots.values()] #[robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
         world.reset()
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]

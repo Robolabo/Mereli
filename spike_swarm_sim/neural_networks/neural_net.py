@@ -8,7 +8,7 @@ from numpy.lib.function_base import delete
 # Own imports
 from spike_swarm_sim.register import neuron_models, synapse_models, learning_rules
 from spike_swarm_sim.utils import increase_time, merge_dicts, remove_duplicates
-from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel
+from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .utils.monitor import NeuralNetMonitor
@@ -16,6 +16,7 @@ try:
     from .utils.visualization import *
 except:
     pass
+
 
 def monitor(func):
     """ Decorator for recording and monitoring the relevant neuronal variables. 
@@ -44,6 +45,7 @@ def monitor(func):
             self.monitor.update(**monitor_vars)
         return spikes, Isynapses, voltages
     return wrapper
+
 
 
 
@@ -169,6 +171,14 @@ class NeuralNetwork:
         #* Build ANN
         self.build()
 
+    def build_from_adjmat(self, w_matrix):
+        #! OJO NORMALIZACION weights !!!
+        assert w_matrix.shape[1] - w_matrix.shape[0] == self.num_inputs
+        for i in range(w_matrix.shape[0]):
+            name = f'H_{i}'
+            import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
+
     def set_motor(self, ensemble_name):
         if ensemble_name not in self.ensemble_names:
             raise Exception(logging.error('Ensemble "{}" does not exist').format(ensemble_name))
@@ -193,12 +203,16 @@ class NeuralNetwork:
         self.ensemble_names.append(name)
         for name_kwarg, kwarg in kwargs.items():
             if not (isinstance(kwarg, np.ndarray) or isinstance(kwarg, list)):
-               kwargs[name_kwarg] = [kwarg] * num_neurons 
+               kwargs[name_kwarg] = [kwarg] * num_neurons
         for n in range(num_neurons):
             self.add_neuron(f'{name}_{n}', ensemble=name,
                 **{k : val[n] for k, val in kwargs.items()})
         
     def add_neuron(self, name, ensemble=None, **kwargs):
+        if ensemble not in self.ensemble_names:
+            self.ensemble_names.append(ensemble)
+        if 'activation' in kwargs:
+            kwargs['activation'] = Activation.from_name(kwargs['activation'])
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
         if ensemble not in self.ensemble_names:
@@ -224,12 +238,24 @@ class NeuralNetwork:
         #* Remove ensemble if neuron was the only unit.
         if not any([neuron['ensemble'] == ensemble for neuron in self.graph['neurons'].values()]):
             self.ensemble_names.remove(ensemble)
+            if ensemble in self.motor_ensemble_names:
+                self.motor_ensemble_names.remove(ensemble)
         #* Remove any synapse with the neuron as pre or post
         for syn_name, syn in [*self.graph['synapses'].items()]:
             if syn['pre'] == name or syn['post'] == name:
                 self.delete_synapse(syn_name)
 
 
+    def reset_graph(self):
+        neuron_names = tuple(self.graph['neurons'].keys())
+        synapse_names = tuple(self.graph['synapses'].keys())
+        for neuron in neuron_names:
+            if not self.is_motor(neuron):
+                self.delete_neuron(neuron)
+        for syn in synapse_names:
+            self.delete_synapse(syn)
+        self.build()
+        
     def add_learning_rule(self):
         #! OJO PROVISIONAL.
         self.learning_rule = learning_rules['generalized_hebbian']() #TODO decouple, improve.
@@ -416,7 +442,10 @@ class NeuralNetwork:
         weight matrix or any kind of ANN adj. mat., the number of inputs MUST be added.
         """
         return np.hstack([self.ensemble_indices(motor) for motor in self.motor_ensemble_names])
-    
+
+    def is_motor(self, neuron_name):
+        return self.graph['neurons'][neuron_name]['is_motor']
+
     def num_ensemble_neurons(self, ensemble):
         return len(self.ensemble_indices(ensemble))
 
