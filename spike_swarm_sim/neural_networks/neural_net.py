@@ -383,7 +383,6 @@ class NeuralNetwork:
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            m = 0.0
             Delta_W = self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
             Delta_W = Delta_W * np.sign(self.synapses.weights)
             # print(Delta_W)
@@ -407,7 +406,7 @@ class NeuralNetwork:
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 1100 and self.monitor is not None:
+        if self.t == self.time_scale * 500 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -415,7 +414,7 @@ class NeuralNetwork:
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0,0]
+        # actions['outA'] = [1,1]
         # actions['outB'] = [0.75]
         return actions
     
