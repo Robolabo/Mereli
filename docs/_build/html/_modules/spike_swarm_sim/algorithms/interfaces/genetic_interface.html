@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'../../../../',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="../../../../_static/jquery.js"></script>
-        <script type="text/javascript" src="../../../../_static/underscore.js"></script>
-        <script type="text/javascript" src="../../../../_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -93,7 +85,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
@@ -177,7 +169,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">SpikeSwarmSim Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul>
@@ -363,8 +355,8 @@
   <h1>Source code for spike_swarm_sim.algorithms.interfaces.genetic_interface</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">.interpreter</span> <span class="kn">import</span> <span class="n">language_dict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">.interpreter</span> <span class="k">import</span> <span class="n">language_dict</span>
 
 <div class="viewcode-block" id="GeneticInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface">[docs]</a><span class="k">class</span> <span class="nc">GeneticInterface</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Interface used by all the evolutionary algorithms to manage phenotype to </span>
@@ -374,7 +366,7 @@
 <span class="sd">        neural_net [NeuralNetwork] : ANN of a robot.</span>
 <span class="sd">    ================================================================================</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span> <span class="o">=</span> <span class="n">neural_net</span> 
 
 <div class="viewcode-block" id="GeneticInterface.submit_query"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query">[docs]</a>    <span class="k">def</span> <span class="nf">submit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -440,7 +432,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
 
 <div class="viewcode-block" id="NEATInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface">[docs]</a><span class="k">class</span> <span class="nc">NEATInterface</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span> <span class="o">=</span> <span class="n">neural_net</span>
 
 <div class="viewcode-block" id="NEATInterface.submit_query"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#spike_swarm_sim.algorithms.interfaces.genetic_interface.NEATInterface.submit_query">[docs]</a>    <span class="k">def</span> <span class="nf">submit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -522,7 +514,7 @@
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]:</span>
                 <span class="n">syn</span> <span class="o">=</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">conn_prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">],</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">],</span> <span class="n">conn_prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">use_seed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span> <span class="p">:</span> <span class="n">effective_genotype</span><span class="p">[</span><span class="s1">&#39;connections&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()})</span>
         <span class="c1">#* Update parameters (Decoders and encoders not supported yet).</span>
         <span class="c1"># counter = 0</span>

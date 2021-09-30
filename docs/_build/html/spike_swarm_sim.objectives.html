@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html4" lang="en" >
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
   
@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -28,21 +30,11 @@
   <![endif]-->
   
     
-      <script type="text/javascript">
-          var DOCUMENTATION_OPTIONS = {
-              URL_ROOT:'./',
-              VERSION:'',
-              LANGUAGE:'None',
-              COLLAPSE_INDEX:false,
-              FILE_SUFFIX:'.html',
-              HAS_SOURCE:  true,
-              SOURCELINK_SUFFIX: '.txt'
-          };
-      </script>
-        <script type="text/javascript" src="_static/jquery.js"></script>
-        <script type="text/javascript" src="_static/underscore.js"></script>
-        <script type="text/javascript" src="_static/doctools.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -95,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
@@ -179,7 +171,7 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">API</span></p>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">SpikeSwarmSim Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
@@ -248,6 +240,12 @@
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.physics_engines.html">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
@@ -371,111 +369,111 @@
 </div>
 <div class="section" id="module-spike_swarm_sim.objectives.fitness">
 <span id="spike-swarm-sim-objectives-fitness-module"></span><h2>spike_swarm_sim.objectives.fitness module<a class="headerlink" href="#module-spike_swarm_sim.objectives.fitness" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.IdentifyBorderline">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">IdentifyBorderline</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#IdentifyBorderline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.IdentifyBorderline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.IdentifyBorderline">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">IdentifyBorderline</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#IdentifyBorderline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.IdentifyBorderline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the borderline identification task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.IdentifyLeader">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">IdentifyLeader</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#IdentifyLeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.IdentifyLeader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.IdentifyLeader">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">IdentifyLeader</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#IdentifyLeader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.IdentifyLeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the leader selection task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.Alignment">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">Alignment</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#Alignment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.Alignment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.Alignment">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">Alignment</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#Alignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.Alignment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the orientation consensus task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.GotoLight">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">GotoLight</code><span class="sig-paren">(</span><em>color='red'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#GotoLight"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.GotoLight" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.GotoLight">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">GotoLight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#GotoLight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.GotoLight" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the light follower task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.TransportCubesFitness">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">TransportCubesFitness</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TransportCubesFitness"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TransportCubesFitness" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.TransportCubesFitness">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">TransportCubesFitness</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TransportCubesFitness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TransportCubesFitness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the light follower task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.TaskSwitching">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">TaskSwitching</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.TaskSwitching">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">TaskSwitching</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the exploration task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.TaskSwitching2">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">TaskSwitching2</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.TaskSwitching2">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">TaskSwitching2</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the exploration task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.TaskSwitching3">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">TaskSwitching3</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.TaskSwitching3">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">TaskSwitching3</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the exploration task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.TaskSwitching4Lights">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">TaskSwitching4Lights</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching4Lights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching4Lights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.TaskSwitching4Lights">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">TaskSwitching4Lights</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#TaskSwitching4Lights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.TaskSwitching4Lights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the exploration task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.Grouping">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">Grouping</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#Grouping"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.Grouping" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.Grouping">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">Grouping</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#Grouping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.Grouping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the aggrupation task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.ObstacleAvoidance">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">ObstacleAvoidance</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#ObstacleAvoidance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.ObstacleAvoidance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.ObstacleAvoidance">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">ObstacleAvoidance</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#ObstacleAvoidance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.ObstacleAvoidance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the Obstacle Avoidance task.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.fitness.GotoGoal">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.fitness.</code><code class="descname">GotoGoal</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#GotoGoal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.GotoGoal" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.fitness.GotoGoal">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.fitness.</span></span><span class="sig-name descname"><span class="pre">GotoGoal</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/fitness.html#GotoGoal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.fitness.GotoGoal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Fitness function for the Obstacle Avoidance task.</p>
 </dd></dl>
 
 </div>
 <div class="section" id="module-spike_swarm_sim.objectives.reward">
 <span id="spike-swarm-sim-objectives-reward-module"></span><h2>spike_swarm_sim.objectives.reward module<a class="headerlink" href="#module-spike_swarm_sim.objectives.reward" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.reward.GoToLightReward">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.reward.</code><code class="descname">GoToLightReward</code><span class="sig-paren">(</span><em>color='red'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#GoToLightReward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.GoToLightReward" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="spike_swarm_sim.objectives.reward.GoToLightReward.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#GoToLightReward.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.GoToLightReward.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.reward.GoToLightReward">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.reward.</span></span><span class="sig-name descname"><span class="pre">GoToLightReward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#GoToLightReward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.GoToLightReward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.reward.GoToLightReward.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#GoToLightReward.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.GoToLightReward.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="spike_swarm_sim.objectives.reward.TaskSwitchingLights">
-<em class="property">class </em><code class="descclassname">spike_swarm_sim.objectives.reward.</code><code class="descname">TaskSwitchingLights</code><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#TaskSwitchingLights"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.TaskSwitchingLights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<dl class="method">
-<dt id="spike_swarm_sim.objectives.reward.TaskSwitchingLights.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#TaskSwitchingLights.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.TaskSwitchingLights.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.reward.TaskSwitchingLights">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">spike_swarm_sim.objectives.reward.</span></span><span class="sig-name descname"><span class="pre">TaskSwitchingLights</span></span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#TaskSwitchingLights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.TaskSwitchingLights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="spike_swarm_sim.objectives.reward.TaskSwitchingLights.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spike_swarm_sim/objectives/reward.html#TaskSwitchingLights.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#spike_swarm_sim.objectives.reward.TaskSwitchingLights.reset" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

@@ -1,0 +1,857 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>spike_swarm_sim.physics_engines.pybullet_engine &mdash; SpikeSwarmSim  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> SpikeSwarmSim
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">SpikeSwarmSim Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html">spike_swarm_sim.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.base_actuator">spike_swarm_sim.actuators.base_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.joint_actuator">spike_swarm_sim.actuators.joint_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.led_actuator">spike_swarm_sim.actuators.led_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.communication_transmitter">spike_swarm_sim.actuators.communication_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.grasp_actuator">spike_swarm_sim.actuators.grasp_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.wheel_actuator">spike_swarm_sim.actuators.wheel_actuator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators.RF_transmitter">spike_swarm_sim.actuators.RF_transmitter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.actuators.html#module-spike_swarm_sim.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.algorithms.html">spike_swarm_sim.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.algorithms.html#module-spike_swarm_sim.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html">spike_swarm_sim.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.controller">spike_swarm_sim.controllers.controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.basic_obstacle_avoider">spike_swarm_sim.controllers.basic_obstacle_avoider module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.braitenberg1_controller">spike_swarm_sim.controllers.braitenberg1_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.light_position_controller">spike_swarm_sim.controllers.light_position_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.neural_controller">spike_swarm_sim.controllers.neural_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers.random_movement_controller">spike_swarm_sim.controllers.random_movement_controller module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.controllers.html#module-spike_swarm_sim.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.communication.html">spike_swarm_sim.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication.IR_communication">spike_swarm_sim.communication.IR_communication module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.communication.html#module-spike_swarm_sim.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html">spike_swarm_sim.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.decoding">spike_swarm_sim.neural_networks.decoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.encoding">spike_swarm_sim.neural_networks.encoding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neural_net">spike_swarm_sim.neural_networks.neural_net module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.neuron_models">spike_swarm_sim.neural_networks.neuron_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.receptive_field">spike_swarm_sim.neural_networks.receptive_field module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks.synapses">spike_swarm_sim.neural_networks.synapses module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.neural_networks.html#module-spike_swarm_sim.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html">spike_swarm_sim.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.fitness">spike_swarm_sim.objectives.fitness module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives.reward">spike_swarm_sim.objectives.reward module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objectives.html#module-spike_swarm_sim.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.objects.html">spike_swarm_sim.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.world_object">spike_swarm_sim.objects.world_object module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-robot-3d-module">spike_swarm_sim.objects.robot_3D module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.light_source">spike_swarm_sim.objects.light_source module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.ball">spike_swarm_sim.objects.ball module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.cube">spike_swarm_sim.objects.cube module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#spike-swarm-sim-objects-ground-area-module">spike_swarm_sim.objects.ground_area module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.wall">spike_swarm_sim.objects.wall module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects.task_scheduler">spike_swarm_sim.objects.task_scheduler module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.objects.html#module-spike_swarm_sim.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.physics_engines.html">spike_swarm_sim.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">spike_swarm_sim.physics_engines.base_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">spike_swarm_sim.physics_engines.pybullet_engine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.physics_engines.html#module-spike_swarm_sim.physics_engines">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html">spike_swarm_sim.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.base_sensor">spike_swarm_sim.sensors.base_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.distance_sensor">spike_swarm_sim.sensors.distance_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.light_sensor">spike_swarm_sim.sensors.light_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.communication_receiver">spike_swarm_sim.sensors.communication_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.color_sensor">spike_swarm_sim.sensors.color_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ground_sensor">spike_swarm_sim.sensors.ground_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.joint_sensor">spike_swarm_sim.sensors.joint_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.collision_sensor">spike_swarm_sim.sensors.collision_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.food_sensor">spike_swarm_sim.sensors.food_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.neighborhood_position_sensor">spike_swarm_sim.sensors.neighborhood_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_orientation_sensor">spike_swarm_sim.sensors.own_orientation_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.own_position_sensor">spike_swarm_sim.sensors.own_position_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.ble_receiver">spike_swarm_sim.sensors.ble_receiver module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors.task_sensor">spike_swarm_sim.sensors.task_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">spike_swarm_sim.sensors.reward_sensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.sensors.html#module-spike_swarm_sim.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../spike_swarm_sim.utils.html">spike_swarm_sim.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.initializers">spike_swarm_sim.utils.initializers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.activations">spike_swarm_sim.utils.activations module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.alg_utils">spike_swarm_sim.utils.alg_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.decorators">spike_swarm_sim.utils.decorators module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.exceptions">spike_swarm_sim.utils.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.graph_utils">spike_swarm_sim.utils.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.math_utils">spike_swarm_sim.utils.math_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils.utils">spike_swarm_sim.utils.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../spike_swarm_sim.utils.html#module-spike_swarm_sim.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.world">spike_swarm_sim.world module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.physics_engine">spike_swarm_sim.physics_engine module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-spike_swarm_sim">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SpikeSwarmSim</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+        
+      <li>spike_swarm_sim.physics_engines.pybullet_engine</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spike_swarm_sim.physics_engines.pybullet_engine</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">xml.etree.cElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
+<span class="kn">import</span> <span class="nn">contextlib</span>
+<span class="k">with</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">redirect_stdout</span><span class="p">(</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+    <span class="kn">import</span> <span class="nn">pybullet_data</span>
+    <span class="kn">import</span> <span class="nn">pybullet_utils.bullet_client</span> <span class="k">as</span> <span class="nn">bc</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">colors</span>
+<span class="c1"># from spike_swarm_sim.utils.utils import HidePrintf</span>
+<span class="kn">from</span> <span class="nn">.base_engine</span> <span class="k">import</span> <span class="n">BaseEngine</span>
+
+
+<div class="viewcode-block" id="PybulletEngine"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine">[docs]</a><span class="k">class</span> <span class="nc">PybulletEngine</span><span class="p">(</span><span class="n">BaseEngine</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 3D Physics and Render Engine class based on the `pybullet library &lt;https://pybullet.org&gt;`_. </span>
+<span class="sd">    Its role in the simulation is to iterate the 3D physic simulations and collision detections of the </span>
+<span class="sd">    entities in the environment and render the 3D graphics. </span>
+
+<span class="sd">    :param float dt: time step of the physics simulation (in seconds).</span>
+<span class="sd">    :param float T_control: period of the sensing+control+action loop. It cannot be lower than dt and </span>
+<span class="sd">        it is set to 5*dt by default. Essentially this means that the physics are updated 5 times </span>
+<span class="sd">        in between every executing of sensors, controllers and actuators.</span>
+
+<span class="sd">    :var BulletClient engine: pybullet client engine.</span>
+<span class="sd">    :var bool render: flag indicating if the simulation is run in visual or render mode.</span>
+<span class="sd">    :var bool connected: whether the engine is connected or not.</span>
+<span class="sd">    :var dict physical_sensors: maps sensor reference names to actual physical links of the robot. Specifically, each key of the dict </span>
+<span class="sd">        corresponds to a sensor (`&#39;distance_sensor&#39;`, `&#39;light_sensor&#39;`, ...), which in turn have a subdict as value. The subdict of </span>
+<span class="sd">        each sensor has another int key per each of the available sectors (e.g. from 0 to 7). Finally, the value of each sector contains </span>
+<span class="sd">        information about the physical link of the corresponding sensor sector (link name, link idx, ghost link, etc.).</span>
+<span class="sd">        For example, the value of the sector 0 of the `&#39;distance sensor&#39;` would be:</span>
+
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; print(self.physical_sensors[&#39;distance_sensor&#39;][0])</span>
+<span class="sd">        &gt;&gt;&gt;     {&#39;link&#39;: &#39;IR0&#39;, &#39;ghost_link&#39;: &#39;ghost_cone_DS0&#39;, &#39;orientation&#39;: array([0.     , 0.     , 0.26179]), &#39;idx&#39;: 33, &#39;ghost_link_idx&#39;: 34}</span>
+<span class="sd">        </span>
+<span class="sd">    :var dict physical_actuators: </span>
+<span class="sd">    :var dict luminous_objects: </span>
+<span class="sd">    :var dict gui_params: unused ftm.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PybulletEngine</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s1">&#39;3D&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical_actuators</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">luminous_objects</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gui_params</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="PybulletEngine.connect"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Connects to the pybullet based physics and render engines. It starts the pybullet </span>
+<span class="sd">        client in either visual or direct mode, sets up all the physics constants (gravity, sampling period, etc.) </span>
+<span class="sd">        and adds all the ``WorldObjects`` to the engine.</span>
+
+<span class="sd">        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># with HidePrintf():</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">bc</span><span class="o">.</span><span class="n">BulletClient</span><span class="p">(</span><span class="n">connection_mode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">GUI</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span> <span class="k">else</span> <span class="n">p</span><span class="o">.</span><span class="n">DIRECT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">resetSimulation</span><span class="p">(</span><span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="c1"># p.resetSimulation(physicsClientId=self.client)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">setAdditionalSearchPath</span><span class="p">(</span><span class="n">pybullet_data</span><span class="o">.</span><span class="n">getDataPath</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">setGravity</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">9.8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">setTimeStep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span>
+        <span class="c1"># self.engine.setPhysicsEngineParameter(numSolverIterations=10)</span>
+        <span class="c1"># self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)</span>
+        <span class="n">plane_id</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">loadURDF</span><span class="p">(</span><span class="s2">&quot;plane.urdf&quot;</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">plane_id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mb">0b0</span><span class="p">,</span> <span class="mb">0b0</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="c1"># self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_objects</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">:</span>
+            <span class="c1"># self.gui_params[&#39;robot_focus&#39;] = self.physics_client.addUserDebugParameter(&#39;Robot focus&#39;, 1, -1, 1)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">resetDebugVisualizerCamera</span><span class="p">(</span><span class="n">cameraDistance</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">cameraYaw</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>\
+                    <span class="n">cameraPitch</span><span class="o">=-</span><span class="mi">90</span><span class="p">,</span> <span class="n">cameraTargetPosition</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.disconnect"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Disconnects the pybullet based physics and render engines. &quot;&quot;&quot;</span>
+        <span class="c1"># self.engine.resetSimulation(physicsClientId=self.engine._client)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.step_physics"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_physics">[docs]</a>    <span class="k">def</span> <span class="nf">step_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Iterates all the 3D physics of the world entities using pybullet. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T_control</span><span class="o">//</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span><span class="p">)):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">stepSimulation</span><span class="p">(</span><span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.step_render"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.step_render">[docs]</a>    <span class="k">def</span> <span class="nf">step_render</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Iterates the graphics visualization at given FPS. &quot;&quot;&quot;</span>
+        <span class="c1"># if self.physics_client.readUserDebugParameter(self.gui_params[&#39;robot_focus&#39;]) == 1:</span>
+        <span class="c1">#     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\</span>
+        <span class="c1">#         cameraTargetPosition=self.robots[&#39;robotA_0&#39;].position, cameraPitch=-70)#-60,)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">240.</span><span class="p">)</span> <span class="c1"># Fast mode</span></div>
+        <span class="c1"># time.sleep(1/10) # Slow mode</span>
+
+
+<div class="viewcode-block" id="PybulletEngine.add_objects"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_objects">[docs]</a>    <span class="k">def</span> <span class="nf">add_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Iteratively add all the WorldObject entities to the engine so that its physics can be taken into account </span>
+<span class="sd">        during the simulation.</span>
+
+<span class="sd">        :param iterable objects: iterable of WorldObjects whose physics have to be simulated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">objects</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_physics</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.add_physics"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.add_physics">[docs]</a>    <span class="k">def</span> <span class="nf">add_physics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the requested entity to the engine so that its physics can be taken into account </span>
+<span class="sd">        during the simulation. It uses the pybullet function ``loadURDF``, that creates the pybullet </span>
+<span class="sd">        entity described in the form of an URDF file. The precise file describing the entity is an </span>
+<span class="sd">        attribute of the corresponding WorldObject class. </span>
+
+<span class="sd">        :param WorldObject obj: entity to be added to the engine.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">model_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">physics_client</span> <span class="o">=</span> <span class="bp">self</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">loadURDF</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">model_file</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">init_position</span><span class="p">,</span>\
+            <span class="n">p</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">init_orientation</span><span class="p">),</span>
+            <span class="n">globalScaling</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">scaling</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;scaling&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span> 
+            <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+
+        
+        <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mb">0b001</span><span class="p">,</span> <span class="mb">0b001</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterPair</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mb">0b001</span><span class="p">,</span> <span class="mb">0b01</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterPair</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">):</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">color</span><span class="p">))</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.</span><span class="p">]</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">changeVisualShape</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">rgbaColor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;mass&#39;</span><span class="p">):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">changeDynamics</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">mass</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="c1">#! Prov loop</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">changeDynamics</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">lateralFriction</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">,</span>\
+                <span class="n">activationState</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">ACTIVATION_STATE_DISABLE_WAKEUP</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_urdf</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="c1">#</span></div>
+
+
+<div class="viewcode-block" id="PybulletEngine.parse_urdf"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.parse_urdf">[docs]</a>    <span class="k">def</span> <span class="nf">parse_urdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="n">link_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">getJointInfo</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">12</span><span class="p">]</span>\
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getNumJoints</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">))])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">model_file</span><span class="p">)</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;.//sensor&quot;</span><span class="p">):</span>
+            <span class="n">sensor_name</span> <span class="o">=</span> <span class="n">sensor</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">sensor</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;sector&quot;</span><span class="p">):</span>
+                <span class="n">sector_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sector</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+                <span class="n">orientation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;origin&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rpy&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+                <span class="n">link_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">link_names</span> <span class="o">==</span> <span class="n">link</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">ghost_link</span> <span class="o">=</span> <span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;ghost&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;ghost&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">ghost_link_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">link_names</span> <span class="o">==</span> <span class="n">ghost_link</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">ghost_link</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">ghost_link_idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ghost_link_idx</span><span class="p">,</span> <span class="mb">0b00</span><span class="p">,</span> <span class="mb">0b00</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+                    <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterPair</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ghost_link_idx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">ghost_link_idx</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">opacity</span><span class="o">=.</span><span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">][</span><span class="n">sector_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;link&#39;</span> <span class="p">:</span> <span class="n">link</span><span class="p">,</span> <span class="s1">&#39;ghost_link&#39;</span><span class="p">:</span> <span class="n">ghost_link</span><span class="p">,</span> 
+                    <span class="s1">&#39;orientation&#39;</span> <span class="p">:</span> <span class="n">orientation</span><span class="p">,</span> <span class="s1">&#39;idx&#39;</span> <span class="p">:</span> <span class="n">link_idx</span><span class="p">,</span> <span class="s1">&#39;ghost_link_idx&#39;</span><span class="p">:</span> <span class="n">ghost_link_idx</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="k">for</span> <span class="n">actuator</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;.//actuator&quot;</span><span class="p">):</span>
+            <span class="n">actuator_name</span> <span class="o">=</span> <span class="n">actuator</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">physical_actuators</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">sector</span> <span class="ow">in</span> <span class="n">actuator</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;sector&quot;</span><span class="p">):</span>
+                <span class="n">sector_idx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sector</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">))</span>
+                <span class="n">link</span> <span class="o">=</span> <span class="n">sector</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+                <span class="n">link_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">link_names</span> <span class="o">==</span> <span class="n">link</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">physical_actuators</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">][</span><span class="n">sector_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;link&#39;</span> <span class="p">:</span> <span class="n">link</span><span class="p">,</span>  <span class="s1">&#39;idx&#39;</span> <span class="p">:</span> <span class="n">link_idx</span>
+                <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">ls</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;.//lightsource&quot;</span><span class="p">):</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;link&#39;</span><span class="p">)</span>
+            <span class="n">link_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">link_names</span> <span class="o">==</span> <span class="n">link</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">link_names</span><span class="p">)</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="n">lum</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;luminosity&#39;</span><span class="p">))</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">):</span>
+                <span class="n">color</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">color</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">luminous_objects</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;link&#39;</span> <span class="p">:</span> <span class="n">link</span><span class="p">,</span> <span class="s1">&#39;link_idx&#39;</span><span class="p">:</span> <span class="n">link_idx</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span> <span class="p">:</span> <span class="n">color</span><span class="p">,</span> <span class="s1">&#39;luminosity&#39;</span> <span class="p">:</span> <span class="n">lum</span><span class="p">}</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Pybullet engine client used in the simulation. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">_client</span>
+
+
+<div class="viewcode-block" id="PybulletEngine.get_body_position"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">z_offset</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Getter method of the current position of the root link of an entity with the </span>
+<span class="sd">        given identifier.</span>
+
+<span class="sd">        :param int identifier: identifier of the entity whose position is requested.</span>
+<span class="sd">        :param int body_id: deprecated, to be removed</span>
+
+<span class="sd">        :returns: numpy array of shape (3,) with the entities&#39; position.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getBasePositionAndOrientation</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>        
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span><span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">pos</span></div>
+    
+<div class="viewcode-block" id="PybulletEngine.get_body_orientation"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current Euler orientation of the root link of an entity with the </span>
+<span class="sd">        given identifier.</span>
+
+<span class="sd">        :param int identifier: identifier of the entity whose position is requested.</span>
+<span class="sd">        :param int body_id: deprecated, to be removed</span>
+
+<span class="sd">        :returns: numpy array of shape (3,) with the entities&#39; Euler orientation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">quaternion_orientation</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getBasePositionAndOrientation</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getEulerFromQuaternion</span><span class="p">(</span><span class="n">quaternion_orientation</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">))</span></div>
+         
+
+<div class="viewcode-block" id="PybulletEngine.get_body_velocity"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current velocity of the root link of an entity with the </span>
+<span class="sd">        given identifier.</span>
+
+<span class="sd">        :param int identifier: identifier of the entity whose position is requested.</span>
+<span class="sd">        :param int body_id: deprecated, to be removed</span>
+
+<span class="sd">        :returns: numpy array of shape (3,) with the entities&#39; velocity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">getBaseVelocity</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="PybulletEngine.get_body_angular_velocity"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_body_angular_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_body_angular_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Getter method of the current angular velocity of the root link of an entity with the </span>
+<span class="sd">        given identifier.</span>
+
+<span class="sd">        :param int identifier: identifier of the entity whose position is requested.</span>
+<span class="sd">        :param int body_id: deprecated, to be removed</span>
+
+<span class="sd">        :returns: numpy array of shape (3,) with the entities&#39; angular velocity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">getBaseVelocity</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.set_body_state"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_body_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_body_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">identifier</span><span class="p">,</span> <span class="n">body_id</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Sets the physics state (position and orientation) of a registered entity with the given</span>
+<span class="sd">        identifier. </span>
+
+<span class="sd">        :param int identifier: identifier of the entity whose position is requested.</span>
+<span class="sd">        :param int body_id: deprecated, to be removed</span>
+<span class="sd">        :param np.ndarray position: new 3D position of the entity.</span>
+<span class="sd">        :param np.ndarray orientation: new 3D Euler orientation of the entity. It is also possible to </span>
+<span class="sd">            introduce an angle scalar in radians so that orientation = [0,0,orientation].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">orientation</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">orientation</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">orientation</span><span class="p">]</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">resetBasePositionAndOrientation</span><span class="p">(</span><span class="n">identifier</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span>\
+            <span class="n">p</span><span class="o">.</span><span class="n">getQuaternionFromEuler</span><span class="p">(</span><span class="n">orientation</span><span class="p">),</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.ray_cast"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.ray_cast">[docs]</a>    <span class="k">def</span> <span class="nf">ray_cast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Casts a batch of rays between pairwise coordinates in origin and destination lists</span>
+<span class="sd">        and verifies if there is some object/obstacle in between. </span>
+<span class="sd">        It returns the id of the first encountered object.</span>
+
+<span class="sd">        Example::</span>
+<span class="sd">        </span>
+<span class="sd">        &gt;&gt;&gt; # Cast two rays, both of them starting at [0,0,0] and with destinations</span>
+<span class="sd">        &gt;&gt;&gt; # [1,0,0] and [1,1,0] respectively.  </span>
+<span class="sd">        &gt;&gt;&gt; origins = [np.array([0,0,0])] * 2</span>
+<span class="sd">        &gt;&gt;&gt; destinations = [np.array([1,0,0]), np.array([1,1,0])]</span>
+<span class="sd">        &gt;&gt;&gt; # The result is a list with 2 components, each storing the id of the first </span>
+<span class="sd">        &gt;&gt;&gt; # obstacle detected in the ray trajectory (or -1 if no object was detected). </span>
+<span class="sd">        &gt;&gt;&gt; ids_list = ray_cast(origins, destinations) </span>
+
+<span class="sd">        :param list origin: list of numpy arrays with the set of origin coordinates.</span>
+<span class="sd">        :param list destination: list of numpy arrays with the set of destination coordinates.</span>
+
+<span class="sd">        :returns: list of int identifiers of the first intersected WorldObject by each of the casted rays</span>
+<span class="sd">            between pairwise origins and destinations. For each ray, if no obstacle was detected it returns </span>
+<span class="sd">            a -1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">origin</span><span class="p">,</span> <span class="n">dest</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[(</span><span class="n">o</span> <span class="o">+</span> <span class="mf">1.2</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">o</span><span class="p">),</span> <span class="n">o</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">destination</span><span class="p">)])</span>
+        <span class="n">ray_res</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">rayTestBatch</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">dest</span><span class="p">,</span> <span class="n">collisionFilterMask</span><span class="o">=</span><span class="mb">0b001</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">ray_res</span><span class="p">,</span> <span class="n">ray_pos</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[(</span><span class="n">ray</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ray</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">ray</span> <span class="ow">in</span> <span class="n">ray_res</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ray_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">ray_res</span> <span class="o">=</span> <span class="n">ray_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">ray_pos</span> <span class="o">=</span> <span class="n">ray_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">ray_res</span><span class="p">,</span> <span class="n">ray_pos</span></div>
+    
+<div class="viewcode-block" id="PybulletEngine.get_closest_point"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_closest_point">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">linkA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the closest points between two links of two registered entities.</span>
+
+<span class="sd">        :param int idA: identifier of the first WorldObject entity.</span>
+<span class="sd">        :param int idB: identifier of the second WorldObject entity.</span>
+<span class="sd">        :param int linkA: identifier of the link of the first WorldObject entity.</span>
+<span class="sd">        :param int linkB: identifier of the link of the second WorldObject entity.</span>
+<span class="sd">        :param float max_dist: maximum distance between the objects.</span>
+
+<span class="sd">        :returns: 3D numpy array with the coordinates of the closest point in linkB of entity with idB. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">linkB</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">closest_points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">linkIndexA</span><span class="o">=</span><span class="n">linkA</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">closest_points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getClosestPoints</span><span class="p">(</span><span class="n">idA</span><span class="p">,</span> <span class="n">idB</span><span class="p">,</span> <span class="n">max_dist</span><span class="p">,</span> <span class="n">linkIndexA</span><span class="o">=</span><span class="n">linkA</span><span class="p">,</span> <span class="n">linkIndexB</span><span class="o">=</span><span class="n">linkB</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">closest_points</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">closest_points</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">closest_points</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">closest_points</span><span class="p">])][</span><span class="mi">6</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.get_contact_points"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_contact_points">[docs]</a>    <span class="k">def</span> <span class="nf">get_contact_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">ghost_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Computes the contact points between any link of the given entity and any other </span>
+<span class="sd">        entity. It steps the collision detection engine to perform the query. The identifier </span>
+<span class="sd">        of ghost links can be specified in order to momentarily activate collisions and detect </span>
+<span class="sd">        obstacles.</span>
+
+<span class="sd">        :param int obj_id: identifier of the WorldObject entity.</span>
+<span class="sd">        :param list ghost_ids: list of the identifiers of the entity ghost links.</span>
+
+<span class="sd">        :returns: list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ghost_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ghost_ids</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="mb">0b01</span><span class="p">,</span> <span class="mb">0b01</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">performCollisionDetection</span><span class="p">(</span><span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="n">contact_points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getContactPoints</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ghost_ids</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">ghost_ids</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">setCollisionFilterGroupMask</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="mb">0b0</span><span class="p">,</span> <span class="mb">0b0</span><span class="p">,</span>  <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">pt</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">pt</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">pt</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">contact_points</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.get_link_state"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_link_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_link_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Getter of the position and orientation of a given link in the specified entity.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the WorldObject entity.</span>
+<span class="sd">        :param int link_idx: identifier of the link of the WorldObject entity.</span>
+
+<span class="sd">        :returns: ``tuple`` with the 3D numpy position and 3D orientation of the link.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos</span><span class="p">,</span> <span class="n">qt_ori</span> <span class="o">=</span>  <span class="n">p</span><span class="o">.</span><span class="n">getLinkState</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">link_idx</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getEulerFromQuaternion</span><span class="p">(</span><span class="n">qt_ori</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.get_sensor_position"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Getter of the physical position of a sensor within a robot. Sensors are attached to </span>
+<span class="sd">        robot links and, therefore, it returns the 3D coordinates of the corresponding link.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            For the moment only directional sensor positions can be queried.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the robot owning the sensor.</span>
+<span class="sd">        :param str sensor_name: reference name of the sensor.</span>
+<span class="sd">        :para int sector: index of the sensor&#39;s sector requested.</span>
+
+<span class="sd">        :returns: numpy array with the position. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">][</span><span class="n">sector</span><span class="p">][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_link_state</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">sensor_index</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">sensor_index</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.get_actuator_position"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_actuator_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_actuator_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">actuator_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;TODO Getter of the physical position of a sensor within a robot. Sensors are attached to </span>
+<span class="sd">        robot links and, therefore, it returns the 3D coordinates of the corresponding link.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            For the moment only directional sensor positions can be queried.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the robot owning the sensor.</span>
+<span class="sd">        :param str sensor_name: reference name of the sensor.</span>
+<span class="sd">        :para int sector: index of the sensor&#39;s sector requested.</span>
+
+<span class="sd">        :returns: tuple with the numpy array with the position and the actuator identifier.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">actuator_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_actuators</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">][</span><span class="n">sector</span><span class="p">][</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_link_state</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">actuator_index</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">actuator_index</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.get_sensor_orientation"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.get_sensor_orientation">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_orientation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Getter of the physical position of a sensor within a robot. Sensors are attached to </span>
+<span class="sd">        robot links and, therefore, it returns the 3D coordinates of the corresponding link.</span>
+
+<span class="sd">        .. note::</span>
+<span class="sd">            For the moment only directional sensor positions can be queried.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the robot owning the sensor.</span>
+<span class="sd">        :param str sensor_name: reference name of the sensor.</span>
+<span class="sd">        :para int sector: index of the sensor&#39;s sector requested.</span>
+
+<span class="sd">        :returns: numpy array with the position. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_sensors</span><span class="p">[</span><span class="n">sensor_name</span><span class="p">][</span><span class="n">sector</span><span class="p">][</span><span class="s1">&#39;orientation&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#!only yaw ftm</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.control_joints"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.control_joints">[docs]</a>    <span class="k">def</span> <span class="nf">control_joints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">joints</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">control_type</span><span class="o">=</span><span class="s1">&#39;velocity&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Control a series of robot joints either by velocity or by position.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the robot whose joints will be controlled.</span>
+<span class="sd">        :param list joints: list of identifiers of the joints of the robot to be controlled.</span>
+<span class="sd">        :param list actions: list or np.ndarray of actions to control each joint.</span>
+<span class="sd">        :param str control_type: type of joint control (either &quot;velocity&quot; or &quot;position&quot;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">joints</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">action</span><span class="p">,</span> <span class="n">joint</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">joints</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">control_type</span> <span class="o">==</span> <span class="s1">&#39;velocity&#39;</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> <span class="n">targetVelocity</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span>
+                    <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">VELOCITY_CONTROL</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">control_type</span> <span class="o">==</span> <span class="s1">&#39;position&#39;</span><span class="p">:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">setJointMotorControl2</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> <span class="n">targetPosition</span><span class="o">=</span><span class="n">action</span><span class="p">,</span> <span class="n">controlMode</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">POSITION_CONTROL</span><span class="p">,</span>
+                    <span class="n">positionGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">velocityGain</span><span class="o">=</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Joints cannot be controlled by </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                     <span class="s1">&#39;Please Select either &quot;velocity&quot; or &quot;position&quot;.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">control_type</span><span class="p">)))</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.read_joints"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.read_joints">[docs]</a>    <span class="k">def</span> <span class="nf">read_joints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">joints</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns </span>
+<span class="sd">        a tuple (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</span>
+
+<span class="sd">        :param int obj_id: identifier of the robot whose joints will be read.</span>
+<span class="sd">        :param list joints: list of identifiers of the joints of the robot to be read.</span>
+
+<span class="sd">        :returns: tuple of the form (joint_velocities, joint_positions) with the arrays of the measurements of each kind.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">positions</span><span class="p">,</span> <span class="n">velocities</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">getJointState</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">joint</span><span class="p">,</span> 
+                                    <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">joint</span> <span class="ow">in</span> <span class="n">joints</span><span class="p">]))</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="p">(</span><span class="n">positions</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1">#! Check</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocities</span><span class="p">)</span></div>
+     
+<div class="viewcode-block" id="PybulletEngine.set_color"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_color">[docs]</a>    <span class="k">def</span> <span class="nf">set_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_id</span><span class="p">,</span> <span class="n">link_id</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets the color and opacity of a link of an entity. </span>
+<span class="sd">        </span>
+<span class="sd">        :param int obj_id: identifier of the robot owning the sensor.</span>
+<span class="sd">        :param int obj_id: identifier of the link of the robot owning the sensor whose color is changed.</span>
+<span class="sd">        :param list color: ``list`` with the RGB code of the color or ``str`` with the color name.</span>
+<span class="sd">        :para float opacity: opacity of the color.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">colors</span><span class="o">.</span><span class="n">to_rgb</span><span class="p">(</span><span class="n">color</span><span class="p">))</span>
+        <span class="n">rgba_color</span> <span class="o">=</span> <span class="n">color</span> <span class="o">+</span> <span class="p">[</span><span class="n">opacity</span><span class="p">]</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">changeVisualShape</span><span class="p">(</span><span class="n">obj_id</span><span class="p">,</span> <span class="n">link_id</span><span class="p">,</span> <span class="n">rgbaColor</span><span class="o">=</span><span class="n">rgba_color</span><span class="p">,</span> <span class="n">physicsClientId</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PybulletEngine.set_camera_focus"><a class="viewcode-back" href="../../../spike_swarm_sim.physics_engines.html#spike_swarm_sim.physics_engines.pybullet_engine.PybulletEngine.set_camera_focus">[docs]</a>    <span class="k">def</span> <span class="nf">set_camera_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">yaw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=-</span><span class="mi">90</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets of the camera target position and distance in the environment. </span>
+<span class="sd">        The camera spotlight is set to the given position and the camera it placed at the given </span>
+<span class="sd">        distance wrt to that position. Yaw and pitch in degrees can be also specified. </span>
+<span class="sd">        This method is only applied in render mode.</span>
+
+<span class="sd">        :param np.ndarray position: new spotlight of the camera.</span>
+<span class="sd">        :param float distance: distance of the camera wrt to the spotlight.</span>
+<span class="sd">        :param float yaw: yaw angle of the camera.</span>
+<span class="sd">        :param float pitch: pitch angle of the camera.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">resetDebugVisualizerCamera</span><span class="p">(</span><span class="n">cameraDistance</span><span class="o">=</span><span class="n">distance</span><span class="p">,</span> <span class="n">cameraYaw</span><span class="o">=</span><span class="n">yaw</span><span class="p">,</span>\
+                    <span class="n">cameraPitch</span><span class="o">=</span><span class="n">pitch</span><span class="p">,</span> <span class="n">cameraTargetPosition</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">position</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

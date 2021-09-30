@@ -99,9 +99,9 @@ def config_checker(cfg_dict):
             raise Exception(logging.error('The number of instances of object {} must be greater than .'.format(obj_name)))
         if 'type' not in obj.keys():
             raise Exception(logging.error('Entity type of {} not specified.'.format(obj_name)))
-        if obj['type'] not in reg.world_objects[world_cfg['engine']].keys():
-            raise Exception(logging.error('Entity type {} is not implemented. '\
-                'Available entities are: {}.'.format(obj['type'], tuple(reg.world_objects[world_cfg['engine']].keys()))))
+        # if obj['type'] not in reg.world_objects[world_cfg['engine']].keys():
+        #     raise Exception(logging.error('Entity type {} is not implemented. '\
+        #         'Available entities are: {}.'.format(obj['type'], tuple(reg.world_objects[world_cfg['engine']].keys()))))
             #! TO BE EXTENDED TO OTHER CONTROLLABLE ENTITIES
             raise Exception(logging.error('The number of instances of entity {} '\
                 'must be greater than 0.'.format(obj['type'])))
