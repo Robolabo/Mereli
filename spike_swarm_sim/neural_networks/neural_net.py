@@ -414,8 +414,8 @@ class NeuralNetwork:
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [1,1]
-        # actions['outB'] = [0.75]
+        # actions['outA'] = [0,0]
+        # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         return actions
     
     @property
