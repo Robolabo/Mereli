@@ -19,7 +19,7 @@ from .actuators import *
 from .objects import *
 from .config_parser import *
 from .physics_engines import *
-from .world import SquareArena, CircularArena, CustomWorld, MultiWorldWrapper
+from .world import *
 from .objectives import *
 from .algorithms import *
 
