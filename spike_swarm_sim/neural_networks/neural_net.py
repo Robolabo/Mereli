@@ -1,10 +1,7 @@
-import copy
 import logging
 from itertools import product
 from functools import wraps
 import numpy as np
-import matplotlib.pyplot as plt
-from numpy.lib.function_base import delete
 # Own imports
 from spike_swarm_sim.register import neuron_models, synapse_models, learning_rules
 from spike_swarm_sim.utils import increase_time, merge_dicts, remove_duplicates

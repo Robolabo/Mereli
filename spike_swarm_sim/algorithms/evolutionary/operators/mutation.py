@@ -10,13 +10,14 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
     """ Add a new node in between an existing connection. The existing connection 
     is disabled and two new synapses are included.
     """
-    
     #* Randomly select an enabled connection
     sel_conn = np.random.choice([*genotype.enabled_connections])
-    sel_conn.enabled = False # Disable connection 
 
     #* Create and add new node gene in-between pre and post nodes of sel_conn
     node_name = f'Node_{sel_conn.innovation}'
+    if genotype.contains_node(node_name):
+        return genotype, current_innovation, innovation_history
+    sel_conn.enabled = False # Disable connection 
     new_node = NodeGene(node_name)
     new_node.idx = genotype.num_nodes
     # Initialize randomly node parameters
