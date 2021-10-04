@@ -6,8 +6,8 @@ with open('requirements.txt') as f:
 setup(
    name='mereli',
    version='0.0.1',
-   description='Evolutionary Robotics Simulator',
-   author='Rafael Sendra',
+   description='Multi-Environment Robotics simulator with Evolution and LearnIng implementations (MERELI).',
+   author='Rafael Sendra and Álvaro Gutiérrez',
    author_email='',
    packages=find_packages(),
    install_requires=required, #requirements
