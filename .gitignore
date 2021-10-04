@@ -5,6 +5,7 @@ __pycache__
 # mereli/config/*.json
 # mereli/checkpoints/populations/*.pickle
 mereli/logs/data/*
+spike_swarm_sim/logs/data/*
 scripts
 *.sh
 *.log
