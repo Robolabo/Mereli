@@ -15,9 +15,9 @@ From a formal mathematical perspective, the sensor acts as a mapping between the
 global environment/world state (:math:`s(t)`) and a partially observable state (:math:`\phi(t)`) relative to the robot and constrained its surroundings. 
 Depending on the sensor, the reading can be an scalar value (e.g. ground sensor), a vector (e.g. distance sensor or other directional sensors) 
 or even a matrix or tensor (e.g. camera sensor). 
-All the sensors inherit from the base class :py:class:`spike_swarm_sim.sensors.Sensor`. Moreover, directional sensors 
+All the sensors inherit from the base class :py:class:`mereli.sensors.Sensor`. Moreover, directional sensors 
 allow a decoupled sensing of the environment in multiple directions (resulting in a vector of direction measurements instead of an scalar reading). 
-Directional sensors inherit from the class :py:class:`spike_swarm_sim.sensors.DirectionalSensor`.
+Directional sensors inherit from the class :py:class:`mereli.sensors.DirectionalSensor`.
 
 The sensors whose simulation is currently implemented in the simulator  are the gathered in the following table: 
 
@@ -113,8 +113,8 @@ block shows the content of ``robot.sensors`` after the executing of the Example 
 
 >>> print(robot.sensors)
 >>>    {
->>>        'distance_sensor': <spike_swarm_sim.sensors.distance_sensor.DistanceSensor object at 0x000001153170F508>, 
->>>        'light_sensor': <spike_swarm_sim.sensors.light_sensor.LightSensor object at 0x000001153170F4C8>
+>>>        'distance_sensor': <mereli.sensors.distance_sensor.DistanceSensor object at 0x000001153170F508>, 
+>>>        'light_sensor': <mereli.sensors.light_sensor.LightSensor object at 0x000001153170F4C8>
 >>>    }
 
 Thereafter, once created, the sensors measurements are read by means of the ``Sensor.step`` method that must be 
@@ -163,7 +163,7 @@ the following screenshot highlights the physical link mimicking the distance sen
     *********** FIGURA SEÑALANDO SENSORS ***********
 
 In this way, the sensor measurement is computed with respect to the established physical link (for computing distances, detecting obstacles, casting rays and so on). 
-The mapping between physical links and sensors is accomplished within the URDF file of the robot (e.g. spike_swarm_sim/models/entities/epuck/epuck.urdf.xacro in the case of the 
+The mapping between physical links and sensors is accomplished within the URDF file of the robot (e.g. mereli/models/entities/epuck/epuck.urdf.xacro in the case of the 
 Epuck robot). The syntax used within these URDF files has been designed by us as a non-standardized xml tag structure,
 as it can be observed in the following example:
 
@@ -327,7 +327,7 @@ The general steps accomplished within the are  the ``DistanceSensor.step`` metho
         \phi_j(t) = \frac{1}{N_{hit}}\sum_{i=1}^{N_{hit}-1} \exp\left\{-0.7\, \rho_i(t) - \alpha_i^2(t)\right\}
 
    This operation essentially estimates the signal strength based on an exponential decaying model. This propagation model is defined at the python class
-   :py:class:`spike_swarm_sim.sensors.utils.propagation.ExpDecayPropagation`. Other propagation models can be used by defining the corresponiding propagation class 
+   :py:class:`mereli.sensors.utils.propagation.ExpDecayPropagation`. Other propagation models can be used by defining the corresponiding propagation class 
    and attaching it to the sensor as the property ``self.propagation``.
 
 

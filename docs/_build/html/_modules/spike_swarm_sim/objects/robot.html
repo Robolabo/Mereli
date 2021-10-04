@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>spike_swarm_sim.objects.robot &mdash; SpikeSwarmSim  documentation</title>
+  <title>mereli.objects.robot &mdash; SpikeSwarmSim  documentation</title>
   
 
   
@@ -154,9 +154,9 @@
         
           <li><a href="../../index.html">Module code</a> &raquo;</li>
         
-          <li><a href="../../spike_swarm_sim.html">spike_swarm_sim</a> &raquo;</li>
+          <li><a href="../../mereli.html">mereli</a> &raquo;</li>
         
-      <li>spike_swarm_sim.objects.robot</li>
+      <li>mereli.objects.robot</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -171,17 +171,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>Source code for spike_swarm_sim.objects.robot</h1><div class="highlight"><pre>
+  <h1>Source code for mereli.objects.robot</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pymunk</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PYGAME_HIDE_SUPPORT_PROMPT&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;hide&quot;</span>
 <span class="kn">from</span> <span class="nn">pygame.color</span> <span class="kn">import</span> <span class="n">THECOLORS</span>
 <span class="c1"># from shapely.geometry import Point</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.objects</span> <span class="kn">import</span> <span class="n">WorldObject2D</span>
-<span class="kn">from</span> <span class="nn">spike_swarm_sim.register</span> <span class="kn">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">world_object_registry</span>
+<span class="kn">from</span> <span class="nn">mereli.objects</span> <span class="kn">import</span> <span class="n">WorldObject2D</span>
+<span class="kn">from</span> <span class="nn">mereli.register</span> <span class="kn">import</span> <span class="n">sensors</span><span class="p">,</span> <span class="n">actuators</span><span class="p">,</span> <span class="n">world_object_registry</span>
 
-<div class="viewcode-block" id="Robot_deprecated"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated">[docs]</a><span class="k">class</span> <span class="nc">Robot_deprecated</span><span class="p">(</span><span class="n">WorldObject2D</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated">[docs]</a><span class="k">class</span> <span class="nc">Robot_deprecated</span><span class="p">(</span><span class="n">WorldObject2D</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for the robot world object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -229,7 +229,7 @@
     <span class="c1">#     engine.add(self.id, [body], [shape, wh_right_sh, wh_left_sh])</span>
 
 
-<div class="viewcode-block" id="Robot_deprecated.step"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.step"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Firstly steps all the sensors in order to perceive the environment.</span>
 <span class="sd">        Secondly, the robot executes its controller in order to compute the</span>
@@ -262,7 +262,7 @@
         <span class="c1"># print(self.orientation)</span>
         <span class="k">return</span> <span class="n">state</span><span class="p">,</span> <span class="n">actions</span></div>
 
-<div class="viewcode-block" id="Robot_deprecated.update_colors"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.update_colors">[docs]</a>    <span class="k">def</span> <span class="nf">update_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.update_colors"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.update_colors">[docs]</a>    <span class="k">def</span> <span class="nf">update_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="s1">&#39;wireless_transmitter&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">msg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;wireless_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg&#39;</span><span class="p">]):</span>
@@ -275,13 +275,13 @@
         <span class="k">if</span> <span class="s1">&#39;led_actuator&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actuators</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">color2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)[</span><span class="n">action</span><span class="p">[</span><span class="s1">&#39;led_actuator&#39;</span><span class="p">]]</span> <span class="c1">#[actions[&#39;wireless_transmitter&#39;][&#39;state&#39;]]#</span></div>
       
-<div class="viewcode-block" id="Robot_deprecated.plan_actions"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.plan_actions">[docs]</a>    <span class="k">def</span> <span class="nf">plan_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.plan_actions"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.plan_actions">[docs]</a>    <span class="k">def</span> <span class="nf">plan_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">actuator</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span><span class="p">[</span><span class="n">actuator</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span></div>
             <span class="c1"># self.planned_actions[actuator] = (actuator == &#39;wheel_actuator&#39;)\</span>
             <span class="c1">#     and [action, self.position, self.orientation]  or [action]</span>
 
-<div class="viewcode-block" id="Robot_deprecated.actuate"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.actuate">[docs]</a>    <span class="k">def</span> <span class="nf">actuate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.actuate"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.actuate">[docs]</a>    <span class="k">def</span> <span class="nf">actuate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Executes the previously planned actions in order to be processed in the world.</span>
 <span class="sd">        =====================</span>
@@ -295,7 +295,7 @@
             <span class="c1">#! actuator.step(*iter(self.planned_actions[actuator_name]))</span>
             <span class="n">actuator</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planned_actions</span><span class="p">[</span><span class="n">actuator_name</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="Robot_deprecated.perceive"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.perceive">[docs]</a>    <span class="k">def</span> <span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.perceive"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.perceive">[docs]</a>    <span class="k">def</span> <span class="nf">perceive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the observed stimuli by steping each of the active sensors.</span>
 <span class="sd">        =====================</span>
@@ -308,7 +308,7 @@
         <span class="k">return</span> <span class="p">{</span><span class="n">sensor_name</span> <span class="p">:</span> <span class="n">sensor</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">neighborhood</span><span class="p">)</span>\
                 <span class="k">for</span> <span class="n">sensor_name</span><span class="p">,</span> <span class="n">sensor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 
-<div class="viewcode-block" id="Robot_deprecated.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.objects.html#spike_swarm_sim.objects.robot.Robot_deprecated.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot_deprecated.reset"><a class="viewcode-back" href="../../../mereli.objects.html#mereli.objects.robot.Robot_deprecated.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Resets the robot dynamics, sensors, actuators and controller. Position and orientation </span>
 <span class="sd">        can be randomly initialized or fixed. In the former case a seed can be specified.</span>

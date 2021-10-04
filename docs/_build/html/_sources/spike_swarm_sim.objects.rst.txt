@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.objects.world\_object module
 ----------------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.world_object
+.. automodule:: mereli.objects.world_object
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ spike\_swarm\_sim.objects.world\_object module
 spike\_swarm\_sim.objects.robot\_3D module
 ------------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.robot_3D
+.. automodule:: mereli.objects.robot_3D
     :members:
     :undoc-members:
     :show-inheritance:
@@ -25,7 +25,7 @@ spike\_swarm\_sim.objects.robot\_3D module
 spike\_swarm\_sim.objects.light\_source module
 ----------------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.light_source
+.. automodule:: mereli.objects.light_source
     :members:
     :undoc-members:
     :show-inheritance:
@@ -33,7 +33,7 @@ spike\_swarm\_sim.objects.light\_source module
 spike\_swarm\_sim.objects.ball module
 -------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.ball
+.. automodule:: mereli.objects.ball
     :members:
     :undoc-members:
     :show-inheritance:
@@ -41,7 +41,7 @@ spike\_swarm\_sim.objects.ball module
 spike\_swarm\_sim.objects.cube module
 -------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.cube
+.. automodule:: mereli.objects.cube
     :members:
     :undoc-members:
     :show-inheritance:
@@ -49,7 +49,7 @@ spike\_swarm\_sim.objects.cube module
 spike\_swarm\_sim.objects.ground_area module
 -------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.ground_area
+.. automodule:: mereli.objects.ground_area
     :members:
     :undoc-members:
     :show-inheritance:
@@ -57,7 +57,7 @@ spike\_swarm\_sim.objects.ground_area module
 spike\_swarm\_sim.objects.wall module
 -------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.wall
+.. automodule:: mereli.objects.wall
     :members:
     :undoc-members:
     :show-inheritance:  
@@ -66,7 +66,7 @@ spike\_swarm\_sim.objects.wall module
 spike\_swarm\_sim.objects.task\_scheduler module
 ------------------------------------------------
 
-.. automodule:: spike_swarm_sim.objects.task_scheduler
+.. automodule:: mereli.objects.task_scheduler
     :members:
     :undoc-members:
     :show-inheritance:
@@ -75,7 +75,7 @@ spike\_swarm\_sim.objects.task\_scheduler module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.objects
+.. automodule:: mereli.objects
     :members:
     :undoc-members:
     :show-inheritance:

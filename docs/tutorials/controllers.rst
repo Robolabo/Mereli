@@ -11,8 +11,8 @@ Overview
 Controllers are programs that define the behavior of robots. Controllers received sensory information, manipulate it and produce 
 actions as a result. The actions are thereafter fed to actuators in order to interact with the environment. A controller can be any 
 kind of program, ranging from simple rule based decions to neural controllers (control through artificial neural networks). In this 
-simulator, any controller inherits directly or indirectly from the class py:class:`spike_swarm_sim.controllers.Controller`. 
-Additionally, controllers applied to robots must inherit from py:class:`spike_swarm_sim.controllers.RobotController`. The reason for having 
+simulator, any controller inherits directly or indirectly from the class py:class:`mereli.controllers.Controller`. 
+Additionally, controllers applied to robots must inherit from py:class:`mereli.controllers.RobotController`. The reason for having 
 these two base classes is because in this simulator, the term controller transcends the control of robots. For instance, a moving light that 
 describes an orbit is also considered a controller. 
 

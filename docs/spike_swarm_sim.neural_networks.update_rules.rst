@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.neural\_networks.update\_rules.update\_rules module
 ---------------------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.update_rules.update_rules
+.. automodule:: mereli.neural_networks.update_rules.update_rules
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ spike\_swarm\_sim.neural\_networks.update\_rules.update\_rules module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.neural_networks.update_rules
+.. automodule:: mereli.neural_networks.update_rules
     :members:
     :undoc-members:
     :show-inheritance:

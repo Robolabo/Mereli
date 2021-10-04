@@ -1,10 +1,10 @@
 import time
 import numpy as np
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim import CircularArena
-from spike_swarm_sim.physics_engines import PybulletEngine
-from spike_swarm_sim.objects import Epuck, LightSource
-from spike_swarm_sim.controllers import Braitenberg2B
+from mereli.globals import global_states
+from mereli import CircularArena
+from mereli.physics_engines import PybulletEngine
+from mereli.objects import Epuck, LightSource
+from mereli.controllers import Braitenberg2B
 
 #* Create physics engine with 0.02sec of discretization and a period the robot
 #* control loop of 0.14sec.

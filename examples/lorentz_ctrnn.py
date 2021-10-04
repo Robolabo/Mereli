@@ -6,10 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plot
 
 
-from spike_swarm_sim import World 
-from spike_swarm_sim.objects import Robot
-from spike_swarm_sim.controllers import NeuralController
-from spike_swarm_sim.algorithms.evolutionary import xNES
+from mereli import World 
+from mereli.objects import Robot
+from mereli.controllers import NeuralController
+from mereli.algorithms.evolutionary import xNES
 
 
 class LorentzAttractor:

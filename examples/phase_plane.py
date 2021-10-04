@@ -3,7 +3,7 @@ import os
 sys.path.append('D:\subversion\SpikeSwarmSim')
 import numpy as np
 import matplotlib.pyplot as plt
-from spike_swarm_sim.neural_networks import AdExModel 
+from mereli.neural_networks import AdExModel 
 
 dt = 1.
 n_neurons = 1

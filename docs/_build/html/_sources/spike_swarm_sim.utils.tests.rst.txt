@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.utils.tests.test\_math\_utils module
 ------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.tests.test_math_utils
+.. automodule:: mereli.utils.tests.test_math_utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ spike\_swarm\_sim.utils.tests.test\_math\_utils module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.utils.tests
+.. automodule:: mereli.utils.tests
     :members:
     :undoc-members:
     :show-inheritance:

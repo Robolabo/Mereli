@@ -35,7 +35,7 @@ The simulator can be run from the command line using the following command:
 ``` 
 python main.py --cfg experiment_configuration -Rv 
 ```
-It executes the experiment defined in the JSON configuration file `experiment_configuration` (stored in `spike_swarm_sim\config`) 
+It executes the experiment defined in the JSON configuration file `experiment_configuration` (stored in `mereli\config`) 
 in render mode (`R`) and in verbose mode (`v`). 
 
 The following table shows the possible command line arguments with its abbreviation and description:
@@ -47,12 +47,12 @@ The following table shows the possible command line arguments with its abbreviat
 | `eval` | `e` | Whether to run evaluation mode or in optmization mode. |
 | `resume` | `r` | Whether to restore previously saved optimization checkpoint. |
 | `ncpu` | `n` | Number of cores to use for parallelization. |
-| `cfg` | `f` | JSON configuration file to be used (without extension). The file has to be stored in `spike_swarm_sim/config` |
+| `cfg` | `f` | JSON configuration file to be used (without extension). The file has to be stored in `mereli/config` |
 | `verbose` | `v` | Whether to run in verbose mode. |
 
 ## Configuration Files
 In contrast to the command line arguments that configure basic aspects of the simulator, the most relevant configuration 
-settings can be adjusted using JSON configuration files. The file has to be stored in `spike_swarm_sim/config` and is called 
+settings can be adjusted using JSON configuration files. The file has to be stored in `mereli/config` and is called 
 using the command line argument `--cfg` (or `-f`). 
 The configuration file is composed by the following main blocks:
 - `checkpoint_file`: name of the file where optimization checkpoints are stored.
@@ -86,9 +86,9 @@ models as building blocks of CTRNNs:
         "I4" :{"scheme" : "IdentityEncoding"},
         "I5" :{"scheme" : "IdentityEncoding"}
     },
-    # Neuron model from spike_swarm_sim.neural_networks.neuron_models.
+    # Neuron model from mereli.neural_networks.neuron_models.
     "neuron_model" : "rate_model",
-    # Synapse model from spike_swarm_sim.neural_networks.synapses. Currently, it can be either static for 
+    # Synapse model from mereli.neural_networks.synapses. Currently, it can be either static for 
     # non-spiking neurons and dynamic for spiking neurons.
     "synapse_model" : "static_synapse",
     # Set of neuron ensembles or layers. 
@@ -244,7 +244,7 @@ parts of the ANN. Currently implemented queries are:
 | `decoding:weights` | `all` | Decoding weights if using LinearPopulationDecoding in spiking neural nets. |
 
 <br/><br/>
-In the directory `spike_swarm_sim/config` there are the following configuration files stored as examples:
+In the directory `mereli/config` there are the following configuration files stored as examples:
 
 - `experimentA_GA_ctrnn`: Experiment of selecting a leader of a swarm using homogeneous CTRNN controllers. 
     Optimization is carried out using a Genetic Algorithm (GA).

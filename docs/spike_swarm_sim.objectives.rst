@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.objectives.fitness module
 -------------------------------------------
 
-.. automodule:: spike_swarm_sim.objectives.fitness
+.. automodule:: mereli.objectives.fitness
     :members:
     :undoc-members:
     :show-inheritance:
@@ -15,7 +15,7 @@ spike\_swarm\_sim.objectives.fitness module
 spike\_swarm\_sim.objectives.reward module
 ------------------------------------------
 
-.. automodule:: spike_swarm_sim.objectives.reward
+.. automodule:: mereli.objectives.reward
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ spike\_swarm\_sim.objectives.reward module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.objectives
+.. automodule:: mereli.objectives
     :members:
     :undoc-members:
     :show-inheritance:

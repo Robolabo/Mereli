@@ -6,8 +6,8 @@ Subpackages
 
 .. toctree::
 
-    spike_swarm_sim.neural_networks.update_rules
-    spike_swarm_sim.neural_networks.utils
+    mereli.neural_networks.update_rules
+    mereli.neural_networks.utils
 
 Submodules
 ----------
@@ -15,7 +15,7 @@ Submodules
 spike\_swarm\_sim.neural\_networks.decoding module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.decoding
+.. automodule:: mereli.neural_networks.decoding
     :members:
     :undoc-members:
     :show-inheritance:
@@ -23,7 +23,7 @@ spike\_swarm\_sim.neural\_networks.decoding module
 spike\_swarm\_sim.neural\_networks.encoding module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.encoding
+.. automodule:: mereli.neural_networks.encoding
     :members:
     :undoc-members:
     :show-inheritance:
@@ -31,7 +31,7 @@ spike\_swarm\_sim.neural\_networks.encoding module
 spike\_swarm\_sim.neural\_networks.neural\_net module
 -----------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.neural_net
+.. automodule:: mereli.neural_networks.neural_net
     :members:
     :undoc-members:
     :show-inheritance:
@@ -39,7 +39,7 @@ spike\_swarm\_sim.neural\_networks.neural\_net module
 spike\_swarm\_sim.neural\_networks.neuron\_models module
 --------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.neuron_models
+.. automodule:: mereli.neural_networks.neuron_models
     :members:
     :undoc-members:
     :show-inheritance:
@@ -47,7 +47,7 @@ spike\_swarm\_sim.neural\_networks.neuron\_models module
 spike\_swarm\_sim.neural\_networks.receptive\_field module
 ----------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.receptive_field
+.. automodule:: mereli.neural_networks.receptive_field
     :members:
     :undoc-members:
     :show-inheritance:
@@ -55,7 +55,7 @@ spike\_swarm\_sim.neural\_networks.receptive\_field module
 spike\_swarm\_sim.neural\_networks.synapses module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.neural_networks.synapses
+.. automodule:: mereli.neural_networks.synapses
     :members:
     :undoc-members:
     :show-inheritance:
@@ -64,7 +64,7 @@ spike\_swarm\_sim.neural\_networks.synapses module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.neural_networks
+.. automodule:: mereli.neural_networks
     :members:
     :undoc-members:
     :show-inheritance:

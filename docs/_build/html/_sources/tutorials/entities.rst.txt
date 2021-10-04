@@ -80,12 +80,12 @@ Example::
     >>> world.build_from_dict(world_cfg)
 
 The only configuration distinction is that we have already introduced the entity initializers. More precisely, we have used the 
-:py:class:`spike_swarm_sim.utils.initializers.FixedInitializer`, that deterministically assigns the given fixed values to the 
+:py:class:`mereli.utils.initializers.FixedInitializer`, that deterministically assigns the given fixed values to the 
 positions and orientations of the objects in the group.
 
 The third option is very similar to using a ``dict`` gathering the configuration. Specifically, it is about using configuration files gathering 
 the configuration. Moreover, the configuration files not only encompass the world configuration but also the neural topology and optimization algorithm (if any). 
-For the moment, the format of the configuration files is ``json`` and the configuration files are stored in the ``spike_swarm_sim/config`` directory. 
+For the moment, the format of the configuration files is ``json`` and the configuration files are stored in the ``mereli/config`` directory. 
 The meaning of the JSON field is explained at the `Configuration Files <configuration_files.html>`__ section. 
 When using configuration files, the only way of executing the simulator is via the main.py file. More precisely, provided that the configuration file name is ``config_example.json``, 
 the command line execution would be:
@@ -97,7 +97,7 @@ Example::
 where ``-R`` means that the simulation is run in visual mode and ``-f`` is the config. file name. For the description of the rest of command line arguments see XXXXXXXX. 
 
 Finally, another important aspect when creating entities is their model definition. Each entity class has an attribute called ``model_file`` that states the name of the 
-file defining the 2D or 3D model of the object. The model must be previously designed, coded and stored in ``spike_swarm_sim/objects/models``. In the case of the 3D 
+file defining the 2D or 3D model of the object. The model must be previously designed, coded and stored in ``mereli/objects/models``. In the case of the 3D 
 entities using the ``pybullet`` based engine (the only 3D engine currently available), the 3D model must be defined as an `URDF <http://wiki.ros.org/urdf>`_ file. 
 These aside from from  defining the geometry, inertia, masses, and so on, it also establishes the links and joints of robots. 
 See `epuck.urdf <_static/epuck.urdf>`_ for an example of creating a simplified epuck through an URDF file. 

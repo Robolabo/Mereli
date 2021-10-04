@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.actuators.utils.utils module
 ----------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.utils.utils
+.. automodule:: mereli.actuators.utils.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ spike\_swarm\_sim.actuators.utils.utils module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.actuators.utils
+.. automodule:: mereli.actuators.utils
     :members:
     :undoc-members:
     :show-inheritance:

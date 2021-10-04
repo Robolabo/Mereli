@@ -1,9 +1,9 @@
 import numpy as np
-from spike_swarm_sim import World
-from spike_swarm_sim.physics_engines import PybulletEngine
-from spike_swarm_sim.objects import Epuck
-from spike_swarm_sim.utils.initializers import RandomUniformInitializer, RandomGraphInitializer
-from spike_swarm_sim.controllers import RobotController
+from mereli import World
+from mereli.physics_engines import PybulletEngine
+from mereli.objects import Epuck
+from mereli.utils.initializers import RandomUniformInitializer, RandomGraphInitializer
+from mereli.controllers import RobotController
 
 """ EXAMPLE DESCRIPTION:
 

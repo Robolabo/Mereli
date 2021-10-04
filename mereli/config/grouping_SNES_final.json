@@ -1,0 +1,113 @@
+
+{
+    "checkpoint_file" : "chk_grouping_SNES_final",
+    "num_processes" : 1,
+    "render" : false,
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "W1" : {"n" : 2, "sensor" : "wireless_receiver:msg"},
+            "W2" : {"n" : 2, "sensor" : "wireless_receiver:receiving_direction"},
+            "W4" : {"n" : 1, "sensor" : "wireless_receiver:signal"},
+            "W5" : {"n" : 1, "sensor" : "wireless_receiver:state"}
+        },
+        "encoding" : {
+            "W1" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "W2" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "W4" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "W5" :{"scheme" : "IdentityEncoding", "receptive_field" : {}}
+        },
+        "neurons" : {"model": "ctrnn", "params": {"tau":0.35, "gain" : 1.0, "bias" : -1.0}},
+        "ensembles": {
+            "C1" : {"n" : 10, "tau" : 10, "gain" : 1, "bias": 0, "activation":"sigmoid"},
+            "C2" : {"n" : 10, "tau" : 10, "gain" : 1, "bias": 0, "activation":"sigmoid"},
+            "OUT_COMM" : {"n" : 2, "tau" : 8, "gain" : 2, "bias": 0, "activation":"sigmoid"},
+            "OUT_COMM_ST" : {"n" : 1, "tau" : 8, "gain" : 2, "bias": 0, "activation":"sigmoid"},
+            "OUT_MOT" : {"n" : 2, "tau" : 10, "gain" : 2, "bias": 0, "activation":"sigmoid"}
+        },
+        "outputs" : {
+            "outC" : {"ensemble" : ["OUT_COMM_ST"], "actuator" : "IR_transmitter:state", "enc": "cat"},
+            "outA" : {"ensemble" : ["OUT_COMM"], "actuator" : "IR_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : ["OUT_MOT"], "actuator" : "wheel_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "W1-c" : {"pre":"W1","post":"C1", "trainable":true, "p":1},
+            "W2-c" : {"pre":"W2","post":"C1", "trainable":true, "p":1},
+            "W4-c" : {"pre":"W4","post":"C1", "trainable":true, "p":1},
+            "W5-c" : {"pre":"W5","post":"C1", "trainable":true, "p":1},
+            "W1-c1" : {"pre":"W1","post":"C2", "trainable":true, "p":1},
+            "W2-c1" : {"pre":"W2","post":"C2", "trainable":true, "p":1},
+            "W4-c1" : {"pre":"W4","post":"C2", "trainable":true, "p":1},
+            "W5-c1" : {"pre":"W5","post":"C2", "trainable":true, "p":1},
+            "c-c" : {"pre":"C1","post":"C1", "trainable":true, "p":0.8},
+            "c2-c2" : {"pre":"C2","post":"C2", "trainable":true, "p":0.7},
+            "c1-c2" : {"pre":"C1","post":"C2", "trainable":true, "p":0.7},
+
+            "c-mot" : {"pre":"C1","post":"OUT_MOT", "trainable":true, "p":1},
+            "c2-comm" : {"pre":"C2","post":"OUT_COMM", "trainable":true, "p":1},
+            "c2-st" : {"pre":"C2","post":"OUT_COMM_ST", "trainable":true, "p":1},
+
+            "comm-c" : {"pre":"OUT_COMM","post":"C1", "trainable":true, "p":1},
+            "mot-c" : {"pre":"OUT_MOT","post":"C1", "trainable":true, "p":1},
+            "st-c" : {"pre":"OUT_COMM_ST","post":"C1", "trainable":true, "p":1},
+
+            "comm-comm" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1},
+            "comm-st" : {"pre":"OUT_COMM","post":"OUT_COMM_ST", "trainable":true, "p":1},
+            "st-comm" : {"pre":"OUT_COMM_ST","post":"OUT_COMM", "trainable":true, "p":1}
+        },
+        "decoding" : {
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "SNES",
+        "evolvable_object" : "robotA",
+        "population_size" : 40,
+        "generations" : 5000,
+        "evaluation_steps" : 400,
+        "num_evaluations" : 3,
+        "fitness_function" : "grouping",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
+                "max_vals" : [3,  2, 1, 4],
+                "min_vals" : [-3, -2, -1, 0.5],
+                "encoding" : "real",
+                "selection_operator" : "nonlin_rank",
+                "crossover_operator" : "blxalpha",
+                "mutation_operator" : "gaussian",
+                "mating_operator" : "random",
+                "mutation_prob" : 0.05,
+                "crossover_prob" : 0.9,
+                "num_elite" : 2
+            }
+        }
+    }, 
+    "world":{
+        "world_delay" : 1,
+        "render_connections" :false,
+        "height":1000,
+        "width": 1000,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 15,
+                "controller" : "neural_controller",
+                "sensors" : {"wireless_receiver" : {"n_sectors":4, "range" : 200,  "msg_length" : 2}},
+                "actuators" : {"wheel_actuator" : {}, "IR_transmitter" : {"quantize":true, "range" : 200, "msg_length" : 2}},
+                "positions" : "random",
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform", "params" : {"low":340, "high" : 670, "size":2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "all_positions" : [
+                    [[460, 500], [500, 500], [547, 500], [460, 550], [500, 550],[547, 550], [460, 456], [500, 456],[547, 456]]
+                ],
+                "params" : {"trainable" : true}
+            }
+        }
+    }
+}

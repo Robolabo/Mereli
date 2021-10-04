@@ -5,11 +5,11 @@ try:
     USE_MPI = True
 except:
     USE_MPI = False
-from spike_swarm_sim import MultiWorldWrapper
-from spike_swarm_sim.register import fitness_functions
-from spike_swarm_sim.config_parser import json_parser
-from spike_swarm_sim.register import algorithms, worlds, physics_engines
-from spike_swarm_sim.globals import global_states
+from mereli import MultiWorldWrapper
+from mereli.register import fitness_functions
+from mereli.config_parser import json_parser
+from mereli.register import algorithms, worlds, physics_engines
+from mereli.globals import global_states
 
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')

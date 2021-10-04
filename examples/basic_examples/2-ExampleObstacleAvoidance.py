@@ -1,11 +1,11 @@
 import time
 import numpy as np
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim import SquareArena, CircularArena, CustomWorld
-from spike_swarm_sim.physics_engines import PybulletEngine
-from spike_swarm_sim.objects import Epuck, LightSource
-from spike_swarm_sim.controllers import BasicObstacleAvoider
-from spike_swarm_sim.utils.initializers import FixedInitializer, RandomUniformInitializer
+from mereli.globals import global_states
+from mereli import SquareArena, CircularArena, CustomWorld
+from mereli.physics_engines import PybulletEngine
+from mereli.objects import Epuck, LightSource
+from mereli.controllers import BasicObstacleAvoider
+from mereli.utils.initializers import FixedInitializer, RandomUniformInitializer
 
 
 global_states.set_states(render=True, debug=True)

@@ -2,9 +2,9 @@
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.neural_networks import MLP
-from spike_swarm_sim.neural_networks.utils import plot_weights
+from mereli.globals import global_states
+from mereli.neural_networks import MLP
+from mereli.neural_networks.utils import plot_weights
 
 
 ann = MLP()

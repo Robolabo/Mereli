@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.communication.IR\_communication module
 -------------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.communication.IR_communication
+.. automodule:: mereli.communication.IR_communication
     :members:
     :undoc-members:
     :show-inheritance:
@@ -18,7 +18,7 @@ spike\_swarm\_sim.communication.IR\_communication module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.communication
+.. automodule:: mereli.communication
     :members:
     :undoc-members:
     :show-inheritance:

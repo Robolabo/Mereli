@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.sensors.utils.propagation module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.utils.propagation
+.. automodule:: mereli.sensors.utils.propagation
     :members:
     :undoc-members:
     :show-inheritance:
@@ -15,7 +15,7 @@ spike\_swarm\_sim.sensors.utils.propagation module
 spike\_swarm\_sim.sensors.utils.utils module
 --------------------------------------------
 
-.. automodule:: spike_swarm_sim.sensors.utils.utils
+.. automodule:: mereli.sensors.utils.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ spike\_swarm\_sim.sensors.utils.utils module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.sensors.utils
+.. automodule:: mereli.sensors.utils
     :members:
     :undoc-members:
     :show-inheritance:

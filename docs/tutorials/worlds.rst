@@ -14,7 +14,7 @@ entity python objects. Another feature that is important to introduce at this po
 groups arrange multiple entities (normally homogeneous entities) into a single set. In this way, the simulator can apply collective 
 operations to all the members of the group jointly. The clearer use case of groups is related to position states initialization, so that 
 the sampling of positions can be done as a group. For instance, the positions of an static swarm of mobile robots can be randomly sampled 
-using an random spatial graph generator to preserve swarm compactness (see :py:class:`spike_swarm_sim.utils.initializers.RandomGraphInitializer`).
+using an random spatial graph generator to preserve swarm compactness (see :py:class:`mereli.utils.initializers.RandomGraphInitializer`).
 
 .. note::
     
@@ -77,7 +77,7 @@ The simulation is set up using the world as a context manager, so that the ``Wor
 internally. After resetting the world dynamics, the simulation is run for 2000 discrete time instants. 
 
 Apart from the previously introduced main methods, the class ``World`` also has the methods summarized in the following table (for a detailed explanation 
-see the API reference :py:class:`spike_swarm_sim.world.World`):
+see the API reference :py:class:`mereli.world.World`):
 
 +----------------------------+-------------------------------------------------------------------------------------------------------------------------+
 | **Method**                 |  **Description**                                                                                                        |
@@ -116,20 +116,20 @@ see the API reference :py:class:`spike_swarm_sim.world.World`):
 
 
 
-All the core functionalities of worlds is implemented in the :py:class:`spike_swarm_sim.world.World` base class. Nonetheless, this class is not 
+All the core functionalities of worlds is implemented in the :py:class:`mereli.world.World` base class. Nonetheless, this class is not 
 thought to be instantiated directly as it just creates a completely empty world with merely a plane as floor. Besides, it is advisable to create the world 
 using one of the higher level classes that inherit from ``World`` base class. In brief this classes are:
 
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
 | **Reference Name**    |   **Python Class**                            |     **Description**                                                                         |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    square_arena       |:py:class:`spike_swarm_sim.world.SquareArena`  | World arena limited by 4 walls forming a square area.                                       |
+|    square_arena       |:py:class:`mereli.world.SquareArena`  | World arena limited by 4 walls forming a square area.                                       |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    circular_arena     |:py:class:`spike_swarm_sim.world.CircularArena`| World arena limited a single circular wall forming a cicle area.                            |
+|    circular_arena     |:py:class:`mereli.world.CircularArena`| World arena limited a single circular wall forming a cicle area.                            |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    custom_world       |:py:class:`spike_swarm_sim.world.CustomWorld`  | | World that can be highly customized by the user to any 3D map, arena or maze.             |
+|    custom_world       |:py:class:`mereli.world.CustomWorld`  | | World that can be highly customized by the user to any 3D map, arena or maze.             |
 |                       |                                               | | The only requirement is that the 3D mesh must have been previously created and stored     |
-|                       |                                               | | in the 'spike_swarm_sim/models/maps/' directory.                                          |
+|                       |                                               | | in the 'mereli/models/maps/' directory.                                          |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
 
 The following screenshots depict each of the currently implemented world classes:
@@ -156,7 +156,7 @@ Entities
 -------------
 
 Entities are any kind of world objects that are created in the world or environment space. Jointly with the physics and render engine, they 
-define the variety experiments to be carried out. Every entity defined in the simulator inherits from the class :py:class:`spike_swarm_sim.objects.world_object.WorldObject`. 
+define the variety experiments to be carried out. Every entity defined in the simulator inherits from the class :py:class:`mereli.objects.world_object.WorldObject`. 
 This base class should not be directly instantiated. Even thought their names are descriptive, the 
 following table defines the currently implemented entity properties:
 
@@ -175,7 +175,7 @@ following table defines the currently implemented entity properties:
 +-----------------------+---------------------------------------------------------------------+
 
 Aside from the previous entity properties, there are several methods that are worth mentioning (see API reference for further details 
-:py:class:`spike_swarm_sim.objects.world_object.WorldObject`):
+:py:class:`mereli.objects.world_object.WorldObject`):
 
 +----------------------------+-------------------------------------------------------------------------------------------------------------------------+
 | **Method**                 |  **Description**                                                                                                        |
@@ -210,10 +210,10 @@ Aside from the previous entity properties, there are several methods that are wo
 
 When creating entities, in order to establish a 3D model for physics interactions and visualization, each class that inherits from ``WorldObject`` 
 must provide an existing `URDF <http://wiki.ros.org/urdf>`_ file describing its geometry, visuals, collision, inertial, etc. In the case of robots, the URDF also specifies the links 
-and joints of the robot. The URDF files must be stored in the directory 'spike_swarm_sim/models/entities/'.
+and joints of the robot. The URDF files must be stored in the directory 'mereli/models/entities/'.
 
 .. note::
-    Even though its implementation is currently in process,  for creating 2D entities for the ``pymunk`` based physics engine (:py:class:`spike_swarm_sim.physics_engine.Engine2D`), 
+    Even though its implementation is currently in process,  for creating 2D entities for the ``pymunk`` based physics engine (:py:class:`mereli.physics_engine.Engine2D`), 
     we established a simple yet easily extensible JSON module syntax. An example of a JSON file modelling a simplified 2D epuck is shown in `epuck.json <_static/epuck.json>`_ .
 
 The precise entities that are currently implemented in the simulator are gathered in the following table:
@@ -244,7 +244,7 @@ The precise entities that are currently implemented in the simulator are gathere
 +-----------------------+-------------------------+----------------------------------------------------------+---------------------------+
                 
 
-For the moment the only implemented robot is the e-puck (:py:class:`spike_swarm_sim.objects.robot3D.Epuck`). Nonetheless, in order to create a custom robot, 
+For the moment the only implemented robot is the e-puck (:py:class:`mereli.objects.robot3D.Epuck`). Nonetheless, in order to create a custom robot, 
 the main and most laborious part is to create the 3D mesh obj files and the URDF file describing its whole 3D model. Aside from that, the 
 class can be readily coded as follows:
 
@@ -297,14 +297,14 @@ Now that we have introduced the entities, lets extend the Example 1.1:
 
 In this example we have created a circular arena with 2 robots, a blue cube, a red ball and a yellow light. Even though we 
 have not yet introduced them, in order to build a more interesting example the robots are controlled by a basic obstacle avoidance 
-controller. Moreover, they are equipped with the distance sensor (:py:class:`spike_swarm_sim.sensors.distance_sensor.DistanceSensor`) to detect nearby obstacles 
-and with the joint velocity actuator (:py:class:`spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator`) to control the velocity of the two joints (one per 
+controller. Moreover, they are equipped with the distance sensor (:py:class:`mereli.sensors.distance_sensor.DistanceSensor`) to detect nearby obstacles 
+and with the joint velocity actuator (:py:class:`mereli.actuators.joint_actuator.JointVelocityActuator`) to control the velocity of the two joints (one per 
 wheel).
 
 .. note::
 
     An important remark is that the z-axis coordinate of the light sources position has an implicit offset of 0.8m, which is fixed in the URDF file 
-    (spike_swarm_sim/models/entities/light_source/light.urdf). Therefore when creating a light, its z-coordinate is actually z+0.8 to guarantee a 
+    (mereli/models/entities/light_source/light.urdf). Therefore when creating a light, its z-coordinate is actually z+0.8 to guarantee a 
     minimum light height.
 
 
@@ -394,11 +394,11 @@ In the example we have created a group called ``'swarm'`` with 5 robots and with
 #. **Orientations**:  are sampled randomly from an uniform distribution :math:`\,\mathcal{U}(0, 2\pi)`.
 
 Additionally, notice that, once created, the initializers are registered in the world and mapped to the corresponding group 
-using the method :py:meth:`spike_swarm_sim.world.World.set_initializer`. 
+using the method :py:meth:`mereli.world.World.set_initializer`. 
 Once created, the initializer object can be called (e.g. ``ini_pos()``). This action returns an iterable with the positions or 
 orientations of all the group objects (with length equal to the group size). 
 
-Lastly, there is another important method that is not mentioned in the previous example. This method is :py:meth:`spike_swarm_sim.world.World.run_initializers`, 
+Lastly, there is another important method that is not mentioned in the previous example. This method is :py:meth:`mereli.world.World.run_initializers`, 
 which is called every time that the world is reset. Its functionality is to call the initializer of every group and set the entity position and orientation (if required) 
 to the new initial state. 
 There is no actual need to call this method outside of the source code, because it is automatically executed within the reset method. Nonetheless, it 
@@ -524,7 +524,7 @@ in the following table:
 |``receptive_field_registry`` |  ``receptive_fields``       |         Register decorator for ANN input receptive field classes (only if spiking neural nets).                                |
 +-----------------------------+-----------------------------+--------------------------------------------------------------------------------------------------------------------------------+
 
-These decorators are coded in the module ``spike_swarm_sim.register.py``. Its basic functioning is that when the decorated class is instantiated, the decorator 
+These decorators are coded in the module ``mereli.register.py``. Its basic functioning is that when the decorated class is instantiated, the decorator 
 function is called once, registering in a global ``dict`` (see second column of the table) the mapping between the reference name and the python class. 
 Subsequently, to obtain the class corresponding to a given reference name (for example when decoding the configuration files), the user just has to import 
 the correct ``dict`` and access the python class using the reference name as key:  
@@ -532,14 +532,14 @@ the correct ``dict`` and access the python class using the reference name as key
 
 **Example 1.7**::
 
->>> from spike_swarm_sim.register import worlds
+>>> from mereli.register import worlds
 >>> print(worlds['custom_world'])
 >>> Console: 
->>>     <class 'spike_swarm_sim.world.CustomWorld'>
+>>>     <class 'mereli.world.CustomWorld'>
 >>> print(worlds)
 >>> Console: 
 >>>     {
->>>        'square_arena': <class 'spike_swarm_sim.world.SquareArena'>, 
->>>        'circular_arena': <class 'spike_swarm_sim.world.CircularArena'>, 
->>>        'custom_world': <class 'spike_swarm_sim.world.CustomWorld'>
+>>>        'square_arena': <class 'mereli.world.SquareArena'>, 
+>>>        'circular_arena': <class 'mereli.world.CircularArena'>, 
+>>>        'custom_world': <class 'mereli.world.CustomWorld'>
 >>>     }

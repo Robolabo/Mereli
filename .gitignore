@@ -2,13 +2,13 @@
 __pycache__
 .vscode
 .pytest_cache
-# spike_swarm_sim/config/*.json
-# spike_swarm_sim/checkpoints/populations/*.pickle
-spike_swarm_sim/logs/data/*
+# mereli/config/*.json
+# mereli/checkpoints/populations/*.pickle
+mereli/logs/data/*
 scripts
 *.sh
 *.log
 tmp/*
 dist/*
-spike_swarm_sim.egg-info/*
+mereli.egg-info/*
 build/*

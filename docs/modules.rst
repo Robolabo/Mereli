@@ -6,21 +6,21 @@ Subpackages
 
 .. toctree::
 
-    spike_swarm_sim.actuators
-    spike_swarm_sim.algorithms
-    spike_swarm_sim.controllers
-    spike_swarm_sim.communication
-    spike_swarm_sim.neural_networks
-    spike_swarm_sim.objectives
-    spike_swarm_sim.objects
-    spike_swarm_sim.physics_engines
-    spike_swarm_sim.sensors
-    spike_swarm_sim.utils
+    mereli.actuators
+    mereli.algorithms
+    mereli.controllers
+    mereli.communication
+    mereli.neural_networks
+    mereli.objectives
+    mereli.objects
+    mereli.physics_engines
+    mereli.sensors
+    mereli.utils
 
 spike\_swarm\_sim.world module
 ------------------------------
 
-.. automodule:: spike_swarm_sim.world
+.. automodule:: mereli.world
     :members:
     :undoc-members:
     :show-inheritance:
@@ -28,7 +28,7 @@ spike\_swarm\_sim.world module
 spike\_swarm\_sim.physics\_engine module
 ----------------------------------------
 
-.. automodule:: spike_swarm_sim.physics_engine
+.. automodule:: mereli.physics_engine
     :members:
     :undoc-members:
     :show-inheritance:
@@ -36,7 +36,7 @@ spike\_swarm\_sim.physics\_engine module
 spike\_swarm\_sim.env\_perturbations module
 -------------------------------------------
 
-.. automodule:: spike_swarm_sim.env_perturbations
+.. automodule:: mereli.env_perturbations
     :members:
     :undoc-members:
     :show-inheritance:
@@ -44,7 +44,7 @@ spike\_swarm\_sim.env\_perturbations module
 spike\_swarm\_sim.register module
 ---------------------------------
 
-.. automodule:: spike_swarm_sim.register
+.. automodule:: mereli.register
     :members:
     :undoc-members:
     :show-inheritance:
@@ -52,7 +52,7 @@ spike\_swarm\_sim.register module
 spike\_swarm\_sim.globals module
 --------------------------------
 
-.. automodule:: spike_swarm_sim.globals
+.. automodule:: mereli.globals
     :members:
     :undoc-members:
     :show-inheritance:
@@ -60,7 +60,7 @@ spike\_swarm\_sim.globals module
 spike\_swarm\_sim.config\_parser module
 ---------------------------------------
 
-.. automodule:: spike_swarm_sim.config_parser
+.. automodule:: mereli.config_parser
     :members:
     :undoc-members:
     :show-inheritance:
@@ -69,7 +69,7 @@ spike\_swarm\_sim.config\_parser module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim
+.. automodule:: mereli
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,0 +1,133 @@
+{
+    "checkpoint_file" : "chk_gotolight_SNN_SNES",
+    "num_processes" : 1,
+    "render" : false,
+    "topology" : {
+        "dt" : 1,
+        "time_scale" : 30,
+        "stimuli": {
+            "I0" : {"n" : 6, "sensor" : "light_sensor"},
+            "I1" : {"n" : 1, "sensor" : "IR_receiver:msg"},
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"}
+        },
+        "encoding" : {
+            "I0" :{
+                "scheme" : "LIF_Encoding",
+                "receptive_field" : {
+                    "name" : "gaussian_receptive_field",
+                    "params" : {"n_neurons" : 3, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                }
+            },
+            "I1" : {
+                "scheme" : "LIF_Encoding",
+                "receptive_field" : {
+                    "name" : "gaussian_receptive_field",
+                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                }
+            },
+            "I2" : {
+                "scheme" : "LIF_Encoding",
+                "receptive_field" : {
+                    "name" : "gaussian_receptive_field",
+                    "params" : {"n_neurons" : 4, "min_stim" : 0, "max_stim" : 1, "min_val" : 0, "max_val" : 30,  "inverted" : false}
+                }
+            }
+        },
+        "neuron_model" : "adex",
+        "synapse_model" : "dynamic_synapse",
+        "ensembles": {
+            "H1e" : {"n" : 15, "params" : {}},
+            "H1i" : {"n" : 10, "params" : {}},
+            "OUT" : {"n" : 7, "params" : {}},
+            "OUT_COMM" : {"n" : 7, "params" : {}}
+        },
+        "outputs" : {
+            "out" :  {"ensemble" : "OUT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "out2" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "out3" :  {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter:state", "enc": "cat"}
+        },     
+        "decoding" : {
+            "out" : {
+                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 2, "is_cat" : false, "rest_value" : 0.5}
+            },
+            "out2" : {
+                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 1, "is_cat" : false, "rest_value" : 0.5}
+            },
+            "out3" : {
+                "scheme" : "LinearPopulationDecoding", "params" : {"trainable":true, "num_outputs": 1, "is_cat" : false, "rest_value" : 0.5}
+            }
+        },
+        "synapses" :  {
+            "I0-H1e" : {"pre":"I0","post":"H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "I0-H1i" : {"pre":"I0","post":"H1i", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "I1-H1e" : {"pre":"I1","post":"H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "I1-H1i" : {"pre":"I1","post":"H1i", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "I2-H1e" : {"pre":"I2","post":"H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "I2-H1i" : {"pre":"I2","post":"H1i", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "H1e-H1i" : {"pre":"H1e","post":"H1i", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "H1i-H1e" : {"pre":"H1i","post":"H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"GABA", "trainable":true},
+            "H1e-H1e" : {"pre":"H1e","post":"H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "H1i-H1i" : {"pre":"H1i","post":"H1i", "p" : 1.0, "ntx_fixed":true, "neuroTX":"GABA", "trainable":true},
+            "H1e-OUT" : {"pre" : "H1e", "post": "OUT", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "H1i-OUT" : {"pre" : "H1i", "post": "OUT", "p" : 1.0, "ntx_fixed":true, "neuroTX":"GABA", "trainable":true},
+            "H1e-OUT_COMM" : {"pre" : "H1e", "post": "OUT_COMM", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true},
+            "H1i-OUT_COMM" : {"pre" : "H1i", "post": "OUT_COMM", "p" : 1.0, "ntx_fixed":true, "neuroTX":"GABA", "trainable":true},
+            "OUT_COMM-H1e" : {"pre" : "OUT_COMM", "post": "H1e", "p" : 1.0, "ntx_fixed":true, "neuroTX":"AMPA+NDMA", "trainable":true}
+        },
+        "synapse_params": {
+            "AMPA" : {"gain" : 6, "tau" : 6, "E":null},
+            "GABA" : {"gain" : 5, "tau": 10, "E":null}, 
+            "NDMA" : {"gain" : 1, "tau_rise" : 10, "tau_decay": 50, "Mg2" : 0.5, "E" : null}
+        }
+    },
+    "algorithm" : {
+            "name" : "SNES",
+            "evolvable_object" : "robotA",
+            "population_size" : 50,
+            "generations" : 5000,
+            "evaluation_steps" : 900,
+            "num_evaluations" : 1,
+            "fitness_function" : "goto_light",
+            "populations" : {
+                "p1" : {
+                    "objects" : ["synapses:weights:all", "decoders:weights:all"],
+                    "max_vals" : [4, 1],
+                    "min_vals" : [0, -1],
+                    "params": {
+                        "encoding" : "real"
+                    }
+                }
+            }
+    },
+    "world":{
+        "engine" : "3D",
+        "world_delay": 1,
+        "render_connections" : false,
+        "height":10,
+        "width": 10,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 6,
+                "controller" : "neural_controller",
+                "sensors" : {"IR_receiver" : {"n_sectors":4, "range" : 1.4,  "msg_length" : 1}, "light_sensor" : {"n_sectors" : 6, "range" : 3}},
+                "actuators" : {"joint_velocity_actuator" : {"joint_ids" : [0, 1]},  "IR_transmitter" : {"quantize":true, "range" : 1.4, "msg_length" : 1}},
+                "initializers" : {
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad": 2, "initial_pos" : [0, 0]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": 4, "stimuli" : "light_sensor"}},
+                "params" : {"trainable" : true}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "controller" : null,
+                "initializers" : {
+                    "positions" : {"name" : "random_circumference", "params" : {"radius": 1, "center" : [0, 0]}}
+                },
+                "params" : {"range" : 4, "color" : "red"}
+            }
+        }
+    }
+}

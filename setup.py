@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-   name='spike_swarm_sim',
+   name='mereli',
    version='0.0.1',
    description='Evolutionary Robotics Simulator',
    author='Rafael Sendra',

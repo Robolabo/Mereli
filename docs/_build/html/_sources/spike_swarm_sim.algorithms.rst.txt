@@ -6,13 +6,13 @@ Subpackages
 
 .. toctree::
 
-    spike_swarm_sim.algorithms.evolutionary
-    spike_swarm_sim.algorithms.interfaces
+    mereli.algorithms.evolutionary
+    mereli.algorithms.interfaces
 
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.algorithms
+.. automodule:: mereli.algorithms
     :members:
     :undoc-members:
     :show-inheritance:

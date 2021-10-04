@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.world import SquareArena, CircularArena
-from spike_swarm_sim.objects import Epuck
-from spike_swarm_sim.controllers import BasicObstacleAvoider
+from mereli.globals import global_states
+from mereli.world import SquareArena, CircularArena
+from mereli.objects import Epuck
+from mereli.controllers import BasicObstacleAvoider
 
 
 #### NOT FINISHED########

@@ -81,8 +81,8 @@ block shows the content of ``robot.actuators`` after the executing of the Exampl
 
 >>> print(robot.actuators)
 >>>    {
->>>        'led_actuator': <spike_swarm_sim.actuators.led_actuator.LedActuator object at 0x000001F3E7997408>, 
->>>        'joint_velocity_actuator': <spike_swarm_sim.actuators.joint_actuator.JointVelocityActuator object at 0x000001F3E79972C8>}
+>>>        'led_actuator': <mereli.actuators.led_actuator.LedActuator object at 0x000001F3E7997408>, 
+>>>        'joint_velocity_actuator': <mereli.actuators.joint_actuator.JointVelocityActuator object at 0x000001F3E79972C8>}
 >>>    }
 
 

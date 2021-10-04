@@ -1,13 +1,13 @@
 import numpy as np
-from spike_swarm_sim import SquareArena
-from spike_swarm_sim.physics_engines import PybulletEngine
-from spike_swarm_sim.objects import Epuck, LightSource, GroundArea, Ball
-from spike_swarm_sim.utils.initializers import RandomUniformInitializer
+from mereli import SquareArena
+from mereli.physics_engines import PybulletEngine
+from mereli.objects import Epuck, LightSource, GroundArea, Ball
+from mereli.utils.initializers import RandomUniformInitializer
 
 """ EXAMPLE DESCRIPTION:
 The experiments can be defined in three different ways. The first and most common one is via the command 
 line execution of the main.py file with the reference to the corresponding config file previously designed 
-and stored in spike_swarm_sim/config. This type of execution is not shown in this example. 
+and stored in mereli/config. This type of execution is not shown in this example. 
 Besides there are two other manners of executing an experiment within a python program:
 1) Config as dict: the experiment is defined as a python dict with the same fields as in a config file. This
 dict is fed to a previously created world instance throughout the build_from_dict method.

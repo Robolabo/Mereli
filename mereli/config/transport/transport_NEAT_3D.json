@@ -1,0 +1,143 @@
+{
+    "checkpoint_file" : "chk_transport_NEAT_3D",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "I1" : {"n" : 4, "sensor" : "light_sensor"},
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"},
+            "I5" : {"n" : 4, "sensor" : "distance_sensor"},
+            "I6" : {"n" : 4, "sensor" : "color_sensor"},
+            "I7" : {"n" : 1, "sensor" : "ground_sensor"},
+            "I8" : {"n" : 1, "sensor" : "object_grasped_sensor"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "OUT_GRASP" : {"n" : 3, "params" : {}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outD" : {"ensemble" : "OUT_GRASP", "actuator" : "grasp_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-MOT" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I2-MOT" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I3-MOT" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I5-MOT" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I6-MOT" : {"pre":"I6","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I7-MOT" : {"pre":"I7","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I8-MOT" : {"pre":"I8","post":"OUT_MOT", "trainable":true, "p":1.0},
+
+            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I6-COMM" : {"pre":"I6","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I7-COMM" : {"pre":"I7","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I8-COMM" : {"pre":"I8","post":"OUT_COMM", "trainable":true, "p":1.0},
+
+            "I1-GRASP" : {"pre":"I1","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I2-GRASP" : {"pre":"I2","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I3-GRASP" : {"pre":"I3","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I5-GRASP" : {"pre":"I5","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I6-GRASP" : {"pre":"I6","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I7-GRASP" : {"pre":"I7","post":"OUT_GRASP", "trainable":true, "p":1.0},
+            "I8-GRASP" : {"pre":"I8","post":"OUT_GRASP", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outD" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : true}}   
+        } 
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 200,
+        "generations" : 2000,
+        "evaluation_steps" : 1500,
+        "num_evaluations" : 1,
+        "fitness_function" : "transport_cubes",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:sensory",  "neurons:bias:all",  "neurons:tau:all"],
+                "max_vals" : [3,  2, 1.25],
+                "min_vals" : [-3, -2, -0.8],
+                "params" : {
+                    "encoding" : "real",
+                    "p_weight_mut" : 0.5,
+                    "p_node_mut" : 0.03,
+                    "p_conn_mut" : 0.1,
+                    "compatib_thresh" : 0.35,
+                    "c1" : 1,
+                    "c2" : 1,
+                    "c3" : 0.5,
+                    "species_elites" : 2
+                }
+            }          
+        }
+    },
+    "world":{
+        "engine" : "3D",
+        "world_delay" : 1,
+        "render_connections":true,
+        "height":10,
+        "width": 10,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 3,
+                "controller" : "neural_controller",
+                "sensors" : {
+                    "color_sensor" : {"n_sectors" : 4, "range" : 5},
+                    "light_sensor" : {"n_sectors" : 4, "range" : 20},
+                    "IR_receiver" : {"n_sectors" : 4, "range" : 10, "msg_length" : 2, "selection_scheme" : "random"},
+                    "distance_sensor" : {"n_sectors" : 4, "range" : 2},
+                    "object_grasped_sensor" : {},
+                    "ground_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 15},
+                    "IR_transmitter" : {"quantize": true, "range" : 10, "msg_length":2},
+                    "grasp_actuator" : {}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -3], "high" : [1, -2], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {
+                },
+                "params" : {"trainable" : true}
+            },
+            "light_yellow" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed_random", "params" : {"possible_values": [[0, 3.5], [3.5, 0], [-3.5, 0]]}}
+                },
+                "params" : {"range" : 20, "color" : "yellow"}
+            },
+            "ground_area_grey" : {
+                "type" : "ground_area",
+                "num_instances": 3,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0, 3.5], [3.5, 0], [-3.5, 0]]}}
+                },
+                "params" : {"radius" : 1.5, "color" : "grey"}
+            },
+            "cube_blue" : {
+                "type" : "cube",
+                "num_instances": 3,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1, -1], "high" : [1, 2], "size" : 2}}
+                },
+                "params" : {"mass" : 0.1, "side_len" : 0.2, "color" : "blue"}
+            }
+        }
+    }
+}

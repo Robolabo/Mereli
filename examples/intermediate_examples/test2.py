@@ -1,9 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.neural_networks import NeuralNetwork
-from spike_swarm_sim.neural_networks.utils import *
+from mereli.globals import global_states
+from mereli.neural_networks import NeuralNetwork
+from mereli.neural_networks.utils import *
 
 global_states.set_states(debug=True)
 

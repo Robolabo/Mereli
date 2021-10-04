@@ -1,8 +1,8 @@
 import numpy as np
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.world import SquareArena, CircularArena, CustomWorld
-from spike_swarm_sim.objects import Epuck
-from spike_swarm_sim.controllers import RobotController, BasicObstacleAvoider
+from mereli.globals import global_states
+from mereli.world import SquareArena, CircularArena, CustomWorld
+from mereli.objects import Epuck
+from mereli.controllers import RobotController, BasicObstacleAvoider
 
 """ EXAMPLE DESCRIPTION:
 """

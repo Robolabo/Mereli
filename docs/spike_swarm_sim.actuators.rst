@@ -6,7 +6,7 @@ Subpackages
 
 .. toctree::
 
-    spike_swarm_sim.actuators.utils
+    mereli.actuators.utils
 
 Submodules
 ----------
@@ -14,7 +14,7 @@ Submodules
 spike\_swarm\_sim.actuators.base\_actuator module
 -------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.base_actuator
+.. automodule:: mereli.actuators.base_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -22,7 +22,7 @@ spike\_swarm\_sim.actuators.base\_actuator module
 spike\_swarm\_sim.actuators.joint\_actuator module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.joint_actuator
+.. automodule:: mereli.actuators.joint_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -30,7 +30,7 @@ spike\_swarm\_sim.actuators.joint\_actuator module
 spike\_swarm\_sim.actuators.led\_actuator module
 ------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.led_actuator
+.. automodule:: mereli.actuators.led_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -38,7 +38,7 @@ spike\_swarm\_sim.actuators.led\_actuator module
 spike\_swarm\_sim.actuators.communication\_transmitter module
 -------------------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.communication_transmitter
+.. automodule:: mereli.actuators.communication_transmitter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -46,7 +46,7 @@ spike\_swarm\_sim.actuators.communication\_transmitter module
 spike\_swarm\_sim.actuators.grasp\_actuator module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.grasp_actuator
+.. automodule:: mereli.actuators.grasp_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -55,7 +55,7 @@ spike\_swarm\_sim.actuators.grasp\_actuator module
 spike\_swarm\_sim.actuators.wheel\_actuator module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.wheel_actuator
+.. automodule:: mereli.actuators.wheel_actuator
     :members:
     :undoc-members:
     :show-inheritance:
@@ -63,7 +63,7 @@ spike\_swarm\_sim.actuators.wheel\_actuator module
 spike\_swarm\_sim.actuators.RF\_transmitter module
 --------------------------------------------------
 
-.. automodule:: spike_swarm_sim.actuators.RF_transmitter
+.. automodule:: mereli.actuators.RF_transmitter
     :members:
     :undoc-members:
     :show-inheritance:
@@ -71,7 +71,7 @@ spike\_swarm\_sim.actuators.RF\_transmitter module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.actuators
+.. automodule:: mereli.actuators
     :members:
     :undoc-members:
     :show-inheritance:

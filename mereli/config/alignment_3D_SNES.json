@@ -1,0 +1,99 @@
+{
+    "checkpoint_file" : "chk_alignment_3D_SNES_final",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 20,
+        "stimuli": {
+            "I1" : {"n" : 2, "sensor" : "IR_receiver:msg"},
+            "I2" : {"n" : 2, "sensor" : "IR_receiver:sending_direction"},
+            "I3" : {"n" : 2, "sensor" : "IR_receiver:receiving_direction"}
+        },
+        "encoding" : {
+            "I1" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "I2" :{"scheme" : "IdentityEncoding", "receptive_field" : {}},
+            "I3" :{"scheme" : "IdentityEncoding", "receptive_field" : {}}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "H1" : {"n" : 10, "params" : {}},
+            "H2" : {"n" : 10, "params" : {}},
+            "OUT_COMM" : {"n" : 2, "params" : {"tau": 0.5}},
+            "OUT_COMM_STATE" : {"n" : 1, "params" : {"tau": 0.5}},
+            "OUT_MOT" : {"n" : 1, "params" : {"tau": 0.5, "activation":"tanh"}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outC" : {"ensemble" : "OUT_COMM_STATE", "actuator" : "IR_transmitter:state", "enc": "cat"},
+            "outB" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-c" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-c" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-c" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+
+            "h1-h1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.8},
+            "h2-h2" : {"pre":"H2","post":"H2", "trainable":true, "p":0.8},
+            "h1-h2" : {"pre":"H1","post":"H2", "trainable":true, "p":0.7},
+
+            "h1-mot" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "h2-comm" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "h2-st" : {"pre":"H2","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+
+            "comm-h1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":1.0},
+            "mot-h1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":1.0},
+            "st-h1" : {"pre":"OUT_COMM_STATE","post":"H1", "trainable":true, "p":1.0},
+
+            "comm-comm" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "comm-st" : {"pre":"OUT_COMM","post":"OUT_COMM_STATE", "trainable":true, "p":1.0},
+            "st-comm" : {"pre":"OUT_COMM_STATE","post":"OUT_COMM", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        } 
+    },
+    "algorithm" : {
+        "name" : "SNES",
+        "evolvable_object" : "robotA",
+        "population_size" : 50,
+        "generations" : 5000,
+        "evaluation_steps" : 600,
+        "num_evaluations" : 1,
+        "fitness_function" : "alignment",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:hidden", "neurons:gain:all"],
+                "max_vals" : [3,  0, 0.5, 4],
+                "min_vals" : [-3, -3, -1, 0.5],
+                "params" : {"encoding" : "real"}
+            }          
+        }
+    },
+    "world":{
+        "engine" : "3D",
+        "world_delay" : 1,
+        "render_connections":false,
+        "height":10,
+        "width": 10,
+        "objects" : {
+            "robotA" : {
+                "type" : "robot",
+                "num_instances" : 5,
+                "controller" : "neural_controller",
+                "sensors" : {"IR_receiver" : {"n_sectors" : 6, "range" : 1.2, "msg_length" : 2}},
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0], "inverse_mirrored" : 1, "max_velocity":5}, 
+                    "IR_transmitter" : {"quantize": true, "range" : 1.2, "msg_length":2}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_graph", "params" : {"max_rad":0.5, "initial_pos" : [0, 0]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+        }
+    }
+}

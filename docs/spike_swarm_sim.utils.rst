@@ -7,7 +7,7 @@ Submodules
 spike\_swarm\_sim.utils.initializers module
 -------------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.initializers
+.. automodule:: mereli.utils.initializers
     :members:
     :undoc-members:
     :show-inheritance:
@@ -17,7 +17,7 @@ spike\_swarm\_sim.utils.initializers module
 spike\_swarm\_sim.utils.activations module
 ------------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.activations
+.. automodule:: mereli.utils.activations
     :members:
     :undoc-members:
     :show-inheritance:
@@ -25,7 +25,7 @@ spike\_swarm\_sim.utils.activations module
 spike\_swarm\_sim.utils.alg\_utils module
 -----------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.alg_utils
+.. automodule:: mereli.utils.alg_utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -33,7 +33,7 @@ spike\_swarm\_sim.utils.alg\_utils module
 spike\_swarm\_sim.utils.decorators module
 -----------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.decorators
+.. automodule:: mereli.utils.decorators
     :members:
     :undoc-members:
     :show-inheritance:
@@ -41,7 +41,7 @@ spike\_swarm\_sim.utils.decorators module
 spike\_swarm\_sim.utils.exceptions module
 -----------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.exceptions
+.. automodule:: mereli.utils.exceptions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -49,7 +49,7 @@ spike\_swarm\_sim.utils.exceptions module
 spike\_swarm\_sim.utils.graph\_utils module
 -------------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.graph_utils
+.. automodule:: mereli.utils.graph_utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -57,7 +57,7 @@ spike\_swarm\_sim.utils.graph\_utils module
 spike\_swarm\_sim.utils.math\_utils module
 ------------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.math_utils
+.. automodule:: mereli.utils.math_utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -65,7 +65,7 @@ spike\_swarm\_sim.utils.math\_utils module
 spike\_swarm\_sim.utils.utils module
 ------------------------------------
 
-.. automodule:: spike_swarm_sim.utils.utils
+.. automodule:: mereli.utils.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -74,7 +74,7 @@ spike\_swarm\_sim.utils.utils module
 Module contents
 ---------------
 
-.. automodule:: spike_swarm_sim.utils
+.. automodule:: mereli.utils
     :members:
     :undoc-members:
     :show-inheritance:

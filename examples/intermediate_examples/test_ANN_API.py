@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim.neural_networks import NeuralNetwork
+from mereli.globals import global_states
+from mereli.neural_networks import NeuralNetwork
 
 dt = 0.1
 ann = NeuralNetwork(dt, neuron_model='rate_model', synapse_model='static_synapse')

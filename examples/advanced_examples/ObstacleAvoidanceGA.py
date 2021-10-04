@@ -1,11 +1,11 @@
-from spike_swarm_sim.globals import global_states
-from spike_swarm_sim import SquareArena, Engine3D
-from spike_swarm_sim.utils.initializers import RandomUniformInitializer
-from spike_swarm_sim.controllers import NeuralController
-from spike_swarm_sim.objects import Epuck
-from spike_swarm_sim.neural_networks import NeuralNetwork
-from spike_swarm_sim.objectives import ObstacleAvoidance
-from spike_swarm_sim.algorithms.evolutionary import GeneticAlgorithm
+from mereli.globals import global_states
+from mereli import SquareArena, Engine3D
+from mereli.utils.initializers import RandomUniformInitializer
+from mereli.controllers import NeuralController
+from mereli.objects import Epuck
+from mereli.neural_networks import NeuralNetwork
+from mereli.objectives import ObstacleAvoidance
+from mereli.algorithms.evolutionary import GeneticAlgorithm
 
 global_states.set_states(render=False)
 
