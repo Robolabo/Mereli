@@ -6,7 +6,7 @@ from itertools import product
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
-from mereli.neural_networks.synapses import DynamicSynapses
+from spike_swarm_sim.neural_networks.synapses import DynamicSynapses
 from .utils.monitor import NeuralNetMonitor
 
 class BaseNeuralNet:
