@@ -1,7 +1,7 @@
 
 import sys
 import os
-sys.path.append('D:\subversion\SpikeSwarmSim')
+sys.path.append('D:\subversion\Mereli')
 import numpy as np
 import matplotlib.pyplot as plot
 

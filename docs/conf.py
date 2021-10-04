@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'SpikeSwarmSim'
+project = 'Mereli'
 copyright = '2021, Rafael Sendra'
 author = 'Rafael Sendra'
 
@@ -109,7 +109,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'SpikeSwarmSimdoc'
+htmlhelp_basename = 'Merelidoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -136,7 +136,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'SpikeSwarmSim.tex', 'SpikeSwarmSim Documentation',
+    (master_doc, 'Mereli.tex', 'Mereli Documentation',
      'Rafael Sendra', 'manual'),
 ]
 
@@ -146,7 +146,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'spikeswarmsim', 'SpikeSwarmSim Documentation',
+    (master_doc, 'Mereli', 'Mereli Documentation',
      [author], 1)
 ]
 
@@ -157,8 +157,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'SpikeSwarmSim', 'SpikeSwarmSim Documentation',
-     author, 'SpikeSwarmSim', 'One line description of project.',
+    (master_doc, 'Mereli', 'Mereli Documentation',
+     author, 'Mereli', 'One line description of project.',
      'Miscellaneous'),
 ]
 

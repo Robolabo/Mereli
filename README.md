@@ -1,10 +1,10 @@
-# SpikeSwarmSim
+# Mereli
 
 ## Installation
 Clone this repository:
 ```
-git clone https://github.com/Robolabo/SpikeSwarmSim.git
-cd SpikeSwarmSim
+git clone https://github.com/Robolabo/Mereli.git
+cd Mereli
 ```
 Download the simulator requirements:
 ```
@@ -19,7 +19,7 @@ pip3 install mpi4py==3.0.3
 The simulator can be cleanly executed without MPI installed. However, MPI parallelization functionalities 
 (for example parallel evaluation in genetic algorithms) cannot be harnessed.
 
-In order to execute the examples or to use the simulator outside the SpikeSwarmSim directory, run the following 
+In order to execute the examples or to use the simulator outside the Mereli directory, run the following 
 command:
 
 ```

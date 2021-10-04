@@ -1,7 +1,7 @@
 
 import sys
 import os
-sys.path.append('D:\subversion\SpikeSwarmSim')
+sys.path.append('D:\subversion\Mereli')
 import numpy as np
 import matplotlib.pyplot as plt
 from mereli.neural_networks import LIFModel
