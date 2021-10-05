@@ -1,0 +1,702 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.neural_networks.encoding &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.neural_networks.encoding</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.neural_networks.encoding</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mereli.register</span> <span class="k">import</span> <span class="n">encoding_registry</span><span class="p">,</span> <span class="n">encoders</span><span class="p">,</span> <span class="n">receptive_fields</span>
+<span class="kn">from</span> <span class="nn">mereli.utils</span> <span class="k">import</span> <span class="n">increase_time</span>
+<span class="kn">from</span> <span class="nn">mereli.algorithms.interfaces</span> <span class="k">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">SET</span><span class="p">,</span> <span class="n">LEN</span><span class="p">,</span> <span class="n">INIT</span>
+<span class="kn">from</span> <span class="nn">.neuron_models</span> <span class="k">import</span> <span class="n">LIFModel</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.receptive_field</span> <span class="k">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="EncodingWrapper"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper">[docs]</a><span class="k">class</span> <span class="nc">EncodingWrapper</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper for gathering all the encoders of the different stimulus. </span>
+<span class="sd">    It contains a dict mapping sensor names to Encoder instances.</span>
+<span class="sd">    =====================================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        topology [dict] : configuration dict of the overall topology.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_scale</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="n">time_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># if topology is not None:</span>
+        <span class="c1">#     self.build(topology)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     logging.warning(&#39;No topology config. provided to the encoder wrapper.&#39;)</span>
+
+<div class="viewcode-block" id="EncodingWrapper.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Steps all the encoders with the corresponding stimulus. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span>\
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span></div>
+
+<div class="viewcode-block" id="EncodingWrapper.add"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheme</span><span class="p">,</span> <span class="n">sensor</span><span class="p">,</span> <span class="n">stimuli_dim</span><span class="p">,</span> <span class="n">receptive_field</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">receptive_field_params</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="k">if</span> <span class="n">receptive_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">rf_cls</span> <span class="o">=</span> <span class="n">receptive_fields</span><span class="p">[</span><span class="n">receptive_field</span><span class="p">]</span>
+            <span class="n">receptive_field</span> <span class="o">=</span> <span class="n">rf_cls</span><span class="p">(</span><span class="n">n_inputs</span><span class="o">=</span><span class="n">stimuli_dim</span><span class="p">,</span> <span class="o">**</span><span class="n">receptive_field_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">sensor</span> <span class="p">:</span> <span class="n">encoders</span><span class="p">[</span><span class="n">scheme</span><span class="p">](</span><span class="n">stimuli_dim</span><span class="p">,</span>\
+                <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">,</span> <span class="n">receptive_field</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)})</span></div>
+
+
+    <span class="c1"># def build(self, topology):</span>
+    <span class="c1">#     &quot;&quot;&quot; Builds the encoders using the topology config. dict. &quot;&quot;&quot;</span>
+    <span class="c1">#     for name, enc in topology[&#39;encoding&#39;].items():</span>
+    <span class="c1">#         receptive_field = None</span>
+    <span class="c1">#         if &#39;receptive_field&#39; in enc and enc[&#39;receptive_field&#39;] is not None and\</span>
+    <span class="c1">#             len(enc[&#39;receptive_field&#39;]) &gt; 0:</span>
+    <span class="c1">#             receptive_field_cls = receptive_fields[enc[&#39;receptive_field&#39;][&#39;name&#39;]]</span>
+    <span class="c1">#             receptive_field = receptive_field_cls(n_inputs=topology[&#39;stimuli&#39;][name][&#39;n&#39;],\</span>
+    <span class="c1">#                         **enc[&#39;receptive_field&#39;][&#39;params&#39;])</span>
+    <span class="c1">#         self._encoders.update({topology[&#39;stimuli&#39;][name][&#39;sensor&#39;] :</span>
+    <span class="c1">#                 encoders[enc[&#39;scheme&#39;]](topology[&#39;stimuli&#39;][name][&#39;n&#39;],\</span>
+    <span class="c1">#                 topology[&#39;time_scale&#39;], receptive_field, dt=1e-3)})</span>
+
+<div class="viewcode-block" id="EncodingWrapper.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets all the encoders. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">encoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">encoder</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return all the encoders. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span>
+
+<div class="viewcode-block" id="EncodingWrapper.get"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return the encoder corresponding to key.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Encoder corresponding to key &#39;</span>\
+                <span class="s1">&#39;&quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="p">[</span><span class="n">key</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="EncodingWrapper.get_encoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.get_encoding_weights">[docs]</a>    <span class="nd">@GET</span><span class="p">(</span><span class="s1">&#39;encoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_encoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_name</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">enc_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">encoder</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>\
+                <span class="k">for</span> <span class="n">encoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">encoder</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">trainable</span><span class="p">])</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">weights</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EncodingWrapper.set_encoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.set_encoding_weights">[docs]</a>    <span class="nd">@SET</span><span class="p">(</span><span class="s1">&#39;encoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">set_encoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">min_val</span> <span class="o">+</span> <span class="n">data</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">enc_name</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="n">pointer</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">encoder</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encoders</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">encoder</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">trainable</span><span class="p">:</span>
+                    <span class="n">weights_len</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">weights</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">encoder</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">pointer</span> <span class="p">:</span> <span class="n">pointer</span> <span class="o">+</span> <span class="n">weights_len</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">pointer</span> <span class="o">+=</span> <span class="n">weights_len</span></div>
+
+<div class="viewcode-block" id="EncodingWrapper.init_encoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.init_encoding_weights">[docs]</a>    <span class="nd">@INIT</span><span class="p">(</span><span class="s1">&#39;encoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">init_encoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_name</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">weights_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">len_encoding_weights</span><span class="p">(</span><span class="n">enc_name</span><span class="p">)</span>
+        <span class="n">random_weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">weights_len</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_encoding_weights</span><span class="p">(</span><span class="n">enc_name</span><span class="p">,</span> <span class="n">random_weights</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EncodingWrapper.len_encoding_weights"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.EncodingWrapper.len_encoding_weights">[docs]</a>    <span class="nd">@LEN</span><span class="p">(</span><span class="s1">&#39;encoders:weights&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">len_encoding_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_name</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_encoding_weights</span><span class="p">(</span><span class="n">enc_name</span><span class="p">,</span> <span class="n">only_trainable</span><span class="o">=</span><span class="n">only_trainable</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="Encoder"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.Encoder">[docs]</a><span class="k">class</span> <span class="nc">Encoder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Base (abstract) class for neural encoding processes.</span>
+<span class="sd">    =============================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        n_stimuli [int]: dimension of the stumuli vector to encode.</span>
+<span class="sd">        time_scale [int]: ratio between neuronal and environment time scales.</span>
+<span class="sd">        receptive_field [ReceptiveField or None]: receptive field instance that, </span>
+<span class="sd">            normally, encodes stimulus into firing rates or delays to produce</span>
+<span class="sd">            spikes. RFs also augment the input dim. If the encoder doesn&#39;t employ</span>
+<span class="sd">            receptive fields, the argument is None</span>
+<span class="sd">    =============================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_stimuli</span><span class="p">,</span> <span class="n">time_scale</span><span class="p">,</span> <span class="n">receptive_field</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_stimuli</span> <span class="o">=</span> <span class="n">n_stimuli</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="n">time_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span> <span class="o">=</span> <span class="n">receptive_field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="Encoder.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.Encoder.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step the encoder by transforming input stimuli into spikes. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Encoder.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.Encoder.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reset the encoding states (if any). &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">num_neurons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the number of nodes encoding stimuli. It is computed </span>
+<span class="sd">        as dim(stimuli) * N_RF, where N_RF is the number of nodes or &quot;neurons&quot; </span>
+<span class="sd">        encoding each stimulus in the receptive field. </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_stimuli</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span>\
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">1</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Encoder.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.Encoder.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots a visual example of encoding of the provided stimuli. </span>
+<span class="sd">        The subplot shows in the left side the receptive fields of the neurons </span>
+<span class="sd">        and the corresponding firing rate or delay in the y-axis. The </span>
+<span class="sd">        right suplot shows the corresponding encoded spike trains for 1000 time steps.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to plot Encoding if the &#39;</span>\
+            <span class="s1">&#39;receptive field is None.&#39;</span><span class="p">))</span>
+        <span class="n">stimuli</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">stimuli</span><span class="p">])</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="k">else</span> <span class="n">stimuli</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stimuli</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)]</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">spikes</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()]</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eventplot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spikes</span><span class="p">],</span> <span class="n">lineoffsets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>\
+            <span class="n">linelengths</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[:</span><span class="n">spikes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Neuron&#39;</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">spikes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Encoder.stim_rate_curve"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.Encoder.stim_rate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">stim_rate_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots the Firing Rate - Stimulus curve depicting the approx. spiking rate </span>
+<span class="sd">        of the encoded stimulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Unable to plot Rate-Stimulus curve if the &#39;</span>\
+            <span class="s1">&#39;receptive field is None.&#39;</span><span class="p">))</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">min_stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">max_stim</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">firing_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">xx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="n">spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)])</span>
+            <span class="n">Fi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="mi">50</span><span class="p">)],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">firing_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">firing_rates</span><span class="p">,</span> <span class="n">Fi</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">firing_rates</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Firing Rate&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Stimulus&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="IdentityEncoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.IdentityEncoding">[docs]</a><span class="nd">@encoding_registry</span>
+<span class="k">class</span> <span class="nc">IdentityEncoding</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Identity or  dummy encoding that outputs the untouched input. </span>
+<span class="sd">    If time_scale &gt; 1 then the encoding returns a numpy matrix with time_scale </span>
+<span class="sd">    times the stimuli (stim) vector repeated (shape of time_scale x dim(stim)).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IdentityEncoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,)</span>
+
+<div class="viewcode-block" id="IdentityEncoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.IdentityEncoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step of the encoder. It simply returns the same value as the input, </span>
+<span class="sd">        repeated time_scale times.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">stim</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">stim</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="IdentityEncoding.stim_rate_curve"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.IdentityEncoding.stim_rate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">stim_rate_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Encoding Firing Rate - Stimulus is not &#39;</span>\
+            <span class="s1">&#39;available in Identity Encoding.&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="IdentityEncoding.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.IdentityEncoding.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Encoding plot is not &#39;</span>\
+            <span class="s1">&#39;available in Identity Encoding.&#39;</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="LIF_Encoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding">[docs]</a><span class="nd">@encoding_registry</span>
+<span class="k">class</span> <span class="nc">LIF_Encoding</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Maps stimulus to the input current of LIF neurons that produce </span>
+<span class="sd">    spikes. The mapping to currents is generated by means of a receptive </span>
+<span class="sd">    field.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LIF_Encoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lif_model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_stimuli</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LIF_Encoding.create_lif"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding.create_lif">[docs]</a>    <span class="k">def</span> <span class="nf">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_neurons</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lif_model</span> <span class="o">=</span> <span class="n">LIFModel</span><span class="p">(</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_neurons</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lif_model</span><span class="o">.</span><span class="n">add</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LIF_Encoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding.step">[docs]</a>    <span class="nd">@increase_time</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Encoding Step of LIF enc. It firstly converts stimuli into currents. </span>
+<span class="sd">        Subsequently the currents are applied to an ensemble of LIF neurons that </span>
+<span class="sd">        return the corresponding spikes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stimuli</span> <span class="o">=</span> <span class="n">stimuli</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">currents</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span> <span class="k">for</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="p">])</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lif_model</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">currents</span><span class="o">.</span><span class="n">flatten</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>\
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)])</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">spikes</span></div>
+
+<div class="viewcode-block" id="LIF_Encoding.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets the encoding. In this case, it resets the LIF neurons&#39; dynamics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lif_model</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="LIF_Encoding.stim_rate_curve"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding.stim_rate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">stim_rate_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">stim_rate_curve</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_stimuli</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LIF_Encoding.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.LIF_Encoding.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_lif</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_stimuli</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PoissonRateCoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.PoissonRateCoding">[docs]</a><span class="nd">@encoding_registry</span>
+<span class="k">class</span> <span class="nc">PoissonRateCoding</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Maps stimulus value to firing rate of a Poisson process of </span>
+<span class="sd">    spike generation. The specified receptive field is used to generate the </span>
+<span class="sd">    rates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PoissonRateCoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_neurons</span><span class="p">)</span> <span class="c1"># survive prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_neurons</span><span class="p">)</span> <span class="c1"># previous output sample (spikes)</span>
+
+<div class="viewcode-block" id="PoissonRateCoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.PoissonRateCoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Step the dynamics of the Poisson process and stochastically sample a spike </span>
+<span class="sd">        based on the survival probability.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stimuli</span> <span class="o">=</span> <span class="n">stimuli</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">rate</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">rate</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">,</span> <span class="n">rates</span><span class="p">)])</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="n">prob</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">prob</span><span class="p">])</span> <span class="k">for</span> <span class="n">prob</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span><span class="p">[</span><span class="n">output</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">bool</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="PoissonRateCoding.reset"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.PoissonRateCoding.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reset the dynamics of the Poisson process. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_neurons</span><span class="p">)</span> <span class="c1"># survive prob</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_neurons</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PoissonRateCoding.stim_rate_curve"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.PoissonRateCoding.stim_rate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">stim_rate_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Plots the Firing Rate - Stimulus curve depicting the approx. spiking rate </span>
+<span class="sd">        of the encoded stimulus.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Ploting the Firing Rate - Stimulus curve. It may take a while.&#39;</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">min_stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">max_stim</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">firing_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">x_i</span> <span class="ow">in</span> <span class="n">xx</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">prev_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+            <span class="n">spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x_i</span><span class="p">]))</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)])</span>
+            <span class="n">Fi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">chunk</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">chunk</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">spikes</span><span class="p">,</span> <span class="mi">50</span><span class="p">)],</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">firing_rates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">firing_rates</span><span class="p">,</span> <span class="n">Fi</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">firing_rates</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Firing Rate&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Stimulus&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PoissonRateCoding.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.PoissonRateCoding.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="RankOrderCoding"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.RankOrderCoding">[docs]</a><span class="nd">@encoding_registry</span>
+<span class="k">class</span> <span class="nc">RankOrderCoding</span><span class="p">(</span><span class="n">Encoder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Rank Order Coding (ROC) scheme. It is a temporal encoding in which the </span>
+<span class="sd">    stimulus is firstly mapped to spike delays, fixing some ordering, using </span>
+<span class="sd">    receptive fields. Then, a matrix of spikes of shape [time_scale x num_neurons] </span>
+<span class="sd">    is created with ony one spike per neuron at the corresponding delay. Note </span>
+<span class="sd">    that this encoding imposes that time_scale is greater that 1. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RankOrderCoding</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,)</span> <span class="c1">#**kwargs)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_neurons</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;ROC encoding can only be used with time scales &#39;</span>\
+                    <span class="s1">&#39;greater than the number of neurons.&#39;</span><span class="p">))</span>
+        
+<div class="viewcode-block" id="RankOrderCoding.step"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.RankOrderCoding.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="n">stimuli</span> <span class="o">=</span> <span class="p">[</span><span class="n">stimuli</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="k">else</span> <span class="n">stimuli</span>
+        <span class="n">delays</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="p">(</span><span class="n">stim</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="p">])</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)[</span><span class="n">delays</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+        <span class="k">return</span> <span class="n">spikes</span></div>
+    
+<div class="viewcode-block" id="RankOrderCoding.stim_rate_curve"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.RankOrderCoding.stim_rate_curve">[docs]</a>    <span class="k">def</span> <span class="nf">stim_rate_curve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Encoding Firing Rate - Stimulus is not &#39;</span>\
+            <span class="s1">&#39;available in Rank Order Coding.&#39;</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="RankOrderCoding.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.encoding.RankOrderCoding.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">):</span>
+        <span class="n">stimuli</span> <span class="o">=</span> <span class="p">[</span><span class="n">stimuli</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="k">else</span> <span class="n">stimuli</span>
+        <span class="n">f</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">min_stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">max_stim</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">yy</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span><span class="p">]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="p">:</span>
+            <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">min_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">max_val</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">delay</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="p">(</span><span class="n">stimuli</span><span class="p">):</span>
+                <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stim</span><span class="p">,</span> <span class="n">delay</span><span class="p">,</span> <span class="s1">&#39;ko&#39;</span><span class="p">)</span>
+        
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Neuron &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; with mu=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>\
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_field</span><span class="o">.</span><span class="n">centers</span><span class="p">)])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Stimulus&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Time to First Spike&#39;</span><span class="p">)</span>
+        <span class="c1"># Plot spike</span>
+        <span class="n">spikes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">stimuli</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eventplot</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>  <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">spikes</span><span class="p">],</span> <span class="n">lineoffsets</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linelengths</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>\
+                            <span class="n">linewidths</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">])</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Neuron&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">)</span>
+        <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+
+
+<span class="c1">#!TODO</span>
+<span class="c1"># class PopulationVectorEncoding(Encoder):</span>
+<span class="c1">#     def __init__(self, *args, **kwargs):</span>
+<span class="c1">#         super(PopulationVectorEncoding, self).__init__(*args,)</span>
+<span class="c1">#         #! ojo depender de otra var y no mu_vec</span>
+<span class="c1">#         from scipy.linalg import circulant</span>
+<span class="c1">#         self.Phi = circulant(np.r_[[1, .5], np.zeros(8-3), [0.5]])</span>
+<span class="c1">#         self.s = np.ones_like(self.mu_vec) # survive prob</span>
+<span class="c1">#         self.prev_output = 0 # previous output sample (spike)</span>
+
+<span class="c1">#     def step(self, stimuli):</span>
+<span class="c1">#         yy = self.Phi.dot(stimuli)</span>
+<span class="c1">#         rates = [self.receptive_field(yy, mu) for mu in self.mu_vec]</span>
+        
+<span class="c1">#         self.s += np.array([1e-3 * (-rate * s) for s, rate in zip(self.s, rates)])</span>
+<span class="c1">#         output = np.array([np.random.choice(2, p=[prob, 1-prob]) for prob in self.s])</span>
+<span class="c1">#         self.s[output.astype(bool)] = 1.</span>
+<span class="c1">#         return output</span>
+
+<span class="c1">#     def plot_ROC(self, stim_val):</span>
+<span class="c1">#         f, axes = plot.subplots(1, 2, figsize=(15, 7))</span>
+<span class="c1">#         xx = np.linspace(self.min_stim, self.max_stim, 1000)</span>
+<span class="c1">#         lines = []</span>
+<span class="c1">#         for mu in self.mu_vec:</span>
+<span class="c1">#             y = np.array([self.receptive_field(v, mu) for v in xx])</span>
+<span class="c1">#             lines.append(axes[0].plot(xx, y)[0])</span>
+<span class="c1">#             axes[0].vlines(stim_val, self.min_val, self.max_val)</span>
+<span class="c1">#             axes[0].plot(stim_val, self.receptive_field(stim_val, mu), &#39;ko&#39;)</span>
+<span class="c1">#         axes[0].legend(lines, [&#39;Neuron &#39;+str(i)+&#39; with mu=&#39;+str(round(mu,2)) for i, mu in enumerate(self.mu_vec)])</span>
+<span class="c1">#         axes[0].set_xlabel(&#39;Stimulus&#39;); axes[0].set_ylabel(&#39;Firing Rate&#39;)</span>
+        
+<span class="c1">#         spikes = [self.step(stim_val) for _ in range(1000)]</span>
+<span class="c1">#         spikes = np.vstack(spikes).T</span>
+<span class="c1">#         axes[1].eventplot([np.where(v)[0]  for v in spikes], lineoffsets=1, linelengths=.5, linewidths=1)</span>
+<span class="c1">#         axes[1].set_ylabel(&#39;Neuron&#39;); axes[1].set_xlabel(&#39;Time&#39;)</span>
+<span class="c1">#         axes[1].set_xlim(0, 1000)</span>
+<span class="c1">#         axes[1].set_yticks(range(5))</span>
+<span class="c1">#         plot.show()</span>
+
+<span class="c1">#     def reset(self):</span>
+<span class="c1">#         self.t = 0</span>
+<span class="c1">#         self.s = np.ones_like(self.mu_vec) # survive prob</span>
+<span class="c1">#         self.prev_output = np.zeros_like(self.mu_vec)</span>
+
+
+<span class="c1">#     def step(self, stimuli):</span>
+<span class="c1">#         stimuli = [stimuli] if not isinstance(stimuli, list) else stimuli</span>
+<span class="c1">#         delays = np.hstack([self.receptive_field(stim).astype(int) for stim in stimuli])</span>
+<span class="c1">#         spikes = np.eye(self.time_scale)[delays-1].T</span>
+<span class="c1">#         return spikes</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

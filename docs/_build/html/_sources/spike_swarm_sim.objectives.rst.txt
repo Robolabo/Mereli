@@ -1,10 +1,10 @@
-spike\_swarm\_sim.objectives package
+mereli.objectives package
 ====================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.objectives.fitness module
+mereli.objectives.fitness module
 -------------------------------------------
 
 .. automodule:: mereli.objectives.fitness
@@ -12,7 +12,7 @@ spike\_swarm\_sim.objectives.fitness module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.objectives.reward module
+mereli.objectives.reward module
 ------------------------------------------
 
 .. automodule:: mereli.objectives.reward

@@ -1,0 +1,440 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.utils.activations &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.utils.activations</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.utils.activations</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="heaviside"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.heaviside">[docs]</a><span class="k">def</span> <span class="nf">heaviside</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Applies a Heaviside activation function.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\mathcal{H}(x) = \left\{\begin{array}{ccc}</span>
+<span class="sd">            1, &amp; \text{ if } &amp; x &gt;=0 \\</span>
+<span class="sd">            0, &amp; \text{ if } &amp; x &lt; 0 \\</span>
+<span class="sd">        \end{array}\right.\]</span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># return x * (x &gt;= 0.0)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="relu"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.relu">[docs]</a><span class="k">def</span> <span class="nf">relu</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;  Applies a ReLU () activation function to the input vector.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\mathrm{relu}(x) = \left\{\begin{array}{ccc}</span>
+<span class="sd">            x, &amp; \text{ if } &amp; x &gt;=0 \\</span>
+<span class="sd">            0, &amp; \text{ if } &amp; x &lt; 0 \\</span>
+<span class="sd">        \end{array}\right.\]</span>
+<span class="sd">    </span>
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">x</span><span class="p">[</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="sigmoid"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.sigmoid">[docs]</a><span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Applies a sigmoid activation function to the input vector.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\sigma(x) = \dfrac{1}{1 + e^{-x}}\]</span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="tanh"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.tanh">[docs]</a><span class="k">def</span> <span class="nf">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Applies a hyperbolic tangent activation function to the input vector.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\mathrm{tanh}(x) = \dfrac{e^{2x} - 1}{e^{2x} + 1}\]</span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="gaussian"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.gaussian">[docs]</a><span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Applies a gaussian function to the input x.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\mathrm{gaussian}(x) = e^{-\mathrm{scale}\,x^2}\]</span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sin"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.sin">[docs]</a><span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+<span class="sd">    :param float freq:</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq</span><span class="o">*</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cos"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.cos">[docs]</a><span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+<span class="sd">    :param float freq:</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">freq</span><span class="o">*</span><span class="n">x</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="square_sin"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.square_sin">[docs]</a><span class="k">def</span> <span class="nf">square_sin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+<span class="sd">    :param float freq:</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="square_cos"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.square_cos">[docs]</a><span class="k">def</span> <span class="nf">square_cos</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+<span class="sd">    :param float freq:</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="softmax"><a class="viewcode-back" href="../../../spike_swarm_sim.utils.html#mereli.utils.activations.softmax">[docs]</a><span class="k">def</span> <span class="nf">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tau</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Applies a softmax activation function to the input vector.</span>
+<span class="sd">    </span>
+<span class="sd">    .. math::</span>
+<span class="sd">        :nowrap:</span>
+
+<span class="sd">        \[\mathrm{softmax}(x)_j = \dfrac{e^{\mathbf{x}_j/\tau}}{\displaystyle \sum_{ i} e^{x_i / \tau} }\]</span>
+
+<span class="sd">    :param np.ndarray x: input vector to which the activation is applied.</span>
+
+<span class="sd">    :returns: numpy array with the element-wise transformed vector.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">tau</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">tau</span><span class="p">))</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,10 +1,10 @@
-spike\_swarm\_sim.neural\_networks.update\_rules package
+mereli.neural\_networks.update\_rules package
 ========================================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.neural\_networks.update\_rules.update\_rules module
+mereli.neural\_networks.update\_rules.update\_rules module
 ---------------------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.update_rules.update_rules

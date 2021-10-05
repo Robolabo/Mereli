@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.config_parser &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.config_parser</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.config_parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span> 
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">mereli.register</span> <span class="k">as</span> <span class="nn">reg</span>
+<span class="kn">from</span> <span class="nn">mereli.sensors.utils</span> <span class="k">import</span> <span class="n">check_sensor_cfg</span><span class="p">,</span> <span class="n">autocomplete_sensor_cfg</span>
+<span class="kn">from</span> <span class="nn">mereli.actuators.utils</span> <span class="k">import</span> <span class="n">check_actuator_cfg</span><span class="p">,</span> <span class="n">autocomplete_actuator_cfg</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.utils</span> <span class="k">import</span> <span class="n">neural_net_checker</span><span class="p">,</span> <span class="n">autocomplete_neural_net</span>
+
+<div class="viewcode-block" id="ExceptionDuplicates"><a class="viewcode-back" href="../../modules.html#mereli.config_parser.ExceptionDuplicates">[docs]</a><span class="k">def</span> <span class="nf">ExceptionDuplicates</span><span class="p">(</span><span class="n">kv_pairs</span><span class="p">):</span>
+    <span class="n">dct</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kv_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dct</span><span class="p">:</span>
+           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Duplicate key &quot;</span><span class="si">{}</span><span class="s1">&quot; in JSON config. file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dct</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">dct</span></div>
+
+<div class="viewcode-block" id="json_parser"><a class="viewcode-back" href="../../modules.html#mereli.config_parser.json_parser">[docs]</a><span class="k">def</span> <span class="nf">json_parser</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Converts the JSON configuration file into a dictionary. &quot;&quot;&quot;</span>
+    <span class="n">json_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;mereli&#39;</span><span class="p">,</span> <span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="n">file</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">json_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">config_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">,</span> <span class="n">object_pairs_hook</span><span class="o">=</span><span class="n">ExceptionDuplicates</span><span class="p">)</span>
+    <span class="n">config_dict</span> <span class="o">=</span> <span class="n">config_checker</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+    <span class="n">config_dict</span> <span class="o">=</span> <span class="n">config_autocompletion</span><span class="p">(</span><span class="n">config_dict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">config_dict</span></div>
+
+<div class="viewcode-block" id="config_checker"><a class="viewcode-back" href="../../modules.html#mereli.config_parser.config_checker">[docs]</a><span class="k">def</span> <span class="nf">config_checker</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
+    <span class="c1">#* General checks</span>
+    <span class="c1">#! COmprobar que si neural controller =&gt; topology != None</span>
+    <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;ANN Topology not specified in configuration file.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;algorithm&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Optimization Algorithm not specified in configuration file.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;world&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;world&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;World/Environment not specified in configuration file.&#39;</span><span class="p">))</span>
+    
+    <span class="c1">#!check types</span>
+    <span class="c1">#* Checker Algorithm</span>
+    <span class="k">if</span> <span class="s1">&#39;algorithm&#39;</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]):</span>
+        <span class="n">alg_cfg</span> <span class="o">=</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alg_cfg</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Algorithm type of not specified.&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The algorithm </span><span class="si">{}</span><span class="s1"> is not currently implemented in the simulator. &#39;</span>\
+                <span class="s1">&#39;Available algorithms are: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">algorithms</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+        <span class="k">if</span> <span class="s1">&#39;fitness_function&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alg_cfg</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Fitness function not specified.&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;fitness_function&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">fitness_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The Fitness Function </span><span class="si">{}</span><span class="s1"> is not currently implemented in the simulator. &#39;</span>\
+                <span class="s1">&#39;Available fitness functions are: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;fitness_function&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">fitness_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;population_size&#39;</span><span class="p">,</span> <span class="s1">&#39;generations&#39;</span><span class="p">,</span> <span class="s1">&#39;evaluation_steps&#39;</span><span class="p">,</span> <span class="s1">&#39;num_evaluations&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Parameter </span><span class="si">{}</span><span class="s1"> of algorithm </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                    <span class="s1">&#39;must be greater than 0.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;populations&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;There must be at least one population of </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                <span class="s1">&#39;in order to start evolution.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])))</span>
+        <span class="k">for</span> <span class="n">pop_name</span><span class="p">,</span> <span class="n">pop</span> <span class="ow">in</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;populations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;No ANN variable to be optimized was &#39;</span>\
+                    <span class="s1">&#39;selected in population </span><span class="si">{}</span><span class="s1"> of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pop_name</span><span class="p">,</span> <span class="n">alg_cfg</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">]]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The length of the max_vals field must &#39;</span>\
+                    <span class="s1">&#39;be the same as the length of the objects field.&#39;</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The length of the min_vals field must &#39;</span>\
+                    <span class="s1">&#39;be the same as the length of the objects field.&#39;</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">min_v</span><span class="p">,</span> <span class="n">max_v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pop</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;min_vals&#39;</span><span class="p">],</span> <span class="n">pop</span><span class="p">[</span><span class="s1">&#39;max_vals&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">max_v</span> <span class="o">&lt;=</span> <span class="n">min_v</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The minimum value of optimization variable queried by &quot;</span><span class="si">{}</span><span class="s1">&quot; &#39;</span>\
+                        <span class="s1">&#39;must be lower than the specified maximum value.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">query</span><span class="p">)))</span>
+            <span class="c1"># Check that probabilities are within [0, 1]</span>
+            <span class="k">for</span> <span class="n">prb</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mutation_prob&#39;</span><span class="p">,</span> <span class="s1">&#39;crossover_prob&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">prb</span> <span class="ow">in</span> <span class="n">pop</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">pop</span><span class="p">[</span><span class="n">prb</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> of population </span><span class="si">{}</span><span class="s1"> is a probability &#39;</span>\
+                        <span class="s1">&#39;and must be bounded in [0, 1].&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prb</span><span class="p">,</span> <span class="n">pop_name</span><span class="p">)))</span>
+            <span class="c1">#TODO check alg. params</span>
+            <span class="c1"># # Check that evo operators are implemented.</span>
+            <span class="c1"># for operator in [&quot;selection_operator&quot;, &quot;crossover_operator&quot;, &quot;mutation_operator&quot;, &quot;mating_operator&quot;]:</span>
+            <span class="c1">#     if pop[operator] not in map(lambda x: &#39;_&#39;.join(x.split(&#39;_&#39;)[:-1]), reg.evo_operators.keys()):</span>
+            <span class="c1">#         available_ops = map(lambda x: &#39;_&#39;.join(x.split(&#39;_&#39;)[:-1]), filter(lambda x: \</span>
+            <span class="c1">#             x.split(&#39;_&#39;)[-1] == operator.split(&#39;_&#39;)[0], reg.evo_operators.keys()))</span>
+            <span class="c1">#         raise Exception(logging.error(&#39;Evolutionary {} operator &quot;{}&quot; of population {} is not implemented in the simulator. &#39;\</span>
+            <span class="c1">#             &#39;Available operators are {}&#39;.format(operator.split(&#39;_&#39;)[0], pop[operator], pop_name, tuple(available_ops))))</span>
+            <span class="c1"># Check types of population variables.</span>
+        
+    <span class="c1">#* Checker World</span>
+    <span class="n">world_cfg</span> <span class="o">=</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;world&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;objects&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">world_cfg</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">world_cfg</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No world entities were specified. Empty World will be created.&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">world_cfg</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;num_instances&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;num_instances&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Specify the number of instances of object </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;num_instances&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The number of instances of object </span><span class="si">{}</span><span class="s1"> must be greater than .&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="s1">&#39;type&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Entity type of </span><span class="si">{}</span><span class="s1"> not specified.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)))</span>
+        <span class="c1"># if obj[&#39;type&#39;] not in reg.world_objects[world_cfg[&#39;engine&#39;]].keys():</span>
+        <span class="c1">#     raise Exception(logging.error(&#39;Entity type {} is not implemented. &#39;\</span>
+        <span class="c1">#         &#39;Available entities are: {}.&#39;.format(obj[&#39;type&#39;], tuple(reg.world_objects[world_cfg[&#39;engine&#39;]].keys()))))</span>
+            <span class="c1">#! TO BE EXTENDED TO OTHER CONTROLLABLE ENTITIES</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The number of instances of entity </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                <span class="s1">&#39;must be greater than 0.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])))</span>
+        <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;robot&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;controller&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No controller was settled for </span><span class="si">{}</span><span class="s1">. Dummy controller will be used. &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj_name</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;controller&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">controllers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Controller </span><span class="si">{}</span><span class="s1"> of entity </span><span class="si">{}</span><span class="s1"> is not implemented. &#39;</span>\
+                    <span class="s1">&#39;Dummy controller will be used instead.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;controller&#39;</span><span class="p">]))</span>
+            <span class="c1"># #! Meter dummy controller</span>
+            <span class="c1"># for var, possible_vals in zip([&#39;sensors&#39;, &#39;actuators&#39;], [reg.sensors, reg.actuators]):</span>
+            <span class="c1">#     if var not in obj.keys() or len(obj[var]) == 0 or obj[var] is None:</span>
+            <span class="c1">#         raise Exception(logging.error(&#39;No {} was settled for entity {}.&#39;.format(var[:-1], obj_name)))</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         for key in obj[var].keys():</span>
+            <span class="c1">#             if key not in possible_vals.keys():</span>
+            <span class="c1">#                 raise Exception(logging.error(&#39;{} {} is not implemented. Available {} are {}.&#39;\</span>
+            <span class="c1">#                     .format(var[:-1], key, var, tuple(possible_vals))))</span>
+            <span class="c1"># Check actuators params</span>
+            <span class="k">for</span> <span class="n">act_name</span><span class="p">,</span> <span class="n">act_params</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">check_actuator_cfg</span><span class="p">(</span><span class="n">act_name</span><span class="p">,</span> <span class="n">act_params</span><span class="p">)</span>
+            <span class="c1"># Check sensors params</span>
+            <span class="k">for</span> <span class="n">sens_name</span><span class="p">,</span> <span class="n">sens_params</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">check_sensor_cfg</span><span class="p">(</span><span class="n">sens_name</span><span class="p">,</span> <span class="n">sens_params</span><span class="p">)</span>
+            <span class="c1"># Check both comm. transmitter and receiver are created</span>
+            <span class="k">if</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;A communication transmitter was created &#39;</span>\
+                    <span class="s1">&#39;but no communication receiver was specified. &#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;A communication receiver was created &#39;</span>\
+                    <span class="s1">&#39;but no communication transmitter was specified. &#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]):</span>
+        <span class="n">neural_net_checker</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">cfg_dict</span>  </div>
+
+<div class="viewcode-block" id="config_autocompletion"><a class="viewcode-back" href="../../modules.html#mereli.config_parser.config_autocompletion">[docs]</a><span class="k">def</span> <span class="nf">config_autocompletion</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletes omitted optional fields in the config file to </span>
+<span class="sd">    their default values. &quot;&quot;&quot;</span>
+    <span class="c1">#* Autocomplete Algorithm config</span>
+    <span class="k">if</span> <span class="s1">&#39;algorithm&#39;</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]):</span>
+        <span class="n">alg_dict</span> <span class="o">=</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;algorithm&#39;</span><span class="p">]</span>
+        <span class="c1"># Autocomplete alg. paramters to their defaults.</span>
+        <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;population_size&#39;</span><span class="p">,</span> <span class="s1">&#39;generations&#39;</span><span class="p">,</span>\
+                <span class="s1">&#39;evaluation_steps&#39;</span><span class="p">,</span> <span class="s1">&#39;num_evaluations&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">1</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">alg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">alg_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">alg_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+        <span class="c1">#TODO Autocomplete each population</span>
+        <span class="c1"># for pop in alg_dict[&#39;populations&#39;].values():</span>
+        <span class="c1">#     #! En el futuro comprobar que el alg hereda de Evolutionary Alg.</span>
+        <span class="c1">#     for var, default in zip([&#39;selection_operator&#39;, &#39;crossover_operator&#39;, &#39;mutation_operator&#39;,\</span>
+        <span class="c1">#             &#39;mating_operator&#39;, &#39;mutation_prob&#39;, &#39;crossover_prob&#39;, &#39;num_elite&#39;],\</span>
+        <span class="c1">#             [&#39;nonlin_rank&#39;, &#39;blxalpha&#39;, &#39;gaussian&#39;, &#39;random&#39;, 0.05, 1, 1]):</span>
+        <span class="c1">#         if var not in pop:</span>
+        <span class="c1">#             pop[var] = default</span>
+
+    <span class="c1">#* Autocomplete World config</span>
+    <span class="n">world_dict</span> <span class="o">=</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;world&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;engine&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">:</span>
+        <span class="n">world_dict</span><span class="p">[</span><span class="s1">&#39;engine&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;2D&#39;</span>
+    <span class="c1"># Autocomplete world paramters to their defaults.</span>
+    <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">default</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;world_delay&#39;</span><span class="p">,</span> <span class="s1">&#39;render_connections&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> <span class="n">world_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">world_dict</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">default</span>
+    <span class="k">if</span> <span class="s1">&#39;objects&#39;</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;robot&#39;</span><span class="p">:</span>
+                <span class="c1"># Autocomplete sensors&#39; params</span>
+                <span class="k">if</span> <span class="s1">&#39;sensors&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">sens_name</span><span class="p">,</span> <span class="n">sens</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="n">sens_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">autocomplete_sensor_cfg</span><span class="p">(</span><span class="n">sens_name</span><span class="p">,</span> <span class="n">sens</span><span class="p">)</span>
+                <span class="c1"># Autocomplete actuators&#39; params</span>
+                <span class="k">if</span> <span class="s1">&#39;actuators&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">act_name</span><span class="p">,</span> <span class="n">act</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="n">act_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">autocomplete_actuator_cfg</span><span class="p">(</span><span class="n">act_name</span><span class="p">,</span> <span class="n">act</span><span class="p">)</span>
+                <span class="c1"># Set TX and RX msgs to the same length</span>
+                <span class="k">if</span> <span class="s1">&#39;IR_receiver&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="s1">&#39;IR_transmitter&#39;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]:</span>
+                        <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">][</span><span class="s1">&#39;IR_transmitter&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The length of communication receiver and communication transmitter messages &#39;</span>\
+                            <span class="s1">&#39;was not the same. Fixing message to a length of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">][</span><span class="s1">&#39;IR_receiver&#39;</span><span class="p">][</span><span class="s1">&#39;msg_length&#39;</span><span class="p">]))</span>
+                <span class="c1"># Check robot env perturbations</span>
+                <span class="k">if</span>  <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;robot&#39;</span> <span class="ow">and</span> <span class="s1">&#39;perturbations&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;perturbations&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s1">&#39;topology&#39;</span> <span class="ow">in</span> <span class="n">cfg_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]):</span>
+        <span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">autocomplete_neural_net</span><span class="p">(</span><span class="n">cfg_dict</span><span class="p">[</span><span class="s1">&#39;topology&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">cfg_dict</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

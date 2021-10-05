@@ -1,10 +1,10 @@
-spike\_swarm\_sim.neural\_networks.utils package
+mereli.neural\_networks.utils package
 ================================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.neural\_networks.utils.builder module
+mereli.neural\_networks.utils.builder module
 -------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.utils.builder
@@ -12,7 +12,7 @@ spike\_swarm\_sim.neural\_networks.utils.builder module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.utils.monitor module
+mereli.neural\_networks.utils.monitor module
 -------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.utils.monitor
@@ -20,7 +20,7 @@ spike\_swarm\_sim.neural\_networks.utils.monitor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.utils.utils module
+mereli.neural\_networks.utils.utils module
 -----------------------------------------------------
 
 .. automodule:: mereli.neural_networks.utils.utils
@@ -28,7 +28,7 @@ spike\_swarm\_sim.neural\_networks.utils.utils module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.utils.visualization module
+mereli.neural\_networks.utils.visualization module
 -------------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.utils.visualization

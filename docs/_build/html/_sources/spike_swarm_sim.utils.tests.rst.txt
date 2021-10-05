@@ -1,10 +1,10 @@
-spike\_swarm\_sim.utils.tests package
+mereli.utils.tests package
 =====================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.utils.tests.test\_math\_utils module
+mereli.utils.tests.test\_math\_utils module
 ------------------------------------------------------
 
 .. automodule:: mereli.utils.tests.test_math_utils

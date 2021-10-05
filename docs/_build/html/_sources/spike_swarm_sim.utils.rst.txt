@@ -1,10 +1,10 @@
-spike\_swarm\_sim.utils package
+mereli.utils package
 ===============================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.utils.initializers module
+mereli.utils.initializers module
 -------------------------------------------
 
 .. automodule:: mereli.utils.initializers
@@ -14,7 +14,7 @@ spike\_swarm\_sim.utils.initializers module
     :exclude-members: initializer_handler
 
 
-spike\_swarm\_sim.utils.activations module
+mereli.utils.activations module
 ------------------------------------------
 
 .. automodule:: mereli.utils.activations
@@ -22,7 +22,7 @@ spike\_swarm\_sim.utils.activations module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.alg\_utils module
+mereli.utils.alg\_utils module
 -----------------------------------------
 
 .. automodule:: mereli.utils.alg_utils
@@ -30,7 +30,7 @@ spike\_swarm\_sim.utils.alg\_utils module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.decorators module
+mereli.utils.decorators module
 -----------------------------------------
 
 .. automodule:: mereli.utils.decorators
@@ -38,7 +38,7 @@ spike\_swarm\_sim.utils.decorators module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.exceptions module
+mereli.utils.exceptions module
 -----------------------------------------
 
 .. automodule:: mereli.utils.exceptions
@@ -46,7 +46,7 @@ spike\_swarm\_sim.utils.exceptions module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.graph\_utils module
+mereli.utils.graph\_utils module
 -------------------------------------------
 
 .. automodule:: mereli.utils.graph_utils
@@ -54,7 +54,7 @@ spike\_swarm\_sim.utils.graph\_utils module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.math\_utils module
+mereli.utils.math\_utils module
 ------------------------------------------
 
 .. automodule:: mereli.utils.math_utils
@@ -62,7 +62,7 @@ spike\_swarm\_sim.utils.math\_utils module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.utils.utils module
+mereli.utils.utils module
 ------------------------------------
 
 .. automodule:: mereli.utils.utils

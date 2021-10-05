@@ -1,0 +1,24 @@
+mereli.communication package
+=====================================
+
+Submodules
+----------
+
+mereli.communication.IR\_communication
+-------------------------------------------------------------
+
+.. automodule:: mereli.communication.IR_communication
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
+
+
+Module contents
+---------------
+
+.. automodule:: mereli.communication
+    :members:
+    :undoc-members:
+    :show-inheritance:

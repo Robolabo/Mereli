@@ -1,4 +1,4 @@
-spike\_swarm\_sim.actuators package
+mereli.actuators package
 ===================================
 
 Subpackages
@@ -11,7 +11,7 @@ Subpackages
 Submodules
 ----------
 
-spike\_swarm\_sim.actuators.base\_actuator module
+mereli.actuators.base\_actuator module
 -------------------------------------------------
 
 .. automodule:: mereli.actuators.base_actuator
@@ -19,7 +19,7 @@ spike\_swarm\_sim.actuators.base\_actuator module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.actuators.joint\_actuator module
+mereli.actuators.joint\_actuator module
 --------------------------------------------------
 
 .. automodule:: mereli.actuators.joint_actuator
@@ -27,7 +27,7 @@ spike\_swarm\_sim.actuators.joint\_actuator module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.actuators.led\_actuator module
+mereli.actuators.led\_actuator module
 ------------------------------------------------
 
 .. automodule:: mereli.actuators.led_actuator
@@ -35,7 +35,7 @@ spike\_swarm\_sim.actuators.led\_actuator module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.actuators.communication\_transmitter module
+mereli.actuators.communication\_transmitter module
 -------------------------------------------------------------
 
 .. automodule:: mereli.actuators.communication_transmitter
@@ -43,7 +43,7 @@ spike\_swarm\_sim.actuators.communication\_transmitter module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.actuators.grasp\_actuator module
+mereli.actuators.grasp\_actuator module
 --------------------------------------------------
 
 .. automodule:: mereli.actuators.grasp_actuator
@@ -52,7 +52,7 @@ spike\_swarm\_sim.actuators.grasp\_actuator module
     :show-inheritance:
 
 
-spike\_swarm\_sim.actuators.wheel\_actuator module
+mereli.actuators.wheel\_actuator module
 --------------------------------------------------
 
 .. automodule:: mereli.actuators.wheel_actuator
@@ -60,7 +60,7 @@ spike\_swarm\_sim.actuators.wheel\_actuator module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.actuators.RF\_transmitter module
+mereli.actuators.RF\_transmitter module
 --------------------------------------------------
 
 .. automodule:: mereli.actuators.RF_transmitter

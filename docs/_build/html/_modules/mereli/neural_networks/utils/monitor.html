@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.neural_networks.utils.monitor &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.neural_networks.utils.monitor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.neural_networks.utils.monitor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+
+<div class="viewcode-block" id="NeuralNetMonitor"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.monitor.NeuralNetMonitor">[docs]</a><span class="k">class</span> <span class="nc">NeuralNetMonitor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Monitor of the neural network variables.</span>
+<span class="sd">    ==============================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        ensembles [dict] : dict mapping ensemble names to number of neurons.</span>
+<span class="sd">        stimuli [dict] : dict mapping stimuli names to number of stimuli components.</span>
+<span class="sd">        encoded_inputs [dict] : dict encoded stimuli names to number of input neurons.</span>
+<span class="sd">        output_neuron_names [list] : list of motor ensembles.</span>
+<span class="sd">    ==============================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ensembles</span><span class="p">,</span> <span class="n">stimuli</span><span class="p">,</span> <span class="n">encoded_inputs</span><span class="p">,</span> <span class="n">output_neuron_names</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensembles</span> <span class="o">=</span> <span class="n">ensembles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stimuli</span> <span class="o">=</span> <span class="n">stimuli</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoded_inputs</span> <span class="o">=</span> <span class="n">encoded_inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_neurons</span> <span class="o">=</span> <span class="n">output_neuron_names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neuron_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">ensembles</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stimuli_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">stimuli</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoded_input_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">encoded_inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">ensembles</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_neurons</span><span class="p">]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span> <span class="o">=</span> <span class="p">{</span><span class="n">key1</span> <span class="p">:</span> <span class="p">{</span><span class="n">key2</span> <span class="p">:</span> <span class="n">deque</span><span class="p">([])</span> <span class="k">for</span> <span class="n">key2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neuron_names</span><span class="p">}</span>\
+            <span class="k">for</span> <span class="n">key1</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;spikes&#39;</span><span class="p">,</span> <span class="s1">&#39;voltages&#39;</span><span class="p">,</span> <span class="s1">&#39;currents&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">,</span> <span class="s1">&#39;recovery&#39;</span><span class="p">,</span> <span class="s1">&#39;neuron_theta&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;stimuli&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">deque</span><span class="p">([])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stimuli_names</span><span class="p">}})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;encoded_inputs&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">deque</span><span class="p">([])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded_input_names</span><span class="p">}})</span>
+        <span class="c1"># Currently only activities of motor neurons implemented</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;activities&#39;</span> <span class="p">:</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">deque</span><span class="p">([])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_names</span><span class="p">}})</span>
+
+<div class="viewcode-block" id="NeuralNetMonitor.update"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.monitor.NeuralNetMonitor.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Updates the recorded data with the new sample.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">value</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Variable </span><span class="si">{}</span><span class="s1"> is not in available &#39;</span>\
+                    <span class="s1">&#39;variables to be recorded&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="NeuralNetMonitor.get"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.monitor.NeuralNetMonitor.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the recorded values of a queried variable. It also allows the </span>
+<span class="sd">        retrieval of a particular neuron or input node. If no neuron is fixed, it </span>
+<span class="sd">        returns the records of all the records of the requested var.</span>
+<span class="sd">        ===========================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            varname [str] : name of the monitored variable.</span>
+<span class="sd">            node_name [str or None] : name of the node or neuron.</span>
+<span class="sd">        - Returns:</span>
+<span class="sd">        ===========================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Variable </span><span class="si">{}</span><span class="s1"> does not exist or is not recorded. &#39;</span>\
+                <span class="s1">&#39;Recorded variables are </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">varname</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">keys</span><span class="p">()))))</span>
+        <span class="k">if</span> <span class="n">node_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Node/Neuron </span><span class="si">{}</span><span class="s1"> does not exist for variable </span><span class="si">{}</span><span class="s1">. &#39;</span>\
+                <span class="s1">&#39;Existing nodes are </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">)))</span>
+        <span class="n">var_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">node_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">var_records</span><span class="p">[</span><span class="n">node_name</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">var_records</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+    
+<div class="viewcode-block" id="NeuralNetMonitor.get_ensemble"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.monitor.NeuralNetMonitor.get_ensemble">[docs]</a>    <span class="k">def</span> <span class="nf">get_ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">ensemble_name</span><span class="p">):</span>
+        <span class="c1">#TODO</span>
+        <span class="c1"># if varname not in self.records.keys():</span>
+        <span class="c1">#     raise Exception(logging.error(&#39;Variable {} does not exist or is not recorded. &#39;\</span>
+        <span class="c1">#         &#39;Recorded variables are {}&#39;.format(varname, tuple(self.records.keys()))))</span>
+        <span class="c1"># if ensemble_name not in self.records[varname].keys():</span>
+        <span class="c1">#     raise Exception(logging.error(&#39;Ensemble {} does not exist {}. &#39;\</span>
+        <span class="c1">#         &#39;Existing ensembles are {}&#39;.format(ensemble_name, tuple(self.records[varname].keys())))</span>
+        <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()}[</span><span class="n">ensemble_name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NeuralNetMonitor.reset"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.monitor.NeuralNetMonitor.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Clear all the monitors. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">var_data</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">var_data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="n">varname</span><span class="p">][</span><span class="n">node_name</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="p">[</span><span class="s1">&#39;voltages&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span></div>
+
+    <span class="c1"># def to_csv(self, csv_name, csv_path):</span>
+    <span class="c1">#     # cols = [ for var_names in iter([self.get_inputs()])]</span>
+    <span class="c1">#     cols = []</span>
+    <span class="c1">#     for var_name, var in self.data.items():</span>
+    <span class="c1">#         for k in var[0]:</span>
+    <span class="c1">#             cols.extend([var_name+&#39;_&#39;+k[0]+&#39;_&#39;+str(k[1])])</span>
+    <span class="c1">#     data = np.hstack([var[1] for var in self.data.values()])</span>
+    <span class="c1">#     pd.DataFrame(data, columns=cols).to_csv(csv_path + csv_name+&#39;.csv&#39;) </span>
+    <span class="c1">#     import pdb; pdb.set_trace()</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

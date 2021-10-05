@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>mereli.controllers package &mdash; Mereli  documentation</title>
+  <title>spike_swarm_sim.controllers package &mdash; Mereli  documentation</title>
   
 
   
@@ -41,9 +41,7 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="mereli.communication package" href="mereli.communication.html" />
-    <link rel="prev" title="mereli.algorithms.interfaces package" href="mereli.algorithms.interfaces.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -124,6 +122,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -173,124 +172,17 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="mereli.actuators.html">mereli.actuators package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators">Module contents</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">mereli.controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.controller">mereli.controllers.controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.controllers">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objects.html">mereli.objects package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.world_object">mereli.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-robot-3d-module">mereli.objects.robot_3D module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.light_source">mereli.objects.light_source module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ball">mereli.objects.ball module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.cube">mereli.objects.cube module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-ground-area-module">mereli.objects.ground_area module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.wall">mereli.objects.wall module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">mereli.physics_engines.base_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">mereli.physics_engines.pybullet_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.sensors.html">mereli.sensors package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">mereli.sensors.reward_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.physics_engine">mereli.physics_engine module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
 </ul>
 </li>
@@ -342,15 +234,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
-        
-      <li>mereli.controllers package</li>
+      <li>spike_swarm_sim.controllers package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/mereli.controllers.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/spike_swarm_sim.controllers.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -364,12 +254,12 @@
            <div itemprop="articleBody">
             
   <div class="section" id="spike-swarm-sim-controllers-package">
-<h1>mereli.controllers package<a class="headerlink" href="#spike-swarm-sim-controllers-package" title="Permalink to this headline">¶</a></h1>
+<h1>spike_swarm_sim.controllers package<a class="headerlink" href="#spike-swarm-sim-controllers-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-mereli.controllers.controller">
-<span id="spike-swarm-sim-controllers-controller-module"></span><h2>mereli.controllers.controller module<a class="headerlink" href="#module-mereli.controllers.controller" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-controller-module"></span><h2>spike_swarm_sim.controllers.controller module<a class="headerlink" href="#module-mereli.controllers.controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.controller.Controller">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.controller.</span></span><span class="sig-name descname"><span class="pre">Controller</span></span><a class="reference internal" href="_modules/mereli/controllers/controller.html#Controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.controller.Controller" title="Permalink to this definition">¶</a></dt>
@@ -495,7 +385,7 @@ has to be called.</p>
 
 </div>
 <div class="section" id="module-mereli.controllers.basic_obstacle_avoider">
-<span id="spike-swarm-sim-controllers-basic-obstacle-avoider-module"></span><h2>mereli.controllers.basic_obstacle_avoider module<a class="headerlink" href="#module-mereli.controllers.basic_obstacle_avoider" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-basic-obstacle-avoider-module"></span><h2>spike_swarm_sim.controllers.basic_obstacle_avoider module<a class="headerlink" href="#module-mereli.controllers.basic_obstacle_avoider" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.basic_obstacle_avoider.BasicObstacleAvoider">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.basic_obstacle_avoider.</span></span><span class="sig-name descname"><span class="pre">BasicObstacleAvoider</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensitivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/controllers/basic_obstacle_avoider.html#BasicObstacleAvoider"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.basic_obstacle_avoider.BasicObstacleAvoider" title="Permalink to this definition">¶</a></dt>
@@ -538,7 +428,7 @@ the sensor np.ndarray reading.</p></li>
 
 </div>
 <div class="section" id="module-mereli.controllers.braitenberg1_controller">
-<span id="spike-swarm-sim-controllers-braitenberg1-controller-module"></span><h2>mereli.controllers.braitenberg1_controller module<a class="headerlink" href="#module-mereli.controllers.braitenberg1_controller" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-braitenberg1-controller-module"></span><h2>spike_swarm_sim.controllers.braitenberg1_controller module<a class="headerlink" href="#module-mereli.controllers.braitenberg1_controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.braitenberg1_controller.Braitenberg2B">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.braitenberg1_controller.</span></span><span class="sig-name descname"><span class="pre">Braitenberg2B</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/controllers/braitenberg1_controller.html#Braitenberg2B"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.braitenberg1_controller.Braitenberg2B" title="Permalink to this definition">¶</a></dt>
@@ -599,7 +489,7 @@ the sensor np.ndarray reading.</p></li>
 
 </div>
 <div class="section" id="module-mereli.controllers.light_position_controller">
-<span id="spike-swarm-sim-controllers-light-position-controller-module"></span><h2>mereli.controllers.light_position_controller module<a class="headerlink" href="#module-mereli.controllers.light_position_controller" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-light-position-controller-module"></span><h2>spike_swarm_sim.controllers.light_position_controller module<a class="headerlink" href="#module-mereli.controllers.light_position_controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.light_position_controller.LightOrbitController">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.light_position_controller.</span></span><span class="sig-name descname"><span class="pre">LightOrbitController</span></span><a class="reference internal" href="_modules/mereli/controllers/light_position_controller.html#LightOrbitController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.light_position_controller.LightOrbitController" title="Permalink to this definition">¶</a></dt>
@@ -652,7 +542,7 @@ initialization.</p>
 
 </div>
 <div class="section" id="module-mereli.controllers.neural_controller">
-<span id="spike-swarm-sim-controllers-neural-controller-module"></span><h2>mereli.controllers.neural_controller module<a class="headerlink" href="#module-mereli.controllers.neural_controller" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-neural-controller-module"></span><h2>spike_swarm_sim.controllers.neural_controller module<a class="headerlink" href="#module-mereli.controllers.neural_controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.neural_controller.NeuralController">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.neural_controller.</span></span><span class="sig-name descname"><span class="pre">NeuralController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/controllers/neural_controller.html#NeuralController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.neural_controller.NeuralController" title="Permalink to this definition">¶</a></dt>
@@ -707,7 +597,7 @@ initialization.</p>
 
 </div>
 <div class="section" id="module-mereli.controllers.random_movement_controller">
-<span id="spike-swarm-sim-controllers-random-movement-controller-module"></span><h2>mereli.controllers.random_movement_controller module<a class="headerlink" href="#module-mereli.controllers.random_movement_controller" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-controllers-random-movement-controller-module"></span><h2>spike_swarm_sim.controllers.random_movement_controller module<a class="headerlink" href="#module-mereli.controllers.random_movement_controller" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.controllers.random_movement_controller.RandomMovementController">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.controllers.random_movement_controller.</span></span><span class="sig-name descname"><span class="pre">RandomMovementController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/controllers/random_movement_controller.html#RandomMovementController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.controllers.random_movement_controller.RandomMovementController" title="Permalink to this definition">¶</a></dt>
@@ -744,10 +634,6 @@ the sensor np.ndarray reading. Not used in this controller.</p></li>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mereli.communication.html" class="btn btn-neutral float-right" title="mereli.communication package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="mereli.algorithms.interfaces.html" class="btn btn-neutral float-left" title="mereli.algorithms.interfaces package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

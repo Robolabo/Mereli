@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.neural_networks.receptive_field &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.neural_networks.receptive_field</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.neural_networks.receptive_field</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mereli.register</span> <span class="k">import</span> <span class="n">receptive_field_registry</span>
+
+<div class="viewcode-block" id="ReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ReceptiveField">[docs]</a><span class="k">class</span> <span class="nc">ReceptiveField</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for receptive fields (RF). It is composed by a number of &#39;neurons&#39; </span>
+<span class="sd">    or sensing nodes that activate depending on the value of the stimuli. Normally, </span>
+<span class="sd">    the sensing fields of each neuron overlap at some extent. Receptive fields can </span>
+<span class="sd">    be mathematically thought as basis expansions of the stimulus variable. </span>
+<span class="sd">    The mathematical function that defines the receptive field is defined in each </span>
+<span class="sd">    class inheriting from this one and specified in the receptive_function method.</span>
+<span class="sd">    ==============================================================================</span>
+<span class="sd">    - Params:</span>
+<span class="sd">        n_inputs [int] : dimension of the input stimuli vector.</span>
+<span class="sd">        n_neurons [int] : number of neurons encoding each stimulus.</span>
+<span class="sd">        trainable [bool] : whether RF parameters can be optimized or not.</span>
+<span class="sd">        max_val [float] : maximum value output of the receptive field.</span>
+<span class="sd">        min_val [float] : minimum value output of the receptive field.</span>
+<span class="sd">        min_stim [float] : minimum value of the stimuli components.</span>
+<span class="sd">        max_stim [float] : maximum value of the stimuli components.</span>
+<span class="sd">        inverted [bool] : whether to use 1 - receptive_field(stim) or not.</span>
+<span class="sd">    ==============================================================================</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trainable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                <span class="n">min_stim</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">max_stim</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">inverted</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">=</span> <span class="n">n_inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_neurons</span> <span class="o">=</span> <span class="n">n_neurons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="n">trainable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> <span class="o">=</span> <span class="n">min_val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">=</span> <span class="n">max_val</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_stim</span> <span class="o">=</span> <span class="n">min_stim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_stim</span> <span class="o">=</span> <span class="n">max_stim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inverted</span> <span class="o">=</span> <span class="n">inverted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">min_stim</span><span class="p">,</span> <span class="n">max_stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neurons</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ReceptiveField.receptive_function">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method that defines the mathematical function of each neuron of the </span>
+<span class="sd">        receptive field. For the moment only radial receptive fields are supported, </span>
+<span class="sd">        requiring the neuron specific center where their sensing field is maximum </span>
+<span class="sd">        (or minimum if inverted=True).</span>
+<span class="sd">        ============================================================================</span>
+<span class="sd">        - Args:</span>
+<span class="sd">            s : the stimulus to be processed.</span>
+<span class="sd">            center :  the center of the radial function.</span>
+<span class="sd">        ============================================================================</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Call method of the receptive fields. It iterated over centers (or neurons) </span>
+<span class="sd">        and computes the corresponding response to the stimulus. It linearly transforms </span>
+<span class="sd">        the responses to the specified range [min_val, max_val].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">normalized</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">receptive_function</span><span class="p">(</span><span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">)</span>\
+                <span class="k">for</span> <span class="n">center</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverted</span><span class="p">:</span>
+            <span class="n">normalized</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">normalized</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span><span class="p">)</span> <span class="o">*</span> <span class="n">normalized</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span> 
+
+<div class="viewcode-block" id="ReceptiveField.plot"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ReceptiveField.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stimulus</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_stim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_stim</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">yy</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xx</span><span class="p">]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="n">stimulus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">(</span><span class="n">stimulus</span><span class="p">):</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">stimulus</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="s1">&#39;ko&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Neuron &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; with mu=&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>\
+                    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">mu</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centers</span><span class="p">)])</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Stimulus&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Firing Rate [Hz]&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ax</span></div></div>
+
+<div class="viewcode-block" id="IdentityReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.IdentityReceptiveField">[docs]</a><span class="nd">@receptive_field_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;identity_receptive_field&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">IdentityReceptiveField</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Identity or dummy receptive field. It merely serves as a placeholder </span>
+<span class="sd">    when the neural encoder doesn&#39;t employ receptive field. The number of</span>
+<span class="sd">    RF neurons/nodes must be always 1 (otherwise it would be ignored). </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">IdentityReceptiveField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_neurons</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Identity receptive field does not support &#39;</span>\
+                <span class="s1">&#39;multiple sensing nodes. Using n_neurons=1 instead.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IdentityReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.IdentityReceptiveField.receptive_function">[docs]</a>    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">stim</span></div>
+
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">stim</span></div>
+
+<div class="viewcode-block" id="GaussianReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.GaussianReceptiveField">[docs]</a><span class="nd">@receptive_field_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;gaussian_receptive_field&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GaussianReceptiveField</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Gaussian or radial basis receptive field. It encodes the stimuli </span>
+<span class="sd">    of each RF neuron as exp(-sigma * ||stim-center||_2^2).</span>
+<span class="sd">    ====================================================================</span>
+<span class="sd">    - Args:</span>
+<span class="sd">        sigma [float]: std. dev. of the gaussian receptive fields.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">6.</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GaussianReceptiveField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">=</span> <span class="n">sigma</span>
+
+<div class="viewcode-block" id="GaussianReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.GaussianReceptiveField.receptive_function">[docs]</a>    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">sigma</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">stim</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="TriangularReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.TriangularReceptiveField">[docs]</a><span class="nd">@receptive_field_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;triangular_receptive_field&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">TriangularReceptiveField</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Triangular receptive field. It encodes the stimuli </span>
+<span class="sd">    of each RF neuron as 1 - slope * |stim - center|. Only supported for</span>
+<span class="sd">    1D stim.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TriangularReceptiveField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">=</span> <span class="n">slope</span>
+
+<div class="viewcode-block" id="TriangularReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.TriangularReceptiveField.receptive_function">[docs]</a>    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stim</span> <span class="o">-</span> <span class="n">center</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="ConicReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ConicReceptiveField">[docs]</a><span class="nd">@receptive_field_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;conic_receptive_field&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ConicReceptiveField</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ConicReceptiveField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">=</span> <span class="n">slope</span>
+
+<div class="viewcode-block" id="ConicReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ConicReceptiveField.receptive_function">[docs]</a>    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">stim</span> <span class="o">-</span> <span class="n">center</span><span class="p">),</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="ParabolicReceptiveField"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ParabolicReceptiveField">[docs]</a><span class="nd">@receptive_field_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;parabolic_receptive_field&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ParabolicReceptiveField</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ParabolicReceptiveField</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">=</span> <span class="n">slope</span>
+
+<div class="viewcode-block" id="ParabolicReceptiveField.receptive_function"><a class="viewcode-back" href="../../../spike_swarm_sim.neural_networks.html#mereli.neural_networks.receptive_field.ParabolicReceptiveField.receptive_function">[docs]</a>    <span class="k">def</span> <span class="nf">receptive_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stim</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">stim</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span></div></div>
+
+<span class="c1">#TODO</span>
+<span class="c1"># @receptive_field_registry(name=&#39;linear_receptive_field&#39;)</span>
+<span class="c1"># class LinearReceptiveField(ReceptiveField):</span>
+<span class="c1">#     def __init__(self,  *args, **kwargs):</span>
+<span class="c1">#         super(LinearReceptiveField, self).__init__(*args, **kwargs, trainable=True)</span>
+<span class="c1">#         self.weights = np.ones(self.n_inputs * self.n_neurons + self.n_neurons)</span>
+<span class="c1">#         self.initialize()</span>
+
+<span class="c1">#     def receptive_function(self, stim, center):</span>
+<span class="c1">#         Phi = self.weights[:self.n_inputs * self.n_neurons].reshape(self.n_inputs, self.n_neurons)</span>
+<span class="c1">#         bias = self.weights[-self.n_neurons:]</span>
+<span class="c1">#         return (Phi.T.dot(stim) + bias).flatten()</span>
+
+<span class="c1">#     def initialize(self):</span>
+<span class="c1">#         base_rf = [[np.exp(-np.abs(x - center)) for x in range(self.n_inputs)]\</span>
+<span class="c1">#                    for center in np.linspace(0, self.n_inputs, self.n_neurons)]</span>
+<span class="c1">#         Phi = np.array(base_rf)</span>
+<span class="c1">#         self.weights = Phi.flatten()</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

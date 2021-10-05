@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.sensors.base_sensor &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.sensors.base_sensor</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.sensors.base_sensor</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">LA</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">from</span> <span class="nn">mereli.utils</span> <span class="k">import</span> <span class="n">compute_angle</span><span class="p">,</span> <span class="n">angle_diff</span><span class="p">,</span> <span class="n">key_of</span>
+<span class="kn">from</span> <span class="nn">mereli.register</span> <span class="k">import</span> <span class="n">sensors</span>
+
+<div class="viewcode-block" id="Sensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.Sensor">[docs]</a><span class="k">class</span> <span class="nc">Sensor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Base class of robot sensors.</span>
+
+<span class="sd">    :param Robot sensor_owner: robot object owning and reading from the sensor.</span>
+<span class="sd">    :param float range: range of coverage of the sensor.</span>
+<span class="sd">    :param float noise_sigma: std. dev. of the white noise attached to the measurement.  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sensor_owner</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">noise_sigma</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span> <span class="o">=</span> <span class="n">sensor_owner</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise_sigma</span> <span class="o">=</span> <span class="n">noise_sigma</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="nb">range</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reading</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Sensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.Sensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">physics_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the physics engine client of the robot owning the sensor. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">owner_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the identifier of the robot owning the sensor. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor">[docs]</a><span class="k">class</span> <span class="nc">DirectionalSensor</span><span class="p">(</span><span class="n">Sensor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Base class for directional sensors. Directional or sectorized sensors are </span>
+<span class="sd">    sensors that can acquire the orientation from where the measurement was sensed.</span>
+<span class="sd">    They have multiple sensor (one per sector), normally equally distributed around the</span>
+<span class="sd">    robot perimeter, and can read the local surroundings of each sector area. In this </span>
+<span class="sd">    case, the sensor of each sector has a limited range and aperture in radians. Some </span>
+<span class="sd">    examples of directional sensors are the ``light_sensor`` and the ``distance_sensor``.</span>
+<span class="sd">    Excluding some exceptions such as the IR communication receiver, the reading of the </span>
+<span class="sd">    sensor is an numpy array with length equal to the number of sectors. This class is a </span>
+<span class="sd">    base class for directional sensors.</span>
+
+<span class="sd">    :param Robot sensor_owner: robot object owning and reading from the sensor.</span>
+<span class="sd">    :param float range: range of coverage of the sensor.</span>
+<span class="sd">    :param float noise_sigma: std. dev. of the white noise attached to the measurement.</span>
+<span class="sd">    :param int n_sectors: number of sectors of the sensor.</span>
+
+<span class="sd">    :var float aperture: aperture in radians of each sector of the sensor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">n_sectors</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DirectionalSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span> <span class="o">=</span> <span class="n">n_sectors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span>
+
+<div class="viewcode-block" id="DirectionalSensor.directions"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.directions">[docs]</a>    <span class="k">def</span> <span class="nf">directions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the vector of sensing orientations (in radians) of the sectors </span>
+<span class="sd">        relative to the robot heading orientation.</span>
+
+<span class="sd">        :param float theta: orientation of the robots using the sensor.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: numpy array with the absolute directions of each sensor (starting from theta).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">theta</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_orientation</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.get_sensor_position"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.get_sensor_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the position of the physical sensing device of a sector. </span>
+<span class="sd">        Each sector device is represented by a physical robot link,  </span>
+<span class="sd">        which is used to cast rays and compute the readings wrt it. </span>
+<span class="sd">        </span>
+<span class="sd">        .. todo::</span>
+<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
+
+<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
+
+<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+    
+    
+<div class="viewcode-block" id="DirectionalSensor.get_sensor_idx"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.get_sensor_idx">[docs]</a>    <span class="k">def</span> <span class="nf">get_sensor_idx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sector</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Gets the position of the sensor of a sector. Each sector is represented by a physical link  </span>
+<span class="sd">        used to cast rays and compute the readings wrt it. </span>
+<span class="sd">        </span>
+<span class="sd">        .. todo::</span>
+<span class="sd">            TODO: For the moment only available in 3D. Create method in 2D engine.</span>
+
+<span class="sd">        :param int sector: sector of a the sectorized sensor to be requested.</span>
+
+<span class="sd">        :returns: the numpy array position of the sensor within the robot model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sensor_name</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_name</span> <span class="k">for</span> <span class="n">ref_name</span><span class="p">,</span> <span class="n">sens_cls</span> <span class="ow">in</span> <span class="n">sensors</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">sens_cls</span><span class="p">)][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_sensor_position</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> 
+                    <span class="n">sensor_name</span><span class="o">=</span><span class="n">sensor_name</span><span class="p">,</span> <span class="n">sector</span><span class="o">=</span><span class="n">sector</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.target_filter"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.target_filter">[docs]</a>    <span class="k">def</span> <span class="nf">target_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method devoted to filtering the world objects that should be targeted for a particular sensor.</span>
+<span class="sd">        For example: a light sensor will filter out only luminous objects.</span>
+<span class="sd">        This method must be overwritten in each directional sensor that inherits from DirectionalSensor </span>
+<span class="sd">        in order to particularize its functioning.</span>
+<span class="sd">        </span>
+<span class="sd">        :param WorldObject obj: Potential world object to be sensed.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: Boolean response revealing whether the obj should be explored by the sensor or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="DirectionalSensor.step_direction"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.step_direction">[docs]</a>    <span class="k">def</span> <span class="nf">step_direction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">direction_reading</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">diff_vector</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method that specifies the particular behavior of a directional sensor in each sensing direction.</span>
+<span class="sd">        It must return the reading of the current direction.</span>
+<span class="sd">        This method must be overwritten in each directional sensor that inherits from DirectionalSensor </span>
+<span class="sd">        in order to particularize its functioning.</span>
+
+<span class="sd">        :param float rho: Euclidean distance between the object sensing and the object (obj) sensed.</span>
+<span class="sd">        :param float phi: angle between the direction of the sensor and the line passing through </span>
+<span class="sd">            both sensing and sensed object positions.</span>
+<span class="sd">        :param float direction_reading: Current reading in the featured direction </span>
+<span class="sd">            to be potentially overwritten. In some cases such as the communication receiver it can be a ``dict``.</span>
+<span class="sd">        :param int direction: integer refering to the current sensing direction between 0 and n_sectors - 1.</span>
+<span class="sd">        :param WorldObject obj: Optionally, the object that is being sensed can be used.</span>
+<span class="sd">        :param np.ndarray diff_vector: Optionally, the vector resulting from the difference </span>
+<span class="sd">            of the between object positions can be used. However, most of the times, </span>
+<span class="sd">            rho and phi are sufficient. Notice that rho=|diff_vector|.</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: Reading of the sensor in the current direction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+    
+<div class="viewcode-block" id="DirectionalSensor.step"><a class="viewcode-back" href="../../../spike_swarm_sim.sensors.html#mereli.sensors.base_sensor.DirectionalSensor.step">[docs]</a>    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neighborhood</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Main method for steping the sensor and capturing nearby environment events.</span>
+<span class="sd">        It senses the environment independently in each of the sensing sectors. The </span>
+<span class="sd">        particular behavior of each sensor inheriting this class should be specified in </span>
+<span class="sd">        ``step_direction`` method.</span>
+
+<span class="sd">        :param list neighborhood: List of target neighboring entities (``WorldObject`` types) (excluding the robot </span>
+<span class="sd">            reading the sensor).</span>
+<span class="sd">        </span>
+<span class="sd">        :returns: numpy array with the measurement in each direction. In exceptional cases </span>
+<span class="sd">            it may return a list of python dictionaries (see ``CommunicationReceiver``).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initial zero readings. This will the reading in the cases with no sensing candidates.</span>
+        <span class="n">readings</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">step_direction</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_sectors</span><span class="p">)]</span>
+        <span class="c1"># Orientation of the robot using the sensor.</span>
+        <span class="n">orientation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">orientation</span>
+        <span class="c1"># Entities that are, at first, candidates to be sensed by the robot sensor. The candidates </span>
+        <span class="c1"># are filtered out using the target_filter method.</span>
+        <span class="n">featured_objects</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">neighborhood</span> \
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_filter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">]</span>
+        <span class="c1">#! Improve code</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">featured_objects</span><span class="p">:</span>
+            <span class="c1"># If Wall, detect the distance to the closest point to the wall (CoM would not work).</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Map&#39;</span><span class="p">,</span> <span class="s1">&#39;Wall&#39;</span><span class="p">]:</span>
+                <span class="c1"># closest_points = p.getClosestPoints(self.sensor_owner.id, obj.id, 200,\</span>
+                <span class="c1">#         linkIndexA=-1, linkIndexB=-1, physicsClientId=self.sensor_owner.physics_client.client)</span>
+                <span class="n">closest_pt_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">physics_client</span><span class="o">.</span><span class="n">get_closest_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>  
+                                    <span class="n">linkA</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">linkB</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_dist</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">range</span> <span class="o">+</span> <span class="mf">0.11</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">closest_pt_pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+                    <span class="k">continue</span>
+                <span class="c1"># closest_pt_pos = np.array(closest_points[0][6])</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">closest_pt_pos</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">position</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Provisional solution: For the rest of objects (generally small objects) compute the distance </span>
+                <span class="c1"># to the CoM of the target object.</span>
+                <span class="n">v</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">position</span> <span class="c1">#!OJO</span>
+            <span class="n">orientation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sensor_owner</span><span class="o">.</span><span class="n">orientation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">rho</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="c1"># Discard distant entities.</span>
+            <span class="k">if</span> <span class="n">rho</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">range</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="c1"># Angle difference between sensor directions and ang(v).</span>
+            <span class="c1"># Compute the directions with candidate entities to be perceived by the sensor. </span>
+            <span class="n">phi_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">angle_diff</span><span class="p">(</span><span class="n">compute_angle</span><span class="p">(</span><span class="n">v</span><span class="p">[:</span><span class="mi">2</span><span class="p">]),</span> <span class="n">theta</span><span class="p">)</span> <span class="k">for</span> <span class="n">theta</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">directions</span><span class="p">(</span><span class="n">orientation</span><span class="p">)])</span>
+            <span class="n">featured_sensors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phi_values</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">phi_values</span> <span class="o">=</span> <span class="n">phi_values</span><span class="p">[</span><span class="n">featured_sensors</span><span class="p">]</span>
+            <span class="c1"># For each sector with candidate targets to perceive, read the sector&#39;s sensor. </span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">phi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">featured_sensors</span><span class="p">,</span> <span class="n">phi_values</span><span class="p">):</span>
+                <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_direction</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">readings</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">k</span><span class="p">,</span> <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span> <span class="n">diff_vector</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">readings</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">readings</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span> <span class="k">else</span> <span class="n">readings</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

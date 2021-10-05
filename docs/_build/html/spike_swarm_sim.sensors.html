@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>mereli.sensors package &mdash; Mereli  documentation</title>
+  <title>spike_swarm_sim.sensors package &mdash; Mereli  documentation</title>
   
 
   
@@ -41,9 +41,7 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="mereli.sensors.utils package" href="mereli.sensors.utils.html" />
-    <link rel="prev" title="mereli.physics_engines package" href="mereli.physics_engines.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -124,6 +122,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -173,124 +172,17 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="mereli.actuators.html">mereli.actuators package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators">Module contents</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.controllers.html">mereli.controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.controller">mereli.controllers.controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objects.html">mereli.objects package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.world_object">mereli.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-robot-3d-module">mereli.objects.robot_3D module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.light_source">mereli.objects.light_source module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ball">mereli.objects.ball module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.cube">mereli.objects.cube module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-ground-area-module">mereli.objects.ground_area module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.wall">mereli.objects.wall module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">mereli.physics_engines.base_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">mereli.physics_engines.pybullet_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">mereli.sensors package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#spike-swarm-sim-sensors-reward-sensor-module">mereli.sensors.reward_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.physics_engine">mereli.physics_engine module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
 </ul>
 </li>
@@ -342,15 +234,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
-        
-      <li>mereli.sensors package</li>
+      <li>spike_swarm_sim.sensors package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/mereli.sensors.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/spike_swarm_sim.sensors.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -364,26 +254,17 @@
            <div itemprop="articleBody">
             
   <div class="section" id="spike-swarm-sim-sensors-package">
-<h1>mereli.sensors package<a class="headerlink" href="#spike-swarm-sim-sensors-package" title="Permalink to this headline">¶</a></h1>
+<h1>spike_swarm_sim.sensors package<a class="headerlink" href="#spike-swarm-sim-sensors-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="mereli.sensors.utils.html">mereli.sensors.utils package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils.propagation">mereli.sensors.utils.propagation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils.utils">mereli.sensors.utils.utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-mereli.sensors.base_sensor">
-<span id="spike-swarm-sim-sensors-base-sensor-module"></span><h2>mereli.sensors.base_sensor module<a class="headerlink" href="#module-mereli.sensors.base_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-base-sensor-module"></span><h2>spike_swarm_sim.sensors.base_sensor module<a class="headerlink" href="#module-mereli.sensors.base_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.base_sensor.Sensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.base_sensor.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_owner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.Sensor" title="Permalink to this definition">¶</a></dt>
@@ -506,7 +387,7 @@ This method must be overwritten in each directional sensor that inherits from Di
 in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -530,7 +411,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
 of the between object positions can be used. However, most of the times, 
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -565,7 +446,7 @@ it may return a list of python dictionaries (see <code class="docutils literal n
 
 </div>
 <div class="section" id="module-mereli.sensors.distance_sensor">
-<span id="spike-swarm-sim-sensors-distance-sensor-module"></span><h2>mereli.sensors.distance_sensor module<a class="headerlink" href="#module-mereli.sensors.distance_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-distance-sensor-module"></span><h2>spike_swarm_sim.sensors.distance_sensor module<a class="headerlink" href="#module-mereli.sensors.distance_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.distance_sensor.</span></span><span class="sig-name descname"><span class="pre">DistanceSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/distance_sensor.html#DistanceSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor" title="Permalink to this definition">¶</a></dt>
@@ -590,7 +471,7 @@ in that direction.</p>
 <dt class="field-even">Variables</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
-<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+<li><p><strong>propagation</strong> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
 distance estimation bounded in [0, 1].</p></li>
 </ul>
 </dd>
@@ -724,7 +605,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
 of the between object positions can be used. However, most of the times, 
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -745,7 +626,7 @@ This method must be overwritten in each directional sensor that inherits from Di
 in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -757,7 +638,7 @@ in order to particularize its functioning.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.light_sensor">
-<span id="spike-swarm-sim-sensors-light-sensor-module"></span><h2>mereli.sensors.light_sensor module<a class="headerlink" href="#module-mereli.sensors.light_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-light-sensor-module"></span><h2>spike_swarm_sim.sensors.light_sensor module<a class="headerlink" href="#module-mereli.sensors.light_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.light_sensor.LightSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">LightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#LightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.LightSensor" title="Permalink to this definition">¶</a></dt>
@@ -783,7 +664,7 @@ light intensity within the correspoding sector.</p>
 <dt class="field-even">Variables</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
-<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+<li><p><strong>propagation</strong> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
 distance estimation bounded in [0, 1].</p></li>
 </ul>
 </dd>
@@ -886,7 +767,7 @@ kept as a parameter because other sensors may need to use it.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.communication_receiver">
-<span id="spike-swarm-sim-sensors-communication-receiver-module"></span><h2>mereli.sensors.communication_receiver module<a class="headerlink" href="#module-mereli.sensors.communication_receiver" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-communication-receiver-module"></span><h2>spike_swarm_sim.sensors.communication_receiver module<a class="headerlink" href="#module-mereli.sensors.communication_receiver" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.communication_receiver.</span></span><span class="sig-name descname"><span class="pre">IRCommunicationReceiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_hops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver" title="Permalink to this definition">¶</a></dt>
@@ -925,7 +806,7 @@ selection scheme to be employed. Possible values: <code class="docutils literal 
 <li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
 <li><p><strong>current_direction</strong> (<em>int</em>) – indicates the last direction/sector from where a frame was received.
 It is only useful when using cyclic selection.</p></li>
-<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the
+<li><p><strong>propagation</strong> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the
 distance estimation bounded in [0, 1].</p></li>
 </ul>
 </dd>
@@ -1022,7 +903,7 @@ In this case it filters out, among all neighboring objects, only the robots with
 enabled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -1045,7 +926,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference
 of the between object positions can be used. However, most of the times,
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -1061,7 +942,7 @@ rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
 
 </div>
 <div class="section" id="module-mereli.sensors.color_sensor">
-<span id="spike-swarm-sim-sensors-color-sensor-module"></span><h2>mereli.sensors.color_sensor module<a class="headerlink" href="#module-mereli.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-color-sensor-module"></span><h2>spike_swarm_sim.sensors.color_sensor module<a class="headerlink" href="#module-mereli.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.color_sensor.ColorSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.color_sensor.</span></span><span class="sig-name descname"><span class="pre">ColorSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ColorSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ColorSensor" title="Permalink to this definition">¶</a></dt>
@@ -1088,7 +969,7 @@ surpasses a certain threshold.</p>
 <dt class="field-even">Variables</dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
-<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+<li><p><strong>propagation</strong> (<a class="reference internal" href="spike_swarm_sim.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
 distance estimation bounded in [0, 1].</p></li>
 </ul>
 </dd>
@@ -1100,7 +981,7 @@ distance estimation bounded in [0, 1].</p></li>
 In this case it filters out, among all neighboring objects, only the solid objects of the sentitive color.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -1123,7 +1004,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
 of the between object positions can be used. However, most of the times, 
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -1150,7 +1031,7 @@ rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
 
 </div>
 <div class="section" id="module-mereli.sensors.ground_sensor">
-<span id="spike-swarm-sim-sensors-ground-sensor-module"></span><h2>mereli.sensors.ground_sensor module<a class="headerlink" href="#module-mereli.sensors.ground_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-ground-sensor-module"></span><h2>spike_swarm_sim.sensors.ground_sensor module<a class="headerlink" href="#module-mereli.sensors.ground_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.ground_sensor.GroundSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.ground_sensor.</span></span><span class="sig-name descname"><span class="pre">GroundSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ground_sensor.html#GroundSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ground_sensor.GroundSensor" title="Permalink to this definition">¶</a></dt>
@@ -1186,7 +1067,7 @@ area has been detected and a value of 0.0 means that no ground areas was detecte
 
 </div>
 <div class="section" id="module-mereli.sensors.joint_sensor">
-<span id="spike-swarm-sim-sensors-joint-sensor-module"></span><h2>mereli.sensors.joint_sensor module<a class="headerlink" href="#module-mereli.sensors.joint_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-joint-sensor-module"></span><h2>spike_swarm_sim.sensors.joint_sensor module<a class="headerlink" href="#module-mereli.sensors.joint_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointPositionSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.joint_sensor.</span></span><span class="sig-name descname"><span class="pre">JointPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointPositionSensor" title="Permalink to this definition">¶</a></dt>
@@ -1201,7 +1082,7 @@ area has been detected and a value of 0.0 means that no ground areas was detecte
 <dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointPositionSensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointPositionSensor.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the current position of the requested joints. It queries this operation 
-to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine3D.read_joints</span></code>.</p>
+to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine.read_joints</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>numpy array with the position reading of each joint.</p>
@@ -1225,7 +1106,7 @@ to the physics engine by calling the method <code class="docutils literal notran
 <dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointVelocitySensor.step">
 <span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointVelocitySensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointVelocitySensor.step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the current velocity of the requested joints. It queries this operation 
-to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine3D.read_joints</span></code>.</p>
+to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine.read_joints</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>numpy array with the velocity reading of each joint.</p>
@@ -1237,7 +1118,7 @@ to the physics engine by calling the method <code class="docutils literal notran
 
 </div>
 <div class="section" id="module-mereli.sensors.collision_sensor">
-<span id="spike-swarm-sim-sensors-collision-sensor-module"></span><h2>mereli.sensors.collision_sensor module<a class="headerlink" href="#module-mereli.sensors.collision_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-collision-sensor-module"></span><h2>spike_swarm_sim.sensors.collision_sensor module<a class="headerlink" href="#module-mereli.sensors.collision_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.collision_sensor.CollisionSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.collision_sensor.</span></span><span class="sig-name descname"><span class="pre">CollisionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/collision_sensor.html#CollisionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.collision_sensor.CollisionSensor" title="Permalink to this definition">¶</a></dt>
@@ -1251,7 +1132,7 @@ to the physics engine by calling the method <code class="docutils literal notran
 
 </div>
 <div class="section" id="module-mereli.sensors.food_sensor">
-<span id="spike-swarm-sim-sensors-food-sensor-module"></span><h2>mereli.sensors.food_sensor module<a class="headerlink" href="#module-mereli.sensors.food_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-food-sensor-module"></span><h2>spike_swarm_sim.sensors.food_sensor module<a class="headerlink" href="#module-mereli.sensors.food_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">FoodSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodSensor" title="Permalink to this definition">¶</a></dt>
@@ -1287,7 +1168,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
 of the between object positions can be used. However, most of the times, 
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -1308,7 +1189,7 @@ This method must be overwritten in each directional sensor that inherits from Di
 in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -1340,7 +1221,7 @@ both sensing and sensed object positions.</p></li>
 <li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
 to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
 <li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
-<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
 <li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
 of the between object positions can be used. However, most of the times, 
 rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
@@ -1361,7 +1242,7 @@ This method must be overwritten in each directional sensor that inherits from Di
 in order to particularize its functioning.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="spike_swarm_sim.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
@@ -1373,7 +1254,7 @@ in order to particularize its functioning.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.neighborhood_position_sensor">
-<span id="spike-swarm-sim-sensors-neighborhood-position-sensor-module"></span><h2>mereli.sensors.neighborhood_position_sensor module<a class="headerlink" href="#module-mereli.sensors.neighborhood_position_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-neighborhood-position-sensor-module"></span><h2>spike_swarm_sim.sensors.neighborhood_position_sensor module<a class="headerlink" href="#module-mereli.sensors.neighborhood_position_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.neighborhood_position_sensor.</span></span><span class="sig-name descname"><span class="pre">NeighborhoodPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor" title="Permalink to this definition">¶</a></dt>
@@ -1387,7 +1268,7 @@ in order to particularize its functioning.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.own_orientation_sensor">
-<span id="spike-swarm-sim-sensors-own-orientation-sensor-module"></span><h2>mereli.sensors.own_orientation_sensor module<a class="headerlink" href="#module-mereli.sensors.own_orientation_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-own-orientation-sensor-module"></span><h2>spike_swarm_sim.sensors.own_orientation_sensor module<a class="headerlink" href="#module-mereli.sensors.own_orientation_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.own_orientation_sensor.OwnOrientationSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.own_orientation_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnOrientationSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_orientation_sensor.html#OwnOrientationSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_orientation_sensor.OwnOrientationSensor" title="Permalink to this definition">¶</a></dt>
@@ -1401,7 +1282,7 @@ in order to particularize its functioning.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.own_position_sensor">
-<span id="spike-swarm-sim-sensors-own-position-sensor-module"></span><h2>mereli.sensors.own_position_sensor module<a class="headerlink" href="#module-mereli.sensors.own_position_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-own-position-sensor-module"></span><h2>spike_swarm_sim.sensors.own_position_sensor module<a class="headerlink" href="#module-mereli.sensors.own_position_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.own_position_sensor.OwnPositionSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.own_position_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_position_sensor.html#OwnPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_position_sensor.OwnPositionSensor" title="Permalink to this definition">¶</a></dt>
@@ -1415,7 +1296,7 @@ in order to particularize its functioning.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.ble_receiver">
-<span id="spike-swarm-sim-sensors-ble-receiver-module"></span><h2>mereli.sensors.ble_receiver module<a class="headerlink" href="#module-mereli.sensors.ble_receiver" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-ble-receiver-module"></span><h2>spike_swarm_sim.sensors.ble_receiver module<a class="headerlink" href="#module-mereli.sensors.ble_receiver" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.ble_receiver.</span></span><span class="sig-name descname"><span class="pre">RF_Receiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ble_receiver.html#RF_Receiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver" title="Permalink to this definition">¶</a></dt>
@@ -1463,7 +1344,7 @@ If no message is sensed, the measurement is an empty frame.</p>
 
 </div>
 <div class="section" id="module-mereli.sensors.task_sensor">
-<span id="spike-swarm-sim-sensors-task-sensor-module"></span><h2>mereli.sensors.task_sensor module<a class="headerlink" href="#module-mereli.sensors.task_sensor" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-sensors-task-sensor-module"></span><h2>spike_swarm_sim.sensors.task_sensor module<a class="headerlink" href="#module-mereli.sensors.task_sensor" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.task_sensor.TaskSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.task_sensor.</span></span><span class="sig-name descname"><span class="pre">TaskSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/task_sensor.html#TaskSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.task_sensor.TaskSensor" title="Permalink to this definition">¶</a></dt>
@@ -1477,7 +1358,7 @@ If no message is sensed, the measurement is an empty frame.</p>
 
 </div>
 <div class="section" id="spike-swarm-sim-sensors-reward-sensor-module">
-<h2>mereli.sensors.reward_sensor module<a class="headerlink" href="#spike-swarm-sim-sensors-reward-sensor-module" title="Permalink to this headline">¶</a></h2>
+<h2>spike_swarm_sim.sensors.reward_sensor module<a class="headerlink" href="#spike-swarm-sim-sensors-reward-sensor-module" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-mereli.sensors.reward_sensor"></span><dl class="py class">
 <dt class="sig sig-object py" id="mereli.sensors.reward_sensor.GroupRewardSensor">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.reward_sensor.</span></span><span class="sig-name descname"><span class="pre">GroupRewardSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/reward_sensor.html#GroupRewardSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.reward_sensor.GroupRewardSensor" title="Permalink to this definition">¶</a></dt>
@@ -1520,10 +1401,6 @@ kept as a parameter because other sensors may need to use it.</p>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mereli.sensors.utils.html" class="btn btn-neutral float-right" title="mereli.sensors.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="mereli.physics_engines.html" class="btn btn-neutral float-left" title="mereli.physics_engines package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

@@ -1,9 +1,9 @@
-spike\_swarm\_sim.physics\_engines package
+mereli.physics\_engines package
 ==========================================
 
 
 
-spike\_swarm\_sim.physics\_engines.base\_engine module
+mereli.physics\_engines.base\_engine module
 --------------------------------------------------
 
 .. automodule:: mereli.physics_engines.base_engine
@@ -11,7 +11,7 @@ spike\_swarm\_sim.physics\_engines.base\_engine module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.physics\_engines.pybullet\_engine module
+mereli.physics\_engines.pybullet\_engine module
 --------------------------------------------------
 
 .. automodule:: mereli.physics_engines.pybullet_engine

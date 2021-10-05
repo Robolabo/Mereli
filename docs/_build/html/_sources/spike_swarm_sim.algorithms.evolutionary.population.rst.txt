@@ -1,10 +1,10 @@
-spike\_swarm\_sim.algorithms.evolutionary.population package
+mereli.algorithms.evolutionary.population package
 ============================================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.algorithms.evolutionary.population.cma\_ea\_population module
+mereli.algorithms.evolutionary.population.cma\_ea\_population module
 -------------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.cma_ea_population
@@ -12,7 +12,7 @@ spike\_swarm\_sim.algorithms.evolutionary.population.cma\_ea\_population module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.population.neat\_population module
+mereli.algorithms.evolutionary.population.neat\_population module
 ----------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.neat_population
@@ -20,7 +20,7 @@ spike\_swarm\_sim.algorithms.evolutionary.population.neat\_population module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.population.openai\_es\_population module
+mereli.algorithms.evolutionary.population.openai\_es\_population module
 ----------------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.openai_es_population
@@ -28,7 +28,7 @@ spike\_swarm\_sim.algorithms.evolutionary.population.openai\_es\_population modu
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.population.population module
+mereli.algorithms.evolutionary.population.population module
 ----------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.population
@@ -36,7 +36,7 @@ spike\_swarm\_sim.algorithms.evolutionary.population.population module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.population.snes\_population module
+mereli.algorithms.evolutionary.population.snes\_population module
 ----------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.snes_population
@@ -44,7 +44,7 @@ spike\_swarm\_sim.algorithms.evolutionary.population.snes\_population module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.population.xnes\_population module
+mereli.algorithms.evolutionary.population.xnes\_population module
 ----------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.population.xnes_population

@@ -1,10 +1,10 @@
-spike\_swarm\_sim.algorithms.evolutionary.operators package
+mereli.algorithms.evolutionary.operators package
 ===========================================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.algorithms.evolutionary.operators.crossover module
+mereli.algorithms.evolutionary.operators.crossover module
 --------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.operators.crossover
@@ -12,7 +12,7 @@ spike\_swarm\_sim.algorithms.evolutionary.operators.crossover module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.operators.mating module
+mereli.algorithms.evolutionary.operators.mating module
 -----------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.operators.mating
@@ -20,7 +20,7 @@ spike\_swarm\_sim.algorithms.evolutionary.operators.mating module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.operators.mutation module
+mereli.algorithms.evolutionary.operators.mutation module
 -------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.operators.mutation
@@ -28,7 +28,7 @@ spike\_swarm\_sim.algorithms.evolutionary.operators.mutation module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.operators.selection module
+mereli.algorithms.evolutionary.operators.selection module
 --------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.operators.selection

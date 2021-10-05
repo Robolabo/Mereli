@@ -1,4 +1,4 @@
-spike\_swarm\_sim.neural\_networks package
+mereli.neural\_networks package
 ==========================================
 
 Subpackages
@@ -12,7 +12,7 @@ Subpackages
 Submodules
 ----------
 
-spike\_swarm\_sim.neural\_networks.decoding module
+mereli.neural\_networks.decoding module
 --------------------------------------------------
 
 .. automodule:: mereli.neural_networks.decoding
@@ -20,7 +20,7 @@ spike\_swarm\_sim.neural\_networks.decoding module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.encoding module
+mereli.neural\_networks.encoding module
 --------------------------------------------------
 
 .. automodule:: mereli.neural_networks.encoding
@@ -28,7 +28,7 @@ spike\_swarm\_sim.neural\_networks.encoding module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.neural\_net module
+mereli.neural\_networks.neural\_net module
 -----------------------------------------------------
 
 .. automodule:: mereli.neural_networks.neural_net
@@ -36,7 +36,7 @@ spike\_swarm\_sim.neural\_networks.neural\_net module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.neuron\_models module
+mereli.neural\_networks.neuron\_models module
 --------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.neuron_models
@@ -44,7 +44,7 @@ spike\_swarm\_sim.neural\_networks.neuron\_models module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.receptive\_field module
+mereli.neural\_networks.receptive\_field module
 ----------------------------------------------------------
 
 .. automodule:: mereli.neural_networks.receptive_field
@@ -52,7 +52,7 @@ spike\_swarm\_sim.neural\_networks.receptive\_field module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.neural\_networks.synapses module
+mereli.neural\_networks.synapses module
 --------------------------------------------------
 
 .. automodule:: mereli.neural_networks.synapses

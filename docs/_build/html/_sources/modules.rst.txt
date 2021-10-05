@@ -17,7 +17,7 @@ Subpackages
     mereli.sensors
     mereli.utils
 
-spike\_swarm\_sim.world module
+mereli.world
 ------------------------------
 
 .. automodule:: mereli.world
@@ -25,7 +25,7 @@ spike\_swarm\_sim.world module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.physics\_engine module
+mereli.physics\_engine
 ----------------------------------------
 
 .. automodule:: mereli.physics_engine
@@ -33,7 +33,7 @@ spike\_swarm\_sim.physics\_engine module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.env\_perturbations module
+mereli.env\_perturbations
 -------------------------------------------
 
 .. automodule:: mereli.env_perturbations
@@ -41,7 +41,7 @@ spike\_swarm\_sim.env\_perturbations module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.register module
+mereli.register
 ---------------------------------
 
 .. automodule:: mereli.register
@@ -49,7 +49,7 @@ spike\_swarm\_sim.register module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.globals module
+mereli.globals
 --------------------------------
 
 .. automodule:: mereli.globals
@@ -57,7 +57,7 @@ spike\_swarm\_sim.globals module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.config\_parser module
+mereli.config\_parser
 ---------------------------------------
 
 .. automodule:: mereli.config_parser

@@ -1,4 +1,4 @@
-spike\_swarm\_sim.algorithms.evolutionary package
+mereli.algorithms.evolutionary package
 =================================================
 
 Subpackages
@@ -12,7 +12,7 @@ Subpackages
 Submodules
 ----------
 
-spike\_swarm\_sim.algorithms.evolutionary.cma\_es module
+mereli.algorithms.evolutionary.cma\_es module
 --------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.cma_es
@@ -20,7 +20,7 @@ spike\_swarm\_sim.algorithms.evolutionary.cma\_es module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.evolutionary\_algorithm module
+mereli.algorithms.evolutionary.evolutionary\_algorithm module
 ------------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.evolutionary_algorithm
@@ -28,7 +28,7 @@ spike\_swarm\_sim.algorithms.evolutionary.evolutionary\_algorithm module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.genetic\_algorithm module
+mereli.algorithms.evolutionary.genetic\_algorithm module
 -------------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.genetic_algorithm
@@ -36,7 +36,7 @@ spike\_swarm\_sim.algorithms.evolutionary.genetic\_algorithm module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.neat module
+mereli.algorithms.evolutionary.neat module
 -----------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.neat
@@ -44,7 +44,7 @@ spike\_swarm\_sim.algorithms.evolutionary.neat module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.openai\_es module
+mereli.algorithms.evolutionary.openai\_es module
 -----------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.openai_es
@@ -52,7 +52,7 @@ spike\_swarm\_sim.algorithms.evolutionary.openai\_es module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.snes module
+mereli.algorithms.evolutionary.snes module
 -----------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.snes
@@ -60,7 +60,7 @@ spike\_swarm\_sim.algorithms.evolutionary.snes module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.species module
+mereli.algorithms.evolutionary.species module
 --------------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.species
@@ -68,7 +68,7 @@ spike\_swarm\_sim.algorithms.evolutionary.species module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.evolutionary.xnes module
+mereli.algorithms.evolutionary.xnes module
 -----------------------------------------------------
 
 .. automodule:: mereli.algorithms.evolutionary.xnes

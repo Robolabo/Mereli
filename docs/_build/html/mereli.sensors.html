@@ -1,0 +1,1567 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.sensors package &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mereli.sensors.utils package" href="mereli.sensors.utils.html" />
+    <link rel="prev" title="mereli.physics_engines package" href="mereli.physics_engines.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mereli.actuators.html">mereli.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.controllers.html">mereli.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.controller">mereli.controllers.controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.objects.html">mereli.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.world_object">mereli.objects.world_object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#mereli-objects-robot-3d">mereli.objects.robot_3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.light_source">mereli.objects.light_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ball">mereli.objects.ball</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.cube">mereli.objects.cube</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ground_area">mereli.objects.ground_area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.wall">mereli.objects.wall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.base_engine">mereli.physics_engines.base_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.pybullet_engine">mereli.physics_engines.pybullet_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mereli.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors.reward_sensor">mereli.sensors.reward_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
+        
+      <li>mereli.sensors package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/mereli.sensors.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mereli-sensors-package">
+<h1>mereli.sensors package<a class="headerlink" href="#mereli-sensors-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mereli.sensors.utils.html">mereli.sensors.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils.propagation">mereli.sensors.utils.propagation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils.utils">mereli.sensors.utils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mereli.sensors.utils.html#module-mereli.sensors.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mereli.sensors.base_sensor">
+<span id="mereli-sensors-base-sensor"></span><h2>mereli.sensors.base_sensor<a class="headerlink" href="#module-mereli.sensors.base_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.Sensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.base_sensor.</span></span><span class="sig-name descname"><span class="pre">Sensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_owner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#Sensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.Sensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class of robot sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.Sensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#Sensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.Sensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.Sensor.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#mereli.sensors.base_sensor.Sensor.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.Sensor.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#mereli.sensors.base_sensor.Sensor.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the sensor.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.base_sensor.</span></span><span class="sig-name descname"><span class="pre">DirectionalSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_sectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Base class for directional sensors. Directional or sectorized sensors are 
+sensors that can acquire the orientation from where the measurement was sensed.
+They have multiple sensor (one per sector), normally equally distributed around the
+robot perimeter, and can read the local surroundings of each sector area. In this 
+case, the sensor of each sector has a limited range and aperture in radians. Some 
+examples of directional sensors are the <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code> and the <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>.
+Excluding some exceptions such as the IR communication receiver, the reading of the 
+sensor is an numpy array with length equal to the number of sectors. This class is a 
+base class for directional sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+<li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.directions">
+<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.directions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing orientations (in radians) of the sectors 
+relative to the robot heading orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the absolute directions of each sensor (starting from theta).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.get_sensor_position">
+<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.get_sensor_position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the physical sensing device of a sector. 
+Each sector device is represented by a physical robot link,  
+which is used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.get_sensor_idx">
+<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.get_sensor_idx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a physical link  
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id2">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.base_sensor.DirectionalSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/base_sensor.html#DirectionalSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.base_sensor.DirectionalSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main method for steping the sensor and capturing nearby environment events.
+It senses the environment independently in each of the sensing sectors. The 
+particular behavior of each sensor inheriting this class should be specified in 
+<code class="docutils literal notranslate"><span class="pre">step_direction</span></code> method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> types) (excluding the robot 
+reading the sensor).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases 
+it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.distance_sensor">
+<span id="mereli-sensors-distance-sensor"></span><h2>mereli.sensors.distance_sensor<a class="headerlink" href="#module-mereli.sensors.distance_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.distance_sensor.</span></span><span class="sig-name descname"><span class="pre">DistanceSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/distance_sensor.html#DistanceSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Directional distance sensor class. It mimics a IR based distance sensor. 
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an scalar bounded in [0, 1] that estimates the distance 
+to the closest solid entity within the correspoding sector. A reading of 1 means that 
+the target object is very close and a measurement near 0 indicates that there are no obstacles 
+in that direction.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">distance_sensor</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+<li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
+<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/distance_sensor.html#DistanceSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
+It returns a numpy array of length equal to <code class="docutils literal notranslate"><span class="pre">n_sectors</span></code> with the reading of each independent sector. 
+The main steps of the reading are the following:</p>
+<ol class="arabic">
+<li><p>The identifiers of the ghost links bonded to the sensor sectors are collected as a list. Using these ghost link ids, 
+it is requested to the physics engine to compute the contant points between the ghost links of the robot and any other 
+entity. This will return a list with the identifier of all the objects that overlap with any of the robot ghost links. In 
+turn, if an entity overlaps with a ghost cone, then it implies that the entity is within the sector sensing area.</p></li>
+<li><p>We iterate through the different sectors of the sensor (8 in this case). The loop provides both the index of the sector (from 0 to N-1) 
+and the corresponding sector orientation (only scalar yaw for the moment). Within the first lines inside the loop, the list <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code>, 
+filters out the identifiers of the overlapping entities within the sector ghost cone of the i-th sector. If this new list is empty, the 
+measured signal strength is zero (no entities within the sensing area of this sector). Otherwise, if there are entities within the sector area, 
+then the signal strength reading is calculated (see below).</p></li>
+<li><p>Provided that <code class="docutils literal notranslate"><span class="pre">tar_ents</span></code> is not empty, the computation of the distance and misalignment estimation to solid objects is accomplished as follows. 
+The core idea is to cast a batch of rays, all of them with the same origin coordinates (sensor position) and with destination at equispaced points 
+of a sector area of a total angle given by the sensor aperture and a radius given by the sensor range. The following screenshot displays the mentioned 
+ray batchs of a sector:</p>
+<img src="../../_static/demo_DS_rays.png" style="width:70%;text-align: center;"><p>In terms of code, the destination of the rays are computed as follows:</p>
+<blockquote>
+<div><ul>
+<li><p>Using the function <code class="docutils literal notranslate"><span class="pre">np.linspace(-self.aperture/2,</span> <span class="pre">self.aperture/2,</span> <span class="pre">5)</span></code> we obtain 5 equispaced angle points inside the interval <span class="math notranslate nohighlight">\([-A/2,\, A/2]\)</span> rad, 
+where <span class="math notranslate nohighlight">\(A\)</span> is the aperture of the sector in radians. Even though in the code we use a total of 5 rays, generically speaking lets denote <span class="math notranslate nohighlight">\(N\)</span> to the 
+total number of rays casted from each sensor’s sector.</p></li>
+<li><p>Provided that <span class="math notranslate nohighlight">\(R\)</span> stands for the range in meters of the sensor and <span class="math notranslate nohighlight">\(\mathbf{o}\)</span> is the position of the physical sensor, the destination positions are:</p>
+<div class="math notranslate nohighlight">
+\[ \mathbf{d} = \mathbf{o} + R \left(\begin{array}{c}\cos(\alpha_i)\\ \sin(\alpha_i) \end{array}\right) \]</div><p>where <span class="math notranslate nohighlight">\(\alpha_i, \, \forall i\in\{1,\,\dots,\,N\}\)</span> are the angles previously computed using <code class="docutils literal notranslate"><span class="pre">np.linspace</span></code>.</p>
+</li>
+</ul>
+</div></blockquote>
+</li>
+</ol>
+<p>The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the 
+position of the intersection to the first intersecting solid object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.directions">
+<span class="sig-name descname"><span class="pre">directions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.directions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the vector of sensing orientations (in radians) of the sectors 
+relative to the robot heading orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>theta</strong> (<em>float</em>) – orientation of the robots using the sensor.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the absolute directions of each sensor (starting from theta).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.get_sensor_idx">
+<span class="sig-name descname"><span class="pre">get_sensor_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.get_sensor_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the sensor of a sector. Each sector is represented by a physical link  
+used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id3">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.get_sensor_position">
+<span class="sig-name descname"><span class="pre">get_sensor_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sector</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.get_sensor_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the position of the physical sensing device of a sector. 
+Each sector device is represented by a physical robot link,  
+which is used to cast rays and compute the readings wrt it.</p>
+<div class="admonition-todo admonition" id="id4">
+<p class="admonition-title">Todo</p>
+<p>TODO: For the moment only available in 3D. Create method in 2D engine.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sector</strong> (<em>int</em>) – sector of a the sectorized sensor to be requested.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the numpy array position of the sensor within the robot model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the sensor.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.distance_sensor.DistanceSensor.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#mereli.sensors.distance_sensor.DistanceSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.light_sensor">
+<span id="mereli-sensors-light-sensor"></span><h2>mereli.sensors.light_sensor<a class="headerlink" href="#module-mereli.sensors.light_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.LightSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">LightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#LightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.LightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Directional ambient light sensor that enables the sensing 
+of the light intensity resulting from the emission of luminous 
+WorldObjects (e.g. <code class="docutils literal notranslate"><span class="pre">LightSource</span></code>).
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an scalar bounded in [0, 1] that estimates the received 
+light intensity within the correspoding sector.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">light_sensor</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+<li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
+<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.LightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#LightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.LightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.BlueLightSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">BlueLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#BlueLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.BlueLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.light_sensor.LightSensor" title="mereli.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.BlueLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#BlueLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.BlueLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.YellowLightSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">YellowLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#YellowLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.YellowLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.light_sensor.LightSensor" title="mereli.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.YellowLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#YellowLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.YellowLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.RedLightSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">RedLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#RedLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.RedLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.light_sensor.LightSensor" title="mereli.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.RedLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#RedLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.RedLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.GreenLightSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.light_sensor.</span></span><span class="sig-name descname"><span class="pre">GreenLightSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#GreenLightSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.GreenLightSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.light_sensor.LightSensor" title="mereli.sensors.light_sensor.LightSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.light_sensor.LightSensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.light_sensor.GreenLightSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/light_sensor.html#GreenLightSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.light_sensor.GreenLightSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.ndarray with the reading of each sector.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.communication_receiver">
+<span id="mereli-sensors-communication-receiver"></span><h2>mereli.sensors.communication_receiver<a class="headerlink" href="#module-mereli.sensors.communication_receiver" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.communication_receiver.</span></span><span class="sig-name descname"><span class="pre">IRCommunicationReceiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_hops</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selection_scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'random'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Communication Receiver based on IR technology.
+The sensor is partitioned into multiple sectors that provide measurements
+solely of their sector coverage and about the corresponding sensing orientation.
+The reading of each sector is an message frame (python <code class="docutils literal notranslate"><span class="pre">dict</span></code>) with the message content
+and different context information (signal strength, RX orientation, etc.).
+This sensor is paired with the <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code> actuator, meaning that robots must
+be equipped with both RX and TX in order to work. Additionally, the IR receiver can only
+sense a single frame per simulation cycle (even though there could be multiple senders
+in the coverage). Within each sector area, the selected frame is the one sent by the closest
+robot. Besides, there is a frame selection function to decide the sector whose perceived frame
+is currently received. The implemented selection scheme are a random selection, that picks sectors
+randomly, and the cyclic selection, that deterministically iterates the cyclic sequence of sectors
+to be selected.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">IR_receiver</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+<li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
+<li><p><strong>msg_length</strong> (<em>int</em>) – number of components of the message. Must be the
+same as in the Transmitter definition.</p></li>
+<li><p><strong>max_hops</strong> (<em>int</em>) – maximum number of hops before frame discard.</p></li>
+<li><p><strong>selection_scheme</strong> (<em>str</em>) – As only one frame can be perceived by the sensor at each time step
+from all directions, a frame selection scheme is required. This parameter indicates the
+selection scheme to be employed. Possible values: <code class="docutils literal notranslate"><span class="pre">&quot;random&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;cyclic&quot;</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
+<li><p><strong>current_direction</strong> (<em>int</em>) – indicates the last direction/sector from where a frame was received.
+It is only useful when using cyclic selection.</p></li>
+<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the
+distance estimation bounded in [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the communication receiver. With the sensed frames from all directions it
+applies the selection of a
+unique frame is carried out among those frames whose sender is not the receiver.
+If no message is sensed, the measurement is an empty frame. Notice that this method extends the
+functionality of the method <code class="docutils literal notranslate"><span class="pre">DirectionalSensor.step</span></code> (it does not overwrite it).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – List of target neighboring entities (<code class="docutils literal notranslate"><span class="pre">WorldObject</span></code> types) (excluding the robot
+reading the sensor).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array with the measurement in each direction. In exceptional cases
+it may return a list of python dictionaries (see <code class="docutils literal notranslate"><span class="pre">CommunicationReceiver</span></code>).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.random_selection">
+<span class="sig-name descname"><span class="pre">random_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.random_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.random_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Random selection scheme that selects a single frame from all possible frames.
+The selection is purely random among those frames whose sender is not the robot owning the receiver.
+Additionally, those frames with a large number of hops are discarded. The number of hops is only
+considered if the communication state is used (see <code class="docutils literal notranslate"><span class="pre">IR_transmitter</span></code>), so that robots are able to
+relay messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frames</strong> (<em>list</em>) – list of frame dicts (to be changed to frame objects) that are candidate to be selected.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a single selected frame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.cyclic_selection">
+<span class="sig-name descname"><span class="pre">cyclic_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.cyclic_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.cyclic_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cyclic selection scheme that selects a single frame from all possible frames.
+The selection is deterministic and selects frames following the cyclic sequence of sectors.
+This means that, in an example with 4 sectors, the sequence of sectors whose frame is selected would be:</p>
+<p>Selection Sequence: S1 - S2 - S3 - S4 - S1 - S2 - S3 - S4- …..</p>
+<p>The drawback is that the sectors are selected even if there is no sender within their coverage area. In
+these cases, the selected frame is an empty frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frames</strong> (<em>list</em>) – list of frame dicts (to be changed to frame objects) that are candidate to be selected.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a single selected frame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.full_selection">
+<span class="sig-name descname"><span class="pre">full_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frames</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.full_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.full_selection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects the message of all directions at once (no selection). Thus, the resulting message has the dimension of 
+n_sectors * msg_length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>frames</strong> (<em>list</em>) – list of frame dicts (to be changed to frame objects) that are candidate to be selected.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a single selected frame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset method of the sensor.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.empty_frame">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">empty_frame</span></span><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.empty_frame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an empty frame <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the robots with the IR transmitter
+enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.communication_receiver.IRCommunicationReceiver.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/communication_receiver.html#IRCommunicationReceiver.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.communication_receiver.IRCommunicationReceiver.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the sensed frame of the current direction. Only objects that are within the range and
+aperture are considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference
+of the between object positions can be used. However, most of the times,
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.color_sensor">
+<span id="mereli-sensors-color-sensor"></span><h2>mereli.sensors.color_sensor<a class="headerlink" href="#module-mereli.sensors.color_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.color_sensor.ColorSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.color_sensor.</span></span><span class="sig-name descname"><span class="pre">ColorSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ColorSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ColorSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Directional color sensor that detects objects of a certain color in the local surroundings.
+The sensor is partitioned into multiple sectors that provide measurements 
+solely of their sector coverage and about the corresponding sensing orientation. 
+The reading of each sector is an binary reading inticatin whether an object of the color was detected or 
+not in the sector coverage. The color sensor is a high level sensor that simplyfies the use of 
+a camara plus a postprocessing unit. The analogous postprocessing would be to detect the amount of 
+pixels of the color and detect an object of that color provided that the number of detected pixels 
+surpasses a certain threshold.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">color_sensor</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – range of coverage of the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – std. dev. of the white noise attached to the measurement.</p></li>
+<li><p><strong>n_sectors</strong> (<em>int</em>) – number of sectors of the sensor.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>aperture</strong> (<em>float</em>) – aperture in radians of each sector of the sensor.</p></li>
+<li><p><strong>propagation</strong> (<a class="reference internal" href="mereli.sensors.utils.html#mereli.sensors.utils.propagation.ExpDecayPropagation" title="mereli.sensors.utils.propagation.ExpDecayPropagation"><em>ExpDecayPropagation</em></a>) – propagation model to map <code class="docutils literal notranslate"><span class="pre">rho</span></code> and <code class="docutils literal notranslate"><span class="pre">phi</span></code> into the 
+distance estimation bounded in [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.color_sensor.ColorSensor.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ColorSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ColorSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+In this case it filters out, among all neighboring objects, only the solid objects of the sentitive color.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.color_sensor.ColorSensor.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ColorSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ColorSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction. Only objects that are within the range and 
+aperture are considered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Eucliden distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.color_sensor.ObjectGraspedSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.color_sensor.</span></span><span class="sig-name descname"><span class="pre">ObjectGraspedSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ObjectGraspedSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ObjectGraspedSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.color_sensor.ObjectGraspedSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/color_sensor.html#ObjectGraspedSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.color_sensor.ObjectGraspedSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.ground_sensor">
+<span id="mereli-sensors-ground-sensor"></span><h2>mereli.sensors.ground_sensor<a class="headerlink" href="#module-mereli.sensors.ground_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.ground_sensor.GroundSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.ground_sensor.</span></span><span class="sig-name descname"><span class="pre">GroundSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ground_sensor.html#GroundSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ground_sensor.GroundSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor that detects if there is a ground area underneath the robot (binary reading). 
+Additionally, it only detects ground areas of a particular color.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">ground_sensor</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_owner</strong> (<em>Robot</em>) – robot object owning and reading from the sensor.</p></li>
+<li><p><strong>noise_sigma</strong> (<em>float</em>) – TODO change to Bernoulli noise.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the light to which the sensor is sensitive.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.ground_sensor.GroundSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ground_sensor.html#GroundSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ground_sensor.GroundSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method for reading the ground sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – <code class="docutils literal notranslate"><span class="pre">list</span></code> of entities in the surroundings of the robot.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy array of length 1 with the binary reading. A reading of 1.0 means that a ground 
+area has been detected and a value of 0.0 means that no ground areas was detected.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.joint_sensor">
+<span id="mereli-sensors-joint-sensor"></span><h2>mereli.sensors.joint_sensor<a class="headerlink" href="#module-mereli.sensors.joint_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointPositionSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.joint_sensor.</span></span><span class="sig-name descname"><span class="pre">JointPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor of the position (in radians) of the joints of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>joints</strong> (<em>list</em>) – list of joints to be read.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointPositionSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current position of the requested joints. It queries this operation 
+to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine.read_joints</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the position reading of each joint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointVelocitySensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.joint_sensor.</span></span><span class="sig-name descname"><span class="pre">JointVelocitySensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointVelocitySensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointVelocitySensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor of the position (in radians/s) of the joints of the robot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>joints</strong> (<em>list</em>) – list of joints to be read.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.joint_sensor.JointVelocitySensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/joint_sensor.html#JointVelocitySensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.joint_sensor.JointVelocitySensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the current velocity of the requested joints. It queries this operation 
+to the physics engine by calling the method <code class="docutils literal notranslate"><span class="pre">Engine.read_joints</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the velocity reading of each joint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.collision_sensor">
+<span id="mereli-sensors-collision-sensor"></span><h2>mereli.sensors.collision_sensor<a class="headerlink" href="#module-mereli.sensors.collision_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.collision_sensor.CollisionSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.collision_sensor.</span></span><span class="sig-name descname"><span class="pre">CollisionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/collision_sensor.html#CollisionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.collision_sensor.CollisionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.collision_sensor.CollisionSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hierarchy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/collision_sensor.html#CollisionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.collision_sensor.CollisionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.food_sensor">
+<span id="mereli-sensors-food-sensor"></span><h2>mereli.sensors.food_sensor<a class="headerlink" href="#module-mereli.sensors.food_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">FoodSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Food sensor that detects whether the robot is 
+holding/transporting a food piece or not.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodAreaSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">FoodAreaSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodAreaSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodAreaSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Food area sensor that detects whether there is a food 
+area underneath the robot or not.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodAreaSensor.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodAreaSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodAreaSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.FoodAreaSensor.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#FoodAreaSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.FoodAreaSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.NestSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.food_sensor.</span></span><span class="sig-name descname"><span class="pre">NestSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#NestSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.NestSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<p>Nest area sensor that detects whether there is a nest 
+area underneath the robot or not.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.NestSensor.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#NestSensor.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.NestSensor.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that specifies the particular behavior of a directional sensor in each sensing direction.
+It must return the reading of the current direction.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em>) – Euclidean distance between the object sensing and the object (obj) sensed.</p></li>
+<li><p><strong>phi</strong> (<em>float</em>) – angle between the direction of the sensor and the line passing through 
+both sensing and sensed object positions.</p></li>
+<li><p><strong>direction_reading</strong> (<em>float</em>) – Current reading in the featured direction 
+to be potentially overwritten. In some cases such as the communication receiver it can be a <code class="docutils literal notranslate"><span class="pre">dict</span></code>.</p></li>
+<li><p><strong>direction</strong> (<em>int</em>) – integer refering to the current sensing direction between 0 and n_sectors - 1.</p></li>
+<li><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Optionally, the object that is being sensed can be used.</p></li>
+<li><p><strong>diff_vector</strong> (<em>np.ndarray</em>) – Optionally, the vector resulting from the difference 
+of the between object positions can be used. However, most of the times, 
+rho and phi are sufficient. Notice that rho=|diff_vector|.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Reading of the sensor in the current direction.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.food_sensor.NestSensor.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/food_sensor.html#NestSensor.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.food_sensor.NestSensor.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method devoted to filtering the world objects that should be targeted for a particular sensor.
+For example: a light sensor will filter out only luminous objects.
+This method must be overwritten in each directional sensor that inherits from DirectionalSensor 
+in order to particularize its functioning.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<a class="reference internal" href="mereli.objects.html#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><em>WorldObject</em></a>) – Potential world object to be sensed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Boolean response revealing whether the obj should be explored by the sensor or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.neighborhood_position_sensor">
+<span id="mereli-sensors-neighborhood-position-sensor"></span><h2>mereli.sensors.neighborhood_position_sensor<a class="headerlink" href="#module-mereli.sensors.neighborhood_position_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.neighborhood_position_sensor.</span></span><span class="sig-name descname"><span class="pre">NeighborhoodPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/neighborhood_position_sensor.html#NeighborhoodPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.neighborhood_position_sensor.NeighborhoodPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.own_orientation_sensor">
+<span id="mereli-sensors-own-orientation-sensor"></span><h2>mereli.sensors.own_orientation_sensor<a class="headerlink" href="#module-mereli.sensors.own_orientation_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.own_orientation_sensor.OwnOrientationSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.own_orientation_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnOrientationSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_orientation_sensor.html#OwnOrientationSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_orientation_sensor.OwnOrientationSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.own_orientation_sensor.OwnOrientationSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_orientation_sensor.html#OwnOrientationSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_orientation_sensor.OwnOrientationSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.own_position_sensor">
+<span id="mereli-sensors-own-position-sensor"></span><h2>mereli.sensors.own_position_sensor<a class="headerlink" href="#module-mereli.sensors.own_position_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.own_position_sensor.OwnPositionSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.own_position_sensor.</span></span><span class="sig-name descname"><span class="pre">OwnPositionSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_position_sensor.html#OwnPositionSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_position_sensor.OwnPositionSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.own_position_sensor.OwnPositionSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/own_position_sensor.html#OwnPositionSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.own_position_sensor.OwnPositionSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.ble_receiver">
+<span id="mereli-sensors-ble-receiver"></span><h2>mereli.sensors.ble_receiver<a class="headerlink" href="#module-mereli.sensors.ble_receiver" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.ble_receiver.</span></span><span class="sig-name descname"><span class="pre">RF_Receiver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ble_receiver.html#RF_Receiver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.DirectionalSensor" title="mereli.sensors.base_sensor.DirectionalSensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.DirectionalSensor</span></code></a></p>
+<ul>
+<li><dl>
+<dt>Args:</dt><dd><dl class="simple">
+<dt>msg_length [int]<span class="classifier">number of components of the message. Must be the </span></dt><dd><p>same as in the Transmitter definition.</p>
+</dd>
+</dl>
+<p>max_hops [int] : maximum number of hops before frame discard.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver.target_filter">
+<span class="sig-name descname"><span class="pre">target_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ble_receiver.html#RF_Receiver.target_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver.target_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filtering of potential sender robots.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver.step_direction">
+<span class="sig-name descname"><span class="pre">step_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction_reading</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_vector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ble_receiver.html#RF_Receiver.step_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver.step_direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step the sensor of a sector, receiving the frame messages and the underlying
+context. For a detailed explanation of this method see DirectionalSensor._step_direction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/ble_receiver.html#RF_Receiver.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the communication receiver. With the sensed frames from all directions it 
+firstly discards those with more hops than a thresh. Then, the selection of a 
+unique frame is carried out stochastically among those frames whose sender is not the receiver. 
+If no message is sensed, the measurement is an empty frame.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.sensors.ble_receiver.RF_Receiver.empty_msg">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">empty_msg</span></span><a class="headerlink" href="#mereli.sensors.ble_receiver.RF_Receiver.empty_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Format of an empty message.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.task_sensor">
+<span id="mereli-sensors-task-sensor"></span><h2>mereli.sensors.task_sensor<a class="headerlink" href="#module-mereli.sensors.task_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.task_sensor.TaskSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.task_sensor.</span></span><span class="sig-name descname"><span class="pre">TaskSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/task_sensor.html#TaskSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.task_sensor.TaskSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.task_sensor.TaskSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hierarchy</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/task_sensor.html#TaskSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.task_sensor.TaskSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors.reward_sensor">
+<span id="mereli-sensors-reward-sensor"></span><h2>mereli.sensors.reward_sensor<a class="headerlink" href="#module-mereli.sensors.reward_sensor" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.sensors.reward_sensor.GroupRewardSensor">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.sensors.reward_sensor.</span></span><span class="sig-name descname"><span class="pre">GroupRewardSensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/reward_sensor.html#GroupRewardSensor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.reward_sensor.GroupRewardSensor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.sensors.base_sensor.Sensor" title="mereli.sensors.base_sensor.Sensor"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.sensors.base_sensor.Sensor</span></code></a></p>
+<p>Sensor that measures the mean reward obtained by all the robots in the 
+vicinity of the sensor owner. The vicinity is established as a sphere of a radius 
+determinied by the <code class="docutils literal notranslate"><span class="pre">range</span></code> argument. The sensor simplifies and abstracts the underlying 
+use of communication technologies such as Bluetooth or Zigbee. An important note is that 
+the receiving robot is not aware of the neighboring robot that sent the reward because there is 
+no directionality awareness and rewards are averaged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>range</strong> (<em>float</em>) – radius of the vicinity. Only rewards within this range can be perceived by 
+the robot.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.sensors.reward_sensor.GroupRewardSensor.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/sensors/reward_sensor.html#GroupRewardSensor.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.sensors.reward_sensor.GroupRewardSensor.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method of th Group Reward Sensor. It collects the rewards of any robot within an 
+Euclidean distance lower that <code class="docutils literal notranslate"><span class="pre">range</span></code> and returns the mean reward of the vicinity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>neighborhood</strong> (<em>list</em>) – list of world entities. This parameter is not used at all in this sensor, but it is 
+kept as a parameter because other sensors may need to use it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.sensors">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mereli.sensors" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="mereli.sensors.utils.html" class="btn btn-neutral float-right" title="mereli.sensors.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mereli.physics_engines.html" class="btn btn-neutral float-left" title="mereli.physics_engines package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

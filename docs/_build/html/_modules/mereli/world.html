@@ -1,0 +1,903 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.world &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.world</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.world</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">deque</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pybullet</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">import</span> <span class="nn">pybullet_data</span>
+<span class="kn">import</span> <span class="nn">pybullet_utils.bullet_client</span> <span class="k">as</span> <span class="nn">bc</span>
+
+
+<span class="kn">from</span> <span class="nn">mereli.objects</span> <span class="k">import</span>  <span class="n">Robot</span><span class="p">,</span> <span class="n">LightSource</span><span class="p">,</span> <span class="n">Wall</span><span class="p">,</span> <span class="n">Map</span>
+<span class="kn">from</span> <span class="nn">mereli.physics_engines.pybullet_engine</span> <span class="k">import</span> <span class="n">PybulletEngine</span>
+<span class="kn">from</span> <span class="nn">mereli.register</span> <span class="k">import</span> <span class="p">(</span><span class="n">controllers</span><span class="p">,</span> <span class="n">world_objects</span><span class="p">,</span> <span class="n">initializers</span><span class="p">,</span> 
+        <span class="n">env_perturbations</span><span class="p">,</span> <span class="n">rewards</span><span class="p">,</span> <span class="n">communication_systems</span><span class="p">,</span> <span class="n">world_registry</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">mereli.utils</span> <span class="k">import</span> <span class="p">(</span><span class="n">increase_time</span><span class="p">,</span> <span class="n">mov_average_timeit</span><span class="p">,</span> <span class="n">isinstance_of_any</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">mereli.globals</span> <span class="k">import</span> <span class="n">global_states</span>
+
+
+<div class="viewcode-block" id="map_parser"><a class="viewcode-back" href="../../modules.html#mereli.world.map_parser">[docs]</a><span class="k">def</span> <span class="nf">map_parser</span><span class="p">():</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;mereli/models/maps/map1.txt&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">map_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="nb">int</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="k">if</span> <span class="n">ch</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()])</span>
+    <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="World"><a class="viewcode-back" href="../../modules.html#mereli.world.World">[docs]</a><span class="k">class</span> <span class="nc">World</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># language=rst</span>
+    <span class="sd">&quot;&quot;&quot; Base class of the world or environment. This class is never used directly in an experiment but </span>
+<span class="sd">    any experiment environment/world must inherit from it. The main function of World classes is to act as</span>
+<span class="sd">    containers and orchestrator of the simulation. It stores all the objects that have been instantiated, </span>
+<span class="sd">    calls the :py:meth:`mereli.objects.Robot.step` method of every robot in order to map states into </span>
+<span class="sd">    actions and communicates with the physics and render engines in order to simulate and visualize rigid object </span>
+<span class="sd">    realistic physics and collisions. </span>
+<span class="sd">    Currently only 2D and 3D square arenas are implemented. </span>
+
+<span class="sd">    :param Engine physics_engine: physics engine to be used.</span>
+<span class="sd">    :param float height: height in metres of the square arena.</span>
+<span class="sd">    :param float width: width in metres of the square arena.</span>
+<span class="sd">    :param float world_delay: deprecated, to be removed in next ver.</span>
+
+<span class="sd">    :var dict hierarchy: dictionary storing all the entities instantiated in the world.</span>
+<span class="sd">    :var dict initializers: dictionary mapping groups of entities to initializers of the positions </span>
+<span class="sd">            and orientations</span>
+<span class="sd">    :var dict env_perturbations: dictionary mapping object groups to environmental perturbations (``EnvironmentalPerturbation``) applied </span>
+<span class="sd">        to robot states or actions.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">    &gt;&gt;&gt; # Example of an obstacle avoidance experiment with 5 robots in 3D. </span>
+<span class="sd">    &gt;&gt;&gt; from mereli import SquareArena</span>
+<span class="sd">    &gt;&gt;&gt; from mereli.physics_engines import PybulletEngine</span>
+<span class="sd">    &gt;&gt;&gt; from mereli.objects import Robot3D</span>
+<span class="sd">    &gt;&gt;&gt; from mereli.controllers import BasicObstacleAvoider</span>
+<span class="sd">    &gt;&gt;&gt; from mereli.utils.initializers import InitializerHandler, RandomUniformInitializer</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; n_robots = 5</span>
+<span class="sd">    &gt;&gt;&gt; phy_engine = PybulletEngine(dt=0.02)</span>
+<span class="sd">    &gt;&gt;&gt; world = SquareArena(phy_engine, height=10, width=10)</span>
+<span class="sd">    &gt;&gt;&gt; world_cfg = {</span>
+<span class="sd">    &gt;&gt;&gt;     &quot;world_delay&quot; : 1,</span>
+<span class="sd">    &gt;&gt;&gt;     &quot;height&quot;: 10,</span>
+<span class="sd">    &gt;&gt;&gt;     &quot;width&quot;:  10,</span>
+<span class="sd">    &gt;&gt;&gt;     &quot;objects&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;        &quot;robotA&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;type&quot; : &quot;robot&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;num_instances&quot; : n_robots,</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;controller&quot; : &quot;basic_obstable_avoider&quot;,</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;sensors&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;                &quot;distance_sensor&quot; : {&quot;n_sectors&quot; : 8, &quot;range&quot; : 1}</span>
+<span class="sd">    &gt;&gt;&gt;            },  </span>
+<span class="sd">    &gt;&gt;&gt;            &quot;actuators&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;                &quot;joint_velocity_actuator&quot; : {&quot;joint_ids&quot; : [0, 1], &quot;max_velocity&quot; : 5}</span>
+<span class="sd">    &gt;&gt;&gt;            },</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;initializers&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;                &quot;positions&quot; : {&quot;name&quot; : &quot;random_uniform&quot;,  &quot;params&quot; : {&quot;low&quot; : [-3, -3], &quot;high&quot; : [3, 3], &quot;size&quot; : 2}},</span>
+<span class="sd">    &gt;&gt;&gt;                &quot;orientations&quot; : {&quot;name&quot; : &quot;random_uniform&quot;,  &quot;params&quot; : {&quot;low&quot;:0, &quot;high&quot; : 6.28, &quot;size&quot; : 1}}</span>
+<span class="sd">    &gt;&gt;&gt;            },</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;perturbations&quot; : {</span>
+<span class="sd">    &gt;&gt;&gt;            },</span>
+<span class="sd">    &gt;&gt;&gt;            &quot;params&quot; : {&quot;trainable&quot; : True}</span>
+<span class="sd">    &gt;&gt;&gt;        }</span>
+<span class="sd">    &gt;&gt;&gt;     }</span>
+<span class="sd">    &gt;&gt;&gt; }</span>
+<span class="sd">    &gt;&gt;&gt; world.build_from_dict(world_cfg)</span>
+<span class="sd">    &gt;&gt;&gt; with world:</span>
+<span class="sd">    &gt;&gt;&gt;     while(True):</span>
+<span class="sd">    &gt;&gt;&gt;         state, action = world.step()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">physics_engine</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span> <span class="o">=</span> <span class="n">physics_engine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render</span> <span class="o">=</span> <span class="n">global_states</span><span class="o">.</span><span class="n">RENDER</span>
+
+        <span class="c1">#* Dict storing all objects</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#* Dict mapping object names to object groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#* Dict storing how objects should be initialized as a group.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#* Dict mapping object groups to environmental perturbations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="World.step"><a class="viewcode-back" href="../../modules.html#mereli.world.World.step">[docs]</a>    <span class="nd">@increase_time</span>
+    <span class="nd">@mov_average_timeit</span>
+    <span class="k">def</span> <span class="nf">step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># language=rst</span>
+        <span class="sd">&quot;&quot;&quot; Step function of the world to run it one timestep. This method is must be executed at every step of </span>
+<span class="sd">        the simulation in order to iterate the physics and robot controllers.</span>
+<span class="sd">        </span>
+<span class="sd">        The main functions of the method are:</span>
+
+<span class="sd">        * It computes the swarm rewards based on the previous action and states.</span>
+<span class="sd">        * For each instantiated controllable entity, the :py:meth:`step` method is executed. This results in the partially observable state measured by the robot sensors and the corresponding </span>
+<span class="sd">          actions elaborated by the controller. These states and actions are python ``dict`` objects mapping sensor </span>
+<span class="sd">          and actuator names to numpy arrays of measured states and actions. The states and actions of all the robots </span>
+<span class="sd">          in the swarm are gathered as a numpy array of python ``dict`` objects (each corresponding to a robot).</span>
+<span class="sd">            </span>
+<span class="sd">          Example::</span>
+
+<span class="sd">          &gt;&gt;&gt; state_obj = {&#39;distance_sensor&#39; : np.array([0, 0, 0, 1]), &#39;ground_sensor&#39; : np.array([0])}</span>
+<span class="sd">          &gt;&gt;&gt; action_obj = {&#39;joint_velocity_actuator&#39; : np.array([0.4, -0.1])}</span>
+
+<span class="sd">        * Perturbations are applied to the planned actions. For example, a robot communication transmitter can </span>
+<span class="sd">          be broken and its action is, therefore, inhibited.</span>
+<span class="sd">        * Actuators of the robots are executed with the actions planned by the controllers.</span>
+<span class="sd">        * The render and physics engines are iterated. The render engine is iterated only if </span>
+<span class="sd">          :py:attr:`mereli.World.render` is ``True``. </span>
+
+<span class="sd">        :returns: A tuple with state and action numpy arrays of length equal to the number of robots. </span>
+<span class="sd">                  Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">states</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="n">deque</span><span class="p">()</span>
+        <span class="n">pre_perturbations</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1">#* Step controllers</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controllable_objects</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">):</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">pre_perturbations</span> <span class="o">=</span> <span class="p">[</span><span class="n">pert</span> <span class="k">for</span> <span class="n">pert</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">group_of</span><span class="p">(</span><span class="n">obj_name</span><span class="p">)]</span>\
+                            <span class="k">if</span> <span class="ow">not</span> <span class="n">pert</span><span class="o">.</span><span class="n">postprocessing</span> <span class="ow">and</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">pert</span><span class="o">.</span><span class="n">affected_robots</span><span class="p">]</span>
+            <span class="c1">#* Compute robot reward </span>
+            <span class="n">reward</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>\
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">state_obj</span><span class="p">,</span> <span class="n">action_obj</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">reward</span><span class="o">=</span><span class="n">reward</span><span class="p">,</span> <span class="n">perturbations</span><span class="o">=</span><span class="n">pre_perturbations</span><span class="p">)</span> <span class="c1">#!</span>
+            <span class="c1"># if self.reward_generator is not None:</span>
+            <span class="c1">#     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)</span>
+            <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state_obj</span><span class="p">)</span>
+            <span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action_obj</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">states</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">actions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+
+        <span class="c1">#* Apply environmental perturbations (Postprocessing)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">perturbation</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">perturbation</span><span class="o">.</span><span class="n">postprocessing</span><span class="p">:</span>
+                    <span class="n">states</span><span class="p">,</span> <span class="n">actions</span> <span class="o">=</span> <span class="n">perturbation</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">robots</span><span class="p">)</span>
+
+        <span class="c1">#* Actuate</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">controllable_objects</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span><span class="p">:</span>
+                <span class="n">obj</span><span class="o">.</span><span class="n">actuate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="p">)</span>
+
+        <span class="c1">#* Render and physics step.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">step_physics</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">step_render</span><span class="p">()</span>
+
+        <span class="c1">#* Retain prev states and actions to compute rewards.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span> <span class="o">=</span> <span class="n">states</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span> <span class="o">=</span> <span class="n">actions</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">states</span><span class="p">,</span> <span class="n">actions</span></div>
+
+<div class="viewcode-block" id="World.register_entity"><a class="viewcode-back" href="../../modules.html#mereli.world.World.register_entity">[docs]</a>    <span class="k">def</span> <span class="nf">register_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Adds an object to the world registry. Assigns a unique identifier to the object.</span>
+<span class="sd">        Additionally, if the object belongs to a group of world objects it also registers it.</span>
+
+<span class="sd">        :param str name: name of the object.</span>
+<span class="sd">        :param WorldObject obj: instance of the world object to be added.</span>
+<span class="sd">        :param str group: name of the group to which obj belong to. If none a new group is created with</span>
+<span class="sd">                           obj as unique element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span><span class="p">})</span>
+        <span class="c1">#* Register group element</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">group</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">group</span> <span class="o">=</span> <span class="n">group</span> </div>
+
+<div class="viewcode-block" id="World.set_initializer"><a class="viewcode-back" href="../../modules.html#mereli.world.World.set_initializer">[docs]</a>    <span class="k">def</span> <span class="nf">set_initializer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">initializer_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Bounds and registers entity initializers to groups of entities. </span>
+<span class="sd">        Therefore, every time that an experiment is reset, the settled initializers are used </span>
+<span class="sd">        to establish the positions and orientations (only if the entity is a robot) of </span>
+<span class="sd">        the world entities. </span>
+
+<span class="sd">        :param str group_name: name of the group of entities to be created.</span>
+<span class="sd">        :param Initializer initializer_pos: initializer class of the positions of the group.</span>
+<span class="sd">        :param Initializer initializer_ori: initializer class of the orientations of the group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">initializer_pos</span><span class="p">,</span>
+            <span class="s1">&#39;orientations&#39;</span> <span class="p">:</span> <span class="n">initializer_ori</span>
+        <span class="p">}</span></div>
+
+<div class="viewcode-block" id="World.add_group"><a class="viewcode-back" href="../../modules.html#mereli.world.World.add_group">[docs]</a>    <span class="k">def</span> <span class="nf">add_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">entity_cls</span><span class="p">,</span>  <span class="n">initializer_pos</span><span class="p">,</span> <span class="n">initializer_ori</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Adds entities belonging to a certain group to the world. For instance, it can create all the </span>
+<span class="sd">        homogeneous robots within a swarm.</span>
+
+<span class="sd">        :param str group_name: name of the group of entities to be created.</span>
+<span class="sd">        :param WorldObject entity_cls: precise class of the entities of the group.</span>
+<span class="sd">        :param Initializer initializer_pos: initializer class of the positions of the group.</span>
+<span class="sd">        :param Initializer initializer_ori: initializer class of the orientations of the group.</span>
+<span class="sd">        :param Controller controller: controller (if any) of the entities of the group. If the entity is not </span>
+<span class="sd">                controllable then its content must be None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#* Create group intializers.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">group_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;positions&#39;</span> <span class="p">:</span> <span class="n">initializer_pos</span><span class="p">,</span>
+            <span class="s1">&#39;orientations&#39;</span> <span class="p">:</span> <span class="n">initializer_ori</span>
+        <span class="p">}</span>
+        <span class="n">positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">group_name</span><span class="p">][</span><span class="s1">&#39;positions&#39;</span><span class="p">]()</span>
+        <span class="n">orientations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">group_name</span><span class="p">][</span><span class="s1">&#39;orientations&#39;</span><span class="p">]()</span>\
+                        <span class="k">if</span> <span class="n">initializer_ori</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">5</span><span class="o">*</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">ori</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">orientations</span><span class="p">)):</span>
+            <span class="n">entity</span> <span class="o">=</span> <span class="n">entity_cls</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">controller</span><span class="p">)</span>
+            <span class="n">ent_name</span> <span class="o">=</span> <span class="n">group_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">i</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_entity</span><span class="p">(</span><span class="n">ent_name</span><span class="p">,</span> <span class="n">entity_cls</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">ori</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">controller</span><span class="p">,</span> <span class="n">group_name</span><span class="o">=</span><span class="n">group_name</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="World.build_from_dict"><a class="viewcode-back" href="../../modules.html#mereli.world.World.build_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">build_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">,</span> <span class="n">ann_topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Initializes all the entities and adds them to the world/environment using a ``dict`` structure as input.</span>
+<span class="sd">        The ``world_dict`` fully defines the environment and the instatiated robots and the ``ann_topology`` </span>
+<span class="sd">        entirely establishes the ANN controller topology (if :py:class:`mereli.controllers.NeuralController` is used).</span>
+<span class="sd">        For a dedicated description of the configuration files fields see `Configuration Files &lt;configuration_files.html&gt;`__ .</span>
+
+<span class="sd">        :param dict world_dict: configuration ``dict`` of the environment (parameters, objects, ...).</span>
+<span class="sd">        :param dict ann_topology:  configuration ``dict`` of the neural network.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1">#TODO: esto implica que el tipo/generador de reward es igual para todos los robots.</span>
+        <span class="k">if</span> <span class="n">ann_topology</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ann_topology</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;learning_rule&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reward&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="o">=</span> <span class="n">rewards</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ann_topology</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;learning_rule&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;reward&#39;</span><span class="p">))()</span>
+        <span class="k">for</span> <span class="n">obj_name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">world_dict</span><span class="p">[</span><span class="s1">&#39;objects&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">object_cls</span> <span class="o">=</span> <span class="n">world_objects</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">engine_type</span><span class="p">][</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]]</span>
+            <span class="c1">#! Prov implementation for TFM regarding the task scheduler</span>
+            <span class="k">if</span> <span class="n">object_cls</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;TaskScheduler&#39;</span><span class="p">:</span>
+                <span class="n">world_obj</span> <span class="o">=</span> <span class="n">object_cls</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="o">**</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span> <span class="c1">#! ojo 2D</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="n">obj_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">world_obj</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">obj_name</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="c1">#* Create group intializers.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">key</span> <span class="p">:</span> <span class="n">initializers</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]](</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;num_instances&#39;</span><span class="p">],</span> <span class="n">engine</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">engine_type</span><span class="p">,</span> 
+                        <span class="n">variable</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="o">**</span><span class="n">value</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;initializers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="c1">#* Loop entities and add them to the world.</span>
+            <span class="c1">#* Distinguish between robots and the other objects.</span>
+            <span class="n">entity_positions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s1">&#39;positions&#39;</span><span class="p">]()</span>
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">object_cls</span><span class="p">,</span> <span class="n">Robot</span><span class="p">):</span><span class="c1"># or issubclass(object_cls, Robot3D):</span>
+                <span class="n">entity_orientations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">obj_name</span><span class="p">][</span><span class="s1">&#39;orientations&#39;</span><span class="p">]()</span>
+                <span class="c1">#* Add entities one by one at their position and orientation</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">entity_positions</span><span class="p">,</span> <span class="n">entity_orientations</span><span class="p">)):</span>
+                    <span class="n">controller</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="k">if</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;controller&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1">#* Create Controller and add sensors and actuators</span>
+                        <span class="n">controller_cls</span> <span class="o">=</span> <span class="n">controllers</span><span class="p">[</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;controller&#39;</span><span class="p">]]</span>
+                        <span class="n">controller</span> <span class="o">=</span> <span class="n">controller_cls</span><span class="p">()</span>
+                        <span class="n">controller</span><span class="o">.</span><span class="n">add_sensors_from_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;sensors&#39;</span><span class="p">])</span>
+                        <span class="n">controller</span><span class="o">.</span><span class="n">add_actuators_from_dict</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;actuators&#39;</span><span class="p">])</span>
+                        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">controller_cls</span><span class="p">,</span> <span class="n">controllers</span><span class="p">[</span><span class="s1">&#39;neural_controller&#39;</span><span class="p">]):</span>
+                            <span class="n">controller</span><span class="o">.</span><span class="n">add_ann_from_dict</span><span class="p">(</span><span class="n">ann_topology</span><span class="p">)</span>
+                    <span class="n">robot</span> <span class="o">=</span> <span class="n">object_cls</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">controller</span><span class="o">=</span><span class="n">controller</span><span class="p">,</span> <span class="o">**</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+                    <span class="c1">#* Add communication system (if any)</span>
+                    <span class="k">if</span> <span class="s2">&quot;comm_sys&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">:</span>
+                        <span class="n">robot</span><span class="o">.</span><span class="n">add_communication</span><span class="p">(</span><span class="n">communication_systems</span><span class="p">[</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;comm_sys&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]](</span><span class="o">**</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;comm_sys&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="n">obj_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">robot</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">obj_name</span><span class="p">)</span>
+
+                <span class="c1">#* Add perturbations (if any) to the robot states and actions (not physical perturbs)</span>
+                <span class="c1">#* For example: inhibit a certain sensor reading or ignore some action of a robot.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;perturbations&#39;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">object_perturbations</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">pert_name</span><span class="p">,</span> <span class="n">perturbations</span> <span class="ow">in</span> <span class="n">obj</span><span class="p">[</span><span class="s1">&#39;perturbations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">perturbations</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                            <span class="n">object_perturbations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_perturbations</span><span class="p">[</span><span class="n">pert_name</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;num_instances&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">perturbations</span><span class="p">))</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pert</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">perturbations</span><span class="p">):</span>
+                                <span class="n">object_perturbations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">env_perturbations</span><span class="p">[</span><span class="n">pert_name</span><span class="p">](</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;num_instances&#39;</span><span class="p">],</span> <span class="o">**</span><span class="n">pert</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">obj_name</span> <span class="p">:</span> <span class="n">object_perturbations</span><span class="p">})</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1">#* Non robot objects</span>
+                <span class="n">controller_cls</span> <span class="o">=</span> <span class="n">controllers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;controller&#39;</span><span class="p">))</span>
+                <span class="n">controller</span> <span class="o">=</span> <span class="n">controller_cls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">controller_cls</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">position</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">entity_positions</span><span class="p">):</span>
+                    <span class="n">world_obj</span> <span class="o">=</span> <span class="n">object_cls</span><span class="p">(</span><span class="n">position</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">controller</span><span class="o">=</span><span class="n">controller</span><span class="p">,</span> <span class="o">**</span><span class="n">obj</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="n">obj_name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">world_obj</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">obj_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="World.reset"><a class="viewcode-back" href="../../modules.html#mereli.world.World.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets the world and all its objects. It also initializes</span>
+<span class="sd">        the dynamics (positions, orientation, ...) of entities.</span>
+
+<span class="sd">        :param int seed: seed to initialize at some known random state. If no seed is used then the </span>
+<span class="sd">                argument to be fed must be None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_states</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prev_actions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reward_generator</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="c1">#* Initialize object dynamics.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_initializers</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+        <span class="c1">#* Reset objects</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">group_pert</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">env_perturbations</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">pert</span> <span class="ow">in</span> <span class="n">group_pert</span><span class="p">:</span>
+                <span class="n">pert</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="World.connect"><a class="viewcode-back" href="../../modules.html#mereli.world.World.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Connect to the physics engine. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="World.disconnect"><a class="viewcode-back" href="../../modules.html#mereli.world.World.disconnect">[docs]</a>    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Disconnect physics engine. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span>
+    
+    <span class="k">def</span> <span class="nf">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+
+<div class="viewcode-block" id="World.run_initializers"><a class="viewcode-back" href="../../modules.html#mereli.world.World.run_initializers">[docs]</a>    <span class="k">def</span> <span class="nf">run_initializers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Executes the initializers of the positions and orientations of each group of world entities.</span>
+<span class="sd">        As all entities in a group are initialized jointly, initializers are associated to groups.</span>
+<span class="sd">        </span>
+<span class="sd">        :param int seed: seed to initialize to a known random state or None if no seed is used.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">group</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">group_initializer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">initializers</span><span class="p">[</span><span class="n">group</span><span class="p">]</span>
+                <span class="n">group_elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">group_objects</span><span class="p">(</span><span class="n">group</span><span class="p">)</span>
+                <span class="c1">#* Initialize positions</span>
+                <span class="k">if</span> <span class="s1">&#39;positions&#39;</span> <span class="ow">in</span> <span class="n">group_initializer</span><span class="p">:</span>
+                    <span class="n">positions</span> <span class="o">=</span> <span class="n">group_initializer</span><span class="p">[</span><span class="s1">&#39;positions&#39;</span><span class="p">]()</span>
+                    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">group_elements</span><span class="p">):</span>
+                        <span class="n">obj</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">pos</span>
+                <span class="c1">#* Initialize orientations</span>
+                <span class="k">if</span> <span class="s1">&#39;orientations&#39;</span> <span class="ow">in</span> <span class="n">group_initializer</span> <span class="ow">and</span> <span class="n">group_initializer</span><span class="p">[</span><span class="s1">&#39;orientations&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">orientations</span> <span class="o">=</span> <span class="n">group_initializer</span><span class="p">[</span><span class="s1">&#39;orientations&#39;</span><span class="p">]()</span>
+                    <span class="k">for</span> <span class="n">orientation</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">orientations</span><span class="p">,</span> <span class="n">group_elements</span><span class="p">):</span>
+                        <span class="n">obj</span><span class="o">.</span><span class="n">orientation</span> <span class="o">=</span> <span class="n">orientation</span>
+        <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="World.group_objects"><a class="viewcode-back" href="../../modules.html#mereli.world.World.group_objects">[docs]</a>    <span class="k">def</span> <span class="nf">group_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">group</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; List all the objects belonging to a group.</span>
+
+<span class="sd">        :param str group: name of the group to be listed.</span>
+<span class="sd">        :returns: List of WorldObjects belonging to the group.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="n">group</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="World.group_of"><a class="viewcode-back" href="../../modules.html#mereli.world.World.group_of">[docs]</a>    <span class="k">def</span> <span class="nf">group_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get the group to which the object belongs. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">group_members</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">obj_name</span> <span class="ow">in</span> <span class="n">group_members</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="World.entities"><a class="viewcode-back" href="../../modules.html#mereli.world.World.entities">[docs]</a>    <span class="k">def</span> <span class="nf">entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all world objects of some object type (robot, light_source, ...).</span>
+<span class="sd">        TODO: Not finished: 2D implementation pending</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if obj_type not in world_objects[&#39;3D&#39;].keys():</span>
+        <span class="c1">#     logging.warning(&#39;Wrong world object. Known world objects are: {}&#39;.format(tuple(world_objects)))</span>
+        <span class="c1">#     return {}</span>
+        <span class="n">obj_cls</span> <span class="o">=</span> <span class="n">world_objects</span><span class="p">[</span><span class="s1">&#39;3D&#39;</span><span class="p">][</span><span class="n">obj_type</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">obj_cls</span><span class="p">)}</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">robots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all robots. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+            <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">Robot</span><span class="p">)}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">lights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all light sources. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;LightSource&#39;</span><span class="p">]}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">controllable_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all controllable objects (ie with a controller). &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">controllable</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">uncontrollable_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all uncontrollable objects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">controllable</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">tangible_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all tangible objects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">intangible_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all intangible objects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>\
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">tangible</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">moving_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all objects with movement capabilities. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">obj</span><span class="o">.</span><span class="n">static</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">static_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all static objects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">static</span><span class="p">}</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">luminous_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Dict with all luminous objects. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span> <span class="p">:</span> <span class="n">obj</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">luminous</span><span class="p">}</span>
+
+<div class="viewcode-block" id="World.set_camera_focus"><a class="viewcode-back" href="../../modules.html#mereli.world.World.set_camera_focus">[docs]</a>    <span class="k">def</span> <span class="nf">set_camera_focus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">distance</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;  Sets the focus of the camera of the render engine on the position of an entity.</span>
+
+<span class="sd">        :param WorldObject obj: focused entity.</span>
+<span class="sd">        :param float distance: distance between the entity and the camera.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">set_camera_focus</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="SquareArena"><a class="viewcode-back" href="../../modules.html#mereli.world.SquareArena">[docs]</a><span class="nd">@world_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;square_arena&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SquareArena</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; World class for square arenas of a given height and width. </span>
+
+<span class="sd">    :param float width: width of the square arena in meters.</span>
+<span class="sd">    :param float height: height of the square arena in meters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SquareArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="c1">#* Add world limits</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__add_limiting_walls</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__add_limiting_walls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Private method for customizing the size of the limiting walls of the arena. </span>
+<span class="sd">        It creates the wall objects individually. They are stored under the group &#39;side_wall&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_up&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>\
+            <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">-.</span><span class="mi">5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_bottom&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">height</span><span class="o">=.</span><span class="mi">5</span><span class="p">,</span>\
+            <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="o">-.</span><span class="mi">5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_left&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">+.</span><span class="mi">5</span><span class="p">,</span>\
+             <span class="n">width</span><span class="o">=.</span><span class="mi">5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;wall_side_right&#39;</span><span class="p">,</span> <span class="n">Wall</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="o">.</span><span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="o">+.</span><span class="mi">5</span><span class="p">,</span>\
+            <span class="n">width</span><span class="o">=.</span><span class="mi">5</span><span class="p">),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;side_wall&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CircularArena"><a class="viewcode-back" href="../../modules.html#mereli.world.CircularArena">[docs]</a><span class="nd">@world_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;circular_arena&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CircularArena</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; World class for environments with an empty circular arena. </span>
+
+<span class="sd">    :param float radius: radius of the circular wall contraining the arena.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CircularArena</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__resize_circle_arena</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">Map</span><span class="p">(</span><span class="s1">&#39;circle_arena/circle_arena&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;maps&#39;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">__resize_circle_arena</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Private method for customizing the radius of the circular arena. </span>
+<span class="sd">        It reads the 3D obj mesh file, modifies the vertex positions and saves the file with the changes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="s1">&#39;mereli/models/maps/circle_arena/circle_arena.obj&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">elems</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">elems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;v&#39;</span><span class="p">:</span>
+                    <span class="n">vert</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elems</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+                    <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vert</span><span class="p">)</span>
+            <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">old_rads</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">vertices</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">old_rads</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+            <span class="n">scaling</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">/</span> <span class="n">old_rads</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+            <span class="n">vertices</span><span class="p">[:,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]]</span> <span class="o">*=</span> <span class="n">scaling</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">vert_iter</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;v </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">vert_iter</span><span class="p">)))</span> <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;v&#39;</span> <span class="k">else</span> <span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span> <span class="p">]</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CustomWorld"><a class="viewcode-back" href="../../modules.html#mereli.world.CustomWorld">[docs]</a><span class="nd">@world_registry</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;custom_world&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CustomWorld</span><span class="p">(</span><span class="n">World</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; World class for environments with custom map. The map is defined by means of a previously </span>
+<span class="sd">    defined and stored URDF file (with the corresponding obj files). The map file must be stored </span>
+<span class="sd">    in the folder &#39;mereli/models/maps/&#39;.</span>
+
+<span class="sd">    :param str model_file: path to the URDF file defining the map. It is relative to &#39;mereli/models/maps/&#39; </span>
+<span class="sd">        and the file extension is not required</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">map_file</span><span class="o">=</span><span class="s1">&#39;simple_map_1/simple_map_1&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CustomWorld</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_file</span> <span class="o">=</span> <span class="n">map_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_entity</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="n">Map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_file</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)),</span> <span class="n">group</span><span class="o">=</span><span class="s1">&#39;maps&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultiWorldWrapper"><a class="viewcode-back" href="../../modules.html#mereli.world.MultiWorldWrapper">[docs]</a><span class="k">class</span> <span class="nc">MultiWorldWrapper</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Wrapper class for parallelizing genotype evaluations. </span>
+<span class="sd">    </span>
+<span class="sd">    :param int n_cpu: number of cores (and parallel simulations).</span>
+<span class="sd">    :param World world: created instance of world or environment to be </span>
+<span class="sd">        cloned and parallelized.</span>
+
+<span class="sd">    .. todo:: #TODO: Needs to be revisited!</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_cpu</span><span class="p">,</span> <span class="n">world</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_cpu</span> <span class="o">=</span> <span class="n">n_cpu</span>
+        <span class="c1">#! Mucho ojo. Son objetos totalmente desacoplados?</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span> <span class="o">=</span> <span class="p">[</span><span class="n">SquareArena</span><span class="p">(</span><span class="n">PybulletEngine</span><span class="p">(),</span> <span class="n">height</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cpu</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="c1"># self._worlds = [copy.deepcopy(world)] * (n_cpu + 1)</span>
+
+<div class="viewcode-block" id="MultiWorldWrapper.build_from_dict"><a class="viewcode-back" href="../../modules.html#mereli.world.MultiWorldWrapper.build_from_dict">[docs]</a>    <span class="k">def</span> <span class="nf">build_from_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_dict</span><span class="p">,</span> <span class="n">ann_topology</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build all the created worlds from the config dicts. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">world</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span><span class="p">:</span>
+            <span class="n">world</span><span class="o">.</span><span class="n">build_from_dict</span><span class="p">(</span><span class="n">world_dict</span><span class="p">,</span> <span class="n">ann_topology</span><span class="o">=</span><span class="n">ann_topology</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return all the worlds as a list. </span>
+
+<span class="sd">        :returns: list of World instances of length N_worlds + 1.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">robots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return all the robots of the first world. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">robots</span>
+
+<div class="viewcode-block" id="MultiWorldWrapper.get_world"><a class="viewcode-back" href="../../modules.html#mereli.world.MultiWorldWrapper.get_world">[docs]</a>    <span class="k">def</span> <span class="nf">get_world</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Get world by index. </span>
+<span class="sd">        </span>
+<span class="sd">        :param int idx: index of the world queried within [0, N_worlds]</span>
+
+<span class="sd">        :returns: World instance requested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worlds</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div></div>
+
+<span class="c1"># class World2D(World):</span>
+<span class="c1">#     &quot;&quot;&quot; World class of 2D bounded arenas. &quot;&quot;&quot;</span>
+<span class="c1">#     def __init__(self, *args, **kwargs):</span>
+<span class="c1">#         physics_engine = Engine2D()</span>
+<span class="c1">#         super(World2D, self).__init__(physics_engine, *args, **kwargs)</span>
+<span class="c1">#         self.add_limiting_walls()</span>
+
+<span class="c1">#     def add_limiting_walls(self):</span>
+<span class="c1">#         &quot;&quot;&quot; Creates the limiting walls of the 2D arena. &quot;&quot;&quot;</span>
+<span class="c1">#         self.register_entity(&#39;wall_side_up&#39;, Wall([self.width/2, 0], np.pi/2, height=0.5,\</span>
+<span class="c1">#             width=self.width), group=&#39;side_wall&#39;)</span>
+<span class="c1">#         self.register_entity(&#39;wall_side_bottom&#39;, Wall([-self.width/2,0], np.pi/2, height=0.5,\</span>
+<span class="c1">#             width=self.width), group=&#39;side_wall&#39;)</span>
+<span class="c1">#         self.register_entity(&#39;wall_side_left&#39;, Wall([0, self.height/2], -np.pi/2, height=self.height-0.5,\</span>
+<span class="c1">#             width=0.5), group=&#39;side_wall&#39;)</span>
+<span class="c1">#         self.register_entity(&#39;wall_side_right&#39;, Wall([0, -self.height/2], -np.pi/2, height=self.height-0.5,\</span>
+<span class="c1">#             width=0.5), group=&#39;side_wall&#39;)</span>
+
+<span class="c1">#     def assign_unique_id(self):</span>
+<span class="c1">#         &quot;&quot;&quot; Returns a unique identifier to be assigned to a new entity. &quot;&quot;&quot;</span>
+<span class="c1">#         obj_id = np.random.randint(1000)</span>
+<span class="c1">#         while(len(self.hierarchy) &gt; 0 and obj_id in [obj.id for obj in self.hierarchy.values()]):</span>
+<span class="c1">#             obj_id = np.random.randint(1, 1000)</span>
+<span class="c1">#         return obj_id</span>
+
+<span class="c1">#     def register_entity(self, name, obj, group=None):</span>
+<span class="c1">#         &quot;&quot;&quot; Adds entity to the world registry. &quot;&quot;&quot;</span>
+<span class="c1">#         obj.id = self.assign_unique_id()</span>
+<span class="c1">#         super().register_entity(name, obj, group=group)</span>
+
+<div class="viewcode-block" id="GymWorld"><a class="viewcode-back" href="../../modules.html#mereli.world.GymWorld">[docs]</a><span class="k">class</span> <span class="nc">GymWorld</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">env_name</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

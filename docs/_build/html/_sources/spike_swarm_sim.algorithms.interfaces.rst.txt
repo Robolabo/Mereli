@@ -1,10 +1,10 @@
-spike\_swarm\_sim.algorithms.interfaces package
+mereli.algorithms.interfaces package
 ===============================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.algorithms.interfaces.genetic\_interface module
+mereli.algorithms.interfaces.genetic\_interface module
 -----------------------------------------------------------------
 
 .. automodule:: mereli.algorithms.interfaces.genetic_interface
@@ -12,7 +12,7 @@ spike\_swarm\_sim.algorithms.interfaces.genetic\_interface module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.algorithms.interfaces.interpreter module
+mereli.algorithms.interfaces.interpreter module
 ----------------------------------------------------------
 
 .. automodule:: mereli.algorithms.interfaces.interpreter

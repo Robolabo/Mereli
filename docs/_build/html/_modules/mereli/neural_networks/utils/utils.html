@@ -1,0 +1,599 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.neural_networks.utils.utils &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.neural_networks.utils.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.neural_networks.utils.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">mereli.utils</span> <span class="k">import</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">any_duplicates</span><span class="p">,</span> <span class="n">ConfigException</span>
+<span class="kn">import</span> <span class="nn">mereli.register</span> <span class="k">as</span> <span class="nn">reg</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.receptive_field</span> <span class="k">import</span> <span class="n">ReceptiveField</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.decoding</span> <span class="k">import</span> <span class="n">Decoder</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.neuron_models</span> <span class="k">import</span> <span class="n">SpikingNeuronModel</span>
+
+<span class="c1">#* ---- CONFIGURATION CHECK FUNCTIONS ---- #</span>
+<div class="viewcode-block" id="ensembles_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.ensembles_checker">[docs]</a><span class="k">def</span> <span class="nf">ensembles_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="n">ensembles_config</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">]</span>
+    <span class="n">neuron_model</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ensembles_config</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;No ANN ensemble specified.&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ens</span> <span class="ow">in</span> <span class="n">ensembles_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;n&#39;</span> <span class="ow">in</span> <span class="n">ens</span> <span class="ow">and</span> <span class="n">ens</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Ensemble neurons must be greater than 0. &#39;</span>\
+                <span class="s1">&#39;Error in ensemble </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="n">neurons_inspect</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">[</span><span class="n">neuron_model</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">neuron_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_inspect</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">neurons_inspect</span><span class="o">.</span><span class="n">defaults</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">ens</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">ens</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">neuron_args</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;The parameter &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist for neuron model </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                        <span class="s1">&#39;of ensemble </span><span class="si">{}</span><span class="s1">. Available neuron model arguments are </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">neuron_model</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">neuron_args</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">type</span><span class="p">(</span><span class="n">neuron_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">]):</span>
+                    <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39; Wrong type of parameter </span><span class="si">{}</span><span class="s1"> in ensemble </span><span class="si">{}</span><span class="s1">. Type </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                        <span class="s1">&#39;should have been received.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">neuron_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="synapses_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.synapses_checker">[docs]</a><span class="k">def</span> <span class="nf">synapses_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="n">synapse_config</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span>
+    <span class="n">ensembles</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">]</span>
+    <span class="n">synapse_params</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;synapse_params&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">synapse_config</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;No ANN synapses specified.&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">synapse_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Check types</span>
+        <span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">expected_type</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s1">&#39;pre&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;ntx_fixed&#39;</span><span class="p">,</span> <span class="s1">&#39;neuroTX&#39;</span><span class="p">,</span> <span class="s1">&#39;trainable&#39;</span><span class="p">],</span>\
+                <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">syn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">syn</span><span class="p">[</span><span class="n">var</span><span class="p">],</span> <span class="n">expected_type</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Synapse field &quot;</span><span class="si">{}</span><span class="s1">&quot; must be of type </span><span class="si">{}</span><span class="s1"> and its type is </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">expected_type</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">syn</span><span class="p">[</span><span class="n">var</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">ensembles</span><span class="p">,</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;stimuli&#39;</span><span class="p">]]):</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Presynaptic ensemble &quot;</span><span class="si">{}</span><span class="s1">&quot; of synapse &quot;</span><span class="si">{}</span><span class="s1">&quot; does not &#39;</span>\
+                <span class="s1">&#39;exist in the defined ensembles.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ensembles</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Postsynaptic ensemble &quot;</span><span class="si">{}</span><span class="s1">&quot; of synapse &quot;</span><span class="si">{}</span><span class="s1">&quot; does not &#39;</span>\
+                <span class="s1">&#39;exist in the defined ensembles.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;p&#39;</span> <span class="ow">in</span> <span class="n">syn</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;p&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Connection probability of synapse </span><span class="si">{}</span><span class="s1"> must be in the interval [0, 1]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;neuroTX&#39;</span> <span class="ow">in</span> <span class="n">syn</span> <span class="ow">and</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;AMPA&#39;</span><span class="p">,</span> <span class="s1">&#39;GABA&#39;</span><span class="p">,</span> <span class="s1">&#39;NDMA&#39;</span><span class="p">,</span> <span class="s1">&#39;AMPA+NDMA&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Neurotransmitter </span><span class="si">{}</span><span class="s1"> of synapse </span><span class="si">{}</span><span class="s1"> is not implemented. &#39;</span>\
+                <span class="s1">&#39;Available neurotransmitters are </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">],</span>\
+                <span class="n">name</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;AMPA&#39;</span><span class="p">,</span> <span class="s1">&#39;GABA&#39;</span><span class="p">,</span> <span class="s1">&#39;NDMA&#39;</span><span class="p">,</span> <span class="s1">&#39;AMPA+NDMA&#39;</span><span class="p">]))</span>
+    <span class="c1">#* Check no duplicate connections</span>
+    <span class="k">if</span> <span class="n">any_duplicates</span><span class="p">([</span><span class="n">syn</span><span class="p">[</span><span class="s1">&#39;pre&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">syn</span><span class="p">[</span><span class="s1">&#39;post&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">synapse_config</span><span class="o">.</span><span class="n">values</span><span class="p">()]):</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;There are duplicate connections.&#39;</span><span class="p">)</span></div>
+    <span class="c1"># if synapse_params is not None:</span>
+
+<div class="viewcode-block" id="encoding_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.encoding_checker">[docs]</a><span class="k">def</span> <span class="nf">encoding_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Checks that the configuration structure and parameters of the encoding ANN </span>
+<span class="sd">    configuration are correct.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">encoder</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Check that encoding input exists</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;stimuli&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Input &quot;</span><span class="si">{}</span><span class="s1">&quot; of encoder does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="c1"># Check that encoder exists</span>
+        <span class="k">if</span> <span class="s1">&#39;scheme&#39;</span> <span class="ow">in</span> <span class="n">encoder</span> <span class="ow">and</span> <span class="n">encoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">encoders</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Encoder &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist. &#39;</span>\
+                <span class="s1">&#39;Available encoders are </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">encoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">encoders</span><span class="p">)))</span>
+        
+        <span class="c1">#TODO check that sheme available for neuron model.</span>
+
+        <span class="c1"># Check receptive field</span>
+        <span class="k">if</span> <span class="s1">&#39;receptive_field&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoder</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">rf</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">[</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">rf</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">receptive_fields</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Receptive field &quot;</span><span class="si">{}</span><span class="s1">&quot; of encoder &quot;</span><span class="si">{}</span><span class="s1">&quot; is not implemented. &#39;</span>\
+                        <span class="s1">&#39;Available receptive fields are </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">encoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">receptive_fields</span><span class="p">)))</span>
+            <span class="n">rf_base_inspection</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">ReceptiveField</span><span class="p">)</span>
+            <span class="n">rf_child_inspection</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">receptive_fields</span><span class="p">[</span><span class="n">rf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]])</span>
+            <span class="n">rf_child_args</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">rf_child_inspection</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">rf_child_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">rf_child_inspection</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>\
+                                    <span class="nb">reversed</span><span class="p">(</span><span class="n">rf_child_inspection</span><span class="p">[</span><span class="mi">3</span><span class="p">]))}</span>
+            <span class="k">if</span> <span class="n">rf_child_inspection</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                 <span class="n">rf_child_args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">rf_child_inspection</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+            <span class="n">rf_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">rf_base_inspection</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>\
+                                    <span class="nb">reversed</span><span class="p">(</span><span class="n">rf_base_inspection</span><span class="p">[</span><span class="mi">3</span><span class="p">]))}</span>
+            <span class="n">rf_args</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">rf_args</span><span class="p">,</span> <span class="n">rf_child_args</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">rf</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">rf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">rf_args</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;The parameter &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist in receptive field &quot;</span><span class="si">{}</span><span class="s1">&quot; &#39;</span>\
+                            <span class="s1">&#39;of encoder </span><span class="si">{}</span><span class="s1">. Available receptive field arguments are </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">rf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">rf_args</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+                    <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">rf_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">rf_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">float</span> <span class="k">else</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_types</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Wrong type of parameter &quot;</span><span class="si">{}</span><span class="s1">&quot; in encoder &quot;</span><span class="si">{}</span><span class="s1">&quot;. Type </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                            <span class="s1">&#39;should have been received.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">rf_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="decoding_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.decoding_checker">[docs]</a><span class="k">def</span> <span class="nf">decoding_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Checks that the configuration structure and parameters of the decoding ANN </span>
+<span class="sd">    configuration are correct.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">decoder</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Output &quot;</span><span class="si">{}</span><span class="s1">&quot; of decoder does not exist.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;scheme&#39;</span> <span class="ow">in</span> <span class="n">decoder</span> <span class="ow">and</span> <span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">decoders</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Decoder &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist. &#39;</span>\
+                <span class="s1">&#39;Available decoders are </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">decoders</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="s1">&#39;scheme&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">decoder</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">dec_base_inspection</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">Decoder</span><span class="p">)</span>
+        <span class="n">dec_child_args</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">decoders</span><span class="p">[</span><span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;scheme&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">kwonlydefaults</span>
+        <span class="n">dec_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">dec_base_inspection</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>\
+                        <span class="nb">reversed</span><span class="p">(</span><span class="n">dec_base_inspection</span><span class="p">[</span><span class="mi">3</span><span class="p">]))}</span>
+        <span class="k">if</span> <span class="n">dec_child_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dec_args</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">([</span><span class="n">dec_child_args</span><span class="p">,</span> <span class="n">dec_args</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">in</span> <span class="n">decoder</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">decoder</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dec_args</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;The parameter &quot;</span><span class="si">{}</span><span class="s1">&quot; does not exist in decoder &quot;</span><span class="si">{}</span><span class="s1">&quot;. &#39;</span>\
+                            <span class="s1">&#39;Available decoder arguments are </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">dec_args</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+                <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">type</span><span class="p">(</span><span class="n">dec_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dec_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">float</span> <span class="k">else</span> <span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_types</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Wrong type of parameter &quot;</span><span class="si">{}</span><span class="s1">&quot; in decoder &quot;</span><span class="si">{}</span><span class="s1">&quot;. Type </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                        <span class="s1">&#39;should have been received.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_name</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">dec_args</span><span class="p">[</span><span class="n">p_name</span><span class="p">])</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="neural_net_checker"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.neural_net_checker">[docs]</a><span class="k">def</span> <span class="nf">neural_net_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Checks that the provided configuration of the neural network is correct </span>
+<span class="sd">    and supported. If error is critical it raises a ConfigException and terminates </span>
+<span class="sd">    the execution.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check compulsory variables.</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">,</span> <span class="s1">&#39;synapses&#39;</span><span class="p">,</span> <span class="s1">&#39;outputs&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="n">var</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Required field </span><span class="si">{}</span><span class="s1"> not specified in config. file.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s1">&#39;dt&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;ANN Euler step must be greater than 0.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;time_scale&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;time_scale&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;ANN time_scale must be greater than 0.&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;neuron_model&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Neuron model </span><span class="si">{}</span><span class="s1"> not implemented. &#39;</span>\
+            <span class="s1">&#39;Available neuron models are </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="s1">&#39;synapse_model&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_model&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">reg</span><span class="o">.</span><span class="n">synapse_models</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Synapse model </span><span class="si">{}</span><span class="s1"> not implemented. &#39;</span>\
+            <span class="s1">&#39;Available synapse models are </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_model&#39;</span><span class="p">],</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">synapse_models</span><span class="p">)))</span>
+
+    <span class="c1">#* --- Check input stimuli config. ---</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">stim</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;stimuli&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;n&#39;</span> <span class="ow">in</span> <span class="n">stim</span> <span class="ow">and</span> <span class="n">stim</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Input neurons must be greater than 0. &#39;</span>\
+                <span class="s1">&#39;Error in input </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;sensor&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">stim</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;No associated sensors specified in input </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="c1">#TODO Check that sensor exists in robot. It requires association between ANN and robot.</span>
+        <span class="c1"># if stim[&#39;sensor&#39;] not in topology</span>
+    <span class="c1">#* --- Check output config. ---</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;ensemble&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;No associated ensemble specified in output </span><span class="si">{}</span><span class="s1">.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="n">ConfigException</span><span class="p">(</span><span class="s1">&#39;Specified ensemble </span><span class="si">{}</span><span class="s1"> of output </span><span class="si">{}</span><span class="s1"> does not exist.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ensemble&#39;</span><span class="p">],</span> <span class="n">name</span><span class="p">))</span>
+        <span class="c1">#TODO Check that actuator exists in robot. It requires association between ANN and robot.</span>
+    <span class="n">ensembles_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">synapses_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;encoding&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">encoding_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;decoding&#39;</span> <span class="ow">in</span> <span class="n">topology</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">])</span> <span class="ow">and</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">decoding_checker</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span></div>
+
+
+<span class="c1">#* ---- CONFIGURATION AUTOCOMPLETION FUNCTIONS ---- #</span>
+<div class="viewcode-block" id="autocomplete_ensembles"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.autocomplete_ensembles">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_ensembles</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletion of neural network ensembles and neurons. &quot;&quot;&quot;</span>
+    <span class="n">neuron_model</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ens</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;n&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ens</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The number of neurons of ensemble </span><span class="si">{}</span><span class="s1"> &#39;</span>\
+                <span class="s1">&#39;was not settled. Fixing 10 neurons.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ens</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">neurons_inspect</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getfullargspec</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">[</span><span class="n">neuron_model</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">)</span>
+        <span class="n">neuron_args</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">neurons_inspect</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">neurons_inspect</span><span class="o">.</span><span class="n">defaults</span><span class="p">)}</span>
+        <span class="k">for</span> <span class="n">p_name</span><span class="p">,</span> <span class="n">default_val</span> <span class="ow">in</span> <span class="n">neuron_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">p_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ens</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span>
+                <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;ensembles&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">p_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_val</span>
+    <span class="k">return</span> <span class="n">topology</span></div>
+
+<div class="viewcode-block" id="autocomplete_synapses"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.autocomplete_synapses">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_synapses</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletion of neural network synapses and connections. &quot;&quot;&quot;</span>
+    <span class="n">syn_model</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_model&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">syn</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s1">&#39;p&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;p&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;The connection prob. of synapse &quot;</span><span class="si">{}</span><span class="s1">&quot; &#39;</span>\
+                <span class="s1">&#39;was not settled. Fixing prob=1.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;trainable&#39;</span><span class="p">,</span> <span class="s1">&#39;ntx_fixed&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">:</span>
+                <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1">#TODO: Ampliar a futuros modelos</span>
+        <span class="k">if</span> <span class="n">syn_model</span> <span class="o">==</span> <span class="s1">&#39;dynamic_synapse&#39;</span> <span class="ow">and</span> <span class="s1">&#39;neuroTX&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">syn</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapses&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="s1">&#39;neuroTX&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;AMPA+NDMA&#39;</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No neurotransmitter (neuroTX) of synapse &quot;</span><span class="si">{}</span><span class="s1">&quot; &#39;</span>\
+                <span class="s1">&#39;was settled. Fixing neuroTX=AMPA+NDMA.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="c1">#* Autocomplete synapse params.</span>
+    <span class="n">default_params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;static_synapse&#39;</span> <span class="p">:</span> <span class="p">{},</span>
+        <span class="s1">&#39;dynamic_synapse&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;AMPA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;gain&quot;</span> <span class="p">:</span> <span class="mf">6.</span><span class="p">,</span> <span class="s2">&quot;tau&quot;</span> <span class="p">:</span> <span class="mf">6.</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="s2">&quot;GABA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;gain&quot;</span> <span class="p">:</span> <span class="mf">5.</span><span class="p">,</span> <span class="s2">&quot;tau&quot;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span>
+            <span class="s2">&quot;NDMA&quot;</span> <span class="p">:</span> <span class="p">{</span><span class="s2">&quot;gain&quot;</span> <span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s2">&quot;tau_rise&quot;</span> <span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span> <span class="s2">&quot;tau_decay&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;Mg2&quot;</span> <span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;E&quot;</span> <span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="p">}}</span>
+    <span class="k">if</span> <span class="s1">&#39;synapse_params&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">:</span>
+        <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_params</span><span class="p">[</span><span class="n">syn_model</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">syn_model</span> <span class="o">==</span> <span class="s1">&#39;dynamic_synapse&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ntx</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;AMPA&#39;</span><span class="p">,</span> <span class="s1">&#39;GABA&#39;</span><span class="p">,</span> <span class="s1">&#39;NDMA&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">ntx</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">]:</span>
+                <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">][</span><span class="n">ntx</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_params</span><span class="p">[</span><span class="n">syn_model</span><span class="p">][</span><span class="n">ntx</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">varname</span><span class="p">,</span> <span class="n">ntx_var</span> <span class="ow">in</span> <span class="n">default_params</span><span class="p">[</span><span class="n">syn_model</span><span class="p">][</span><span class="n">ntx</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">][</span><span class="n">ntx</span><span class="p">]:</span>
+                    <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;synapse_params&#39;</span><span class="p">][</span><span class="n">ntx</span><span class="p">][</span><span class="n">varname</span><span class="p">]</span> <span class="o">=</span> <span class="n">ntx_var</span>
+    <span class="k">return</span> <span class="n">topology</span></div>
+
+
+<div class="viewcode-block" id="autocomplete_encoding"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.autocomplete_encoding">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_encoding</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletes missing neural configuration related to encoding. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_spiking</span> <span class="o">=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">[</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">]],</span> <span class="n">SpikingNeuronModel</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;encoding&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">:</span>
+        <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">encoding_config</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">inpt</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;stimuli&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">inpt</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoding_config</span> <span class="ow">or</span> <span class="n">encoding_config</span><span class="p">[</span><span class="n">inpt</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No encoder configured for input &quot;</span><span class="si">{}</span><span class="s1">&quot;. Using default encoder.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inpt</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;scheme&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoding_config</span><span class="p">[</span><span class="n">inpt</span><span class="p">]:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;scheme&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LIF_Encoding&#39;</span> <span class="k">if</span> <span class="n">is_spiking</span> <span class="k">else</span> <span class="s1">&#39;IdentityEncoding&#39;</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No encoding scheme established in &quot;</span><span class="si">{}</span><span class="s1">&quot;. Using encoder &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inpt</span><span class="p">,</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;scheme&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s1">&#39;receptive_field&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoding_config</span><span class="p">[</span><span class="n">inpt</span><span class="p">]:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoding_config</span><span class="p">[</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">]:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;gaussian_receptive_field&#39;</span>\
+                <span class="k">if</span> <span class="n">is_spiking</span> <span class="k">else</span> <span class="s1">&#39;identity_receptive_field&#39;</span>
+        <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">encoding_config</span><span class="p">[</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">]:</span>
+            <span class="c1"># Uses RF class default kwargs.</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;encoding&#39;</span><span class="p">][</span><span class="n">inpt</span><span class="p">][</span><span class="s1">&#39;receptive_field&#39;</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">topology</span></div>
+
+<div class="viewcode-block" id="autocomplete_decoding"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.autocomplete_decoding">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_decoding</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletes missing neural configuration related to decoding. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">is_spiking</span> <span class="o">=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">neuron_models</span><span class="p">[</span><span class="n">topology</span><span class="p">[</span><span class="s1">&#39;neuron_model&#39;</span><span class="p">]],</span> <span class="n">SpikingNeuronModel</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;decoding&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">:</span>
+        <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">decoding_config</span> <span class="o">=</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">out</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">decoding_config</span> <span class="ow">or</span> <span class="n">decoding_config</span><span class="p">[</span><span class="n">out</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No decoder configured for output &quot;</span><span class="si">{}</span><span class="s1">&quot;. Using default decoder.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s1">&#39;scheme&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">]:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">][</span><span class="s1">&#39;scheme&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;LinearPopulationDecoding&#39;</span> <span class="k">if</span> <span class="n">is_spiking</span> <span class="k">else</span> <span class="s1">&#39;IdentityDecoding&#39;</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No decoding scheme established in &quot;</span><span class="si">{}</span><span class="s1">&quot;. Using decoder &quot;</span><span class="si">{}</span><span class="s1">&quot;.&#39;</span>\
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">][</span><span class="s1">&#39;scheme&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="s1">&#39;params&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">]:</span>
+            <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">][</span><span class="n">out</span><span class="p">][</span><span class="s1">&#39;params&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">return</span> <span class="n">topology</span></div>
+
+<div class="viewcode-block" id="autocomplete_neural_net"><a class="viewcode-back" href="../../../../spike_swarm_sim.neural_networks.utils.html#mereli.neural_networks.utils.utils.autocomplete_neural_net">[docs]</a><span class="k">def</span> <span class="nf">autocomplete_neural_net</span><span class="p">(</span><span class="n">topology</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Autocompletion of neural network configuration. </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;dt&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">:</span>
+        <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No ANN Euler step dt specified. Using dt=1.0&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;time_scale&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">topology</span><span class="p">:</span>
+        <span class="n">topology</span><span class="p">[</span><span class="s1">&#39;time_scale&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;No ANN time scale specified. Using time_scale=1&#39;</span><span class="p">)</span>
+    <span class="c1">#TODO autocomplete input dim based on sensor.</span>
+    <span class="c1">#TODO autocomplete out ensemble dim based on actuator.</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">autocomplete_ensembles</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">autocomplete_synapses</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">autocomplete_encoding</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="n">topology</span> <span class="o">=</span> <span class="n">autocomplete_decoding</span><span class="p">(</span><span class="n">topology</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">topology</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

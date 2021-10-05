@@ -123,13 +123,13 @@ using one of the higher level classes that inherit from ``World`` base class. In
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
 | **Reference Name**    |   **Python Class**                            |     **Description**                                                                         |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    square_arena       |:py:class:`mereli.world.SquareArena`  | World arena limited by 4 walls forming a square area.                                       |
+|    square_arena       |:py:class:`mereli.world.SquareArena`           | World arena limited by 4 walls forming a square area.                                       |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    circular_arena     |:py:class:`mereli.world.CircularArena`| World arena limited a single circular wall forming a cicle area.                            |
+|    circular_arena     |:py:class:`mereli.world.CircularArena`         | World arena limited a single circular wall forming a cicle area.                            |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
-|    custom_world       |:py:class:`mereli.world.CustomWorld`  | | World that can be highly customized by the user to any 3D map, arena or maze.             |
+|    custom_world       |:py:class:`mereli.world.CustomWorld`           | | World that can be highly customized by the user to any 3D map, arena or maze.             |
 |                       |                                               | | The only requirement is that the 3D mesh must have been previously created and stored     |
-|                       |                                               | | in the 'mereli/models/maps/' directory.                                          |
+|                       |                                               | | in the 'mereli/models/maps/' directory.                                                   |
 +-----------------------+-----------------------------------------------+---------------------------------------------------------------------------------------------+
 
 The following screenshots depict each of the currently implemented world classes:

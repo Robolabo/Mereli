@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>mereli.algorithms.evolutionary package &mdash; Mereli  documentation</title>
+  <title>spike_swarm_sim.algorithms.evolutionary package &mdash; Mereli  documentation</title>
   
 
   
@@ -40,9 +40,7 @@
 
     
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="mereli.algorithms.evolutionary.operators package" href="mereli.algorithms.evolutionary.operators.html" />
-    <link rel="prev" title="mereli.algorithms package" href="mereli.algorithms.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -123,6 +121,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
@@ -172,124 +171,17 @@
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="mereli.actuators.html">mereli.actuators package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators">Module contents</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.controllers.html">mereli.controllers package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.controller">mereli.controllers.controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.objects.html">mereli.objects package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.world_object">mereli.objects.world_object module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-robot-3d-module">mereli.objects.robot_3D module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.light_source">mereli.objects.light_source module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ball">mereli.objects.ball module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.cube">mereli.objects.cube module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#spike-swarm-sim-objects-ground-area-module">mereli.objects.ground_area module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.wall">mereli.objects.wall module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-base-engine-module">mereli.physics_engines.base_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#spike-swarm-sim-physics-engines-pybullet-engine-module">mereli.physics_engines.pybullet_engine module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.sensors.html">mereli.sensors package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#subpackages">Subpackages</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#spike-swarm-sim-sensors-reward-sensor-module">mereli.sensors.reward_sensor module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.physics_engine">mereli.physics_engine module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
 </ul>
 </li>
@@ -341,17 +233,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
-        
-          <li><a href="mereli.algorithms.html">mereli.algorithms package</a> &raquo;</li>
-        
-      <li>mereli.algorithms.evolutionary package</li>
+      <li>spike_swarm_sim.algorithms.evolutionary package</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/mereli.algorithms.evolutionary.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/spike_swarm_sim.algorithms.evolutionary.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -365,39 +253,17 @@
            <div itemprop="articleBody">
             
   <div class="section" id="spike-swarm-sim-algorithms-evolutionary-package">
-<h1>mereli.algorithms.evolutionary package<a class="headerlink" href="#spike-swarm-sim-algorithms-evolutionary-package" title="Permalink to this headline">¶</a></h1>
+<h1>spike_swarm_sim.algorithms.evolutionary package<a class="headerlink" href="#spike-swarm-sim-algorithms-evolutionary-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html">mereli.algorithms.evolutionary.operators package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#module-mereli.algorithms.evolutionary.operators.crossover">mereli.algorithms.evolutionary.operators.crossover module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#module-mereli.algorithms.evolutionary.operators.mating">mereli.algorithms.evolutionary.operators.mating module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#module-mereli.algorithms.evolutionary.operators.mutation">mereli.algorithms.evolutionary.operators.mutation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#module-mereli.algorithms.evolutionary.operators.selection">mereli.algorithms.evolutionary.operators.selection module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.operators.html#module-mereli.algorithms.evolutionary.operators">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html">mereli.algorithms.evolutionary.population package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.cma_ea_population">mereli.algorithms.evolutionary.population.cma_ea_population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.neat_population">mereli.algorithms.evolutionary.population.neat_population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.openai_es_population">mereli.algorithms.evolutionary.population.openai_es_population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.population">mereli.algorithms.evolutionary.population.population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.snes_population">mereli.algorithms.evolutionary.population.snes_population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population.xnes_population">mereli.algorithms.evolutionary.population.xnes_population module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mereli.algorithms.evolutionary.population.html#module-mereli.algorithms.evolutionary.population">Module contents</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </div>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.cma_es">
-<span id="spike-swarm-sim-algorithms-evolutionary-cma-es-module"></span><h2>mereli.algorithms.evolutionary.cma_es module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.cma_es" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-cma-es-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.cma_es module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.cma_es" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.cma_es.CMA_ES">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.cma_es.</span></span><span class="sig-name descname"><span class="pre">CMA_ES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/cma_es.html#CMA_ES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.cma_es.CMA_ES" title="Permalink to this definition">¶</a></dt>
@@ -420,7 +286,7 @@ The evolution step is defined in the CMA_EA_Population class.</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.evolutionary_algorithm">
-<span id="spike-swarm-sim-algorithms-evolutionary-evolutionary-algorithm-module"></span><h2>mereli.algorithms.evolutionary.evolutionary_algorithm module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.evolutionary_algorithm" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-evolutionary-algorithm-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.evolutionary_algorithm module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.evolutionary_algorithm" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.evolutionary_algorithm.get_info_old">
 <span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.evolutionary_algorithm.</span></span><span class="sig-name descname"><span class="pre">get_info_old</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/evolutionary_algorithm.html#get_info_old"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.evolutionary_algorithm.get_info_old" title="Permalink to this definition">¶</a></dt>
@@ -514,7 +380,7 @@ It can be smoothed by generational averaging (every 5 generations).
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.genetic_algorithm">
-<span id="spike-swarm-sim-algorithms-evolutionary-genetic-algorithm-module"></span><h2>mereli.algorithms.evolutionary.genetic_algorithm module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.genetic_algorithm" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-genetic-algorithm-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.genetic_algorithm module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.genetic_algorithm" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.genetic_algorithm.</span></span><span class="sig-name descname"><span class="pre">GeneticAlgorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/genetic_algorithm.html#GeneticAlgorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.genetic_algorithm.GeneticAlgorithm" title="Permalink to this definition">¶</a></dt>
@@ -537,7 +403,7 @@ evolution.</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.neat">
-<span id="spike-swarm-sim-algorithms-evolutionary-neat-module"></span><h2>mereli.algorithms.evolutionary.neat module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.neat" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-neat-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.neat module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.neat" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.neat.NEAT">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.neat.</span></span><span class="sig-name descname"><span class="pre">NEAT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/neat.html#NEAT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.neat.NEAT" title="Permalink to this definition">¶</a></dt>
@@ -558,7 +424,7 @@ evolution.</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.openai_es">
-<span id="spike-swarm-sim-algorithms-evolutionary-openai-es-module"></span><h2>mereli.algorithms.evolutionary.openai_es module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.openai_es" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-openai-es-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.openai_es module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.openai_es" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.openai_es.OpenAI_ES">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.openai_es.</span></span><span class="sig-name descname"><span class="pre">OpenAI_ES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/openai_es.html#OpenAI_ES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.openai_es.OpenAI_ES" title="Permalink to this definition">¶</a></dt>
@@ -579,7 +445,7 @@ evolution.</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.snes">
-<span id="spike-swarm-sim-algorithms-evolutionary-snes-module"></span><h2>mereli.algorithms.evolutionary.snes module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.snes" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-snes-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.snes module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.snes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.snes.SNES">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.snes.</span></span><span class="sig-name descname"><span class="pre">SNES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/snes.html#SNES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.snes.SNES" title="Permalink to this definition">¶</a></dt>
@@ -602,7 +468,7 @@ The evolution step is defined in the SNES_Population class.</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.species">
-<span id="spike-swarm-sim-algorithms-evolutionary-species-module"></span><h2>mereli.algorithms.evolutionary.species module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.species" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-species-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.species module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.species" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.species.Species">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.species.</span></span><span class="sig-name descname"><span class="pre">Species</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatib_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c3</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/species.html#Species"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.species.Species" title="Permalink to this definition">¶</a></dt>
@@ -645,7 +511,7 @@ distance [float] : compatibility distance of the genotype to the species</p>
 
 </div>
 <div class="section" id="module-mereli.algorithms.evolutionary.xnes">
-<span id="spike-swarm-sim-algorithms-evolutionary-xnes-module"></span><h2>mereli.algorithms.evolutionary.xnes module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.xnes" title="Permalink to this headline">¶</a></h2>
+<span id="spike-swarm-sim-algorithms-evolutionary-xnes-module"></span><h2>spike_swarm_sim.algorithms.evolutionary.xnes module<a class="headerlink" href="#module-mereli.algorithms.evolutionary.xnes" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="mereli.algorithms.evolutionary.xnes.xNES">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.algorithms.evolutionary.xnes.</span></span><span class="sig-name descname"><span class="pre">xNES</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">populations</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/algorithms/evolutionary/xnes.html#xNES"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.algorithms.evolutionary.xnes.xNES" title="Permalink to this definition">¶</a></dt>
@@ -677,10 +543,6 @@ The evolution step is defined in the xNES_Population class.</p>
            
           </div>
           <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="mereli.algorithms.evolutionary.operators.html" class="btn btn-neutral float-right" title="mereli.algorithms.evolutionary.operators package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="mereli.algorithms.html" class="btn btn-neutral float-left" title="mereli.algorithms package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-    </div>
 
   <hr/>
 

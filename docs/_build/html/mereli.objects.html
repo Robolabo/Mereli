@@ -1,0 +1,855 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.objects package &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mereli.physics_engines package" href="mereli.physics_engines.html" />
+    <link rel="prev" title="mereli.objectives package" href="mereli.objectives.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mereli.actuators.html">mereli.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.actuators.html#module-mereli.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.controllers.html">mereli.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.controller">mereli.controllers.controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mereli.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.world_object">mereli.objects.world_object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mereli-objects-robot-3d">mereli.objects.robot_3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.light_source">mereli.objects.light_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.ball">mereli.objects.ball</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.cube">mereli.objects.cube</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.ground_area">mereli.objects.ground_area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.wall">mereli.objects.wall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.base_engine">mereli.physics_engines.base_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.pybullet_engine">mereli.physics_engines.pybullet_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.sensors.html">mereli.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.reward_sensor">mereli.sensors.reward_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
+        
+      <li>mereli.objects package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/mereli.objects.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mereli-objects-package">
+<h1>mereli.objects package<a class="headerlink" href="#mereli-objects-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mereli.objects.world_object">
+<span id="mereli-objects-world-object"></span><h2>mereli.objects.world_object<a class="headerlink" href="#module-mereli.objects.world_object" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.world_object.</span></span><span class="sig-name descname"><span class="pre">WorldObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controller</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tangible</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">luminous</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/world_object.html#WorldObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.world_object.WorldObject" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<p>Base class for abstract world objects or entities. This class is the most basic class of
+world entities and only implements abstract properties of objects. It does not 
+implement positions, orientations, and so on. This class must not be directly instantiated 
+and all world objects have to inherit from it indirectly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_file</strong> (<em>str</em>) – name of the file where the model of the entity is stored.</p></li>
+<li><p><strong>position</strong> – </p></li>
+<li><p><strong>orientation</strong> – </p></li>
+<li><p><strong>static</strong> (<em>bool</em>) – whether the object is static or can move.</p></li>
+<li><p><strong>controller</strong> (<a class="reference internal" href="mereli.controllers.html#mereli.controllers.controller.Controller" title="mereli.controllers.controller.Controller"><em>Controller</em></a>) – controller, if any, defining object behavior. 
+If the object cannot be controlled, then controller=None.</p></li>
+<li><p><strong>tangible</strong> (<em>bool</em>) – whether the object has collisions or not.</p></li>
+<li><p><strong>luminous</strong> (<em>bool</em>) – whether the object emits light or not.</p></li>
+<li><p><strong>trainable</strong> (<em>bool</em>) – whether the object controller can be trained (not really used yet).</p></li>
+<li><p><strong>z_offset</strong> (<em>float</em>) – z-axis offset of the entity position. It is only valid for 3D entities. 
+If entity is not 3D, then it should be left as <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>physics_client</strong> (<em>Engine</em>) – physics and render client used in the simulations.</p></li>
+<li><p><strong>id</strong> (<em>int</em>) – unique identifier of the entity (should not be changed unless strictly needed).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.step">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/world_object.html#WorldObject.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.world_object.WorldObject.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.reset">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/world_object.html#WorldObject.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.world_object.WorldObject.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">velocity</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current velocity of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entities’ velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.angular_velocity">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">angular_velocity</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.angular_velocity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current angular velocity of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entity angular velocity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.position">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">position</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current position of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entities’ position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.orientation">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">orientation</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current orientation of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entities’ orientation if 3D or
+<code class="docutils literal notranslate"><span class="pre">float</span></code> if 2D.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">id</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of the unique object’s id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>int id of the entity.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.world_object.WorldObject.controllable">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">controllable</span></span><a class="headerlink" href="#mereli.objects.world_object.WorldObject.controllable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of a flag denoting whether the object 
+can be controlled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bool stating if the entity is controllable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="mereli-objects-robot-3d">
+<h2>mereli.objects.robot_3D<a class="headerlink" href="#mereli-objects-robot-3d" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mereli.objects.light_source">
+<span id="mereli-objects-light-source"></span><h2>mereli.objects.light_source<a class="headerlink" href="#module-mereli.objects.light_source" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.light_source.LightSource">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.light_source.</span></span><span class="sig-name descname"><span class="pre">LightSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/light_source.html#LightSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.light_source.LightSource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<p>Class of the light source entity. It is an intangible entity that isotropically emits 
+light of a certain color and up to a defined range. Even though they are represented as 3D or 2D 
+balls, it is just displayed in that way for visualization purposes. 
+They are actually point lights without mass. The emitted light can be sensed by robots through 
+their <code class="docutils literal notranslate"><span class="pre">light_sensors</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color</strong> (<em>str</em>) – color of the light.</p></li>
+<li><p><strong>range</strong> (<em>float</em>) – coverage range of the light.</p></li>
+<li><p><strong>z_offset</strong> (<em>int</em>) – offset of the z-axis position of the point light.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.light_source.LightSource.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/light_source.html#LightSource.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.light_source.LightSource.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Step method of the light sou
+ce. Even though lights are not technically controlled, they can</p>
+<blockquote>
+<div><p>have a ‘virtual controller’ for allowing custom behaviours such as mobile lights or preys in the 
+predator and prey game. The controller can be implemented just as in the robots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param list neighborhood</dt>
+<dd class="field-odd"><p>list filled with the neighboring entities.</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.light_source.LightSource.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/light_source.html#LightSource.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.light_source.LightSource.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects.ball">
+<span id="mereli-objects-ball"></span><h2>mereli.objects.ball<a class="headerlink" href="#module-mereli.objects.ball" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.ball.Ball">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.ball.</span></span><span class="sig-name descname"><span class="pre">Ball</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'red'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ball.html#Ball"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ball.Ball" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<p>Ball object of a certain radius, color and mass. If 2D then it is a
+circle (TODO) and if 3D it is a sphere.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">ball</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>) – radius [metres] of the ball.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the ball.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – total mass of the ball.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.ball.Ball.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ball.html#Ball.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ball.Ball.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.ball.Ball.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ball.html#Ball.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ball.Ball.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects.cube">
+<span id="mereli-objects-cube"></span><h2>mereli.objects.cube<a class="headerlink" href="#module-mereli.objects.cube" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.cube.Cube">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.cube.</span></span><span class="sig-name descname"><span class="pre">Cube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/cube.html#Cube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.cube.Cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<p>Cube object of a certain mase, color and side length. If 2D then it is a
+square (TODO) and if 3D it is a cube.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">cube</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>side_len</strong> (<em>float</em>) – length of the sides [metres] of the cube.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the cube.</p></li>
+<li><p><strong>mass</strong> (<em>float</em>) – total mass of the ball.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Variables</dt>
+<dd class="field-even"><p><strong>is_grasped</strong> (<em>bool</em>) – flag indicating if a robot has grasped the object through its 
+high level grasp and drop sensor.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.cube.Cube.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/cube.html#Cube.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.cube.Cube.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.cube.Cube.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/cube.html#Cube.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.cube.Cube.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects.ground_area">
+<span id="mereli-objects-ground-area"></span><h2>mereli.objects.ground_area<a class="headerlink" href="#module-mereli.objects.ground_area" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.ground_area.GroundArea">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.ground_area.</span></span><span class="sig-name descname"><span class="pre">GroundArea</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'grey'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ground_area.html#GroundArea"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ground_area.GroundArea" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<p>Circular ground area radius and color. It is an intangible objects that robots 
+can detect through their ground_sensor, provided that it is underneath the robot body.</p>
+<p><strong>Reference Name</strong>: <code class="docutils literal notranslate"><span class="pre">ground_area</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>float</em>) – radius [metres] of the ground area.</p></li>
+<li><p><strong>color</strong> (<em>str</em>) – color of the ground area.</p></li>
+<li><p><strong>float</strong> – total mass of the ball.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.ground_area.GroundArea.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ground_area.html#GroundArea.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ground_area.GroundArea.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.ground_area.GroundArea.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/ground_area.html#GroundArea.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.ground_area.GroundArea.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects.wall">
+<span id="mereli-objects-wall"></span><h2>mereli.objects.wall<a class="headerlink" href="#module-mereli.objects.wall" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.wall.Wall">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.wall.</span></span><span class="sig-name descname"><span class="pre">Wall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/wall.html#Wall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.wall.Wall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<p>Class of wall objects, with parametrizable height and width. The mass is large enough 
+so that robots cannot move them. Its main use is to constrain the environment arena, but 
+they can be also instantiated as regular walls in arbitrary positions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position</strong> – </p></li>
+<li><p><strong>height</strong> (<em>float</em>) – height in metres of the wall.</p></li>
+<li><p><strong>width</strong> (<em>float</em>) – width in metres of the wall.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.wall.Wall.resize_wall">
+<span class="sig-name descname"><span class="pre">resize_wall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/wall.html#Wall.resize_wall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.wall.Wall.resize_wall" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.wall.Wall.resize_wall2D">
+<span class="sig-name descname"><span class="pre">resize_wall2D</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/wall.html#Wall.resize_wall2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.wall.Wall.resize_wall2D" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.wall.Wall.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/wall.html#Wall.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.wall.Wall.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.wall.Wall.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/wall.html#Wall.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.wall.Wall.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects.task_scheduler">
+<span id="mereli-objects-task-scheduler"></span><h2>mereli.objects.task_scheduler<a class="headerlink" href="#module-mereli.objects.task_scheduler" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.objects.task_scheduler.</span></span><span class="sig-name descname"><span class="pre">TaskScheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_timesteps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_tasks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_slots</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#mereli.objects.world_object.WorldObject" title="mereli.objects.world_object.WorldObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.objects.world_object.WorldObject</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract step method that is executed in every simulation cycle. The clearest function concerns 
+robots, that read sensors and execute the controller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.controllable">
+<span class="sig-name descname"><span class="pre">controllable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.controllable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.controllable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter of a flag denoting whether the object 
+can be controlled or not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>bool stating if the entity is controllable.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.current_task">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">current_task</span></span><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.current_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
+the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
+order to be reset at a precise random state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>seed</strong> (<em>int</em>) – seed to reset at a precise random state. None if no seed is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.add_physics">
+<span class="sig-name descname"><span class="pre">add_physics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.add_physics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.add_physics" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.position">
+<span class="sig-name descname"><span class="pre">position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.position"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current position of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entities’ position.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.objects.task_scheduler.TaskScheduler.orientation">
+<span class="sig-name descname"><span class="pre">orientation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/objects/task_scheduler.html#TaskScheduler.orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.objects.task_scheduler.TaskScheduler.orientation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Getter method of the current orientation of the entity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>numpy array with the entities’ orientation if 3D or
+<code class="docutils literal notranslate"><span class="pre">float</span></code> if 2D.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.objects">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mereli.objects" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="mereli.physics_engines.html" class="btn btn-neutral float-right" title="mereli.physics_engines package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mereli.objectives.html" class="btn btn-neutral float-left" title="mereli.objectives package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

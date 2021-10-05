@@ -1,0 +1,472 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.algorithms.interfaces.genetic_interface &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Mereli Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#subpackages">Subpackages</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.world">spike_swarm_sim.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#spike-swarm-sim-physics-engine">spike_swarm_sim.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.env_perturbations">spike_swarm_sim.env_perturbations module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.register">spike_swarm_sim.register module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.globals">spike_swarm_sim.globals module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli.config_parser">spike_swarm_sim.config_parser module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+          <li><a href="../../../mereli.html">mereli</a> &raquo;</li>
+        
+      <li>mereli.algorithms.interfaces.genetic_interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for mereli.algorithms.interfaces.genetic_interface</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.interpreter</span> <span class="k">import</span> <span class="n">language_dict</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.mlp</span> <span class="k">import</span> <span class="n">MLP</span>
+<span class="kn">from</span> <span class="nn">mereli.neural_networks.neuron_models</span> <span class="k">import</span> <span class="n">Activation</span>
+
+<div class="viewcode-block" id="GeneticInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.GeneticInterface">[docs]</a><span class="k">class</span> <span class="nc">GeneticInterface</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Interface used by all the evolutionary algorithms to manage phenotype to </span>
+<span class="sd">    genotype transactions (bijectively), genotype initialization and so on.</span>
+
+<span class="sd">    - Params:</span>
+<span class="sd">        neural_net [NeuralNetwork] : ANN of a robot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span> <span class="o">=</span> <span class="n">neural_net</span> 
+
+<div class="viewcode-block" id="GeneticInterface.submit_query"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.GeneticInterface.submit_query">[docs]</a>    <span class="k">def</span> <span class="nf">submit_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Submits a query to read or write the ANN. The operation is of the syntax </span>
+<span class="sd">        &quot;PRIMITIVE query data&quot; (data if primitive is write). </span>
+<span class="sd">        - Args:</span>
+<span class="sd">            query [str] : query subject to the primitive. The query addresses some </span>
+<span class="sd">                    variable of the ANN and it has the following syntax:</span>
+<span class="sd">                        &quot;ANN_part:variable:name&quot;</span>
+<span class="sd">                    Some examples are:</span>
+<span class="sd">                        &quot;synapses:weights:all&quot; -&gt; weights of all the synapses.</span>
+<span class="sd">                        &quot;synapses:weights:S1&quot; -&gt; weights of synapse with name S1 (must be)</span>
+<span class="sd">                                                 defined</span>
+<span class="sd">                        &quot;neurons:tau:all&quot; -&gt; time constants of all neuron models.</span>
+<span class="sd">                        &quot;neurons:gain:sensory&quot; -&gt; gains of sensory neurons.</span>
+<span class="sd">                        &quot;decoding:weights:all&quot; -&gt; weights of all decoders (in SNN).</span>
+<span class="sd">            primitive [str]: action or primitive of the query. Possible primitives </span>
+<span class="sd">                    are GET, SET, LEN, INIT.</span>
+<span class="sd">            data [np.ndarray]: genotype array only supplied when the primitive is SET.</span>
+<span class="sd">            min_vals [np.ndarray]: minimum bound of the search space. In GET it is None.</span>
+<span class="sd">            max_vals [np.ndarray]: max. bound of the search space. In GET it is None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">query_hierarchy</span> <span class="o">=</span> <span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">+</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">query_status</span> <span class="o">=</span> <span class="n">language_dict</span>
+        <span class="k">for</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_hierarchy</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">assert</span> <span class="n">query_elem</span> <span class="ow">in</span> <span class="n">query_status</span>
+            <span class="n">query_status</span> <span class="o">=</span> <span class="n">query_status</span><span class="p">[</span><span class="n">query_elem</span><span class="p">]</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">query_status</span><span class="p">)</span>\
+               <span class="k">if</span> <span class="n">query_hierarchy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;decoding&#39;</span><span class="p">,</span> <span class="s1">&#39;encoding&#39;</span><span class="p">]</span>\
+               <span class="k">else</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="p">,</span> <span class="n">query_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">query_hierarchy</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="GeneticInterface.toGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.GeneticInterface.toGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">toGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a phenotype or structured ANN into a vector genotype. </span>
+<span class="sd">        It performs a series of queries (depending on the population segments) </span>
+<span class="sd">        and gathers the results as the final genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">genotype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>\
+                   <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>\
+                   <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">genotype</span></div>
+
+
+<div class="viewcode-block" id="GeneticInterface.fromGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.GeneticInterface.fromGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">fromGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a genotype into a phenotype or, in this case, structured ANN. </span>
+<span class="sd">        It iterates across population opt. vars. with the corresponding queries and </span>
+<span class="sd">        submits a SET operation towards the ANN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="n">genes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">genotype</span><span class="o">.</span><span class="n">genes_of_struct</span><span class="p">(</span><span class="n">query</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">g</span><span class="p">:</span> <span class="n">g</span><span class="o">.</span><span class="n">innovation</span><span class="p">)</span>
+            <span class="n">genes_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">gene</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">genes</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;SET&#39;</span><span class="p">,</span>\
+                    <span class="n">data</span><span class="o">=</span><span class="n">genes_values</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span> <span class="c1">#* Compile changes.</span></div>
+    
+<div class="viewcode-block" id="GeneticInterface.initGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.GeneticInterface.initGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method for initializing the values of the genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="NEATInterface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.NEATInterface">[docs]</a><span class="k">class</span> <span class="nc">NEATInterface</span><span class="p">(</span><span class="n">GeneticInterface</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">NEATInterface</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">neural_net</span><span class="p">)</span>
+
+<div class="viewcode-block" id="NEATInterface.fromGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.NEATInterface.fromGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">fromGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Converts a genotype into a phenotype or, in this case, structured ANN.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">effective_genotype</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">genotype</span><span class="p">)</span>        
+        <span class="c1">#* Clean previous architecture</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">reset_graph</span><span class="p">()</span>
+        <span class="c1">#* Add neurons</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="ow">and</span> <span class="n">key</span> <span class="o">!=</span> <span class="s1">&#39;idx&#39;</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span><span class="p">[</span><span class="s1">&#39;neurons&#39;</span><span class="p">][</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                <span class="k">continue</span>
+            
+            <span class="n">neuron_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">param</span> <span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;bias&#39;</span><span class="p">,</span> <span class="s1">&#39;gain&#39;</span><span class="p">,</span> <span class="s1">&#39;activation&#39;</span><span class="p">,</span> <span class="s1">&#39;tau&#39;</span><span class="p">]</span> \
+                            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">neurons</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">param</span><span class="p">)}</span> <span class="c1">#! Modify for SNN</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_neuron</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">ensemble</span><span class="p">,</span> <span class="o">**</span><span class="n">neuron_params</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_output</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">set_motor</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">ensemble</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="o">.</span><span class="n">enabled_connections</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">pre</span><span class="p">,</span> <span class="n">conn</span><span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">conn</span><span class="o">.</span><span class="n">weight</span><span class="p">)</span>
+            <span class="c1">#! OJO meter aqui learning rule</span>
+        <span class="c1">#* Update parameters (Decoders and encoders not supported yet).</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="n">gene_type</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;synapses&#39;</span> <span class="p">:</span> <span class="s1">&#39;connections&#39;</span><span class="p">,</span> <span class="s1">&#39;neurons&#39;</span> <span class="p">:</span> <span class="s1">&#39;nodes&#39;</span><span class="p">}</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;connections&#39;</span><span class="p">)</span>
+            <span class="n">variable</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">variable</span> <span class="o">==</span> <span class="s1">&#39;weights&#39;</span><span class="p">:</span> 
+                <span class="n">variable</span> <span class="o">=</span> <span class="s1">&#39;weight&#39;</span>
+            <span class="k">if</span> <span class="s1">&#39;learning_rule&#39;</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+                <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">gene</span><span class="o">.</span><span class="n">learning_rule</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">effective_genotype</span><span class="o">.</span><span class="n">connections</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">]])</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">genotype_segment</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">gene</span><span class="p">,</span> <span class="n">variable</span><span class="p">)</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">genotype</span><span class="p">,</span> <span class="n">gene_type</span><span class="p">)])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;SET&#39;</span><span class="p">,</span>\
+                        <span class="n">data</span><span class="o">=</span><span class="n">genotype_segment</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span> <span class="c1">#* Compile changes.</span></div>
+
+<div class="viewcode-block" id="NEATInterface.initGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.NEATInterface.initGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Method for initializing the values of the genotype.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="n">min_val</span><span class="o">=</span><span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="o">=</span><span class="n">max_val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="CPPN_NEAT_Interface"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.CPPN_NEAT_Interface">[docs]</a><span class="k">class</span> <span class="nc">CPPN_NEAT_Interface</span><span class="p">(</span><span class="n">NEATInterface</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">dev_mlp</span> <span class="o">=</span> <span class="n">MLP</span><span class="p">()</span>
+        <span class="n">dev_mlp</span><span class="o">.</span><span class="n">add_stimuli</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_inputs</span><span class="p">,</span> <span class="n">sensor</span><span class="o">=</span><span class="s1">&#39;I&#39;</span><span class="p">)</span>
+        <span class="n">dev_mlp</span><span class="o">.</span><span class="n">add_ensemble</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">Activation</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">)</span>
+        <span class="n">dev_mlp</span><span class="o">.</span><span class="n">set_motor</span><span class="p">(</span><span class="s1">&#39;O&#39;</span><span class="p">)</span>
+        <span class="n">dev_mlp</span><span class="o">.</span><span class="n">add_synapse</span><span class="p">(</span><span class="s1">&#39;I-O&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="s1">&#39;O&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">conn_prob</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+        <span class="n">dev_mlp</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_ANN</span> <span class="o">=</span> <span class="n">neural_net</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CPPN_NEAT_Interface</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dev_mlp</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CPPN_NEAT_Interface.dev_decode"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.CPPN_NEAT_Interface.dev_decode">[docs]</a>    <span class="k">def</span> <span class="nf">dev_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">genotype</span><span class="p">):</span>
+        <span class="k">pass</span> </div>
+
+<div class="viewcode-block" id="CPPN_NEAT_Interface.fromGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.CPPN_NEAT_Interface.fromGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">fromGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="c1">#! REVISAR</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fromGenotype</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">genotype</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">)</span>
+        <span class="n">n_neurons</span> <span class="o">=</span> <span class="mi">100</span> 
+        <span class="n">W_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_neurons</span><span class="p">,</span> <span class="n">n_neurons</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">final_ANN</span><span class="o">.</span><span class="n">num_inputs</span><span class="p">)</span>
+        <span class="n">xx</span><span class="p">,</span> <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">W_shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">W_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">neurons</span><span class="o">.</span><span class="n">activation</span> <span class="o">=</span> <span class="p">[</span><span class="n">Activation</span><span class="o">.</span><span class="n">GAUSSIAN</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">num_neurons</span><span class="c1">#!</span>
+        <span class="n">zz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])])</span>\
+                    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">flatten</span><span class="p">())],</span> <span class="n">W_shape</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_ANN</span><span class="o">.</span><span class="n">build_from_adjmat</span><span class="p">(</span><span class="n">zz</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">pdb</span><span class="p">;</span> <span class="n">pdb</span><span class="o">.</span><span class="n">set_trace</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="CPPN_NEAT_Interface.initGenotype"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.CPPN_NEAT_Interface.initGenotype">[docs]</a>    <span class="k">def</span> <span class="nf">initGenotype</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">queries</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">query</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">min_val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">queries</span><span class="p">,</span> <span class="n">max_vals</span><span class="p">,</span> <span class="n">min_vals</span><span class="p">):</span>
+            <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;max_val&#39;</span> <span class="p">:</span> <span class="n">max_val</span><span class="p">,</span> <span class="s1">&#39;min_val&#39;</span> <span class="p">:</span> <span class="n">min_val</span><span class="p">}</span> <span class="k">if</span> <span class="s1">&#39;activation&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">query</span> <span class="k">else</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">submit_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">primitive</span><span class="o">=</span><span class="s1">&#39;INIT&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neural_net</span><span class="o">.</span><span class="n">build</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="InterfaceFactory"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.InterfaceFactory">[docs]</a><span class="k">class</span> <span class="nc">InterfaceFactory</span><span class="p">:</span>
+<div class="viewcode-block" id="InterfaceFactory.create"><a class="viewcode-back" href="../../../../spike_swarm_sim.algorithms.interfaces.html#mereli.algorithms.interfaces.genetic_interface.InterfaceFactory.create">[docs]</a>    <span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">algorithm</span><span class="p">,</span> <span class="n">neural_net</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;GeneticAlgorithm&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">,</span>
+            <span class="s1">&#39;SNES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">,</span>
+            <span class="s1">&#39;xNES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">,</span>
+            <span class="s1">&#39;CMA_ES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">,</span>
+            <span class="s1">&#39;OpenAI_ES&#39;</span> <span class="p">:</span> <span class="n">GeneticInterface</span><span class="p">,</span>
+            <span class="s1">&#39;NEAT&#39;</span> <span class="p">:</span> <span class="n">NEATInterface</span><span class="p">,</span>
+            <span class="s1">&#39;CPPN_NEAT&#39;</span> <span class="p">:</span> <span class="n">CPPN_NEAT_Interface</span>
+        <span class="p">}[</span><span class="n">algorithm</span><span class="p">](</span><span class="n">neural_net</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

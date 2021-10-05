@@ -1,10 +1,10 @@
-spike\_swarm\_sim.sensors.utils package
+mereli.sensors.utils package
 =======================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.sensors.utils.propagation module
+mereli.sensors.utils.propagation module
 --------------------------------------------------
 
 .. automodule:: mereli.sensors.utils.propagation
@@ -12,7 +12,7 @@ spike\_swarm\_sim.sensors.utils.propagation module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.utils.utils module
+mereli.sensors.utils.utils module
 --------------------------------------------
 
 .. automodule:: mereli.sensors.utils.utils

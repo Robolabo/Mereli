@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>mereli.actuators package &mdash; Mereli  documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="mereli.actuators.utils package" href="mereli.actuators.utils.html" />
+    <link rel="prev" title="Mereli Package" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Mereli
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/worlds.html">Worlds and Entities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#worlds">Worlds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#entities">Entities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#initializers">Initializers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/worlds.html#reference-names">Reference Names</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/sensors.html">Sensors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#creating-sensors">Creating Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#directional-sensors">Directional Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#distance-sensor">Distance Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#light-sensor-old-implementation">Light Sensor (old implementation)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#joint-position-and-velocity-sensors">Joint Position and Velocity Sensors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#ground-sensor">Ground Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#color-sensor">Color Sensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/sensors.html#camera-sensor">Camera Sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/actuators.html">Actuators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#creating-actuators">Creating Actuators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-velocity-actuator">Joint Velocity Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#joint-position-actuator">Joint Position Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#led-actuator">LED Actuator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/actuators.html#grasp-and-drop-actuator">Grasp and Drop Actuator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/controllers.html">Controllers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#creating-controllers">Creating Controllers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/controllers.html#custom-controllers">Custom  Controllers</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/communication_systems.html">Communication</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#receiver">Receiver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#transmitter">Transmitter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorials/communication_systems.html#communication-systems">Communication Systems</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorials/artificial_neural_networks.html">Artificial Neural Networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration_files.html">Configuration Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#world-configuration">World Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#topology-configuration">Topology Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#algorithm-configuration">Algorithm Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration_files.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="custom_classes.html">Customize Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic_examples.html">Basic Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example1.html">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example2.html">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example3.html">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example4.html">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/basic_examples/example5.html">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/intermediate_examples.html">Intermediate Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/intermediate_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/advanced_examples.html">Advanced Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#creating-worlds-and-entities">1. Creating worlds and entities.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-obstacle-avoider">2. Basic Obstacle Avoider</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#braitenberg-vehicle-i">3. Braitenberg Vehicle I</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#basic-communication-among-robots">4. Basic Communication Among Robots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/advanced_examples.html#transporting-small-objects">5. Transporting Small Objects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Mereli Package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">mereli.actuators package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.base_actuator">mereli.actuators.base_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.joint_actuator">mereli.actuators.joint_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.led_actuator">mereli.actuators.led_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.communication_transmitter">mereli.actuators.communication_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.grasp_actuator">mereli.actuators.grasp_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.wheel_actuator">mereli.actuators.wheel_actuator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators.RF_transmitter">mereli.actuators.RF_transmitter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-mereli.actuators">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.algorithms.html">mereli.algorithms package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.algorithms.html#module-mereli.algorithms">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.controllers.html">mereli.controllers package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.controller">mereli.controllers.controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.basic_obstacle_avoider">mereli.controllers.basic_obstacle_avoider</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.braitenberg1_controller">mereli.controllers.braitenberg1_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.light_position_controller">mereli.controllers.light_position_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.neural_controller">mereli.controllers.neural_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers.random_movement_controller">mereli.controllers.random_movement_controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.controllers.html#module-mereli.controllers">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.communication.html">mereli.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication.IR_communication">mereli.communication.IR_communication</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.communication.html#module-mereli.communication">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.neural_networks.html">mereli.neural_networks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neural_net">mereli.neural_networks.neural_net</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.neuron_models">mereli.neural_networks.neuron_models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.synapses">mereli.neural_networks.synapses</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.decoding">mereli.neural_networks.decoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.encoding">mereli.neural_networks.encoding</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks.receptive_field">mereli.neural_networks.receptive_field</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.neural_networks.html#module-mereli.neural_networks">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.objectives.html">mereli.objectives package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.fitness">mereli.objectives.fitness</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives.reward">mereli.objectives.reward</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objectives.html#module-mereli.objectives">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.objects.html">mereli.objects package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.world_object">mereli.objects.world_object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#mereli-objects-robot-3d">mereli.objects.robot_3D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.light_source">mereli.objects.light_source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ball">mereli.objects.ball</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.cube">mereli.objects.cube</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.ground_area">mereli.objects.ground_area</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.wall">mereli.objects.wall</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects.task_scheduler">mereli.objects.task_scheduler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.objects.html#module-mereli.objects">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.physics_engines.html">mereli.physics_engines package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.base_engine">mereli.physics_engines.base_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines.pybullet_engine">mereli.physics_engines.pybullet_engine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.physics_engines.html#module-mereli.physics_engines">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.sensors.html">mereli.sensors package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.base_sensor">mereli.sensors.base_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.distance_sensor">mereli.sensors.distance_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.light_sensor">mereli.sensors.light_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.communication_receiver">mereli.sensors.communication_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.color_sensor">mereli.sensors.color_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ground_sensor">mereli.sensors.ground_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.joint_sensor">mereli.sensors.joint_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.collision_sensor">mereli.sensors.collision_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.food_sensor">mereli.sensors.food_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.neighborhood_position_sensor">mereli.sensors.neighborhood_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_orientation_sensor">mereli.sensors.own_orientation_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.own_position_sensor">mereli.sensors.own_position_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.ble_receiver">mereli.sensors.ble_receiver</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.task_sensor">mereli.sensors.task_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors.reward_sensor">mereli.sensors.reward_sensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.sensors.html#module-mereli.sensors">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mereli.utils.html">mereli.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.initializers">mereli.utils.initializers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.activations">mereli.utils.activations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.alg_utils">mereli.utils.alg_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.decorators">mereli.utils.decorators</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.exceptions">mereli.utils.exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.graph_utils">mereli.utils.graph_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.math_utils">mereli.utils.math_utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils.utils">mereli.utils.utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mereli.utils.html#module-mereli.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.world">mereli.world</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#mereli-physics-engine">mereli.physics_engine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.env_perturbations">mereli.env_perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.register">mereli.register</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.globals">mereli.globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli.config_parser">mereli.config_parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="modules.html#module-mereli">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Mereli</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="modules.html">Mereli Package</a> &raquo;</li>
+        
+      <li>mereli.actuators package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/mereli.actuators.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="mereli-actuators-package">
+<h1>mereli.actuators package<a class="headerlink" href="#mereli-actuators-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="mereli.actuators.utils.html">mereli.actuators.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mereli.actuators.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mereli.actuators.utils.html#module-mereli.actuators.utils.utils">mereli.actuators.utils.utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mereli.actuators.utils.html#module-mereli.actuators.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-mereli.actuators.base_actuator">
+<span id="mereli-actuators-base-actuator"></span><h2>mereli.actuators.base_actuator<a class="headerlink" href="#module-mereli.actuators.base_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.Actuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">Actuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actuator_owner</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/base_actuator.html#Actuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.base_actuator.Actuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base class for actuators. Any actuator to be implemented in the simulator must 
+inherit (directly or indirectly) from this base class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actuator_owner</strong> (<em>Robot</em>) – instance of the agent executing the actuator.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.Actuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/base_actuator.html#Actuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.base_actuator.Actuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.Actuator.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#mereli.actuators.base_actuator.Actuator.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the actuator.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.Actuator.owner_id">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">owner_id</span></span><a class="headerlink" href="#mereli.actuators.base_actuator.Actuator.owner_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the identifier of the robot owning the actuator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.HighLevelActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.base_actuator.</span></span><span class="sig-name descname"><span class="pre">HighLevelActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/base_actuator.html#HighLevelActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.base_actuator.HighLevelActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Base class for high level actuators. A high level actuator is an actuator that either 
+makes use of global information that would not be available in reality or that simplifies 
+the implementation of an more complex actuator for easing simulation. For the moment this 
+class is completely void and it is merely used to keep track of which actuators are high 
+level and which are not.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>actuator_owner</strong> (<em>Robot</em>) – instance of the agent executing the actuator.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.base_actuator.HighLevelActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/base_actuator.html#HighLevelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.base_actuator.HighLevelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by high level actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.joint_actuator">
+<span id="mereli-actuators-joint-actuator"></span><h2>mereli.actuators.joint_actuator<a class="headerlink" href="#module-mereli.actuators.joint_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.joint_actuator.JointVelocityActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointVelocityActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse_mirrored</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/joint_actuator.html#JointVelocityActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.joint_actuator.JointVelocityActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>The joint velocity actuator controls the velocity of the joints of a robot. 
+Given a reference velocity (action), the actuator drives the velocity of the joint towards 
+the desired target value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ids</strong> (<em>list joint</em>) – list of the joint ids to be controlled.</p></li>
+<li><p><strong>max_velocity</strong> (<em>float</em>) – maximum velocity of the joint (CHECK).</p></li>
+<li><p><strong>inverse_mirrored</strong> (<em>bool</em>) – Whether to control two joints with the same velocity reference 
+but with opposite sign. For example, this feature is useful when controlling two-wheeled 
+mobile robots that only rotate. In this case, the robot controller would only plan an scalar 
+action with the velocity and sign.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.joint_actuator.JointVelocityActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/joint_actuator.html#JointVelocityActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.joint_actuator.JointVelocityActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the actuator by transforming the action planed by the robot controller into an actual 
+joint rotation speed. The action argument is a vector settling the desired reference velocity of 
+each joint to be controlled. The action references are contrained within [-1, 1], meaning that an 
+action of 1 means maximum velocity in one sense and -1 represents maximum velocity in the opposite 
+sense. An action of 0 means no rotation at all.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – numpy array collection the normalized reference velocities of each joint 
+to be controlled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.joint_actuator.JointVelocityActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/joint_actuator.html#JointVelocityActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.joint_actuator.JointVelocityActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the actuator.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.joint_actuator.JointPositionActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.joint_actuator.</span></span><span class="sig-name descname"><span class="pre">JointPositionActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0]</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/joint_actuator.html#JointPositionActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.joint_actuator.JointPositionActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>The joint position actuator controls the position of the joints of a robot. 
+Given a reference angle position (action), the actuator drives the position of the joint towards 
+the desired target value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ids</strong> (<em>list joint</em>) – list of the joint ids to be controlled.</p></li>
+<li><p><strong>max_velocity</strong> (<em>float</em>) – maximum velocity of the joint (CHECK).</p></li>
+<li><p><strong>inverse_mirrored</strong> (<em>bool</em>) – Whether to control two joints with the same velocity reference 
+but with opposite sign. For example, this feature is useful when controlling two-wheeled 
+mobile robots that only rotate. In this case, the robot controller would only plan an scalar 
+action with the velocity and sign.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.joint_actuator.JointPositionActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/joint_actuator.html#JointPositionActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.joint_actuator.JointPositionActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Steps the actuator by transforming the action planed by the robot controller into an actual 
+joint angle position. The action argument is a vector settling the desired reference positions of 
+each joint to be controlled. The action references are contrained within [-1, 1], which are mapped 
+into [-pi, pi] inside the method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – numpy array collection the normalized reference velocities of each joint 
+to be controlled.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.led_actuator">
+<span id="mereli-actuators-led-actuator"></span><h2>mereli.actuators.led_actuator<a class="headerlink" href="#module-mereli.actuators.led_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.led_actuator.LedActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.led_actuator.</span></span><span class="sig-name descname"><span class="pre">LedActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'blue'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_off</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'white'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/led_actuator.html#LedActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.led_actuator.LedActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>LED actuator that turns on or off the LED depending on 
+the action.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.led_actuator.LedActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/led_actuator.html#LedActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.led_actuator.LedActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="mereli.actuators.led_actuator.LedActuator.physics_client">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">physics_client</span></span><a class="headerlink" href="#mereli.actuators.led_actuator.LedActuator.physics_client" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the physics engine client of the robot owning the actuator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.led_actuator.LedActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/led_actuator.html#LedActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.led_actuator.LedActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.communication_transmitter">
+<span id="mereli-actuators-communication-transmitter"></span><h2>mereli.actuators.communication_transmitter<a class="headerlink" href="#module-mereli.actuators.communication_transmitter" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.communication_transmitter.CommunicationTransmitter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.communication_transmitter.</span></span><span class="sig-name descname"><span class="pre">CommunicationTransmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/communication_transmitter.html#CommunicationTransmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.communication_transmitter.CommunicationTransmitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Communication transmitter actuator. It isotropically transmits a 
+frame with a message and its context. The propagation simulation is 
+implemented at the receiver side, this class only updates the transmitted 
+frame of each robot.</p>
+<ul>
+<li><dl>
+<dt>Params:</dt><dd><p>range [float] : maximum distance of message reception, in centimeters.
+msg_length [int] : number of components of the message.
+quantize [bool] : whether to quantize the message to a set of possible</p>
+<blockquote>
+<div><p>symbols or not.</p>
+</div></blockquote>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.communication_transmitter.CommunicationTransmitter.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tx_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/communication_transmitter.html#CommunicationTransmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.communication_transmitter.CommunicationTransmitter.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.communication_transmitter.CommunicationTransmitter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/communication_transmitter.html#CommunicationTransmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.communication_transmitter.CommunicationTransmitter.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.grasp_actuator">
+<span id="mereli-actuators-grasp-actuator"></span><h2>mereli.actuators.grasp_actuator<a class="headerlink" href="#module-mereli.actuators.grasp_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.grasp_actuator.GraspActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.grasp_actuator.</span></span><span class="sig-name descname"><span class="pre">GraspActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/grasp_actuator.html#GraspActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.grasp_actuator.GraspActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.HighLevelActuator" title="mereli.actuators.base_actuator.HighLevelActuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.HighLevelActuator</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.grasp_actuator.GraspActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neighborhood</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/grasp_actuator.html#GraspActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.grasp_actuator.GraspActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by high level actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.grasp_actuator.GraspActuator.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/grasp_actuator.html#GraspActuator.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.grasp_actuator.GraspActuator.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.wheel_actuator">
+<span id="mereli-actuators-wheel-actuator"></span><h2>mereli.actuators.wheel_actuator<a class="headerlink" href="#module-mereli.actuators.wheel_actuator" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.wheel_actuator.WheelActuator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.wheel_actuator.</span></span><span class="sig-name descname"><span class="pre">WheelActuator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.11</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/wheel_actuator.html#WheelActuator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.wheel_actuator.WheelActuator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Robot wheel actuator using a differential drive system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.wheel_actuator.WheelActuator.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v_motors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/wheel_actuator.html#WheelActuator.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.wheel_actuator.WheelActuator.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators.RF_transmitter">
+<span id="mereli-actuators-rf-transmitter"></span><h2>mereli.actuators.RF_transmitter<a class="headerlink" href="#module-mereli.actuators.RF_transmitter" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="mereli.actuators.RF_transmitter.RF_Transmitter">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">mereli.actuators.RF_transmitter.</span></span><span class="sig-name descname"><span class="pre">RF_Transmitter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/RF_transmitter.html#RF_Transmitter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.RF_transmitter.RF_Transmitter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="spike_swarm_sim.actuators.html#mereli.actuators.base_actuator.Actuator" title="mereli.actuators.base_actuator.Actuator"><code class="xref py py-class docutils literal notranslate"><span class="pre">mereli.actuators.base_actuator.Actuator</span></code></a></p>
+<p>Communication transmitter actuator. It isotropically transmits a 
+frame with a message and its context. The propagation simulation is 
+implemented at the receiver side, this class only updates the transmitted 
+frame of each robot. 
+=========================================================================
+- Params:</p>
+<blockquote>
+<div><p>range [float] : maximum distance of message reception, in centimeters.
+msg_length [int] : number of components of the message.
+quantize [bool] : whether to quantize the message to a set of possible</p>
+<blockquote>
+<div><p>symbols or not.</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.RF_transmitter.RF_Transmitter.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/RF_transmitter.html#RF_Transmitter.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.RF_transmitter.RF_Transmitter.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute an iteration of the actuator. In this base class it is empty and 
+must be overwritten by actuators inheriting from it in order to particularize their 
+functionality. Essentially, this method transforms actions planned by the robot controller 
+into real interactions with the environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>np.ndarray</em>) – vector or scalar action to be executed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mereli.actuators.RF_transmitter.RF_Transmitter.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/mereli/actuators/RF_transmitter.html#RF_Transmitter.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mereli.actuators.RF_transmitter.RF_Transmitter.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-mereli.actuators">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-mereli.actuators" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="mereli.actuators.utils.html" class="btn btn-neutral float-right" title="mereli.actuators.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="Mereli Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Rafael Sendra.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

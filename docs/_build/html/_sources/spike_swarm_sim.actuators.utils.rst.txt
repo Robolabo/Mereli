@@ -1,10 +1,10 @@
-spike\_swarm\_sim.actuators.utils package
+mereli.actuators.utils package
 =========================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.actuators.utils.utils module
+mereli.actuators.utils.utils module
 ----------------------------------------------
 
 .. automodule:: mereli.actuators.utils.utils

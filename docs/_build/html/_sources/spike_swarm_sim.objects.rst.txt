@@ -1,10 +1,10 @@
-spike\_swarm\_sim.objects package
+mereli.objects package
 =================================
 
 Submodules
 ----------
 
-spike\_swarm\_sim.objects.world\_object module
+mereli.objects.world\_object module
 ----------------------------------------------
 
 .. automodule:: mereli.objects.world_object
@@ -13,7 +13,7 @@ spike\_swarm\_sim.objects.world\_object module
     :show-inheritance:
     :exclude-members: WorldObject2D
 
-spike\_swarm\_sim.objects.robot\_3D module
+mereli.objects.robot\_3D module
 ------------------------------------------
 
 .. automodule:: mereli.objects.robot_3D
@@ -22,7 +22,7 @@ spike\_swarm\_sim.objects.robot\_3D module
     :show-inheritance:
 
 
-spike\_swarm\_sim.objects.light\_source module
+mereli.objects.light\_source module
 ----------------------------------------------
 
 .. automodule:: mereli.objects.light_source
@@ -30,7 +30,7 @@ spike\_swarm\_sim.objects.light\_source module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.objects.ball module
+mereli.objects.ball module
 -------------------------------------
 
 .. automodule:: mereli.objects.ball
@@ -38,7 +38,7 @@ spike\_swarm\_sim.objects.ball module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.objects.cube module
+mereli.objects.cube module
 -------------------------------------
 
 .. automodule:: mereli.objects.cube
@@ -46,7 +46,7 @@ spike\_swarm\_sim.objects.cube module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.objects.ground_area module
+mereli.objects.ground_area module
 -------------------------------------
 
 .. automodule:: mereli.objects.ground_area
@@ -54,7 +54,7 @@ spike\_swarm\_sim.objects.ground_area module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.objects.wall module
+mereli.objects.wall module
 -------------------------------------
 
 .. automodule:: mereli.objects.wall
@@ -63,7 +63,7 @@ spike\_swarm\_sim.objects.wall module
     :show-inheritance:  
 
 
-spike\_swarm\_sim.objects.task\_scheduler module
+mereli.objects.task\_scheduler module
 ------------------------------------------------
 
 .. automodule:: mereli.objects.task_scheduler

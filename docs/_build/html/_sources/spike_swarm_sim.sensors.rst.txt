@@ -1,4 +1,4 @@
-spike\_swarm\_sim.sensors package
+mereli.sensors package
 =================================
 
 Subpackages
@@ -11,7 +11,7 @@ Subpackages
 Submodules
 ----------
 
-spike\_swarm\_sim.sensors.base\_sensor module
+mereli.sensors.base\_sensor module
 ---------------------------------------------
 
 .. automodule:: mereli.sensors.base_sensor
@@ -19,7 +19,7 @@ spike\_swarm\_sim.sensors.base\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.distance\_sensor module
+mereli.sensors.distance\_sensor module
 -------------------------------------------------
 
 .. automodule:: mereli.sensors.distance_sensor
@@ -28,7 +28,7 @@ spike\_swarm\_sim.sensors.distance\_sensor module
     :show-inheritance:
     :inherited-members:
 
-spike\_swarm\_sim.sensors.light\_sensor module
+mereli.sensors.light\_sensor module
 ----------------------------------------------
 
 .. automodule:: mereli.sensors.light_sensor
@@ -36,7 +36,7 @@ spike\_swarm\_sim.sensors.light\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.communication\_receiver module
+mereli.sensors.communication\_receiver module
 --------------------------------------------------------
 
 .. automodule:: mereli.sensors.communication_receiver
@@ -44,7 +44,7 @@ spike\_swarm\_sim.sensors.communication\_receiver module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.color\_sensor module
+mereli.sensors.color\_sensor module
 ----------------------------------------------
 
 .. automodule:: mereli.sensors.color_sensor
@@ -53,7 +53,7 @@ spike\_swarm\_sim.sensors.color\_sensor module
     :show-inheritance:
 
 
-spike\_swarm\_sim.sensors.ground\_sensor module
+mereli.sensors.ground\_sensor module
 -----------------------------------------------
 
 .. automodule:: mereli.sensors.ground_sensor
@@ -61,7 +61,7 @@ spike\_swarm\_sim.sensors.ground\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.joint\_sensor module
+mereli.sensors.joint\_sensor module
 ----------------------------------------------
 
 .. automodule:: mereli.sensors.joint_sensor
@@ -69,7 +69,7 @@ spike\_swarm\_sim.sensors.joint\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.collision\_sensor module
+mereli.sensors.collision\_sensor module
 --------------------------------------------------
 
 .. automodule:: mereli.sensors.collision_sensor
@@ -78,7 +78,7 @@ spike\_swarm\_sim.sensors.collision\_sensor module
     :show-inheritance:
 
 
-spike\_swarm\_sim.sensors.food\_sensor module
+mereli.sensors.food\_sensor module
 ---------------------------------------------
 
 .. automodule:: mereli.sensors.food_sensor
@@ -86,7 +86,7 @@ spike\_swarm\_sim.sensors.food\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.neighborhood\_position\_sensor module
+mereli.sensors.neighborhood\_position\_sensor module
 ---------------------------------------------------------------
 
 .. automodule:: mereli.sensors.neighborhood_position_sensor
@@ -94,7 +94,7 @@ spike\_swarm\_sim.sensors.neighborhood\_position\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.own\_orientation\_sensor module
+mereli.sensors.own\_orientation\_sensor module
 ---------------------------------------------------------
 
 .. automodule:: mereli.sensors.own_orientation_sensor
@@ -102,7 +102,7 @@ spike\_swarm\_sim.sensors.own\_orientation\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.own\_position\_sensor module
+mereli.sensors.own\_position\_sensor module
 ------------------------------------------------------
 
 .. automodule:: mereli.sensors.own_position_sensor
@@ -110,7 +110,7 @@ spike\_swarm\_sim.sensors.own\_position\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.ble\_receiver module
+mereli.sensors.ble\_receiver module
 ----------------------------------------------
 
 .. automodule:: mereli.sensors.ble_receiver
@@ -118,7 +118,7 @@ spike\_swarm\_sim.sensors.ble\_receiver module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.task\_sensor module
+mereli.sensors.task\_sensor module
 ---------------------------------------------
 
 .. automodule:: mereli.sensors.task_sensor
@@ -126,7 +126,7 @@ spike\_swarm\_sim.sensors.task\_sensor module
     :undoc-members:
     :show-inheritance:
 
-spike\_swarm\_sim.sensors.reward\_sensor module
+mereli.sensors.reward\_sensor module
 ---------------------------------------------
 
 .. automodule:: mereli.sensors.reward_sensor
