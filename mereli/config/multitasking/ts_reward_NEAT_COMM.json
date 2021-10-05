@@ -72,8 +72,8 @@
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[0,0], [0,1], [1,0], [1, 1]]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 0.001, "size" : 1}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "comm_sys" : {"name" :"IR_comm", "params" : {}},
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": [0,1], "stimuli" : "reward", "replace_value" : 0}},
@@ -114,7 +114,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 1000, 
+                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 700, 
                             "replacement" : false, "task_names" : ["red", "yellow", "blue", "green"]}
             }
         }
@@ -124,7 +124,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 800,
+        "evaluation_steps" : 700,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching3",
         "populations" : {
