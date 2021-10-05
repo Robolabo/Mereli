@@ -1,4 +1,4 @@
-# Mereli
+# Mereli: Multi-Environment Robotics simulator with Evolution and LearnIng implementations 
 
 ## Installation
 Clone this repository:
