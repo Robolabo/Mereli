@@ -1,5 +1,5 @@
 # MERELI
-# Multi-Environment Robotics simulator with Evolution and LearnIng implementations 
+# Multi-Environment Robotics simulator with Evolution and Learning Implementations 
 
 ## Installation
 Clone this repository:
