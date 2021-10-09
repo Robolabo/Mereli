@@ -1,4 +1,5 @@
 from .utils import *
+from .base_neural_net import BaseNeuralNet
 from .neural_net import NeuralNetwork
 from .synapses import StaticSynapses, DynamicSynapses
 from .neuron_models import Activation, RateModel, IzhikevichModel, LIFModel, AdExModel, SpikingNeuronModel, NonSpikingNeuronModel

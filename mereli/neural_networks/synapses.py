@@ -52,25 +52,8 @@ class Synapses(ABC):
                 self.mask[post_idx, pre_idx] = True
                 self.trainable_mask[post_idx, pre_idx] = syn['trainable']
                 self.weights[post_idx, pre_idx] = syn['weight']
+        # self.weights = np.stack([w_row / np.sum(w_row != 0.0)  if any(w_row != 0) else w_row for w_row in self.weights]).round(4)
 
-    # def build(self, ann_graph):
-    #     #! Old ineficient implementation of build
-    #     mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
-    #     trainable_mask = mask.copy()
-    #     weights = mask.copy().astype(float)
-    #     for name, node in ann_graph['neurons'].items():
-    #         in_connections = [syn for syn in ann_graph['synapses'].values() if syn['post'] == name]
-    #         for syn in in_connections:
-    #             if syn['enabled']:
-    #                 pre_idx = ann_graph['inputs'][syn['pre']]['idx']\
-    #                             if syn['pre'] in ann_graph['inputs']\
-    #                             else ann_graph['neurons'][syn['pre']]['idx'] + len(ann_graph['inputs'])
-    #                 mask[node['idx'], pre_idx] = True
-    #                 trainable_mask[node['idx'], pre_idx] = True
-    #                 weights[node['idx'], pre_idx] = syn['weight']
-    #     self.weights = weights
-    #     self.mask = mask
-    #     self.trainable_mask = trainable_mask
 
     @GET("synapses:weights")
     def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):

@@ -68,6 +68,11 @@ class BaseNeuronModel(ABC):
     def voltages(self):
         return self._volt.copy()
 
+    @voltages.setter
+    def voltages(self, volts):
+        assert len(self._volt) == len(volts)
+        self._volt = volts
+
 class SpikingNeuronModel(BaseNeuronModel):
     def __init__(self, *args, **kwargs):
         super(SpikingNeuronModel, self).__init__(*args, **kwargs)
@@ -186,7 +191,7 @@ class Perceptron(NonSpikingNeuronModel):
         self.gain = np.delete(self.gain, index)
         self.activation = np.delete(self.activation, index)
         
-    def reset(self):
+    def reset(self): 
         self._volt = np.zeros(len(self))
 
 @neuron_model_registry(name='rate_model')
@@ -206,7 +211,6 @@ class RateModel(NonSpikingNeuronModel):
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
         outputs = self.gain * self._volt.copy() + self.bias
-    
         for func in without_duplicates(self.activation):
             outputs[self.activation == func] = Activation.function_of(func)(outputs[self.activation == func])
         return outputs, self._volt.copy()
@@ -217,6 +221,9 @@ class RateModel(NonSpikingNeuronModel):
         self.tau = np.hstack((self.tau, tau)) # np.insert(self.tau, index, values=tau, axis=0)
         self.bias = np.hstack((self.bias, bias))
         self.gain = np.hstack((self.gain, gain))
+        if isinstance(activation, str): 
+            activation = Activation.from_name(activation)
+        assert activation is not None
         self.activation = np.hstack((self.activation, activation))
 
     def delete(self, index):

@@ -10,22 +10,18 @@ from spike_swarm_sim.neural_networks.synapses import DynamicSynapses
 from .utils.monitor import NeuralNetMonitor
 
 class BaseNeuralNet:
-
-
-    def __init__(self, synapses, neurons, encoders=None, decoders=None):
+    def __init__(self, neurons, synapses, encoders=None, decoders=None):
         self.synapses = synapses
         self.neurons  = neurons
         #* Submodules of the neural network distributing its functioning
         #* and computations.
-        if issubclass(synapses, DynamicSynapses) and issubclass(neurons, NonSpikingNeuronModel):
+        if issubclass(type(synapses), DynamicSynapses) and issubclass(type(neurons), NonSpikingNeuronModel):
             raise Exception(logging.error('The combination of dynamic synapses and '\
                 'non-spiking neuron models is not currently implemented.'))
         
-        #*
-        if encoders is None:
-            self.encoders = EncodingWrapper()
-        if decoders is None:
-            self.decoders = DecodingWrapper()
+
+        self.encoders = EncodingWrapper() if encoders is None else encoders
+        self.decoders = DecodingWrapper() if decoders is None else encoders 
         
         #* Monitor that, if in DEBUG mode, will store all the relevant neural variables.
         self.monitor = None
@@ -39,7 +35,7 @@ class BaseNeuralNet:
 
         #* Flag indicating if the ANN is built and functional. 
         #* The ANN cannot be used if this flag is False.
-        self.is_built = False
+        self.is_built = False #! USE IN CODE
 
         #* Variables storing the previous stim and spikes (CHECK IF NEEDED).
         self.stimuli, self.spikes, self.prev_input = None, None, None
@@ -117,6 +113,16 @@ class BaseNeuralNet:
             self.monitor = None
         # #* --- Reset dynamics ---
         # self.reset()
+
+    def build_from_adjmat(self, w_matrix):
+        #! OJO NORMALIZACION weights !!!
+        assert w_matrix.shape[1] - w_matrix.shape[0] == self.num_inputs
+        for i in range(w_matrix.shape[0]):
+            name = f'H_{i}'
+            import pdb; pdb.set_trace()
+        import pdb; pdb.set_trace()
+
+
 
     def add_stimuli(self, name, num_nodes, sensor=None):
         """ Adds a stimuli or input node to the neural network. This stimuli can be an scalar (num_nodes=1) or 
@@ -288,7 +294,6 @@ class BaseNeuralNet:
         self.graph['synapses'].pop(name, None)
 
 
-
     def set_motor(self, ensemble_name):
         """ Sets the neurons in the given ensemble as motor or output of the network.
         
@@ -309,8 +314,17 @@ class BaseNeuralNet:
         stimuli or state. Originally, they were conceived as processes to encode real-valued 
         signals into spike trains that can be suitably processed by Spiking Neural Networks. 
         Nonetheless, the current purpose of encoders aims to be more general, ranging from simple 
-        normalization or standarization to basis expansions. If no 
+        normalization or standarization to basis expansions. 
         
+        :param str scheme:
+        :param str sensor: reference name of the sensor to which the encoder is attached.
+        :param str receptive_field: reference name of the receptive field to be used (generally in 
+            spiking neural networks) or None if no receptive field is required.
+        :param dict receptive_field_params: parameters of the receptive field to be used.
+
+        ..todo::
+
+            Receptive field dependency injection.
 
         """
         raw_inputs = [inp for inp in self.graph['inputs'].values() if inp['sensor'] == sensor]
@@ -328,23 +342,59 @@ class BaseNeuralNet:
                         {'ensemble' : ensemble_name, 'sensor' : sensor, 'idx': prev_idx + 1}})
 
     def add_decoder(self, scheme, ensemble_name, action_name, decoder_params={}):
-        pass
+        output_dim = self.num_ensemble_neurons(ensemble_name) # Num. Output Neurons in ensemble
+        self.decoders.add(scheme, ensemble_name, action_name, output_dim, decoder_params=decoder_params)
 
     def reset_graph(self):
-        pass
+        """ Resets the neural network graph by removing all the nodes that are neither outputs nor inputs.
+        It deletes all the synapses.
+        """
+        neuron_names = tuple(self.graph['neurons'].keys())
+        synapse_names = tuple(self.graph['synapses'].keys())
+        for neuron in neuron_names:
+            if not self.is_motor(neuron):
+                self.delete_neuron(neuron)
+        for syn in synapse_names:
+            self.delete_synapse(syn)
+        self.build()
 
 
     def is_motor(self, neuron_name):
+        """ Determines whether a neuron is a motor/output neuron or not.
+        
+        :param str neuron_name: name of the neuron
+        
+        :returns: boolean value indicating if the neuron is motor.
+        """
         return self.graph['neurons'][neuron_name]['is_motor']
 
     def num_ensemble_neurons(self, ensemble):
+        """ Gets the number of neurons composing a given ensemble/layer.
+
+        :param str ensemble: name of the neural (non-input) ensemble.
+
+        :returns: integer value representing the number of neurons in ensemble. 
+        """
         return len(self.ensemble_indices(ensemble))
 
     def num_input_nodes(self, ensemble):
+        """ Gets the number of nodes composing a given input layer or ensemble.
+
+        :param str ensemble: name of the input ensemble.
+
+        :returns: integer value representing the number of nodes in input ensemble. 
+        """
         return len(self.input_ensemble_indices(ensemble))
 
     def ensemble_indices(self, ens_name, consider_inputs=False):
-        """ Indices of the neurons of the requested ensemble. """
+        """ Indices of the neurons of the requested ensemble. 
+        
+        :param str ens_name: name of the ensemble.
+        :param bool consider_inputs: whether to take input nodes into account for the response or not.
+
+        :returns: numpy array with the neuron indices. The size of the array equals the number of
+            neurons in the ensemble.
+        """
         if ens_name not in self.ensemble_names:
             raise Exception(logging.error('Requested ensemble "{}" does not exist.'.format(ens_name)))
         
@@ -354,14 +404,25 @@ class BaseNeuralNet:
         return indices
 
     def input_ensemble_indices(self, input_name):
-        """ Indices of the neurons of the requested ensemble. """
+        """ Indices of the input nodes of the requested input ensemble. 
+        
+        :param str input_name: name of the input ensemble.
+
+        :returns: numpy array with the input node indices.
+        """
         if input_name not in self.input_ensemble_names:
             raise Exception(logging.error('Requested input ensemble "{}" does not exist.'.format(input_name)))
         indices = np.array([node['idx'] for node in self.graph['inputs'].values() if node['ensemble'] == input_name])
         return indices
 
     def voltage_of(self, ensemble, neuron):
-        """ """
+        """ Returns the current voltage of the requested neuron. By voltage, we generally refer to the state of the 
+        continuous time neural model.  
+        
+        :param str ensemble: name of the ensemble to which the neuron belongs.
+        :param int neuron: index of the neuron (in [0,n-1], where n is the num. 
+            of neurons in the ensemble) in the ensemble.
+        """
         index = self.graph['neurons'][ensemble + '_' + str(neuron)]['idx']
         return self.neurons.voltages[index]
 
@@ -372,19 +433,22 @@ class BaseNeuralNet:
 
     @property
     def num_inputs(self):
+        """ Number of input nodes in the neural network. """
         return len(self.graph['inputs'])
     
     @property
     def num_motor(self):
+        """ Number of motor or output neurons in the neural network. """
         return len(self.motor_neurons)
     
     @property
     def num_hidden(self):
+        """ Number of hidden neurons in the neural network. """
         return self.num_neurons - self.num_motor
 
     @property
     def motor_neurons(self):
-        """ Indices of motor neurons without counting input nodes. When addressing the 
+        """ Indices of motor neurons without considering input nodes. When addressing the 
         weight matrix or any kind of ANN adj. mat., the number of inputs MUST be added.
         """
         return np.hstack([self.ensemble_indices(motor) for motor in self.motor_ensemble_names])
@@ -396,11 +460,30 @@ class BaseNeuralNet:
 
     @property
     def voltages(self):
-        """Getter instantaneous voltage vector (membrane voltage of each neuron membrane)
+        """ Instantaneous voltage vector (membrane voltage of each neuron membrane)
         at current simulation timestep."""
         return self.neurons.voltages
     
     @property
     def weights(self):
-        "Getter of the numpy weight matrix."
+        """ Getter of the numpy weight matrix W. This matrix is essentially the weighted adjacency matrix 
+        of the overall neural network. 
+        
+        :returns: a numpy array representing the (N x N+I) weighted adjacency matrix.
+        """
         return self.synapses.weights
+
+    @property
+    def in_degrees(self):
+        return np.r_[np.zeros(self.num_inputs),  self.synapses.mask.sum(1)]
+
+    @property
+    def laplacian(self):
+        return np.diag(self.in_degrees)\
+            - np.r_[np.zeros([self.num_inputs,self.num_inputs+self.num_neurons]), self.weights]
+
+    
+    def laplacian_eig(self):
+        return np.linalg.eig(self.laplacian)
+
+    
