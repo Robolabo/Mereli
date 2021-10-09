@@ -1,7 +1,72 @@
 from collections import deque
 import numpy as np
 from mereli.algorithms.interfaces import GET, SET, LEN, INIT
-from mereli.register import learning_rule_registry
+from mereli.register import learning_rule_registry, learning_rules
+
+
+
+class LearningRuleWrapper:
+
+    def __init__(self):
+        self._rules = {}
+        self._rule_dict = {}
+
+    def add_rule(self, synapse_name, rule_name):
+        if rule_name in self._rule_dict:
+            self._rule_dict[rule_name].append(synapse_name)
+        else:    
+            self._rule_dict[rule_name] = [synapse_name]
+
+    def build(self, ann_graph):
+        """ Builds the ANN synapses by converting the ANN graph into the adjacency matrix. """
+        pass
+        # self.mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False)
+        # self.trainable_mask = self.mask.copy()
+        # self.weights = self.mask.copy().astype(float)
+        # n_inputs = len(ann_graph['inputs'])
+        # for syn in ann_graph['synapses'].values():
+        #     if syn['enabled']:
+        #         if syn['pre'] in ann_graph['inputs']:
+        #             pre_idx = ann_graph['inputs'][syn['pre']]['idx']
+        #         else:
+        #             pre_idx = ann_graph['neurons'][syn['pre']]['idx'] + n_inputs
+        #         post_idx = ann_graph['neurons'][syn['post']]['idx'] 
+        #         self.mask[post_idx, pre_idx] = True
+        #         self.trainable_mask[post_idx, pre_idx] = syn['trainable']
+        #         self.weights[post_idx, pre_idx] = syn['weight']
+
+    def step(self, synapses, activities, reward=None):
+        Weight_Delta = np.zeros_like(synapses.weights)
+        for rule in self._rules: 
+            Weight_Delta += rule.step(synapses.weights, activities, reward=reward)
+        synapses.weights += Weight_Delta
+        return synapses
+    
+
+
+
+class BaseLearningRule:
+
+    def __init__(self):
+        self.mask = None
+
+    def step(self, weights, activities, reward=None):
+        pass
+
+    def reset(self):
+        pass
+        
+
+
+
+@learning_rule_registry(name='simple_hebb')
+class SimpleHebbian(BaseLearningRule):
+    pass
+
+
+
+
+
 
 def append_and_pop(queue, new_elem):
     queue.append(new_elem)

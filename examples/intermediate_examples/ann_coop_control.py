@@ -30,8 +30,8 @@ ann.set_motor('5')
 # ann.add_synapse('5-4', '5', '4', weight=1/2)
 
 # TREE
-ann.add_synapse('I-1', 'I', '1', weight=1)
-ann.add_synapse('I-2', 'I', '2', weight=1)
+ann.add_synapse('I-1', 'I', '1', weight=1, learning_rule='simple_hebb')
+ann.add_synapse('I-2', 'I', '2', weight=1, learning_rule='stdp')
 ann.add_synapse('1-3', '1', '3', weight=1)
 ann.add_synapse('1-4', '1', '4', weight=1)
 ann.add_synapse('2-5', '2', '5', weight=1)
@@ -48,6 +48,7 @@ ann.add_synapse('2-6', '2', '6', weight=1)
 # ann.add_synapse('6-1', '6', '1', weight=1)
 
 ann.add_decoder('IdentityDecoding', '5', 'A1')
+
 
 ann.build()
 ann.reset()

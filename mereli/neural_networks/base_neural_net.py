@@ -6,25 +6,24 @@ from itertools import product
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
-from spike_swarm_sim.neural_networks.synapses import DynamicSynapses
+from mereli.neural_networks.synapses import DynamicSynapses
 from .utils.monitor import NeuralNetMonitor
 
 class BaseNeuralNet:
-    def __init__(self, neurons, synapses, encoders=None, decoders=None):
+    def __init__(self, neurons, synapses, encoders=None, decoders=None, monitor=None):
         self.synapses = synapses
         self.neurons  = neurons
+        #* Monitor that, if in DEBUG mode, will store all the relevant neural variables.
+        self.monitor = monitor
+
         #* Submodules of the neural network distributing its functioning
         #* and computations.
         if issubclass(type(synapses), DynamicSynapses) and issubclass(type(neurons), NonSpikingNeuronModel):
             raise Exception(logging.error('The combination of dynamic synapses and '\
                 'non-spiking neuron models is not currently implemented.'))
         
-
         self.encoders = EncodingWrapper() if encoders is None else encoders
         self.decoders = DecodingWrapper() if decoders is None else encoders 
-        
-        #* Monitor that, if in DEBUG mode, will store all the relevant neural variables.
-        self.monitor = None
 
         #* Overall ANN directed graph description.
         self.graph = {'inputs' : {}, 'neurons' : {}, 'synapses' : {}}
@@ -475,10 +474,12 @@ class BaseNeuralNet:
 
     @property
     def in_degrees(self):
+        """ In-Degree vector of the neural network DiGraph."""
         return np.r_[np.zeros(self.num_inputs),  self.synapses.mask.sum(1)]
 
     @property
     def laplacian(self):
+        """ Laplacian Matrix of the neural network DiGraph."""
         return np.diag(self.in_degrees)\
             - np.r_[np.zeros([self.num_inputs,self.num_inputs+self.num_neurons]), self.weights]
 
