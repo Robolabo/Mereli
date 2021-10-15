@@ -114,7 +114,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 700, 
+                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 1000, 
                             "replacement" : false, "task_names" : ["red", "yellow", "blue", "green"]}
             }
         }
@@ -124,7 +124,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 700,
+        "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching3",
         "populations" : {
