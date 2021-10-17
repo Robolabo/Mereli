@@ -16,15 +16,15 @@ class IdentifyBorderline:
         self.borderline = []
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
-            info [dict or None]: dict of additional information. 
+            info [dict or None]: dict of additional information.
         =======================================================================================
         """
         actions = np.stack(actions)
@@ -60,15 +60,15 @@ class IdentifyLeader:
         self.required_info = ("generation",)
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
-            info [dict or None]: dict of additional information. 
+            info [dict or None]: dict of additional information.
         =======================================================================================
         """
         actions = np.stack([[ac_robot['led_actuator'] for ac_robot in ac] for ac in actions])
@@ -98,13 +98,13 @@ class Alignment:
         self.required_info = ("robot_positions", "robot_orientations",)
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
             info [dict or None]: dict of additional information.
         =======================================================================================
@@ -135,13 +135,13 @@ class GotoLight:
         self.required_info = ("robot:position", "robot:orientation", "light_source:position@color="+color)
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
             info [dict or None]: dict of additional information.
         =======================================================================================
@@ -155,13 +155,16 @@ class GotoLight:
             distances = LA.norm(pos[:, :2] - light_pos[:2], axis=1)
             #* Considering that there can be multiple lights
             # distances = np.min([LA.norm(pos[:, :2] - ls_pos[:2], axis=1) for ls_pos in light_pos], 0)
-            fA = (distances < 1).mean()
-            if len(distances) > 1:
-                fA *= (np.sum(distances < 1) > 1)
-            if t < 50:#antes a 100
-                rad_ball = -(3/50) * t + 3
+            # fA = (distances < 1).mean()
+            fA = int(all(distances < 1))
+            # if len(distances) > 1:
+            #     fA *= (np.sum(distances < 1) > 1)
+            if t < 100:#antes a 100
+                rad_ball = -(3/100) * t + 3
                 fA = np.clip(1 - (distances / rad_ball), a_max=1, a_min=0).mean()
-            fitness += fA 
+            # fitness += fA
+            fitness += fA
+        # return (fitness / len(states)) + 1e-5
         return (fitness / len(states)) + 1e-5
 
 @fitness_func_registry(name='transport_cubes')
@@ -178,14 +181,14 @@ class TransportCubesFitness:
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
             info [dict or None]: dict of additional information.
         =======================================================================================
         """
-        
+
         robot_positions = np.stack(info["robot:position"]).copy()
         cube_positions = np.stack(info["cube:position"]).copy()
         ground_area_pos = info["ground_area:position"][0]
@@ -256,7 +259,7 @@ class TaskSwitching2:
                 if key != 'generation' else values for key, values in info.items()}
             task = self.tasks[tasks[t_init+1]]
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
-        
+
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
         self.buffered_fitnesses.append(fitness_tasks)
         return fitness + 1e-5
@@ -287,7 +290,7 @@ class TaskSwitching3:
             task = self.tasks[tasks[t_init+1]]
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        return fitness + 1e-5
+        return np.log(fitness + 1e-5)
 
 @fitness_func_registry(name='task_switching3')
 class TaskSwitching4Lights:
@@ -310,7 +313,7 @@ class TaskSwitching4Lights:
                 if key != 'generation' else values for key, values in info.items()}
             task = self.tasks[tasks[t_init+1]]
             fitness_tasks.append(task(task_actions, task_states, info=task_info))
-        
+
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
         return fitness + 1e-5
 
@@ -322,15 +325,15 @@ class Grouping:
         self.required_info = ("robot_positions", "robot_orientations")
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
-            info [dict or None]: dict of additional information. 
+            info [dict or None]: dict of additional information.
         =======================================================================================
         """
         robot_positions = np.stack(info["robot_positions"]).copy()
@@ -341,7 +344,7 @@ class Grouping:
             #                     for j, th1 in enumerate(thetas)
             #                     for i, th2 in enumerate(thetas) if i != j])
             distances_robots = [LA.norm(pos_i - pos_j)
-                                for i, pos_i in enumerate(pos) 
+                                for i, pos_i in enumerate(pos)
                                 for j, pos_j in enumerate(pos) if i != j]
             distances = [LA.norm(pos_i - np.mean(pos, 0)) for pos_i in pos]
             fA = np.mean([ np.clip(1 - dist / 100, a_min=0, a_max=1) for dist in distances])
@@ -360,13 +363,13 @@ class ObstacleAvoidance:
         self.required_info = ("robot:position",)
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
             info [dict or None]: dict of additional information.
         =======================================================================================
@@ -393,13 +396,13 @@ class GotoGoal:
                         "ground_area:radius")
 
     def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states. 
+        """Computes the fitness function based on trial actions and states.
         Additionally, other useful variables can be used from info dict (if specified in init).
         =======================================================================================
         - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the 
+            actions [list of dicts]: list of dictionaries with actuator names and the
                     corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the 
+            states [list of dicts]: list of dictionaries with sensor names and the
                     corresponding measured states.
             info [dict or None]: dict of additional information.
         =======================================================================================

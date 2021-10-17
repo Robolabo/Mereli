@@ -127,30 +127,21 @@ class NeuralNetwork(BaseNeuralNet):
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
             # raise Exception(logging.error('The ANN received empty stimuli.'))
-        
         stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
         inputs = self.encoders.step(stimuli)
         self.stimuli = stimuli.copy()
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
+
         #* --- Apply update rules to synapses ---
-        if self.t > 1 and self.learning_rule is not None:
+        if self.learning_rule is not None and self.t > 1:
             # If reward is None  while learning rule is not, then 
             # assume that it is a non modulated learning rule.
             if reward is None:
                 reward = 1.
             # Use inputs and neuron outputs of previous time step.
-            Delta_W = self.learning_rule.step(self.prev_input, self.spikes, reward=reward)
-            Delta_W = Delta_W * np.sign(self.synapses.weights)
-            # print(Delta_W)
-            # print(np.max(Delta_W))
-            # print(Delta_W)
-            self.synapses.weights += (Delta_W)
-            # self.synapses.weights += (0.001)*(-self.synapses.weights)
-            # Delta_W = self.learnng_rule.step(self.prev_input, self.spikes, reward=reward)
-            # self.synapses.weights += Delta_W
-            self.synapses.weights = np.clip(self.synapses.weights, a_min=-10, a_max=10)
-            # print(np.max(self.synapses.weights))
+            self.synapses = self.learning_rule.step(self.synapses, self.spikes, self.prev_input, reward=reward)
+
         #* --- Step synapses and neurons ---
         spikes_window = []
         for tt, stim in enumerate(inputs):
@@ -175,10 +166,6 @@ class NeuralNetwork(BaseNeuralNet):
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         return actions
     
-    def add_learning_rule(self):
-        #! OJO PROVISIONAL.
-        self.learning_rule = learning_rules['generalized_hebbian']() #TODO decouple, improve.
-
     def reset(self):
         """ Reset process of all the neural network dynamics. """
         self.t = 0

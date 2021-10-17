@@ -2,6 +2,8 @@ import logging
 import numpy as np
 from itertools import product
 
+from mereli.neural_networks.update_rules.update_rules import LearningRuleWrapper
+
 
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
@@ -24,7 +26,7 @@ class BaseNeuralNet:
         
         self.encoders = EncodingWrapper() if encoders is None else encoders
         self.decoders = DecodingWrapper() if decoders is None else encoders 
-
+        
         #* Overall ANN directed graph description.
         self.graph = {'inputs' : {}, 'neurons' : {}, 'synapses' : {}}
         self.ensemble_names = [] # List of names of all non-input ensembles.
@@ -98,6 +100,7 @@ class BaseNeuralNet:
         for stim in self.stimuli_names:
             if stim not in self.encoders.all:
                 self.add_encoder('IdentityEncoding', stim)
+        #* Build learning rule if required.
         if self.learning_rule is not None:
             self.learning_rule.build(self.graph)
         #TODO --- Create Monitor (DEBUG MODE) ---
@@ -224,7 +227,7 @@ class BaseNeuralNet:
                 self.delete_synapse(syn_name)
 
     def add_synapse(self, name, pre, post, weight=1., conn_prob=1., 
-            trainable=True, use_seed=False, **kwargs):
+            trainable=True, use_seed=False,  learning_rule=None, **kwargs):
         """ Adds a new group of synapses between neurons in ensembles ``pre`` and ``post``. 
 
         :param str name: name of the synapse group. Individual synapses in group are called name_i, where 
@@ -259,7 +262,6 @@ class BaseNeuralNet:
             post = [name for name, node in {**self.graph['inputs'], **self.graph['neurons']}.items() if node['ensemble'] == post]
         else:
             post = [post]
-
         #* Add individual Synapses
         #! REVISAR SEED
         if use_seed:
@@ -272,16 +274,22 @@ class BaseNeuralNet:
                     'weight': weight if weight is not 'random' else  0.1 * np.random.randn(), 
                     'trainable' : trainable,
                     'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}
-                if self.learning_rule is not None:
-                    synapse_config.update({'learning_rule' : {p : 0. for p in ['A', 'B', 'C', 'D']}})
                 if self.synapse_model == 'dynamic_synapse':
                     #! Add min and max possible delays?
                     synapse_config.update({'delay' : np.random.randint(1, 10)})
                 syn_name = name+'_'+str(i) if len(pre + post) > 2 else name #  "{}_{}".format(name, i) 
                 self.graph['synapses'][syn_name] = {**synapse_config, **kwargs}
+                if learning_rule is not None:
+                    self.add_learning_rule(syn_name, learning_rule)
         if use_seed:
             np.random.seed(None)
 
+    def add_learning_rule(self, synapse_name, rule_name, **lr_params):
+        if self.learning_rule is None:
+            self.learning_rule = LearningRuleWrapper()
+        self.learning_rule.add_rule(synapse_name, rule_name)
+        
+        self.graph['synapses'][synapse_name]['learning_rule'] = {'name' : rule_name, 'params' : lr_params}
 
     def delete_synapse(self, name):
         """ Removes an existing synapse from the ANN. 
