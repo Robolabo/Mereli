@@ -51,8 +51,48 @@ class BaseLearningRule:
 
     def reset(self):
         pass
-        
 
+     #! OJO refactorizar queries!!!!
+    @GET("learning_rule:learning_rate")
+    def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+        assert conn_name == 'all'
+        #* Return scaled in [0,1]
+        if conn_name == 'all':
+            params = np.array([syn['learning_rule']['learning_rate'] for syn in ann_graph['synapses'].values()])
+            return (params - min_val) / (max_val - min_val)
+
+    
+
+    @SET("learning_rule:learning_rate")
+    def set_params(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
+        """
+        """
+        assert conn_name == 'all'
+        #* rescale genotype segment to weight range
+        data = min_val + data * (max_val - min_val)
+        if conn_name == 'all':
+            for i, param in enumerate(['A', 'B', 'C', 'D']):
+                param_data = data[i * len(data) // 4 : (i + 1) * len(data) // 4]
+                for val, syn in zip(param_data, filter(lambda x: x['trainable'], ann_graph['synapses'].values())):
+                    syn['learning_rule'][param] = val
+            return ann_graph
+   
+    @INIT("learning_rule:learning_rate")
+    def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+        """
+        """
+        params_len = self.len_params(conn_name, ann_graph)
+        random_params = 0.5 + np.random.randn(params_len) * 0.2
+        random_params = np.clip(random_params, a_min=0, a_max=1)
+        return self.set_params(conn_name, ann_graph, random_params, min_val=min_val, max_val=max_val)
+
+    @LEN("learning_rule:params")
+    def len_params(self, conn_name, ann_graph, only_trainable=True):
+        """
+        """
+        return self.get_params(conn_name, ann_graph, only_trainable=True).shape[0]
+
+        
 
 
 @learning_rule_registry(name='simple_hebb')
@@ -77,6 +117,15 @@ class ModulatedSimpleHebbian(SimpleHebbian):
         return reward * super().step(*args)
 
 
+@learning_rule_registry(name='generalized_hebb')
+class ModulatedSimpleHebbian(BaseLearningRule):
+    def __init__(self):
+        super(ModulatedSimpleHebbian, self).__init__()
+        self.modulated = True #!
+
+    def step(self, *args, reward=None):
+        assert reward is not None
+        return reward * super().step(*args)
 
 
 

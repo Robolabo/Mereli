@@ -162,7 +162,7 @@ class GotoLight:
             if t < 100:#antes a 100
                 rad_ball = -(3/100) * t + 3
                 fA = np.clip(1 - (distances / rad_ball), a_max=1, a_min=0).mean()
-            # fitness += fA
+            # fitness += 
             fitness += fA
         # return (fitness / len(states)) + 1e-5
         return (fitness / len(states)) + 1e-5
