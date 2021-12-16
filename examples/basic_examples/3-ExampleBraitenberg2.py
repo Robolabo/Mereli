@@ -19,8 +19,8 @@ world.register_entity('swarm_0', ent, group='swarm')
 
 ls = LightSource([2,2,1.5], [0,0,0], color='red', range=5.)
 world.register_entity('light_red', ls, group='light_sources')
-# ls = LightSource([-2,2,1.5], [0,0,0], color='red', range=5.)
-# world.register_entity('light_red2', ls, group='light_sources')
+ls = LightSource([-2,2,1.5], [0,0,0], color='red', range=5.)
+world.register_entity('light_red2', ls, group='light_sources')
 # ls = LightSource([0,-1,1], [0,0,0], color='red', range=10.)
 # world.register_entity('light_red3', ls, group='light_sources')
 

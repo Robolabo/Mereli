@@ -1,0 +1,37 @@
+{
+    "topology" : {
+    },
+    "algorithm" : {
+    },
+    "world": {
+        "name" : "square_arena",
+        "arena_params" : {
+            "height":7,
+            "width": 7
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.02,
+        "T_control" : 0.14,
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 5,
+                "controller" : "basic_obstable_avoider",
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 1}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
+                    "led_actuator" : {}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+          
+        }
+    }
+}

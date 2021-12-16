@@ -10,7 +10,7 @@ from mereli.utils.initializers import FixedInitializer, RandomUniformInitializer
 
 global_states.set_states(render=True, debug=True)
 
-n_robots = 15
+n_robots = 5
 # Create physics engine with 0.02sec of discretization and a period the robot
 # control loop of 0.14sec.
 phy_engine = PybulletEngine(dt=0.02, T_control=0.14)
