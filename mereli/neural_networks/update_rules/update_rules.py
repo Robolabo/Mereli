@@ -15,10 +15,11 @@ class LearningRuleWrapper:
             self._rules[rule_name] = lr_instance
 
     def build(self, ann_graph):
-        """  """
+        """  """    
         ref_mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False) 
         for rule in self._rules.values():
             rule.mask = ref_mask.copy()
+            rule.weights = ref_mask.astype(float)
         n_inputs = len(ann_graph['inputs'])
         for syn in ann_graph['synapses'].values():
             if syn['enabled']:
@@ -26,10 +27,13 @@ class LearningRuleWrapper:
                     pre_idx = ann_graph['inputs'][syn['pre']]['idx']
                 else:
                     pre_idx = ann_graph['neurons'][syn['pre']]['idx'] + n_inputs
-                post_idx = ann_graph['neurons'][syn['post']]['idx'] 
-                learning_rule = syn['learning_rule']
-                self._rules[learning_rule['name']].mask[post_idx, pre_idx] = True
-
+                post_idx = ann_graph['neurons'][syn['post']]['idx']
+                if 'learning_rule' in syn:
+                    self._rules[syn['learning_rule']['name']].mask[post_idx, pre_idx] = True                
+                    self._rules[syn['learning_rule']['name']].weights[post_idx, pre_idx] = syn['learning_rule']['weight']
+        # Run specific build methods of each rule
+        for rule in self._rules.values():
+            rule.build()
 
     def step(self, synapses, activities, stimuli, reward=None):
         Weight_Delta = np.zeros_like(synapses.weights)
@@ -39,32 +43,110 @@ class LearningRuleWrapper:
         synapses.weights = np.clip(synapses.weights, a_min=-10, a_max=10)
         return synapses
     
+    @property
+    def weights(self):
+        return np.sum([rule.weights * rule.mask for rule in self._rules], 0)
+    
+
     def reset(self):
         pass
+
+    @GET("learning_rule:weights")
+    def get_weights(self, conn_name, ann_graph, min_val=-1, max_val=1.):
+        #* Return scaled in [0,1]
+        if conn_name == 'all':
+            
+            weights = np.array([syn['learning_rule']['weight'] for syn in \
+                filter(lambda x: x['trainable'] and 'learning_rule' in x, ann_graph['synapses'].values())  ])
+            return (weights - min_val) / (max_val - min_val)
+        #* Special queries of synapses
+        conn_name = {
+            'sensory' : [key for key, syn in ann_graph['synapses'].items()\
+                            if syn['pre'] in ann_graph['inputs']],
+            'hidden' : [key for key, syn in ann_graph['synapses'].items()\
+                        if syn['pre'] in ann_graph['neurons']\
+                        and not ann_graph['neurons'][syn['pre']]['is_motor']],
+            'motor' : [key for key, syn in ann_graph['synapses'].items()\
+                        if syn['pre'] in ann_graph['neurons']\
+                        and ann_graph['neurons'][syn['pre']]['is_motor']]
+        }.get(conn_name, [conn_name])
+        weights = np.array([ann_graph['synapses'][name]['learning_rule']['weight']\
+                for name in conn_name if ann_graph['synapses'][name]['trainable']])
+        return (weights - min_val) / (max_val - min_val)
+
+    @SET("learning_rule:weights")
+    def set_weights(self, conn_name, ann_graph, data, min_val=-1, max_val=1.,):
+        """
+        """
+        #* rescale genotype segment to weight range
+        data = min_val + data * (max_val - min_val)
+        if conn_name == 'all':
+            for w, syn in zip(data, filter(lambda x: x['trainable'] and 'learning_rule' in x, ann_graph['synapses'].values())):
+                syn['learning_rule']['weight'] = w
+            return ann_graph
+        else:
+            #* Special queries of synapses
+            conn_name = {
+                'sensory' : [key for key, syn in ann_graph['synapses'].items()\
+                                if syn['pre'] in ann_graph['inputs']],
+                'hidden' : [key for key, syn in ann_graph['synapses'].items()\
+                            if syn['pre'] in ann_graph['neurons']\
+                            and not ann_graph['neurons'][syn['pre']]['is_motor']],
+                'motor' : [key for key, syn in ann_graph['synapses'].items()\
+                            if syn['pre'] in ann_graph['neurons']\
+                            and ann_graph['neurons'][syn['pre']]['is_motor']]
+            }.get(conn_name, [conn_name])
+            for w, syn_name in zip(data, conn_name):
+                if ann_graph['synapses'][syn_name]['trainable'] and 'learning_rule' in ann_graph['synapses'][syn_name]:
+                    ann_graph['synapses'][syn_name]['learning_rule']['weight'] = w
+            return ann_graph
+
+    @INIT('learning_rule:weights')
+    def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1.):
+        """
+        """
+        weights_len = self.len_weights(conn_name, ann_graph)
+        random_weights = np.random.randn(weights_len)
+        random_weights = np.clip(random_weights, a_min=-4, a_max=4)
+        return self.set_weights(conn_name, ann_graph, random_weights,\
+                            min_val=min_val, max_val=max_val)
+
+    @LEN('learning_rule:weights')
+    def len_weights(self, conn_name, ann_graph):
+        """
+        """
+        return self.get_weights(conn_name, ann_graph).shape[0]
+
+
+
 
 class BaseLearningRule:
     def __init__(self):
+        # boolean mask, with the same shape as weight adjacency matrix, that states if the connection 
+        # has the learning rule attached.
         self.mask = None
+        self.weights = None
 
     def step(self, weights, activities, stimuli, reward=None):
+        pass
+    
+    def build(self):
         pass
 
     def reset(self):
         pass
 
-     #! OJO refactorizar queries!!!!
+    #! OJO refactorizar queries!!!!
     @GET("learning_rule:learning_rate")
-    def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+    def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         assert conn_name == 'all'
         #* Return scaled in [0,1]
         if conn_name == 'all':
             params = np.array([syn['learning_rule']['learning_rate'] for syn in ann_graph['synapses'].values()])
             return (params - min_val) / (max_val - min_val)
 
-    
-
     @SET("learning_rule:learning_rate")
-    def set_params(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
+    def set_weights(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
         """
         """
         assert conn_name == 'all'
@@ -78,7 +160,7 @@ class BaseLearningRule:
             return ann_graph
    
     @INIT("learning_rule:learning_rate")
-    def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+    def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """
         """
         params_len = self.len_params(conn_name, ann_graph)
@@ -86,26 +168,31 @@ class BaseLearningRule:
         random_params = np.clip(random_params, a_min=0, a_max=1)
         return self.set_params(conn_name, ann_graph, random_params, min_val=min_val, max_val=max_val)
 
-    @LEN("learning_rule:params")
-    def len_params(self, conn_name, ann_graph, only_trainable=True):
+    @LEN("learning_rule:learning_rate")
+    def len_weights(self, conn_name, ann_graph, only_trainable=True):
         """
         """
         return self.get_params(conn_name, ann_graph, only_trainable=True).shape[0]
 
         
-
-
 @learning_rule_registry(name='simple_hebb')
 class SimpleHebbian(BaseLearningRule):
     def __init__(self):
         super(SimpleHebbian, self).__init__()
         self.modulated = False #!
-        self.learning_rate = 1e-5
+        self.learning_rate = 1
+        self.rule_weights = None
 
     def step(self, weights, activities, stimuli, reward=None):
-        return self.learning_rate * np.outer(activities, np.r_[stimuli, activities])
+        # return self.learning_rate * self.mask * self.weights * np.outer(activities, np.r_[stimuli, activities])
+        W_tar = self.weights * np.outer(activities, np.r_[stimuli, activities])
+        return self.learning_rate * self.mask * (-weights + W_tar)
 
+    def build(self):
+        # import pdb; pdb.set_trace()
+        pass
 
+    
 @learning_rule_registry(name='modulated_simple_hebb')
 class ModulatedSimpleHebbian(SimpleHebbian):
     def __init__(self):
@@ -115,6 +202,8 @@ class ModulatedSimpleHebbian(SimpleHebbian):
     def step(self, *args, reward=None):
         assert reward is not None
         return reward * super().step(*args)
+
+
 
 
 @learning_rule_registry(name='generalized_hebb')
@@ -218,59 +307,59 @@ class GeneralizedHebbian:
         self.activities_queue = deque([])
         self.inputs_queue = deque([])
 
-    #! OJO refactorizar queries!!!!
-    @GET("learning_rule:params")
-    def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
-        #* Return scaled in [0,1]
-        if conn_name == 'all':
-            params = np.hstack([np.array([syn['learning_rule'][param] for syn in ann_graph['synapses'].values()\
-                    if syn['trainable']]) for param in ['A', 'B', 'C', 'D']])
-            return (params - min_val) / (max_val - min_val)
-        #* Special queries of synapses
-        conn_name = {
-            'sensory' : [key for key, syn in ann_graph['synapses'].items()\
-                            if syn['pre'] in ann_graph['inputs']],
-            'hidden' : [key for key, syn in ann_graph['synapses'].items()\
-                        if syn['pre'] in ann_graph['neurons']\
-                        and not ann_graph['neurons'][syn['pre']]['is_motor']],
-            'motor' : [key for key, syn in ann_graph['synapses'].items()\
-                        if syn['pre'] in ann_graph['neurons']\
-                        and ann_graph['neurons'][syn['pre']]['is_motor']]
-        }.get(conn_name, [conn_name])
-        weights = np.hstack([np.array([ann_graph['synapses'][name]['learning_rule'][param] for name in conn_name\
-                    if not only_trainable or ann_graph['synapses'][name]['trainable']]) for param in ['A', 'B', 'C', 'D']])
-        return (weights - min_val) / (max_val - min_val)
+    # #! OJO refactorizar queries!!!!
+    # @GET("learning_rule:params")
+    # def get_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+    #     #* Return scaled in [0,1]
+    #     if conn_name == 'all':
+    #         params = np.hstack([np.array([syn['learning_rule'][param] for syn in ann_graph['synapses'].values()\
+    #                 if syn['trainable']]) for param in ['A', 'B', 'C', 'D']])
+    #         return (params - min_val) / (max_val - min_val)
+    #     #* Special queries of synapses
+    #     conn_name = {
+    #         'sensory' : [key for key, syn in ann_graph['synapses'].items()\
+    #                         if syn['pre'] in ann_graph['inputs']],
+    #         'hidden' : [key for key, syn in ann_graph['synapses'].items()\
+    #                     if syn['pre'] in ann_graph['neurons']\
+    #                     and not ann_graph['neurons'][syn['pre']]['is_motor']],
+    #         'motor' : [key for key, syn in ann_graph['synapses'].items()\
+    #                     if syn['pre'] in ann_graph['neurons']\
+    #                     and ann_graph['neurons'][syn['pre']]['is_motor']]
+    #     }.get(conn_name, [conn_name])
+    #     weights = np.hstack([np.array([ann_graph['synapses'][name]['learning_rule'][param] for name in conn_name\
+    #                 if not only_trainable or ann_graph['synapses'][name]['trainable']]) for param in ['A', 'B', 'C', 'D']])
+    #     return (weights - min_val) / (max_val - min_val)
     
 
-    @SET("learning_rule:params")
-    def set_params(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
-        """
-        """
-        #* rescale genotype segment to weight range
-        data = min_val + data * (max_val - min_val)
-        if conn_name == 'all':
-            for i, param in enumerate(['A', 'B', 'C', 'D']):
-                param_data = data[i * len(data) // 4 : (i + 1) * len(data) // 4]
-                for val, syn in zip(param_data, filter(lambda x: x['trainable'], ann_graph['synapses'].values())):
-                    syn['learning_rule'][param] = val
-            return ann_graph
-        else:
-            raise NotImplementedError #!!!
+    # @SET("learning_rule:params")
+    # def set_params(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
+    #     """
+    #     """
+    #     #* rescale genotype segment to weight range
+    #     data = min_val + data * (max_val - min_val)
+    #     if conn_name == 'all':
+    #         for i, param in enumerate(['A', 'B', 'C', 'D']):
+    #             param_data = data[i * len(data) // 4 : (i + 1) * len(data) // 4]
+    #             for val, syn in zip(param_data, filter(lambda x: x['trainable'], ann_graph['synapses'].values())):
+    #                 syn['learning_rule'][param] = val
+    #         return ann_graph
+    #     else:
+    #         raise NotImplementedError #!!!
    
-    @INIT("learning_rule:params")
-    def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
-        """
-        """
-        params_len = self.len_params(conn_name, ann_graph)
-        random_params = 0.5 + np.random.randn(params_len) * 0.2
-        random_params = np.clip(random_params, a_min=0, a_max=1)
-        return self.set_params(conn_name, ann_graph, random_params, min_val=min_val, max_val=max_val)
+    # @INIT("learning_rule:params")
+    # def init_params(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
+    #     """
+    #     """
+    #     params_len = self.len_params(conn_name, ann_graph)
+    #     random_params = 0.5 + np.random.randn(params_len) * 0.2
+    #     random_params = np.clip(random_params, a_min=0, a_max=1)
+    #     return self.set_params(conn_name, ann_graph, random_params, min_val=min_val, max_val=max_val)
 
-    @LEN("learning_rule:params")
-    def len_params(self, conn_name, ann_graph, only_trainable=True):
-        """
-        """
-        return self.get_params(conn_name, ann_graph, only_trainable=True).shape[0]
+    # @LEN("learning_rule:params")
+    # def len_params(self, conn_name, ann_graph, only_trainable=True):
+    #     """
+    #     """
+    #     return self.get_params(conn_name, ann_graph, only_trainable=True).shape[0]
 
 
 

@@ -88,7 +88,7 @@ class NeuralNetwork(BaseNeuralNet):
         synapses = synapse_models[self.synapse_model](self.dt)
         super(NeuralNetwork, self).__init__(neurons, synapses, encoders=EncodingWrapper(self.time_scale))
         self.learning_rule = None #! OJO: provisional
-
+        self.ww_buffer = []
 
     @increase_time
     @monitor
@@ -164,6 +164,7 @@ class NeuralNetwork(BaseNeuralNet):
             import pdb; pdb.set_trace()
         # actions['outA'] = [0,0]
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
+        self.ww_buffer.append(self.weights)
         return actions
     
     def reset(self):

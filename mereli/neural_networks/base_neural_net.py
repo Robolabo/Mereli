@@ -281,15 +281,22 @@ class BaseNeuralNet:
                 self.graph['synapses'][syn_name] = {**synapse_config, **kwargs}
                 if learning_rule is not None:
                     self.add_learning_rule(syn_name, learning_rule)
+                    # synapse_config['learning_rule'] = learning_rule
+               
         if use_seed:
             np.random.seed(None)
 
-    def add_learning_rule(self, synapse_name, rule_name, **lr_params):
+    def add_learning_rule(self, synapse_name, rule_name, weight=1,  **lr_params):
         if self.learning_rule is None:
             self.learning_rule = LearningRuleWrapper()
         self.learning_rule.add_rule(synapse_name, rule_name)
         
-        self.graph['synapses'][synapse_name]['learning_rule'] = {'name' : rule_name, 'params' : lr_params}
+        self.graph['synapses'][synapse_name]['learning_rule'] = {
+            'name' : rule_name, 
+            'weight' : weight,
+            # 'learning_rate' 
+        }
+
 
     def delete_synapse(self, name):
         """ Removes an existing synapse from the ANN. 

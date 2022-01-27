@@ -56,6 +56,6 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         world.reset()
         while(True):
             state, action = world.step()
-
+            print(world.robots['robotA_0'].position)
 if __name__ == "__main__":
     main()

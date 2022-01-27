@@ -83,9 +83,11 @@ class NEATInterface(GeneticInterface):
     def fromGenotype(self, queries, genotype, min_vals, max_vals):
         """ Converts a genotype into a phenotype or, in this case, structured ANN.
         """
-        effective_genotype = copy.deepcopy(genotype)        
+        effective_genotype = copy.deepcopy(genotype)  
+             
         #* Clean previous architecture
         self.neural_net.reset_graph()
+
         #* Add neurons
         for node in effective_genotype.nodes:
             if node.name in self.neural_net.graph['neurons']:
@@ -101,7 +103,8 @@ class NEATInterface(GeneticInterface):
                 self.neural_net.set_motor(node.ensemble)
         for conn in effective_genotype.enabled_connections:
             self.neural_net.add_synapse(conn.name, conn.pre, conn.post, weight=conn.weight)
-            #! OJO meter aqui learning rule
+            if conn.learning_rule:
+                self.neural_net.add_learning_rule(conn.name, conn.learning_rule['name'], conn.learning_rule['weight'])
         #* Update parameters (Decoders and encoders not supported yet).
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
@@ -109,17 +112,18 @@ class NEATInterface(GeneticInterface):
             if variable == 'weights': 
                 variable = 'weight'
             if 'learning_rule' in query:
-                genotype_segment = np.array([[gene.learning_rule[v] for gene in effective_genotype.connections] for v in ['A', 'B', 'C', 'D']]).flatten()
+                genotype_segment = np.array([gene.learning_rule['weight'] for gene in filter(lambda x: x.learning_rule, effective_genotype.connections)]).flatten()
             else:
                 genotype_segment = np.array([getattr(gene, variable) for gene in getattr(genotype, gene_type)])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)
-
         self.neural_net.build() #* Compile changes.
+        
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.
         """
+        
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             self.neural_net.graph = self.submit_query(query, primitive='INIT', min_val=min_val, max_val=max_val)
         self.neural_net.build()

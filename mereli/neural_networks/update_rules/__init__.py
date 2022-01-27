@@ -1,1 +1,1 @@
-from .update_rules import GeneralizedHebbian, BufferedHebb
+from .update_rules import LearningRuleWrapper, BaseLearningRule, SimpleHebbian
