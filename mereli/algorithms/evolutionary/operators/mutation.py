@@ -31,8 +31,8 @@ def add_node(genotype, current_innovation, innovation_history, node_variables, *
         new_conn.innovation = innovation_history.get((pre, post), current_innovation) #!check
         new_conn.idx = genotype.num_connections
         if sel_conn.learning_rule is not None:
-            new_conn.learning_rule = (sel_conn.learning_rule, {v : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)\
-                                        for v in ['A', 'B', 'C', 'D']})[n]
+            new_lr = {'name' : 'simple_hebb', 'weight' : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)}
+            new_conn.learning_rule = (sel_conn.learning_rule, new_lr)[n]
         genotype.add_connection(new_conn)
         #* Update innovation dict
         if (pre, post) not in innovation_history:
@@ -58,7 +58,7 @@ def add_connection(genotype, input_nodes, current_innovation, innovation_history
     new_connection.pre = new_conn[0]
     new_connection.post = new_conn[1]
     new_connection.weight = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1) # Random weight in [0,1] (denormalized later).
-    new_connection.learning_rule = {v : np.random.random() for v in ['A', 'B', 'C', 'D']}
+    new_connection.learning_rule = {'name' : 'simple_hebb', 'weight' : np.random.random()}
     new_connection.innovation = innovation_history.get((new_conn[0], new_conn[1]), current_innovation)
     new_connection.idx = len([*genotype.connections])
 
@@ -103,17 +103,13 @@ def neat_mutation(population, input_nodes, current_innovation, innovation_histor
                 if np.random.random() < 0.02:
                     if 'learning_rule' in param:
                         assert type(gene).__name__ == 'ConnectionGene'
-                        setattr(gene, 'learning_rule', {v : np.random.random() for v in ['A', 'B', 'C', 'D']})
+                        setattr(gene, 'learning_rule', {'name' : 'simple_hebb', 'weight' : np.random.random()})
                     else:
                         setattr(gene, variable, np.random.random())
                 else:
                     if 'learning_rule' in param:
                         assert type(gene).__name__ == 'ConnectionGene'
-                        new_value = {}
-                        for v in ['A', 'B', 'C', 'D']:
-                            current_val = getattr(gene, 'learning_rule')[v]
-                            new_value[v] = np.clip(current_val + np.random.randn() * .05, a_min=0, a_max=1)
-                        setattr(gene, 'learning_rule', new_value)
+                        gene.learning_rule['weight'] = np.clip(gene.learning_rule['weight'] + np.random.randn() * .05, a_min=0, a_max=1)
                     else:
                         current_value = getattr(gene, variable)
                         setattr(gene, variable, np.clip(current_value + np.random.randn() * 0.05, a_min=0, a_max=1))

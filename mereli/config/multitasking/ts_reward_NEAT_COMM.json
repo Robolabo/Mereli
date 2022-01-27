@@ -122,7 +122,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 20,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
