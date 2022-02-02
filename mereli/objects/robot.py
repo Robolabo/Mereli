@@ -64,8 +64,9 @@ class Robot(WorldObject):
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Add reward as a new state entry.
+        
         if reward is not None:
-            state['reward'] = reward
+            state['reward'] = reward[0]
 
         #* Apply perturbations to stimuli 
         if perturbations is not None:
@@ -78,6 +79,7 @@ class Robot(WorldObject):
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
+        
         #* Apply communication system pre step (previous to controller) 
         if self.comm_sys is not None:
             actions = self.comm_sys.step_post(actions)

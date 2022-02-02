@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_ts_reward_NEAT_COMM",
+    "checkpoint_file" : "chk_ts_HEBBreward_1bot",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -9,18 +9,14 @@
             "I3" : {"n" : 8, "sensor" : "blue_light_sensor"},
             "I4" : {"n" : 8, "sensor" : "green_light_sensor"},
             "I5" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I6" : {"n" : 8, "sensor" : "IR_receiver:msg"},
             "I7" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_COMM" : {"n" : 1, "params" : {}}
-        },
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}        },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
         },
         "synapses" :  {
             "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
@@ -28,20 +24,10 @@
             "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
             "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
             "I5-O" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I6-O" : {"pre":"I6","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I7-O" : {"pre":"I7","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"}, 
-
-            "I1-COMM" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I2-COMM" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I3-COMM" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I4-COMM" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I5-COMM" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I6-COMM" : {"pre":"I6","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"},
-            "I7-COMM" : {"pre":"I7","post":"OUT_COMM", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"}
+            "I7-O" : {"pre":"I7","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "simple_hebb"}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         },
         "learning_rule" : {
             "reward" : "task_switching_lights"
@@ -49,7 +35,7 @@
     },
     "world": {
         "name" : "square_arena",
-        "arena_params" : {
+    "arena_params" : {
             "height":7,
             "width": 7
         },
@@ -59,24 +45,21 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 2, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 2},
                     "task_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
-                    "IR_transmitter" : {"range" : 2, "msg_length":1},
-                    "led_actuator" : {}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "comm_sys" : {"name" :"IR_comm", "params" : {}},
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [0,1], "stimuli" : "reward", "replace_value" : 0}},
+                "perturbations" : {},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
