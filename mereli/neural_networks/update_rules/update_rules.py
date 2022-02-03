@@ -30,7 +30,7 @@ class LearningRuleWrapper:
                 post_idx = ann_graph['neurons'][syn['post']]['idx']
                 if 'learning_rule' in syn:
                     self._rules[syn['learning_rule']['name']].mask[post_idx, pre_idx] = True                
-                    self._rules[syn['learning_rule']['name']].weights[post_idx, pre_idx] = syn['learning_rule']['weight']
+                    self._rules[syn['learning_rule']['name']].weights[post_idx, pre_idx] = syn['learning_rule']['lr_weight']
         # Run specific build methods of each rule
         for rule in self._rules.values():
             rule.build()
@@ -51,12 +51,12 @@ class LearningRuleWrapper:
     def reset(self):
         pass
 
-    @GET("learning_rule:weights")
+    @GET("learning_rule:lr_weights")
     def get_weights(self, conn_name, ann_graph, min_val=-1, max_val=1.):
         #* Return scaled in [0,1]
         if conn_name == 'all':
             
-            weights = np.array([syn['learning_rule']['weight'] for syn in \
+            weights = np.array([syn['learning_rule']['lr_weight'] for syn in \
                 filter(lambda x: x['trainable'] and 'learning_rule' in x, ann_graph['synapses'].values())  ])
             return (weights - min_val) / (max_val - min_val)
         #* Special queries of synapses
@@ -70,11 +70,11 @@ class LearningRuleWrapper:
                         if syn['pre'] in ann_graph['neurons']\
                         and ann_graph['neurons'][syn['pre']]['is_motor']]
         }.get(conn_name, [conn_name])
-        weights = np.array([ann_graph['synapses'][name]['learning_rule']['weight']\
+        weights = np.array([ann_graph['synapses'][name]['learning_rule']['lr_weight']\
                 for name in conn_name if ann_graph['synapses'][name]['trainable']])
         return (weights - min_val) / (max_val - min_val)
 
-    @SET("learning_rule:weights")
+    @SET("learning_rule:lr_weights")
     def set_weights(self, conn_name, ann_graph, data, min_val=-1, max_val=1.,):
         """
         """
@@ -82,7 +82,7 @@ class LearningRuleWrapper:
         data = min_val + data * (max_val - min_val)
         if conn_name == 'all':
             for w, syn in zip(data, filter(lambda x: x['trainable'] and 'learning_rule' in x, ann_graph['synapses'].values())):
-                syn['learning_rule']['weight'] = w
+                syn['learning_rule']['lr_weight'] = w
             return ann_graph
         else:
             #* Special queries of synapses
@@ -98,20 +98,20 @@ class LearningRuleWrapper:
             }.get(conn_name, [conn_name])
             for w, syn_name in zip(data, conn_name):
                 if ann_graph['synapses'][syn_name]['trainable'] and 'learning_rule' in ann_graph['synapses'][syn_name]:
-                    ann_graph['synapses'][syn_name]['learning_rule']['weight'] = w
+                    ann_graph['synapses'][syn_name]['learning_rule']['lr_weight'] = w
             return ann_graph
 
-    @INIT('learning_rule:weights')
+    @INIT('learning_rule:lr_weights')
     def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1.):
         """
         """
         weights_len = self.len_weights(conn_name, ann_graph)
         random_weights = np.random.randn(weights_len)
-        random_weights = np.clip(random_weights, a_min=-4, a_max=4)
+        random_weights = np.clip(random_weights, a_min=0, a_max=1)
         return self.set_weights(conn_name, ann_graph, random_weights,\
                             min_val=min_val, max_val=max_val)
 
-    @LEN('learning_rule:weights')
+    @LEN('learning_rule:lr_weights')
     def len_weights(self, conn_name, ann_graph):
         """
         """

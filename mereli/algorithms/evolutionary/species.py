@@ -1,4 +1,5 @@
 import logging
+from itertools import chain
 import numpy as np
 
 class Species:
@@ -37,22 +38,41 @@ class Species:
 
         repr_innovations = set(g.innovation for g in self.representative.connections)
         genotype_innovations = set(g.innovation for g in genotype.connections)
+        repr_nodes = set(g.name for g in self.representative.nodes)
+        geno_nodes = set(g.name for g in genotype.nodes)
 
         # Do not care about disjoint and excess. For the moment we use same weights.
         diff_genes = genotype_innovations - repr_innovations
         common_genes = genotype_innovations.intersection(repr_innovations)
-        weights_repr = np.array([g.weight for g in self.representative.connections if g.innovation in common_genes])
-        weights_genotype = np.array([g.weight for g in genotype.connections if g.innovation in common_genes])
-        if len(weights_repr) != len(weights_genotype):
-            print(len(weights_repr), len(weights_genotype))
-            import pdb; pdb.set_trace()
-        assert len(weights_repr) == len(weights_genotype)
-        # W_dist = np.abs(weights_repr.mean() - weights_genotype.mean()) #!CHECK
-        W_dist = np.linalg.norm(weights_repr - weights_genotype) / np.sqrt(len(weights_genotype))
-        # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
-        #         + self.c3 * W_dist
-        dist = 2 * self.c1 * len(diff_genes) / max(len(repr_innovations), len(genotype_innovations)) + self.c3 * W_dist
-        return dist < self.compatib_thresh, dist
+
+        
+        param_distance = 0
+        conn_params = [*genotype.connections][0].parameters
+        node_params = [*genotype.nodes][0].parameters
+        #* Connection parameter's distance 
+        for param in conn_params:
+            param_repr = np.array([g.parameters[param] for g in self.representative.connections
+                                    if g.innovation in common_genes])
+            param_genotype = np.array([g.parameters[param] for g in genotype.connections 
+                                    if g.innovation in common_genes])
+            assert len(param_repr) == len(param_genotype)
+            param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+        param_distance /= 2 * len(conn_params)
+        #* Node parameter's distance 
+        for param in node_params:
+            param_repr = np.array([self.representative.get_node(node).parameters[param] 
+                        for node in geno_nodes.intersection(repr_nodes)])
+            param_genotype = np.array([genotype.get_node(node).parameters[param]
+                        for node in geno_nodes.intersection(repr_nodes)])
+            assert len(param_repr) == len(param_genotype)
+            param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+        param_distance /= 2 * len(node_params) 
+        
+        #* Topological distance
+        arch_distance = len(diff_genes) / max(len(repr_innovations), len(genotype_innovations))
+
+        total_dist = 2 * self.c1 * arch_distance + self.c3 * param_distance
+        return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):
         self.history['num_genotypes'].append(self.num_genotypes)

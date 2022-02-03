@@ -55,51 +55,6 @@ class BaseGene:
         self._min_dec_val = new_min
 
 
-class NodeGene(BaseGene):
-    def __init__(self, name, *args,  **kwargs):
-        super(NodeGene, self).__init__(*args, **kwargs)
-        self.name = name
-        self.ensemble = name
-        self.idx = None
-        self.tau = 1.
-        self.bias = 0.
-        self.gain = 1.
-        self.activation = 'sigmoid'
-        self.is_output = False
-        self.enabled = True
-
-    def set_params(self, tau=None, bias=None, gain=None, activation=None):
-        if tau is not None:
-            self.tau = tau
-        if bias is not None:
-            self.bias = bias
-        if gain is not None:
-            self.gain = gain
-        if activation is not None:
-            self.activation = activation
-    # def value(self):
-    #     return {''}
-
-
-    
-class ConnectionGene(BaseGene):
-    def __init__(self, name, *args, 
-            pre=None, post=None, weight=None,
-            **kwargs):
-        super(ConnectionGene, self).__init__(*args, **kwargs)
-        self.name = name
-        self.group = name
-        self.pre = pre
-        self.post = post
-        self.weight = weight
-        self.delay = None
-        self.learning_rule = None
-        self.innovation = None
-        self.idx = None
-        self.enabled = True
-
-    def value(self):
-        return {''}
 
 
 # class BaseGenotype:
@@ -148,10 +103,69 @@ class FixedLenGenotype:
     def fitness(self, fitness_value):
         self._fitness = fitness_value
 
+
+
+class NodeGene(BaseGene):
+    def __init__(self, name, *args,  **kwargs):
+        super(NodeGene, self).__init__(*args, **kwargs)
+        self.name = name
+        self.ensemble = name
+        self.idx = None
+        self.activation = 'sigmoid'
+        self.is_output = False
+        self.enabled = True
+        self.parameters = {}
+
+    def add_parameter(self, name, value):
+        self.parameters[name] = value
+
+    # def set_params(self, tau=None, bias=None, gain=None, activation=None):
+    #     if tau is not None:
+    #         self.tau = tau
+    #     if bias is not None:
+    #         self.bias = bias
+    #     if gain is not None:
+    #         self.gain = gain
+    #     if activation is not None:
+    #         self.activation = activation
+    # def value(self):
+    #     return {''}
+
+
+    
+class ConnectionGene(BaseGene):
+    def __init__(self, name, *args, 
+            pre=None, post=None, 
+            **kwargs):
+        super(ConnectionGene, self).__init__(*args, **kwargs)
+        self.name = name
+        self.group = name
+        self.pre = pre
+        self.post = post
+        self.innovation = None
+        self.idx = None
+        self.enabled = True
+        self.learning_rule = None
+        self.parameters = {}
+
+    def add_parameter(self, name, value):
+        self.parameters[name] = value
+
+    @property
+    def weight(self):
+        return self.parameters.get('weight')
+    
+    @property
+    def has_learning_rule(self):
+        return self.learning_rule is not None
+
+    def value(self):
+        return {''}
+
 class GraphGenotype:
     def __init__(self):
         self._fitness = None
-        self._evolvable_structs = None
+        self._evolvable_structs = None  
         self._node_genes = deque([])
         self._connection_genes = deque([])
         self._species = None
@@ -175,13 +189,14 @@ class GraphGenotype:
         new_gene = ConnectionGene(name)
         new_gene.pre = pre
         new_gene.post = post
-        new_gene.weight = weight
+        if 'learning_rule' in kwargs and kwargs['learning_rule']['name'] is not None:
+            new_gene.learning_rule = kwargs['learning_rule']['name']
         
         for param, val in kwargs.items():
-            if hasattr(new_gene, param):
-                setattr(new_gene, param, val)
+            if hasattr(self, param):
+                setattr(self, param, val)
         self._connection_genes.append(new_gene)
-
+    
     # def delete_connection(self, name):
     #     idx = [conn. for conn in self.connections]
     #     import pdb; pdb.set_trace()

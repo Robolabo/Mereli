@@ -103,6 +103,7 @@ class BaseNeuralNet:
         #* Build learning rule if required.
         if self.learning_rule is not None:
             self.learning_rule.build(self.graph)
+            
         #TODO --- Create Monitor (DEBUG MODE) ---
         # self.output_neurons = remove_duplicates([out['ensemble'] for out in topology['outputs'].values()])
         if logging.root.level == logging.DEBUG:
@@ -293,7 +294,7 @@ class BaseNeuralNet:
         
         self.graph['synapses'][synapse_name]['learning_rule'] = {
             'name' : rule_name, 
-            'weight' : weight,
+            'lr_weight' : weight,
             # 'learning_rate' 
         }
 

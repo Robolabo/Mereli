@@ -1,20 +1,18 @@
-from itertools import product
+from itertools import product, chain
 import numpy as np
 from mereli.algorithms.evolutionary.gene import ConnectionGene
 from mereli.register import evo_operator_registry
-from mereli.utils import ShapeMismatchException
+from mereli.utils import ShapeMismatchException, isinstance_of_any
 from ..gene import ConnectionGene, NodeGene
 
 
-def add_node(genotype, innovation, node_variables, **kwargs):
-    """ Adds a new node in in-between an existing connection. The existing connection 
-    is disabled and two new synapses are included entering and exiting the new node. This 
-    function is mainly designed to fullfill the NEAT node mutation basic requirements. 
+def add_node(genotype, innovation):
+    """ Adds a new node in in-between an existing connection. The existing connection
+    is disabled and two new synapses are included entering and exiting the new node. This
+    function is mainly designed to fullfill the NEAT node mutation basic requirements.
 
     :param GraphGenotype genotype: genotype instance gathering all the connection and node genes.
-    :param Innovation innovation: last innovation index (see NEAT paper) used in a mutation during evolution.
-    :param dict innovation_history: dict containing the history of all the innovation number assigned to traits 
-        of any genotype during the evolution process. 
+    :param Innovation innovation: 
     :param node_variables:
 
     """
@@ -25,28 +23,32 @@ def add_node(genotype, innovation, node_variables, **kwargs):
     node_name = f'Node_{sel_conn.innovation}'
     if genotype.contains_node(node_name):
         return genotype, innovation
-    sel_conn.enabled = False # Disable connection 
+    sel_conn.enabled = False # Disable connection
     new_node = NodeGene(node_name)
     new_node.idx = genotype.num_nodes
     # Initialize randomly node parameters
-    new_node.set_params(**{param : np.random.random() for param in node_variables})
+    for param in np.random.choice([*genotype.nodes]).parameters:
+        new_node.add_parameter(param, np.random.random())
     genotype.add_node(new_node)
 
     #* Add new connections
-    for n, (pre, post) in enumerate(zip([node_name, sel_conn.pre], [sel_conn.post, node_name])):
-        weight = (sel_conn.weight, np.clip(np.random.normal(loc=.5, scale=.1), 0, 1))[n]
-        new_conn = ConnectionGene(f'{pre}-{post}', pre=pre, post=post, weight=weight)
+    for n, (pre, post) in enumerate(zip([node_name, sel_conn.pre], [sel_conn.post, node_name])):        
+        new_conn = ConnectionGene(f'{pre}-{post}', pre=pre, post=post)
         new_conn.idx = genotype.num_connections
         new_conn.innovation = innovation.assign(pre, post)
+        for param in sel_conn.parameters:
+            value = (sel_conn.parameters[param], np.clip(np.random.normal(loc=.5, scale=.1), 0, 1))[n]
+            new_conn.add_parameter(param, value)
+        new_conn.learning_rule = sel_conn.learning_rule
         if sel_conn.learning_rule is not None:
             new_lr = {'name' : 'simple_hebb', 'weight' : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)}
             new_conn.learning_rule = (sel_conn.learning_rule, new_lr)[n]
         genotype.add_connection(new_conn)
     return genotype, innovation
 
-def add_connection(genotype, input_nodes, innovation, **kwargs):
-    """ Add a new gene connection to the genotype. The pre and post 
-    synaptic nodes are selected randomly (validating that the connection does not 
+def add_connection(genotype, input_nodes, innovation):
+    """ Add a new gene connection to the genotype. The pre and post
+    synaptic nodes are selected randomly (validating that the connection does not
     exist).
     """
     node_names = [node.name for node in genotype.nodes]
@@ -61,8 +63,10 @@ def add_connection(genotype, input_nodes, innovation, **kwargs):
     new_connection = ConnectionGene(conn_name)
     new_connection.pre = new_conn[0]
     new_connection.post = new_conn[1]
-    new_connection.weight = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1) # Random weight in [0,1] (denormalized later).
-    new_connection.learning_rule = {'name' : 'simple_hebb', 'weight' : np.random.random()}
+    for param, value in new_connection.parameters.items():
+        #! OJO dim de param.
+        new_value = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1)
+        new_connection.parameters[param] = new_value
     new_connection.idx = len([*genotype.connections])
     new_connection.innovation = innovation.assign(new_connection.pre, new_connection.post)
     return genotype, innovation
@@ -92,41 +96,34 @@ def delete_connection(genotype, input_nodes, **kwargs):
     del genotype['connections'][conn]
 
 
-def neat_mutation(population, input_nodes, innovation, mutable_variables, 
-                    p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
-    for genotype in filter(lambda x: np.random.random() < p_weight_mut, population):
-        #* Parameter Mutations
-        for param in mutable_variables:
-            gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(param.split(':')[0], 'connections')
-            variable = {'weights' : 'weight'}.get(param.split(':')[1], param.split(':')[1])
-            for gene in getattr(genotype, gene_type): 
+def neat_mutation(population, input_nodes, innovation,
+            p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
+    for genotype in population:
+        #*Parameter Mutations
+        # filter(lambda x: np.random.random() < p_weight_mut, population):
+        for gene in chain(genotype.nodes, genotype.connections):
+            for param, value in gene.parameters.items():
+                if np.random.random() > p_weight_mut: 
+                    continue
                 if np.random.random() < 0.02:
-                    if 'learning_rule' in param:
-                        assert type(gene).__name__ == 'ConnectionGene'
-                        setattr(gene, 'learning_rule', {'name' : 'simple_hebb', 'weight' : np.random.random()})
-                    else:
-                        setattr(gene, variable, np.random.random())
+                    new_val = np.random.random(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else np.random.random()
                 else:
-                    if 'learning_rule' in param:
-                        assert type(gene).__name__ == 'ConnectionGene'
-                        gene.learning_rule['weight'] = np.clip(gene.learning_rule['weight'] + np.random.randn() * .05, a_min=0, a_max=1)
-                    else:
-                        current_value = getattr(gene, variable)
-                        setattr(gene, variable, np.clip(current_value + np.random.randn() * 0.05, a_min=0, a_max=1))
-
-    #* Connection mutations
-    for genotype in filter(lambda x: np.random.random() < p_conn_mut, population):
-        genotype, innovation = add_connection(genotype, input_nodes, innovation)
-    #* Node mutations
-    for genotype in filter(lambda x: np.random.random() < p_node_mut, population):
-        genotype, innovation = add_node(genotype, innovation, 
-                [var.split(':')[1] for var in mutable_variables if var.split(':')[0] == 'neurons'])
+                    noise = np.random.randn(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else np.random.randn() 
+                    new_val = np.clip(value + noise * 0.05, a_min=0, a_max=1)
+                gene.parameters[param] = new_val
+        #* Connection mutations
+        if np.random.random() < p_conn_mut:
+            genotype, innovation = add_connection(genotype, input_nodes, innovation)
+            
+        #* Node mutations
+        if np.random.random() < p_node_mut:
+            genotype, innovation = add_node(genotype, innovation)
     return population, innovation
 
 @evo_operator_registry(name='gaussian_mutation')
 def gaussian_mutation(population, mutation_prob=0.05, sigma=0.1, min_vals=0, max_vals=1):
-    """ Gaussian mutation operator for GA. Each genotype gene is mutated with a 
-    probability mutation_prob. Mutation is accomplished by sampling a new gene value 
+    """ Gaussian mutation operator for GA. Each genotype gene is mutated with a
+    probability mutation_prob. Mutation is accomplished by sampling a new gene value
     from a gaussian dist. centered at the gene and with a std. dev. sigma.
     ================================================================================
     - Args:
@@ -148,20 +145,20 @@ def gaussian_mutation(population, mutation_prob=0.05, sigma=0.1, min_vals=0, max
 @evo_operator_registry(name='uniform_mutation')
 def uniform_mutation(population, **kwargs):
 
-    """ TODO revise. 
-    Uniform mutation operator for GA. Each genotype gene is mutated with a 
+    """ TODO revise.
+    Uniform mutation operator for GA. Each genotype gene is mutated with a
     probability mutation_prob. Mutation is accomplished by uniformly resampling the
-    gene within the interval [min_vals[g], max_vals[g]], where min_vals and max_vals 
+    gene within the interval [min_vals[g], max_vals[g]], where min_vals and max_vals
     are the bounds of each gene and g is the gene index.
     ================================================================================
     - Args:
         mutation_prob [float]: probability of mutating a gene.
-        min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be 
-                either a numpy array of same length as the genotype or a float. If float, 
-                it is assumed that all genes have the same min value. 
-        max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be 
-                either a numpy array of same length as the genotype or a float. If float, 
-                it is assumed that all genes have the same max value. 
+        min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be
+                either a numpy array of same length as the genotype or a float. If float,
+                it is assumed that all genes have the same min value.
+        max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be
+                either a numpy array of same length as the genotype or a float. If float,
+                it is assumed that all genes have the same max value.
     - Returns
         new_pop [list of np.ndarray]: list of mutated genotypes.
     ================================================================================
@@ -193,18 +190,18 @@ def uniform_mutation(population, **kwargs):
 
 @evo_operator_registry(name='bitflip_mutation')
 def bitFlip_mutation(population, **kwargs):
-    """ Bit-Flip mutation operator for binary coded GA. Each genotype gene is mutated 
-    with a probability mutation_prob. Mutation is accomplished by flipping the gene 
+    """ Bit-Flip mutation operator for binary coded GA. Each genotype gene is mutated
+    with a probability mutation_prob. Mutation is accomplished by flipping the gene
     bit (0 -> 1 or 1 -> 0).
     ================================================================================
     - Args:
         mutation_prob [float]: probability of mutating a gene.
-        min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be 
-                either a numpy array of same length as the genotype or a float. If float, 
-                it is assumed that all genes have the same min value. 
-        max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be 
-                either a numpy array of same length as the genotype or a float. If float, 
-                it is assumed that all genes have the same max value. 
+        min_vals [float or np.ndarray]: minimum values of uniform mutation. It can be
+                either a numpy array of same length as the genotype or a float. If float,
+                it is assumed that all genes have the same min value.
+        max_vals [float or np.ndarray]: maximum values of uniform mutation. It can be
+                either a numpy array of same length as the genotype or a float. If float,
+                it is assumed that all genes have the same max value.
     - Returns
         new_pop [list of np.ndarray]: list of mutated genotypes.
     ================================================================================

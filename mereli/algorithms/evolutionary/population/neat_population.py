@@ -128,8 +128,7 @@ class NEAT_Population(Population):
             offspring.extend(neat_crossover(parents))
         #* NEAT Mutation
         offspring, self.innovation = neat_mutation(offspring, self.input_nodes, self.innovation, 
-                        self.objects, p_weight_mut=self.p_weight_mut,
-                        p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
+                p_weight_mut=self.p_weight_mut, p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
         #* Update popultation
         self.population = offspring
         if len(self.population) != self.pop_size:
@@ -208,7 +207,6 @@ class NEAT_Population(Population):
         #* Only initialize weights randomly, the structure is always the same.
         for n in range(self.pop_size):
             interface.initGenotype(self.objects, self.min_vals, self.max_vals)
-
             #* Create new genotype
             genotype = GraphGenotype()
             # import pdb; pdb.set_trace()
@@ -217,17 +215,15 @@ class NEAT_Population(Population):
                 genotype.add_node_from_dict(name, **node_vals)
             for name, conn_vals in interface.neural_net.graph['synapses'].items():
                 genotype.add_conn_from_dict(name, **conn_vals)
-            
+
             #* Initialize genotype (ANN parameters and weights traits)
             for query, min_val, max_val in zip(self.objects, self.min_vals, self.max_vals):
                 gnt_segment = interface.toGenotype([query], [min_val], [max_val])
                 variable = query.split(':')[1]
-                if variable == 'weights': 
-                    variable = 'weight'
+                variable = variable.replace('weights', 'weight')
                 gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
                 for gene, value in zip(getattr(genotype, gene_type), gnt_segment):
-                    assert hasattr(gene, variable)
-                    setattr(gene, variable, value)
+                    gene.add_parameter(variable, value)
             #* Assign innovation numbers
             for conn in genotype.connections:
                 conn.innovation = self.innovation.assign(conn.pre, conn.post)

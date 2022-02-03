@@ -95,16 +95,15 @@ class NEATInterface(GeneticInterface):
                     if hasattr(node, key) and key != 'idx':
                         self.neural_net.graph['neurons'][node.name][key] = getattr(node, key)
                 continue
-            
-            neuron_params = {param : getattr(node, param) for param in ['bias', 'gain', 'activation', 'tau'] \
-                            if hasattr(self.neural_net.neurons, param) and hasattr(node, param)} #! Modify for SNN
-            self.neural_net.add_neuron(node.name, node.ensemble, **neuron_params)
+            # neuron_params = {param : getattr(node, param) for param in ['bias', 'gain', 'activation', 'tau'] \
+            #                 if hasattr(self.neural_net.neurons, param) and hasattr(node, param)} #! Modify for SNN
+            self.neural_net.add_neuron(node.name, node.ensemble, **node.parameters)#! OJO default activation
             if node.is_output:
                 self.neural_net.set_motor(node.ensemble)
         for conn in effective_genotype.enabled_connections:
             self.neural_net.add_synapse(conn.name, conn.pre, conn.post, weight=conn.weight)
-            if conn.learning_rule:
-                self.neural_net.add_learning_rule(conn.name, conn.learning_rule['name'], conn.learning_rule['weight'])
+            if conn.has_learning_rule:
+                self.neural_net.add_learning_rule(conn.name, conn.learning_rule, conn.parameters['lr_weight'])
         #* Update parameters (Decoders and encoders not supported yet).
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
@@ -112,13 +111,12 @@ class NEATInterface(GeneticInterface):
             if variable == 'weights': 
                 variable = 'weight'
             if 'learning_rule' in query:
-                genotype_segment = np.array([gene.learning_rule['weight'] for gene in filter(lambda x: x.learning_rule, effective_genotype.connections)]).flatten()
+                genotype_segment = np.array([gene.parameters['lr_weight'] for gene in filter(lambda x: x.has_learning_rule, effective_genotype.connections)]).flatten()
             else:
-                genotype_segment = np.array([getattr(gene, variable) for gene in getattr(genotype, gene_type)])
+                genotype_segment = np.array([gene.parameters[variable] for gene in getattr(effective_genotype, gene_type)]).flatten()
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)
         self.neural_net.build() #* Compile changes.
-        
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.
