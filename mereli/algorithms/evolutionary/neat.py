@@ -28,8 +28,7 @@ class NEAT(EvolutionaryAlgorithm):
             'populations' : {name : {
                 'best' : pop.best,
                 'genotypes' : pop.population, # List of dicts
-                'current_innovation' : pop.current_innovation,
-                'innovation_history' : pop.innovation_history,
+                'innovation' : pop.innovation,
                 'input_nodes' : pop.input_nodes,
                 'species_count' : pop.species_count,
                 'species' : [{
@@ -78,8 +77,7 @@ class NEAT(EvolutionaryAlgorithm):
             self.populations[key].population = pop['genotypes']
             
             self.populations[key].best = pop.get('best', None)
-            self.populations[key].current_innovation = pop['current_innovation']
-            self.populations[key].innovation_history = pop['innovation_history']
+            self.populations[key].innovation = pop['innovation']
             self.populations[key].input_nodes = pop['input_nodes']
             self.populations[key].species_count = pop['species_count']
             self.populations[key].species = []

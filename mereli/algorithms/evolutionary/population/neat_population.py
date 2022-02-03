@@ -44,6 +44,25 @@ def compute_spawn(species, pop_size, min_species_size):
         spawn_amounts[np.random.choice(len(species))] += (1, -1)[sum(spawn_amounts) > pop_size]
     return spawn_amounts
 
+
+class Innovation:
+    def __init__(self):
+        self.current = 0
+        self.history = {}
+    
+    def increase(self):
+        self.current += 1
+    
+    def assign(self, pre, post):
+        if (pre, post) in self.history:
+            return self.history[(pre, post)]
+        else: 
+            self.increase()
+            self.history[(pre, post)] = self.current
+            return self.current
+
+
+
 class NEAT_Population(Population):
     """  
     """ 
@@ -64,11 +83,8 @@ class NEAT_Population(Population):
         self.input_nodes = [] #* Cannot be altered by NEAT 
         self.population = []
         #* Global pointer of gene innovations
-        self.current_innovation = 0
-        #* Dict mapping (pre, post) tuple connections to innovation numbers.
-        #* It is used for assigning same innovations to mutations already occured in 
-        #* the evolution.
-        self.innovation_history = {}
+        self.innovation = Innovation()
+
         
     def step(self, fitness_vector, generation):
         """
@@ -111,9 +127,8 @@ class NEAT_Population(Population):
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents))
         #* NEAT Mutation
-        offspring, self.current_innovation, self.innovation_history = neat_mutation(
-                        offspring, self.input_nodes, copy.deepcopy(self.current_innovation),
-                        copy.deepcopy(self.innovation_history), self.objects, p_weight_mut=self.p_weight_mut,
+        offspring, self.innovation = neat_mutation(offspring, self.input_nodes, self.innovation, 
+                        self.objects, p_weight_mut=self.p_weight_mut,
                         p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
         #* Update popultation
         self.population = offspring
@@ -122,6 +137,7 @@ class NEAT_Population(Population):
         #* Speciation
         self.update_species(generation)
         logging.info('Num. species is {}'.format(len(self.species)))
+
         #* Adaptive species thresh.
         # num_tar_species = 15
         # if len(self.species) != num_tar_species:
@@ -214,12 +230,7 @@ class NEAT_Population(Population):
                     setattr(gene, variable, value)
             #* Assign innovation numbers
             for conn in genotype.connections:
-                if n == 0:
-                    conn.innovation = self.current_innovation
-                    self.innovation_history[(conn.pre, conn.post)] = self.current_innovation
-                    self.current_innovation += 1
-                else:
-                    conn.innovation = self.innovation_history[(conn.pre, conn.post)]
+                conn.innovation = self.innovation.assign(conn.pre, conn.post)
             #* Add genotype to the population
             self.population.append(genotype)
         #* Initial Speciation
