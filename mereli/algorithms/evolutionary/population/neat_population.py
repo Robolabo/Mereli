@@ -103,8 +103,10 @@ class NEAT_Population(Population):
             n_sel = max(1, round(0.3 * len(spc_genotypes)))
             parents = truncation_selection(spc_genotypes, n_sel)
             #* Random Mating (OJO REPLACEMENT)
-            parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
-
+            try:
+                parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
+            except:
+                import pdb; pdb.set_trace()
             parents = [parents[idx] for idx in parents_mating] # shuffle parents
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents))

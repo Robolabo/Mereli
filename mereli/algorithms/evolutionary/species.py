@@ -52,7 +52,6 @@ class Species:
         # dist = 2 * self.c1 * (len(diff_genes) / max(len(weights_repr), len(weights_genotype))) \
         #         + self.c3 * W_dist
         dist = 2 * self.c1 * len(diff_genes) / max(len(repr_innovations), len(genotype_innovations)) + self.c3 * W_dist
-        
         return dist < self.compatib_thresh, dist
 
     def update_stats(self, fitness_scores):
