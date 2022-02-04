@@ -132,7 +132,7 @@ class NeuralNetwork(BaseNeuralNet):
         self.stimuli = stimuli.copy()
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-
+        
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and self.t > 1:
             # If reward is None  while learning rule is not, then 

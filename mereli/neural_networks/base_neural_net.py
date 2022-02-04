@@ -272,9 +272,10 @@ class BaseNeuralNet:
                 synapse_config = {
                     'pre' : pre_node, 
                     'post' : post_node,
-                    'weight': weight if weight is not 'random' else  0.1 * np.random.randn(), 
+                    'weight': weight,
                     'trainable' : trainable,
-                    'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True}
+                    'group' : name, 'idx' : len(self.graph['synapses']), 'enabled' : True
+                }
                 if self.synapse_model == 'dynamic_synapse':
                     #! Add min and max possible delays?
                     synapse_config.update({'delay' : np.random.randint(1, 10)})

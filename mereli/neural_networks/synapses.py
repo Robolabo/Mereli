@@ -50,10 +50,9 @@ class Synapses(ABC):
                     pre_idx = ann_graph['neurons'][syn['pre']]['idx'] + n_inputs
                 post_idx = ann_graph['neurons'][syn['post']]['idx'] 
                 self.mask[post_idx, pre_idx] = True
-                self.trainable_mask[post_idx, pre_idx] = syn['trainable']
-                self.weights[post_idx, pre_idx] = syn['weight']
+                self.trainable_mask[post_idx, pre_idx] = syn['trainable']                
+                self.weights[post_idx, pre_idx] = syn['weight'] if syn['weight'] != 'random' else np.round(0.1 * np.random.randn(), decimals=5)
         # self.weights = np.stack([w_row / np.sum(w_row != 0.0)  if any(w_row != 0) else w_row for w_row in self.weights]).round(4)
-
 
     @GET("synapses:weights")
     def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
