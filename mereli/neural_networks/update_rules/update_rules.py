@@ -10,13 +10,10 @@ class LearningRuleWrapper:
         self._rules = {}
 
     def add_rule(self, synapse_name, rule_name):
-        try:
-            lr_instance = learning_rules[rule_name]()
-            if rule_name not in self._rules: 
-                self._rules[rule_name] = lr_instance
-        except:
-            import pdb; pdb.set_trace()
-            
+        lr_instance = learning_rules[rule_name]()
+        if rule_name not in self._rules: 
+            self._rules[rule_name] = lr_instance
+
     def build(self, ann_graph):
         """  """    
         ref_mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False) 
@@ -145,13 +142,14 @@ class SimpleHebbian(BaseLearningRule):
     def __init__(self):
         super(SimpleHebbian, self).__init__()
         self.modulated = False #!
-        self.learning_rate = 1
+        self.learning_rate = 0.1
         self.rule_weights = None
 
     def step(self, weights, activities, stimuli, reward=None):
         # return self.learning_rate * self.mask * self.weights * np.outer(activities, np.r_[stimuli, activities])
         W_tar = self.weights * np.outer(activities, np.r_[stimuli, activities])
-        return self.learning_rate * self.mask * (-weights + W_tar)
+        # return self.learning_rate * self.mask * (-weights + W_tar)
+        return self.learning_rate * self.mask * W_tar
 
     def build(self):
         # import pdb; pdb.set_trace()
