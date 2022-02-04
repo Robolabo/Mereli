@@ -41,8 +41,8 @@ def add_node(genotype, innovation):
             new_conn.add_parameter(param, value)
         new_conn.learning_rule = sel_conn.learning_rule
         if sel_conn.learning_rule is not None:
-            new_lr = {'name' : 'simple_hebb', 'weight' : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)}
-            new_conn.learning_rule = (sel_conn.learning_rule, new_lr)[n]
+            # new_lr = {'name' : 'simple_hebb', 'weight' : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)}
+            new_conn.learning_rule = (sel_conn.learning_rule, 'simple_hebb')[n]
         genotype.add_connection(new_conn)
     return genotype, innovation
 

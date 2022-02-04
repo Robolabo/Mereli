@@ -10,10 +10,13 @@ class LearningRuleWrapper:
         self._rules = {}
 
     def add_rule(self, synapse_name, rule_name):
-        lr_instance = learning_rules[rule_name]()
-        if rule_name not in self._rules: 
-            self._rules[rule_name] = lr_instance
-
+        try:
+            lr_instance = learning_rules[rule_name]()
+            if rule_name not in self._rules: 
+                self._rules[rule_name] = lr_instance
+        except:
+            import pdb; pdb.set_trace()
+            
     def build(self, ann_graph):
         """  """    
         ref_mask = np.full((len(ann_graph['neurons']), len(ann_graph['inputs']) + len(ann_graph['neurons'])), False) 
