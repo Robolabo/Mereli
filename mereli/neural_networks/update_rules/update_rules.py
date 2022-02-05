@@ -1,5 +1,4 @@
 from collections import deque
-from msilib.schema import Error
 import numpy as np
 from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from mereli.register import learning_rule_registry, learning_rules
