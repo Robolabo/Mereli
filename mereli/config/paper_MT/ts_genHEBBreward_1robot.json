@@ -1,0 +1,132 @@
+{
+    "checkpoint_file" : "chk_ts_genHEBBreward_1bot",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
+            "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
+            "I3" : {"n" : 8, "sensor" : "blue_light_sensor"},
+            "I4" : {"n" : 8, "sensor" : "green_light_sensor"},
+            "I5" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I7" : {"n" : 1, "sensor" : "reward"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}        },
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"},
+            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"},
+            "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"},
+            "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"},
+            "I5-O" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"},
+            "I7-O" : {"pre":"I7","post":"OUT_MOT", "trainable":true, "p":1.0, "learning_rule" : "generalized_hebb"}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        },
+        "learning_rule" : {
+            "reward" : "task_switching_lights"
+        }
+    },
+    "world": {
+        "name" : "square_arena",
+    "arena_params" : {
+            "height" : 7,
+            "width" : 7
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.02,
+        "T_control" : 0.14,
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+                "controller" : "neural_controller",
+                "sensors" : {
+                    "light_sensor" : {"n_sectors" : 8, "range" : 10},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 2},
+                    "task_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            },
+            "light_yellow" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "yellow"}
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "red"}
+            }, 
+            "light_blue" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, -2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "blue"}
+            },
+            "light_green" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, 2, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "green"}
+            },
+            "task_scheduler" : {
+                "type" : "task_scheduler",
+                "num_instances": 1,
+                "params" : {"num_tasks" : 4, "num_slots" : 2, "total_timesteps" : 1000, 
+                            "replacement" : false, "task_names" : ["red", "yellow", "blue", "green"]}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 100,
+        "generations" : 2000,
+        "evaluation_steps" : 1000,
+        "num_evaluations" : 1,
+        "fitness_function" : "task_switching3",
+        "populations" : {
+            "p1" : {
+                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "learning_rule:lr_weights:all"],
+                "max_vals" : [5, 4, 1.2, 5],
+                "min_vals" : [-5, -4, -0.8, -5],
+                "params" : {
+                    "encoding" : "real",
+                    "p_weight_mut" : 0.1,
+                    "p_node_mut" : 0.05,
+                    "p_conn_mut" : 0.1,
+                    "compatib_thresh" : 0.3,
+                    "c1" : 1,
+                    "c2" : 1,
+                    "c3" : 1,
+                    "species_elites" : 2
+                }
+            }          
+        }
+    }
+}

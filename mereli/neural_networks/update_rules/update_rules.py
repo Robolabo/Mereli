@@ -1,4 +1,5 @@
 from collections import deque
+from msilib.schema import Error
 import numpy as np
 from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from mereli.register import learning_rule_registry, learning_rules
@@ -105,11 +106,21 @@ class LearningRuleWrapper:
     def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1.):
         """
         """
-        weights_len = self.len_weights(conn_name, ann_graph)
-        random_weights = np.random.randn(weights_len)
-        random_weights = np.clip(random_weights, a_min=0, a_max=1)
-        return self.set_weights(conn_name, ann_graph, random_weights,\
-                            min_val=min_val, max_val=max_val)
+        # weights_len = self.len_weights(conn_name, ann_graph)
+        # random_weights = np.random.randn(weights_len)
+        # random_weights = np.clip(random_weights, a_min=0, a_max=1)
+        # import pdb; pdb.set_trace()
+        # return self.set_weights(conn_name, ann_graph, random_weights,\
+        #                     min_val=min_val, max_val=max_val)
+        if len(self._rules) == 1:
+            w_dim = [*self._rules.values()][0].weights_dim
+            weights_len = self.len_weights(conn_name, ann_graph)
+            random_weights = 0.1 * np.random.randn(weights_len, w_dim).squeeze() + 0.5
+            random_weights = np.clip(random_weights, a_min=0, a_max=1)
+            return self.set_weights(conn_name, ann_graph, random_weights,\
+                          min_val=min_val, max_val=max_val)
+        else:
+            raise NotImplementedError #!
 
     @LEN('learning_rule:lr_weights')
     def len_weights(self, conn_name, ann_graph):
@@ -143,6 +154,7 @@ class SimpleHebbian(BaseLearningRule):
         super(SimpleHebbian, self).__init__()
         self.modulated = False #!
         self.learning_rate = 1
+        self.weights_dim = 1
         self.rule_weights = None
 
     def step(self, weights, activities, stimuli, reward=None):
@@ -161,6 +173,7 @@ class ModulatedSimpleHebbian(SimpleHebbian):
     def __init__(self):
         super(ModulatedSimpleHebbian, self).__init__()
         self.modulated = True #!
+        self.weights_dim = 1
 
     def step(self, *args, reward=None):
         assert reward is not None
@@ -170,14 +183,27 @@ class ModulatedSimpleHebbian(SimpleHebbian):
 
 
 @learning_rule_registry(name='generalized_hebb')
-class ModulatedSimpleHebbian(BaseLearningRule):
+class GeneralizedHebbian(BaseLearningRule):
     def __init__(self):
-        super(ModulatedSimpleHebbian, self).__init__()
-        self.modulated = True #!
+        super(GeneralizedHebbian, self).__init__()
+        self.modulated = False #!
+        self.learning_rate = 1
+        self.weights_dim = 4
 
-    def step(self, *args, reward=None):
-        assert reward is not None
-        return reward * super().step(*args)
+    def step(self, weights, activities, stimuli, reward=None):
+        activ_inp_v = np.r_[stimuli, activities]
+        f_basis = np.array([
+            np.outer(activities, activ_inp_v),
+            np.outer(activities, np.ones_like(activ_inp_v)),
+            np.outer(np.ones_like(activities), activ_inp_v),
+            np.ones_like(weights)
+        ])
+        W_tar = self.weights * np.outer(activities, np.r_[stimuli, activities])
+        # return self.learning_rate * self.mask * (-weights + W_tar)
+        return self.learning_rate * self.mask * W_tar
+
+    def build(self):
+        pass
 
 
 
