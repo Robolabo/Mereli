@@ -142,7 +142,7 @@ class SimpleHebbian(BaseLearningRule):
     def __init__(self):
         super(SimpleHebbian, self).__init__()
         self.modulated = False #!
-        self.learning_rate = 0.1
+        self.learning_rate = 1
         self.rule_weights = None
 
     def step(self, weights, activities, stimuli, reward=None):
