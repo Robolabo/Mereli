@@ -40,7 +40,7 @@ class LearningRuleWrapper:
         for rule in self._rules.values():
             Weight_Delta += rule.step(synapses.weights, activities, stimuli, reward=reward)
         synapses.weights += Weight_Delta
-        synapses.weights = np.clip(synapses.weights, a_min=-10, a_max=10)
+        synapses.weights = np.clip(synapses.weights, a_min=-5, a_max=5)
         return synapses
     
     @property
