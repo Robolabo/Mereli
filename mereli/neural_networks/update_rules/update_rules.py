@@ -176,6 +176,7 @@ class ModulatedSimpleHebbian(SimpleHebbian):
 
     def step(self, *args, reward=None):
         assert reward is not None
+        import pdb; pdb.set_trace()
         return reward * super().step(*args)
 
 

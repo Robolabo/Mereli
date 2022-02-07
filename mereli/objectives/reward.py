@@ -1,3 +1,4 @@
+from turtle import distance
 import numpy as np
 import numpy.linalg as LA
 from mereli.utils import angle_mean, angle_diff, increase_time
@@ -13,7 +14,11 @@ class GoToLightReward:
     def __call__(self, actions, states, robot, info=None):
         lights = [obj for obj in info if type(obj).__name__ == 'LightSource' and obj.color == self.color]
         distances_ls = np.array([np.linalg.norm(ls.position[:2] - robot.position[:2]) for ls in lights])
-        return np.array([int(any(distances_ls < 2.0) if len(distances_ls) > 0 else -1)]) #Antes 0 en vez de -1
+        if any(distances_ls < 2.0):
+            return np.array([1 - distances_ls/2.])
+        else:
+            return np.array([-1])
+        # return np.array([1 if any(distances_ls < 2.0) else -1)]) #Antes 0 en vez de -1
             
         # return  rew_obst + rew_ls
     def reset(self):
