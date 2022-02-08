@@ -22,7 +22,8 @@ class StatefulCommTX(Actuator):
         
     def step(self, delta_state):
         #* Select cluster using softmax on distances to clusters
-        self.state += (self.dt/self.tau_m) * delta_state
+        self.state += (self.dt/self.tau_m) * (delta_state)
+        self.state = np.clip(self.state, a_min=0, a_max=1)
 
     def reset(self):
         self.state = np.random.random(self.state_dim)

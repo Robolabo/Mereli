@@ -16,23 +16,31 @@ dt = 0.1
 ann = NeuralNetwork(dt, neuron_model='rate_model', synapse_model='static_synapse')
 
 
-ann.add_ensemble('1', 1, tau=30*dt, bias=0, gain=1, activation='sigmoid')
-ann.add_ensemble('2', 1, tau=30*dt, bias=0, gain=1, activation='sigmoid')
-ann.add_ensemble('3', 1, tau=30*dt, bias=0, gain=1, activation='sigmoid')
+ann.add_ensemble('1', 1, tau=5*dt, bias=0, gain=100, activation='sigmoid')
+ann.add_ensemble('2', 1, tau=5*dt, bias=0, gain=100, activation='sigmoid')
+ann.add_ensemble('3', 1, tau=5*dt, bias=0, gain=100, activation='sigmoid')
 
 ann.set_motor('1')
 
+patterns = np.array([
+    [0, 0., 1.]
+])
 
-pattern = np.array([0.2, 0.2, 0.2])
-pattern2 = np.array([0.8, 0.8, 0.8])
 
+w12 = np.sum([pat[0]*pat[1] for pat in patterns])
+w13 = np.sum([pat[0]*pat[2] for pat in patterns])
+w23 = np.sum([pat[1]*pat[2] for pat in patterns])
 
-ann.add_synapse('1-2', '1', '2', weight=0.5*(pattern[0] * sigm_inv(pattern[1]) + pattern2[0] * sigm_inv(pattern2[1])))
-ann.add_synapse('2-1', '2', '1', weight=0.5*(pattern[1] * sigm_inv(pattern[0]) + pattern2[1] * sigm_inv(pattern2[0])))
-ann.add_synapse('1-3', '1', '3', weight=0.5*(pattern[0] * sigm_inv(pattern[2]) + pattern2[0] * sigm_inv(pattern2[2])))
-ann.add_synapse('3-1', '3', '1', weight=0.5*(pattern[2] * sigm_inv(pattern[0]) + pattern2[2] * sigm_inv(pattern2[0])))
-ann.add_synapse('2-3', '2', '3', weight=0.5*(pattern[1] * sigm_inv(pattern[2]) + pattern2[1] * sigm_inv(pattern2[2])))
-ann.add_synapse('3-2', '3', '2', weight=0.5*(pattern[2] * sigm_inv(pattern[1]) + pattern2[2] * sigm_inv(pattern2[1])))
+w12 = np.sum([(2*pat[0]-1)*(2*pat[1]-1) for pat in patterns])
+w13 = np.sum([(2*pat[0]-1)*(2*pat[2]-1) for pat in patterns])
+w23 = np.sum([(2*pat[1]-1)*(2*pat[2]-1) for pat in patterns])
+
+ann.add_synapse('1-2', '1', '2', weight=w12)
+ann.add_synapse('2-1', '2', '1', weight=w12)
+ann.add_synapse('1-3', '1', '3', weight=w13)
+ann.add_synapse('3-1', '3', '1', weight=w13)
+ann.add_synapse('2-3', '2', '3', weight=w23)
+ann.add_synapse('3-2', '3', '2', weight=w23)
 
 # No self connections
 ann.add_synapse('1-1', '1', '1', weight=0)
@@ -58,11 +66,9 @@ print()
 
 
 w11 = []
-ann.neurons.voltages = [0,0,0]#np.random.uniform(-3, 3, size=ann.num_neurons)
-print('V_0(0)=', ann.neurons.voltages[0])
+ann.neurons.voltages = np.random.randn(3)*0.2
 
-
-for t in range(300):
+for t in range(100):
     output = ann.step({})
 
 print(output)
