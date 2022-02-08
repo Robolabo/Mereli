@@ -1,0 +1,28 @@
+import numpy as np
+import pybullet as p
+
+from .base_actuator import Actuator
+from mereli.register import actuator_registry
+from mereli.utils import softmax
+from mereli.globals import global_states
+from mereli.communication import IRFrame
+
+
+@actuator_registry(name='stateful_tx')
+class StatefulCommTX(Actuator):
+    """
+    """
+    def __init__(self, *args, dt=0.1, tau_m=50, range=4, state_dim=5, **kwargs):
+        super(StatefulCommTX, self).__init__(*args, **kwargs)
+        self.state_dim = state_dim
+        self.range = range
+        self.dt = dt
+        self.tau_m = tau_m
+        self.reset()
+        
+    def step(self, delta_state):
+        #* Select cluster using softmax on distances to clusters
+        self.state += (self.dt/self.tau_m) * delta_state
+
+    def reset(self):
+        self.state = np.random.random(self.state_dim)

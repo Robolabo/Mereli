@@ -49,7 +49,7 @@
     },
     "world": {
         "name" : "square_arena",
-    "arena_params" : {
+        "arena_params" : {
             "height":7,
             "width": 7
         },

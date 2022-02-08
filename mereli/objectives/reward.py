@@ -1,4 +1,3 @@
-from turtle import distance
 import numpy as np
 import numpy.linalg as LA
 from mereli.utils import angle_mean, angle_diff, increase_time
