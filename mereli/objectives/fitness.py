@@ -265,7 +265,7 @@ class TaskSwitching2:
         return fitness + 1e-5
 
 
-@fitness_func_registry(name='task_switching3')
+@fitness_func_registry(name='task_switching3old')
 class TaskSwitching3:
     """Fitness function for the exploration task."""
     def __init__(self):
@@ -296,7 +296,8 @@ class TaskSwitching3:
 class TaskSwitching4Lights:
     """Fitness function for the exploration task."""
     def __init__(self):
-        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
+        # self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
+        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow')]
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
 

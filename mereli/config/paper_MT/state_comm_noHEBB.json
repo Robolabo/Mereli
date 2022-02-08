@@ -7,15 +7,15 @@
             "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
             "I3" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I4" : {"n" : 3, "sensor" : "mean_neigh_state"},
-            "I5" : {"n" : 3, "sensor" : "own_state"},
+            "I4" : {"n" : 4, "sensor" : "mean_neigh_state"},
+            "I5" : {"n" : 4, "sensor" : "own_state"},
             "I6" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_STATE" : {"n" : 3, "params" : {"activation" : "tanh"}}},
+            "OUT_STATE" : {"n" : 4, "params" : {"activation" : "tanh"}}},
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
@@ -58,12 +58,12 @@
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 2},
-                    "stateful_rx" : {"state_dim" : 3},
+                    "stateful_rx" : {"state_dim" : 4},
                     "task_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
-                    "stateful_tx" : {"state_dim" : 3}  
+                    "stateful_tx" : {"state_dim" : 4}  
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
