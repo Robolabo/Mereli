@@ -421,3 +421,31 @@ class GotoGoal:
         rew = rew - 0.1 * collisions
         fitness = np.mean([np.sum(rew[i:] * 0.9 ** np.arange(len(rew[i:]))) for i in range(len(rew))])
         return fitness + 1e-5
+
+
+@fitness_func_registry(name='comm_sync')
+class CommSync:
+    """ Consensus state communication"""
+    def __init__(self):
+        self.required_info = ()
+
+    def __call__(self, actions, states, info=None):
+        """Computes the fitness function based on trial actions and states.
+        Additionally, other useful variables can be used from info dict (if specified in init).
+        =======================================================================================
+        - Args:
+            actions [list of dicts]: list of dictionaries with actuator names and the
+                    corresponding action.
+            states [list of dicts]: list of dictionaries with sensor names and the
+                    corresponding measured states.
+            info [dict or None]: dict of additional information.
+        =======================================================================================
+        """
+        fitness = 0
+        for states_t in states:
+            robot_states = [rob_st['own_state'] for rob_st in states_t]
+            mean_swarm_st = np.mean(robot_states, 0)
+            F_t = 1 - np.mean([np.linalg.norm(st - mean_swarm_st)/np.sqrt(len(st)) for st in robot_states])
+            fitness += F_t
+        fitness /= len(states)
+        return fitness + 1e-5
