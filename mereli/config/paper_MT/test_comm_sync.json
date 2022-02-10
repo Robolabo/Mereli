@@ -60,7 +60,7 @@
         "population_size" : 100,
         "generations" : 2000,
         "evaluation_steps" : 200,
-        "num_evaluations" : 10,
+        "num_evaluations" : 1,
         "fitness_function" : "comm_sync",
         "populations" : {
             "p1" : {
