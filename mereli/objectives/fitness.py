@@ -280,7 +280,7 @@ class TaskSwitchingB:
                 V_t = np.sum([np.clip(info['robot:reward'][k].flatten(), a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
             except:
                 import pdb; pdb.set_trace()
-            # F_tA = len(rew_t) / np.sum((np.clip(V_t, a_min=0, a_max=None)+1e-5)**-1)
+            F_tA = len(rew_t) / np.sum((np.clip(V_t, a_min=0, a_max=None)+1e-5)**-1)
             # F_tB = np.prod(V_t) ** (1 / len(V_t))
             fitness += np.mean(V_t)
         return fitness/len(states) + 1e-5
