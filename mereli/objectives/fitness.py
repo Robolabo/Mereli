@@ -211,58 +211,6 @@ class TransportCubesFitness:
         fitness = max(0, n_cubes_correct + mean_dist_moved - n_cubes_correct_start) / cube_positions.shape[1]
         return fitness + 1e-5
 
-@fitness_func_registry(name='task_switching')
-class TaskSwitching:
-    """Fitness function for the exploration task."""
-    def __init__(self):
-        self.tasks = [GotoLight(), TransportCubesFitness()]
-        #! Add current task info
-        self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
-        self.buffered_fitnesses = []
-    def __call__(self, actions, states, info=None):
-        tasks = np.array(info['task_scheduler:current_task']).flatten()
-        task_switch = np.where(np.diff(tasks))[0].tolist() + [-1]
-        fitness_tasks = []
-        for i, tsk_sw in enumerate(task_switch):
-            tsk = tasks[tsk_sw]
-            init_instant = task_switch[i - 1] if i > 0 else 0
-            last_instant = tsk_sw + 1 if i < len(task_switch) - 1 else tsk_sw
-            task_actions = np.array(actions)[init_instant:last_instant]
-            task_states = np.array(states)[init_instant:last_instant]
-            task_info = {key : np.array(values)[init_instant:last_instant]\
-                if key != 'generation' else values for key, values in info.items()}
-            fitness_tasks.append(self.tasks[tsk](task_actions, task_states, info=task_info))
-        fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        self.buffered_fitnesses.append(fitness_tasks)
-        # fitness = np.mean(fitness_tasks)
-        return fitness + 1e-5
-
-
-@fitness_func_registry(name='task_switching2')
-class TaskSwitching2:
-    """Fitness function for the exploration task."""
-    def __init__(self):
-        self.tasks = [GotoLight(), GotoLight(color='yellow')]
-        #! Add current task info
-        self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
-        self.buffered_fitnesses = []
-    def __call__(self, actions, states, info=None):
-        tasks = np.array(info['task_scheduler:current_task']).flatten()
-        n_slots = info['task_scheduler:num_slots'][0].item()
-        fitness_tasks = []
-        for i in range(n_slots):
-            t_init = int(i * len(actions) / n_slots)
-            t_end = int((i + 1)  * len(actions) / n_slots)
-            task_actions = np.array(actions)[t_init:t_end]
-            task_states = np.array(states)[t_init:t_end]
-            task_info = {key : np.array(values)[t_init:t_end]\
-                if key != 'generation' else values for key, values in info.items()}
-            task = self.tasks[tasks[t_init+1]]
-            fitness_tasks.append(task(task_actions, task_states, info=task_info))
-
-        fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
-        self.buffered_fitnesses.append(fitness_tasks)
-        return fitness + 1e-5
 
 
 @fitness_func_registry(name='task_switching3old')
@@ -317,6 +265,21 @@ class TaskSwitching4Lights:
 
         fitness = np.prod(fitness_tasks) ** (1 / len(fitness_tasks)) #* Geom mean combination
         return fitness + 1e-5
+
+
+@fitness_func_registry(name='task_switching_B')
+class TaskSwitchingB:
+    """Fitness function for the exploration task."""
+    def __init__(self):
+        self.required_info = ['robot:reward']
+
+    def __call__(self, actions, states, info=None):
+        fitness = 0
+        for rew_t in info['robot:reward']:
+            F_i = len(rew_t) / np.sum((np.clip(rew_t, a_min=0, a_max=None)+1e-5)**-1)
+            fitness += F_i
+        return F_i/len(states) + 1e-5
+
 
 
 @fitness_func_registry(name='grouping')
@@ -388,39 +351,7 @@ class ObstacleAvoidance:
         return fitness + 1e-5
 
 
-@fitness_func_registry(name='goto_goal')
-class GotoGoal:
-    """Fitness function for the Obstacle Avoidance task."""
-    def __init__(self):
-        self.required_info = ("robot:position", "robot:orientation",
-                        "cube:position", "ground_area:position",
-                        "ground_area:radius")
 
-    def __call__(self, actions, states, info=None):
-        """Computes the fitness function based on trial actions and states.
-        Additionally, other useful variables can be used from info dict (if specified in init).
-        =======================================================================================
-        - Args:
-            actions [list of dicts]: list of dictionaries with actuator names and the
-                    corresponding action.
-            states [list of dicts]: list of dictionaries with sensor names and the
-                    corresponding measured states.
-            info [dict or None]: dict of additional information.
-        =======================================================================================
-        """
-        #! Assuming only 1 robot!!!
-        collisions = np.array([[st['collision_sensor'] for st in state_t] for state_t in states]).flatten()
-        # if any(n_collisions > 200):
-        #     return 1e-5
-        robot_positions = np.stack(info["robot:position"]).copy()
-        goal_center = info["ground_area:position"][-1].flatten()
-        goal_rad = info["ground_area:radius"][-1].flatten()
-        #! Assuming only 1 robot!!!
-        rew = np.array([1 - np.linalg.norm(pos - goal_center)/15 for pos in robot_positions]).flatten()
-        # import pdb; pdb.set_trace()
-        rew = rew - 0.1 * collisions
-        fitness = np.mean([np.sum(rew[i:] * 0.9 ** np.arange(len(rew[i:]))) for i in range(len(rew))])
-        return fitness + 1e-5
 
 
 @fitness_func_registry(name='comm_sync')
