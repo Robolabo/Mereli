@@ -275,10 +275,12 @@ class TaskSwitchingB:
 
     def __call__(self, actions, states, info=None):
         fitness = 0
-        for rew_t in info['robot:reward']:
-            F_i = len(rew_t) / np.sum((np.clip(rew_t, a_min=0, a_max=None)+1e-5)**-1)
-            fitness += F_i
-        return F_i/len(states) + 1e-5
+        for t, rew_t in enumerate(info['robot:reward']):
+            V_t = np.sum([np.clip(info['robot:reward'][k], a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
+            # F_tA = len(rew_t) / np.sum((np.clip(V_t, a_min=0, a_max=None)+1e-5)**-1)
+            # F_tB = np.prod(V_t) ** (1 / len(V_t))
+            fitness += np.mean(V_t)
+        return fitness/len(states) + 1e-5
 
 
 
