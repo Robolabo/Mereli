@@ -57,7 +57,7 @@ class Species:
                 param_genotype = np.array([g.parameters[param] for g in genotype.connections 
                                         if g.innovation in common_genes])
                 assert len(param_repr) == len(param_genotype)
-                param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+                param_distance += np.abs(param_repr - param_genotype) / np.sqrt(len(param_genotype))
             param_distance /= 2 * len(conn_params)
         #* Node parameter's distance
         if len(node_params):
@@ -67,7 +67,7 @@ class Species:
                 param_genotype = np.array([genotype.get_node(node).parameters[param]
                             for node in geno_nodes.intersection(repr_nodes)])
                 assert len(param_repr) == len(param_genotype)
-                param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+                param_distance += np.abs(param_repr - param_genotype) / np.sqrt(len(param_genotype))
             param_distance /= 2 * len(node_params) 
         
         #* Topological distance
