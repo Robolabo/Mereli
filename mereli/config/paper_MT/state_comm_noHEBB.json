@@ -44,8 +44,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height" : 7,
-            "width" : 7
+            "height" : 5,
+            "width" : 5
         },
         "engine" : "pybullet",
         "physics_dt" : 0.08,
@@ -53,7 +53,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 3,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
@@ -66,17 +66,17 @@
                     "stateful_tx" : {"state_dim" : 4}  
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1.5,-1.5],"high" : [1.5,1.5], "size" : 2}},
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1],"high" : [1,1], "size" : 2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "reward", "replace_value" : -1}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2], "stimuli" : "reward", "replace_value" : -1}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1,5, 1.5, 1]]}}
                 },
                 "params" : {"range" : 10, "color" : "yellow"}
             },
@@ -84,14 +84,14 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1.5, -1.5, 1]]}}
                 },
                 "params" : {"range" : 10, "color" : "red"}
             },
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 400, 
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 350, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -99,10 +99,10 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 2000,
-        "evaluation_steps" : 400,
-        "num_evaluations" : 1,
+        "evaluation_steps" : 350,
+        "num_evaluations" : 5,
         "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {
