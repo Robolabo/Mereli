@@ -1,7 +1,9 @@
+import enum
 import numpy as np
 from scipy.linalg import expm
 from .population import Population
 from mereli.utils import eigendecomposition, normalize
+from mereli.algorithms.evolutionary.gene import FixedLenGenotype
 
 class SNES_Population(Population):
     """ Class of Separable Natural Evolution Strategy (SNES) Population defining 
@@ -71,7 +73,7 @@ class SNES_Population(Population):
         =====================================================================
         """
         self.segment_lengths = [interface.submit_query(query, primitive='LEN') for query in self.objects]
-        genotype_length = interface.toGenotype(self.objects, self.min_vector, self.max_vector).shape[0]
+        genotype_length = sum(self.segment_lengths)
         np.random.seed()
         #* Use larger sigma at first for better initialization
         self.mu = 0.5 * np.ones(genotype_length)
@@ -82,6 +84,19 @@ class SNES_Population(Population):
         self.eta_mu = 1e-2
         self.eta_s = (3 + np.log(d)) / (5 * np.sqrt(d)) + 0.2 #!
         
+        self.population = []
+        all_samples = self.sample()[0]
+        for sample in all_samples:
+            genotype = FixedLenGenotype()
+            for i, obj in enumerate(self.objects):
+                init = sum(self.segment_lengths[:i])
+                end = sum(self.segment_lengths[:i+1])
+                geno_segment = sample[init:end]
+                for gene_val in geno_segment:
+                    import pdb; pdb.set_trace()
+                    genotype.add_gene(gene_val, encoded_struct=obj, min_dec_val=0, max_dec_val=1)
+
+        import pdb; pdb.set_trace()
         #* sample initial pop
         self.population, self.z_samples = self.sample()
         self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]

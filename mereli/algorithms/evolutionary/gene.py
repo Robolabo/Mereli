@@ -55,8 +55,6 @@ class BaseGene:
         self._min_dec_val = new_min
 
 
-
-
 # class BaseGenotype:
 #     def __init__(self):
 

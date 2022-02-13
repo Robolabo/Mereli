@@ -63,6 +63,7 @@ class GeneticInterface:
         submits a SET operation towards the ANN.
         """
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
+            import pdb; pdb.set_trace()
             genes = sorted(genotype.genes_of_struct(query), key=lambda g: g.innovation)
             genes_values = np.array([gene.value for gene in genes])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
