@@ -74,6 +74,7 @@ class Species:
         arch_distance = len(diff_genes) / max(len(repr_innovations), len(genotype_innovations))
 
         total_dist = 2 * self.c1 * arch_distance + self.c3 * param_distance
+        import pdb; pdb.set_trace()
         return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):

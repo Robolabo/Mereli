@@ -185,7 +185,7 @@ def combined_crossover(parents, eta=1., crossover_prob=1.):
 #     return offspring
 
 
-def neat_crossover(parents, crossover_prob=1., disable_prob=0.75):
+def neat_crossover(parents, crossover_prob=0.8, disable_prob=0.75):
     #! First version, to be optimized
     offspring = []
     if len(parents) % 2 != 0:
