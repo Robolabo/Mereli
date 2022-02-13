@@ -116,7 +116,7 @@ class NeuralNetwork(BaseNeuralNet):
             3) Neurons step.
             4) Decoding of spikes or activities into actions.
         ===============================================================
-        - Args:
+        - Args: 
             stimuli [dict]: dict mapping stimuli name and numpy array 
                     containing its values.
         - Returns:
@@ -154,7 +154,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 399 and self.monitor is not None:
+        if self.t == self.time_scale * 349 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
