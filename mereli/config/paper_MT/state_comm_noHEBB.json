@@ -103,7 +103,7 @@
         "generations" : 2000,
         "evaluation_steps" : 400,
         "num_evaluations" : 5,
-        "fitness_function" : "task_switching_B",
+        "fitness_function" : "task_switching3",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all", "neurons:gain:all", "neurons:tau:all"],
