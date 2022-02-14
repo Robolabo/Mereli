@@ -274,7 +274,7 @@ class TaskSwitchingB:
         self.required_info = ['robot:reward']
 
     def __call__(self, actions, states, info=None):
-        f1, f2 = 0, 0
+        fA, fB = 0, 0
         for t, rew_t in enumerate(info['robot:reward']):
             # try:
             #     V_t = np.sum([np.clip(info['robot:reward'][k].flatten(), a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
