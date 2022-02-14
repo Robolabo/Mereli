@@ -274,7 +274,7 @@ class TaskSwitchingB:
         self.required_info = ['robot:reward']
 
     def __call__(self, actions, states, info=None):
-        fitness = 0
+        f1, f2 = 0, 0
         for t, rew_t in enumerate(info['robot:reward']):
             # try:
             #     V_t = np.sum([np.clip(info['robot:reward'][k].flatten(), a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
@@ -282,8 +282,13 @@ class TaskSwitchingB:
             #     import pdb; pdb.set_trace()
             # F_tA = len(rew_t) / np.sum((np.clip(rew_t.flatten(), a_min=0, a_max=None)+1e-5)**-1)
             if sum(rew_t.flatten() > 0) > 1:
-                fitness += np.mean(rew_t.flatten())
-        return fitness/len(states) + 1e-5
+                if t <= len(states) / 2: 
+                    fA += np.mean(rew_t.flatten())
+                else:
+                    fB += np.mean(rew_t.flatten())
+        fA /= 0.5 * len(states)
+        fB /= 0.5 * len(states)
+        return np.sqrt(fA * fB) + 1e-5
 
 
 

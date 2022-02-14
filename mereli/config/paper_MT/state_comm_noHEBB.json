@@ -91,7 +91,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 350, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 400, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -101,7 +101,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 350,
+        "evaluation_steps" : 400,
         "num_evaluations" : 5,
         "fitness_function" : "task_switching_B",
         "populations" : {
@@ -114,7 +114,7 @@
                     "p_weight_mut" : 0.1,
                     "p_node_mut" : 0.02,
                     "p_conn_mut" : 0.1,
-                    "compatib_thresh" : 0.4,
+                    "compatib_thresh" : 0.3,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
