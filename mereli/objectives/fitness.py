@@ -281,7 +281,7 @@ class TaskSwitchingB:
             # except:
             #     import pdb; pdb.set_trace()
             # F_tA = len(rew_t) / np.sum((np.clip(rew_t.flatten(), a_min=0, a_max=None)+1e-5)**-1)
-            if sum(rew_t.flatten() > 0) > 1:
+            if True: #sum(rew_t.flatten() > 0) > 1:
                 if t <= len(states) / 2: 
                     fA += np.mean(rew_t.flatten())
                 else:
