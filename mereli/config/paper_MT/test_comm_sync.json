@@ -5,7 +5,9 @@
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 4, "sensor" : "mean_neigh_state"},
-            "I2" : {"n" : 4, "sensor" : "own_state"}
+            "I2" : {"n" : 4, "sensor" : "own_state"},
+            "I3" : {"n" : 1, "sensor" : "task_sensor"}
+
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -16,7 +18,8 @@
         },
         "synapses" :  {
             "I1-S" : {"pre":"I1","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I2-S" : {"pre":"I2","post":"OUT_STATE", "trainable":true, "p":1.0}
+            "I2-S" : {"pre":"I2","post":"OUT_STATE", "trainable":true, "p":1.0},
+            "I3-S" : {"pre":"I3","post":"OUT_STATE", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
@@ -37,10 +40,11 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 6,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 4, "range" : 2}
+                    "stateful_rx" : {"state_dim" : 4, "range" : 2},
+                    "task_sensor" : {}
                 },
                 "actuators" : {
                     "stateful_tx" : {"state_dim" : 4, "range" : 2}  
@@ -51,28 +55,34 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
+            },
+            "task_scheduler" : {
+                "type" : "task_scheduler",
+                "num_instances": 1,
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 150, 
+                            "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 2000,
-        "evaluation_steps" : 200,
-        "num_evaluations" : 1,
+        "evaluation_steps" : 150,
+        "num_evaluations" : 10,
         "fitness_function" : "comm_sync",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all"],
-                "max_vals" : [5, 4, 1.2],
-                "min_vals" : [-5, -4, -0.8],
+                "objects" : ["synapses:weights:all"],
+                "max_vals" : [5],
+                "min_vals" : [-5],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.1,
                     "p_node_mut" : 0.05,
                     "p_conn_mut" : 0.1,
-                    "compatib_thresh" : 0.2,
+                    "compatib_thresh" : 0.25,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,

@@ -288,7 +288,6 @@ class TaskSwitchingB:
                     fB += np.mean(rew_t.flatten())
         fA /= 0.5 * len(states)
         fB /= 0.5 * len(states)
-        import pdb; pdb.set_trace()
         return np.sqrt(fA * fB) + 1e-5
 
 
@@ -369,6 +368,10 @@ class ObstacleAvoidance:
 class CommSync:
     """ Consensus state communication"""
     def __init__(self):
+        self.symbols = np.array([
+            [0,1,1,0],
+            [1,0,0,1]
+        ])
         self.required_info = ()
 
     def __call__(self, actions, states, info=None):
@@ -385,8 +388,10 @@ class CommSync:
         """
         fitness = 0
         for states_t in states:
+            task = states_t[0]['task_sensor']
             robot_states = [rob_st['own_state'] for rob_st in states_t]
             mean_swarm_st = np.mean(robot_states, 0)
+            import pdb; pdb.set_trace()
             F_t = 1 - np.mean([np.linalg.norm(st - mean_swarm_st)/np.sqrt(len(st)) for st in robot_states])
             fitness += F_t
         fitness /= len(states)

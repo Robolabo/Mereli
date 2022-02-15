@@ -44,8 +44,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height" : 5,
-            "width" : 5
+            "height" : 7,
+            "width" : 7
         },
         "engine" : "pybullet",
         "physics_dt" : 0.08,
@@ -53,7 +53,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 3,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
@@ -76,7 +76,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1.2, 1.2, 0.5]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1.5, 1.5, 0.2]]}}
                 },
                 "params" : {"range" : 10, "color" : "yellow"}
             },
@@ -84,7 +84,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1.5, -1.5, 0.5]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1.7, -1.7, 0.2]]}}
                 },
                 "params" : {"range" : 10, "color" : "red"}
             },
@@ -99,11 +99,11 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 200,
+        "population_size" : 500,
         "generations" : 2000,
         "evaluation_steps" : 400,
         "num_evaluations" : 5,
-        "fitness_function" : "task_switching3",
+        "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:bias:all", "neurons:gain:all", "neurons:tau:all"],
@@ -111,14 +111,14 @@
                 "min_vals" : [-3,-1, 0.05, -0.8],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.1,
-                    "p_node_mut" : 0.02,
-                    "p_conn_mut" : 0.1,
+                    "p_weight_mut" : 0.4,
+                    "p_node_mut" : 0.1,
+                    "p_conn_mut" : 0.2,
                     "compatib_thresh" : 0.3,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
-                    "species_elites" : 2
+                    "species_elites" : 5
                 }
             }          
         }
