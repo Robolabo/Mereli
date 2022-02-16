@@ -58,7 +58,7 @@ class LightSensor(DirectionalSensor):
                 tar_pos = self.physics_client.get_body_position(ent_id, -1)
                 # Cast a ray between the sensor position and the target entity position.
                 ray_res, ray_position = self.sensor_owner.physics_client.ray_cast([origin], [tar_pos])
-                # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.07)
+                # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.0)
                 if ray_res == ent_id: # If no obstacles (aside from target)
                     # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.07)
                     # Compute distance to light.
@@ -71,7 +71,6 @@ class LightSensor(DirectionalSensor):
                     vector1 = np.r_[np.cos(ori), np.sin(ori), 0]
                     vector2 = np.array(ray_position) - origin
                     phi = np.arccos(vector1.dot(vector2) / (np.linalg.norm(vector1) * np.linalg.norm(vector2)))
-    
                     # Compute actual reading wrt the target light using the fixed propagation model.
                     light_color = self.physics_client.luminous_objects[ent_id]['color']
                     if light_color in signal_strength:
@@ -113,7 +112,6 @@ class YellowLightSensor(LightSensor):
         #* Get readings from all colors (using parent class step method).
         readings = super().step(*args)
         #* Return just yellow reading 
-        import pdb; pdb.set_trace()
         return readings['yellow']
     
 @sensor_registry(name='red_light_sensor')

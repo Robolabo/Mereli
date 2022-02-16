@@ -86,16 +86,16 @@ class DistanceSensor(DirectionalSensor):
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i]]
+            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i] and pt[0] not in self.sensor_owner.physics_client.luminous_objects]
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
-                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
+                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 4)
                 ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
-
+                
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
-                # import pdb; pdb.set_trace()
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0)
+
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])

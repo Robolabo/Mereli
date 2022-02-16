@@ -57,7 +57,7 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 2},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 1},
                     "stateful_rx" : {"state_dim" : 2},
                     "task_sensor" : {}
                 },
@@ -76,9 +76,9 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1.5, 1.5, 0.2]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1.5, 1.5, 1]]}}
                 },
-                "params" : {"range" : 10, "color" : "yellow"}
+                "params" : {"range" : 5, "color" : "yellow"}
             },
             "light_red" : {
                 "type" : "light_source",
@@ -86,7 +86,7 @@
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1.7, -1.7, 0.2]]}}
                 },
-                "params" : {"range" : 10, "color" : "red"}
+                "params" : {"range" : 5, "color" : "red"}
             },
             "task_scheduler" : {
                 "type" : "task_scheduler",
