@@ -1,21 +1,21 @@
 {
     "checkpoint_file" : "chk_state_comm_noHEBB",
     "topology" : {
-        "dt" : 0.1,
+        "dt" : 0.01,
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
             "I3" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I4" : {"n" : 4, "sensor" : "mean_neigh_state"},
-            "I5" : {"n" : 4, "sensor" : "own_state"},
+            "I4" : {"n" : 2, "sensor" : "mean_neigh_state"},
+            "I5" : {"n" : 2, "sensor" : "own_state"},
             "I6" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_STATE" : {"n" : 4, "params" : {"activation" : "tanh"}}},
+            "OUT_STATE" : {"n" : 2, "params" : {"activation" : "tanh"}}},
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
@@ -58,12 +58,12 @@
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 2},
-                    "stateful_rx" : {"state_dim" : 4},
+                    "stateful_rx" : {"state_dim" : 2},
                     "task_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5},
-                    "stateful_tx" : {"state_dim" : 4}  
+                    "stateful_tx" : {"state_dim" : 2}  
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1],"high" : [1,1], "size" : 2}},
@@ -99,9 +99,9 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 300,
+        "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 400,
+        "evaluation_steps" : 500,
         "num_evaluations" : 5,
         "fitness_function" : "task_switching_B",
         "populations" : {
@@ -118,7 +118,7 @@
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
-                    "species_elites" : 5
+                    "species_elites" : 2
                 }
             }          
         }
