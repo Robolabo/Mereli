@@ -387,10 +387,11 @@ class CommSync:
         =======================================================================================
         """
         fitness = 0
+        target = np.mean([rob_st['own_state'] for rob_st in states[0]], 0)
         for states_t in states:
             robot_states = [rob_st['own_state'] for rob_st in states_t]
-            mean_swarm_st = np.mean(robot_states, 0)
-            F_t = 1 - np.mean([np.linalg.norm(st - mean_swarm_st)/np.sqrt(len(st)) for st in robot_states])
+            # mean_swarm_st = np.mean(robot_states, 0)
+            F_t = 1 - np.mean([np.linalg.norm(st - target)/np.sqrt(len(st)) for st in robot_states])
             fitness += F_t ** 3
         fitness /= len(states)
         return fitness + 1e-5

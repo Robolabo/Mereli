@@ -85,7 +85,6 @@ class NEATInterface(GeneticInterface):
         """ Converts a genotype into a phenotype or, in this case, structured ANN.
         """
         effective_genotype = copy.deepcopy(genotype)  
-             
         #* Clean previous architecture
         self.neural_net.reset_graph()
 

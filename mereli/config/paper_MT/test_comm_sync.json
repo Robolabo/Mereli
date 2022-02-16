@@ -47,7 +47,7 @@
                     "stateful_tx" : {"state_dim" : 2, "range" : 3}  
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-3,-3],"high" : [3, 3], "size" : 2}},
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1],"high" : [1, 1], "size" : 2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
@@ -79,7 +79,7 @@
                     "p_weight_mut" : 0.1,
                     "p_node_mut" : 0.01,
                     "p_conn_mut" : 0.1,
-                    "compatib_thresh" : 0.2,
+                    "compatib_thresh" : 0.4,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,

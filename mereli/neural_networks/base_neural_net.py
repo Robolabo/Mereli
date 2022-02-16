@@ -114,6 +114,7 @@ class BaseNeuralNet:
                         self.motor_ensemble_names)
         else:
             self.monitor = None
+        self.synapses.weights = np.round(self.synapses.weights, 4)
         # #* --- Reset dynamics ---
         # self.reset()
 
@@ -250,6 +251,7 @@ class BaseNeuralNet:
         #* Check if pre is neuron or ensemble.
         if pre not in {**self.graph['inputs'], **self.graph['neurons']}:
             if pre not in self.input_ensemble_names + self.ensemble_names:
+                import pdb; pdb.set_trace()
                 raise Exception(logging.error('Connection presynaptic neuron or ensemble '\
                     '"{}" does not exist').format(pre))
             pre = [name for name, node in {**self.graph['inputs'], **self.graph['neurons']}.items() if node['ensemble'] == pre]

@@ -24,7 +24,7 @@ class StatefulCommRX(Sensor):
                     if dist < self.range:
                         neigh_state.append(obj.actuators['stateful_tx'].state)
         if len(neigh_state) == 0:
-            neigh_state = np.array([-1] * self.state_dim)
+            neigh_state = np.array([0] * self.state_dim)
         else:    
             neigh_state = np.mean(neigh_state, 0)
 
