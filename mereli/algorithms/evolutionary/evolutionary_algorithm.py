@@ -99,7 +99,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         for pop in populations.values():
             genotype_segment = pop.population[env_id]
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
-    print('Stuff:', time.time() - t0, flush=True)
+    # print('Stuff:', time.time() - t0, flush=True)
     fitness = 0
     mean_survival_time = 0  
     t0 = time.time()  
@@ -132,7 +132,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
-    print('Eval:', time.time() - t0, flush=True)
+    # print('Eval:', time.time() - t0, flush=True)
     
     return (env_id, fitness)
 
