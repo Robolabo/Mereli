@@ -68,12 +68,13 @@ class PybulletEngine(BaseEngine):
         self.engine.setGravity(0, 0, -9.8)
         self.engine.setTimeStep(self.dt)
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
-        # self.engine.setPhysicsEngineParameter(fixedTimeStep=1000)
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
+        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         self.add_objects(objects)
         self.connected = True
+
         if self.render:
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
             self.engine.resetDebugVisualizerCamera(cameraDistance=4, cameraYaw=30,\
@@ -95,8 +96,9 @@ class PybulletEngine(BaseEngine):
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-        time.sleep(1/240.) # Fast mode
+        # time.sleep(1/240.) # Fast mode
         # time.sleep(1/10) # Slow mode
+        pass
 
 
     def add_objects(self, objects):
@@ -118,6 +120,8 @@ class PybulletEngine(BaseEngine):
 
         :param WorldObject obj: entity to be added to the engine.
         """
+        # print(obj)
+        t0 = time.time()
         if obj.model_file is None:
             return
         obj.physics_client = self
@@ -125,8 +129,8 @@ class PybulletEngine(BaseEngine):
             p.getQuaternionFromEuler(obj.init_orientation),
             globalScaling=obj.scaling if hasattr(obj, 'scaling') else 1, 
             physicsClientId=self.client)
-
-        
+        # print('Load: ', time.time() - t0)
+        t0 = time.time()
         p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
         p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
         for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
@@ -143,8 +147,10 @@ class PybulletEngine(BaseEngine):
         for i in range(2):
             p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
                 activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
-        
+        # print('Config and colls: ', time.time() - t0)
+        t0 = time.time()
         self.parse_urdf(obj) #
+        # print('Parser:',time.time() - t0)
 
 
     def parse_urdf(self, obj):
@@ -154,7 +160,8 @@ class PybulletEngine(BaseEngine):
         root = tree.getroot()
         for sensor in root.findall(".//sensor"):
             sensor_name = sensor.get('name')
-            self.physical_sensors[sensor_name] = {}
+            if sensor_name not in self.physical_sensors:
+                self.physical_sensors[sensor_name] = {}
             for sector in sensor.findall("sector"):
                 sector_idx = int(sector.get('index'))
                 link = sector.find('parent').get('link')
@@ -173,6 +180,10 @@ class PybulletEngine(BaseEngine):
                 }
         for actuator in root.findall(".//actuator"):
             actuator_name = actuator.get('name')
+            if actuator_name in self.physical_actuators:
+                continue
+            else:
+                self.physical_actuators[actuator_name] = {}
             self.physical_actuators[actuator_name] = {}
             for sector in actuator.findall("sector"):
                 sector_idx = int(sector.get('index'))
@@ -327,6 +338,7 @@ class PybulletEngine(BaseEngine):
         """
         if ghost_ids is not None:
             for idx in ghost_ids:
+                # import pdb; pdb.set_trace()
                 p.setCollisionFilterGroupMask(obj_id, idx, 0b01, 0b01, physicsClientId=self.client)
         p.performCollisionDetection(physicsClientId=self.client)
         contact_points = p.getContactPoints(obj_id, physicsClientId=self.client)

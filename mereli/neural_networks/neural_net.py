@@ -154,18 +154,18 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 149 and self.monitor is not None:
+        if self.t == self.time_scale * 499 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
-            ww = np.stack(self.ww_buffer)
+            # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0,0]
+        # actions['outA'] = [1,1]
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
-        self.ww_buffer.append(self.weights)
+        # self.ww_buffer.append(self.weights)
         return actions
     
     def reset(self):

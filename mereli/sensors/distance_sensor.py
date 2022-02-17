@@ -31,6 +31,9 @@ class DistanceSensor(DirectionalSensor):
         super(DistanceSensor, self).__init__(*args, **kwargs)
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
         self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
+        self.contact_points = None
+        self.reading = np.zeros(8)
+        self.t = 0
 
     def step(self, neighborhood):
         r""" Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
@@ -82,11 +85,17 @@ class DistanceSensor(DirectionalSensor):
 
         :returns: np.ndarray with the reading of each sector.
         """
-        reading = []
+        
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
-        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            tar_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i] and pt[0] not in self.sensor_owner.physics_client.luminous_objects]
+        reading = np.zeros(len(g_ids))
+        if self.contact_points is None or self.t % 10 == 0:
+            self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        # return np.zeros(8)
+        oris = self.directions(self.sensor_owner.orientation[-1])
+        
+        for i in range(8):
+            ori = oris[i]
+            tar_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i] and pt[0] not in self.sensor_owner.physics_client.luminous_objects]
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
@@ -95,11 +104,16 @@ class DistanceSensor(DirectionalSensor):
                 
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
                 #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0)
-
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
                     signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
-            reading.append(signal_strength)
-        if len(reading) != 8: import pdb; pdb.set_trace()
-        return np.array(reading)
+            reading[i] += signal_strength + np.random.randn() * 0.05
+        self.t += 1
+        self.reading += (0.2) * (np.array(reading) - self.reading)  
+        return self.reading
+
+    def reset(self):
+        self.reading= np.zeros(8)
+        self.contact_points = None  
+        self.t = 0

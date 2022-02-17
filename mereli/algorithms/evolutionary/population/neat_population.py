@@ -1,5 +1,5 @@
 import logging
-import copy
+import copy,time
 import numpy as np
 from functools import reduce
 
@@ -92,6 +92,7 @@ class NEAT_Population(Population):
         :param list fitness_vector: vector collecting the achieved fitness score of every individual.
         :param int generation: current generation of the evolution process.
         """
+        t0 = time.time()
         offspring = []
         for genotype, fitness in zip(self.population, fitness_vector):
             genotype.fitness = fitness
@@ -136,7 +137,7 @@ class NEAT_Population(Population):
         #* Speciation
         self.update_species(generation)
         logging.info('Num. species is {}'.format(len(self.species)))
-
+        print('NEAT: ', time.time() - t0)
         #* Adaptive species thresh.
         # num_tar_species = 15
         # if len(self.species) != num_tar_species:

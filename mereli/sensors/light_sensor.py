@@ -32,7 +32,9 @@ class LightSensor(DirectionalSensor):
         self.color = color
         self.aperture = 0.785 + .2
         self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
-    
+        self.contact_points = None
+        self.reading = {color + '_light_sensor' : np.zeros(8) for color in ['red', 'yellow', 'blue', 'green']}
+        self.t = 0
 
 
     def step(self, neighborhood):
@@ -43,19 +45,25 @@ class LightSensor(DirectionalSensor):
 
         :returns: np.ndarray with the reading of each sector. 
         """
-        reading = []
         g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        reading = {'red' : np.zeros(8), 'yellow': np.zeros(8), 'blue' : np.zeros(8), 'green' : np.zeros(8)}
+        oris = self.directions(self.sensor_owner.orientation[-1])
         # List the entities that overlap with the robot ghost cones.
-        contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
-        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])): 
-            luminous_ents = [pt[0] for pt in contact_points if pt[1] == g_ids[i] \
+        if self.contact_points is None or self.t % 20 == 0:
+            self.contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
+        for i in range(len(g_ids)):
+            ori = oris[i]
+            luminous_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i] \
                         and pt[0] in self.physics_client.luminous_objects]
             signal_strength = {'red' : 0., 'yellow': 0., 'blue' : 0., 'green' : 0.}
+            if len(luminous_ents) == 0:
+                continue
             origin = self.get_sensor_position(i) # Coordinates of the physical link of sensor (in the i-th sector).
             # Cast a ray for each luminous object in the sector cone.
-            for ent_id in luminous_ents: 
+            for ent_id in luminous_ents:
                 # Query target entity position
                 tar_pos = self.physics_client.get_body_position(ent_id, -1)
+                
                 # Cast a ray between the sensor position and the target entity position.
                 ray_res, ray_position = self.sensor_owner.physics_client.ray_cast([origin], [tar_pos])
                 # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.0)
@@ -77,18 +85,29 @@ class LightSensor(DirectionalSensor):
                         signal_strength[light_color] += self.propagation(rho, phi)
                     else:
                         signal_strength[light_color] = self.propagation(rho, phi)
-            reading.append(signal_strength)
-        if len(reading) != 8: import pdb; pdb.set_trace()
-        #* Convert dict to the type {color : vector}, where vector is the measurement of all sectors (dim=n_sectors)
-        #* taking into account only the color set by the key.
-        reading = {color : np.array([x[color] for x in reading]) for color in reading[0].keys()}
-        #* Rename keys according to state notation (e.g. red_light_sensor).
+            for color in signal_strength:
+                reading[color][i] += signal_strength[color] 
         reading = {color + '_light_sensor' : vec for color, vec in reading.items()}
-        reading['light_sensor'] = np.sum([x for x in reading.values()], 0)
-        return reading
+        # #* Convert dict to the type {color : vector}, where vector is the measurement of all sectors (dim=n_sectors)
+        # #* taking into account only the color set by the key.
+        # reading = {color : np.array([x[color] for x in reading]) for color in reading[0].keys()}
+        # #* Rename keys according to state notation (e.g. red_light_sensor).
+        # reading = {color + '_light_sensor' : vec for color, vec in reading.items()}
+        # reading['light_sensor'] = np.sum([x for x in reading.values()], 0)
+        self.t += 1
+        for color in reading:
+            reading[color] += np.random.randn() * 0.05
+            self.reading[color] += (0.2) * (reading[color]  - self.reading[color])
+        return self.reading
+
+    def step_fast(self, neighborhood):
+        pass
 
 
-
+    def reset(self):
+        self.t = 0
+        self.reading = {color + '_light_sensor' : np.zeros(8) for color in ['red', 'yellow', 'blue', 'green']}
+        self.contact_points = None
 
 
 

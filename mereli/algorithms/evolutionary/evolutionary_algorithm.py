@@ -78,7 +78,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
-    
+    t0 = time.time()
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
             rank = MPI.COMM_WORLD.Get_rank()
@@ -99,13 +99,16 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         for pop in populations.values():
             genotype_segment = pop.population[env_id]
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
+    print('Stuff:', time.time() - t0, flush=True)
     fitness = 0
-    mean_survival_time = 0
-    t0 = time.time()
+    mean_survival_time = 0  
+    t0 = time.time()  
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
         seed += 1
+        
         world.reset(seed=seed)
+        
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}
@@ -122,11 +125,15 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             survival_time += 1
             if done:
                 break
+        
         mean_survival_time += survival_time
         fitness += fitness_fn(actions_history, states_history, info=info)
+    
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
+    print('Eval:', time.time() - t0, flush=True)
+    
     return (env_id, fitness)
 
 class EvolutionaryAlgorithm:
@@ -202,6 +209,7 @@ class EvolutionaryAlgorithm:
                 size = comm.Get_size()
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
+                # print('rank, ', rank, [*self.populations['p1'].population[10].connections][0].parameters)
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
                 #comm.Barrier()

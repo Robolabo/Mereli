@@ -140,6 +140,7 @@ class World(object):
 
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
+        # for obj_name, obj in self.controllable_objects.items():
             if not issubclass(type(obj), Robot):
                 obj.step(self.hierarchy.values())
                 continue
@@ -169,12 +170,11 @@ class World(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate(self.hierarchy)
-
+        
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-
         #* Retain prev states and actions to compute rewards.
         self.prev_states = states.copy()
         self.prev_actions = actions.copy()
