@@ -132,7 +132,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
-    # print('Eval:', time.time() - t0, flush=True)
+    print('Eval:', time.time() - t0, flush=True)
     
     return (env_id, fitness)
 
