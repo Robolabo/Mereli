@@ -132,7 +132,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
-    print('Eval:', time.time() - t0, flush=True)
+    # print('Eval:', time.time() - t0, flush=True)
     
     return (env_id, fitness)
 
@@ -305,11 +305,12 @@ class EvolutionaryAlgorithm:
                     re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
                     st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])
                     ac = np.hstack([action[a] for a in without_duplicates(map(re_split, actuator_names)) if a in action.keys()])
-                    row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position[:2], robot[1].orientation[-1], st, ac)))
-                    row_dict = {key: val for key, val in zip(fieldnames, row_values)}
-                    for name, obj in {**lights, **cubes}.items():
-                        row_dict.update({'position_x_'+ name : obj.position[0], 'position_y_'+ name : obj.position[1]})
-                    data_logger.update(row_dict)
+                    #! Provisionally commented
+                    # row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position[:2], robot[1].orientation[-1], st, ac)))
+                    # row_dict = {key: val for key, val in zip(fieldnames, row_values)}
+                    # for name, obj in {**lights, **cubes}.items():
+                    #     row_dict.update({'position_x_'+ name : obj.position[0], 'position_y_'+ name : obj.position[1]})
+                    # data_logger.update(row_dict)
                 eval_hist['states'].append(states)
                 eval_hist['actions'].append(actions)
             self.fitness_fn(eval_hist['actions'], eval_hist['states'], info=info)
