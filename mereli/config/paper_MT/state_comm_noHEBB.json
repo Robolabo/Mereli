@@ -91,7 +91,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 400, 
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 400, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
