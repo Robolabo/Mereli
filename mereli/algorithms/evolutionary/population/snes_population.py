@@ -95,7 +95,7 @@ class SNES_Population(Population):
         #* Use larger sigma at first for better initialization
         self.mu = 0.5 * np.ones(genotype_length)
         self.mu = np.clip(self.mu, a_min=0., a_max=1.)
-        self.sigma = 0.2 * np.ones(genotype_length) #0.2 * np.ones(genotype_length)
+        self.sigma = 0.01 * np.ones(genotype_length) #0.2 * np.ones(genotype_length)
         d = self.mu.shape[0]
         n_expected = int(4 + np.floor(3 * np.log(d)))
         self.eta_mu = 1e-2
@@ -106,4 +106,4 @@ class SNES_Population(Population):
         #* sample initial pop
         # self.population, self.z_samples = self.sample()
         # self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
-        self.sigma = 0.1 * np.ones(genotype_length) # 0.1 * np.ones(genotype_length)
+        self.sigma = 0.01 * np.ones(genotype_length) # 0.1 * np.ones(genotype_length)
