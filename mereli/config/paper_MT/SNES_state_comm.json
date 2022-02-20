@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_state_comm_noHEBB",
+    "checkpoint_file" : "chk_SNES_state_comm",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
