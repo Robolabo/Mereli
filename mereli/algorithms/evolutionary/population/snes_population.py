@@ -39,6 +39,8 @@ class SNES_Population(Population):
         - Returns: None
         ==================================================================================
         """
+        for genotype, fitness in zip(self.population, fitness_vector):
+            genotype.fitness = fitness
         fitness_order = np.argsort(fitness_vector.copy())[::-1]
         ord_samples = [self.z_samples[idx].copy() for idx in fitness_order]
         ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])
@@ -60,8 +62,22 @@ class SNES_Population(Population):
         self.sigma = np.clip(self.sigma, a_min=0, a_max=1.5)
 
         #* --- Sample New population -- *#
-        self.population, self.z_samples = self.sample()
-        self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
+        all_samples, self.z_samples = self.sample()
+        self.set_population(all_samples)
+        # self.population, self.z_samples = self.sample()
+        # self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
+
+    def set_population(self, samples):
+        for sample in samples:
+            clipped_sample = np.clip(sample, a_min=0., a_max=1.)
+            genotype = FixedLenGenotype()
+            for i, obj in enumerate(self.objects):
+                init = sum(self.segment_lengths[:i])
+                end = sum(self.segment_lengths[:i+1])
+                geno_segment = clipped_sample[init:end]
+                for gene_val in geno_segment:
+                    genotype.add_gene(gene_val, encoded_struct=obj)
+            self.population.append(genotype)
 
     def initialize(self, interface):
         """ Initializes the parameters and population of SNES.
@@ -84,20 +100,9 @@ class SNES_Population(Population):
         self.eta_mu = 1e-2
         self.eta_s = (3 + np.log(d)) / (5 * np.sqrt(d)) + 0.2 #!
         
-        self.population = []
-        all_samples = self.sample()[0]
-        for sample in all_samples:
-            genotype = FixedLenGenotype()
-            for i, obj in enumerate(self.objects):
-                init = sum(self.segment_lengths[:i])
-                end = sum(self.segment_lengths[:i+1])
-                geno_segment = sample[init:end]
-                for gene_val in geno_segment:
-                    import pdb; pdb.set_trace()
-                    genotype.add_gene(gene_val, encoded_struct=obj, min_dec_val=0, max_dec_val=1)
-
-        import pdb; pdb.set_trace()
+        all_samples, self.z_samples = self.sample()
+        self.set_population(all_samples)
         #* sample initial pop
-        self.population, self.z_samples = self.sample()
-        self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
+        # self.population, self.z_samples = self.sample()
+        # self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
         self.sigma = 0.1 * np.ones(genotype_length) # 0.1 * np.ones(genotype_length)
