@@ -288,6 +288,7 @@ class TaskSwitchingB:
                     fB += np.mean(rew_t.flatten())
         fA /= 0.5 * len(states)
         fB /= 0.5 * len(states)
+        return (fA + fB)/2 + 1e-5
         return np.sqrt(fA * fB) + 1e-5
 
 
