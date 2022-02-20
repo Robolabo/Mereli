@@ -61,7 +61,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
@@ -107,7 +107,7 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 2000,
         "evaluation_steps" : 800,
         "num_evaluations" : 1,

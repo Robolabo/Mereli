@@ -86,7 +86,6 @@ class NEATInterface(GeneticInterface):
         effective_genotype = copy.deepcopy(genotype)  
         #* Clean previous architecture
         self.neural_net.reset_graph()
-
         #* Add neurons
         for node in effective_genotype.nodes:
             if node.name in self.neural_net.graph['neurons']:
@@ -110,17 +109,24 @@ class NEATInterface(GeneticInterface):
             if variable == 'weights': 
                 variable = 'weight'
             if 'learning_rule' in query:
-                genotype_segment = np.array([gene.parameters['lr_weight'] for gene in filter(lambda x: x.has_learning_rule, effective_genotype.connections)]).flatten()
+                genotype_segment = np.array([gene.parameters['lr_weight'] for gene in filter(lambda x: x.has_learning_rule and x.enabled, effective_genotype.connections)]).flatten()
             else:
-                genotype_segment = np.array([gene.parameters[variable] for gene in getattr(effective_genotype, gene_type)]).flatten()
+                if gene_type == 'connections':
+                    genotype_segment = np.array([gene.parameters[variable] for gene in getattr(effective_genotype, gene_type) if gene.enabled]).flatten()
+                else:
+                    genotype_segment = np.array([gene.parameters[variable] for gene in getattr(effective_genotype, gene_type)]).flatten()
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
                         data=genotype_segment, min_val=min_val, max_val=max_val)
         self.neural_net.build() #* Compile changes.
+        # conn_g = [n.name for n in genotype.connections if n.enabled]
+        # conn_ann = [n for n, v in self.neural_net.graph['synapses'].items()]
+        # w_g = np.array([n.parameters['weight'] for n in genotype.connections if n.enabled])
+        # w_ann = np.array([v['weight'] for n, v in self.neural_net.graph['synapses'].items()])
+        # import pdb; pdb.set_trace()
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.
         """
-        
         for query, max_val, min_val in zip(queries, max_vals, min_vals):
             self.neural_net.graph = self.submit_query(query, primitive='INIT', min_val=min_val, max_val=max_val)
         self.neural_net.build()
