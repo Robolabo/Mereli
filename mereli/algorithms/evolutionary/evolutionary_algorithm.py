@@ -108,7 +108,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         seed += 1
         
         world.reset(seed=seed)
-        
         actions_history = deque()
         states_history = deque()
         info = {n : deque() for n in fitness_fn.required_info}

@@ -109,12 +109,18 @@ class Synapses(ABC):
     def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """
         """
-        weights_len = self.len_weights(conn_name, ann_graph)
-        random_weights = 0.5 + np.random.randn(weights_len) * 0.3 #between 0 and 1 (denormalized in set)
-        # random_weights = np.random.random(size=weights_len)
-        random_weights = np.clip(random_weights, a_min=0, a_max=1)
-        return self.set_weights(conn_name, ann_graph, random_weights,\
-                            min_val=min_val, max_val=max_val)
+        assert conn_name == 'all'
+        # weights_len = self.len_weights(conn_name, ann_graph)
+        # random_weights = 0.5 + np.random.randn(weights_len) * 0.3 #between 0 and 1 (denormalized in set)
+        for syn in filter(lambda x: x['trainable'], ann_graph['synapses'].values()):
+            in_deg = np.sum(self.mask, 1)[ann_graph['neurons'][syn['post']]['idx']]
+            # out_deg = np.sum(self.mask, )[ann_graph['neurons'][syn['pre']]['idx']]
+
+            syn['weight'] = np.random.uniform(low=-1 / np.sqrt(in_deg), high=1 / np.sqrt(in_deg))
+        return ann_graph
+        # random_weights = np.clip(random_weights, a_min=0, a_max=1)
+        # return self.set_weights(conn_name, ann_graph, random_weights,\
+        #                     min_val=min_val, max_val=max_val)
 
     @LEN('synapses:weights')
     def len_weights(self, conn_name, ann_graph, only_trainable=True):
