@@ -244,8 +244,8 @@ class TaskSwitching3:
 class TaskSwitching4Lights:
     """Fitness function for the exploration task."""
     def __init__(self):
-        # self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
-        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow')]
+        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
+        # self.tasks = [GotoLight(color='red'), GotoLight(color='yellow')]
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
 

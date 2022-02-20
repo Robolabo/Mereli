@@ -40,8 +40,8 @@
             "width": 7
         },
         "engine" : "pybullet",
-        "physics_dt" : 0.02,
-        "T_control" : 0.14,
+        "physics_dt" : 0.08,
+        "T_control" : 0.08,
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
