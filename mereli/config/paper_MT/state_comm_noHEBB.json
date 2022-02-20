@@ -53,7 +53,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 9,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
@@ -91,7 +91,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 700, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1000, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -99,16 +99,16 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 200,
         "generations" : 2000,
-        "evaluation_steps" : 700,
+        "evaluation_steps" : 1000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:tau:all"],
-                "max_vals" : [6, 0.6],
-                "min_vals" : [-6, -0.7],
+                "objects" : ["synapses:weights:all", "neurons:tau:all", "neurons:bias:all"],
+                "max_vals" : [6, 0.6, 4],
+                "min_vals" : [-6, -0.7, -4],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.1,

@@ -283,12 +283,12 @@ class TaskSwitchingB:
             # F_tA = len(rew_t) / np.sum((np.clip(rew_t.flatten(), a_min=0, a_max=None)+1e-5)**-1)
             if True: #sum(rew_t.flatten() > 0) > 1:
                 if t <= len(states) / 2: 
-                    fA += np.mean(rew_t.flatten())
+                    fA += np.mean(rew_t.flatten()) ** 2
                 else:
-                    fB += np.mean(rew_t.flatten())
+                    fB += np.mean(rew_t.flatten()) ** 2
         fA /= 0.5 * len(states)
         fB /= 0.5 * len(states)
-        return (fA + fB)/2 + 1e-5
+        # return (fA + fB)/2 + 1e-5
         return np.sqrt(fA * fB) + 1e-5
 
 
