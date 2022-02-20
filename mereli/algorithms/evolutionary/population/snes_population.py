@@ -68,6 +68,7 @@ class SNES_Population(Population):
         # self.population = [np.clip(v, a_min=0., a_max=1.) for v in self.population]
 
     def set_population(self, samples):
+        self.population = []
         for sample in samples:
             clipped_sample = np.clip(sample, a_min=0., a_max=1.)
             genotype = FixedLenGenotype()

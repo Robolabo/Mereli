@@ -14,6 +14,9 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
+            "H1" : {"n" : 10, "params" : {"activation" : "sigmoid"}},
+            "H2" : {"n" : 5, "params" : {"activation" : "sigmoid"}},
+            "H3" : {"n" : 10, "params" : {"activation" : "sigmoid"}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_STATE" : {"n" : 2, "params" : {"activation" : "tanh"}}},
         "outputs" : {
@@ -21,18 +24,23 @@
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
         },
         "synapses" :  {
-            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I5-O" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I6-O" : {"pre":"I6","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I1-S" : {"pre":"I1","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I2-S" : {"pre":"I2","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I3-S" : {"pre":"I3","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I4-S" : {"pre":"I4","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I5-S" : {"pre":"I5","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I6-S" : {"pre":"I6","post":"OUT_STATE", "trainable":true, "p":1.0}
+            "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
+            "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+         
+            "I4-H1" : {"pre":"I4","post":"H2", "trainable":true, "p":1.0},
+            "I5-H1" : {"pre":"I5","post":"H2", "trainable":true, "p":1.0},
+
+                     
+            "I3-H3" : {"pre":"I3","post":"H3", "trainable":true, "p":1.0},
+            "I6-H1" : {"pre":"I6","post":"H1", "trainable":true, "p":1.0},
+            "I6-H2" : {"pre":"I6","post":"H2", "trainable":true, "p":1.0},
+            "I6-H3" : {"pre":"I6","post":"H3", "trainable":true, "p":1.0},
+
+            "H1-H2" : {"pre":"H1","post":"H2", "trainable":true, "p":1.0},
+            "H2-H3" : {"pre":"H2","post":"H3", "trainable":true, "p":1.0},
+            "H3-H3" : {"pre":"H3","post":"H3", "trainable":true, "p":1.0},
+            "H3-MOT" : {"pre":"H3","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "H3-ST" : {"pre":"H3","post":"OUT_STATE", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
@@ -99,7 +107,7 @@
     "algorithm" : {
         "name" : "SNES",
         "evolvable_object" : "robotA",
-        "population_size" : 20,
+        "population_size" : 100,
         "generations" : 2000,
         "evaluation_steps" : 800,
         "num_evaluations" : 1,
