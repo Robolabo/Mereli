@@ -39,7 +39,7 @@ class TaskSwitchingLights:
         rews = [tsk(actions, states, robot, info=info) for tsk in self.tasks]
         rew = np.sum([rews[i]*(-1,1)[i == current_task]for i in range(len(rews))])
         # import pdb; pdb.set_trace()
-        # good_rew = rews[current_task].flatten()
+        return rews[current_task].flatten()
         return np.array([rew])
     
     def reset(self):
