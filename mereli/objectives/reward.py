@@ -36,8 +36,12 @@ class TaskSwitchingLights:
     def __call__(self, actions, states, robot, info=None):
         task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
         current_task = task_scheduler.current_task
-        rew =  self.tasks[current_task](actions, states, robot, info=info)
-        return rew
+        rews = [tsk(actions, states, robot, info=info) for tsk in self.tasks]
+        rew = np.sum([rews[i]*(-1,1)[i == current_task]for i in range(len(rews))])
+        # import pdb; pdb.set_trace()
+        # good_rew = rews[current_task].flatten()
+        print(rew)
+        return np.array([rew])
     
     def reset(self):
         pass

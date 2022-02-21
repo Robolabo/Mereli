@@ -50,7 +50,7 @@ def plot_ann_graph(neural_net, filename=None):
         with graph.subgraph(name='cluster_inputs'+in_ens) as subG:
             for in_name, inp in neural_net.graph['inputs'].items():
                 if inp['ensemble'] == in_ens:
-                    subG.attr( rank='min')
+                    subG.attr(rank='min')
                     subG.node_attr.update(fillcolor='cadetblue1', label='')
                     subG.node(in_name)
        
@@ -75,15 +75,14 @@ def plot_ann_graph(neural_net, filename=None):
     motor_nodes = [name for name, node in neural_net.graph['neurons'].items() if node['is_motor']]
     # Hidden-Hidden
     for conn_name, conn in neural_net.graph['synapses'].items():
-        if conn['enabled'] and (conn['pre'] in hidden_nodes and conn['post'] in hidden_nodes):
+        if not conn['enabled']:
+            continue
+        if conn['pre'] in hidden_nodes and conn['post'] in hidden_nodes:
             graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
-    # Input-Hidden
-    for conn_name, conn in neural_net.graph['synapses'].items():
-        if conn['enabled'] and (conn['pre'] in neural_net.graph['inputs'] and conn['post'] in hidden_nodes):
-            graph.edge(conn['pre'], conn['post'], fontsize='9', **conn_attr)
-    # Hidden-Motor
-    for conn_name, conn in neural_net.graph['synapses'].items():
-        if conn['enabled'] and (conn['pre'] in hidden_nodes and conn['post'] in motor_nodes):
+        if conn['pre'] in neural_net.graph['inputs'] and conn['post'] in hidden_nodes + motor_nodes:
+            graph.edge(conn['pre'], conn['post'],**conn_attr)
+  
+        if conn['pre'] in hidden_nodes and conn['post'] in motor_nodes:
             graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
   
 
