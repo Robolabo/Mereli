@@ -94,8 +94,8 @@ class NEAT_Population(Population):
         """
         t0 = time.time()
         offspring = []
-        for genotype, fitness in zip(self.population, fitness_vector):
-            genotype.fitness = fitness
+        # for genotype, fitness in zip(self.population, fitness_vector):
+        #     genotype.fitness = fitness
         self.best = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[0]
 
         #* Update species fitness statistics

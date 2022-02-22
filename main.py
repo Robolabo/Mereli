@@ -54,7 +54,13 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     else: #* Non-optimizable simulation
         world.connect()
         world.reset()
+        t = 0
         while(True):
             state, action = world.step()
+            t += 1
+            if t == 1000:
+                print(world.robots['robotA_0'].position)
+                import pdb; pdb.set_trace()
+               
 if __name__ == "__main__":
     main()

@@ -108,7 +108,7 @@ class DistanceSensor(DirectionalSensor):
                 if any(np.array(ray_res) != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
                     signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
-            reading[i] += signal_strength + np.random.randn() * 0.05
+            reading[i] += signal_strength + np.random.randn() * 0.0
         self.t += 1
         self.reading += (0.2) * (np.array(reading) - self.reading)  
         return self.reading

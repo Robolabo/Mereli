@@ -77,13 +77,14 @@ def plot_ann_graph(neural_net, filename=None):
     for conn_name, conn in neural_net.graph['synapses'].items():
         if not conn['enabled']:
             continue
-        if conn['pre'] in hidden_nodes and conn['post'] in hidden_nodes:
-            graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
-        if conn['pre'] in neural_net.graph['inputs'] and conn['post'] in hidden_nodes + motor_nodes:
-            graph.edge(conn['pre'], conn['post'],**conn_attr)
+        graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+        # if conn['pre'] in hidden_nodes and conn['post'] in hidden_nodes:
+        #     graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+        # if conn['pre'] in neural_net.graph['inputs'] and conn['post'] in hidden_nodes + motor_nodes:
+        #     graph.edge(conn['pre'], conn['post'],**conn_attr)
   
-        if conn['pre'] in hidden_nodes and conn['post'] in motor_nodes:
-            graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+        # if conn['pre'] in hidden_nodes and conn['post'] in motor_nodes:
+        #     graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
   
 
 

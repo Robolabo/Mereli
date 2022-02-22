@@ -132,7 +132,6 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     fitness /= num_evaluations
     world.disconnect()
     # print('Eval:', time.time() - t0, flush=True)
-    
     return (env_id, fitness)
 
 class EvolutionaryAlgorithm:
@@ -206,12 +205,13 @@ class EvolutionaryAlgorithm:
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
+                
                 indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
                 my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
                 # print('rank, ', rank, [*self.populations['p1'].population[10].connections][0].parameters)
                 my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
                                 self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
-                #comm.Barrier()
+                comm.Barrier()
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
                     fitness = [vv for ff in eval_result for vv in ff]
@@ -223,20 +223,23 @@ class EvolutionaryAlgorithm:
                 self.fitness = [v for _, v in eval_result]
             #* No parallelization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
-                #* Evolve Population
-                mean_fitness, max_fitness, min_fitness = self.evolve(k)
-                
-                print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
-                    .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
-                any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
-                            zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
+                for genotype, fitness in zip(self.populations['p1'].population, self.fitness):#! Ojo many pops
+                    genotype.fitness = fitness
                 if k % 5 == 0 and self.checkpoint_name is not None:
                     if use_mpi:
                         print('SAVING CHECKPOINT', flush=True)
                     self.save_population(k)
+                #* Evolve Population
+                mean_fitness, max_fitness, min_fitness = self.evolve(k)
+                print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
+                    .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
+                any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
+                            zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
+
             if use_mpi:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
+                MPI.COMM_WORLD.Barrier()
 
     def evolve(self, generation):
         for pop in self.populations.values():
@@ -256,7 +259,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=30, timesteps=8000):
+    def evaluate(self, trials=30, timesteps=1000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in mereli/logs/data).
@@ -274,7 +277,7 @@ class EvolutionaryAlgorithm:
         world.reset()
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
-            for pop in self.populations.values():
+            for pop in self.populations.values():     
                 genotype_segment =  pop.best if pop.best is not None else pop.population[1] # pop.population[150]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         info = {n : deque() for n in self.fitness_fn.required_info}
