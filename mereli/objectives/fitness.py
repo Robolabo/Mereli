@@ -293,8 +293,7 @@ class TaskSwitchingB:
         # return (fA + fB)/2 + 1e-5
         ff =  (2 / (1/fA + 1/fB)) + 1e-5
         
-        import pdb; pdb.set_trace()
-        return(2 / (1/fA + 1/fB)) + 1e-5
+        # return(2 / (1/fA + 1/fB)) + 1e-5
         return np.sqrt(fA * fB) + 1e-5
 
 
