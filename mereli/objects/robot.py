@@ -203,3 +203,4 @@ class Epuck(Robot):
     """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
         super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)
+        self.scaling = 2.

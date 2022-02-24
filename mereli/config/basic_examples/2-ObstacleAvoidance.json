@@ -6,8 +6,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height":7,
-            "width": 7
+            "height": 7,
+            "width" : 7
         },
         "engine" : "pybullet",
         "physics_dt" : 0.1,
@@ -18,14 +18,14 @@
                 "num_instances" : 5,
                 "controller" : "basic_obstable_avoider",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1}
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 1.5}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
                 },
                 "initializers" : {
                     "positions" : {"name" : "grid",  "params" : {"shuffle": false}},
-                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values": [0,0,0,0,0]}}
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values": [0,0, 0,0,0 ]}}
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}

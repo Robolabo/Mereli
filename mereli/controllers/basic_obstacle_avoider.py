@@ -33,7 +33,6 @@ class BasicObstacleAvoider(RobotController):
             the sensor np.ndarray reading.
         :param float reward: reward (if any). Not used in this controller.
         """
-        
         st_ds = state['distance_sensor']
         if any(st_ds[[0,1]] > self.sensitivity):
             # print('Turn Left')
@@ -44,6 +43,7 @@ class BasicObstacleAvoider(RobotController):
         else:
             # print('GO straight over')
             action = np.array([1., 1.])
+        # action  = np.array([1., 1.])
         # Turn on the LED of the obstacle direction.
         if 'led_actuator' in self.enabled_actuators:
             led_action = st_ds > self.sensitivity

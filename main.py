@@ -55,12 +55,16 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         world.connect()
         world.reset()
         t = 0
+        import time
+        t0 = time.time()
         while(True):
             state, action = world.step()
             t += 1
             if t == 1000:
                 print(world.robots['robotA_0'].position)
+                print(time.time() - t0)
                 import pdb; pdb.set_trace()
+        
                
 if __name__ == "__main__":
     main()

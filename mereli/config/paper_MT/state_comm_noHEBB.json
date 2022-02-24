@@ -42,11 +42,7 @@
         }
     },
     "world": {
-        "name" : "square_arena",
-        "arena_params" : {
-            "height" : 10,
-            "width" : 10
-        },
+        "name" : "flat_world",
         "engine" : "pybullet",
         "physics_dt" : 0.08,
         "T_control" : 0.08,
@@ -57,26 +53,26 @@
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 10},
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1},
-                    "stateful_rx" : {"state_dim" : 2, "range" : 2},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 1.5},
+                    "stateful_rx" : {"state_dim" : 2, "range" : 3},
                     "task_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5},
-                    "stateful_tx" : {"state_dim" : 2, "range" : 2}  
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
+                    "stateful_tx" : {"state_dim" : 2, "range" : 3}  
                 },
                 "initializers" : {
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 4,6,7,8], "stimuli" : "reward", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 4,6,7], "stimuli" : "reward", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[4, 4, 1]]}}
                 },
                 "params" : {"range" : 5, "color" : "yellow"}
             },
@@ -84,7 +80,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-4, -4, 1]]}}
                 },
                 "params" : {"range" : 5, "color" : "red"}
             },

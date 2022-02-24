@@ -74,7 +74,7 @@ class PybulletEngine(BaseEngine):
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         self.add_objects(objects)
         self.connected = True
-
+        # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
             # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
             self.engine.resetDebugVisualizerCamera(cameraDistance=4, cameraYaw=30,\
@@ -127,7 +127,7 @@ class PybulletEngine(BaseEngine):
         obj.physics_client = self
         obj.id = p.loadURDF(obj.model_file, obj.init_position,\
             p.getQuaternionFromEuler(obj.init_orientation),
-            globalScaling=obj.scaling if hasattr(obj, 'scaling') else 1, 
+            globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 2), 
             physicsClientId=self.client)
         # print('Load: ', time.time() - t0)
         t0 = time.time()
@@ -136,7 +136,6 @@ class PybulletEngine(BaseEngine):
         for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
             p.setCollisionFilterGroupMask(obj.id, i, 0b001, 0b01, physicsClientId=self.client)
             p.setCollisionFilterPair(0, obj.id, -1, i, 1, physicsClientId=self.client)
-
 
         if hasattr(obj, 'color'):
             color = list(colors.to_rgb(obj.color)) + [1.]
@@ -173,11 +172,14 @@ class PybulletEngine(BaseEngine):
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
                     self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
-
+                # import pdb; pdb.set_trace()
+                p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)
                 self.physical_sensors[sensor_name][sector_idx] = {
                     'link' : link, 'ghost_link': ghost_link, 
                     'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,
                 }
+        # import pdb; pdb.set_trace()
+        
         for actuator in root.findall(".//actuator"):
             actuator_name = actuator.get('name')
             if actuator_name in self.physical_actuators:
@@ -416,7 +418,7 @@ class PybulletEngine(BaseEngine):
         assert len(joints) == len(actions)
         for action, joint in zip(actions, joints):
             if control_type == 'velocity':
-                p.setJointMotorControl2(obj_id, joint, targetVelocity=action, velocityGain=1.1,
+                p.setJointMotorControl2(obj_id, joint, targetVelocity=action, velocityGain=1,
                     controlMode=p.VELOCITY_CONTROL, physicsClientId=self.client)
             elif control_type == 'position':
                 p.setJointMotorControl2(obj_id, joint, targetPosition=action, controlMode=p.POSITION_CONTROL,

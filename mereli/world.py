@@ -442,6 +442,19 @@ class World(object):
         self.physics_engine.set_camera_focus(obj.position, distance)
 
 
+@world_registry(name='flat_world')
+class FlatWorld(World):
+    """ World class for square arenas of a given height and width. 
+
+    :param float width: width of the square arena in meters.
+    :param float height: height of the square arena in meters.
+    """
+    def __init__(self, *args, **kwargs):
+        super(FlatWorld, self).__init__(*args, **kwargs)
+
+
+
+
 @world_registry(name='square_arena')
 class SquareArena(World):
     """ World class for square arenas of a given height and width. 
@@ -460,14 +473,14 @@ class SquareArena(World):
         """ Private method for customizing the size of the limiting walls of the arena. 
         It creates the wall objects individually. They are stored under the group 'side_wall'.
         """
-        self.register_entity('wall_side_up', Wall([self.width/2, 0, .5], [0, 0, np.pi/2], height=0.5,\
-            width=self.width-.5), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .5], [0, 0, np.pi/2], height=.5,\
-            width=self.width-.5), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
-             width=.5), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
-            width=.5), group='side_wall')
+        self.register_entity('wall_side_up', Wall([self.width, 0, .5], [0, 0, np.pi/2], height=1,\
+            width=self.width-1), group='side_wall')
+        self.register_entity('wall_side_bottom', Wall([-self.width, 0, .5], [0, 0, np.pi/2], height=1,\
+            width=self.width-1), group='side_wall')
+        self.register_entity('wall_side_left', Wall([0, self.height, .5], [0, 0, -np.pi/2], height=self.height+1,\
+             width=1), group='side_wall')
+        self.register_entity('wall_side_right', Wall([0, -self.height, .5], [0, 0, -np.pi/2], height=self.height+1,\
+            width=1), group='side_wall')
 
 
 @world_registry(name='circular_arena')
@@ -497,7 +510,7 @@ class CircularArena(World):
                     vertices.append(vert)
             vertices = np.vstack(vertices)
             old_rads = np.unique(np.sqrt(vertices[:,0] ** 2 + vertices[:,2] ** 2).round(3))
-            assert len(old_rads) == 2
+            # assert len(old_rads) == 2
             scaling = self.radius / old_rads.min()
             vertices[:,[0,2]] *= scaling
         with open(file, "r+") as f:
@@ -522,6 +535,8 @@ class CustomWorld(World):
         super(CustomWorld, self).__init__(*args, **kwargs)
         self.map_file = map_file
         self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
+
+
 
 
 class MultiWorldWrapper:
