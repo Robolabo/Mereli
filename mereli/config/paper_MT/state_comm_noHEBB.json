@@ -65,7 +65,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 3, 5], "stimuli" : "reward", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2, 3,4, 5], "stimuli" : "reward", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
