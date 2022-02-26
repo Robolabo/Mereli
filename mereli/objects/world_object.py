@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod, abstractproperty
 import numpy as np
 import copy
 import pybullet as p
-from torch import float32
 from mereli.utils import isinstance_of_any
 
 class WorldObject(ABC):
