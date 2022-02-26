@@ -123,6 +123,9 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+        # stimuli['red_light_sensor'] = np.zeros(8)
+        # stimuli['yellow_light_sensor'] = np.zeros(8)
+        # stimuli['distance_sensor'] = np.zeros(8)
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
@@ -154,7 +157,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 999 and self.monitor is not None:
+        if self.t == self.time_scale * 299 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))

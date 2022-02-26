@@ -90,9 +90,8 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     else:        
         world = worlds
     assert not world.physics_engine.connected 
-    
     world.connect()
-    world.reset(seed=seed)
+    # world.reset(seed=seed)
     robots = [robot for robot in world.robots.values()]
     interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
@@ -101,7 +100,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
             interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
     # print('Stuff:', time.time() - t0, flush=True)
     fitness = 0
-    mean_survival_time = 0  
+    mean_survival_time = 0
     t0 = time.time()  
     #* Evaluate gentoype several times and average
     for rep in range(num_evaluations):
@@ -274,7 +273,7 @@ class EvolutionaryAlgorithm:
         world = self.world
         robots = [*world.robots.values()] #[robot for robot in world.hierarchy.values() if robot.trainable]
         world.connect()
-        world.reset()
+        # world.reset()
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():     
@@ -295,18 +294,19 @@ class EvolutionaryAlgorithm:
         fieldnames = fieldnames + [y for x in [['position_x_'+name, 'position_y_'+name] for name in {**lights, **cubes}] for y in x]
         data_logger = DataLogger(fieldnames)
         for trial in range(trials):
-            world.reset()
+            
             eval_hist = {'actions': [], 'states': []} # For fitness function not recording
             info = {n : deque() for n in self.fitness_fn.required_info}
+            world.reset()
             for timestep in range(timesteps):
                 states, actions = world.step()
                 for key, val in info.items():
                     if isinstance(val, deque):
                         val.append(get_info(key, world))
-                for robot, state, action in map(lambda x: (x[0], flatten_dict(x[1]), flatten_dict(x[2])), zip(world.robots.items(), states, actions)):
-                    re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
-                    st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])
-                    ac = np.hstack([action[a] for a in without_duplicates(map(re_split, actuator_names)) if a in action.keys()])
+                # for robot, state, action in map(lambda x: (x[0], flatten_dict(x[1]), flatten_dict(x[2])), zip(world.robots.items(), states, actions)):
+                #     re_split = lambda x: re.split('_\d|_[a-z]$', x)[0]
+                #     st = np.hstack([state[s] for s in without_duplicates(map(re_split, sensor_names)) if s in state.keys()])
+                #     ac = np.hstack([action[a] for a in without_duplicates(map(re_split, actuator_names)) if a in action.keys()])
                     #! Provisionally commented
                     # row_values = chain([trial, timestep], [robot[0]], np.hstack((robot[1].position[:2], robot[1].orientation[-1], st, ac)))
                     # row_dict = {key: val for key, val in zip(fieldnames, row_values)}

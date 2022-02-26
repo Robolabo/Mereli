@@ -25,4 +25,4 @@ class StatefulCommTX(Actuator):
         self.state = np.clip(self.state, a_min=0, a_max=1)
 
     def reset(self):
-        self.state = np.random.random(self.state_dim)
+        self.state = np.zeros(self.state_dim)#np.random.random(self.state_dim)

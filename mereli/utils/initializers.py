@@ -47,6 +47,27 @@ class Initializer:
     def __call__(self):
         raise NotImplementedError
 
+
+@initializer_registry(name='same')
+class SameValueInitializer(Initializer):
+    """
+    """
+    def __init__(self, *args, val=0, **kwargs):
+        super(SameValueInitializer, self).__init__(*args,  **kwargs)
+        self.val = val
+        self.values = [[val] for _ in range(self.num_points)]
+
+    @initializer_handler
+    def __call__(self):
+        """ 
+        Call method that returns the position or orientation values according to the initialization process.
+        
+        :returns: ``list`` of numpy arrays containing the initialization (position or orientation).
+        """
+        return [np.array(val) for val in self.values]
+
+
+
 @initializer_registry(name='fixed')
 class FixedInitializer(Initializer):
     """ Initializer class that initializes the positions or orientations always at the given fixed 
@@ -153,15 +174,15 @@ class RandomUniformInitializer(Initializer):
             while len(res) < self.num_points:
                 # new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
                 if isinstance(self.low, int):
-                    new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size)
+                    new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size).round(3)
                 else:
-                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0])
-                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1])
+                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0]).round(3)
+                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1]).round(3)
                     new_sample = np.r_[new_sample_x, new_sample_y]
                 if len(res) == 0 or all(LA.norm(new_sample - pp) > self.min_dist for pp in res):
                     res.append(new_sample)
         else:
-            res = [np.random.uniform(low=self.low, high=self.high, size=self.size)\
+            res = [np.random.uniform(low=self.low, high=self.high, size=self.size).round(3)\
                     for _ in range(self.num_points)]
         return res
         
@@ -323,4 +344,4 @@ class GridInitializer(Initializer):
             points.append(np.array([x_i, y_i]))
         if self.shuffle:
             np.random.shuffle(points)
-        return points
+        return np.array(points).copy()

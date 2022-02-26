@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod, abstractproperty
 import numpy as np
+import copy
 import pybullet as p
+from torch import float32
 from mereli.utils import isinstance_of_any
 
 class WorldObject(ABC):
@@ -110,7 +112,8 @@ class WorldObject(ABC):
         
         :param np.ndarray new_position: numpy array with the new position of the entity.
         """
-        self.physics_client.set_body_state(self.id, 0, new_position, self.orientation)
+        self.init_position = np.array(new_position).copy()
+        self.physics_client.set_body_state(self.id, 0, np.array(new_position).copy(), self.orientation)
         
     @orientation.setter
     def orientation(self, new_orientation):

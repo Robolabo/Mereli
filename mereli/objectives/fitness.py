@@ -291,8 +291,7 @@ class TaskSwitchingB:
         fA = np.clip(fA, a_max=1, a_min=0)
         fB = np.clip(fB, a_max=1, a_min=0)
         # return (fA + fB)/2 + 1e-5
-        ff =  (2 / (1/fA + 1/fB)) + 1e-5
-        
+        # ff =  (2 / (1/fA + 1/fB)) + 1e-5
         # return(2 / (1/fA + 1/fB)) + 1e-5
         return np.sqrt(fA * fB) + 1e-5
 

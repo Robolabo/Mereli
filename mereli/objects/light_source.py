@@ -18,6 +18,7 @@ class LightSource(WorldObject):
                         static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color
+        self.scaling = 0.5
         self.reset()
 
     def step(self, neighborhood):

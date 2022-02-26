@@ -134,10 +134,10 @@ class World(object):
         :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
                   Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
+        # import pdb; pdb.set_trace()
         states = deque()
         actions = deque()
         pre_perturbations = []
-
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
@@ -263,9 +263,10 @@ class World(object):
             self.initializers[obj_name] = {
                 key : initializers[value['name']](obj['num_instances'], engine=self.physics_engine.engine_type, 
                         variable=key, **value['params']) for key, value in obj['initializers'].items()
-            }
+            }            
             #* Loop entities and add them to the world.
             #* Distinguish between robots and the other objects.
+            
             entity_positions = self.initializers[obj_name]['positions']()
             if issubclass(object_cls, Robot):# or issubclass(object_cls, Robot3D):
                 entity_orientations = self.initializers[obj_name]['orientations']()
@@ -280,7 +281,7 @@ class World(object):
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology)
-                    robot = object_cls(position, orientation, controller=controller, **obj['params'])
+                    robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
                     #* Add communication system (if any)
                     if "comm_sys" in obj:
                         robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))

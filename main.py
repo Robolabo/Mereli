@@ -34,9 +34,17 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
+
+
+
+
     if ncpu > 1 or USE_MPI and MPI.COMM_WORLD.Get_size() > 1:
         world = MultiWorldWrapper(max(ncpu, MPI.COMM_WORLD.Get_size()), world)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
+
+
+
+
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
         ga_config = cfg_dict['algorithm']
         fitness = fitness_functions[ga_config['fitness_function']]()

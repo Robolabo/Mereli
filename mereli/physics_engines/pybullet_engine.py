@@ -143,9 +143,9 @@ class PybulletEngine(BaseEngine):
         if hasattr(obj, 'mass'):
             p.changeDynamics(obj.id, -1, mass=obj.mass, physicsClientId=self.client)
         #! Prov loop
-        for i in range(2):
-            p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
-                activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
+        # for i in range(2):
+        #     p.changeDynamics(obj.id, i, lateralFriction=0.9, physicsClientId=self.client,\
+        #         activationState=p.ACTIVATION_STATE_DISABLE_WAKEUP)
         # print('Config and colls: ', time.time() - t0)
         t0 = time.time()
         self.parse_urdf(obj) #

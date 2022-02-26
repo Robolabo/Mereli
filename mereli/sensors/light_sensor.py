@@ -86,7 +86,7 @@ class LightSensor(DirectionalSensor):
                     else:
                         signal_strength[light_color] = self.propagation(rho, phi)
             for color in signal_strength:
-                reading[color][i] += signal_strength[color] 
+                reading[color][i] += np.round(signal_strength[color], 4)
         reading = {color + '_light_sensor' : vec for color, vec in reading.items()}
         # #* Convert dict to the type {color : vector}, where vector is the measurement of all sectors (dim=n_sectors)
         # #* taking into account only the color set by the key.
@@ -96,9 +96,9 @@ class LightSensor(DirectionalSensor):
         # reading['light_sensor'] = np.sum([x for x in reading.values()], 0)
         self.t += 1
         for color in reading:
-            reading[color] += np.random.randn() * 0.05
+            # reading[color] += np.random.randn() * 0.0
             self.reading[color] += (0.2) * (reading[color]  - self.reading[color])
-        return self.reading
+        return reading
 
     def step_fast(self, neighborhood):
         pass
