@@ -116,7 +116,7 @@ class Synapses(ABC):
             in_deg = np.sum(self.mask, 1)[ann_graph['neurons'][syn['post']]['idx']]
             # out_deg = np.sum(self.mask, )[ann_graph['neurons'][syn['pre']]['idx']]
 
-            syn['weight'] = np.random.uniform(low=-1 / np.sqrt(in_deg), high=1 / np.sqrt(in_deg))
+            syn['weight'] = np.random.randn() #np.random.uniform(low=-1 / np.sqrt(in_deg), high=1 / np.sqrt(in_deg))
         return ann_graph
         # random_weights = np.clip(random_weights, a_min=0, a_max=1)
         # return self.set_weights(conn_name, ann_graph, random_weights,\

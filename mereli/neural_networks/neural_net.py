@@ -123,9 +123,6 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        # stimuli['red_light_sensor'] = np.zeros(8)
-        # stimuli['yellow_light_sensor'] = np.zeros(8)
-        # stimuli['distance_sensor'] = np.zeros(8)
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
