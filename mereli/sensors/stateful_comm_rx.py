@@ -25,7 +25,7 @@ class StatefulCommRX(Sensor):
                         neigh_state.append(obj.actuators['stateful_tx'].state)
         if len(neigh_state) == 0:
             neigh_state = np.array([0] * self.state_dim)
-        else:    
+        else:
             neigh_state = np.mean(neigh_state, 0)
 
         return {'mean_neigh_state' : neigh_state,# + np.random.randn(self.state_dim) * 0.0,

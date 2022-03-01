@@ -163,9 +163,21 @@ class NeuralNetwork(BaseNeuralNet):
             # plot_spikes(self)
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [1,1]
+        # actions['outA'] = [0,0]
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         # self.ww_buffer.append(self.weights)
+        if stimuli['reward'] > 0.01:
+            red_ls = stimuli['red_light_sensor']
+            yell_ls = stimuli['yellow_light_sensor']
+            if max(red_ls) > max(yell_ls):
+                actions['outB'] = [-1, 1]
+                print('red')
+            else: 
+                actions['outB'] = [1, -1]
+                print('yell')
+
+        else:
+            actions['outB'] = [-1, -1]
         return actions
     
     def reset(self):

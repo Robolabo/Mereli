@@ -35,7 +35,8 @@
             "I6-S" : {"pre":"I6","post":"OUT_STATE", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         },
         "learning_rule" : {
             "reward" : "task_switching_lights"
@@ -44,8 +45,8 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.1,
-        "T_control" : 0.1,
+        "physics_dt" : 0.07,
+        "T_control" : 0.07,
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
@@ -95,7 +96,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 800,
+        "population_size" : 400,
         "generations" : 2000,
         "evaluation_steps" : 1000,
         "num_evaluations" : 1,
@@ -107,14 +108,14 @@
                 "min_vals" : [-4, -0.7, -2],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.7,
-                    "p_node_mut" : 0.15,
-                    "p_conn_mut" : 0.3,
-                    "compatib_thresh" : 0.6,
+                    "p_weight_mut" : 0.4,
+                    "p_node_mut" : 0.1,
+                    "p_conn_mut" : 0.2,
+                    "compatib_thresh" : 0.4,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
-                    "species_elites" : 5
+                    "species_elites" : 3
                 }
             }          
         }
