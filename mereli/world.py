@@ -474,14 +474,14 @@ class SquareArena(World):
         """ Private method for customizing the size of the limiting walls of the arena. 
         It creates the wall objects individually. They are stored under the group 'side_wall'.
         """
-        self.register_entity('wall_side_up', Wall([self.width, 0, .5], [0, 0, np.pi/2], height=1,\
-            width=self.width-1), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width, 0, .5], [0, 0, np.pi/2], height=1,\
-            width=self.width-1), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height, .5], [0, 0, -np.pi/2], height=self.height+1,\
-             width=1), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height, .5], [0, 0, -np.pi/2], height=self.height+1,\
-            width=1), group='side_wall')
+        self.register_entity('wall_side_up', Wall([self.width/2, 0, .5], [0, 0, np.pi/2], height=0.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .5], [0, 0, np.pi/2], height=.5,\
+            width=self.width-.5), group='side_wall')
+        self.register_entity('wall_side_left', Wall([0, self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+             width=.5), group='side_wall')
+        self.register_entity('wall_side_right', Wall([0, -self.height/2, .5], [0, 0, -np.pi/2], height=self.height+.5,\
+            width=.5), group='side_wall')
 
 
 @world_registry(name='circular_arena')

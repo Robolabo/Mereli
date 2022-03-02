@@ -88,7 +88,7 @@ class DistanceSensor(DirectionalSensor):
         
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         reading = np.zeros(len(g_ids))
-        if self.contact_points is None or self.t % 15 == 0:
+        if self.contact_points is None or self.t % 10 == 0:
             self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         # return np.zeros(8)
         oris = self.directions(self.sensor_owner.orientation[-1])
@@ -103,15 +103,14 @@ class DistanceSensor(DirectionalSensor):
                 ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
                 
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=15)
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=5)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
-                ray_positions = [np.round(ps, 5) for ps in ray_positions]
                 if any(np.array(ray_res) != -1):
                     
-                    rhos, phis = zip(*[(np.linalg.norm(np.round(pos, 5) - np.round(origin, 5)), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1 and idx != 0])
+                    rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1 and idx != 0])
                     signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
                     # if self.t == 171:import pdb; pdb.set_trace()
-            reading[i] += np.round(signal_strength, 4)# + np.random.randn() * 0.0
+            reading[i] += signal_strength # + np.random.randn() * 0.0
         self.t += 1
         self.reading += (0.2) * (np.array(reading) - self.reading)
         # if self.t > 171:import pdb; pdb.set_trace()

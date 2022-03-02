@@ -127,7 +127,7 @@ class PybulletEngine(BaseEngine):
         obj.physics_client = self
         obj.id = p.loadURDF(obj.model_file, obj.init_position,\
             p.getQuaternionFromEuler(obj.init_orientation),
-            globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 2), 
+            globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 1), 
             physicsClientId=self.client)
         # print('Load: ', time.time() - t0)
         t0 = time.time()

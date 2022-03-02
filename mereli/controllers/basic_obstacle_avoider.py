@@ -2,7 +2,7 @@ import numpy as np
 from mereli.controllers import RobotController
 from mereli.register import controller_registry
 
-@controller_registry(name='basic_obstable_avoider')
+@controller_registry(name='basic_obstacle_avoider')
 class BasicObstacleAvoider(RobotController):
     """ Controller devoted to the obstacle avoidance task. This means that the controller 
     will read from the distance sensor, process the measurements and return joint velocity 
@@ -12,7 +12,7 @@ class BasicObstacleAvoider(RobotController):
     :param float sensitivity: value in [0, 1] that defines the threshold in the distance sensor reading 
         to interpret an obstacle detection. 
     """
-    def __init__(self, *args, sensitivity=0.15, **kwargs):
+    def __init__(self, *args, sensitivity=0.1, **kwargs):
         super(BasicObstacleAvoider, self).__init__(*args, **kwargs)
         self.sensitivity = sensitivity
 
@@ -43,7 +43,6 @@ class BasicObstacleAvoider(RobotController):
         else:
             # print('GO straight over')
             action = np.array([1., 1.])
-        # action  = np.array([1., 1.])
         # Turn on the LED of the obstacle direction.
         if 'led_actuator' in self.enabled_actuators:
             led_action = st_ds > self.sensitivity
