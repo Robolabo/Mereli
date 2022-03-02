@@ -45,15 +45,15 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.07,
-        "T_control" : 0.07,
+        "physics_dt" : 0.1,
+        "T_control" : 0.1,
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 5},
+                    "light_sensor" : {"n_sectors" : 8, "range" : 7},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 1},
                     "stateful_rx" : {"state_dim" : 2, "range" : 10},
                     "task_sensor" : {}
@@ -75,7 +75,7 @@
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
                 },
-                "params" : {"range" : 5, "color" : "yellow"}
+                "params" : {"range" : 7, "color" : "yellow"}
             },
             "light_red" : {
                 "type" : "light_source",
@@ -83,7 +83,7 @@
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
                 },
-                "params" : {"range" : 5, "color" : "red"}
+                "params" : {"range" : 7, "color" : "red"}
             },
             "task_scheduler" : {
                 "type" : "task_scheduler",
