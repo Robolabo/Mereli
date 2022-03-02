@@ -123,6 +123,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+        task = stimuli['task_sensor']
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
@@ -167,15 +168,12 @@ class NeuralNetwork(BaseNeuralNet):
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         # self.ww_buffer.append(self.weights)
         if stimuli['reward'] > 0.01:
-            red_ls = stimuli['red_light_sensor']
-            yell_ls = stimuli['yellow_light_sensor']
-            if max(red_ls) > max(yell_ls):
-                actions['outB'] = [-1, 1]
+            if task == 0:
+                actions['outB'] = [0, 1]
             else: 
-                actions['outB'] = [1, -1]
-
+                actions['outB'] = [1, 0]
         else:
-            actions['outB'] = [-1, -1]
+            actions['outB'] = stimuli['mean_neigh_state']
         return actions
     
     def reset(self):

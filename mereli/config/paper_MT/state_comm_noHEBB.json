@@ -15,7 +15,7 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_STATE" : {"n" : 2, "params" : {"activation" : "tanh"}}},
+            "OUT_STATE" : {"n" : 2, "params" : {"activation" : "sigmoid"}}},
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
