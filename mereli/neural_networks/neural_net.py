@@ -171,10 +171,8 @@ class NeuralNetwork(BaseNeuralNet):
             yell_ls = stimuli['yellow_light_sensor']
             if max(red_ls) > max(yell_ls):
                 actions['outB'] = [-1, 1]
-                print('red')
             else: 
                 actions['outB'] = [1, -1]
-                print('yell')
 
         else:
             actions['outB'] = [-1, -1]
