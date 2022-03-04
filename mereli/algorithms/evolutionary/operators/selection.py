@@ -129,7 +129,7 @@ def tournament_selection(population,  n_sel, tournament_size=3):
         selected.append(competitors[np.argmax(competitors_fitness)])
         selected_fitness.append(np.max(competitors_fitness))
     # selected = [v for v, _ in sorted(zip(selected, selected_fitness), key=lambda x: x[1])]
-    return selected, selected_fitness
+    return selected
 
 
 @evo_operator_registry(name='stochastic_universal_selection')
