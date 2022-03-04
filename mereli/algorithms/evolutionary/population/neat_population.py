@@ -109,9 +109,9 @@ class NEAT_Population(Population):
         total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
         species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]) / total_fitness).astype(int)
         species_offsprings[species_offsprings < 2] = 2
-        while sum(species_offsprings) < 50:
+        while sum(species_offsprings) < self.pop_size:
             species_offsprings[np.random.randint(len(self.species))] += 1
-        while sum(species_offsprings) > 50:
+        while sum(species_offsprings) > self.pop_size:
             ii = np.random.choice(np.where(species_offsprings > 2)[0])
             species_offsprings[ii] -= 1
         assert sum(species_offsprings) == self.pop_size
