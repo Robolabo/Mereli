@@ -124,6 +124,7 @@ class NeuralNetwork(BaseNeuralNet):
         ===============================================================
         """
         task = stimuli['task_sensor']
+        # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
@@ -150,12 +151,11 @@ class NeuralNetwork(BaseNeuralNet):
             self.spikes = spikes.copy()
             spikes_window.append(spikes.copy())
         spikes_window = np.stack(spikes_window)
-
         #* --- Convert spikes into actions (Decoding Step) ---
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 999 and self.monitor is not None:
+        if self.t == self.time_scale * 499 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -164,7 +164,6 @@ class NeuralNetwork(BaseNeuralNet):
             # plot_spikes(self)
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
-        # actions['outA'] = [0,0]
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         # self.ww_buffer.append(self.weights)
         if stimuli['reward'] > 0.01:

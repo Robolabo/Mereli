@@ -102,6 +102,10 @@ class Species:
         })
 
     @property
+    def adjusted_fitness(self):
+        return self.mean_fitness['raw'] / self.num_genotypes
+
+    @property
     def is_extinct(self):
         return self.last_improvement >= 15
         

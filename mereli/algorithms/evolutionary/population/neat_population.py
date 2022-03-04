@@ -66,12 +66,13 @@ class Innovation:
 class NEAT_Population(Population):
     """  
     """ 
-    def __init__(self, *args, p_weight_mut=0.75, p_node_mut=0.08, p_conn_mut=0.1,
+    def __init__(self, *args, survival_rate=0.5, p_weight_mut=0.75, p_node_mut=0.08, p_conn_mut=0.1,
                 compatib_thresh=2, c1=1, c2=1, c3=2, species_elites=0, **kwargs):
         super(NEAT_Population, self).__init__(*args, **kwargs)
         self.p_weight_mut = p_weight_mut
         self.p_node_mut = p_node_mut
         self.p_conn_mut = p_conn_mut
+        self.survival_rate = survival_rate
         self.compatib_thresh = compatib_thresh
         self.c1 = c1
         self.c2 = c2
@@ -97,7 +98,6 @@ class NEAT_Population(Population):
         # for genotype, fitness in zip(self.population, fitness_vector):
         #     genotype.fitness = fitness
         self.best = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[0]
-
         #* Update species fitness statistics
         for spc in self.species:
             spc_genotypes = [genotype for genotype in self.population if genotype.species == spc.id]
@@ -105,7 +105,16 @@ class NEAT_Population(Population):
             spc.update_stats(spc_fitness)
 
         #* Compute the number of offspring for each species
-        species_offsprings = compute_spawn(self.species, self.pop_size, 2)
+        # species_offsprings = compute_spawn(self.species, self.pop_size, 2)
+        total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
+        species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]) / total_fitness).astype(int)
+        species_offsprings[species_offsprings < 2] = 2
+        while sum(species_offsprings) < 50:
+            species_offsprings[np.random.randint(len(self.species))] += 1
+        while sum(species_offsprings) > 50:
+            ii = np.random.choice(np.where(species_offsprings > 2)[0])
+            species_offsprings[ii] -= 1
+        assert sum(species_offsprings) == self.pop_size
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
             #* Filter out genotypes from species.
@@ -117,14 +126,15 @@ class NEAT_Population(Population):
                     n_offspring -= 1
                     offspring.append(copy.deepcopy(elite_gnt))
             #* Truncate bests
-            n_sel = max(1, round(0.3 * len(spc_genotypes)))
-            parents = truncation_selection(spc_genotypes, n_sel)
+            n_sel = max(2, round(self.survival_rate * len(spc_genotypes)))
+            parents = tournament_selection(spc_genotypes, n_sel)
             #* Random Mating (OJO REPLACEMENT)
-            try:
-                parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
-            except:
-                import pdb; pdb.set_trace()
-            parents = [parents[idx] for idx in parents_mating] # shuffle parents
+            # try:
+            #     parents_mating = np.random.choice(n_sel, size=2 * n_offspring)
+            #     import pdb; pdb.set_trace()
+            # except:
+            #     import pdb; pdb.set_trace()
+            # parents = [parents[idx] for idx in parents_mating] # shuffle parents
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents))
         #* NEAT Mutation
@@ -154,14 +164,14 @@ class NEAT_Population(Population):
         #* If a new species is created the current representative is the genotype 
         #* that created it.
         for spc in self.species:
-            if spc.representative is not None:
-                #TODO 
-                compatible, distances = zip(*[spc.compatibility(gnt) for gnt in self.population])
-                spc.representative = copy.deepcopy(self.population[np.argmin(distances)])
             spc.num_genotypes = 0
 
         for genotype in self.population:
-            compatible, distances = zip(*[spc.compatibility(genotype) for spc in self.species])
+            if len(self.species) != 0:
+                compatible, distances = zip(*[spc.compatibility(genotype) for spc in self.species])
+            else:
+                compatible, distances = [False], None
+            
             if not any(compatible): #* create new species
                 self.species_count += 1
                 new_species = Species(self.species_count, generation, compatib_thresh=self.compatib_thresh,
@@ -176,7 +186,11 @@ class NEAT_Population(Population):
                 species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype.species = self.species[species_idx].id
-
+        for spc in self.species:
+            if spc.representative is not None:
+                compatible, distances = zip(*[spc.compatibility(gnt) for gnt in self.population if gnt.species == spc.id])
+                spc.representative = copy.deepcopy(self.population[np.argmin(distances)])
+            
         #* check extintion
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
@@ -202,8 +216,8 @@ class NEAT_Population(Population):
                 Evolutionary algs.
         - Returns: None
         """
-        self.species = [Species(self.species_count, 0, compatib_thresh=self.compatib_thresh, 
-                            c1=self.c1, c2=self.c2, c3=self.c3)]
+        self.species = []#Species(self.species_count, 0, compatib_thresh=self.compatib_thresh, 
+                            #c1=self.c1, c2=self.c2, c3=self.c3)]
         self.input_nodes = [*interface.neural_net.graph['inputs'].keys()]
         #* Only initialize weights randomly, the structure is always the same.
         for n in range(self.pop_size):

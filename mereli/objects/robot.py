@@ -79,7 +79,7 @@ class Robot(WorldObject):
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=reward)
-        
+
         #* Apply communication system pre step (previous to controller) 
         if self.comm_sys is not None:
             actions = self.comm_sys.step_post(actions)

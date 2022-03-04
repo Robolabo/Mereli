@@ -258,7 +258,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=30, timesteps=1000):
+    def evaluate(self, trials=30, timesteps=2000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in mereli/logs/data).
@@ -276,8 +276,10 @@ class EvolutionaryAlgorithm:
         # world.reset()
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
-            for pop in self.populations.values():     
-                genotype_segment =  pop.best if pop.best is not None else pop.population[1] # pop.population[150]
+            for pop in self.populations.values():
+                import pdb; pdb.set_trace()
+                aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
+                genotype_segment = aux_pop[1]#pop.best if pop.best is not None else pop.population[1] # pop.population[150]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         info = {n : deque() for n in self.fitness_fn.required_info}
         info['generation'] = 1
