@@ -105,15 +105,15 @@ class NEAT_Population(Population):
             spc.update_stats(spc_fitness)
 
         #* Compute the number of offspring for each species
-        species_offsprings = compute_spawn(self.species, self.pop_size, 2)
-        # total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
-        # species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]) / total_fitness).astype(int)
-        # species_offsprings[species_offsprings < 2] = 2
-        # while sum(species_offsprings) < self.pop_size:
-        #     species_offsprings[np.random.randint(len(self.species))] += 1
-        # while sum(species_offsprings) > self.pop_size:
-        #     ii = np.random.choice(np.where(species_offsprings > 2)[0])
-        #     species_offsprings[ii] -= 1
+        # species_offsprings = compute_spawn(self.species, self.pop_size, 2)
+        total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
+        species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]) / total_fitness).astype(int)
+        species_offsprings[species_offsprings < 2] = 2
+        while sum(species_offsprings) < self.pop_size:
+            species_offsprings[np.random.randint(len(self.species))] += 1
+        while sum(species_offsprings) > self.pop_size:
+            ii = np.random.choice(np.where(species_offsprings > 2)[0])
+            species_offsprings[ii] -= 1
         assert sum(species_offsprings) == self.pop_size
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
