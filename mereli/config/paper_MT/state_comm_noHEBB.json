@@ -98,7 +98,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 1300,
+        "evaluation_steps" : 1500,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching3",
         "populations" : {
