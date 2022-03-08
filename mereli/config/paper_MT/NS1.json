@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_state_comm_noHEBB",
+    "checkpoint_file" : "chk_NS1",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -50,7 +50,7 @@
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 1,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 7},
@@ -96,7 +96,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 150,
+        "population_size" : 50,
         "generations" : 2000,
         "evaluation_steps" : 1500,
         "num_evaluations" : 1,
@@ -115,7 +115,7 @@
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
-                    "species_elites" : 2
+                    "species_elites" : 1
                 }
             }          
         }

@@ -3,6 +3,8 @@ import copy,time
 import numpy as np
 from functools import reduce
 
+from torch import trunc
+
 from .population import Population
 from mereli.algorithms.evolutionary.species import Species
 from ..operators.crossover import *
@@ -127,7 +129,7 @@ class NEAT_Population(Population):
                     offspring.append(copy.deepcopy(elite_gnt))
             #* Truncate bests
             n_sel = max(2, round(self.survival_rate * len(spc_genotypes)))
-            parents = tournament_selection(spc_genotypes, n_sel)
+            parents = truncation_selection(spc_genotypes, n_sel)
             #* Random Mating (OJO REPLACEMENT)
             try:
                 parents_mating = np.random.choice(n_sel, size=2 * n_offspring)

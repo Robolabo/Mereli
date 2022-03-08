@@ -25,6 +25,10 @@ import graphviz
 #     plt.show()
 
 
+def plot_weight_hist(neural_net):
+    plt.hist(neural_net.weights[neural_net.weights != 0.0])
+    plt.show()
+
 def plot_ann_graph(neural_net, filename=None):
     conn_attr = {
         # 'style' : 'normal' if conn['weight'] >= 0 else 'dot',
