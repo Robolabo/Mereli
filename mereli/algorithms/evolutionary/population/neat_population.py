@@ -185,19 +185,19 @@ class NEAT_Population(Population):
                 species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype.species = self.species[species_idx].id
-                
+
         #* Check extintion and upadate representatives.
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))
                 self.species.pop(i)
             else:
-                assert spc.representative is not None
+                assert species.representative is not None
                 try:
-                    compatible, distances = zip(*[spc.compatibility(gnt) for gnt in self.population if gnt.species == spc.id])
+                    compatible, distances = zip(*[species.compatibility(gnt) for gnt in self.population if gnt.species == species.id])
                 except:
                     import pdb; pdb.set_trace()
-                spc.representative = copy.deepcopy(self.population[np.argmin(distances)])
+                species.representative = copy.deepcopy(self.population[np.argmin(distances)])
 
 
 
