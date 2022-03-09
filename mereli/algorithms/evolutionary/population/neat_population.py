@@ -105,7 +105,7 @@ class NEAT_Population(Population):
             try:
                 spc.update_stats(spc_fitness)
             except:
-                print(spc_fitness)
+                print(spc_fitness, spc_genotypes, spc.num_genotypes, spc.id, self.species)
                 spc.update_stats(spc_fitness)
         #* Compute the number of offspring for each species
         # species_offsprings = compute_spawn(self.species, self.pop_size, 2)
@@ -121,7 +121,7 @@ class NEAT_Population(Population):
         #* Crossover in-between species individuals.
         for n_offspring, spc in zip(species_offsprings, self.species):
             #* Filter out genotypes from species.
-            spc_genotypes = [genotype for genotype in self.population if genotype.species == spc.id]
+            spc_genotypes = self.species_genotypes(spc.id)
             #* Apply species elitism
             if self.species_elites > 0 and n_offspring > self.species_elites:
                 # Use dummy iterable range(self.species_elites) to set the loop length to the number of elites
@@ -187,21 +187,22 @@ class NEAT_Population(Population):
                 species_idx, _ = sorted(zip(compatible_species, compatible_distances), key=lambda x: x[1])[0]
                 self.species[species_idx].num_genotypes += 1
                 genotype.species = self.species[species_idx].id
-
-        #* Check extintion and upadate representatives.
+        #* Check extintion and update representatives.
         for i, species in enumerate(self.species):
             if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))
                 self.species.pop(i)
             else:
                 assert species.representative is not None
+                spc_genotypes = self.species_genotypes(species.id)
                 try:
-                    compatible, distances = zip(*[species.compatibility(gnt) for gnt in self.population if gnt.species == species.id])
+                    compatible, distances = zip(*[species.compatibility(gnt) for gnt in spc_genotypes])
                 except:
                     import pdb; pdb.set_trace()
-                species.representative = copy.deepcopy(self.population[np.argmin(distances)])
+                species.representative = copy.deepcopy(spc_genotypes[np.argmin(distances)])
 
-
+    def species_genotypes(self, species_id):
+        return [genotype for genotype in self.population if genotype.species == species_id]
 
     @property
     def min_vector(self):
