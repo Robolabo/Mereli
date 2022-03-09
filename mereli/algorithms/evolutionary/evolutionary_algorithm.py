@@ -278,6 +278,7 @@ class EvolutionaryAlgorithm:
         for interface in interfaces:
             for pop in self.populations.values():
                 aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
+                pop.species[0].compatibility(aux_pop[0])
                 genotype_segment = aux_pop[1] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         info = {n : deque() for n in self.fitness_fn.required_info}

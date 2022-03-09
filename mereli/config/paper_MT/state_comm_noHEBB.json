@@ -45,12 +45,12 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.03,
-        "T_control" : 0.03,
+        "physics_dt" : 0.07,
+        "T_control" : 0.07,
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 3,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 7},
@@ -88,7 +88,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 3000, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -98,20 +98,20 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 3000,
+        "evaluation_steps" : 2000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching3",
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:tau:all", "neurons:bias:all"],
-                "max_vals" : [6, 0.6, 2],
-                "min_vals" : [-6, -0.7, -2],
+                "max_vals" : [30, 0.6, 10],
+                "min_vals" : [-30, -0.7, -10],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.4,
+                    "p_weight_mut" : 0.5,
                     "p_node_mut" : 0.08,
-                    "p_conn_mut" : 0.15,
-                    "compatib_thresh" : 0.3,
+                    "p_conn_mut" : 0.2,
+                    "compatib_thresh" : 1.2,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,

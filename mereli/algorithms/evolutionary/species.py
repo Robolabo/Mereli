@@ -44,8 +44,7 @@ class Species:
         # Do not care about disjoint and excess. For the moment we use same weights.
         diff_genes = genotype_innovations - repr_innovations
         common_genes = genotype_innovations.intersection(repr_innovations)
-
-        
+        # import pdb; pdb.set_trace()
         param_distance = 0
         conn_params = [*genotype.connections][0].parameters
         node_params = [*genotype.nodes][0].parameters
@@ -58,7 +57,7 @@ class Species:
                                         if g.innovation in common_genes])
                 assert len(param_repr) == len(param_genotype)
                 param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
-            param_distance /= 2 * len(conn_params)
+            param_distance /= len(conn_params)
         #* Node parameter's distance
         if len(node_params):
             for param in node_params:
@@ -68,12 +67,12 @@ class Species:
                             for node in geno_nodes.intersection(repr_nodes)])
                 assert len(param_repr) == len(param_genotype)
                 param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
-            param_distance /= 2 * len(node_params) 
+            param_distance /= len(node_params) 
         
         #* Topological distance
-        arch_distance = len(diff_genes) / max(len(repr_innovations), len(genotype_innovations))
-
-        total_dist = 2 * self.c1 * arch_distance + self.c3 * param_distance
+        arch_conn_distance = len(diff_genes) / 10 #max(len(repr_innovations), len(genotype_innovations))
+        arch_node_distance = len(geno_nodes - repr_nodes) / max(len(geno_nodes), len(repr_nodes))
+        total_dist = self.c1 * (arch_conn_distance + arch_node_distance) + self.c3 * param_distance
         return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):

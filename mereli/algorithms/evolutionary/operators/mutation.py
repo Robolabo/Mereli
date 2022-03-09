@@ -20,7 +20,7 @@ def add_node(genotype, innovation):
     sel_conn = np.random.choice([*genotype.enabled_connections])
 
     #* Create and add new node gene in-between pre and post nodes of sel_conn
-    node_name = f'Node_{sel_conn.innovation}'
+    node_name = f'N{sel_conn.innovation}'
     if genotype.contains_node(node_name):
         return genotype, innovation
     sel_conn.enabled = False # Disable connection
