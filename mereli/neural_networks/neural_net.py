@@ -155,7 +155,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 1499 and self.monitor is not None:
+        if self.t == self.time_scale * 2999 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -165,6 +165,7 @@ class NeuralNetwork(BaseNeuralNet):
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
+        # actions['outA'] = [1, 1]
         # self.ww_buffer.append(self.weights)
         # if stimuli['reward'] > 0.01:
         #     if task == 0:

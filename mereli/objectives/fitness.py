@@ -149,6 +149,7 @@ class GotoLight:
         robot_positions = np.stack(info["robot:position"]).copy()
         light_positions = np.stack(info["light_source:position@color="+self.color]).copy()
         fitness = 0
+        T = len(actions)
         for t, (pos, light_pos, actions_t)  in enumerate(zip(robot_positions, light_positions, actions)):
             #* Considering only 1 light
             light_pos = light_pos.flatten()
@@ -159,10 +160,10 @@ class GotoLight:
             fA = int(all(distances < 1))
             # if len(distances) > 1:
             #     fA *= (np.sum(distances < 1) > 1)
-            if t < 100:#antes a 100
-                rad_ball = -(3/100) * t + 3
+            
+            if t < int(0.1 * T):
+                rad_ball = -(3/int(0.1 * T)) * t + 3
                 fA = np.clip(1 - (distances / rad_ball), a_max=1, a_min=0).mean()
-            # fitness += 
             fitness += fA
         # return (fitness / len(states)) + 1e-5
         return (fitness / len(states)) + 1e-5
@@ -244,8 +245,8 @@ class TaskSwitching3:
 class TaskSwitching4Lights:
     """Fitness function for the exploration task."""
     def __init__(self):
-        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
-        # self.tasks = [GotoLight(color='red'), GotoLight(color='yellow')]
+        # self.tasks = [GotoLight(color='red'), GotoLight(color='yellow'), GotoLight(color='blue'), GotoLight(color='green')]
+        self.tasks = [GotoLight(color='red'), GotoLight(color='yellow')]
         #! Add current task info
         self.required_info = tuple(set(['task_scheduler:current_task', 'task_scheduler:num_slots']).union(*[set(tsk.required_info) for tsk in self.tasks]))
 

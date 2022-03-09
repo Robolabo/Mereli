@@ -31,7 +31,7 @@ class LightSensor(DirectionalSensor):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 0.785 + .2
-        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1)# TFM
+        self.propagation = ExpDecayPropagation(rho_att=0.1, phi_att=1.2)# TFM
         self.contact_points = None
         self.reading = {color + '_light_sensor' : np.zeros(8) for color in ['red', 'yellow', 'blue', 'green']}
         self.t = 0
@@ -49,7 +49,7 @@ class LightSensor(DirectionalSensor):
         reading = {'red' : np.zeros(8), 'yellow': np.zeros(8), 'blue' : np.zeros(8), 'green' : np.zeros(8)}
         oris = self.directions(self.sensor_owner.orientation[-1])
         # List the entities that overlap with the robot ghost cones.
-        if self.contact_points is None or self.t % 20 == 0:
+        if self.contact_points is None or self.t % 10 == 0:
             self.contact_points = self.physics_client.get_contact_points(self.owner_id, ghost_ids=g_ids)
         for i in range(len(g_ids)):
             ori = oris[i]
@@ -98,7 +98,7 @@ class LightSensor(DirectionalSensor):
         for color in reading:
             # reading[color] += np.random.randn() * 0.0
             self.reading[color] += (0.2) * (reading[color]  - self.reading[color])
-        return reading
+        return self.reading
 
     def step_fast(self, neighborhood):
         pass

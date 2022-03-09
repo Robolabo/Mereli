@@ -191,38 +191,43 @@ def neat_crossover(parents, crossover_prob=0.8, disable_prob=0.75):
     if len(parents) % 2 != 0:
         offspring.append(parents.pop(0))
     for parent1, parent2 in zip(parents[::2], parents[1::2]):
-        child = GraphGenotype()
-        child.evolvable_structs = parent1.evolvable_structs
+        children = [GraphGenotype(), GraphGenotype()]
+        for child in children:
+            child.evolvable_structs = parent1.evolvable_structs
 
         innovations_1 = set([gene.innovation for gene in parent1.connections])
         innovations_2 = set([gene.innovation for gene in parent2.connections])
         common_genes = innovations_1.intersection(innovations_2)
-        # random_mask = np.random.randint(2, size=len(common_genes))
         #* Common connection genes
         for gene_innovation in common_genes:
             parent1_gene = [conn for conn in parent1.connections\
                             if conn.innovation == gene_innovation][0]
             parent2_gene = [conn for conn in parent2.connections\
                             if conn.innovation == gene_innovation][0]
-            child_gene = parent1_gene.copy() if np.random.random() < 0.5 else parent2_gene.copy()
-            child.add_connection(child_gene)
-
+            dice = np.random.random() < 0.5
+            children[0].add_connection(parent1_gene.copy() if dice else parent2_gene.copy())
+            children[1].add_connection(parent1_gene.copy() if not dice else parent2_gene.copy())
         #* Disjoint and excess connection genes
         fittest_parent = parent1 if parent1.fitness >= parent2.fitness else parent2
         fittest_innovations = innovations_1 if parent1.fitness >= parent2.fitness else innovations_2
         for gene_innovation in fittest_innovations - common_genes:
             winner_gene = [conn for conn in fittest_parent.connections if conn.innovation == gene_innovation][0]
-            child.add_connection(winner_gene.copy())
+            children[0].add_connection(winner_gene.copy())
+            children[1].add_connection(winner_gene.copy())
 
         #* Crossover Nodes
         for node in fittest_parent.nodes:
             if parent1.contains_node(node.name) and parent2.contains_node(node.name):
-                selected_parent = parent1 if np.random.random() > 0.5 else parent2
-                winner_gene = selected_parent.get_node(node.name)
-                child.add_node(selected_parent.get_node(node.name).copy())
+                dice = np.random.random() > 0.5
+                selected_parent1 = parent1 if dice else parent2
+                selected_parent2 = parent1 if not dice else parent2
+                children[0].add_node(selected_parent1.get_node(node.name).copy())
+                children[1].add_node(selected_parent2.get_node(node.name).copy())
             else:
-                child.add_node(fittest_parent.get_node(node.name).copy())
+                children[0].add_node(fittest_parent.get_node(node.name).copy())
+                children[1].add_node(fittest_parent.get_node(node.name).copy())
         #* Formalize recombination
         do_crossover = np.random.random() < crossover_prob
-        offspring.append((parent1.copy(), child)[do_crossover])
+        offspring.append((parent1.copy(), children[0])[do_crossover])
+        offspring.append((parent2.copy(), children[1])[do_crossover])
     return offspring
