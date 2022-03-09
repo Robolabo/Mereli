@@ -11,10 +11,10 @@ import pybullet_utils.bullet_client as bc
 from mereli.objects import  Robot, LightSource, Wall, Map
 from mereli.physics_engines.pybullet_engine import PybulletEngine
 from mereli.register import (controllers, world_objects, initializers, 
-        env_perturbations, rewards, communication_systems, world_registry)
+        env_perturbations, rewards, communication_systems, world_registry, done_registry)
 from mereli.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from mereli.globals import global_states
-
+from mereli.objectives.done import *
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -100,6 +100,7 @@ class World(object):
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
 
+        # self.done_signal = TimeDoneSignal(timesteps=)
         self.reward_generator = None
         self.prev_states = None
         self.prev_actions = None

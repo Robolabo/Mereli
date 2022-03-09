@@ -104,14 +104,14 @@
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:tau:all", "neurons:bias:all"],
-                "max_vals" : [30, 0.6, 10],
-                "min_vals" : [-30, -0.7, -10],
+                "max_vals" : [10, 0.6, 4],
+                "min_vals" : [-10, -0.7, -4],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.5,
                     "p_node_mut" : 0.08,
                     "p_conn_mut" : 0.2,
-                    "compatib_thresh" : 1.2,
+                    "compatib_thresh" : 1.5,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
