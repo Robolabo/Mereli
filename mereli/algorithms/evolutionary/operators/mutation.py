@@ -63,7 +63,7 @@ def add_connection(genotype, input_nodes, innovation):
     new_connection = ConnectionGene(conn_name)
     new_connection.pre = new_conn[0]
     new_connection.post = new_conn[1]
-    for param, value in new_connection.parameters.items():
+    for param in next(genotype.connections).parameters:
         #! OJO dim de param.
         new_value = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1)
         new_connection.parameters[param] = new_value
