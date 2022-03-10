@@ -26,14 +26,13 @@ class LightReached:
     def __call__(self, entities):
         lights = [obj for obj in entities.values() if type(obj).__name__ == 'LightSource' and obj.color == self.color]
         robots = [obj for obj in entities.values() if issubclass(type(obj), Robot)]
-        done = True
         for robot in robots:
-             = []
+            distances = []
             for light in lights:
-                if LA.norm(robot.position - light.position) < 1.5:
-
-        import pdb; pdb.set_trace()
-        return False
+                distances.append(LA.norm(robot.position - light.position))
+            if not any(np.array(distances) < 1.5):
+                return False
+        return True
 
     def reset(self):
         self.t = 0
@@ -46,8 +45,8 @@ class TaskCompleted:
 
     def __call__(self, entities):
         task = entities['task_scheduler_0'].current_task
-        return self.task_dones[task](entities) 
-        return False
+        done =  self.task_dones[task](entities) 
+        return done
 
     def reset(self):
         self.t = 0
