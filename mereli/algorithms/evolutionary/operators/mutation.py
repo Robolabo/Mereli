@@ -67,6 +67,7 @@ def add_connection(genotype, input_nodes, innovation):
         #! OJO dim de param.
         new_value = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1)
         new_connection.parameters[param] = new_value
+        new_connection.add_parameter(param, new_value)
     new_connection.idx = len([*genotype.connections])
     new_connection.innovation = innovation.assign(new_connection.pre, new_connection.post)
     genotype.add_connection(new_connection)
