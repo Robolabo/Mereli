@@ -69,6 +69,7 @@ def add_connection(genotype, input_nodes, innovation):
         new_connection.parameters[param] = new_value
     new_connection.idx = len([*genotype.connections])
     new_connection.innovation = innovation.assign(new_connection.pre, new_connection.post)
+    genotype.add_connection(new_connection)
     return genotype, innovation
 
 

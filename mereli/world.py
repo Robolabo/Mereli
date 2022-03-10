@@ -3,15 +3,13 @@ import time
 import copy
 from collections import deque
 import numpy as np
-import pybullet as p
-import pybullet_data
-import pybullet_utils.bullet_client as bc
 
 
-from mereli.objects import  Robot, LightSource, Wall, Map
+
+from mereli.objects import  Robot, Wall, Map
 from mereli.physics_engines.pybullet_engine import PybulletEngine
-from mereli.register import (controllers, world_objects, initializers, 
-        env_perturbations, rewards, communication_systems, world_registry, done_registry)
+from mereli.register import (controllers, world_objects, initializers, dones, rewards, 
+    env_perturbations, communication_systems, world_registry, done_registry)
 from mereli.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from mereli.globals import global_states
 from mereli.objectives import done
@@ -100,7 +98,7 @@ class World(object):
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
 
-        self.done_signal = done.TaskCompleted()
+        self.done_signal = None
         self.reward_generator = None
         self.prev_states = None
         self.prev_actions = None
@@ -254,6 +252,8 @@ class World(object):
         #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
         if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
             self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
+        if 'done_signal' in world_dict:
+            self.done_signal = dones[world_dict['done_signal']['name']](**world_dict['done_signal'].get('params', {}))
         for obj_name, obj in world_dict['objects'].items():
             object_cls = world_objects[self.physics_engine.engine_type][obj['type']]
             #! Prov implementation for TFM regarding the task scheduler

@@ -47,6 +47,7 @@
         "engine" : "pybullet",
         "physics_dt" : 0.1,
         "T_control" : 0.1,
+        "done_signal" : {"name" : "task_completed"},
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",

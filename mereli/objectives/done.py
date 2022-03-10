@@ -18,6 +18,7 @@ class TimeElapsed:
     def reset(self):
         self.t = 0
 
+@done_registry(name='light_reached')
 class LightReached:
     def __init__(self, color='red'):
         # self.tasks = tasks
@@ -37,7 +38,7 @@ class LightReached:
     def reset(self):
         self.t = 0
 
-
+@done_registry(name='task_completed')
 class TaskCompleted:
     def __init__(self):
         self.task_dones = [LightReached(color='red'), LightReached(color='yellow')]
