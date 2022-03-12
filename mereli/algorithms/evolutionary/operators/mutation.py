@@ -108,7 +108,7 @@ def neat_mutation(population, input_nodes, innovation,
                 if np.random.random() > p_weight_mut: 
                     continue
                 if np.random.random() < 0.02:
-                    new_val = np.random.random(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else .1*np.random.randn()
+                    new_val = np.random.random(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else .1*np.random.randn() + 0.5
                 else:
                     noise = np.random.randn(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else np.random.randn() 
                     new_val = np.clip(value + noise * 0.02, a_min=0, a_max=1)
