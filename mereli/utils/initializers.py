@@ -320,7 +320,7 @@ class GridInitializer(Initializer):
     :param str engine: physics and render engine used (currently it can be either 2D or 3D)
     :param str variable: entity variable to be initialized (either 'positions' or 'orientations')    
     """
-    def __init__(self, *args, center=[0,0], delta_x=1, delta_y=1, shuffle=True, **kwargs):
+    def __init__(self, *args, center=[0,0], delta_x=0.2, delta_y=0.2, shuffle=True, **kwargs):
         super(GridInitializer, self).__init__(*args,  **kwargs)
         self.center = center
         self.delta_x = delta_x
@@ -336,8 +336,8 @@ class GridInitializer(Initializer):
         """
         H = int(np.floor(np.sqrt(self.num_points)))
         W = int(np.ceil(np.sqrt(self.num_points)))
-        x = np.linspace(self.center[0] - self.delta_x*W//2, self.center[0] + self.delta_x*W//2, W) 
-        y = np.linspace(self.center[1] - self.delta_y*H//2, self.center[1] + self.delta_y*W//2, H) 
+        x = np.linspace(self.center[0] - self.delta_x*W/2, self.center[0] + self.delta_x*W/2, W) 
+        y = np.linspace(self.center[1] - self.delta_y*H/2, self.center[1] + self.delta_y*W/2, H) 
         xx, yy = np.meshgrid(x, y)
         points = []
         for x_i, y_i in zip(xx.flatten(), yy.flatten()):

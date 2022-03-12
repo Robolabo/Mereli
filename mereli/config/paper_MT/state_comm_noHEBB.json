@@ -50,11 +50,11 @@
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 7},
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1},
+                    "light_sensor" : {"n_sectors" : 8, "range" : 3},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
                     "stateful_rx" : {"state_dim" : 2, "range" : 20},
                     "task_sensor" : {}
                 },
@@ -73,22 +73,22 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.3]]}}
                 },
-                "params" : {"range" : 7, "color" : "yellow"}
+                "params" : {"range" : 3, "color" : "yellow"}
             },
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.3]]}}
                 },
-                "params" : {"range" : 7, "color" : "red"}
+                "params" : {"range" : 3, "color" : "red"}
             },
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2500, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -98,7 +98,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 2000,
+        "evaluation_steps" : 2500,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching_B",
         "populations" : {

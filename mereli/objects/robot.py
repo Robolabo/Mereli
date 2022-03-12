@@ -86,7 +86,7 @@ class Robot(WorldObject):
 
         #* Plan actions for future execution
         self.plan_actions(actions)
-
+        # print(np.linalg.norm(self.velocity))
         #* Convert again tx frame to dict for its use in the opt. algs. 
         if self.comm_sys is not None:
             actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
@@ -203,4 +203,4 @@ class Epuck(Robot):
     """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
         super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)
-        self.scaling = 1.
+        self.scaling = 1/4.13

@@ -30,7 +30,7 @@ class DistanceSensor(DirectionalSensor):
     def __init__(self, *args, **kwargs):
         super(DistanceSensor, self).__init__(*args, **kwargs)
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
-        self.aperture = 0.61 #1.5 * np.pi / self.n_sectors
+        self.aperture = 0.55 #1.5 * np.pi / self.n_sectors
         self.contact_points = None
         self.reading = np.zeros(8)
         self.t = 0
@@ -99,11 +99,11 @@ class DistanceSensor(DirectionalSensor):
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
-                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 4)
+                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 3)
                 ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
                 
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=5)
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=.05)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     

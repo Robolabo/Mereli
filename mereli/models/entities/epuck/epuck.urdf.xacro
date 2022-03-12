@@ -16,7 +16,7 @@
              <origin rpy="1.57075 0 0" xyz="0.0 0.0 0.125" />
         </collision>
         <inertial>
-            <mass value="1.5" />
+            <mass value="0.1" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -38,7 +38,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.1" />
+            <mass value="0.025" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -60,7 +60,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.1" />
+            <mass value="0.025" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -95,7 +95,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.5" />
+            <mass value="0.025" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -122,7 +122,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -144,7 +144,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -165,7 +165,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -186,7 +186,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.00" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -207,7 +207,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -228,7 +228,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -249,7 +249,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
@@ -270,7 +270,7 @@
             <origin xyz="0 0 0" />
         </collision>
         <inertial>
-            <mass value="0.01" />
+            <mass value="0.0" />
             <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
         </inertial>
     </link>
