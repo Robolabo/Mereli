@@ -45,22 +45,22 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.1,
-        "T_control" : 0.1,
+        "physics_dt" : 0.03,
+        "T_control" : 0.03,
         "done_signal" : {"name" : "task_completed"},
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 7},
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1},
+                    "light_sensor" : {"n_sectors" : 8, "range" : 3},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
                     "stateful_rx" : {"state_dim" : 2, "range" : 20},
                     "task_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 3},
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10},
                     "stateful_tx" : {"state_dim" : 2, "range" : 20}  
                 },
                 "initializers" : {
@@ -74,7 +74,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2, 2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.3]]}}
                 },
                 "params" : {"range" : 7, "color" : "yellow"}
             },
@@ -82,14 +82,14 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.3]]}}
                 },
-                "params" : {"range" : 7, "color" : "red"}
+                "params" : {"range" : 3, "color" : "red"}
             },
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 1500, 
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 1500, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -97,26 +97,27 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 200,
         "generations" : 2000,
         "evaluation_steps" : 1500,
         "num_evaluations" : 1,
-        "fitness_function" : "task_switching3",
+        "fitness_function" : "task_switching_B",
+        "novelty_search" : true,
         "populations" : {
             "p1" : {
                 "objects" : ["synapses:weights:all", "neurons:tau:all", "neurons:bias:all"],
-                "max_vals" : [6, 0.6, 2],
-                "min_vals" : [-6, -0.7, -2],
+                "max_vals" : [10, 0.6, 4],
+                "min_vals" : [-10, -0.7, -4],
                 "params" : {
                     "encoding" : "real",
                     "p_weight_mut" : 0.4,
                     "p_node_mut" : 0.05,
                     "p_conn_mut" : 0.15,
-                    "compatib_thresh" : 0.3,
+                    "compatib_thresh" : 1.4,
                     "c1" : 1,
                     "c2" : 1,
                     "c3" : 1,
-                    "species_elites" : 1
+                    "species_elites" : 2
                 }
             }          
         }

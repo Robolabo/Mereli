@@ -2,6 +2,8 @@ import time
 import copy
 import re
 import logging
+
+from mereli.algorithms.evolutionary.novelty_search import NoveltySearch
 try:
     import multiprocessing
 except:
@@ -59,7 +61,7 @@ def get_info(names, world):
     return np.array([getattr(v, obj_var) for v in objects.values() if hasattr(v, obj_var)])
 
 
-
+    
 
 def _run_worker(env_id, worlds, populations, eval_steps, \
         num_evaluations, fitness_fn, seed, generation, algorithm):
@@ -129,7 +131,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     fitness /= num_evaluations
     world.disconnect()
     # print('Eval:', time.time() - t0, flush=True)
-    return (env_id, fitness)
+    return (env_id, fitness, mean_survival_time)
 
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
@@ -140,6 +142,7 @@ class EvolutionaryAlgorithm:
                  num_evaluations=3,
                  n_processes=1,
                  fitness_fn=None,
+                 use_novelty_search=False,
                  checkpoint_name='chk',
                  resume=False):
         self.world = world
@@ -148,6 +151,7 @@ class EvolutionaryAlgorithm:
         self.population_size = population_size
         self.eval_steps = eval_steps
         self.num_evaluations = num_evaluations
+        self.novelty_search = NoveltySearch() if use_novelty_search else None
         self.n_processes = n_processes
         self.checkpoint_name = checkpoint_name
         # print('Running with ', self.n_processes, ' cores')
@@ -195,7 +199,7 @@ class EvolutionaryAlgorithm:
                         for v in iter([self.populations, self.eval_steps, self.num_evaluations,\
                         self.fitness_fn, seed, k, alg_name])])
                     evaluation_res = pool.starmap(_run_worker, pool_args)
-                    self.fitness = [v for _, v in sorted(evaluation_res, key=lambda x: x[0])]
+                    self.fitness = [v for _, v, _ in sorted(evaluation_res, key=lambda x: x[0])]
 
             #* MPI Parallelization
             elif use_mpi: #! TODO Multi world
@@ -212,12 +216,16 @@ class EvolutionaryAlgorithm:
                 eval_result = comm.gather(my_fitness, root=0)
                 if rank == 0:
                     fitness = [vv for ff in eval_result for vv in ff]
-                    self.fitness = [f_val for _, f_val in sorted(fitness, key=lambda x: x[0])]
+                    self.fitness = [f_val for _, f_val, _ in sorted(fitness, key=lambda x: x[0])]
+                    if self.novelty_search is not None:
+                        for _, _, t_elapsed in fitness:
+                            self.novelty_search.update(t_elapsed)                        
+                        self.fitness = [self.novelty_search.novelty_metric(t_val) for _,  _, t_val in sorted(fitness, key=lambda x: x[0])]
             else:
                 eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
                                 self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
                                 for i in range(self.population_size)]
-                self.fitness = [v for _, v in eval_result]
+                self.fitness = [v for _, v, _ in eval_result]
             #* No parallelization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
                 for genotype, fitness in zip(self.populations['p1'].population, self.fitness):#! Ojo many pops
@@ -277,6 +285,7 @@ class EvolutionaryAlgorithm:
             for pop in self.populations.values():
                 aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
                 pop.species[0].compatibility(aux_pop[0])
+                # import pdb; pdb.set_trace()
                 genotype_segment = aux_pop[0] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         info = {n : deque() for n in self.fitness_fn.required_info}

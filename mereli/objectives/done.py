@@ -31,7 +31,7 @@ class LightReached:
             distances = []
             for light in lights:
                 distances.append(LA.norm(robot.position - light.position))
-            if not any(np.array(distances) < 1.5):
+            if not any(np.array(distances) < .5):
                 return False
         return True
 
@@ -51,3 +51,18 @@ class TaskCompleted:
 
     def reset(self):
         self.t = 0
+
+
+# @done_registry(name='task_completed')
+# class SequentialTasks:
+#     def __init__(self):
+#         self.task_dones = [LightReached(color='red'), LightReached(color='yellow')]
+#         self.t = 0
+
+#     def __call__(self, entities):
+#         task = entities['task_scheduler_0'].current_task
+#         done =  self.task_dones[task](entities) 
+#         return done
+
+#     def reset(self):
+#         self.t = 0
