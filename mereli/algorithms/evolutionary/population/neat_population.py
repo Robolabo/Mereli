@@ -129,11 +129,11 @@ class NEAT_Population(Population):
                     n_offspring -= 1
                     offspring.append(copy.deepcopy(elite_gnt))
             #* Truncate bests
-            n_sel = max(2, round(self.survival_rate * len(spc_genotypes)))
-            # parents = tournament_selection(spc_genotypes, n_offspring)
-            parents = truncation_selection(spc_genotypes, n_sel)
-            parents_mating = np.random.choice(n_sel, size=n_offspring, replacement=False) #* Random Mating (OJO REPLACEMENT)
-            parents = [parents[idx] for idx in parents_mating] # shuffle parents
+            # n_sel = max(2, round(self.survival_rate * len(spc_genotypes)))
+            parents = tournament_selection(spc_genotypes, n_offspring)
+            # parents = truncation_selection(spc_genotypes, n_sel)
+            # parents_mating = np.random.choice(n_sel, size=n_offspring, replacement=False) #* Random Mating (OJO REPLACEMENT)
+            # parents = [parents[idx] for idx in parents_mating] # shuffle parents
             #* NEAT Crossover
             offspring.extend(neat_crossover(parents))
         #* NEAT Mutation
