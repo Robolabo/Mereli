@@ -67,7 +67,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "reward", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 2,3], "stimuli" : "reward", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -89,7 +89,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 1500, 
+                "params" : {"num_tasks" : 2, "num_slots" : 1, "total_timesteps" : 2500, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }

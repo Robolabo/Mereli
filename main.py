@@ -52,7 +52,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         opt_alg = algorithm_cls(cfg_dict['algorithm']['populations'], world,\
                     population_size=ga_config['population_size'], n_generations=ga_config['generations'],\
                     eval_steps=ga_config['evaluation_steps'], num_evaluations=ga_config['num_evaluations'],\
-                    n_processes=ncpu, resume=resume, fitness_fn=fitness, use_novelty_search=ga_config['novelty_search'], 
+                    n_processes=ncpu, resume=resume, fitness_fn=fitness, use_novelty_search=ga_config.get('novelty_search', False), 
                     checkpoint_name=cfg_dict["checkpoint_file"])
         #* Run GA
         if not eval:
