@@ -167,13 +167,13 @@ class NeuralNetwork(BaseNeuralNet):
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         # actions['outA'] = [1, 1]
         # self.ww_buffer.append(self.weights)
-        # if stimuli['reward'] > 0.01:
-        #     if task == 0:
-        #         actions['outB'] = [0, 1]
-        #     else: 
-        #         actions['outB'] = [1, 0]
-        # else:
-        #     actions['outB'] = stimuli['mean_neigh_state']
+        if stimuli['reward'] > 0.01:
+            if task == 0:
+                actions['outB'] = [0, 1]
+            else: 
+                actions['outB'] = [1, 0]
+        else:
+            actions['outB'] = stimuli['mean_neigh_state']
         return actions
     
     def reset(self):

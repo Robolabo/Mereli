@@ -15,6 +15,7 @@ class StatefulCommRX(Sensor):
     def step(self, neighborhood):
         """ 
         """
+        neigh_dist = None
         neigh_state = []
         own_state = self.sensor_owner.actuators['stateful_tx'].state
         for obj in neighborhood: 
@@ -22,11 +23,14 @@ class StatefulCommRX(Sensor):
                 if 'stateful_tx' in obj.actuators:
                     dist = np.linalg.norm(obj.position - self.sensor_owner.position)
                     if dist < self.range:
-                        neigh_state.append(obj.actuators['stateful_tx'].state)
+                        if neigh_dist is None or dist < neigh_dist:
+                            # neigh_state.append(obj.actuators['stateful_tx'].state)
+                            neigh_state = obj.actuators['stateful_tx'].state
+                            neigh_dist = dist
         if len(neigh_state) == 0:
             neigh_state = np.array([0] * self.state_dim)
-        else:
-            neigh_state = np.mean(neigh_state, 0)
+        # else:
+        #     neigh_state = np.mean(neigh_state, 0)
 
         return {'mean_neigh_state' : neigh_state,# + np.random.randn(self.state_dim) * 0.0,
                 'own_state' : own_state}# + np.random.randn()* 0.0}
