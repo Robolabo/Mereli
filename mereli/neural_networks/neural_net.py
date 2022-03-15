@@ -173,7 +173,10 @@ class NeuralNetwork(BaseNeuralNet):
             else: 
                 actions['outB'] = [1, 0]
         else:
-            actions['outB'] = stimuli['mean_neigh_state']
+            # if any(stimuli['mean_neigh_state'] == 1):
+            actions['outB'] = [0,0]
+            # else: 
+            #     actions['outB'] = [0, 0]
         return actions
     
     def reset(self):
