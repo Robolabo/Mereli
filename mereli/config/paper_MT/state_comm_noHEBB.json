@@ -45,8 +45,8 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.03,
-        "T_control" : 0.03,
+        "physics_dt" : 0.04,
+        "T_control" : 0.04,
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
@@ -88,7 +88,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2500, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -98,7 +98,7 @@
         "evolvable_object" : "robotA",
         "population_size" : 100,
         "generations" : 2000,
-        "evaluation_steps" : 2000,
+        "evaluation_steps" : 2500,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching_B",
         "populations" : {
@@ -108,9 +108,9 @@
                 "min_vals" : [-10, -0.7, -4],
                 "params" : {
                     "encoding" : "real",
-                    "p_weight_mut" : 0.2,
-                    "p_node_mut" : 0.08,
-                    "p_conn_mut" : 0.15,
+                    "p_weight_mut" : 0.5,
+                    "p_node_mut" : 0.1,
+                    "p_conn_mut" : 0.2,
                     "compatib_thresh" : 1.5,
                     "c1" : 1,
                     "c2" : 1,
