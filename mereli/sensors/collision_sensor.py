@@ -15,7 +15,7 @@ class CollisionSensor(Sensor):
     def step(self, hierarchy):
         is_collision = 0
         for obj in hierarchy:
-            if type(obj).__name__ in ['Wall', 'Robot3D']:
+            if obj.tangible:#type(obj).__name__ in ['Wall', 'Robot3D']:
                 collision_info = p.getContactPoints(self.sensor_owner.id, obj.id, physicsClientId=self.sensor_owner.physics_client.client)
                 if len(collision_info) > 0:
                         is_collision = 1
