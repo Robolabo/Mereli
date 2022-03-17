@@ -1,4 +1,5 @@
 import logging
+import copy
 import numpy as np
 # from shapely.geometry import Point
 from mereli.objects import WorldObject
@@ -38,11 +39,11 @@ class Robot(WorldObject):
         self.planned_actions = {k : [None] for k in actuators.keys()}
 
         #* Current Reward perceived by the robot.
-        self.reward = None
-
+        self.reward_generator = None
+        self.reward = np.array([0])
         # self.reset()
 
-    def step(self, neighborhood, reward=None, perturbations=None):
+    def step(self, neighborhood, perturbations=None):
         """ Step method of the robots. 
         It is composed by the following main steps:
 
@@ -60,13 +61,10 @@ class Robot(WorldObject):
         :returns: state and action tuple of the current timestep. Both of them are expressed as 
             a dict with the sensor/actuator name and the corresponding stimuli/action.
         """
-        self.reward = reward
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Add reward as a new state entry.
-        
-        if reward is not None:
-            state['reward'] = reward[0]
+        state['reward'] = self.reward
 
         #* Apply perturbations to stimuli 
         if perturbations is not None:
@@ -78,7 +76,7 @@ class Robot(WorldObject):
             state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
 
         #* Obtain actions using controller.
-        actions = self.controller.step(state, reward=reward)
+        actions = self.controller.step(state, reward=self.reward)
 
         #* Apply communication system pre step (previous to controller) 
         if self.comm_sys is not None:
@@ -86,10 +84,12 @@ class Robot(WorldObject):
 
         #* Plan actions for future execution
         self.plan_actions(actions)
-        # print(np.linalg.norm(self.velocity))
         #* Convert again tx frame to dict for its use in the opt. algs. 
         if self.comm_sys is not None:
             actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
+        #* Compute robot reward.
+        if self.reward_generator is not None:
+            self.reward = self.reward_generator(actions, state, self, neighborhood)
         return state, actions
 
     def plan_actions(self, actions):
@@ -141,7 +141,9 @@ class Robot(WorldObject):
         :param int seed: seed for random initialization.
         """
         self._food = False
-        self.reward = None #* Current Reward perceived by the robot.
+        self.reward = np.array([0]) #* Current Reward perceived by the robot.
+        if self.reward_generator is not None:
+            self.reward_generator.reset()
         if self.controllable:
             # Check if new sensors or actuator has been enabled from the controller. If so, 
             # activate them.

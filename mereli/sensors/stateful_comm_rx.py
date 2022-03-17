@@ -1,3 +1,4 @@
+import copy
 import numpy as np
 from mereli.register import sensor_registry
 from mereli.sensors import DirectionalSensor, Sensor
@@ -22,7 +23,7 @@ class StatefulCommRX(Sensor):
                 if 'stateful_tx' in obj.actuators:
                     dist = np.linalg.norm(obj.position - self.sensor_owner.position)
                     if dist < self.range:
-                        neigh_state.append(obj.actuators['stateful_tx'].state)
+                        neigh_state.append(obj.actuators['stateful_tx'].state.copy())
         if len(neigh_state) == 0:
             neigh_state = np.array([0] * self.state_dim)
         else:

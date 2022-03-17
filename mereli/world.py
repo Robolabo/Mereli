@@ -99,9 +99,6 @@ class World(object):
         self.env_perturbations = {}
 
         self.done_signal = None
-        self.reward_generator = None
-        self.prev_states = None
-        self.prev_actions = None
         self.t = 0
 
     @increase_time
@@ -146,12 +143,10 @@ class World(object):
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]
-            #* Compute robot reward 
-            reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
-                    if self.reward_generator is not None else None
-            state_obj, action_obj = obj.step(self.hierarchy.values(), reward=reward, perturbations=pre_perturbations) #!
-            # if self.reward_generator is not None:
-            #     self.rewards[idx] = self.reward_generator(action_obj, state_obj, entity_name=obj_name, info=self.hierarchy)
+            # #* Compute robot reward 
+            # reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
+            #         if self.reward_generator is not None else None
+            state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
             states.append(state_obj)
             actions.append(action_obj)
         if len(states) > 0:
@@ -174,9 +169,6 @@ class World(object):
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-        #* Retain prev states and actions to compute rewards.
-        self.prev_states = states.copy()
-        self.prev_actions = actions.copy()
         # print(self.is_done)
         return states, actions
 
@@ -249,9 +241,9 @@ class World(object):
         :param dict world_dict: configuration ``dict`` of the environment (parameters, objects, ...).
         :param dict ann_topology:  configuration ``dict`` of the neural network.
         """
-        #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
-        if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
-            self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
+        # #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
+        # if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
+        #     self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
         if 'done_signal' in world_dict:
             self.done_signal = dones[world_dict['done_signal']['name']](**world_dict['done_signal'].get('params', {}))
         for obj_name, obj in world_dict['objects'].items():
@@ -283,7 +275,10 @@ class World(object):
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology)
+                    #* Instantiate robot entity
                     robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
+                    #* If any, initialize robot's reward generator
+                    robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)
                     if "comm_sys" in obj:
                         robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))
@@ -315,16 +310,12 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
-        self.prev_states = None
-        self.prev_actions = None
-        if self.reward_generator is not None:
-            self.reward_generator.reset()
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset(seed=seed)
-
+        #* Reset robot environmental perturbations.
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
