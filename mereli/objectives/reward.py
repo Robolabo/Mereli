@@ -37,7 +37,7 @@ class TaskSwitchingLights:
         collided = states.get('collision_sensor', 0)
         # Penalize collisions
         if collided:
-            return np.array([-.1])
+            return np.array([-1])
         task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
         current_task = task_scheduler.current_task
         rews = [tsk(actions, states, robot, info=info) for tsk in self.tasks]
