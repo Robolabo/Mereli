@@ -66,7 +66,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "task_sensor", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "task_sensor", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -88,7 +88,7 @@
             "task_scheduler" : {
                 "type" : "task_scheduler",
                 "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2500, 
+                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, 
                             "replacement" : false, "task_names" : ["red", "yellow"]}
             }
         }
@@ -96,9 +96,9 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 2000,
-        "evaluation_steps" : 2500,
+        "evaluation_steps" : 2000,
         "num_evaluations" : 1,
         "fitness_function" : "task_switching_B",
         "populations" : {
