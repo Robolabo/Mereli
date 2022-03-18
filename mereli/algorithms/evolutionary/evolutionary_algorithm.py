@@ -82,6 +82,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
         and the resulting fitness.
     =====================================================================
     """
+    
     t0 = time.time()
     if isinstance(worlds, MultiWorldWrapper):
         if MPI.COMM_WORLD.Get_size() > 1:
@@ -283,9 +284,9 @@ class EvolutionaryAlgorithm:
         interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
         for interface in interfaces:
             for pop in self.populations.values():
-                aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
-                pop.species[0].compatibility(aux_pop[0])
-                genotype_segment = aux_pop[0] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
+                # aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
+                # pop.species[0].compatibility(aux_pop[0])
+                genotype_segment = pop.best if pop.best is not None else pop.population[1] # pop.population[150]
                 interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
         info = {n : deque() for n in self.fitness_fn.required_info}
         info['generation'] = 1

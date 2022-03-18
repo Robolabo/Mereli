@@ -90,7 +90,7 @@ class Robot(WorldObject):
         #* Compute robot reward.
         if self.reward_generator is not None:
             self.reward = self.reward_generator(actions, state, self, neighborhood)
-        # print(self.reward)
+        # print('A')
         return state, actions
 
     def plan_actions(self, actions):

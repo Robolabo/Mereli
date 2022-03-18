@@ -39,7 +39,7 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         #! for robot in self.world.robots:
         #!    robot.controller.neural_net.graph = checkpoint['ann_graph']
         for name, pop in checkpoint['populations'].items():
-            self.populations[name].population = [v.copy() for v in checkpoint['populations'][name]]
+            self.populations[name].population = [v for v in checkpoint['populations'][name]]
             self.populations[name].mutatation_prob = checkpoint['mutation_prob'][name]
             robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
             interface = GeneticInterface(robots[0].controller.neural_network)

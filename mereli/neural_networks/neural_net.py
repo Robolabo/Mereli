@@ -165,16 +165,15 @@ class NeuralNetwork(BaseNeuralNet):
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
-        # actions['outA'] = [1, 1]
         # self.ww_buffer.append(self.weights)
-        if stimuli['reward'] > 0.01:
-            if task == 0:
-                actions['outB'] = [0, 1]
-            else: 
-                actions['outB'] = [1, 0]
-        else:
-            # if any(stimuli['mean_neigh_state'] == 1):
-            actions['outB'] = [0,0]
+        # if stimuli['reward'] > 0.01:
+        if task == 1:
+            actions['outB'] = [1]
+        else: 
+            actions['outB'] = [0]
+        # else:
+        #     # if any(stimuli['mean_neigh_state'] == 1):
+        #     actions['outB'] = [0,0]
             # else: 
             #     actions['outB'] = [0, 0]
         return actions

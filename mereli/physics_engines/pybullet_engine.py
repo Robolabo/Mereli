@@ -60,8 +60,8 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        with HidePrintf():
-            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        # with HidePrintf():
+        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
         self.engine.resetSimulation(physicsClientId=self.client)
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
