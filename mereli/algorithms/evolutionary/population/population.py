@@ -44,7 +44,7 @@ class Population:
         offspring = self.crossover_operator(parents, crossover_prob=self.crossover_prob)
 
         #* --- Apply mutation operator ---
-        mutation_sigma = 0.1 #(self.max_vector - self.min_vector).copy() / 6
+        mutation_sigma = 0.05 #(self.max_vector - self.min_vector).copy() / 6
         offspring = self.mutation_operator(offspring, mutation_prob=self.mutation_prob, 
                             sigma=mutation_sigma, max_vals=1, min_vals=0)
 
