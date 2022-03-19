@@ -70,7 +70,7 @@
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
-                "type" : "light_source",
+                "type" : "light_source",    
                 "num_instances": 1,
                 "initializers" : {
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.3]]}}
