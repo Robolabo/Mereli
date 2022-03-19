@@ -33,17 +33,25 @@ class TaskSwitchingLights:
         # self.required_info = tuple(set(['task_scheduler:current_task']).union(*[set(tsk.required_info) for tsk in self.tasks]))
         self.buffered_fitnesses = []
 
-    def __call__(self, actions, states, robot, info=None):
-        collided = states.get('collision_sensor', 0)
-        # Penalize collisions
-        if collided:
-            return np.array([-1])
-        task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
-        current_task = task_scheduler.current_task
-        rews = [tsk(actions, states, robot, info=info) for tsk in self.tasks]
-        rew = np.sum([rews[i]*(-1,1)[i == current_task] for i in range(len(rews))])
-        return rews[current_task].flatten()
-        return np.array([rew])
+    # def __call__(self, actions, states, robot, info=None):
+    #     collided = states.get('collision_sensor', 0)
+    #     # Penalize collisions
+    #     if collided:
+    #         return np.array([-1])
+    #     task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
+    #     current_task = task_scheduler.current_task
+    #     rews = [tsk(actions, states, robot, info=info) for tsk in self.tasks]
+    #     rew = np.sum([rews[i]*(-1,1)[i == current_task] for i in range(len(rews))])
+    #     return rews[current_task].flatten()
+    #     return np.array([rew])
     
+    def __call__(self, actions, states, robot, info=None):
+        task_scheduler = [obj for obj in info if type(obj).__name__ == 'TaskScheduler'][0]
+        max_rls = states['red_light_sensor']
+        max_yls = states['yellow_light_sensor']
+        current_task = task_scheduler.current_task
+        rew = max_rls if current_task == 0 else max_yls
+        return rew
+
     def reset(self):
         pass
