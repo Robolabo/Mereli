@@ -155,7 +155,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 2499 and self.monitor is not None:
+        if self.t == self.time_scale * 1999 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
@@ -167,10 +167,11 @@ class NeuralNetwork(BaseNeuralNet):
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
         # self.ww_buffer.append(self.weights)
         # if stimuli['reward'] > 0.01:
-        if task == 1:
-            actions['outB'] = [1]
-        else: 
-            actions['outB'] = [0]
+        # actions['outA'] = [1, -1]
+        # if task == 1:
+        #     actions['outB'] = [1]
+        # else: 
+        #     actions['outB'] = [0]
         # else:
         #     # if any(stimuli['mean_neigh_state'] == 1):
         #     actions['outB'] = [0,0]

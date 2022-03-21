@@ -31,7 +31,7 @@ class LightSensor(DirectionalSensor):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 0.785 + .2
-        self.propagation = ExpDecayPropagation(rho_att=0.5, phi_att=0.7)# TFM
+        self.propagation = ExpDecayPropagation(rho_att=0.3, phi_att=0.5)# TFM
         self.contact_points = None
         self.reading = {color + '_light_sensor' : np.zeros(8) for color in ['red', 'yellow', 'blue', 'green']}
         self.t = 0

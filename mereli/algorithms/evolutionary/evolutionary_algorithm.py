@@ -265,7 +265,7 @@ class EvolutionaryAlgorithm:
         """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
         raise NotImplementedError
 
-    def evaluate(self, trials=30, timesteps=2500):
+    def evaluate(self, trials=30, timesteps=8000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in mereli/logs/data).
