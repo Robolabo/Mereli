@@ -17,6 +17,7 @@ from .actuators import *
 
 
 from .objects import *
+from .tasks import *
 from .config_parser import *
 from .physics_engines import *
 from .world import *

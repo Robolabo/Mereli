@@ -10,9 +10,11 @@ from mereli.objects import  Robot, Wall, Map
 from mereli.physics_engines.pybullet_engine import PybulletEngine
 from mereli.register import (controllers, world_objects, initializers, dones, rewards, 
     env_perturbations, communication_systems, world_registry, done_registry)
+from mereli.tasks.task import TaskManager
 from mereli.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from mereli.globals import global_states
 from mereli.objectives import done
+from mereli.tasks import TaskManager
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -91,6 +93,7 @@ class World(object):
 
         #* Dict storing all objects
         self.hierarchy = {}
+        self.task_manager = None
         #* Dict mapping object names to object groups
         self.groups = {}
         #* Dict storing how objects should be initialized as a group.
@@ -164,7 +167,8 @@ class World(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate(self.hierarchy)
-        
+        self.task_manager(self.hierarchy)
+
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
@@ -244,6 +248,10 @@ class World(object):
         # #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
         # if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
         #     self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
+        self.task_manager = TaskManager(duration=world_dict['task_manager']['total_duration'], 
+                                num_slots=world_dict['task_manager']['num_slots'], use_done=world_dict['task_manager'].get('use_done', False))
+        for task in world_dict['task_manager']['tasks']:
+            self.task_manager.add_task(task['name'], **task['params'])
         if 'done_signal' in world_dict:
             self.done_signal = dones[world_dict['done_signal']['name']](**world_dict['done_signal'].get('params', {}))
         for obj_name, obj in world_dict['objects'].items():
@@ -310,6 +318,7 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
+        self.task_manager.reset(seed=seed)
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects
@@ -391,9 +400,7 @@ class World(object):
 
     @property
     def is_done(self):
-        if self.done_signal is None:
-            return False
-        return self.done_signal(self.hierarchy)
+        return self.task_manager.is_done
 
     @property
     def lights(self):

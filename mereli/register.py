@@ -20,6 +20,7 @@ receptive_fields = {}
 learning_rules = {}
 rewards = {}
 dones = {}
+tasks = {}
 communication_systems = {}
 physics_engines = {}
 
@@ -161,6 +162,13 @@ def done_registry(*args, **kwargs):
     def decorator(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
         dones[name] = cls
+        return cls
+    return decorator
+
+def task_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        tasks[name] = cls
         return cls
     return decorator
 

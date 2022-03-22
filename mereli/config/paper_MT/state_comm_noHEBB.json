@@ -9,7 +9,7 @@
             "I3" : {"n" : 8, "sensor" : "distance_sensor"},
             "I4" : {"n" : 1, "sensor" : "mean_neigh_state"},
             "I5" : {"n" : 1, "sensor" : "own_state"},
-            "I6" : {"n" : 1, "sensor" : "task_sensor"}
+            "I6" : {"n" : 1, "sensor" : "task"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -43,8 +43,17 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.04,
-        "T_control" : 0.04,
+        "physics_dt" : 0.03,
+        "T_control" : 0.03,
+        "task_manager" : {
+            "total_duration" : 3000,
+            "num_slots" : 2,
+            "use_done" : false,
+            "tasks" : [
+                {"name" : "goto_light", "params" : {"color" : "red", "range" : 0.5}},
+                {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 0.5}}
+            ]
+        },
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
@@ -55,7 +64,6 @@
                     "light_sensor" : {"n_sectors" : 8, "range" : 3},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
                     "stateful_rx" : {"state_dim" : 1, "range" : 20},
-                    "task_sensor" : {},
                     "collision_sensor" : {}
                 },
                 "actuators" : {
@@ -66,7 +74,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "task_sensor", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "task", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -84,22 +92,16 @@
                     "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.3]]}}
                 },
                 "params" : {"range" : 3, "color" : "red"}
-            },
-            "task_scheduler" : {
-                "type" : "task_scheduler",
-                "num_instances": 1,
-                "params" : {"num_tasks" : 2, "num_slots" : 2, "total_timesteps" : 2000, 
-                            "replacement" : true, "task_names" : ["red", "yellow"]}
             }
         }
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 100,
         "generations" : 500,
-        "evaluation_steps" : 2000,
-        "num_evaluations" : 1,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 2,
         "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {

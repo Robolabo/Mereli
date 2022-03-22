@@ -1,9 +1,13 @@
 import numpy as np
+import pybullet as p
+from mereli.globals import global_states
 from mereli.objects import Robot, LightSource
+from mereli.register import tasks, task_registry
 
 class Task:
-    def __init__(self, duration=1000):
+    def __init__(self, duration=1000, use_done=False):
         self.duration = duration
+        self.use_done = use_done
         self.t = 0
         self._done = False
         self._rewards = {} # Dict mapping robot names to rewards
@@ -11,12 +15,18 @@ class Task:
     def __call__(self, entities):
         self.t += 1
         robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
-        self._rewards = {self.reward_generator(entities, name) for name in robot_names}
-        self._done = self.done_generator(entities)
+        self._rewards = {name : self.reward_generator(entities, name) for name in robot_names}
+        for name in robot_names:
+            self._rewards[name] = self.reward_generator(entities, name)
+            entities[name].reward = self._rewards[name]
+        self._done = self.done_generator(entities) or self.time_done() if self.use_done else self.time_done()
 
     def reward_generator(self, entities, robot_name):
         raise NotImplementedError
 
+    def time_done(self):
+        return self.t >= self.duration
+        
     def done_generator(self, entities):
         raise NotImplementedError
 
@@ -36,75 +46,108 @@ class Task:
         self._reward = 0
         self._done = False
 
-@task_registry(name="goto_light ")
+@task_registry(name="goto_light")
 class GotoLightTask(Task):
     def __init__(self, *args, range=0.5, color='red', **kwargs):
         super(GotoLightTask,self).__init__(*args, **kwargs)
         self.color = color
+        self.range = range
 
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
-        lights = [ent for ent in entities.values() if isinstance(type(ent), LightSource) and ent.color == self.color]
+        lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
         assert len(lights) > 0
-        distances = [np.linalg.norm(robot.position - ls.position) for ls in lights]
-        if min(distances) < self.range:
-            return np.array([1 - min(distances)/self.range])
+        distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
+        if any(distances < self.range):
+            return np.array([1 - (min(distances)/self.range) ** 2])
         else:
             return np.array([0])
 
     def done_generator(self, entities):
-        lights = [ent for ent in entities.values() if isinstance(type(ent), LightSource) and ent.color == self.color]
+        lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
         robots = [ent for ent in entities.values() if issubclass(type(ent), Robot)]
         for robot in robots:
             distances = []
             for light in lights:
-                distances.append(np.linalg.norm(robot.position - light.position))
+                distances.append(np.linalg.norm(robot.position[:2] - light.position[:2]))
             if not any(np.array(distances) < self.range):
                 return False
         return True
 
 class TaskManager:
-    def __init__(self, tasks, time_props, duration=1000, rand_order=True):
-        self.tasks = tasks
+    def __init__(self, duration=1000, use_done=False, num_slots=2, rand_order=True):
+        self.tasks = []
         self.duration = duration
-        self.time_props = time_props
-        if self.time_props == 'same': 
-            self.time_props = [1/len(tasks)] * len(tasks)
+        self.num_slots = num_slots
+        self.use_done = use_done
+        self.time_props = [1/len(tasks)] * len(tasks)
         self.task_durations = [int(prop * self.duration) for prop in self.time_props]
         self.rand_order = rand_order
-        self.current_task = self.task_order[0]
+        self.task_order = None
         self.block = 0
         self.t = 0
 
+    def add_task(self, task_name, **task_params):
+        task = tasks[task_name](**task_params, duration=self.duration//self.num_slots, use_done=self.use_done)
+        self.tasks.append(task)
+
     def __call__(self, entities):
+        # print(self.t,self.current_task_idx)
+        if self.block >= self.num_slots:
+            return
+        self.current_task(entities)
         if self.task_done:
             self.block += 1
+            if self.block >= self.num_slots:
+                return
+            self.current_task.reset()
+        self.render_task()
+        robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
+        for robot in robot_names:
+            entities[robot].task = np.array([self.current_task_idx / (self.num_tasks - 1)])
         self.t += 1
+
+    def render_task(self):
+        if global_states.RENDER:
+            if self.t == 0:
+                self.label_id = p.addUserDebugText(str(self.current_task_idx), (0,0,0.1), 
+                        textColorRGB=(0,0,0), textSize=2, )
+            else:
+                self.label_id = p.addUserDebugText(str(self.current_task_idx), (-0.5,0,0.1), 
+                        textColorRGB=(0,0,0), textSize=2, replaceItemUniqueId=self.label_id)
+
+    @property
+    def num_tasks(self):
+        return len(self.tasks)
 
     @property
     def is_done(self):
-        pass
+        return self.task_done and self.block == self.num_slots or self.t >= self.duration 
 
     @property
     def current_task_idx(self):
-        return self.task_order[self.block]
+        return self.task_order[self.block] if self.block < self.num_slots else self.task_order[-1]
 
     
     @property
     def current_task(self):
-        return self.task[self.block]
+        return self.tasks[self.current_task_idx]
 
     @property
     def task_done(self):
-        return self.tasks[self.current_task].is_done
+        return self.current_task.is_done
     
     @property
-    def reward(self):
-        return self.tasks[self.current_task].reward
+    def rewards(self):
+        return self.current_task.rewards
 
-    def reset(self):
+    def reset(self, seed=None):
+        if seed is not None:
+            np.random.seed(seed)
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        if seed is not None:
+            np.random.seed()
 
 

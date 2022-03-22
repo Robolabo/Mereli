@@ -123,7 +123,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        task = stimuli['task_sensor']
+        task = stimuli['task']
         # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:

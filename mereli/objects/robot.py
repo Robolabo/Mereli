@@ -41,6 +41,7 @@ class Robot(WorldObject):
         #* Current Reward perceived by the robot.
         self.reward_generator = None
         self.reward = np.array([0])
+        self.task = np.array([0])
         # self.reset()
 
     def step(self, neighborhood, perturbations=None):
@@ -65,6 +66,7 @@ class Robot(WorldObject):
         state = self.perceive(neighborhood)
         #* Add reward as a new state entry.
         state['reward'] = self.reward
+        state['task'] = self.task
 
         #* Apply perturbations to stimuli 
         if perturbations is not None:
@@ -88,9 +90,10 @@ class Robot(WorldObject):
         if self.comm_sys is not None:
             actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
         #* Compute robot reward.
-        if self.reward_generator is not None:
-            self.reward = self.reward_generator(actions, state, self, neighborhood)
+        # if self.reward_generator is not None:
+        #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
+
         return state, actions
 
     def plan_actions(self, actions):
@@ -143,6 +146,7 @@ class Robot(WorldObject):
         """
         self._food = False
         self.reward = np.array([0]) #* Current Reward perceived by the robot.
+        self.task = np.array([0])
         if self.reward_generator is not None:
             self.reward_generator.reset()
         if self.controllable:
