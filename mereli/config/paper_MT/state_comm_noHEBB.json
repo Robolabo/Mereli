@@ -15,7 +15,7 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
+            "OUT_STATE" : {"n" : 1, "params" : {"activation" : "tanh"}}},
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
@@ -74,7 +74,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3], "stimuli" : "task", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "task", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -101,7 +101,7 @@
         "population_size" : 100,
         "generations" : 500,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 2,
+        "num_evaluations" : 1,
         "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {
