@@ -221,7 +221,7 @@ class EvolutionaryAlgorithm:
                     if self.novelty_search is not None:
                         for _, _, t_elapsed in fitness:
                             self.novelty_search.update(t_elapsed)                        
-                        self.fitness = [self.novelty_search.novelty_metric(t_val) for _,  _, t_val in sorted(fitness, key=lambda x: x[0])]
+                        self.fitness = [.5 * self.novelty_search.novelty_metric(t_val) + .5 * ff for _,  ff, t_val in sorted(fitness, key=lambda x: x[0])]
             else:
                 eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
                                 self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
