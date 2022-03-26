@@ -167,7 +167,8 @@ class World(object):
         for obj in self.controllable_objects.values():
             if obj.tangible:
                 obj.actuate(self.hierarchy)
-        self.task_manager(self.hierarchy)
+        if self.task_manager is not None:
+            self.task_manager(self.hierarchy)
 
         #* Render and physics step.
         self.physics_engine.step_physics()
@@ -245,13 +246,12 @@ class World(object):
         :param dict world_dict: configuration ``dict`` of the environment (parameters, objects, ...).
         :param dict ann_topology:  configuration ``dict`` of the neural network.
         """
-        # #TODO: esto implica que el tipo/generador de reward es igual para todos los robots.
-        # if ann_topology is not None and ann_topology.get('learning_rule', {}).get('reward') is not None:
-        #     self.reward_generator = rewards.get(ann_topology.get('learning_rule', {}).get('reward'))()
-        self.task_manager = TaskManager(duration=world_dict['task_manager']['total_duration'], 
-                                num_slots=world_dict['task_manager']['num_slots'], use_done=world_dict['task_manager'].get('use_done', False))
-        for task in world_dict['task_manager']['tasks']:
-            self.task_manager.add_task(task['name'], **task['params'])
+        if 'task_manager' in world_dict:
+            self.task_manager = TaskManager(duration=world_dict.get('task_manager',{}).get('total_duration', 1000), 
+                                    num_slots=world_dict.get('task_manager',{}).get('num_slots', 1), 
+                                    use_done=world_dict.get('task_manager',{}).get('use_done', False))
+            for task in world_dict.get('task_manager', {}).get('tasks', []):
+                self.task_manager.add_task(task['name'], **task['params'])
         if 'done_signal' in world_dict:
             self.done_signal = dones[world_dict['done_signal']['name']](**world_dict['done_signal'].get('params', {}))
         for obj_name, obj in world_dict['objects'].items():
@@ -286,7 +286,7 @@ class World(object):
                     #* Instantiate robot entity
                     robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
                     #* If any, initialize robot's reward generator
-                    robot.reward_generator = rewards.get(obj.get('reward'))()
+                    # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)
                     if "comm_sys" in obj:
                         robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))
@@ -318,7 +318,8 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
-        self.task_manager.reset(seed=seed)
+        if self.task_manager is not None:
+            self.task_manager.reset(seed=seed)
         #* Initialize object dynamics.
         self.run_initializers(seed=seed)
         #* Reset objects
