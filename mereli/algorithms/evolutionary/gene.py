@@ -163,7 +163,8 @@ class ConnectionGene(BaseGene):
 class GraphGenotype:
     def __init__(self):
         self._fitness = None
-        self._evolvable_structs = None  
+        self.eval_time = None
+        self._evolvable_structs = None
         self._node_genes = deque([])
         self._connection_genes = deque([])
         self._species = None

@@ -23,7 +23,7 @@ class Evaluator:
         self.world = world_cls(physics_engine, **arena_params)
         self.world.build_from_dict(world_config, ann_topology=ann_config)
 
-    def evaluate(self, genotype, seed):
+    def evaluate(self, genotype, seed, algorithm):
         self.world.connect()
         robots = [robot for robot in self.world.robots.values()]
         interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]

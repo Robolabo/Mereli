@@ -63,7 +63,7 @@ def get_info(names, world):
 
     
 
-def _run_worker(env_id, worlds, populations, eval_steps, \
+def _run_worker(genotype, worlds, eval_steps, \
         num_evaluations, fitness_fn, seed, generation, algorithm):
     """
     Worker function to evaluate an individual of the EA population and
@@ -100,9 +100,7 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     robots = [robot for robot in world.robots.values()]
     interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in robots]
     for interface in interfaces:
-        for pop in populations.values():
-            genotype_segment = pop.population[env_id]
-            interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
+        interface.fromGenotype(genotype)
     # print('Stuff:', time.time() - t0, flush=True)
     fitness = 0
     mean_survival_time = 0
@@ -131,8 +129,10 @@ def _run_worker(env_id, worlds, populations, eval_steps, \
     mean_survival_time /= num_evaluations
     fitness /= num_evaluations
     world.disconnect()
+    genotype.fitness = fitness
+    genotype.novelty_variables = {'eval_time' : mean_survival_time}
     # print('Eval:', time.time() - t0, flush=True)
-    return (env_id, fitness, mean_survival_time)
+    return genotype
 
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
@@ -191,46 +191,38 @@ class EvolutionaryAlgorithm:
             fitness = []
             t0 = time.time()
             seed = (k) * self.num_evaluations 
-            #* MULTIPROCESSING Parallelization
-            if not use_mpi and self.n_processes > 1:
-                # worlds = [self.world.all[idx % self.n_processes] for idx in range(self.population_size)]
-                with multiprocessing.Pool(processes=self.n_processes) as pool:
-                    pool_args = zip(range(self.population_size), [self.world for _ in range(self.population_size)],\
-                        *[map(lambda x: copy.deepcopy(x), repeat(v))\
-                        for v in iter([self.populations, self.eval_steps, self.num_evaluations,\
-                        self.fitness_fn, seed, k, alg_name])])
-                    evaluation_res = pool.starmap(_run_worker, pool_args)
-                    self.fitness = [v for _, v, _ in sorted(evaluation_res, key=lambda x: x[0])]
+        
 
             #* MPI Parallelization
-            elif use_mpi: #! TODO Multi world
+            if use_mpi: #! TODO Multi world
                 comm = MPI.COMM_WORLD
                 rank = comm.Get_rank()
                 size = comm.Get_size()
-                
-                indiv_per_core = self.population_size // size + (rank == 0) * (self.population_size % size)
-                my_individuals = np.arange(indiv_per_core * rank, indiv_per_core * (rank + 1))
+
+                n_genos_rnk = self.population_size // size + (rank == 0) * (self.population_size % size)
+                rnk_geno_ids = np.arange(n_genos_rnk * rank, n_genos_rnk * (rank + 1))
+                rnk_genotypes = [self.populations['p1'].population[g_id] for g_id in rnk_geno_ids]
                 # print('rank, ', rank, [*self.populations['p1'].population[10].connections][0].parameters)
-                my_fitness = [_run_worker(ii, self.world, self.populations, self.eval_steps, self.num_evaluations,\
-                                self.fitness_fn, seed, k, alg_name) for ii in my_individuals]
+                rnk_genotypes = [_run_worker(geno, self.world, self.eval_steps, self.num_evaluations,\
+                                self.fitness_fn, seed, k, alg_name) for geno in rnk_genotypes]
+                print(rank, [g.fitness for g in rnk_genotypes], flush=True)
                 comm.Barrier()
-                eval_result = comm.gather(my_fitness, root=0)
+                eval_genotypes = comm.gather(rnk_genotypes, root=0)
                 if rank == 0:
-                    fitness = [vv for ff in eval_result for vv in ff]
-                    self.fitness = [f_val for _, f_val, _ in sorted(fitness, key=lambda x: x[0])]
                     if self.novelty_search is not None:
-                        for _, _, t_elapsed in fitness:
-                            self.novelty_search.update(t_elapsed)                        
-                        self.fitness = [self.novelty_search.novelty_metric(t_val) for _,  _, t_val in sorted(fitness, key=lambda x: x[0])]
+                        for geno in eval_genotypes:
+                            self.novelty_search.update(geno.novelty_metric['eval_time'])
+                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric['eval_time'])
+                        geno.fitness = .3 * geno.fitness + .7 * ns_metric
+                    self.populations['p1'].population = eval_genotypes #!
             else:
-                eval_result = [_run_worker(i, self.world, self.populations, self.eval_steps, \
+                self.populations['p1'].population = [_run_worker(geno, self.world, self.eval_steps, \
                                 self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
-                                for i in range(self.population_size)]
-                self.fitness = [v for _, v, _ in eval_result]
+                                for geno in self.populations['p1'].population]
             #* No parallelization
             if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
-                for genotype, fitness in zip(self.populations['p1'].population, self.fitness):#! Ojo many pops
-                    genotype.fitness = fitness
+                # for genotype, fitness in zip(self.populations['p1'].population, self.fitness):#! Ojo many pops
+                #     genotype.fitness = fitness
                 if k % 5 == 0 and self.checkpoint_name is not None:
                     if use_mpi:
                         print('SAVING CHECKPOINT', flush=True)
@@ -285,9 +277,9 @@ class EvolutionaryAlgorithm:
         for interface in interfaces:
             for pop in self.populations.values():
                 aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
-                pop.species[0].compatibility(aux_pop[0])
-                genotype_segment = aux_pop[0] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
-                interface.fromGenotype(pop.objects, genotype_segment, pop.min_vals, pop.max_vals)
+                # pop.species[0].compatibility(aux_pop[0])
+                geno = aux_pop[0] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
+                interface.fromGenotype(geno)
         info = {n : deque() for n in self.fitness_fn.required_info}
         info['generation'] = 1
         

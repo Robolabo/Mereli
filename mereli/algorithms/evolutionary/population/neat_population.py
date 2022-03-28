@@ -226,7 +226,8 @@ class NEAT_Population(Population):
             interface.initGenotype(self.objects, self.min_vals, self.max_vals)
             #* Create new genotype
             genotype = GraphGenotype()
-            # import pdb; pdb.set_trace()
+            genotype.evolvable_structs = {obj : {'min' : min_v, 'max' : max_v}\
+                    for obj, min_v, max_v in zip(self.objects, self.min_vals, self.max_vals)}
             # genotype.evolvable_structs = [x.split(':')[] for x in self.objects]
             for name, node_vals in interface.neural_net.graph['neurons'].items():
                 genotype.add_node_from_dict(name, **node_vals)

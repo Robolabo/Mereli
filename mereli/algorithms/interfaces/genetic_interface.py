@@ -57,16 +57,16 @@ class GeneticInterface:
         return genotype
 
 
-    def fromGenotype(self, queries, genotype, min_vals, max_vals):
+    def fromGenotype(self, genotype):
         """ Converts a genotype into a phenotype or, in this case, structured ANN. 
         It iterates across population opt. vars. with the corresponding queries and 
         submits a SET operation towards the ANN.
         """
-        for query, max_val, min_val in zip(queries, max_vals, min_vals):
+        for query, qparams in genotype.evolvable_structs.items():
             genes = genotype.genes_of_struct(query)
             genes_values = np.array([gene.value for gene in genes])
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
-                    data=genes_values, min_val=min_val, max_val=max_val)
+                    data=genes_values, min_val=qparams['min'], max_val=qparams['max'])
         self.neural_net.build() #* Compile changes.
     
     def initGenotype(self, queries, min_vals, max_vals):
@@ -80,7 +80,7 @@ class NEATInterface(GeneticInterface):
     def __init__(self, neural_net):
         super(NEATInterface, self).__init__(neural_net)
 
-    def fromGenotype(self, queries, genotype, min_vals, max_vals):
+    def fromGenotype(self, genotype):
         """ Converts a genotype into a phenotype or, in this case, structured ANN.
         """
         effective_genotype = copy.deepcopy(genotype)  
@@ -103,7 +103,7 @@ class NEATInterface(GeneticInterface):
             if conn.has_learning_rule:
                 self.neural_net.add_learning_rule(conn.name, conn.learning_rule, conn.parameters['lr_weight'])
         #* Update parameters (Decoders and encoders not supported yet).
-        for query, max_val, min_val in zip(queries, max_vals, min_vals):
+        for query, qparams in genotype.evolvable_structs.items():
             gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
             variable = query.split(':')[1]
             if variable == 'weights': 
@@ -116,13 +116,9 @@ class NEATInterface(GeneticInterface):
                 else:
                     genotype_segment = np.array([gene.parameters[variable] for gene in getattr(effective_genotype, gene_type)]).flatten()
             self.neural_net.graph = self.submit_query(query, primitive='SET',\
-                        data=genotype_segment, min_val=min_val, max_val=max_val)
+                        data=genotype_segment, min_val=qparams['min'], max_val=qparams['max'])
         self.neural_net.build() #* Compile changes.
-        # conn_g = [n.name for n in genotype.connections if n.enabled]
-        # conn_ann = [n for n, v in self.neural_net.graph['synapses'].items()]
-        # w_g = np.array([n.parameters['weight'] for n in genotype.connections if n.enabled])
-        # w_ann = np.array([v['weight'] for n, v in self.neural_net.graph['synapses'].items()])
-        # import pdb; pdb.set_trace()
+
 
     def initGenotype(self, queries, min_vals, max_vals):
         """ Method for initializing the values of the genotype.
