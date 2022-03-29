@@ -51,10 +51,15 @@ class NeuralController(RobotController):
 
         #* Map neuron output names to the corresponding actuator name
         actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items()}
+        # for action in actions:
+        #     if ':' in action:
+        #         action_split = action.split(':')
+        #         if action_split[0] in actions:
+        #             actions[action_split[0]] = {'value' : actions[action_split[0]], action_split[1] : actions[action]}
+        
         #* Convert all actions to numpy arrays
         for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
             actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
-            
         if 'wheel_actuator' in actions.keys():
             if type(actions['wheel_actuator']) in [int, bool]:
                 actions['wheel_actuator'] = np.array(([0., 0.], [.5, -.5], [-.5, .5])[actions['wheel_actuator']])
