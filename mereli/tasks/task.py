@@ -62,13 +62,11 @@ class GotoLightTask(Task):
         assert len(lights) > 0
         distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
         dist_others = np.array([np.linalg.norm(robot.position[:2] - rob.position[:2]) for rob in others])
-        import pdb; pdb.set_trace()
         if any(distances < self.range):
             if all(dist_others < 1):
-                return np.mean(dist_others < 1)
+                return 1 - np.mean(dist_others < 1)
             # return np.array([1 - (min(distances)/self.range) ** 2])
-        else:
-            return np.array([0])
+        return np.array([0])
 
     def done_generator(self, entities):
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
