@@ -128,7 +128,11 @@ class TaskManager:
     def current_task_idx(self):
         return self.task_order[self.block] if self.block < self.num_slots else self.task_order[-1]
 
-    
+    @property 
+    def previous_task(self):
+        assert self.current_task_idx > 0
+        return self.tasks[self.current_task_idx - 1]
+
     @property
     def current_task(self):
         return self.tasks[self.current_task_idx]

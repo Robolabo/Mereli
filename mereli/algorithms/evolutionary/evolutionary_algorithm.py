@@ -2,6 +2,7 @@ import time
 import copy
 import re
 import logging
+from mereli.algorithms.evaluator import Evaluator
 
 from mereli.algorithms.evolutionary.novelty_search import NoveltySearch
 try:
@@ -9,7 +10,6 @@ try:
 except:
     logging.warning('Running without multiprocessing.')
 from collections import deque
-from itertools import repeat, chain
 try:
     from mpi4py import MPI
     MPI_AVAILABLE = True
@@ -24,6 +24,7 @@ from mereli.sensors.utils import list_sensors
 from mereli.actuators.utils import list_actuators
 from mereli.globals import global_states          
 from mereli.world import MultiWorldWrapper, SquareArena
+from mereli.algorithms.evaluator import Evaluator, MPI_Evaluator
 
 def get_info_old(name, robots, world,):
     """
@@ -147,6 +148,8 @@ class EvolutionaryAlgorithm:
                  checkpoint_name='chk',
                  resume=False):
         self.world = world
+        evaluator_cls = MPI_Evaluator if self.use_mpi else Evaluator
+        self.evaluator = evaluator_cls(num_evaluations=num_evaluations)
         self.populations = populations
         self.n_generations = n_generations
         self.population_size = population_size
@@ -165,17 +168,21 @@ class EvolutionaryAlgorithm:
         if resume:
             self.load_population()
         else:
-            use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+            # use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
             #* Only one core is responsible of initialization
-            if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
+            if not self.use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
                 robots = [copy.deepcopy(robot) for robot in world.robots.values()]\
                             if not isinstance(world, MultiWorldWrapper) else\
                             [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
                 for pop in self.populations.values():
                     pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
-            if use_mpi:
+            if self.use_mpi:
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
                 MPI.COMM_WORLD.barrier()
+
+    def create_world(self, world_config, ann_config=None):
+        self.evaluator.create_world(world_config, ann_config=ann_config)
+
 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
@@ -185,56 +192,34 @@ class EvolutionaryAlgorithm:
         The method does not return any data. Instead, it saves all the required 
         information to resume the evolution periodically.
         """
-        use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+        # use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
         alg_name = type(self).__name__
         for k in range(self.init_generation, self.n_generations):
-            fitness = []
             t0 = time.time()
-            seed = (k) * self.num_evaluations 
-        
-
-            #* MPI Parallelization
-            if use_mpi: #! TODO Multi world
-                comm = MPI.COMM_WORLD
-                rank = comm.Get_rank()
-                size = comm.Get_size()
-
-                n_genos_rnk = self.population_size // size + (rank == 0) * (self.population_size % size)
-                rnk_geno_ids = np.arange(n_genos_rnk * rank, n_genos_rnk * (rank + 1))
-                rnk_genotypes = [self.populations['p1'].population[g_id] for g_id in rnk_geno_ids]
-                # print('rank, ', rank, [*self.populations['p1'].population[10].connections][0].parameters)
-                rnk_genotypes = [_run_worker(geno, self.world, self.eval_steps, self.num_evaluations,\
-                                self.fitness_fn, seed, k, alg_name) for geno in rnk_genotypes]
-                print(rank, [g.fitness for g in rnk_genotypes], flush=True)
-                comm.Barrier()
-                eval_genotypes = comm.gather(rnk_genotypes, root=0)
-                if rank == 0:
-                    if self.novelty_search is not None:
-                        for geno in eval_genotypes:
-                            self.novelty_search.update(geno.novelty_metric['eval_time'])
+            seed = (k) * self.num_evaluations
+            eval_genotypes = self.evaluator.batch_evaluate(self.populations['p1'].population, seed, alg_name)
+            if not self.use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
+                #* Apply novelty search (if any)
+                if self.novelty_search is not None:
+                    for geno in eval_genotypes:
+                        self.novelty_search.update(geno.novelty_metric['eval_time'])
                         ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric['eval_time'])
                         geno.fitness = .3 * geno.fitness + .7 * ns_metric
                     self.populations['p1'].population = eval_genotypes #!
-            else:
-                self.populations['p1'].population = [_run_worker(geno, self.world, self.eval_steps, \
-                                self.num_evaluations, self.fitness_fn, seed, k, alg_name)\
-                                for geno in self.populations['p1'].population]
-            #* No parallelization
-            if not use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
-                # for genotype, fitness in zip(self.populations['p1'].population, self.fitness):#! Ojo many pops
-                #     genotype.fitness = fitness
+                #* Save evolution state 
                 if k % 5 == 0 and self.checkpoint_name is not None:
-                    if use_mpi:
+                    if self.use_mpi:
                         print('SAVING CHECKPOINT', flush=True)
                     self.save_population(k)
                 #* Evolve Population
                 mean_fitness, max_fitness, min_fitness = self.evolve(k)
+                #* Print Stuff
                 print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
                     .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
                 any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
                             zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
 
-            if use_mpi:
+            if self.use_mpi:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
                 MPI.COMM_WORLD.Barrier()
@@ -248,6 +233,10 @@ class EvolutionaryAlgorithm:
         self.fitness = [0 for _ in range(self.population_size)]
 
         return mean_fitness, max_fitness, min_fitness
+
+    @property
+    def use_mpi(self):
+        return MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
 
     def save_population(self, generation):
         """ Save the algorithm checkpoint. To be implemented in the particular algorithm. """

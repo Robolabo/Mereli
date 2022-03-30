@@ -1,12 +1,12 @@
-from itertools import combinations
-from functools import reduce
 import numpy as np
 import numpy.linalg as LA
-import matplotlib.pyplot as plot
 from mereli.register import fitness_func_registry
-from mereli.utils import (normalize, compute_angle, angle_diff,
-                                    geom_mean, angle_mean, get_alphashape,
-                                    convert2graph, disjoint_subgraphs, toroidal_difference)
+from mereli.utils import (angle_diff, get_alphashape,
+                                convert2graph, disjoint_subgraphs)
+from mereli.utils.decorators import increase_time
+
+
+
 
 @fitness_func_registry(name='identify_borderline')
 class IdentifyBorderline:
@@ -268,33 +268,54 @@ class TaskSwitching4Lights:
         return fitness + 1e-5
 
 
-@fitness_func_registry(name='task_switching_B')
-class TaskSwitchingB:
-    """Fitness function for the exploration task."""
-    def __init__(self):
-        self.required_info = ['robot:reward']
+class FitnessFunction:
 
-    def __call__(self, actions, states, info=None):
-        fA, fB = 0, 0
-        for t, rew_t in enumerate(info['robot:reward']):
-            # try:
-            #     V_t = np.sum([np.clip(info['robot:reward'][k].flatten(), a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
-            # except:
-            #     import pdb; pdb.set_trace()
-            # F_tA = len(rew_t) / np.sum((np.clip(rew_t.flatten(), a_min=0, a_max=None)+1e-5)**-1)
-            # if sum(rew_t.flatten() > 0) > len(rew_t)//2:
-            if t <= len(states) / 2: 
-                fA += np.mean(rew_t.flatten())
-            else:
-                fB += np.mean(rew_t.flatten())
-        fA /= 0.5 * len(states)
-        fB /= 0.5 * len(states)
-        fA = np.clip(fA, a_max=1, a_min=0)
-        fB = np.clip(fB, a_max=1, a_min=0)
-        # return (fA + fB)/2 + 1e-5
-        # ff =  (2 / (1/fA + 1/fB)) + 1e-5
-        # return(2 / (1/fA + 1/fB)) + 1e-5
-        return np.sqrt(fA * fB) + 1e-5
+    def __init__(self, world):
+        self.world = world
+        self._fitness = 0
+
+    def __call__(self, world):
+        raise NotImplementedError
+
+    @property
+    def fitness(self):
+        if self.t == 0:
+            return 0.
+        return max(self._fitness / self.t, 1e-5)
+
+    @property
+    def rewards(self):
+        return [robot.reward for robot in self.world.robots.values()]
+
+    @property
+    def robots(self):
+        return [robot for robot in self.world.robots.values()]
+
+    def reset(self):
+        self.t = 0
+        self._fitness = 0
+
+@fitness_func_registry(name='task_switching_B')
+class TaskSwitchingB(FitnessFunction):
+    """Fitness function for the exploration task."""
+    def __init__(self, *args, **kwargs):
+        self.required_info = []
+        super(TaskSwitchingB, self).__init__(*args, **kwargs)
+        self._fitness = [0.0] * self.world.task_manager.num_tasks
+        
+    @increase_time
+    def __call__(self):
+        mean_reward = np.mean(self.rewards)
+        current_tsk = self.world.task_manager.current_task_idx
+        self._fitness[current_tsk] += mean_reward
+
+    def fitness(self):
+        fitnesses = [f_val / self.task_manager.task[i].t for i, f_val in enumerate(self._fitness)]
+        return np.prod(fitnesses) ** (1 / len(fitnesses))
+
+    def reset(self):
+        self._fitness = [0.0] * self.world.task_manager.num_tasks
+
 
 
 
