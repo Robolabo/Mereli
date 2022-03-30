@@ -238,7 +238,7 @@ class EvolutionaryAlgorithm:
                 #* Evolve Population
                 mean_fitness, max_fitness, min_fitness = self.evolve(k)
                 print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
-                    .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
+                    .format(k, np.round(mean_fitness, 3), np.round(max_fitness, 3), np.round(time.time() - t0, 2)), flush=True)
                 any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
                             zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
 

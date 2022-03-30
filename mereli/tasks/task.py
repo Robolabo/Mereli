@@ -64,7 +64,7 @@ class GotoLightTask(Task):
         dist_others = np.array([np.linalg.norm(robot.position[:2] - rob.position[:2]) for rob in others])
         if any(distances < self.range):
             if all(dist_others < 1):
-                return 1 - np.mean(dist_others < 1)
+                return np.array([np.mean(dist_others < 1)])
             # return np.array([1 - (min(distances)/self.range) ** 2])
         return np.array([0])
 
