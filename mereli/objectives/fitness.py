@@ -269,7 +269,6 @@ class TaskSwitching4Lights:
 
 
 class FitnessFunction:
-
     def __init__(self, world):
         self.world = world
         self._fitness = 0

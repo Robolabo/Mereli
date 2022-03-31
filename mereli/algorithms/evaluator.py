@@ -12,10 +12,11 @@ from mereli.register import fitness_functions
 
 #! seed?
 class Evaluator:
-    def __init__(self, num_evaluations=1, fitness_fn=None):
+    def __init__(self, num_evaluations=1, fitness_fn=None, use_seed=True):
         self.world = None
         self.fitness_fn = fitness_fn
         self.num_evaluations = num_evaluations
+        self.use_seed = use_seed
 
     def create_world(self, world_config, ann_config=None):
         physics_engine = physics_engines[world_config.get('engine', 'pybullet')](
@@ -26,23 +27,29 @@ class Evaluator:
         self.world = world_cls(physics_engine, **arena_params)
         self.world.build_from_dict(world_config, ann_topology=ann_config)
         if self.fitness_fn is not None:
-            self.fitness_fn = fitness_functions[self.fitness_fn]
+            self.fitness_fn = fitness_functions[self.fitness_fn](self.world)
 
     def batch_evaluate(self, genotypes, seed, algorithm):
         return [self.evaluate(geno, seed, algorithm) for geno in genotypes]
 
-    def evaluate(self, genotype, seed, algorithm):
+    def evaluate(self, genotype, generation, algorithm):
+        assert self.world is not None
         self.world.connect()
+        # Genoype-Phenotype conversion
         interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in self.robots]
         for interface in interfaces:
             interface.fromGenotype(genotype)
+        # Genotype is evaluated N_E independent trials  
+        mean_survival_time = 0
+        seed = generation * self.num_evaluations 
         for trial in range(self.num_evaluations):
             seed += 1
             survival_time = 0
-            self.world.reset(seed=seed)
+            # Reset the world for a new simulation/episode
+            self.world.reset(seed=seed if self.use_seed else None)
             while (not self.world.is_done):
                 states, actions = self.world.step()
-                rewards = np.array([robot.reward for robot in self.world.robots.values()])
+                # rewards = np.array([robot.reward for robot in self.world.robots.values()])
                 survival_time += 1
             mean_survival_time += survival_time
             if self.fitness_fn is not None:
@@ -51,7 +58,7 @@ class Evaluator:
         self.world.disconnect()
         if self.fitness_fn is not None:
             genotype.fitness = self.fitness_fn.fitness
-            genotype.novelty_variables = {'eval_time' : mean_survival_time}
+        genotype.novelty_variables = {'eval_time' : mean_survival_time}
         return genotype
 
     @property
@@ -62,6 +69,19 @@ class MPI_Evaluator(Evaluator):
     def __init__(self, *args, **kwargs):
         super(MPI_Evaluator, self).__init__(*args, **kwargs)
         self.rank = MPI.COMM_WORLD.Get_rank()
+        self.size = MPI.COMM_WORLD.Get_size()
 
 
-    # def evaluate(self, )
+    def batch_evaluate(self, genotypes, seed, algorithm):
+        if self.rank == 0:
+            genotypes = MPI.COMM_WORLD.bcast(self.populations, root=0)
+        MPI.COMM_WORLD.Barrier()
+        pop_size = len(genotypes)
+        num_genotypes = pop_size // self.size + (self.rank == 0) * (self.population_size % self.size)
+        rnk_genotype_ids = np.arange(num_genotypes * self.rank, num_genotypes * (self.rank + 1))
+        rnk_genotypes = [genotypes[g_id] for g_id in rnk_genotype_ids]
+        rnk_genotypes = [self.evaluate(geno, seed, algorithm) for geno in rnk_genotypes]
+        MPI.COMM_WORLD.barrier()
+        all_genotypes = MPI.COMM_WORLD.gather(rnk_genotypes, root=0) #! OJO COMPROBAR
+        return all_genotypes
+        
