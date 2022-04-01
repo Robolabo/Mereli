@@ -27,7 +27,15 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     global_states.set_states(render=render, eval=eval, debug=debug, info=verbose)
     #* Parse JSON
     cfg_dict = json_parser(cfg)
-
+    
+    #* Create World
+    physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
+                        dt=cfg_dict['world'].get('physics_dt', 0.02), 
+                        T_control=cfg_dict['world'].get('T_control', 0.1))
+    world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
+    arena_params = cfg_dict['world'].get('arena_params', {})
+    world = world_cls(physics_engine, **arena_params)
+    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
         ga_config = cfg_dict['algorithm']
         algorithm_cls = algorithms[cfg_dict['algorithm']['name']]
@@ -45,14 +53,6 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
             #* Evaluate after evolution
             opt_alg.evaluate()
     else: #* Non-optimizable simulation
-        #* Create the world
-        physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
-                            dt=cfg_dict['world'].get('physics_dt', 0.02), 
-                            T_control=cfg_dict['world'].get('T_control', 0.1))
-        world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
-        arena_params = cfg_dict['world'].get('arena_params', {})
-        world = world_cls(physics_engine, **arena_params)
-        world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
         world.connect()
         world.reset()
         while(True):

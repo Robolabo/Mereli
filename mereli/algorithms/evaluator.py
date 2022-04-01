@@ -10,10 +10,9 @@ from mereli.register import worlds, physics_engines
 from mereli.algorithms.interfaces import InterfaceFactory
 from mereli.register import fitness_functions
 
-#! seed?
 class Evaluator:
     def __init__(self, num_evaluations=1, fitness_fn=None, use_seed=True):
-        self.world = None
+        self._world = None
         self.fitness_fn = fitness_fn
         self.num_evaluations = num_evaluations
         self.use_seed = use_seed
@@ -29,8 +28,8 @@ class Evaluator:
         if self.fitness_fn is not None:
             self.fitness_fn = fitness_functions[self.fitness_fn](self.world)
 
-    def batch_evaluate(self, genotypes, seed, algorithm):
-        return [self.evaluate(geno, seed, algorithm) for geno in genotypes]
+    def batch_evaluate(self, genotypes, generation, algorithm):
+        return [self.evaluate(geno, generation, algorithm) for geno in genotypes]
 
     def evaluate(self, genotype, generation, algorithm):
         assert self.world is not None
@@ -65,6 +64,15 @@ class Evaluator:
     def robots(self):
         return [robot for robot in self.world.robots.values()]
 
+    @property
+    def world(self):
+        return self._world
+
+    @world.setter
+    def world(self, new_world):
+        self._world = new_world
+
+
 class MPI_Evaluator(Evaluator):
     def __init__(self, *args, **kwargs):
         super(MPI_Evaluator, self).__init__(*args, **kwargs)
@@ -73,15 +81,18 @@ class MPI_Evaluator(Evaluator):
 
 
     def batch_evaluate(self, genotypes, seed, algorithm):
-        if self.rank == 0:
-            genotypes = MPI.COMM_WORLD.bcast(self.populations, root=0)
+        genotypes = MPI.COMM_WORLD.bcast(genotypes, root=0)
         MPI.COMM_WORLD.Barrier()
         pop_size = len(genotypes)
-        num_genotypes = pop_size // self.size + (self.rank == 0) * (self.population_size % self.size)
+        num_genotypes = pop_size // self.size + (self.rank == 0) * (pop_size % self.size)
         rnk_genotype_ids = np.arange(num_genotypes * self.rank, num_genotypes * (self.rank + 1))
         rnk_genotypes = [genotypes[g_id] for g_id in rnk_genotype_ids]
+        if self.rank == 1:
+            self.world.hierarchy['robotA_0'].controller.enabled_sensors = {}
         rnk_genotypes = [self.evaluate(geno, seed, algorithm) for geno in rnk_genotypes]
         MPI.COMM_WORLD.barrier()
         all_genotypes = MPI.COMM_WORLD.gather(rnk_genotypes, root=0) #! OJO COMPROBAR
+        if self.rank == 0:
+            all_genotypes = [geno for geno_batch in all_genotypes for geno in geno_batch]
         return all_genotypes
         

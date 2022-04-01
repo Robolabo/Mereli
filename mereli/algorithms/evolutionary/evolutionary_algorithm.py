@@ -27,7 +27,7 @@ from mereli.algorithms.evaluator import Evaluator, MPI_Evaluator
 
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
-    def __init__(self, populations,
+    def __init__(self, world, populations,
                  n_generations=100,
                  population_size=100,
                  num_evaluations=3,
@@ -35,7 +35,9 @@ class EvolutionaryAlgorithm:
                  use_novelty_search=False,
                  checkpoint_name='chk',
                  resume=False):
+        self.world = world
         self.resume = resume
+        self.generation = 0
         self.populations = populations
         self.n_generations = n_generations
         self.population_size = population_size
@@ -44,7 +46,6 @@ class EvolutionaryAlgorithm:
         self.evaluator = evaluator_cls(num_evaluations=num_evaluations, fitness_fn=fitness_fn)
         self.novelty_search = NoveltySearch() if use_novelty_search else None
         self.evolution_history = {stat : [] for stat in ['mean', 'max', 'min']}
-        self.init_generation = 0
 
     def initialize(self):
         assert self.world is not None
@@ -78,10 +79,10 @@ class EvolutionaryAlgorithm:
         """
         # use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
         alg_name = type(self).__name__
-        for k in range(self.init_generation, self.n_generations):
+        init_generation = self.generation
+        for k in range(init_generation, self.n_generations):
             t0 = time.time()
             self.populations['p1'].population = self.evaluator.batch_evaluate(self.populations['p1'].population, k, alg_name)
-
             if not self.use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
                 #* Apply novelty search (if any)
                 if self.novelty_search is not None:
@@ -95,30 +96,40 @@ class EvolutionaryAlgorithm:
                         print('SAVING CHECKPOINT', flush=True)
                     self.save_population(k)
                 #* Evolve Population
-                mean_fitness, max_fitness, min_fitness = self.evolve(k)
+                self.evolve()
                 #* Print Stuff
                 print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
-                    .format(k, round(mean_fitness, 3), round(max_fitness, 3), round(time.time() - t0, 2)), flush=True)
+                    .format(k, round(self.mean_fitness, 3), round(self.max_fitness, 3), round(time.time() - t0, 2)), flush=True)
                 any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
-                            zip(['mean', 'max', 'min'], [mean_fitness, max_fitness, min_fitness])])
+                            zip(['mean', 'max', 'min'], [self.mean_fitness, self.max_fitness, self.min_fitness])])
             if self.use_mpi:
                 #* Broadcast evolved populations to all nodes
                 self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
                 MPI.COMM_WORLD.Barrier()
 
-    def evolve(self, generation):
-        for pop in self.populations.values():
-            pop.step(self.fitness, generation)
-        mean_fitness = np.mean(self.fitness)
-        max_fitness = np.max(self.fitness)
-        min_fitness = np.min(self.fitness)
-        self.fitness = [0 for _ in range(self.population_size)]
+    def evolve(self):
+        raise NotImplementedError
+        # for pop in self.populations.values():
+        #     pop.step(self.fitness, generation)
 
-        return mean_fitness, max_fitness, min_fitness
+    @property
+    def mean_fitness(self):
+        return np.mean([geno.fitness for geno in self.populations['p1'].population])
+
+    @property
+    def max_fitness(self):
+        return np.max([geno.fitness for geno in self.populations['p1'].population])
+
+    @property
+    def min_fitness(self):
+        return np.min([geno.fitness for geno in self.populations['p1'].population])
 
     @property
     def use_mpi(self):
         return MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+
+    def initialize_population(self, interface):
+        raise NotImplementedError
 
     def save_population(self, generation):
         """ Save the algorithm checkpoint. To be implemented in the particular algorithm. """

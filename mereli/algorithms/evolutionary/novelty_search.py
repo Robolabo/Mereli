@@ -14,7 +14,7 @@ class NoveltySearch:
 
     def novelty_metric(self, value):
         k_nearest = sorted([np.abs(value - x) for x in self.buffer])[:self.k]
-        return np.mean(k_nearest)/max(self.buffer)
+        return np.mean(k_nearest) / max(self.buffer)
 
     def reset(self):
         self.buffer = deque([])

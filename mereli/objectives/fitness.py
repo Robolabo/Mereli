@@ -270,6 +270,7 @@ class TaskSwitching4Lights:
 
 class FitnessFunction:
     def __init__(self, world):
+        self.t = 0
         self.world = world
         self._fitness = 0
 
@@ -294,12 +295,12 @@ class FitnessFunction:
         self.t = 0
         self._fitness = 0
 
-@fitness_func_registry(name='task_switching_B')
-class TaskSwitchingB(FitnessFunction):
+@fitness_func_registry(name='task_switch')
+class TaskSwitch(FitnessFunction):
     """Fitness function for the exploration task."""
     def __init__(self, *args, **kwargs):
         self.required_info = []
-        super(TaskSwitchingB, self).__init__(*args, **kwargs)
+        super(TaskSwitch, self).__init__(*args, **kwargs)
         self._fitness = [0.0] * self.world.task_manager.num_tasks
         
     @increase_time
@@ -308,12 +309,14 @@ class TaskSwitchingB(FitnessFunction):
         current_tsk = self.world.task_manager.current_task_idx
         self._fitness[current_tsk] += mean_reward
 
+    @property
     def fitness(self):
-        fitnesses = [f_val / self.task_manager.task[i].t for i, f_val in enumerate(self._fitness)]
-        return np.prod(fitnesses) ** (1 / len(fitnesses))
+        fitnesses = [f_val / self.world.task_manager.tasks[i].t for i, f_val in enumerate(self._fitness)]
+        return max(np.prod(fitnesses) ** (1 / len(fitnesses)), 1e-5)
 
     def reset(self):
         self._fitness = [0.0] * self.world.task_manager.num_tasks
+
 
 
 
