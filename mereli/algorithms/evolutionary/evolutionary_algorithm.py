@@ -70,6 +70,7 @@ class EvolutionaryAlgorithm:
         """
         while self.generation <= self.n_generations:
             t0 = time.time()
+            #* Evaluate all the genotypes
             self.population = self.evaluator.batch_evaluate(self.population, self.generation)
             
             if self.rank == 0:
@@ -79,15 +80,14 @@ class EvolutionaryAlgorithm:
                         self.novelty_search.update(geno.novelty_metric['eval_time'])
                         ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric['eval_time'])
                         geno.fitness = .3 * geno.fitness + .7 * ns_metric
-
-                #* Evolve Population
-                self.evolve()
                 #* Save evolution state 
                 self.save()
                 time_taken = time.time() - t0
                 #* Print Stuff
                 print(f"""Generation {self.generation}: mean fitness={self.mean_fitness:3f},\ 
                         max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.""", flush=True)
+                #* Evolve Population
+                self.evolve()
                 self.generation += 1
             if self.use_mpi:
                 #* Broadcast evolved population to all nodes
