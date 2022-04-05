@@ -50,10 +50,11 @@ class Evaluator:
             while (not self.world.is_done):
                 states, actions = self.world.step()
                 # rewards = np.array([robot.reward for robot in self.world.robots.values()])
+                if self.fitness_fn is not None:
+                    self.fitness_fn()
                 survival_time += 1
             mean_survival_time += survival_time
-            if self.fitness_fn is not None:
-                self.fitness_fn()
+
         mean_survival_time /= self.num_evaluations
         self.world.disconnect()
         if self.fitness_fn is not None:
