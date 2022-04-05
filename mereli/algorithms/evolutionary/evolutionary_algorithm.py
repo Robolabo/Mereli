@@ -72,7 +72,6 @@ class EvolutionaryAlgorithm:
             t0 = time.time()
             #* Evaluate all the genotypes
             self.population = self.evaluator.batch_evaluate(self.population, self.generation)
-            
             if self.rank == 0:
                 #* Apply novelty search (if any)
                 if self.novelty_search is not None:
