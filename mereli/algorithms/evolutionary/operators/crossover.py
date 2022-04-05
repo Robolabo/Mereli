@@ -191,10 +191,10 @@ def neat_crossover(parents, crossover_prob=0.8, disable_prob=0.75):
     if len(parents) % 2 != 0:
         offspring.append(parents.pop(0))
     for parent1, parent2 in zip(parents[::2], parents[1::2]):
-        children = [GraphGenotype(), GraphGenotype()]
+        children = [GraphGenotype(len(offspring)), GraphGenotype(len(offspring)+1)]
         for child in children:
-            child.evolvable_structs = parent1.evolvable_structs
-
+            child.gene_info = parent1.gene_info
+            child.neural_net_config = parent1.neural_net_config
         innovations_1 = set([gene.innovation for gene in parent1.connections])
         innovations_2 = set([gene.innovation for gene in parent2.connections])
         common_genes = innovations_1.intersection(innovations_2)

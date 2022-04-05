@@ -1,8 +1,8 @@
 import copy
 import numpy as np
 from .interpreter import language_dict
-from mereli.neural_networks.mlp import MLP
-from mereli.neural_networks.neuron_models import Activation
+# from mereli.neural_networks.mlp import MLP
+# from mereli.neural_networks.neuron_models import Activation
 
 class GeneticInterface:
     """ Interface used by all the evolutionary algorithms to manage phenotype to 
@@ -127,39 +127,39 @@ class NEATInterface(GeneticInterface):
             self.neural_net.graph = self.submit_query(query, primitive='INIT', min_val=min_val, max_val=max_val)
         self.neural_net.build()
 
-class CPPN_NEAT_Interface(NEATInterface):
-    def __init__(self, neural_net):
-        self.n_inputs = 3
-        dev_mlp = MLP()
-        dev_mlp.add_stimuli('I', self.n_inputs, sensor='I')
-        dev_mlp.add_ensemble('O', 1, bias=0.0, activation=Activation.LINEAR)
-        dev_mlp.set_motor('O')
-        dev_mlp.add_synapse('I-O', 'I', 'O', weight=1., conn_prob=1.)
-        dev_mlp.build()
-        self.final_ANN = neural_net
-        super(CPPN_NEAT_Interface, self).__init__(dev_mlp)
+# class CPPN_NEAT_Interface(NEATInterface):
+#     def __init__(self, neural_net):
+#         self.n_inputs = 3
+#         dev_mlp = MLP()
+#         dev_mlp.add_stimuli('I', self.n_inputs, sensor='I')
+#         dev_mlp.add_ensemble('O', 1, bias=0.0, activation=Activation.LINEAR)
+#         dev_mlp.set_motor('O')
+#         dev_mlp.add_synapse('I-O', 'I', 'O', weight=1., conn_prob=1.)
+#         dev_mlp.build()
+#         self.final_ANN = neural_net
+#         super(CPPN_NEAT_Interface, self).__init__(dev_mlp)
 
-    def dev_decode(self, genotype):
-        pass 
+#     def dev_decode(self, genotype):
+#         pass 
 
-    def fromGenotype(self, queries, genotype, min_vals, max_vals):
-        #! REVISAR
-        super().fromGenotype(queries, genotype, min_vals, max_vals)
-        n_neurons = 100 
-        W_shape = (n_neurons, n_neurons + self.final_ANN.num_inputs)
-        xx, yy = np.meshgrid(np.linspace(-1, 1, W_shape[0]), np.linspace(-1, 1, W_shape[1]) )
-        self.neural_net.neurons.activation = [Activation.GAUSSIAN] * self.neural_net.num_neurons#!
-        zz = np.reshape([self.neural_net.step(np.r_[x, y, np.linalg.norm(np.r_[x, y])])\
-                    for x, y in zip(xx.flatten(), yy.flatten())], W_shape)
-        self.final_ANN.build_from_adjmat(zz)
-        import pdb; pdb.set_trace()
+#     def fromGenotype(self, queries, genotype, min_vals, max_vals):
+#         #! REVISAR
+#         super().fromGenotype(queries, genotype, min_vals, max_vals)
+#         n_neurons = 100 
+#         W_shape = (n_neurons, n_neurons + self.final_ANN.num_inputs)
+#         xx, yy = np.meshgrid(np.linspace(-1, 1, W_shape[0]), np.linspace(-1, 1, W_shape[1]) )
+#         self.neural_net.neurons.activation = [Activation.GAUSSIAN] * self.neural_net.num_neurons#!
+#         zz = np.reshape([self.neural_net.step(np.r_[x, y, np.linalg.norm(np.r_[x, y])])\
+#                     for x, y in zip(xx.flatten(), yy.flatten())], W_shape)
+#         self.final_ANN.build_from_adjmat(zz)
+#         import pdb; pdb.set_trace()
 
 
-    def initGenotype(self, queries, min_vals, max_vals):
-        for query, max_val, min_val in zip(queries, max_vals, min_vals):
-            kwargs = {'max_val' : max_val, 'min_val' : min_val} if 'activation' not in query else {}
-            self.neural_net.graph = self.submit_query(query, primitive='INIT', **kwargs)
-        self.neural_net.build()
+#     def initGenotype(self, queries, min_vals, max_vals):
+#         for query, max_val, min_val in zip(queries, max_vals, min_vals):
+#             kwargs = {'max_val' : max_val, 'min_val' : min_val} if 'activation' not in query else {}
+#             self.neural_net.graph = self.submit_query(query, primitive='INIT', **kwargs)
+#         self.neural_net.build()
 
 class InterfaceFactory:
     def create(self, algorithm, neural_net):

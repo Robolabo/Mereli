@@ -1,36 +1,32 @@
 import time
-import copy
-import re
 import logging
-from mereli.algorithms.evaluator import Evaluator
-
-from mereli.algorithms.evolutionary.novelty_search import NoveltySearch
-try:
-    import multiprocessing
-except:
-    logging.warning('Running without multiprocessing.')
 from collections import deque
+import numpy as np
+import matplotlib.pyplot as plt
+# try:
+#     import multiprocessing
+# except:
+#     logging.warning('Running without multiprocessing.')
 try:
     from mpi4py import MPI
     MPI_AVAILABLE = True
 except:
     MPI_AVAILABLE = False
     logging.warning('MPI is not installed. Running without mpi4py.')
-import numpy as np
-import matplotlib.pyplot as plt
+from mereli.utils import save_pickle, load_pickle
+from mereli.algorithms.evaluator import Evaluator
+from mereli.algorithms.evolutionary.gene import GraphGenotype
+from mereli.algorithms.evolutionary.novelty_search import NoveltySearch
 from mereli.algorithms.interfaces import InterfaceFactory
 from mereli.utils import DataLogger
 from mereli.sensors.utils import list_sensors
 from mereli.actuators.utils import list_actuators
-from mereli.globals import global_states          
 from mereli.algorithms.evaluator import Evaluator, MPI_Evaluator
 
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
-    def __init__(self, world, populations,
-                 n_generations=100,
-                 population_size=100,
-                 num_evaluations=3,
+    def __init__(self, world, n_generations, population_size,
+                 num_evaluations=1,
                  fitness_fn=None,
                  use_novelty_search=False,
                  checkpoint_name='chk',
@@ -38,37 +34,32 @@ class EvolutionaryAlgorithm:
         self.world = world
         self.resume = resume
         self.generation = 0
-        self.populations = populations
         self.n_generations = n_generations
         self.population_size = population_size
         self.checkpoint_name = checkpoint_name
         evaluator_cls = MPI_Evaluator if self.use_mpi else Evaluator
-        self.evaluator = evaluator_cls(num_evaluations=num_evaluations, fitness_fn=fitness_fn)
+        self.evaluator = evaluator_cls(world, num_evaluations=num_evaluations, fitness_fn=fitness_fn)
         self.novelty_search = NoveltySearch() if use_novelty_search else None
         self.evolution_history = {stat : [] for stat in ['mean', 'max', 'min']}
 
-    def initialize(self):
+    def initialize(self, gene_info, neural_net_config):
         assert self.world is not None
-        if self.resume:
-            self.load_population()
-        else:
-            if not self.use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
-                robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
-                            # if not isinstance(self.world, MultiWorldWrapper) else\
-                            # [copy.deepcopy(robot) for robot in world.all[0].robots.values()]
-                for pop in self.populations.values():
-                    pop.initialize(InterfaceFactory().create(type(self).__name__, robots[0].controller.neural_network))
+        if self.rank == 0:
+            if self.resume:
+                self.load()
+            else:
+                for g_id in range(self.population_size):
+                    genotype = GraphGenotype(g_id)
+                    genotype.configure(gene_info, neural_net_config)
+                    genotype.initialize()
+                    self.population.append(genotype)
         if self.use_mpi:
-            self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
+            self.population = MPI.COMM_WORLD.bcast(self.population, root=0)
             MPI.COMM_WORLD.barrier()
 
     def create_world(self, world_config, ann_config=None):
         self.evaluator.create_world(world_config, ann_config=ann_config)
-
-    @property
-    def world(self):
-        return self.evaluator.world
-
+ 
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
         genotype evaluation to obtain the fitness and performs the evolution step. 
@@ -77,56 +68,90 @@ class EvolutionaryAlgorithm:
         The method does not return any data. Instead, it saves all the required 
         information to resume the evolution periodically.
         """
-        # use_mpi = MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
-        alg_name = type(self).__name__
-        init_generation = self.generation
-        for k in range(init_generation, self.n_generations):
+        while self.generation <= self.n_generations:
             t0 = time.time()
-            self.populations['p1'].population = self.evaluator.batch_evaluate(self.populations['p1'].population, k, alg_name)
-            if not self.use_mpi or MPI.COMM_WORLD.Get_rank() == 0:
+            self.population = self.evaluator.batch_evaluate(self.population, self.generation)
+            
+            if self.rank == 0:
                 #* Apply novelty search (if any)
                 if self.novelty_search is not None:
-                    for geno in self.populations['p1'].population:
+                    for geno in self.population:
                         self.novelty_search.update(geno.novelty_metric['eval_time'])
                         ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric['eval_time'])
                         geno.fitness = .3 * geno.fitness + .7 * ns_metric
-                #* Save evolution state 
-                if k % 5 == 0 and self.checkpoint_name is not None:
-                    if self.use_mpi:
-                        print('SAVING CHECKPOINT', flush=True)
-                    self.save_population(k)
+
                 #* Evolve Population
                 self.evolve()
+                #* Save evolution state 
+                self.save()
+                time_taken = time.time() - t0
                 #* Print Stuff
-                print('End of generation {} with mean fitness {} and max finess {} in {} seconds.'\
-                    .format(k, round(self.mean_fitness, 3), round(self.max_fitness, 3), round(time.time() - t0, 2)), flush=True)
-                any([self.evolution_history[stat_name].append(stat) for stat_name, stat in \
-                            zip(['mean', 'max', 'min'], [self.mean_fitness, self.max_fitness, self.min_fitness])])
+                print(f"""Generation {self.generation}: mean fitness={self.mean_fitness:3f},\ 
+                        max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.""", flush=True)
+                self.generation += 1
             if self.use_mpi:
-                #* Broadcast evolved populations to all nodes
-                self.populations = MPI.COMM_WORLD.bcast(self.populations, root=0)
+                #* Broadcast evolved population to all nodes
+                self.population = MPI.COMM_WORLD.bcast(self.population, root=0)
                 MPI.COMM_WORLD.Barrier()
 
     def evolve(self):
         raise NotImplementedError
-        # for pop in self.populations.values():
-        #     pop.step(self.fitness, generation)
+
+    def save(self):
+        """ Saves the checkpoint with the necessary information to resume the evolution. 
+        """
+        self.evolution_history['mean'].append(self.mean_fitness)
+        self.evolution_history['max'].append(self.max_fitness)
+        self.evolution_history['min'].append(self.min_fitness)
+        if self.generation % 5 == 0 and self.checkpoint_name is not None:
+            file_name = 'mereli/checkpoints/populations/' + self.checkpoint_name
+            save_pickle(self.checkpoint_data, file_name)
+            logging.info('Successfully saved evolution checkpoint.')
+                
+    def load(self):
+        """ Loads a previously saved checkpoint to resume evolution.
+        """
+        checkpoint = load_pickle('mereli/checkpoints/populations/' + self.checkpoint_name)
+        logging.info('Resuming NEAT evolution using checkpoint ' +  self.checkpoint_name)
+        for key, value in checkpoint.items():
+            setattr(self, key, value) 
+        logging.info('Evolution checkpoint successfully restored.')
+    
+    @property
+    def checkpoint_data(self):
+        return {
+            'generation' : self.generation,
+            'population' : self.population,
+            'innovation' : self.innovation,
+            'species_count' : self.species_count,
+            'species' : self.species,
+            'novelty_search' : self.novelty_search,
+            'evolution_hist' : self.evolution_history,
+        }
+
+    @property
+    def pop_size(self):
+        return len(self.population)
 
     @property
     def mean_fitness(self):
-        return np.mean([geno.fitness for geno in self.populations['p1'].population])
+        return np.mean([geno.fitness for geno in self.population])
 
     @property
     def max_fitness(self):
-        return np.max([geno.fitness for geno in self.populations['p1'].population])
+        return np.max([geno.fitness for geno in self.population])
 
     @property
     def min_fitness(self):
-        return np.min([geno.fitness for geno in self.populations['p1'].population])
+        return np.min([geno.fitness for geno in self.population])
 
     @property
     def use_mpi(self):
         return MPI.COMM_WORLD.Get_size() > 1 if MPI_AVAILABLE else False
+
+    @property
+    def rank(self):
+        return MPI.COMM_WORLD.Get_rank() if MPI_AVAILABLE else 0
 
     def initialize_population(self, interface):
         raise NotImplementedError
@@ -233,7 +258,7 @@ class EvolutionaryAlgorithm:
         plt.show()
     
     def plot_species_evolution(self, smoothed=True):
-        species = self.populations['p1'].species
+        species = self.species
         for spc in species:
             fn_ts = np.array(spc.history['max_fitness'])
             if smoothed:

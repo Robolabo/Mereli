@@ -4,7 +4,6 @@ from itertools import product
 
 from mereli.neural_networks.update_rules.update_rules import LearningRuleWrapper
 
-
 from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
 from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
@@ -159,7 +158,8 @@ class BaseNeuralNet:
         :param dict kwargs: Encompasses all the neuron dependent parameters (that are different for each neuron model).
             For instance, if ``rate_model`` it can receive the parameters ``tau``, ``gain``, ``bias`` and ``activation``. 
         """
-        self.ensemble_names.append(name)
+        if name not in self.ensemble_names:
+            self.ensemble_names.append(name)
         for name_kwarg, kwarg in kwargs.items():
             if not (isinstance(kwarg, np.ndarray) or isinstance(kwarg, list)):
                kwargs[name_kwarg] = [kwarg] * num_neurons
@@ -183,7 +183,14 @@ class BaseNeuralNet:
         if ensemble not in self.ensemble_names:
             self.ensemble_names.append(ensemble)
         if 'activation' in kwargs:
-            kwargs['activation'] = Activation.from_name(kwargs['activation'])
+            if isinstance(kwargs['activation'], str):
+                kwargs['activation'] = Activation.from_name(kwargs['activation'])
+        #* If neuron already exists, just update the parameters.
+        if name in self.graph['neurons']:
+            for param, val in kwargs.items():
+                self.graph['neurons'][name][param] = val
+            return
+
         self.neurons.add(**kwargs)#!
         ensemble = ensemble if ensemble is not None else name
         if ensemble not in self.ensemble_names:
@@ -245,6 +252,8 @@ class BaseNeuralNet:
         :param int use_seed: integer value (or None) of the seed to be used when creating the synapse group, in the
             steps involving randomness. If ``seed=None`` then no seed is used at all.
         """
+        if name in self.graph['synapses']:
+            return
         if post in self.graph['inputs'] or post in self.input_ensemble_names:
             raise Exception(logging.error('An input node or ensemble cannot be '\
                 'a postsynaptic neuron or ensemble.'))

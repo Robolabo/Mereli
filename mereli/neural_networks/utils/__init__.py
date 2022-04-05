@@ -1,7 +1,6 @@
 import logging
 from .monitor import NeuralNetMonitor
 from .builder import  SynapsesBuilder
-
 try:
     from .visualization import  *
 except:

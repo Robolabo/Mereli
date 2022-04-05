@@ -1,6 +1,6 @@
 from collections import deque
 import numpy as np
-from mereli.algorithms.interfaces import GET, SET, LEN, INIT
+# from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from mereli.register import learning_rule_registry, learning_rules
 
 
@@ -51,7 +51,7 @@ class LearningRuleWrapper:
     def reset(self):
         pass
 
-    @GET("learning_rule:lr_weights")
+    # @GET("learning_rule:lr_weights")
     def get_weights(self, conn_name, ann_graph, min_val=-1, max_val=1.):
         #* Return scaled in [0,1]
         if conn_name == 'all':
@@ -74,7 +74,7 @@ class LearningRuleWrapper:
                 for name in conn_name if ann_graph['synapses'][name]['trainable']])
         return (weights - min_val) / (max_val - min_val)
 
-    @SET("learning_rule:lr_weights")
+    # @SET("learning_rule:lr_weights")
     def set_weights(self, conn_name, ann_graph, data, min_val=-1, max_val=1.,):
         """
         """
@@ -101,7 +101,7 @@ class LearningRuleWrapper:
                     ann_graph['synapses'][syn_name]['learning_rule']['lr_weight'] = w
             return ann_graph
 
-    @INIT('learning_rule:lr_weights')
+    # @INIT('learning_rule:lr_weights')
     def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1.):
         """
         """
@@ -121,7 +121,7 @@ class LearningRuleWrapper:
         else:
             raise NotImplementedError #!
 
-    @LEN('learning_rule:lr_weights')
+    # @LEN('learning_rule:lr_weights')
     def len_weights(self, conn_name, ann_graph):
         """
         """

@@ -3,18 +3,13 @@ import time
 import logging
 import numpy as np
 
-# from .population import NEAT_Population  
 from .evolutionary_algorithm import EvolutionaryAlgorithm
-from mereli.algorithms.interfaces import NEATInterface
 from mereli.register import algorithm_registry
-from mereli.globals import global_states
-from mereli.utils import save_pickle, load_pickle
 from .species import Species
 from mereli.algorithms.evolutionary.species import Species
 from .operators.crossover import *
 from .operators.mutation import *
 from .operators.selection import *
-from .gene import GraphGenotype
 
 class Innovation:
     def __init__(self):
@@ -38,9 +33,6 @@ class NEAT(EvolutionaryAlgorithm):
     """
     def __init__(self, *args, survival_rate=0.5, p_weight_mut=0.75, p_node_mut=0.08, 
             p_conn_mut=0.1, compatib_thresh=2, c1=1, c2=1, c3=2, species_elites=0, **kwargs):
-        # populations = {name : NEAT_Population(kwargs['population_size'],\
-        #         pop['min_vals'], pop['max_vals'], pop['objects'], **pop['params'])\
-        #         for name, pop in populations.items()}
         super(NEAT, self).__init__(*args, **kwargs)
         self.survival_rate = survival_rate
         self.p_weight_mut = p_weight_mut
@@ -105,7 +97,7 @@ class NEAT(EvolutionaryAlgorithm):
             offspring.extend(neat_crossover(parents))
         #* NEAT Mutation
         offspring, self.innovation = neat_mutation(offspring, self.input_nodes, self.innovation, 
-                p_weight_mut=self.p_weight_mut, p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
+                p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
         #* Update popultation
         self.population = offspring
         if len(self.population) != self.pop_size:
@@ -168,107 +160,21 @@ class NEAT(EvolutionaryAlgorithm):
     def species_genotypes(self, species_id):
         return [genotype for genotype in self.population if genotype.species == species_id]
 
-    def initialize(self, interface):
-        """ Initializes the parameters and population of NEAT.
-
-        - Args:
-            interface [GeneticInterface] : Phenotype to genotype interface of 
-                Evolutionary algs.
-        - Returns: None
-        """
+    def initialize(self, *args, **kwargs):
+        """ """
         self.species = []#Species(self.species_count, 0, compatib_thresh=self.compatib_thresh, 
                             #c1=self.c1, c2=self.c2, c3=self.c3)]
-        self.input_nodes = [*interface.neural_net.graph['inputs'].keys()]
-        #* Only initialize weights randomly, the structure is always the same.
-        for n in range(self.pop_size):
-            interface.initGenotype(self.objects, self.min_vals, self.max_vals)
-            #* Create new genotype
-            genotype = GraphGenotype()
-            genotype.evolvable_structs = {obj : {'min' : min_v, 'max' : max_v}\
-                    for obj, min_v, max_v in zip(self.objects, self.min_vals, self.max_vals)}
-            # genotype.evolvable_structs = [x.split(':')[] for x in self.objects]
-            for name, node_vals in interface.neural_net.graph['neurons'].items():
-                genotype.add_node_from_dict(name, **node_vals)
-            for name, conn_vals in interface.neural_net.graph['synapses'].items():
-                genotype.add_conn_from_dict(name, **conn_vals)
+        super().initialize(*args, **kwargs)
+        if self.rank == 0:
+            #* Only initialize weights randomly, the structure is always the same.
+            for genotype in self.population:
+                #* Assign innovation numbers
+                for conn in genotype.connections:
+                    conn.innovation = self.innovation.assign(conn.pre, conn.post)
+            #* Initial Speciation
+            self.update_species()
 
-            #* Initialize genotype (ANN parameters and weights traits)
-            for query, min_val, max_val in zip(self.objects, self.min_vals, self.max_vals):
-                gnt_segment = interface.toGenotype([query], [min_val], [max_val])
-                variable = query.split(':')[1]
-                variable = variable.replace('weights', 'weight')
-                gene_type = {'synapses' : 'connections', 'neurons' : 'nodes'}.get(query.split(':')[0], 'connections')
-                for gene, value in zip(getattr(genotype, gene_type), gnt_segment):
-                    gene.add_parameter(variable, value)
-            #* Assign innovation numbers
-            for conn in genotype.connections:
-                conn.innovation = self.innovation.assign(conn.pre, conn.post)
-            #* Add genotype to the population
-            self.population.append(genotype)
-        #* Initial Speciation
-        self.update_species(0)
-        # self.species[0].representative = copy.deepcopy(self.population[np.random.randint(self.pop_size)])
-        # self.species[0].num_genotypes = self.pop_size
-
-    def save_population(self, generation):
-        """ Saves the checkpoint with the necessary information to resume the evolution. 
-        """
-        pop_checkpoint = {
-            'populations' : {name : {
-                'best' : pop.best,
-                'genotypes' : pop.population, # List of dicts
-                'innovation' : pop.innovation,
-                'input_nodes' : pop.input_nodes,
-                'species_count' : pop.species_count,
-                'species' : [{
-                    'id' : spc.id,
-                    'creation_generation' : spc.creation_generation,
-                    'history' : copy.deepcopy(spc.history),
-                    'representative' : spc.representative,
-                    'thresh' : spc.compatib_thresh,
-                    'c1' : spc.c1, 'c2' : spc.c2, 'c3' : spc.c3}
-                for spc in pop.species],
-                'species_hist' : None
-            } for name, pop in self.populations.items()},
-            'generation' : generation,
-            'p_weight_mut' : {name : pop.p_weight_mut for name, pop in self.populations.items()},
-            'p_node_mut' : {name : pop.p_node_mut for name, pop in self.populations.items()},
-            'p_conn_mut' : {name : pop.p_conn_mut for name, pop in self.populations.items()},
-            'evolution_hist' : self.evolution_history,
-        }
-        file_name = 'mereli/checkpoints/populations/' + self.checkpoint_name
-        save_pickle(pop_checkpoint, file_name)
-        logging.info('Successfully saved evolution checkpoint.')
-                
-    def load_population(self):
-        """ Loads a previously saved checkpoint to resume evolution.
-        """
-        checkpoint = load_pickle('mereli/checkpoints/populations/' + self.checkpoint_name)
-        logging.info('Resuming NEAT evolution using checkpoint ' +  self.checkpoint_name)
-        key = tuple(self.populations.keys())[0]
-        for key, pop in checkpoint['populations'].items():
-            self.populations[key].p_weight_mut = checkpoint['p_weight_mut'][key]
-            self.populations[key].p_node_mut = checkpoint['p_node_mut'][key]
-            self.populations[key].p_conn_mut = checkpoint['p_conn_mut'][key]
-
-            self.populations[key].population = pop['genotypes']
-            
-            self.populations[key].best = pop.get('best', None)
-            self.populations[key].innovation = pop['innovation']
-            self.populations[key].input_nodes = pop['input_nodes']
-            self.populations[key].species_count = pop['species_count']
-            self.populations[key].species = []
-            for spc_chk in pop['species']:
-                spc = Species(spc_chk['id'], spc_chk['creation_generation'],
-                        compatib_thresh=spc_chk['thresh'], c1=spc_chk['c1'], c2=spc_chk['c2'], c3=spc_chk['c3'])
-                spc.history = copy.deepcopy(spc_chk['history'])
-                self.populations[key].species.append(spc)
-                spc.representative = spc_chk['representative']
-                spc.num_genotypes = np.sum([genotype.species == spc.id  for genotype in pop['genotypes']])
-            robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
-            interface = NEATInterface(robots[0].controller.neural_network)
-            # #!
-            # self.populations[key].segment_lengths = [interface.submit_query(query, primitive='LEN')\
-            #             for query in self.populations[key].objects]         
-        self.generation = checkpoint['generation']
-        self.evolution_history = checkpoint['evolution_hist']
+    @property
+    def checkpoint_data(self):
+        return {**super().checkpoint_data, **{'innovation' : self.innovation,'species' : self.species, 'species_count' : self.species_count}}     
+ 

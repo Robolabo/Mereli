@@ -52,42 +52,7 @@ def config_checker(cfg_dict):
             if alg_cfg[var] < 1:
                 raise Exception(logging.error('Parameter {} of algorithm {} '\
                     'must be greater than 0.'.format(var, alg_cfg['name'])))
-        if len(alg_cfg['populations']) == 0:
-            raise Exception(logging.error('There must be at least one population of {} '\
-                'in order to start evolution.'.format(alg_cfg['name'])))
-        for pop_name, pop in alg_cfg['populations'].items():
-            if len(pop['objects']) == 0:
-                raise Exception(logging.error('No ANN variable to be optimized was '\
-                    'selected in population {} of {}'.format(pop_name, alg_cfg['name'])))
-            if not isinstance(pop['max_vals'], list):
-                pop['max_vals'] = [pop['max_vals']]
-            if not isinstance(pop['min_vals'], list):
-                pop['min_vals'] = [pop['min_vals']]
-            if len(pop['objects']) != len(pop['max_vals']):
-                raise Exception(logging.error('The length of the max_vals field must '\
-                    'be the same as the length of the objects field.'))
-            if len(pop['objects']) != len(pop['min_vals']):
-                raise Exception(logging.error('The length of the min_vals field must '\
-                    'be the same as the length of the objects field.'))
-            for query, min_v, max_v in zip(pop['objects'], pop['min_vals'], pop['max_vals']):
-                if max_v <= min_v:
-                    raise Exception(logging.error('The minimum value of optimization variable queried by "{}" '\
-                        'must be lower than the specified maximum value.'.format(query)))
-            # Check that probabilities are within [0, 1]
-            for prb in ['mutation_prob', 'crossover_prob']:
-                if prb in pop.keys() and not 0 <= pop[prb] <= 1:
-                    raise Exception(logging.error('{} of population {} is a probability '\
-                        'and must be bounded in [0, 1].'.format(prb, pop_name)))
-            #TODO check alg. params
-            # # Check that evo operators are implemented.
-            # for operator in ["selection_operator", "crossover_operator", "mutation_operator", "mating_operator"]:
-            #     if pop[operator] not in map(lambda x: '_'.join(x.split('_')[:-1]), reg.evo_operators.keys()):
-            #         available_ops = map(lambda x: '_'.join(x.split('_')[:-1]), filter(lambda x: \
-            #             x.split('_')[-1] == operator.split('_')[0], reg.evo_operators.keys()))
-            #         raise Exception(logging.error('Evolutionary {} operator "{}" of population {} is not implemented in the simulator. '\
-            #             'Available operators are {}'.format(operator.split('_')[0], pop[operator], pop_name, tuple(available_ops))))
-            # Check types of population variables.
-        
+       
     #* Checker World
     world_cfg = cfg_dict['world']
     if 'objects' not in world_cfg.keys() or world_cfg['objects'] is None:

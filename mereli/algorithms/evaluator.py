@@ -11,9 +11,11 @@ from mereli.algorithms.interfaces import InterfaceFactory
 from mereli.register import fitness_functions
 
 class Evaluator:
-    def __init__(self, num_evaluations=1, fitness_fn=None, use_seed=True):
-        self._world = None
+    def __init__(self, world, num_evaluations=1, fitness_fn=None, use_seed=True):
+        self._world = world
         self.fitness_fn = fitness_fn
+        if self.fitness_fn is not None:
+            self.fitness_fn = fitness_functions[self.fitness_fn](self.world)
         self.num_evaluations = num_evaluations
         self.use_seed = use_seed
 
@@ -28,16 +30,15 @@ class Evaluator:
         if self.fitness_fn is not None:
             self.fitness_fn = fitness_functions[self.fitness_fn](self.world)
 
-    def batch_evaluate(self, genotypes, generation, algorithm):
-        return [self.evaluate(geno, generation, algorithm) for geno in genotypes]
+    def batch_evaluate(self, genotypes, generation):
+        return [self.evaluate(geno, generation) for geno in genotypes]
 
-    def evaluate(self, genotype, generation, algorithm):
+    def evaluate(self, genotype, generation):
         assert self.world is not None
         self.world.connect()
-        # Genoype-Phenotype conversion
-        interfaces = [InterfaceFactory().create(algorithm, bot.controller.neural_network) for bot in self.robots]
-        for interface in interfaces:
-            interface.fromGenotype(genotype)
+        #*         
+        for robot in self.robots:
+            robot.controller.neural_network = genotype.as_phenotype()
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
         seed = generation * self.num_evaluations 

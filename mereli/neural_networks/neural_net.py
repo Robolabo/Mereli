@@ -3,13 +3,11 @@ from functools import wraps
 import numpy as np
 
 # Own imports
-from mereli.register import neuron_models, synapse_models, learning_rules
+from mereli.register import neuron_models, synapse_models
 from mereli.utils import increase_time
 from mereli.neural_networks.base_neural_net import BaseNeuralNet
 from .neuron_models import  SpikingNeuronModel
-from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
-from .utils.monitor import NeuralNetMonitor
 try:
     from .utils.visualization import *
 except:
@@ -123,6 +121,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+        # import pdb; pdb.set_trace()
         task = stimuli['task']
         # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
@@ -177,6 +176,7 @@ class NeuralNetwork(BaseNeuralNet):
         #     actions['outB'] = [0,0]
             # else: 
             #     actions['outB'] = [0, 0]
+        # import pdb; pdb.set_trace()
         return actions
     
     def reset(self):

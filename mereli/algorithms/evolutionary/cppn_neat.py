@@ -3,7 +3,7 @@ import logging
 import numpy as np
 from .population import CPPN_NEAT_Population  
 from .evolutionary_algorithm import EvolutionaryAlgorithm
-from mereli.algorithms.interfaces import CPPN_NEAT_Interface
+# from mereli.algorithms.interfaces import CPPN_NEAT_Interface
 from mereli.register import algorithm_registry
 from mereli.utils import save_pickle, load_pickle
 from .species import Species
