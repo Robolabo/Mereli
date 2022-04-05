@@ -81,7 +81,7 @@ class MPI_Evaluator(Evaluator):
         self.size = MPI.COMM_WORLD.Get_size()
 
 
-    def batch_evaluate(self, genotypes, seed, algorithm):
+    def batch_evaluate(self, genotypes, seed):
         genotypes = MPI.COMM_WORLD.bcast(genotypes, root=0)
         MPI.COMM_WORLD.Barrier()
         pop_size = len(genotypes)
@@ -90,7 +90,7 @@ class MPI_Evaluator(Evaluator):
         rnk_genotypes = [genotypes[g_id] for g_id in rnk_genotype_ids]
         if self.rank == 1:
             self.world.hierarchy['robotA_0'].controller.enabled_sensors = {}
-        rnk_genotypes = [self.evaluate(geno, seed, algorithm) for geno in rnk_genotypes]
+        rnk_genotypes = [self.evaluate(geno, seed) for geno in rnk_genotypes]
         MPI.COMM_WORLD.barrier()
         all_genotypes = MPI.COMM_WORLD.gather(rnk_genotypes, root=0) #! OJO COMPROBAR
         if self.rank == 0:
