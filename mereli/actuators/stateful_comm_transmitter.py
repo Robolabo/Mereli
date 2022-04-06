@@ -21,7 +21,7 @@ class StatefulCommTX(Actuator):
         self.reset()
         
     def step(self, delta_state):
-        self.state += (self.dt / self.tau_m) * delta_state# - self.state)
+        self.state += (self.dt / self.tau_m) * (delta_state - self.state)
         self.state = np.clip(self.state, a_min=-1, a_max=1)
         # self.state = delta_state #np.clip(self.state, a_min=0, a_max=1)
 

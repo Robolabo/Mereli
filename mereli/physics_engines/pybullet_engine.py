@@ -220,7 +220,9 @@ class PybulletEngine(BaseEngine):
         :returns: numpy array of shape (3,) with the entities' position.
         """
         pos = np.array(p.getBasePositionAndOrientation(identifier, physicsClientId=self.client)[0])        
-        if np.isnan(pos).any():import pdb; pdb.set_trace()
+        if np.isnan(pos).any(): 
+            print(pos)
+            import pdb; pdb.set_trace()
         return pos
     
     def get_body_orientation(self, identifier, body_id):

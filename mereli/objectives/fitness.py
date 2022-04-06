@@ -301,22 +301,25 @@ class TaskSwitch(FitnessFunction):
     def __init__(self, *args, **kwargs):
         self.required_info = []
         super(TaskSwitch, self).__init__(*args, **kwargs)
-        self._fitness = [0.0] * self.world.task_manager.num_tasks
+        self._fitness = [0.0] * self.world.task_manager.num_slots
         
     @increase_time
     def __call__(self):
         mean_reward = np.mean(self.rewards)
-        print(mean_reward)
-        current_tsk = self.world.task_manager.current_task_idx
+        current_tsk = self.world.task_manager.block #!check
+        if current_tsk >= len(self._fitness):
+            return
         self._fitness[current_tsk] += mean_reward
+
 
     @property
     def fitness(self):
-        fitnesses = [f_val / self.world.task_manager.tasks[i].t for i, f_val in enumerate(self._fitness)]
+        task_manager = self.world.task_manager
+        fitnesses = [f_val / task_manager.tasks[task_manager.task_order[i]].t for i, f_val in enumerate(self._fitness)]
         return max(np.prod(fitnesses) ** (1 / len(fitnesses)), 1e-5)
 
     def reset(self):
-        self._fitness = [0.0] * self.world.task_manager.num_tasks
+        self._fitness = [0.0] * self.world.task_manager.num_slots
 
 
 
@@ -324,7 +327,7 @@ class TaskSwitch(FitnessFunction):
 
 @fitness_func_registry(name='grouping')
 class Grouping:
-    """Fitness function for the aggrupation task."""
+    """Fitness function for the agrupation task."""
     def __init__(self):
         self.required_info = ("robot_positions", "robot_orientations")
 

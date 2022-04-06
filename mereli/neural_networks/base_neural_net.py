@@ -189,6 +189,7 @@ class BaseNeuralNet:
         if name in self.graph['neurons']:
             for param, val in kwargs.items():
                 self.graph['neurons'][name][param] = val
+                getattr(self.neurons, param)[self.graph['neurons'][name]['idx']] = val
             return
 
         self.neurons.add(**kwargs)#!

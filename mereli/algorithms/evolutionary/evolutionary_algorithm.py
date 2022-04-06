@@ -1,4 +1,5 @@
 import time
+import copy
 import logging
 from collections import deque
 import numpy as np
@@ -83,8 +84,8 @@ class EvolutionaryAlgorithm:
                 self.save()
                 time_taken = time.time() - t0
                 #* Print Stuff
-                print(f"""Generation {self.generation}: mean fitness={self.mean_fitness:3f},\ 
-                        max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.""", flush=True)
+                print(f"Generation {self.generation}: mean fitness={self.mean_fitness:3f},",
+                    f"max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.", flush=True)
                 #* Evolve Population
                 self.evolve()
                 self.generation += 1

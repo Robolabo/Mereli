@@ -52,7 +52,6 @@ class BaseNeuronModel(ABC):
     def __len__(self):
         return len(self._volt)
 
-
     def build(self, **kwargs):
         for var, val in kwargs.items():
             self.__dict__[var] = np.array(val) if isinstance(val, list) else val

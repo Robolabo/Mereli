@@ -36,6 +36,15 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
+
+    # import copy
+    # world2 = copy.deepcopy(world)
+    # world.connect()
+    # world2.connect()
+    # print(world.physics_engine.client)
+    # print(world2.physics_engine.client)
+    # import pdb; pdb.set_trace()
+
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
         ga_config = cfg_dict['algorithm']
         algorithm_cls = algorithms[cfg_dict['algorithm']['name']]

@@ -92,6 +92,7 @@ class TaskManager:
         self.tasks.append(task)
 
     def __call__(self, entities):
+        self.t += 1
         # print(self.t,self.current_task_idx)
         if self.block >= self.num_slots:
             return
@@ -105,11 +106,11 @@ class TaskManager:
         robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
         for robot in robot_names:
             entities[robot].task = np.array([self.current_task_idx / (self.num_tasks - 1)])
-        self.t += 1
+        
 
     def render_task(self):
         if global_states.RENDER:
-            if self.t == 0:
+            if self.t == 1:
                 self.label_id = p.addUserDebugText(str(self.current_task_idx), (0,0,0.1), 
                         textColorRGB=(0,0,0), textSize=2, )
             else:
@@ -127,11 +128,6 @@ class TaskManager:
     @property
     def current_task_idx(self):
         return self.task_order[self.block] if self.block < self.num_slots else self.task_order[-1]
-
-    @property 
-    def previous_task(self):
-        assert self.current_task_idx > 0
-        return self.tasks[self.current_task_idx - 1]
 
     @property
     def current_task(self):
@@ -151,6 +147,8 @@ class TaskManager:
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        for tsk in self.tasks:
+            tsk.reset()
         if seed is not None:
             np.random.seed()
 

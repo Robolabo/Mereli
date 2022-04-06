@@ -1,4 +1,5 @@
 import logging
+import copy
 import numpy as np
 try:
     from mpi4py import MPI
@@ -12,12 +13,13 @@ from mereli.register import fitness_functions
 
 class Evaluator:
     def __init__(self, world, num_evaluations=1, fitness_fn=None, use_seed=True):
-        self._world = world
+        self._world = copy.deepcopy(world)
         self.fitness_fn = fitness_fn
         if self.fitness_fn is not None:
-            self.fitness_fn = fitness_functions[self.fitness_fn](self.world)
+            self.fitness_fn = fitness_functions[self.fitness_fn](self._world)
         self.num_evaluations = num_evaluations
         self.use_seed = use_seed
+
 
     def create_world(self, world_config, ann_config=None):
         physics_engine = physics_engines[world_config.get('engine', 'pybullet')](
@@ -36,15 +38,17 @@ class Evaluator:
     def evaluate(self, genotype, generation):
         assert self.world is not None
         self.world.connect()
-        #*         
+        #* 
         for robot in self.robots:
             robot.controller.neural_network = genotype.as_phenotype()
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
         seed = generation * self.num_evaluations
+        fitness = 0
         for trial in range(self.num_evaluations):
             seed += 1
             survival_time = 0
+            
             # Reset the world for a new simulation/episode
             self.world.reset(seed=seed if self.use_seed else None)            
             if self.fitness_fn is not None:
@@ -56,11 +60,12 @@ class Evaluator:
                     self.fitness_fn()
                 survival_time += 1
             mean_survival_time += survival_time
-
+            if self.fitness_fn is not None:
+                fitness += self.fitness_fn.fitness
         mean_survival_time /= self.num_evaluations
+        # print(self.rank, self.world.robots['robotA_0'].position, flush=True)
         self.world.disconnect()
-        if self.fitness_fn is not None:
-            genotype.fitness = self.fitness_fn.fitness
+        genotype.fitness = fitness / self.num_evaluations
         genotype.novelty_variables = {'eval_time' : mean_survival_time}
         return genotype
 
@@ -80,10 +85,11 @@ class Evaluator:
 class MPI_Evaluator(Evaluator):
     def __init__(self, *args, **kwargs):
         super(MPI_Evaluator, self).__init__(*args, **kwargs)
+        
         self.rank = MPI.COMM_WORLD.Get_rank()
         self.size = MPI.COMM_WORLD.Get_size()
-
-
+        # self._worlds = [copy.deepcopy(self._world) for _ in range(self.size)]
+    
     def batch_evaluate(self, genotypes, generation):
         genotypes = MPI.COMM_WORLD.bcast(genotypes, root=0)
         MPI.COMM_WORLD.Barrier()
@@ -99,4 +105,8 @@ class MPI_Evaluator(Evaluator):
         if self.rank == 0:
             all_genotypes = [geno for geno_batch in all_genotypes for geno in geno_batch]
         return all_genotypes
+
+    # @property
+    # def world(self):
+    #     return self._worlds[self.rank]
         
