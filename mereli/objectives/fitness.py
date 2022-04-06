@@ -306,6 +306,7 @@ class TaskSwitch(FitnessFunction):
     @increase_time
     def __call__(self):
         mean_reward = np.mean(self.rewards)
+        print(mean_reward)
         current_tsk = self.world.task_manager.current_task_idx
         self._fitness[current_tsk] += mean_reward
 

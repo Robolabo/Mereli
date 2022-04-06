@@ -174,21 +174,7 @@ class EvolutionaryAlgorithm:
         - Returns: None
         ============================================================
         """
-        # import pdb; pdb.set_trace()
-        world = self.world
-        robots = [*world.robots.values()] #[robot for robot in world.hierarchy.values() if robot.trainable]
-        world.connect()
-        # world.reset()
-        interfaces = [InterfaceFactory().create(type(self).__name__, bot.controller.neural_network) for bot in robots]
-        for interface in interfaces:
-            for pop in self.populations.values():
-                aux_pop = sorted(pop.population,key=lambda x: x.fitness)[::-1]
-                # pop.species[0].compatibility(aux_pop[0])
-                geno = aux_pop[0] # pop.best if pop.best is not None else pop.population[1] # pop.population[150]
-                interface.fromGenotype(geno)
-        info = {n : deque() for n in self.fitness_fn.required_info}
-        info['generation'] = 1
-        
+        robots = [robot for robot in self.world.robots.values()] 
         sensor_names, actuator_names = list_sensors(robots[0]), list_actuators(robots[0])
         #! Change list_sensors and actuators to add comm:msg
         # sensor_names = [sens for sens in sensor_names if 'IR_receiver' not in sens]
@@ -201,7 +187,8 @@ class EvolutionaryAlgorithm:
         fieldnames = fieldnames + [y for x in [['position_x_'+name, 'position_y_'+name] for name in {**lights, **cubes}] for y in x]
         data_logger = DataLogger(fieldnames)
         self.evaluator.use_seed = False
-        self.evaluator.evaluate(self.populations['p1'].population.best, 0, type(self).__name__)
+        best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
+        self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
         # for trial in range(trials):
             

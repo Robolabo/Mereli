@@ -41,12 +41,14 @@ class Evaluator:
             robot.controller.neural_network = genotype.as_phenotype()
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
-        seed = generation * self.num_evaluations 
+        seed = generation * self.num_evaluations
         for trial in range(self.num_evaluations):
             seed += 1
             survival_time = 0
             # Reset the world for a new simulation/episode
-            self.world.reset(seed=seed if self.use_seed else None)
+            self.world.reset(seed=seed if self.use_seed else None)            
+            if self.fitness_fn is not None:
+                self.fitness_fn.reset()
             while (not self.world.is_done):
                 states, actions = self.world.step()
                 # rewards = np.array([robot.reward for robot in self.world.robots.values()])
