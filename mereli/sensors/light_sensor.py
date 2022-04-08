@@ -62,8 +62,10 @@ class LightSensor(DirectionalSensor):
             # Cast a ray for each luminous object in the sector cone.
             for ent_id in luminous_ents:
                 # Query target entity position
-                tar_pos = self.physics_client.get_body_position(ent_id, -1)
-                
+                try:
+                    tar_pos = self.physics_client.get_body_position(ent_id, -1)
+                except:
+                    print('In LS')
                 # Cast a ray between the sensor position and the target entity position.
                 ray_res, ray_position = self.sensor_owner.physics_client.ray_cast([origin], [tar_pos])
                 # p.addUserDebugLine(origin, tar_pos, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.0)

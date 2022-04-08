@@ -210,6 +210,9 @@ class RateModel(NonSpikingNeuronModel):
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
         outputs = self.gain * self._volt.copy() + self.bias
+        # if np.sum(outputs) > 100  or np.isnan(outputs.flatten()).any():
+        #     print(outputs,Isyn, self.tau, self.gain, self.bias)
+        #     import pdb; pdb.set_trace()
         for func in without_duplicates(self.activation):
             outputs[self.activation == func] = Activation.function_of(func)(outputs[self.activation == func])
         return outputs, self._volt.copy()

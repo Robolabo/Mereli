@@ -221,7 +221,7 @@ class PybulletEngine(BaseEngine):
         """
         pos = np.array(p.getBasePositionAndOrientation(identifier, physicsClientId=self.client)[0])        
         if np.isnan(pos).any(): 
-            print(pos)
+            print(pos, self.__dict__)
             import pdb; pdb.set_trace()
         return pos
     

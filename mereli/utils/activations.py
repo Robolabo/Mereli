@@ -63,8 +63,6 @@ def tanh(x):
 
     :returns: numpy array with the element-wise transformed vector.
     """
-    if any(x == np.nan):
-        import pdb; pdb.set_trace()
     return (np.exp(2*x) - 1) / (np.exp(2*x) + 1)
 
 def gaussian(x, scale=50):

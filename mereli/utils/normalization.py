@@ -19,7 +19,7 @@ class LinearNormalization(Normalization):
         super(LinearNormalization, self).__init__(*args, **kwargs)
 
     def apply(self, value):
-        return (value - self.min_val) / (self.max_val - self.min_val)
+        return np.clip((value - self.min_val) / (self.max_val - self.min_val), a_min=0, a_max=1)
 
     def revert(self, value):
         return value * (self.max_val - self.min_val) + self.min_val
@@ -30,7 +30,7 @@ class ExpNormalization(Normalization):
         super(ExpNormalization, self).__init__(*args, **kwargs)
 
     def apply(self, value):
-        return (np.log10(0.5 * value) - self.min_val) / (self.max_val - self.min_val)
+        return np.clip((np.log10(0.5 * value) - self.min_val) / (self.max_val - self.min_val), a_min=0, a_max=1)
 
     def revert(self, value):
         return 2 * 10 ** (value * (self.max_val - self.min_val) + self.min_val)

@@ -57,7 +57,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "reward" : "task_switching_lights",
                 "sensors" : {
@@ -113,9 +113,9 @@
                 "initialization" : {"type" : "gaussian", "sigma" : 1},
                 "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
             "nodes:gain:all" : {
-                    "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
-                    "initialization" : {"type" : "gaussian", "sigma" : 0.1},
-                    "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+                "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 0.1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
             "nodes:tau:all" : {
                 "normalization" : {"type": "exponential", "min_val" : 0.5, "max_val" : 100},
                 "initialization" : {"type" : "exponential", "sigma" : 10},

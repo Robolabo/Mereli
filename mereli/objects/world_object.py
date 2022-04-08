@@ -71,7 +71,11 @@ class WorldObject(ABC):
 
         :returns: numpy array with the entities' position.
         """
-        pos = self.physics_client.get_body_position(self.id, 0)
+        try:
+            pos = self.physics_client.get_body_position(self.id, 0)
+        except:
+            print(self.__dict__)
+            import pdb; pdb.set_trace()
         if self.z_offset is not None:
             pos[-1] = self.init_position[-1] + self.z_offset
         return pos
