@@ -27,3 +27,21 @@ class StatefulCommTX(Actuator):
 
     def reset(self):
         self.state = np.random.random(self.state_dim)#np.zeros(self.state_dim)#
+
+
+@actuator_registry(name='comm_tx_a')
+class CommTXTypeA(Actuator):
+    """
+    """
+    def __init__(self, *args, range=4, n=5, **kwargs):
+        super(CommTXTypeA, self).__init__(*args, **kwargs)
+        self.n = n
+        self.range = range
+        self.msg = 0
+        
+    def step(self, msg):
+        self.msg = msg.item()
+
+    
+    def reset(self):
+        self.msg = 0

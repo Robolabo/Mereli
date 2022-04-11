@@ -7,32 +7,29 @@
             "I1" : {"n" : 8, "sensor" : "yellow_light_sensor"},
             "I2" : {"n" : 8, "sensor" : "red_light_sensor"},
             "I3" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I4" : {"n" : 1, "sensor" : "mean_neigh_state"},
-            "I5" : {"n" : 1, "sensor" : "own_state"},
+            "I5" : {"n" : 5, "sensor" : "comm_rx_a"},
             "I6" : {"n" : 1, "sensor" : "task"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
+            "MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
+            "outA" : {"ensemble" : "MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "outB" : {"ensemble" : "COMM", "actuator" : "comm_tx_a", "enc": "real"}
         },
         "synapses" :  {
-            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I4-O" : {"pre":"I4","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I5-O" : {"pre":"I5","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I6-O" : {"pre":"I6","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I1-S" : {"pre":"I1","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I2-S" : {"pre":"I2","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I3-S" : {"pre":"I3","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I4-S" : {"pre":"I4","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I5-S" : {"pre":"I5","post":"OUT_STATE", "trainable":true, "p":1.0},
-            "I6-S" : {"pre":"I6","post":"OUT_STATE", "trainable":true, "p":1.0}
+            "I1-O" : {"pre":"I1","post":"MOT", "trainable":true, "p":1.0},
+            "I2-O" : {"pre":"I2","post":"MOT", "trainable":true, "p":1.0},
+            "I3-O" : {"pre":"I3","post":"MOT", "trainable":true, "p":1.0},
+            "I5-O" : {"pre":"I5","post":"MOT", "trainable":true, "p":1.0},
+            "I6-O" : {"pre":"I6","post":"MOT", "trainable":true, "p":1.0},
+            "I1-S" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
+            "I2-S" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0},
+            "I3-S" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0},
+            "I5-S" : {"pre":"I5","post":"COMM", "trainable":true, "p":1.0},
+            "I6-S" : {"pre":"I6","post":"COMM", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
@@ -46,7 +43,7 @@
         "physics_dt" : 0.04,
         "T_control" : 0.04,
         "task_manager" : {
-            "total_duration" : 3500,
+            "total_duration" : 3000,
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
@@ -57,24 +54,24 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "reward" : "task_switching_lights",
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 3},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
-                    "stateful_rx" : {"state_dim" : 1, "range" : 20},
+                    "comm_rx_a" : {"n" : 5, "range" : 20},
                     "collision_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8},
-                    "stateful_tx" : {"state_dim" : 1, "range" : 20}  
+                    "comm_tx_a" : {"n" : 5, "range" : 20} 
                 },
                 "initializers" : {
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "task", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 2,3,4], "stimuli" : "task", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -98,7 +95,7 @@
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
+        "population_size" : 100,
         "generations" : 500,
         "evaluation_steps" : 3000,
         "num_evaluations" : 1,
@@ -123,8 +120,8 @@
         },
         "alg_params" : {
             "p_weight_mut" : 0.4,
-            "p_node_mut" : 0.09,
-            "p_conn_mut" : 0.15,
+            "p_node_mut" : 0.04,
+            "p_conn_mut" : 0.1,
             "compatib_thresh" : 1.4,
             "c1" : 1,
             "c2" : 1,

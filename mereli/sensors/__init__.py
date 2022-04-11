@@ -14,5 +14,5 @@ from .task_sensor import TaskSensor
 from .collision_sensor import CollisionSensor
 from .camera import Camera
 from .reward_sensor import GroupRewardSensor
-from .stateful_comm_rx import StatefulCommRX
+from .stateful_comm_rx import *
 from .utils import *
