@@ -121,8 +121,6 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        if np.max(np.abs(self.weights)) > 10:
-            import pdb; pdb.set_trace()
         task = stimuli['task']
         # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
@@ -155,7 +153,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 3999 and self.monitor is not None:
+        if self.t == self.time_scale * 2999 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
