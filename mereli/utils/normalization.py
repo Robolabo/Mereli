@@ -33,4 +33,4 @@ class ExpNormalization(Normalization):
         return np.clip((np.log10(0.5 * value) - self.min_val) / (self.max_val - self.min_val), a_min=0, a_max=1)
 
     def revert(self, value):
-        return 2 * 10 ** (value * (self.max_val - self.min_val) + self.min_val)
+        return np.clip(2 * 10 ** (value * (self.max_val - self.min_val) + self.min_val), a_min=self.min_val, a_max=self.max_val)
