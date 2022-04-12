@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_state_comm_noHEBB_new",
+    "checkpoint_file" : "chk_commA",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -114,8 +114,8 @@
                 "initialization" : {"type" : "gaussian", "sigma" : 0.1},
                 "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
             "nodes:tau:all" : {
-                "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 100},
-                "initialization" : {"type" : "exponential", "sigma" : 8},
+                "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 20},
+                "initialization" : {"type" : "exponential", "sigma" : 5},
                 "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.05}}
         },
         "alg_params" : {
