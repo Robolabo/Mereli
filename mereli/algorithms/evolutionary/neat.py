@@ -61,11 +61,7 @@ class NEAT(EvolutionaryAlgorithm):
         for spc in self.species:
             spc_genotypes = [genotype for genotype in self.population if genotype.species == spc.id]
             spc_fitness = np.array([genotype.fitness for genotype in spc_genotypes])
-            try:
-                spc.update_stats(spc_fitness)
-            except:
-                print(spc_fitness, spc_genotypes, spc.num_genotypes, spc.id, self.species)
-                spc.update_stats(spc_fitness)
+            spc.update_stats(spc_fitness)
         #* Compute the number of offspring for each species
         # species_offsprings = compute_spawn(self.species, self.pop_size, 2)
         total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
@@ -98,7 +94,7 @@ class NEAT(EvolutionaryAlgorithm):
         #* NEAT Mutation
         offspring, self.innovation = neat_mutation(offspring, self.input_nodes, self.innovation, 
                 p_node_mut=self.p_node_mut, p_conn_mut=self.p_conn_mut)
-        #* Update popultation
+        #* Update population
         self.population = offspring
         if len(self.population) != self.pop_size:
             logging.error('Population Size altered.')

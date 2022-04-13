@@ -47,8 +47,8 @@
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
-                {"name" : "goto_light", "params" : {"color" : "red", "range" : 0.5}},
-                {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 0.5}}
+                {"name" : "goto_light", "params" : {"color" : "red", "range" : 1}},
+                {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 1}}
             ]
         },
         "objects" : {
@@ -64,7 +64,7 @@
                     "collision_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8},
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5},
                     "comm_tx_a" : {"n" : 5, "range" : 20} 
                 },
                 "initializers" : {
@@ -78,7 +78,7 @@
                 "type" : "light_source",    
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.3]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.15]]}}
                 },
                 "params" : {"range" : 3, "color" : "yellow"}
             },
@@ -86,7 +86,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.3]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.15]]}}
                 },
                 "params" : {"range" : 3, "color" : "red"}
             }
@@ -102,21 +102,21 @@
         "fitness_function" : "task_switch",
         "gene_info" : {
             "connections:weight:all" : {
-                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
-                "initialization" : {"type" : "gaussian", "sigma" : 1},
-                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.05}},
+                "normalization" : {"type": "linear", "min_val" : -7, "max_val" : 7}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 0.6},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
             "nodes:bias:all" : {
                 "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
-                "initialization" : {"type" : "gaussian", "sigma" : 1},
-                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.05}},
+                "initialization" : {"type" : "gaussian", "sigma" : 0.4},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
             "nodes:gain:all" : {
                 "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
                 "initialization" : {"type" : "gaussian", "sigma" : 0.1},
-                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.01}},
             "nodes:tau:all" : {
                 "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 20},
-                "initialization" : {"type" : "exponential", "sigma" : 5},
-                "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.05}}
+                "initialization" : {"type" : "exponential", "sigma" : 2},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.02}}
         },
         "alg_params" : {
             "p_weight_mut" : 0.4,

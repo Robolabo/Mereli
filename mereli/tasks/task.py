@@ -55,13 +55,18 @@ class GotoLightTask(Task):
 
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
+        if robot.sensors['collision_sensor'].reading:
+            return np.array([-.2])
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
+        other_lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color != self.color]
         assert len(lights) > 0
         distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
-        if any(distances < self.range):
-            return np.array([1 - (min(distances)/self.range) ** 2])
+        if min(distances) < self.range:
+            return np.array([1 - (min(distances) / self.range) ** 2])
         else:
-            return np.array([0])
+            distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in other_lights])
+            if min(distances) < self.range:
+                return np.array([-0.5])
 
     def done_generator(self, entities):
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
