@@ -306,6 +306,7 @@ class TaskSwitch(FitnessFunction):
     @increase_time
     def __call__(self):
         mean_reward = np.mean(self.rewards)
+        import pdb; pdb.set_trace()
         current_tsk = self.world.task_manager.block #!check
         if current_tsk >= len(self._fitness):
             return
@@ -315,7 +316,7 @@ class TaskSwitch(FitnessFunction):
     @property
     def fitness(self):
         task_manager = self.world.task_manager
-        fitnesses = [f_val / task_manager.tasks[task_manager.task_order[i]].t for i, f_val in enumerate(self._fitness)]
+        fitnesses = [np.clip(f_val,a_min=0, a_max=None) / task_manager.tasks[task_manager.task_order[i]].t for i, f_val in enumerate(self._fitness)]
         return max(np.prod(fitnesses) ** (1 / len(fitnesses)), 1e-5)
 
     def reset(self):
