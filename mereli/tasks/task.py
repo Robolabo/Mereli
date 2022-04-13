@@ -67,6 +67,7 @@ class GotoLightTask(Task):
             distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in other_lights])
             if min(distances) < self.range:
                 return np.array([-0.5])
+        return np.array([0.])
 
     def done_generator(self, entities):
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
