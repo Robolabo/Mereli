@@ -306,7 +306,6 @@ class TaskSwitch(FitnessFunction):
     @increase_time
     def __call__(self):
         mean_reward = np.mean(self.rewards)
-        import pdb; pdb.set_trace()
         current_tsk = self.world.task_manager.block #!check
         if current_tsk >= len(self._fitness):
             return
