@@ -13,14 +13,10 @@ global_states.set_states(render=True, debug=True)
 n_robots = 5
 # Create physics engine with 0.02sec of discretization and a period the robot
 # control loop of 0.14sec.
-phy_engine = PybulletEngine(dt=0.02, T_control=0.14)
-# world = CustomWorld(phy_engine, map_file='simple_map_1/simple_map_1')
-world = SquareArena(phy_engine, height=7, width=7)
+world = SquareArena(PybulletEngine(dt=0.02, T_control=0.14), height=7, width=7)
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
 ini_pos = RandomUniformInitializer(n_robots, low=[-3, -3], high=[3, 3], size=2, engine='3D',  variable='positions')
-#ini_pos = FixedInitializer(n_robots, fixed_values=[[0,0]], engine='3D',  variable='positions')
-# ini_ori = FixedInitializer(n_robots, fixed_values=[np.pi/2], engine='3D',  variable='orientations')
 world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
 for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
     ctlr = BasicObstacleAvoider()

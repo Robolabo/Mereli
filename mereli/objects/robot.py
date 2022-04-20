@@ -93,6 +93,7 @@ class Robot(WorldObject):
         # if self.reward_generator is not None:
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
+        
 
         return state, actions
 

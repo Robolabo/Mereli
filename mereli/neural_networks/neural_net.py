@@ -122,7 +122,6 @@ class NeuralNetwork(BaseNeuralNet):
         ===============================================================
         """
         task = stimuli['task']
-        # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}

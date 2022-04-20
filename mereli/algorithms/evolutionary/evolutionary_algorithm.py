@@ -85,7 +85,8 @@ class EvolutionaryAlgorithm:
                 time_taken = time.time() - t0
                 #* Print Stuff
                 print(f"Generation {self.generation}: mean fitness={self.mean_fitness:3f},",
-                    f"max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.", flush=True)
+                      f"max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.", 
+                      flush=True)
                 #* Evolve Population
                 self.evolve()
                 self.generation += 1
@@ -189,6 +190,7 @@ class EvolutionaryAlgorithm:
         data_logger = DataLogger(fieldnames)
         self.evaluator.use_seed = False
         best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
+        import pdb; pdb.set_trace()
         self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
         # for trial in range(trials):

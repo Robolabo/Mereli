@@ -57,7 +57,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "reward" : "task_switching_lights",
                 "sensors" : {
@@ -74,7 +74,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "task", "replace_value" : 0}},
+                "perturbations" : {},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {

@@ -97,8 +97,7 @@ class MPI_Evaluator(Evaluator):
         num_genotypes = pop_size // self.size + (self.rank == 0) * (pop_size % self.size)
         rnk_genotype_ids = np.arange(num_genotypes * self.rank, num_genotypes * (self.rank + 1))
         rnk_genotypes = [genotypes[g_id] for g_id in rnk_genotype_ids]
-        if self.rank == 1:
-            self.world.hierarchy['robotA_0'].controller.enabled_sensors = {}
+
         rnk_genotypes = [self.evaluate(geno, generation) for geno in rnk_genotypes]
         MPI.COMM_WORLD.barrier()
         all_genotypes = MPI.COMM_WORLD.gather(rnk_genotypes, root=0) #! OJO COMPROBAR
