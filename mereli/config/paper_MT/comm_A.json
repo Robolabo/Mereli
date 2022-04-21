@@ -40,21 +40,21 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.03,
-        "T_control" : 0.03,
+        "physics_dt" : 0.04,
+        "T_control" : 0.04,
         "task_manager" : {
-            "total_duration" : 3000,
+            "total_duration" : 2500,
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
-                {"name" : "goto_light", "params" : {"color" : "red", "range" : 1}},
-                {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 1}}
+                {"name" : "goto_light", "params" : {"color" : "red", "range" : 0.5}},
+                {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 0.5}}
             ]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 3,
                 "controller" : "neural_controller",
                 "reward" : "task_switching_lights",
                 "sensors" : {
@@ -71,7 +71,7 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1, 2,3,4], "stimuli" : "task", "replace_value" : 0}},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,2,3,4], "stimuli" : "task", "replace_value" : 0}},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
@@ -98,7 +98,7 @@
         "population_size" : 100,
         "generations" : 1000,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 4,
         "fitness_function" : "task_switch",
         "gene_info" : {
             "connections:weight:all" : {

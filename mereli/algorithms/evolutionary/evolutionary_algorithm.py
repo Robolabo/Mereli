@@ -190,7 +190,7 @@ class EvolutionaryAlgorithm:
         data_logger = DataLogger(fieldnames)
         self.evaluator.use_seed = False
         best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
         # for trial in range(trials):

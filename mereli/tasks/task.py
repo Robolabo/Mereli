@@ -153,6 +153,7 @@ class TaskManager:
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        print(self.task_order)
         for tsk in self.tasks:
             tsk.reset()
         if seed is not None:

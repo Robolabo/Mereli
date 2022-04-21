@@ -315,7 +315,8 @@ class TaskSwitch(FitnessFunction):
     @property
     def fitness(self):
         task_manager = self.world.task_manager
-        fitnesses = [np.clip(f_val,a_min=0, a_max=None) / task_manager.tasks[task_manager.task_order[i]].t for i, f_val in enumerate(self._fitness)]
+        fitnesses = [np.clip(f_val,a_min=0, a_max=None) / task_manager.tasks[task_manager.task_order[i]].t \
+                    for i, f_val in enumerate(self._fitness)]
         return max(np.prod(fitnesses) ** (1 / len(fitnesses)), 1e-5)
 
     def reset(self):
