@@ -272,7 +272,7 @@ class FitnessFunction:
     def __init__(self, world):
         self.t = 0
         self.world = world
-        self._fitness = 0
+        self._fitness = 0.
 
     def __call__(self, world):
         raise NotImplementedError
@@ -294,6 +294,18 @@ class FitnessFunction:
     def reset(self):
         self.t = 0
         self._fitness = 0
+
+@fitness_func_registry(name='reward_integration')
+class RewardIntegration(FitnessFunction):
+    """Fitness function for the exploration task."""
+    def __init__(self, *args, **kwargs):
+        self.required_info = []
+        super(RewardIntegration, self).__init__(*args, **kwargs)
+        
+    @increase_time
+    def __call__(self):
+        self._fitness += np.mean(self.rewards)
+
 
 @fitness_func_registry(name='task_switch')
 class TaskSwitch(FitnessFunction):

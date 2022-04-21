@@ -50,7 +50,7 @@ class Evaluator:
             survival_time = 0
             
             # Reset the world for a new simulation/episode
-            self.world.reset(seed=seed if self.use_seed else None)            
+            self.world.reset(seed=seed if self.use_seed else None)
             if self.fitness_fn is not None:
                 self.fitness_fn.reset()
             while (not self.world.is_done):
@@ -63,10 +63,12 @@ class Evaluator:
             if self.fitness_fn is not None:
                 fitness += self.fitness_fn.fitness
         mean_survival_time /= self.num_evaluations
-        # print(self.rank, self.world.robots['robotA_0'].position, flush=True)
+        genotype.novelty_variables = {
+            'eval_time' : mean_survival_time, 
+            'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
+        }
         self.world.disconnect()
-        genotype.fitness = fitness / self.num_evaluations
-        genotype.novelty_variables = {'eval_time' : mean_survival_time}
+        genotype.fitness = fitness / self.num_evaluations        
         return genotype
 
     @property

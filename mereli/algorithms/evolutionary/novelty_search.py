@@ -2,18 +2,21 @@ from collections import deque
 import numpy as np
 
 class NoveltySearch:
-    def __init__(self, k=10, max_buffer_size=10000):
+    def __init__(self, k=10, max_buffer_size=10000, variable='eval_time', weight=.5):
         self.k = k
         self.max_buffer_size = max_buffer_size
+        self.behavior_var = variable
+        self.weight = weight
         self.buffer = deque([])
     
     def update(self, new_value):
         if self.buffer_size + 1 >= self.max_buffer_size:
             self.buffer.popleft()
-        self.buffer.append(new_value)
+        self.buffer.append(new_value[self.behavior_var])
 
     def novelty_metric(self, value):
-        k_nearest = sorted([np.abs(value - x) for x in self.buffer])[:self.k]
+        val = value[self.behavior_var]
+        k_nearest = sorted([np.linalg.norm(val - x) for x in self.buffer])[:self.k]
         return np.mean(k_nearest) / max(self.buffer)
 
     def reset(self):

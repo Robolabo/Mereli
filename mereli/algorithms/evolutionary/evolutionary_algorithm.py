@@ -29,7 +29,7 @@ class EvolutionaryAlgorithm:
     def __init__(self, world, n_generations, population_size,
                  num_evaluations=1,
                  fitness_fn=None,
-                 use_novelty_search=False,
+                 novelty_search=None,
                  checkpoint_name='chk',
                  resume=False):
         self.world = world
@@ -40,7 +40,7 @@ class EvolutionaryAlgorithm:
         self.checkpoint_name = checkpoint_name
         evaluator_cls = MPI_Evaluator if self.use_mpi else Evaluator
         self.evaluator = evaluator_cls(world, num_evaluations=num_evaluations, fitness_fn=fitness_fn)
-        self.novelty_search = NoveltySearch() if use_novelty_search else None
+        self.novelty_search = NoveltySearch(**novelty_search) if novelty_search is not None else None
         self.evolution_history = {stat : [] for stat in ['mean', 'max', 'min']}
 
     def initialize(self, gene_info, neural_net_config):
@@ -77,8 +77,8 @@ class EvolutionaryAlgorithm:
                 #* Apply novelty search (if any)
                 if self.novelty_search is not None:
                     for geno in self.population:
-                        self.novelty_search.update(geno.novelty_metric['eval_time'])
-                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric['eval_time'])
+                        self.novelty_search.update(geno.novelty_metric)
+                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric)
                         geno.fitness = .3 * geno.fitness + .7 * ns_metric
                 #* Save evolution state 
                 self.save()

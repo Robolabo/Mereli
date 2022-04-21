@@ -46,6 +46,17 @@ class Task:
         self._reward = 0
         self._done = False
 
+@task_registry(name="dummy")
+class DummyTask(Task):
+    def __init__(self, *args, **kwargs):
+        super(DummyTask,self).__init__(*args, **kwargs)
+
+    def reward_generator(self, *args):
+        return np.array([0.])
+    
+    def done_generator(self, *args):
+        return False
+
 @task_registry(name="goto_light")
 class GotoLightTask(Task):
     def __init__(self, *args, range=0.5, color='red', **kwargs):

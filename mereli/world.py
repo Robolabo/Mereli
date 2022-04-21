@@ -286,7 +286,7 @@ class World(object):
                     #* Instantiate robot entity
                     robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
                     #* If any, initialize robot's reward generator
-                    robot.reward_generator = rewards.get(obj.get('reward'))()
+                    # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)
                     if "comm_sys" in obj:
                         robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))

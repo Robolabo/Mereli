@@ -45,9 +45,7 @@ def config_checker(cfg_dict):
                 'Available algorithms are: {}.'.format(alg_cfg['name'], tuple(reg.algorithms.keys()))))
         if 'fitness_function' not in alg_cfg.keys():
             raise Exception(logging.error('Fitness function not specified.'))
-        if alg_cfg['fitness_function'] not in reg.fitness_functions.keys():
-            raise Exception(logging.error('The Fitness Function {} is not currently implemented in the simulator. '\
-                'Available fitness functions are: {}.'.format(alg_cfg['fitness_function'], tuple(reg.fitness_functions.keys()))))
+    
         for var in ['population_size', 'generations', 'evaluation_steps', 'num_evaluations']:
             if alg_cfg[var] < 1:
                 raise Exception(logging.error('Parameter {} of algorithm {} '\

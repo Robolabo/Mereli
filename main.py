@@ -51,7 +51,7 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
         opt_alg = algorithm_cls(world, ga_config['generations'], ga_config['population_size'], 
                     num_evaluations=ga_config['num_evaluations'],
                     resume=resume, fitness_fn=ga_config['fitness_function'], 
-                    use_novelty_search=ga_config.get('novelty_search', False), 
+                    novelty_search=ga_config.get('novelty_search'), 
                     checkpoint_name=cfg_dict["checkpoint_file"], **ga_config["alg_params"])
         # opt_alg.create_world(cfg_dict['world'], ann_config=cfg_dict['topology'])
         opt_alg.initialize(ga_config["gene_info"], cfg_dict['topology'])
