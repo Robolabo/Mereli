@@ -77,9 +77,10 @@ class EvolutionaryAlgorithm:
                 #* Apply novelty search (if any)
                 if self.novelty_search is not None:
                     for geno in self.population:
-                        self.novelty_search.update(geno.novelty_metric)
-                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_metric)
-                        geno.fitness = .3 * geno.fitness + .7 * ns_metric
+                        self.novelty_search.update(geno.novelty_variables)
+                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_variables)
+                        ns_weight = self.novelty_search.weight
+                        geno.fitness = (1-ns_weight) * geno.fitness + ns_weight * ns_metric
                 #* Save evolution state 
                 self.save()
                 time_taken = time.time() - t0

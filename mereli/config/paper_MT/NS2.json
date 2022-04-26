@@ -26,13 +26,13 @@
     "world": {
         "name" : "custom_world",
         "arena_params" : {
-            "map_file" : ''
+            "map_file" : "corridor_1/corridor_1"
         },
         "engine" : "pybullet",
         "physics_dt" : 0.03,
         "T_control" : 0.03,
         "task_manager" : {
-            "total_duration" : 2500,
+            "total_duration" : 2000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "dummy", "params" : {}}]
@@ -49,8 +49,8 @@
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0,0]]}},
-                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values" : [0]}}
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0,-1]]}},
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values" : [1.57]}}
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}

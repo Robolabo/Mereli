@@ -17,7 +17,10 @@ class NoveltySearch:
     def novelty_metric(self, value):
         val = value[self.behavior_var]
         k_nearest = sorted([np.linalg.norm(val - x) for x in self.buffer])[:self.k]
-        return np.mean(k_nearest) / max(self.buffer)
+        if self.behavior_var == 'eval_time':
+            return np.mean(k_nearest) / max(self.buffer)
+        else:
+            return np.mean(k_nearest)
 
     def reset(self):
         self.buffer = deque([])
