@@ -67,17 +67,17 @@ class GotoLightTask(Task):
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
         if robot.sensors['collision_sensor'].reading:
-            return np.array([-.2])
+            return np.array([-1])
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
         other_lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color != self.color]
         assert len(lights) > 0
         distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
         if min(distances) < self.range:
-            return np.array([1 - (min(distances) / self.range) ** 2])
+            return np.array([1])#np.array([1 - (min(distances) / self.range) ** 2])
         else:
             distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in other_lights])
             if min(distances) < self.range:
-                return np.array([-0.5])
+                return np.array([-1])
         return np.array([0.])
 
     def done_generator(self, entities):
@@ -164,7 +164,6 @@ class TaskManager:
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
-        print(self.task_order)
         for tsk in self.tasks:
             tsk.reset()
         if seed is not None:

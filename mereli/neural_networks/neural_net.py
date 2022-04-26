@@ -152,7 +152,7 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 2999 and self.monitor is not None:
+        if self.t == self.time_scale * 2499 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))

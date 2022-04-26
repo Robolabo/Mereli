@@ -43,7 +43,7 @@
         "physics_dt" : 0.04,
         "T_control" : 0.04,
         "task_manager" : {
-            "total_duration" : 2500,
+            "total_duration" : 3000,
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
@@ -54,7 +54,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 3,
+                "num_instances" : 4,
                 "controller" : "neural_controller",
                 "reward" : "task_switching_lights",
                 "sensors" : {
