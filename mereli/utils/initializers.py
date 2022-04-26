@@ -154,7 +154,7 @@ class RandomUniformInitializer(Initializer):
     :param int size: dim. of the hyperrectangle used to sample.
     :param float min_dist: minimum distance between any pair of sampled points.
     """
-    def __init__(self, *args, low=[-2, -2], high=[2, 2], size=2, min_dist=1., **kwargs):
+    def __init__(self, *args, low=[-2, -2], high=[2, 2], size=2, min_dist=0.1, **kwargs):
         super(RandomUniformInitializer, self).__init__(*args,  **kwargs)
         self.low = low
         self.high = high
@@ -176,8 +176,8 @@ class RandomUniformInitializer(Initializer):
                 if isinstance(self.low, int):
                     new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size).round(3)
                 else:
-                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0]).round(3)
-                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1]).round(3)
+                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0])
+                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1])
                     new_sample = np.r_[new_sample_x, new_sample_y]
                 if len(res) == 0 or all(LA.norm(new_sample - pp) > self.min_dist for pp in res):
                     res.append(new_sample)
