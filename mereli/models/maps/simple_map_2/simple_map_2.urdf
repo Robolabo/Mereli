@@ -7,18 +7,18 @@
        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
     </inertial>
     <visual>
-      <origin rpy="1.5707963 0 0" xyz="0 0 5"/>
+      <origin rpy="1.5707963 0 0" xyz="0 0 0"/>
       <geometry>
-		    <mesh filename="simple_map_2.obj" scale="1 1 1"/>
+		    <mesh filename="simple_map_2.obj" scale="0.4 0.4 0.4"/>
       </geometry>
 		  <material name="white">
           <color rgba="1 1 1 1"/>
       </material>
     </visual>
-    <collision>
-      <origin rpy="1.5707963 0 0" xyz="0 0 5"/>
+    <collision  concave="yes">
+      <origin rpy="1.5707963 0 0" xyz="0 0 0"/>
       <geometry>
-          <mesh filename="simple_map_2.obj" scale="1 1 1"/>
+          <mesh filename="simple_map_2.obj" scale="0.4 0.4 0.4"/>
       </geometry>
     </collision>
   </link>
