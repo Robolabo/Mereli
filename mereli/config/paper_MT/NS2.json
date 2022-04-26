@@ -4,21 +4,28 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 8, "sensor" : "distance_sensor"}
+            "I1" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I2" : {"n" : 2, "sensor" : "comm_rx_a"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
         },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"}
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "outB" : {"ensemble" : "COMM", "actuator" : "comm_tx_a", "enc": "real"}
         },
         "synapses" :  {
-            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0}
+            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I1-C" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
+            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I2-C" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
         },
         "learning_rule" : {
         }
@@ -40,17 +47,19 @@
         "objects" : {   
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 2,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.75}
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
+                    "comm_rx_a" : {"n" : 2, "range" : 20}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 7},
+                    "comm_tx_a" : {"n" : 2, "range" : 20} 
                 },
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0,-1]]}},
-                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values" : [1.57]}}
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values" : [[0,-1], [0,1]]}},
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values" : [1.57, -1.57]}}
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}

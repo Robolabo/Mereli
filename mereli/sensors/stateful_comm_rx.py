@@ -47,7 +47,7 @@ class CommRXTypeA(Sensor):
     def step(self, neighborhood):
         """
         """
-        reading = np.zeros(5)
+        reading = np.zeros(self.n)
         for idx, ent in enumerate(filter(lambda y: issubclass(type(y), Robot), sorted(neighborhood, key=lambda x: x.id))):
             reading[idx] = ent.actuators['comm_tx_a'].msg
         return reading
