@@ -65,6 +65,7 @@ class Evaluator:
         mean_survival_time /= self.num_evaluations
         genotype.novelty_variables = {
             'eval_time' : mean_survival_time, 
+            'fitness' : fitness / self.num_evaluations,
             'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
         }
         self.world.disconnect()

@@ -42,7 +42,8 @@ class CommTXTypeA(Actuator):
     def step(self, msg):
         self.msg = msg.item()
         if global_states.RENDER:
-            self.actuator_owner.actuators['led_actuator'].step(np.ones(8) * self.msg > 0.5)
+            if 'led_actuator' in self.actuator_owner.actuators:
+                self.actuator_owner.actuators['led_actuator'].step(np.ones(8) * self.msg > 0.5)
 
     
     def reset(self):
