@@ -2,7 +2,7 @@ from collections import deque
 import numpy as np
 
 class NoveltySearch:
-    def __init__(self, k=10, max_buffer_size=10000, variable='eval_time', weight=.5):
+    def __init__(self, k=20, max_buffer_size=20000, variable='eval_time', weight=.5):
         self.k = k
         self.max_buffer_size = max_buffer_size
         self.behavior_var = variable
@@ -19,8 +19,8 @@ class NoveltySearch:
         k_nearest = sorted([np.linalg.norm(val - x) for x in self.buffer])[:self.k]
         if self.behavior_var == 'eval_time':
             return np.mean(k_nearest) / max(self.buffer)
-        else:
-            return np.mean(k_nearest)
+        else:# position var
+            return np.exp(np.mean(k_nearest))
 
     def reset(self):
         self.buffer = deque([])
