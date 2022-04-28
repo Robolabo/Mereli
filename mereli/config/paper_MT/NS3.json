@@ -50,7 +50,7 @@
                 "num_instances" : 4,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.75},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.1},
                     "comm_rx_a" : {"n" : 4, "range" : 20}
                 },
                 "actuators" : {
