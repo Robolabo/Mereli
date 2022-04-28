@@ -11,8 +11,8 @@
       <geometry>
 		    <mesh filename="crossroad.obj" scale="1 1 1"/>
       </geometry>
-		  <material name="white">
-          <color rgba="1 1 1 1"/>
+		  <material name="grey">
+          <color rgba="0.3 0.3 0.3 1"/>
       </material>
     </visual>
     <collision concave="yes">
