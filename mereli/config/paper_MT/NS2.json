@@ -39,7 +39,7 @@
         "physics_dt" : 0.03,
         "T_control" : 0.03,
         "task_manager" : {
-            "total_duration" : 2000,
+            "total_duration" : 3000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "dummy", "params" : {}}]
