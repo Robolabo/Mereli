@@ -159,6 +159,7 @@ class NeuralNetwork(BaseNeuralNet):
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
+
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]

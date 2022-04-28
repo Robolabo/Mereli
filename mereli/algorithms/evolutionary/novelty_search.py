@@ -28,3 +28,14 @@ class NoveltySearch:
     @property
     def buffer_size(self):
         return len(self.buffer)
+
+    def visualize(self):
+        import matplotlib.pyplot as plt
+        if self.behavior_var == 'positions':
+            data = np.stack(self.buffer)
+            for i in range(data.shape[1]//2):
+                plt.scatter(data[:,2*i],data[:,2*i+1])
+
+            plt.xlim(-1,1)
+            plt.ylim(-1,1)
+            plt.show()
