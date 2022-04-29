@@ -1,0 +1,115 @@
+{
+    "checkpoint_file" : "chk_state_comm_noHEBB_new",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 1, "sensor" : "ground_sensor"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "OUT_COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
+        "outputs" : {
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
+        },
+        "synapses" :  {
+            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+        },
+        "learning_rule" : {}
+    },
+    "world": {
+        "name" : "flat_world",
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "task_manager" : {
+            "total_duration" : 2000,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [
+                {"name" : "goto_nest", "params" : {"color" : "grey"}}
+            ]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 5,
+                "controller" : "neural_controller",
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 2},
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 1, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
+                    "collision_sensor" : {},
+                    "ground_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8},
+                    "IR_transmitter" : {"range" : 1, "msg_length":1}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.5,-0.5], "high": [0.5,0.5], "size" : 2, "min_dist" : 0.1}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "comm_sys" : {"name" :"IR_comm", "params" : {}},
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            },
+            "ground_area" : {
+                "type" : "ground_area",    
+                "num_instances": 3,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-2,-2], "high": [2,2], "size" : 2, "min_dist" : 0.00001}}
+                },
+                "params" : {"radius" : 0.5, "color" : "grey"}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 50,
+        "generations" : 500,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 1,
+        "fitness_function" : "reward_integration",
+        "gene_info" : {
+            "connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:bias:all" : {
+                "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:gain:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 0.1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.02}},
+            "nodes:tau:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 20},
+                "initialization" : {"type" : "exponential", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.02}}
+        },
+        "alg_params" : {
+            "p_weight_mut" : 0.4,
+            "p_node_mut" : 0.05,
+            "p_conn_mut" : 0.15,
+            "compatib_thresh" : 1.4,
+            "c1" : 1,
+            "c2" : 1,
+            "c3" : 1,
+            "species_elites" : 2
+        }
+    }
+}

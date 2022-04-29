@@ -52,7 +52,9 @@ class IRCommunicationReceiver(DirectionalSensor):
         self.current_direction = 0 # Used by the cyclic selection
         self.aperture = 0.61
         self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.)
-
+        self.contact_points = None
+        self.reading = np.zeros(8)
+        self.t = 0
 
 
     def step(self, neighborhood):
@@ -71,16 +73,20 @@ class IRCommunicationReceiver(DirectionalSensor):
         #* Ids of all robots (used later)
         robot_ids = [ent.id for ent in neighborhood if self.target_filter(ent)]
         frames = [self.empty_frame for _ in range(self.n_sectors)]
-        signal_strengths = []
+        signal_strengths = np.zeros(8)
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
-        for i, ori in enumerate(self.directions(self.sensor_owner.orientation[-1])):
-            tar_ents = np.array([pt[0] for pt in contact_points if pt[1] == g_ids[i]])
+        if self.contact_points is None or self.t % 1 == 0:
+            self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        oris = self.directions(self.sensor_owner.orientation[-1])
+        for i in range(8):
+            ori = oris[i]
+            tar_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i]\
+                and pt[0] not in self.sensor_owner.physics_client.luminous_objects and pt[0] != 0]
             signal_strength_ds = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
-                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 5)
-                ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), 0] + origin for ang in ori + ray_angles]
+                ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 3)
+                ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
                 #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
@@ -88,7 +94,7 @@ class IRCommunicationReceiver(DirectionalSensor):
                 if any(ray_res != -1):
                     rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1])
                     #* Seize the sensor execution and compute the distance sensor reading as well.
-                    signal_strength_ds = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
+                    signal_strengths += np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
                     #* Only if there are robots.
                     comm_conditions = [True if idx in robot_ids else False for idx in ray_res if idx != -1]
                     if any(comm_conditions):
@@ -122,7 +128,6 @@ class IRCommunicationReceiver(DirectionalSensor):
                             received_frame.receiver = self.sensor_owner.id
                             received_frame.signal_strength = signal_strength_comm
                             frames[i] = received_frame
-            signal_strengths.append(signal_strength_ds)
         #!frames = super().step(*args, **kwargs)
 
         #* Select a single frame from all possible sectors according to the given selection scheme.
@@ -137,7 +142,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         #     leds = np.zeros(self.n_sectors)
         #     leds[selected_frame.rx_sector] = int(selected_frame.msg > 0.05)
         #     self.sensor_owner.actuators['led_actuator'].step(leds)
-
+        self.t += 1
         #* To optimize execution, return both received frame and DS reading.
         return selected_frame, np.array(signal_strengths)
 
@@ -203,6 +208,9 @@ class IRCommunicationReceiver(DirectionalSensor):
     def reset(self):
         """ Reset method of the sensor. """
         # super().reset()
+        self.reading = np.zeros(8)
+        self.contact_points = None  
+        self.t = 0
         self.current_direction = 0
 
 

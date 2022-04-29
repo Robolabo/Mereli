@@ -176,8 +176,8 @@ class RandomUniformInitializer(Initializer):
                 if isinstance(self.low, int):
                     new_sample = np.random.uniform(low=self.low, high=self.high, size=self.size).round(3)
                 else:
-                    new_sample_x = np.random.uniform(low=self.low[0], high=self.high[0]).round(3)
-                    new_sample_y = np.random.uniform(low=self.low[1], high=self.high[1]).round(3)
+                    new_sample_x = np.round(np.random.uniform(low=self.low[0], high=self.high[0]), 3)
+                    new_sample_y = np.round(np.random.uniform(low=self.low[1], high=self.high[1]), 3)
                     new_sample = np.r_[new_sample_x, new_sample_y]
                 if len(res) == 0 or all(LA.norm(new_sample - pp) > self.min_dist for pp in res):
                     res.append(new_sample)

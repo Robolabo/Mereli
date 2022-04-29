@@ -1,7 +1,7 @@
 import numpy as np
 import pybullet as p
 from mereli.globals import global_states
-from mereli.objects import Robot, LightSource
+from mereli.objects import Robot, LightSource, GroundArea
 from mereli.register import tasks, task_registry
 
 class Task:
@@ -90,6 +90,28 @@ class GotoLightTask(Task):
             if not any(np.array(distances) < self.range):
                 return False
         return True
+
+
+@task_registry(name="goto_nest")
+class GotoNestTask(Task):
+    def __init__(self, *args, color='grey', **kwargs):
+        super(GotoNestTask,self).__init__(*args, **kwargs)
+        self.color = color
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        if robot.sensors['collision_sensor'].reading:
+            return np.array([-1])
+        nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color == self.color]
+        assert len(nests) > 0
+        inside_nests = np.array([np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius for nest in nests])
+        if any(inside_nests):
+            return np.array([1])#np.array([1 - (min(distances) / self.range) ** 2])
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
+
 
 class TaskManager:
     def __init__(self, duration=1000, use_done=False, num_slots=2, rand_order=True):
