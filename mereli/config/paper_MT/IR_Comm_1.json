@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_state_comm_noHEBB_new",
+    "checkpoint_file" : "chk_IR_Comm_1",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -20,8 +20,10 @@
         "synapses" :  {
             "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
+            "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
+            "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
         },
         "decoding" : {
             "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
@@ -32,8 +34,8 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.01,
-        "T_control" : 0.01,
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
         "task_manager" : {
             "total_duration" : 2000,
             "num_slots" : 1,
@@ -45,17 +47,16 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 15,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 2},
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 1, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
                     "collision_sensor" : {},
                     "ground_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8},
-                    "IR_transmitter" : {"range" : 1, "msg_length":1}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10},
+                    "IR_transmitter" : {"range" : 0.5, "msg_length":1}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.5,-0.5], "high": [0.5,0.5], "size" : 2, "min_dist" : 0.1}},
@@ -67,19 +68,19 @@
             },
             "ground_area" : {
                 "type" : "ground_area",    
-                "num_instances": 3,
+                "num_instances": 4,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-2,-2], "high": [2,2], "size" : 2, "min_dist" : 0.00001}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.00001}}
                 },
-                "params" : {"radius" : 0.5, "color" : "grey"}
+                "params" : {"radius" : 0.15, "color" : "grey"}
             }
         }
     },
     "algorithm" : {
         "name" : "NEAT",
         "evolvable_object" : "robotA",
-        "population_size" : 50,
-        "generations" : 500,
+        "population_size" : 100,
+        "generations" : 1000,
         "evaluation_steps" : 3000,
         "num_evaluations" : 1,
         "fitness_function" : "reward_integration",

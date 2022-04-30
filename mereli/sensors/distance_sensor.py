@@ -95,7 +95,8 @@ class DistanceSensor(DirectionalSensor):
         
         for i in range(8):
             ori = oris[i]
-            tar_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i] and pt[0] not in self.sensor_owner.physics_client.luminous_objects and pt[0] != 0]
+            tar_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i] and pt[0]\
+                    not in self.sensor_owner.physics_client.luminous_objects and pt[0] != 0]
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
@@ -103,7 +104,7 @@ class DistanceSensor(DirectionalSensor):
                 ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
                 
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=1)
+                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.5)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     

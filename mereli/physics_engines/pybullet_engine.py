@@ -170,6 +170,8 @@ class PybulletEngine(BaseEngine):
                 if ghost_link_idx is not None:
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
+                    # if sensor_name == 'distance_sensor':
+                    #     self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=1.0)
                     self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
                 # import pdb; pdb.set_trace()
                 p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)
@@ -177,7 +179,6 @@ class PybulletEngine(BaseEngine):
                     'link' : link, 'ghost_link': ghost_link, 
                     'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,
                 }
-        # import pdb; pdb.set_trace()
         
         for actuator in root.findall(".//actuator"):
             actuator_name = actuator.get('name')

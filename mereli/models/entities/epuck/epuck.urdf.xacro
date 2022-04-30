@@ -788,7 +788,7 @@
 			 <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>       
       </geometry>
       <material name="transparent_red">
-        <color rgba="1 0 0 0."/>
+        <color rgba="1 0 0 0.0"/>
       </material>
     </visual>
      <collision>
@@ -801,7 +801,7 @@
     <joint name="IR0_to_ghost_cone_DS0" type="fixed">
         <parent link="IR0"/>
         <child link="ghost_cone_DS0"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>
 
     <link name="ghost_cone_DS1">
@@ -829,7 +829,7 @@
     <joint name="IR1_to_ghost_cone_DS1" type="fixed">
         <parent link="IR1"/>
         <child link="ghost_cone_DS1"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>    
 
     <link name="ghost_cone_DS2">
@@ -857,7 +857,7 @@
     <joint name="IR2_to_ghost_cone_DS2" type="fixed">
         <parent link="IR2"/>
         <child link="ghost_cone_DS2"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
 
@@ -887,7 +887,7 @@
     <joint name="IR3_to_ghost_cone_DS3" type="fixed">
         <parent link="IR3"/>
         <child link="ghost_cone_DS3"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
     <link name="ghost_cone_DS4">
@@ -915,7 +915,7 @@
     <joint name="IR4_to_ghost_cone_DS4" type="fixed">
         <parent link="IR4"/>
         <child link="ghost_cone_DS4"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
     <link name="ghost_cone_DS5">
@@ -943,7 +943,7 @@
     <joint name="IR5_to_ghost_cone_DS5" type="fixed">
         <parent link="IR5"/>
         <child link="ghost_cone_DS5"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
 <link name="ghost_cone_DS6">
@@ -971,7 +971,7 @@
     <joint name="IR6_to_ghost_cone_DS6" type="fixed">
         <parent link="IR6"/>
         <child link="ghost_cone_DS6"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
     <link name="ghost_cone_DS7">
@@ -999,7 +999,7 @@
     <joint name="IR7_to_ghost_cone_DS7" type="fixed">
         <parent link="IR7"/>
         <child link="ghost_cone_DS7"/>
-        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 1.57"/>
+        <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
 
 

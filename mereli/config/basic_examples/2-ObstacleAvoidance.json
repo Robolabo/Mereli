@@ -15,7 +15,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 5,
                 "controller" : "basic_obstacle_avoider",
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.74}
