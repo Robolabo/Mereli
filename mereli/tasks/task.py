@@ -100,7 +100,9 @@ class GotoNestTask(Task):
 
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
-        if robot.sensors['collision_sensor'].reading:
+        dist_robots = np.array([np.linalg.norm(ent.position - robot.position) for ent in entities.values()\
+                    if issubclass(type(ent), Robot) if ent.id != robot.id])
+        if any(dist_robots < 0.1):
             return np.array([-1])
         nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color == self.color]
         assert len(nests) > 0

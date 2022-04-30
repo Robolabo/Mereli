@@ -190,7 +190,7 @@ class EvolutionaryAlgorithm:
         fieldnames = fieldnames + [y for x in [['position_x_'+name, 'position_y_'+name] for name in {**lights, **cubes}] for y in x]
         data_logger = DataLogger(fieldnames)
         self.evaluator.use_seed = False
-        best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[2]
+        best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
         # import pdb; pdb.set_trace()
         self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
