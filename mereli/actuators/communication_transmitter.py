@@ -33,7 +33,7 @@ class CommunicationTransmitter(Actuator):
         #* Select cluster using softmax on distances to clusters
         self.frame = tx_frame
         if global_states.RENDER and 'led_actuator' in self.actuator_owner.actuators:
-            led = np.round(4 * tx_frame.msg) /4
+            led = np.round(4 * tx_frame.msg) / 4
             self.actuator_owner.actuators['led_actuator'].step(led * np.ones(8))
        
 

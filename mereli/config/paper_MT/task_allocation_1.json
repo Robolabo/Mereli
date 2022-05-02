@@ -1,33 +1,31 @@
 {
-    "checkpoint_file" : "chk_IR_Comm_1",
+    "checkpoint_file" : "chk_task_allocation_1",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
-            "I3" : {"n" : 1, "sensor" : "ground_sensor"}
+            "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
+            "I2" : {"n" : 3, "sensor" : "own_state"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-            "OUT_COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
+            "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid"}},
+            "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid"}}
+        },
         "outputs" : {
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
+            "outA" : {"ensemble" : "OUT_TASK", "actuator" : "led_actuator"}
         },
         "synapses" :  {
-            "I1-O" : {"pre":"I1","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I2-O" : {"pre":"I2","post":"OUT_MOT", "trainable":true, "p":1.0},
-            "I3-O" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0},
             "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
             "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-            "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
+            "I1-T" : {"pre":"I1","post":"OUT_TASK", "trainable":true, "p":1.0},
+            "I2-T" : {"pre":"I2","post":"OUT_TASK", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outA" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : false}}
         },
         "learning_rule" : {}
     },
@@ -37,42 +35,31 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 2000,
+            "total_duration" : 500,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [
-                {"name" : "goto_nest", "params" : {"color" : "grey"}}
+                {"name" : "task_allocation", "params" : {"num_tasks" : 5, "agents_per_task": 1}}
             ]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 15,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
-                    "ground_sensor" : {}
+                    "stateful_rx" : {"state_dim" : 3, "range" : 0.3}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10},
-                    "IR_transmitter" : {"range" : 0.5, "msg_length":1},
+                    "stateful_tx" : {"state_dim" : 3, "range" : 0.3},
                     "led_actuator" : {}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.5,-0.5], "high": [0.5,0.5], "size" : 2, "min_dist" : 0.1}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "comm_sys" : {"name" :"IR_comm", "params" : {}},
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-            },
-            "ground_area" : {
-                "type" : "ground_area",    
-                "num_instances": 5,
-                "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.00001}}
-                },
-                "params" : {"radius" : 0.2, "color" : "grey"}
             }
         }
     },
@@ -82,7 +69,7 @@
         "population_size" : 100,
         "generations" : 1000,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 10,
         "fitness_function" : "reward_integration",
         "gene_info" : {
             "connections:weight:all" : {

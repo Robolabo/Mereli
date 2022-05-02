@@ -91,6 +91,23 @@ class GotoLightTask(Task):
                 return False
         return True
 
+@task_registry(name="task_allocation")
+class TaskAllocation(Task):
+    def __init__(self, *args, num_tasks=5, agents_per_task=1, **kwargs):
+        super(TaskAllocation,self).__init__(*args, **kwargs)
+        self.num_tasks = num_tasks
+        self.agents_per_task = agents_per_task
+
+    def reward_generator(self, entities, robot_name):
+        robot_led = int(entities[robot_name].actuators['led_actuator'].action[0])
+        others_led = np.array([int(ent.actuators['led_actuator'].action[0])\
+            for ent in entities.values() if issubclass(type(ent), Robot) if ent.id != entities[robot_name].id])
+        if not any(led == robot_led for led in others_led):
+            return np.array([1.])
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
 
 @task_registry(name="goto_nest")
 class GotoNestTask(Task):
