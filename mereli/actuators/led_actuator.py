@@ -23,13 +23,13 @@ class LedActuator(Actuator):
         if action is None:
             return
         if len(action) == 1:
-            self.action = action * np.ones(8)
+            action = action * np.ones(8)
         if not global_states.RENDER:
-            self.prev_action = action
+            self.action = action
             return
         action = action if not self.fault else np.zeros_like(action)
-        if self.prev_action is None:
-            self.prev_action = np.zeros_like(action)
+        if self.action is None:
+            self.action = np.zeros_like(action)
 
         for i in range(8):
             led_a = action[i] 

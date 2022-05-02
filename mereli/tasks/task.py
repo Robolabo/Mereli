@@ -97,17 +97,30 @@ class TaskAllocation(Task):
         super(TaskAllocation,self).__init__(*args, **kwargs)
         self.num_tasks = num_tasks
         self.agents_per_task = agents_per_task
-
+        self.prev_task = 0
+        self.times_task = 0
+        
     def reward_generator(self, entities, robot_name):
         robot_led = int(entities[robot_name].actuators['led_actuator'].action[0])
         others_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot) if ent.id != entities[robot_name].id])
         if not any(led == robot_led for led in others_led):
-            return np.array([1.])
+            if robot_led == self.prev_task:
+                self.times_task += 1
+                self.prev_task = robot_led
+                return np.array([min(self.times_task/50, 50)])
+            else:
+                self.prev_task = robot_led
+                self.times_task = 1
+                return np.array([1/50])
         return np.array([0.])
 
     def done_generator(self, entities):
         return False
+    
+    def reset(self):
+        super().reset()
+        self.times_task = 0
 
 @task_registry(name="goto_nest")
 class GotoNestTask(Task):
