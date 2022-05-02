@@ -107,12 +107,13 @@ class TaskAllocation(Task):
         if not any(led == robot_led for led in others_led):
             if robot_led == self.prev_task:
                 self.times_task += 1
-                self.prev_task = robot_led
-                return np.array([min(self.times_task/50, 50)])
             else:
-                self.prev_task = robot_led
                 self.times_task = 1
-                return np.array([1/50])
+            self.prev_task = robot_led
+            return np.array([min(self.times_task/10, 1)])
+        else:
+            self.times_task = 0
+            self.prev_task = robot_led
         return np.array([0.])
 
     def done_generator(self, entities):
@@ -121,6 +122,7 @@ class TaskAllocation(Task):
     def reset(self):
         super().reset()
         self.times_task = 0
+        self.prev_task = 0
 
 @task_registry(name="goto_nest")
 class GotoNestTask(Task):
