@@ -4,7 +4,7 @@
         "dt" : 0.1,
         "time_scale" : 1,
         "stimuli": {
-            "I1" : {"n" : 8, "sensor" : "IR_receiver:msg"}
+            "I1" : {"n" : 5, "sensor" : "comm_rx_a"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
@@ -13,7 +13,7 @@
             "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid"}}
         },
         "outputs" : {
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "comm_tx_a", "enc": "real"},
             "outA" : {"ensemble" : "OUT_TASK", "actuator" : "led_actuator"}
         },
         "synapses" :  {
@@ -45,17 +45,16 @@
                 "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05}
+                    "comm_rx_a" : {"n" : 5, "range" : 20}
                 },
                 "actuators" : {
-                    "IR_transmitter" : {"range" : 0.5, "msg_length" : 1},
+                    "comm_tx_a" : {"n" : 5, "range" : 20},
                     "led_actuator" : {}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.1}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "comm_sys" : {"name" :"IR_comm", "params" : {}},
                 "perturbations" : {},
                 "params" : {"trainable" : true}
             }
