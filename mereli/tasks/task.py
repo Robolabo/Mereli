@@ -154,7 +154,7 @@ class GotoNestTask(Task):
     def __init__(self, *args, num_areas=3, **kwargs):
         super(GotoNestTask,self).__init__(*args, **kwargs)
         self.num_areas = num_areas
-        self.qualities = [1,0.5,0]
+        self.qualities = [1, 0.5, 0, 0, 0]
         np.random.shuffle(self.qualities)
 
     def reward_generator(self, entities, robot_name):
