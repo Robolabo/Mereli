@@ -149,6 +149,33 @@ class GotoNestTask(Task):
     def done_generator(self, entities):
         return False
 
+@task_registry(name="best_of_n")
+class GotoNestTask(Task):
+    def __init__(self, *args, num_areas=3, **kwargs):
+        super(GotoNestTask,self).__init__(*args, **kwargs)
+        self.num_areas = num_areas
+        self.qualities = [1,0.5,0]
+        np.random.shuffle(self.qualities)
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        # dist_robots = np.array([np.linalg.norm(ent.position - robot.position) for ent in entities.values()\
+        #             if issubclass(type(ent), Robot) if ent.id != robot.id])
+        # if any(dist_robots < 0.1):
+        #     return np.array([-1])
+        nests = [ent for ent in entities.values() if isinstance(ent, GroundArea)]
+        assert len(nests) > 0
+        inside_nests = np.array([np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius for nest in nests])
+        if any(inside_nests):
+            return self.qualities[np.where(inside_nests)[0][0]]
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
+
+    def reset(self):
+        super().reset()
+        np.random.shuffle(self.qualities)
 
 class TaskManager:
     def __init__(self, duration=1000, use_done=False, num_slots=2, rand_order=True):
