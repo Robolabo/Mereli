@@ -2,19 +2,25 @@ from collections import deque
 import numpy as np
 
 class NoveltySearch:
-    def __init__(self, k=10, max_buffer_size=10000):
+    def __init__(self, k=20, max_buffer_size=20000, variable='eval_time', weight=.5):
         self.k = k
         self.max_buffer_size = max_buffer_size
+        self.behavior_var = variable
+        self.weight = weight
         self.buffer = deque([])
     
     def update(self, new_value):
         if self.buffer_size + 1 >= self.max_buffer_size:
             self.buffer.popleft()
-        self.buffer.append(new_value)
+        self.buffer.append(new_value[self.behavior_var])
 
     def novelty_metric(self, value):
-        k_nearest = sorted([np.abs(value - x) for x in self.buffer])[:self.k]
-        return np.mean(k_nearest)/max(self.buffer)
+        val = value[self.behavior_var]
+        k_nearest = sorted([np.linalg.norm(val - x) for x in self.buffer])[:self.k]
+        if self.behavior_var == 'eval_time':
+            return np.mean(k_nearest) / max(self.buffer)
+        else:# position var
+            return np.exp(np.mean(k_nearest))
 
     def reset(self):
         self.buffer = deque([])
@@ -22,3 +28,14 @@ class NoveltySearch:
     @property
     def buffer_size(self):
         return len(self.buffer)
+
+    def visualize(self):
+        import matplotlib.pyplot as plt
+        if self.behavior_var == 'positions':
+            data = np.stack(self.buffer)
+            for i in range(data.shape[1]//2):
+                plt.scatter(data[:,2*i],data[:,2*i+1])
+
+            plt.xlim(-1,1)
+            plt.ylim(-1,1)
+            plt.show()

@@ -3,13 +3,11 @@ from functools import wraps
 import numpy as np
 
 # Own imports
-from mereli.register import neuron_models, synapse_models, learning_rules
+from mereli.register import neuron_models, synapse_models
 from mereli.utils import increase_time
 from mereli.neural_networks.base_neural_net import BaseNeuralNet
 from .neuron_models import  SpikingNeuronModel
-from .decoding import DecodingWrapper
 from .encoding import EncodingWrapper
-from .utils.monitor import NeuralNetMonitor
 try:
     from .utils.visualization import *
 except:
@@ -124,7 +122,6 @@ class NeuralNetwork(BaseNeuralNet):
         ===============================================================
         """
         task = stimuli['task']
-        # stimuli['distance_sensor'] *= 0.
         #* --- Convert stimuli into spikes (Encoders Step) ---
         if len(stimuli) == 0 or stimuli is None:
             stimuli = {'dummy_input' : np.array([])}
@@ -134,7 +131,7 @@ class NeuralNetwork(BaseNeuralNet):
         self.stimuli = stimuli.copy()
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-        
+
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and self.t > 1:
             # If reward is None  while learning rule is not, then 
@@ -155,13 +152,14 @@ class NeuralNetwork(BaseNeuralNet):
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 2999 and self.monitor is not None:
+        if self.t == self.time_scale * 1999 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
             # plot_spikes(self)
+
             # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
         # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
@@ -177,6 +175,9 @@ class NeuralNetwork(BaseNeuralNet):
         #     actions['outB'] = [0,0]
             # else: 
             #     actions['outB'] = [0, 0]
+
+        # actions['outA'] = [0, 0]
+        # import pdb; pdb.set_trace()
         return actions
     
     def reset(self):

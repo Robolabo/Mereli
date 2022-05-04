@@ -1,0 +1,100 @@
+{
+    "checkpoint_file" : "chk_task_allocation_1",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 5, "sensor" : "comm_rx_a"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "OUT_COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}},
+            "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid"}}
+        },
+        "outputs" : {
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "comm_tx_a", "enc": "real"},
+            "outA" : {"ensemble" : "OUT_TASK", "actuator" : "led_actuator"}
+        },
+        "synapses" :  {
+            "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+            "I1-T" : {"pre":"I1","post":"OUT_TASK", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
+            "outA" : {"scheme" : "SoftmaxDecoding", "params" : {"is_cat" : false}}
+        },
+        "learning_rule" : {}
+    },
+    "world": {
+        "name" : "flat_world",
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 200,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [
+                {"name" : "task_allocation", "params" : {"num_tasks" : 5, "agents_per_task": 1}}
+            ]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 5,
+                "controller" : "neural_controller",
+                "sensors" : {
+                    "comm_rx_a" : {"n" : 5, "range" : 20}
+                },
+                "actuators" : {
+                    "comm_tx_a" : {"n" : 5, "range" : 20},
+                    "led_actuator" : {}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.1}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 100,
+        "generations" : 1000,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 10,
+        "fitness_function" : "reward_integration",
+        "gene_info" : {
+            "connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:bias:all" : {
+                "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:gain:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 0.1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.02}},
+            "nodes:tau:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 20},
+                "initialization" : {"type" : "exponential", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.02}}
+        },
+        "alg_params" : {
+            "p_weight_mut" : 0.4,
+            "p_node_mut" : 0.05,
+            "p_conn_mut" : 0.15,
+            "compatib_thresh" : 1.4,
+            "c1" : 1,
+            "c2" : 1,
+            "c3" : 1,
+            "species_elites" : 2
+        }
+    }
+}

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod, abstractproperty
 from enum import Enum, auto
 import numpy as np
-from mereli.algorithms.interfaces import GET, SET, LEN, INIT
+# from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from mereli.register import neuron_model_registry
 from mereli.utils import increase_time, without_duplicates
 from mereli.utils.activations import *
@@ -52,7 +52,6 @@ class BaseNeuronModel(ABC):
     def __len__(self):
         return len(self._volt)
 
-
     def build(self, **kwargs):
         for var, val in kwargs.items():
             self.__dict__[var] = np.array(val) if isinstance(val, list) else val
@@ -93,7 +92,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
         self.bias = np.empty(0)
         self.activation = np.empty(0)
         
-    @GET('neurons:bias')
+    # @GET('neurons:bias')
     def get_bias(self, neuron_name, ann_graph, min_val=0, max_val=1):
         bias_vals = np.array({
             'all' : [neuron['bias'] for neuron in ann_graph['neurons'].values()],
@@ -103,7 +102,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
                 if neuron['ensemble'] == neuron_name]))
         return (bias_vals - min_val) / (max_val - min_val)
 
-    @SET('neurons:bias')
+    # @SET('neurons:bias')
     def set_bias(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
         neuron_iterable = {
             'all' : ann_graph['neurons'].values(),
@@ -118,18 +117,18 @@ class NonSpikingNeuronModel(BaseNeuronModel):
                 import pdb; pdb.set_trace()
         return ann_graph
     
-    @LEN('neurons:bias')
+    # @LEN('neurons:bias')
     def len_bias(self, neuron_name, ann_graph):
         return len(self.get_bias(neuron_name, ann_graph))
 
-    @INIT('neurons:bias')
+    # @INIT('neurons:bias')
     def init_bias(self, neuron_name, ann_graph, min_val=-1., max_val=1.):
         biases_len = self.len_bias(neuron_name, ann_graph)
         random_biases = 0.5 + np.random.randn(biases_len) * 0.1
         random_biases = np.clip(random_biases, a_min=0, a_max=1)
         return self.set_bias(neuron_name, ann_graph, random_biases, min_val=min_val, max_val=max_val)
 
-    @GET('neurons:activation')
+    # @GET('neurons:activation')
     def get_activation(self, neuron_name, ann_graph, min_val=0, max_val=1):
         activ_vals = np.array({
             'all' : [neuron['activation'] for neuron in ann_graph['neurons'].values()],
@@ -139,7 +138,7 @@ class NonSpikingNeuronModel(BaseNeuronModel):
                 if neuron['ensemble'] == neuron_name]))
         return activ_vals
 
-    @SET('neurons:activation')
+    # @SET('neurons:activation')
     def set_activation(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
         neuron_iterable = {
             'all' : ann_graph['neurons'].values(),
@@ -151,11 +150,11 @@ class NonSpikingNeuronModel(BaseNeuronModel):
             self.activation[neuron['idx']] = activation
         return ann_graph
     
-    @LEN('neurons:activation')
+    # @LEN('neurons:activation')
     def len_activation(self, neuron_name, ann_graph):
         return len(self.get_activation(neuron_name, ann_graph))
 
-    @INIT('neurons:activation')
+    # @INIT('neurons:activation')
     def init_activation(self, neuron_name, ann_graph):
         activ_len = self.len_activation(neuron_name, ann_graph)
         random_activs = np.array([Activation.sample(ignore=[Activation.SOFTMAX]) for _ in range(activ_len)])
@@ -211,6 +210,9 @@ class RateModel(NonSpikingNeuronModel):
     def step(self, Isyn):
         self._volt += (self.dt / self.tau) * (Isyn.copy() - self._volt)
         outputs = self.gain * self._volt.copy() + self.bias
+        # if np.sum(outputs) > 100  or np.isnan(outputs.flatten()).any():
+        #     print(outputs,Isyn, self.tau, self.gain, self.bias)
+        #     import pdb; pdb.set_trace()
         for func in without_duplicates(self.activation):
             outputs[self.activation == func] = Activation.function_of(func)(outputs[self.activation == func])
         return outputs, self._volt.copy()
@@ -242,7 +244,7 @@ class RateModel(NonSpikingNeuronModel):
         if isinstance(activation, str):
             self.activation = np.repeat(activation, len(self))
      
-    @GET('neurons:tau')
+    # @GET('neurons:tau')
     def get_tau(self, neuron_name, ann_graph, min_val=0, max_val=1):
         tau_vals = np.array({
             'all' : [neuron['tau'] for neuron in ann_graph['neurons'].values()],
@@ -253,7 +255,7 @@ class RateModel(NonSpikingNeuronModel):
         if any(tau_vals == 0): import pdb; pdb.set_trace() 
         return (np.log10(0.5 * tau_vals) - min_val) / (max_val - min_val)
 
-    @SET('neurons:tau')
+    # @SET('neurons:tau')
     def set_tau(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
         neuron_iterable = {
             'all' : ann_graph['neurons'].values(),
@@ -266,11 +268,11 @@ class RateModel(NonSpikingNeuronModel):
             self.tau[neuron['idx']] = neuron['tau']
         return ann_graph
 
-    @LEN('neurons:tau')
+    # @LEN('neurons:tau')
     def len_tau(self, neuron_name, ann_graph):
         return len(self.get_tau(neuron_name, ann_graph, min_val=-1, max_val=.5))
 
-    @INIT('neurons:tau')
+    # @INIT('neurons:tau')
     def init_tau(self, neuron_name, ann_graph, min_val, max_val):
         tau_len = self.len_tau(neuron_name, ann_graph)
         random_taus = np.random.random(size=tau_len)
@@ -278,7 +280,7 @@ class RateModel(NonSpikingNeuronModel):
         random_taus = np.clip(random_taus, a_min=0, a_max=1)
         return self.set_tau(neuron_name, ann_graph, random_taus, min_val=min_val, max_val=max_val)
 
-    @GET('neurons:gain')
+    # @GET('neurons:gain')
     def get_gain(self, neuron_name, ann_graph, min_val=0, max_val=1):
         gain_vals = np.array({
             'all' : [neuron['gain'] for neuron in ann_graph['neurons'].values()],
@@ -288,7 +290,7 @@ class RateModel(NonSpikingNeuronModel):
                 if neuron['ensemble'] == neuron_name]))
         return (gain_vals - min_val) / (max_val - min_val)
     
-    @SET('neurons:gain')
+    # @SET('neurons:gain')
     def set_gain(self, neuron_name, ann_graph, data, min_val=0, max_val=1):
         neuron_iterable = {
             'all' : ann_graph['neurons'].values(),
@@ -300,11 +302,11 @@ class RateModel(NonSpikingNeuronModel):
             self.gain[neuron['idx']] = neuron['gain']
         return ann_graph
 
-    @LEN('neurons:gain')
+    # @LEN('neurons:gain')
     def len_gain(self, neuron_name, ann_graph):
         return len(self.get_gain(neuron_name, ann_graph))
 
-    @INIT('neurons:gain')
+    # @INIT('neurons:gain')
     def init_gain(self, neuron_name, ann_graph, min_val, max_val):
         gain_len = self.len_gain(neuron_name, ann_graph)
         random_gains = np.random.random(size=gain_len)

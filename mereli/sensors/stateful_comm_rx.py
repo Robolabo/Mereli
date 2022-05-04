@@ -33,3 +33,21 @@ class StatefulCommRX(Sensor):
 
         return {'mean_neigh_state' : neigh_state,# + np.random.randn(self.state_dim) * 0.0,
                 'own_state' : own_state}# + np.random.randn()* 0.0}
+
+
+@sensor_registry(name='comm_rx_a')
+class CommRXTypeA(Sensor):
+    """ 
+    """
+    def __init__(self, *args,  range=4, n=5, **kwargs):
+        super(CommRXTypeA, self).__init__(*args, **kwargs)
+        self.range = range
+        self.n = n
+
+    def step(self, neighborhood):
+        """
+        """
+        reading = np.zeros(self.n)
+        for idx, ent in enumerate(filter(lambda y: issubclass(type(y), Robot), sorted(neighborhood, key=lambda x: x.id))):
+            reading[idx] = ent.actuators['comm_tx_a'].msg
+        return reading

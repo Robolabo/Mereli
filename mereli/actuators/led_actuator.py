@@ -1,6 +1,7 @@
 import numpy as np
 from matplotlib import colors
 import pybullet as p
+from mereli.globals import global_states
 from mereli.register import actuator_registry
 from .base_actuator import Actuator
 
@@ -8,33 +9,42 @@ from .base_actuator import Actuator
 class LedActuator(Actuator):
     """ LED actuator that turns on or off the LED depending on 
     the action. """
-    def __init__(self, *args, color_on='blue', color_off='white', **kwargs):
+    def __init__(self, *args, num_colors=2, **kwargs):
         super(LedActuator, self).__init__(*args, **kwargs)
+        self.colors = [[1,1,1], [0,1,0], [1,1,0], [0,0,1], [1,0,0]]
         self.color_on = [1,0,0]
         self.color_off = [1,1,1]
         self.color_fault = [1,0,0]
         self.on = 0
         self.fault = False
-        self.prev_action = None
+        self.action = None
 
     def step(self, action):
-        # if len(action) == 1:TODO
         if action is None:
             return
+        if len(action) == 1:
+            action = action * np.ones(8)
+        if not global_states.RENDER:
+            self.action = action
+            return
         action = action if not self.fault else np.zeros_like(action)
-        if self.prev_action is None:
-            self.prev_action = np.zeros_like(action)
+        if self.action is None:
+            self.action = np.zeros_like(action)
 
-        for i, (led_ac, prev_led_ac) in enumerate(zip(action, self.prev_action)):
-            if led_ac == prev_led_ac: # Used to optimize code (quite slow otherwise)
+        for i in range(8):
+            led_a = action[i] 
+            if led_a == self.action[i]: # Used to optimize code (quite slow otherwise)
                 continue
-            color = (self.color_on if led_ac else self.color_off) if not self.fault else self.color_fault
-            if 0 < led_ac < 1:
-                color = [led_ac, 0, 0]
+            color = [1,1,1]
+            if self.fault:
+                color = self.color_fault
+            else:
+                color = self.colors[int(led_a)]
+            # elif 0 < led_a < 1:
+            #     color = [led_a, 0, 0]
             led_idx = self.physics_client.get_actuator_position(self.actuator_owner.id, 'led_actuator', sector=i)[1]
-            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, led_idx, color, opacity=0.6)
-
-        self.prev_action = action
+            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, led_idx, color, opacity=0.8)
+        self.action = action
         
     @property
     def physics_client(self):
@@ -43,5 +53,5 @@ class LedActuator(Actuator):
     def reset(self):
         self.on = 0
         self.fault = False
-        self.prev_action = None
+        self.action = None
 

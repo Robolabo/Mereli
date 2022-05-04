@@ -1,9 +1,10 @@
 import logging
 import numpy as np
+
 from mereli.register import decoding_registry, decoders
 from mereli.utils import softmax, sigmoid, tanh
 from mereli.globals import global_states
-from mereli.algorithms.interfaces import GET, SET, LEN, INIT
+# from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 
 class DecodingWrapper:
     """ Wrapper for gathering all the decoders of each ANN output. 
@@ -72,14 +73,14 @@ class DecodingWrapper:
         for decoder in self._decoders.values():
             decoder.reset()
 
-    @GET('decoders:weights')
+    # @GET('decoders:weights')
     def get_decoding_weights(self, dec_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         if dec_name == 'all':
             weights = np.hstack([decoder.w.copy() for decoder in self._decoders.values() if decoder.trainable])
             return (weights - min_val) / (max_val - min_val)
         return (self._decoders[dec_name].w.copy() - min_val) / (max_val - min_val)
 
-    @SET('decoders:weights')
+    # @SET('decoders:weights')
     def set_decoding_weights(self, dec_name, ann_graph, data, min_val=0., max_val=1.):
         data = min_val + data * (max_val - min_val)
         if dec_name == 'all':
@@ -92,13 +93,13 @@ class DecodingWrapper:
             self._decoders[dec_name].w = data.copy()
         return ann_graph#!
 
-    @INIT('decoders:weights')
+    # @INIT('decoders:weights')
     def init_decoding_weights(self, dec_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         weights_len = self.len_decoding_weights(dec_name, ann_graph)
         random_weights = np.random.random(size=weights_len)
         return self.set_decoding_weights(dec_name, ann_graph, random_weights, min_val=min_val, max_val=max_val)
 
-    @LEN('decoders:weights')
+    # @LEN('decoders:weights')
     def len_decoding_weights(self, conn_name, ann_graph, only_trainable=True):
         return len(self.get_decoding_weights(conn_name, ann_graph, only_trainable=True))
 

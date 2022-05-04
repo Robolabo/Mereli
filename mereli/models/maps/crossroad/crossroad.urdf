@@ -9,21 +9,16 @@
     <visual>
       <origin rpy="1.5707963 0 0" xyz="0 0 0.01"/>
       <geometry>
-		    <mesh filename="corridor.obj" scale=".75 1 1"/>
+		    <mesh filename="crossroad.obj" scale="1 1 1"/>
       </geometry>
-<<<<<<< HEAD
-		  <material name="white">
-          <color rgba="1 1 1 1"/>
-=======
 		  <material name="grey">
           <color rgba="0.3 0.3 0.3 1"/>
->>>>>>> NewAlgCls
       </material>
     </visual>
     <collision concave="yes">
       <origin rpy="1.5707963 0 0" xyz="0 0 0.01"/>
       <geometry>
-          <mesh filename="corridor.obj" scale=".75 1 1"/>
+          <mesh filename="crossroad.obj" scale="1 1 1"/>
       </geometry>
     </collision>
   </link>

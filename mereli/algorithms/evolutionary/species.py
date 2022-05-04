@@ -10,6 +10,7 @@ class Species:
         self.c2 = c2
         self.c3 = c3
         self.num_genotypes = 0
+        self.best = None
         self.representative = None
         self.mean_fitness = {'raw' : 0, 'adjusted' : 0}
         self.max_fitness = {'raw' : 0, 'adjusted' : 0}
@@ -61,12 +62,17 @@ class Species:
         #* Node parameter's distance
         if len(node_params):
             for param in node_params:
+                if param == 'activation':
+                    continue
                 param_repr = np.array([self.representative.get_node(node).parameters[param] 
                             for node in geno_nodes.intersection(repr_nodes)])
                 param_genotype = np.array([genotype.get_node(node).parameters[param]
                             for node in geno_nodes.intersection(repr_nodes)])
                 assert len(param_repr) == len(param_genotype)
-                param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+                if param == 'activation':
+                    param_distance += np.mean(param_repr == param_genotype)
+                else:
+                    param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
             param_distance /= len(node_params) 
         
         #* Topological distance

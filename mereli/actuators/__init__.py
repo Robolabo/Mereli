@@ -6,4 +6,4 @@ from .RF_transmitter import RF_Transmitter
 from .led_actuator import LedActuator
 from .joint_actuator import JointPositionActuator, JointVelocityActuator
 from .grasp_actuator import GraspActuator
-from .stateful_comm_transmitter import StatefulCommTX
+from .stateful_comm_transmitter import *

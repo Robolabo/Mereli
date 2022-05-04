@@ -1,7 +1,7 @@
 from itertools import product, chain
 import numpy as np
 from mereli.algorithms.evolutionary.gene import ConnectionGene
-from mereli.register import evo_operator_registry
+from mereli.register import evo_operator_registry, mutation
 from mereli.utils import ShapeMismatchException, isinstance_of_any
 from ..gene import ConnectionGene, NodeGene
 
@@ -24,11 +24,12 @@ def add_node(genotype, innovation):
     if genotype.contains_node(node_name):
         return genotype, innovation
     sel_conn.enabled = False # Disable connection
+
+    #* Create, initialize and add node
     new_node = NodeGene(node_name)
     new_node.idx = genotype.num_nodes
-    # Initialize randomly node parameters
-    for param in np.random.choice([*genotype.nodes]).parameters:
-        new_node.add_parameter(param, np.random.random())
+    new_node.configure(genotype.gene_info)
+    new_node.initialize()
     genotype.add_node(new_node)
 
     #* Add new connections
@@ -36,9 +37,11 @@ def add_node(genotype, innovation):
         new_conn = ConnectionGene(f'{pre}-{post}', pre=pre, post=post)
         new_conn.idx = genotype.num_connections
         new_conn.innovation = innovation.assign(pre, post)
-        for param in sel_conn.parameters:
-            value = (sel_conn.parameters[param], np.clip(np.random.normal(loc=.5, scale=.1), 0, 1))[n]
-            new_conn.add_parameter(param, value)
+        new_conn.configure(genotype.gene_info)
+        if n == 0:
+            new_conn.parameters = sel_conn.parameters
+        else:
+            new_conn.initialize()
         new_conn.learning_rule = sel_conn.learning_rule
         if sel_conn.learning_rule is not None:
             # new_lr = {'name' : 'simple_hebb', 'weight' : np.clip(np.random.normal(loc=.5, scale=.05), 0, 1)}
@@ -60,14 +63,9 @@ def add_connection(genotype, input_nodes, innovation):
     new_conn = allowed_conns[np.random.choice(range(len(allowed_conns)))]
     #* Create new connection gene
     conn_name = '-'.join(new_conn)
-    new_connection = ConnectionGene(conn_name)
-    new_connection.pre = new_conn[0]
-    new_connection.post = new_conn[1]
-    for param in next(genotype.connections).parameters:
-        #! OJO dim de param.
-        new_value = np.clip(0.1 * np.random.randn() + 0.5, a_min=0, a_max=1)
-        new_connection.parameters[param] = new_value
-        new_connection.add_parameter(param, new_value)
+    new_connection = ConnectionGene(conn_name, pre=new_conn[0], post=new_conn[1])
+    new_connection.configure(genotype.gene_info)
+    new_connection.initialize()
     new_connection.idx = len([*genotype.connections])
     new_connection.innovation = innovation.assign(new_connection.pre, new_connection.post)
     genotype.add_connection(new_connection)
@@ -98,29 +96,58 @@ def delete_connection(genotype, input_nodes, **kwargs):
     del genotype['connections'][conn]
 
 
-def neat_mutation(population, input_nodes, innovation,
-            p_weight_mut=0.75, p_node_mut=0.03, p_conn_mut=0.5):
+def neat_mutation(population, input_nodes, innovation, p_node_mut=0.03, p_conn_mut=0.5):
     for genotype in population:
         #*Parameter Mutations
-        # filter(lambda x: np.random.random() < p_weight_mut, population):
         for gene in chain(genotype.nodes, genotype.connections):
-            for param, value in gene.parameters.items():
-                if np.random.random() > p_weight_mut: 
-                    continue
-                if np.random.random() < 0.02:
-                    new_val = np.random.random(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else .1*np.random.randn() + 0.5
-                else:
-                    noise = np.random.randn(len(value)) if isinstance_of_any(value, [list, np.ndarray]) else np.random.randn() 
-                    new_val = np.clip(value + noise * 0.02, a_min=0, a_max=1)
-                gene.parameters[param] = new_val
+            gene.mutate()
         #* Connection mutations
         if np.random.random() < p_conn_mut:
             genotype, innovation = add_connection(genotype, input_nodes, innovation)
-            
         #* Node mutations
         if np.random.random() < p_node_mut:
             genotype, innovation = add_node(genotype, innovation)
     return population, innovation
+
+
+@mutation(name="gaussian")
+class GaussianMutation:
+    def __init__(self, mutation_prob=0.05, sigma=0.05):
+        self.mutation_prob = mutation_prob
+        self.sigma = sigma
+
+    def __call__(self, value):
+        if np.random.random() < self.mutation_prob:
+            return np.clip(value + np.random.randn() * self.sigma, a_max=1, a_min=0)
+        else:
+            return value
+
+@mutation(name="bitflip")
+class BitFlipMutation:
+    def __init__(self, mutation_prob=0.05):
+        self.mutation_prob = mutation_prob
+
+    def __call__(self, value):
+        assert value == 1 or value == 0
+        if np.random.random() < self.mutation_prob:
+            return int(not value)
+        else:
+            return int(value)
+
+@mutation(name="categorical")
+class CategoricalMutation:
+    def __init__(self, mutation_prob=0.05, choices=[]):
+        self.mutation_prob = mutation_prob
+        self.choices = choices
+
+    def __call__(self, value):
+        if np.random.random() < self.mutation_prob:
+            idx = np.random.choice(len(self.choices))
+            return self.choices[idx]
+        else:
+            return value
+
+
 
 @evo_operator_registry(name='gaussian_mutation')
 def gaussian_mutation(population, mutation_prob=0.05, sigma=0.1, min_vals=0, max_vals=1):

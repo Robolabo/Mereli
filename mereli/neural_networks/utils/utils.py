@@ -3,7 +3,7 @@ import inspect
 from mereli.utils import merge_dicts, any_duplicates, ConfigException
 import mereli.register as reg
 from mereli.neural_networks.receptive_field import ReceptiveField
-from mereli.neural_networks.decoding import Decoder
+# from mereli.neural_networks.decoding import Decoder
 from mereli.neural_networks.neuron_models import SpikingNeuronModel
 
 #* ---- CONFIGURATION CHECK FUNCTIONS ---- #
@@ -109,30 +109,31 @@ def decoding_checker(topology):
     """ Checks that the configuration structure and parameters of the decoding ANN 
     configuration are correct.
     """
-    for key, decoder in topology['decoding'].items():
-        if key not in topology['outputs']:
-            raise ConfigException('Output "{}" of decoder does not exist.'.format(key))
-        if 'scheme' in decoder and decoder['scheme'] not in reg.decoders:
-            raise ConfigException('Decoder "{}" does not exist. '\
-                'Available decoders are {}'.format(decoder['scheme'], tuple(reg.decoders)))
-        if 'scheme' not in decoder:
-            continue
-        dec_base_inspection = inspect.getfullargspec(Decoder)
-        dec_child_args = inspect.getfullargspec(reg.decoders[decoder['scheme']]).kwonlydefaults
-        dec_args = {key : val for key, val in zip(reversed(dec_base_inspection[0]),\
-                        reversed(dec_base_inspection[3]))}
-        if dec_child_args is not None:
-            dec_args = merge_dicts([dec_child_args, dec_args])
-        if 'params' in decoder:
-            for p_name, param in decoder['params'].items():
-                if p_name not in dec_args:
-                    raise ConfigException('The parameter "{}" does not exist in decoder "{}". '\
-                            'Available decoder arguments are {}.'\
-                            .format(p_name, key, tuple(dec_args.keys())))
-                valid_types = [type(dec_args[p_name])] if type(dec_args[p_name]) is not float else [float, int]
-                if type(param) not in valid_types:
-                    raise ConfigException('Wrong type of parameter "{}" in decoder "{}". Type {} '\
-                        'should have been received.'.format(p_name, key, type(dec_args[p_name]).__name__))
+    pass
+    # for key, decoder in topology['decoding'].items():
+    #     if key not in topology['outputs']:
+    #         raise ConfigException('Output "{}" of decoder does not exist.'.format(key))
+    #     if 'scheme' in decoder and decoder['scheme'] not in reg.decoders:
+    #         raise ConfigException('Decoder "{}" does not exist. '\
+    #             'Available decoders are {}'.format(decoder['scheme'], tuple(reg.decoders)))
+    #     if 'scheme' not in decoder:
+    #         continue
+    #     dec_base_inspection = inspect.getfullargspec(Decoder)
+    #     dec_child_args = inspect.getfullargspec(reg.decoders[decoder['scheme']]).kwonlydefaults
+    #     dec_args = {key : val for key, val in zip(reversed(dec_base_inspection[0]),\
+    #                     reversed(dec_base_inspection[3]))}
+    #     if dec_child_args is not None:
+    #         dec_args = merge_dicts([dec_child_args, dec_args])
+    #     if 'params' in decoder:
+    #         for p_name, param in decoder['params'].items():
+    #             if p_name not in dec_args:
+    #                 raise ConfigException('The parameter "{}" does not exist in decoder "{}". '\
+    #                         'Available decoder arguments are {}.'\
+    #                         .format(p_name, key, tuple(dec_args.keys())))
+    #             valid_types = [type(dec_args[p_name])] if type(dec_args[p_name]) is not float else [float, int]
+    #             if type(param) not in valid_types:
+    #                 raise ConfigException('Wrong type of parameter "{}" in decoder "{}". Type {} '\
+    #                     'should have been received.'.format(p_name, key, type(dec_args[p_name]).__name__))
 
 def neural_net_checker(topology):
     """ Checks that the provided configuration of the neural network is correct 

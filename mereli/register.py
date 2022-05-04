@@ -24,6 +24,35 @@ tasks = {}
 communication_systems = {}
 physics_engines = {}
 
+
+mutations = {}
+distributions = {}
+normalizations = {}
+
+
+def mutation(*args, **kwargs):
+    def wrapper(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        mutations[name] = cls
+        return cls
+    return wrapper 
+
+def distribution(*args, **kwargs):
+    def wrapper(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        distributions[name] = cls
+        return cls
+    return wrapper 
+
+def normalization(*args, **kwargs):
+    def wrapper(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        normalizations[name] = cls
+        return cls
+    return wrapper 
+
+
+
 def world_registry(*args, **kwargs):
     def wrapper(cls):
         name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]

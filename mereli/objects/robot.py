@@ -65,7 +65,7 @@ class Robot(WorldObject):
         #* Sense environment surroundings.
         state = self.perceive(neighborhood)
         #* Add reward as a new state entry.
-        state['reward'] = self.reward
+        state['reward'] = np.array([self.reward]).flatten()
         state['task'] = self.task
 
         #* Apply perturbations to stimuli 
@@ -93,6 +93,7 @@ class Robot(WorldObject):
         # if self.reward_generator is not None:
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
+        
 
         return state, actions
 

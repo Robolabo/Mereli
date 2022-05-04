@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_NS1",
+    "checkpoint_file" : "chk_commA",
     "topology" : {
         "dt" : 0.1,
         "time_scale" : 1,
@@ -100,10 +100,6 @@
         "evaluation_steps" : 3000,
         "num_evaluations" : 4,
         "fitness_function" : "task_switch",
-        "novelty_search" : {
-            "variable" : "fitness",
-            "weight" : 1
-        },
         "gene_info" : {
             "connections:weight:all" : {
                 "normalization" : {"type": "linear", "min_val" : -10, "max_val" : 10}, 

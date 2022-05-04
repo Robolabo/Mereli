@@ -6,3 +6,5 @@ from .activations import *
 from .graph_utils import *
 from .decorators import *
 from .initializers import *
+from .distributions import *
+from .normalization import *

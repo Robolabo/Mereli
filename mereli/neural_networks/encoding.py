@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mereli.register import encoding_registry, encoders, receptive_fields
 from mereli.utils import increase_time
-from mereli.algorithms.interfaces import GET, SET, LEN, INIT
+# from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from .neuron_models import LIFModel
 from mereli.neural_networks.receptive_field import *
 
@@ -65,14 +65,14 @@ class EncodingWrapper:
                 '"{}" does not exist.'.format(key)))
         return self._encoders[key]
 
-    @GET('encoders:weights')
+    # @GET('encoders:weights')
     def get_encoding_weights(self, enc_name, min_val=0., max_val=1., only_trainable=True):
         if enc_name == 'all':
             weights = np.hstack([encoder.receptive_field.weights.copy()\
                 for encoder in self._encoders.values() if encoder.receptive_field.trainable])
             return (weights - min_val) / (max_val - min_val)
 
-    @SET('encoders:weights')
+    # @SET('encoders:weights')
     def set_encoding_weights(self, enc_name, data, min_val=0., max_val=1.):
         data = min_val + data * (max_val - min_val)
         if enc_name == 'all':
@@ -83,13 +83,13 @@ class EncodingWrapper:
                     encoder.receptive_field.weights = data[pointer : pointer + weights_len].copy()
                     pointer += weights_len
 
-    @INIT('encoders:weights')
+    # @INIT('encoders:weights')
     def init_encoding_weights(self, enc_name, min_val=0., max_val=1., only_trainable=True):
         weights_len = self.len_encoding_weights(enc_name)
         random_weights = np.random.random(size=weights_len)
         self.set_encoding_weights(enc_name, random_weights, min_val=min_val, max_val=max_val)
 
-    @LEN('encoders:weights')
+    # @LEN('encoders:weights')
     def len_encoding_weights(self, enc_name, only_trainable=True):
         return self.get_encoding_weights(enc_name, only_trainable=only_trainable).shape[0]
 

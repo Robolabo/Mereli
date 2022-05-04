@@ -1,12 +1,12 @@
-from itertools import combinations
-from functools import reduce
 import numpy as np
 import numpy.linalg as LA
-import matplotlib.pyplot as plot
 from mereli.register import fitness_func_registry
-from mereli.utils import (normalize, compute_angle, angle_diff,
-                                    geom_mean, angle_mean, get_alphashape,
-                                    convert2graph, disjoint_subgraphs, toroidal_difference)
+from mereli.utils import (angle_diff, get_alphashape,
+                                convert2graph, disjoint_subgraphs)
+from mereli.utils.decorators import increase_time
+
+
+
 
 @fitness_func_registry(name='identify_borderline')
 class IdentifyBorderline:
@@ -268,12 +268,74 @@ class TaskSwitching4Lights:
         return fitness + 1e-5
 
 
-@fitness_func_registry(name='task_switching_B')
-class TaskSwitchingB:
-    """Fitness function for the exploration task."""
-    def __init__(self):
-        self.required_info = ['robot:reward']
+class FitnessFunction:
+    def __init__(self, world):
+        self.t = 0
+        self.world = world
+        self._fitness = 0.
 
+    def __call__(self, world):
+        raise NotImplementedError
+
+    @property
+    def fitness(self):
+        if self.t == 0:
+            return 0.
+        return max(self._fitness / self.t, 1e-5)
+
+    @property
+    def rewards(self):
+        return [robot.reward for robot in self.world.robots.values()]
+
+    @property
+    def robots(self):
+        return [robot for robot in self.world.robots.values()]
+
+    def reset(self):
+        self.t = 0
+        self._fitness = 0
+
+@fitness_func_registry(name='reward_integration')
+class RewardIntegration(FitnessFunction):
+    """Fitness function for the exploration task."""
+    def __init__(self, *args, **kwargs):
+        self.required_info = []
+        super(RewardIntegration, self).__init__(*args, **kwargs)
+        
+    @increase_time
+    def __call__(self):
+        self._fitness += np.mean(self.rewards)
+
+
+@fitness_func_registry(name='task_switch')
+class TaskSwitch(FitnessFunction):
+    """Fitness function for the exploration task."""
+    def __init__(self, *args, **kwargs):
+        self.required_info = []
+        super(TaskSwitch, self).__init__(*args, **kwargs)
+        self._fitness = [0.0] * self.world.task_manager.num_slots
+        
+    @increase_time
+    def __call__(self):
+        mean_reward = np.mean(self.rewards)
+        current_tsk = self.world.task_manager.block #!check
+        if current_tsk >= len(self._fitness):
+            return
+        self._fitness[current_tsk] += mean_reward
+
+
+    @property
+    def fitness(self):
+        task_manager = self.world.task_manager
+        fitnesses = [np.clip(f_val,a_min=0, a_max=None) / task_manager.tasks[task_manager.task_order[i]].t \
+                    for i, f_val in enumerate(self._fitness)]
+        return max(np.prod(fitnesses) ** (1 / len(fitnesses)), 1e-5)
+
+    def reset(self):
+        self._fitness = [0.0] * self.world.task_manager.num_slots
+
+
+<<<<<<< HEAD
     def __call__(self, actions, states, info=None):
         fA, fB = 0, 0
         for t, rew_t in enumerate(info['robot:reward']):
@@ -295,12 +357,14 @@ class TaskSwitchingB:
         # ff =  (2 / (1/fA + 1/fB)) + 1e-5
         # return(2 / (1/fA + 1/fB)) + 1e-5
         return np.sqrt(fA * fB) + 1e-5
+=======
+>>>>>>> NewAlgCls
 
 
 
 @fitness_func_registry(name='grouping')
 class Grouping:
-    """Fitness function for the aggrupation task."""
+    """Fitness function for the agrupation task."""
     def __init__(self):
         self.required_info = ("robot_positions", "robot_orientations")
 

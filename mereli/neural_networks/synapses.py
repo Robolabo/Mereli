@@ -1,11 +1,8 @@
-from itertools import chain, product
 from collections import deque
 from functools import wraps
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 import numpy as np
-from mereli.neural_networks.utils.builder import SynapsesBuilder
-from mereli.algorithms.interfaces import GET, SET, LEN, INIT
-from mereli.utils import merge_dicts
+# from mereli.algorithms.interfaces import GET, SET, LEN, INIT
 from mereli.register import synapse_registry
 
 def delay(func):
@@ -54,7 +51,7 @@ class Synapses(ABC):
                 self.weights[post_idx, pre_idx] = syn['weight'] if syn['weight'] != 'random' else np.round(0.1 * np.random.randn(), decimals=5)
         # self.weights = np.stack([w_row / np.sum(w_row != 0.0)  if any(w_row != 0) else w_row for w_row in self.weights]).round(4)
 
-    @GET("synapses:weights")
+    # @GET("synapses:weights")
     def get_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """ Given a connection name the method returns the flattened array of synapse strengths in
         that connection. If only_trainable is active, only weights in train mode are returned.
@@ -78,7 +75,7 @@ class Synapses(ABC):
                     if not only_trainable or ann_graph['synapses'][name]['trainable']])
         return (weights - min_val) / (max_val - min_val)
 
-    @SET("synapses:weights")
+    # @SET("synapses:weights")
     def set_weights(self, conn_name, ann_graph, data, min_val=0., max_val=1.,):
         """
         """
@@ -105,7 +102,7 @@ class Synapses(ABC):
                     ann_graph['synapses'][syn_name]['weight'] = w
             return ann_graph
 
-    @INIT('synapses:weights')
+    # @INIT('synapses:weights')
     def init_weights(self, conn_name, ann_graph, min_val=0., max_val=1., only_trainable=True):
         """
         """
@@ -123,7 +120,7 @@ class Synapses(ABC):
         # return self.set_weights(conn_name, ann_graph, random_weights,\
         #                     min_val=min_val, max_val=max_val)
 
-    @LEN('synapses:weights')
+    # @LEN('synapses:weights')
     def len_weights(self, conn_name, ann_graph, only_trainable=True):
         """
         """
@@ -259,19 +256,19 @@ class DynamicSynapses(Synapses):
         self.x_ndma = np.zeros(self.weights.shape[1])
         self.spike_buffer = [deque([False for _ in range(int(d))]) for d in self.delays]
 
-    @GET('synapses:delays')
+    # @GET('synapses:delays')
     def get_delays(self, neuron_name):
         return self.delays.copy()
 
-    @SET('synapses:delays')
+    # @SET('synapses:delays')
     def set_delays(self, neuron_name, data):
         self.delays = data.copy()
 
-    @LEN('synapses:delays')
+    # @LEN('synapses:delays')
     def len_delays(self, neuron_name):
         return self.delays.shape[0]
 
-    @INIT('synapses:delays')
+    # @INIT('synapses:delays')
     def init_delays(self, neuron_name, min_val=0., max_val=1.):
         self.delays = np.random.randint(min_val, max_val, size=self.delays.shape[0])
     

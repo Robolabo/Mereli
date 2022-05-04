@@ -1,7 +1,7 @@
 import numpy as np
 import pybullet as p
 from mereli.globals import global_states
-from mereli.objects import Robot, LightSource
+from mereli.objects import Robot, LightSource, GroundArea
 from mereli.register import tasks, task_registry
 
 class Task:
@@ -46,6 +46,17 @@ class Task:
         self._reward = 0
         self._done = False
 
+@task_registry(name="dummy")
+class DummyTask(Task):
+    def __init__(self, *args, **kwargs):
+        super(DummyTask,self).__init__(*args, **kwargs)
+
+    def reward_generator(self, *args):
+        return np.array([0.])
+    
+    def done_generator(self, *args):
+        return False
+
 @task_registry(name="goto_light")
 class GotoLightTask(Task):
     def __init__(self, *args, range=0.5, color='red', **kwargs):
@@ -56,17 +67,32 @@ class GotoLightTask(Task):
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
         if robot.sensors['collision_sensor'].reading:
+<<<<<<< HEAD
             return np.array([-.2])
         others = [ent for name, ent in entities.items() if issubclass(type(ent), Robot) and name != robot_name]
+=======
+            return np.array([-1])
+>>>>>>> NewAlgCls
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
+        other_lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color != self.color]
         assert len(lights) > 0
         distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
+<<<<<<< HEAD
         dist_others = np.array([np.linalg.norm(robot.position[:2] - rob.position[:2]) for rob in others])
         if any(distances < self.range):
             if all(dist_others < 1):
                 return np.array([np.mean(dist_others < 1)])
             # return np.array([1 - (min(distances)/self.range) ** 2])
         return np.array([0])
+=======
+        if min(distances) < self.range:
+            return np.array([1])#np.array([1 - (min(distances) / self.range) ** 2])
+        else:
+            distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in other_lights])
+            if min(distances) < self.range:
+                return np.array([-1])
+        return np.array([0.])
+>>>>>>> NewAlgCls
 
     def done_generator(self, entities):
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
@@ -78,6 +104,92 @@ class GotoLightTask(Task):
             if not any(np.array(distances) < self.range):
                 return False
         return True
+
+@task_registry(name="task_allocation")
+class TaskAllocation(Task):
+    def __init__(self, *args, num_tasks=5, agents_per_task=1, **kwargs):
+        super(TaskAllocation,self).__init__(*args, **kwargs)
+        self.num_tasks = num_tasks
+        self.agents_per_task = agents_per_task
+        self.prev_task = {}
+        self.times_task = {}
+        
+    def reward_generator(self, entities, robot_name):
+        if robot_name not in self.prev_task:
+            self.prev_task[robot_name] = 0
+            self.times_task[robot_name] = 0
+        robot_led = int(entities[robot_name].actuators['led_actuator'].action[0])
+        others_led = np.array([int(ent.actuators['led_actuator'].action[0])\
+            for ent in entities.values() if issubclass(type(ent), Robot) if ent.id != entities[robot_name].id])
+        if not any(led == robot_led for led in others_led):
+            if robot_led == self.prev_task[robot_name]:
+                self.times_task[robot_name] += 1
+            else:
+                self.times_task[robot_name] = 1
+            self.prev_task[robot_name] = robot_led
+            return np.array([min(self.times_task[robot_name]/10, 1)])
+        else:
+            self.times_task[robot_name] = 0
+            self.prev_task[robot_name] = robot_led
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
+    
+    def reset(self):
+        super().reset()
+        self.prev_task = {}
+        self.times_task = {}
+
+@task_registry(name="goto_nest")
+class GotoNestTask(Task):
+    def __init__(self, *args, color='grey', **kwargs):
+        super(GotoNestTask,self).__init__(*args, **kwargs)
+        self.color = color
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        dist_robots = np.array([np.linalg.norm(ent.position - robot.position) for ent in entities.values()\
+                    if issubclass(type(ent), Robot) if ent.id != robot.id])
+        if any(dist_robots < 0.1):
+            return np.array([-1])
+        nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color == self.color]
+        assert len(nests) > 0
+        inside_nests = np.array([np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius for nest in nests])
+        if any(inside_nests):
+            return np.array([1])#np.array([1 - (min(distances) / self.range) ** 2])
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
+
+@task_registry(name="best_of_n")
+class GotoNestTask(Task):
+    def __init__(self, *args, num_areas=3, **kwargs):
+        super(GotoNestTask,self).__init__(*args, **kwargs)
+        self.num_areas = num_areas
+        self.qualities = [1, 0.5, 0, 0, 0]
+        np.random.shuffle(self.qualities)
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        # dist_robots = np.array([np.linalg.norm(ent.position - robot.position) for ent in entities.values()\
+        #             if issubclass(type(ent), Robot) if ent.id != robot.id])
+        # if any(dist_robots < 0.1):
+        #     return np.array([-1])
+        nests = [ent for ent in entities.values() if isinstance(ent, GroundArea)]
+        assert len(nests) > 0
+        inside_nests = np.array([np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius for nest in nests])
+        if any(inside_nests):
+            return self.qualities[np.where(inside_nests)[0][0]]
+        return np.array([0.])
+
+    def done_generator(self, entities):
+        return False
+
+    def reset(self):
+        super().reset()
+        np.random.shuffle(self.qualities)
 
 class TaskManager:
     def __init__(self, duration=1000, use_done=False, num_slots=2, rand_order=True):
@@ -97,6 +209,7 @@ class TaskManager:
         self.tasks.append(task)
 
     def __call__(self, entities):
+        self.t += 1
         # print(self.t,self.current_task_idx)
         if self.block >= self.num_slots:
             return
@@ -110,11 +223,11 @@ class TaskManager:
         robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
         for robot in robot_names:
             entities[robot].task = np.array([self.current_task_idx / (self.num_tasks - 1)])
-        self.t += 1
+        
 
     def render_task(self):
         if global_states.RENDER:
-            if self.t == 0:
+            if self.t == 1:
                 self.label_id = p.addUserDebugText(str(self.current_task_idx), (0,0,0.1), 
                         textColorRGB=(0,0,0), textSize=2, )
             else:
@@ -133,7 +246,6 @@ class TaskManager:
     def current_task_idx(self):
         return self.task_order[self.block] if self.block < self.num_slots else self.task_order[-1]
 
-    
     @property
     def current_task(self):
         return self.tasks[self.current_task_idx]
@@ -152,6 +264,8 @@ class TaskManager:
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
+        for tsk in self.tasks:
+            tsk.reset()
         if seed is not None:
             np.random.seed()
 

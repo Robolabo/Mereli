@@ -15,8 +15,12 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+<<<<<<< HEAD
             "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
         },
+=======
+            "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
+>>>>>>> NewAlgCls
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
@@ -47,7 +51,11 @@
         "physics_dt" : 0.04,
         "T_control" : 0.04,
         "task_manager" : {
+<<<<<<< HEAD
             "total_duration" : 2500,
+=======
+            "total_duration" : 3500,
+>>>>>>> NewAlgCls
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
@@ -55,7 +63,7 @@
                 {"name" : "goto_light", "params" : {"color" : "yellow", "range" : 0.5}}
             ]
         },
-        "objects" : {   
+        "objects" : {
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 4,
@@ -75,14 +83,14 @@
                     "positions" : {"name" : "grid",  "params" : {"shuffle" : true}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [2,3], "stimuli" : "task", "replace_value" : 0}},
+                "perturbations" : {},
                 "params" : {"trainable" : true}
             },
             "light_yellow" : {
                 "type" : "light_source",    
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.3]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[0.75, 0.75, 0.15]]}}
                 },
                 "params" : {"range" : 3, "color" : "yellow"}
             },
@@ -90,7 +98,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.3]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-0.75, -0.75, 0.15]]}}
                 },
                 "params" : {"range" : 3, "color" : "red"}
             }
@@ -103,6 +111,7 @@
         "generations" : 500,
         "evaluation_steps" : 2500,
         "num_evaluations" : 1,
+<<<<<<< HEAD
         "fitness_function" : "task_switching_B",
         "populations" : {
             "p1" : {
@@ -121,6 +130,36 @@
                     "species_elites" : 2
                 }
             }
+=======
+        "fitness_function" : "task_switch",
+        "gene_info" : {
+            "connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:bias:all" : {
+                "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}},
+            "nodes:gain:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.1, "max_val" : 2}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 0.1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.02}},
+            "nodes:tau:all" : {
+                "normalization" : {"type": "linear", "min_val" : 0.5, "max_val" : 20},
+                "initialization" : {"type" : "exponential", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.02}}
+        },
+        "alg_params" : {
+            "p_weight_mut" : 0.4,
+            "p_node_mut" : 0.05,
+            "p_conn_mut" : 0.15,
+            "compatib_thresh" : 1.4,
+            "c1" : 1,
+            "c2" : 1,
+            "c3" : 1,
+            "species_elites" : 2
+>>>>>>> NewAlgCls
         }
     }
 }
