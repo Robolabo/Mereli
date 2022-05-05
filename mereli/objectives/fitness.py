@@ -335,30 +335,6 @@ class TaskSwitch(FitnessFunction):
         self._fitness = [0.0] * self.world.task_manager.num_slots
 
 
-<<<<<<< HEAD
-    def __call__(self, actions, states, info=None):
-        fA, fB = 0, 0
-        for t, rew_t in enumerate(info['robot:reward']):
-            # try:
-            #     V_t = np.sum([np.clip(info['robot:reward'][k].flatten(), a_min=0, a_max=1) * 0.95 ** (k-t) for k in range(t, len(states))],0)
-            # except:
-            #     import pdb; pdb.set_trace()
-            # F_tA = len(rew_t) / np.sum((np.clip(rew_t.flatten(), a_min=0, a_max=None)+1e-5)**-1)
-            # if sum(rew_t.flatten() > 0) > len(rew_t)//2:
-            if t <= len(states) / 2:
-                fA += np.mean(rew_t.flatten())
-            else:
-                fB += np.mean(rew_t.flatten())
-        fA /= 0.5 * len(states)
-        fB /= 0.5 * len(states)
-        fA = np.clip(fA, a_max=1, a_min=0)
-        fB = np.clip(fB, a_max=1, a_min=0)
-        # return (fA + fB)/2 + 1e-5
-        # ff =  (2 / (1/fA + 1/fB)) + 1e-5
-        # return(2 / (1/fA + 1/fB)) + 1e-5
-        return np.sqrt(fA * fB) + 1e-5
-=======
->>>>>>> NewAlgCls
 
 
 

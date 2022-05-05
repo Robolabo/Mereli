@@ -67,24 +67,11 @@ class GotoLightTask(Task):
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
         if robot.sensors['collision_sensor'].reading:
-<<<<<<< HEAD
-            return np.array([-.2])
-        others = [ent for name, ent in entities.items() if issubclass(type(ent), Robot) and name != robot_name]
-=======
             return np.array([-1])
->>>>>>> NewAlgCls
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
         other_lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color != self.color]
         assert len(lights) > 0
         distances = np.array([np.linalg.norm(robot.position[:2] - ls.position[:2]) for ls in lights])
-<<<<<<< HEAD
-        dist_others = np.array([np.linalg.norm(robot.position[:2] - rob.position[:2]) for rob in others])
-        if any(distances < self.range):
-            if all(dist_others < 1):
-                return np.array([np.mean(dist_others < 1)])
-            # return np.array([1 - (min(distances)/self.range) ** 2])
-        return np.array([0])
-=======
         if min(distances) < self.range:
             return np.array([1])#np.array([1 - (min(distances) / self.range) ** 2])
         else:
@@ -92,7 +79,6 @@ class GotoLightTask(Task):
             if min(distances) < self.range:
                 return np.array([-1])
         return np.array([0.])
->>>>>>> NewAlgCls
 
     def done_generator(self, entities):
         lights = [ent for ent in entities.values() if isinstance(ent, LightSource) and ent.color == self.color]
