@@ -48,7 +48,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 15,
+                "num_instances" : 10,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
@@ -62,17 +62,25 @@
                     "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.1}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {},
+                "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,3,5,7,9], "stimuli" : "reward", "replace_value" : -1}},
                 "comm_sys" : {"name" :"IR_comm", "params" : {}},
                 "params" : {"trainable" : true}
             },
             "ground_area" : {
-                "type" : "ground_area",    
-                "num_instances": 5,
+                "type" : "ground_area",
+                "num_instances": 4,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1.5,-1.5], "high": [1.5,1.5], "size" : 2, "min_dist" : 0.5}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
                 },
                 "params" : {"radius" : 0.3, "color" : "grey"}
+            },
+            "ground_area2" : {
+                "type" : "ground_area",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
+                },
+                "params" : {"radius" : 0.3, "color" : "green"}
             }
         }
     },

@@ -110,7 +110,7 @@ class NEAT_Population(Population):
         #* Compute the number of offspring for each species
         # species_offsprings = compute_spawn(self.species, self.pop_size, 2)
         total_fitness = np.sum([sp.adjusted_fitness for sp in self.species])
-        species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]).flatten() / total_fitness).astype(int)
+        species_offsprings = np.round(np.array([self.pop_size * sp.adjusted_fitness for sp in self.species]) / total_fitness).astype(int)
         species_offsprings[species_offsprings < 2] = 2
         while sum(species_offsprings) < self.pop_size:
             species_offsprings[np.random.randint(len(self.species))] += 1

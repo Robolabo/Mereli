@@ -15,12 +15,7 @@
         "synapse_model" : "static_synapse",
         "ensembles": {
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
-<<<<<<< HEAD
-            "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
-        },
-=======
             "OUT_STATE" : {"n" : 1, "params" : {"activation" : "sigmoid"}}},
->>>>>>> NewAlgCls
         "outputs" : {
             "outA" : {"ensemble" : "OUT_MOT", "actuator" : "joint_velocity_actuator", "enc": "real"},
             "outB" : {"ensemble" : "OUT_STATE", "actuator" : "stateful_tx", "enc": "real"}
@@ -51,11 +46,7 @@
         "physics_dt" : 0.04,
         "T_control" : 0.04,
         "task_manager" : {
-<<<<<<< HEAD
-            "total_duration" : 2500,
-=======
             "total_duration" : 3500,
->>>>>>> NewAlgCls
             "num_slots" : 2,
             "use_done" : false,
             "tasks" : [
@@ -76,7 +67,7 @@
                     "collision_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5},
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8},
                     "stateful_tx" : {"state_dim" : 1, "range" : 20}  
                 },
                 "initializers" : {
@@ -109,28 +100,8 @@
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 500,
-        "evaluation_steps" : 2500,
+        "evaluation_steps" : 3000,
         "num_evaluations" : 1,
-<<<<<<< HEAD
-        "fitness_function" : "task_switching_B",
-        "populations" : {
-            "p1" : {
-                "objects" : ["synapses:weights:all", "neurons:tau:all", "neurons:bias:all"],
-                "max_vals" : [5, 0.6, 2],
-                "min_vals" : [-5, -0.7, -2],
-                "params" : {
-                    "encoding" : "real",
-                    "p_weight_mut" : 0.4,
-                    "p_node_mut" : 0.09,
-                    "p_conn_mut" : 0.15,
-                    "compatib_thresh" : 1.4,
-                    "c1" : 1,
-                    "c2" : 1,
-                    "c3" : 1,
-                    "species_elites" : 2
-                }
-            }
-=======
         "fitness_function" : "task_switch",
         "gene_info" : {
             "connections:weight:all" : {
@@ -159,7 +130,6 @@
             "c2" : 1,
             "c3" : 1,
             "species_elites" : 2
->>>>>>> NewAlgCls
         }
     }
 }

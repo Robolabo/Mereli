@@ -11,21 +11,15 @@ class CollisionSensor(Sensor):
     """
     def __init__(self, *args, **kwargs):
         super(CollisionSensor, self).__init__(*args, **kwargs)
-        self.reading = 0
 
     def step(self, hierarchy):
         is_collision = 0
-        self.reading = 0
         for obj in hierarchy:
             if obj.tangible:#type(obj).__name__ in ['Wall', 'Robot3D']:
                 collision_info = p.getContactPoints(self.sensor_owner.id, obj.id, physicsClientId=self.sensor_owner.physics_client.client)
                 if len(collision_info) > 0:
                         is_collision = 1
             if is_collision:
-                self.reading = 1
                 return is_collision
-        return is_collision
-    
-    def reset(self):
-        self.reading = 0
+        return is_collision  
        

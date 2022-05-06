@@ -12,7 +12,7 @@ from mereli.communication import IRFrame
 class StatefulCommTX(Actuator):
     """
     """
-    def __init__(self, *args, dt=0.05, tau_m=5, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, dt=0.05, tau_m=1, range=4, state_dim=5, **kwargs):
         super(StatefulCommTX, self).__init__(*args, **kwargs)
         self.state_dim = state_dim
         self.range = range

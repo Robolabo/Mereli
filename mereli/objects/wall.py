@@ -21,17 +21,17 @@ class Wall(WorldObject):
         # Tmp solution
         self.resize_wall()
         self.resize_wall2D()
-        super(Wall, self).__init__('tmp/wall_{}x{}x{}'.format(width, height, .2), *args, static=True,\
+        super(Wall, self).__init__('tmp/wall_{}x{}x{}'.format(width, height, 1), *args, static=True,\
             controller=None, tangible=True, luminous=False, **kwargs)
     
     def resize_wall(self):
-        if not os.path.isfile("mereli/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height, 0.2)): 
+        if not os.path.isfile("mereli/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height, 1)): 
             tree = ET.parse("mereli/models/entities/wall/wall.urdf")
             root = tree.getroot()
             # aa = root.get('link').get('link')
-            root.findall(".//link/visual/geometry/box")[0].attrib['size'] = '{} {} 0.2'.format(self.width, self.height)
-            root.findall(".//link/collision/geometry/box")[0].attrib['size'] = '{} {} 0.2'.format(self.width, self.height)
-            tree.write(open("mereli/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height,0.2), 'wb'))
+            root.findall(".//link/visual/geometry/box")[0].attrib['size'] = '{} {} 1'.format(self.width, self.height)
+            root.findall(".//link/collision/geometry/box")[0].attrib['size'] = '{} {} 1'.format(self.width, self.height)
+            tree.write(open("mereli/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height,1), 'wb'))
     
     def resize_wall2D(self):
         file_tmp = "mereli/models/tmp/wall_{}x{}x2.json".format(self.width, self.height)
