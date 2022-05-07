@@ -165,10 +165,14 @@ class GotoNestTask(Task):
         #     return np.array([-1])
         # nests = [ent for ent in entities.values() if isinstance(ent, GroundArea)]
         nest = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color == 'green'][0]
-
+        other_nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color != 'green'] 
         inside_nest = np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius
         if inside_nest:
             return np.array([1.])#self.qualities[np.where(inside_nests)[0][0]]
+        else:
+            inside_other = [np.linalg.norm(robot.position[:2] - other.position[:2]) < other.radius for other in other_nests]
+            if any(inside_other):
+                return np.array([-1])
         return np.array([0.])
 
     def done_generator(self, entities):
