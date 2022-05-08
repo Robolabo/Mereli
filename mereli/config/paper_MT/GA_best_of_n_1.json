@@ -34,8 +34,8 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.025,
-        "T_control" : 0.025,
+        "physics_dt" : 0.03,
+        "T_control" : 0.03,
         "task_manager" : {
             "total_duration" : 2000,
             "num_slots" : 1,

@@ -12,6 +12,9 @@ def uniform_crossover(genotypeA, genotypeB, crossover_prob=1.):
     same probability.
     """
     childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    for child in [childA, childB]:
+        child.gene_info = genotypeA.gene_info
+        child.neural_net_config = genotypeA.neural_net_config
     for connA, connB in zip(genotypeA.connections, genotypeB.connections):
         if np.random.random() < 0.5:
             childA.add_connection(connA.copy())
@@ -45,6 +48,9 @@ def onepoint_crossover(genotypeA, genotypeB, crossover_prob=1.):
         Parent 2: DE|F  -> DE|C
     """
     childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    for child in [childA, childB]:
+        child.gene_info = genotypeA.gene_info
+        child.neural_net_config = genotypeA.neural_net_config
     cut_conn_idx = np.random.randint(len(genotypeA.connections))
     cut_nodes_idx = np.random.randint(len(genotypeA.nodes))
     for i, (connA, connB) in enumerate(zip(genotypeA.connections, genotypeB.connections)):
@@ -61,6 +67,9 @@ def onepoint_crossover(genotypeA, genotypeB, crossover_prob=1.):
 @evo_operator_registry(name='blxalpha_crossover')
 def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
     childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    for child in [childA, childB]:
+        child.gene_info = genotypeA.gene_info
+        child.neural_net_config = genotypeA.neural_net_config
     for connA, connB in zip(genotypeA.connections, genotypeB.connections):
         childA.add_connection(connA.copy())
         childB.add_connection(connB.copy())
@@ -75,6 +84,8 @@ def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
         childA.add_node(nodeA.copy())
         childB.add_node(nodeB.copy())
         for param in nodeA.parameters:
+            if param not in [x.split(':')[1] for x in genotypeA.gene_info]:
+                continue 
             paramA = nodeA.parameters[param]
             paramB = nodeB.parameters[param]
             g_min = min(paramA, paramB) - alpha * np.abs(paramA - paramB)
