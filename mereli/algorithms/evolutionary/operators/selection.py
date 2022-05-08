@@ -22,7 +22,7 @@ def truncation_selection(population, n_sel):
     return sorted(population, key=lambda x: x.fitness, reverse=True)[:n_sel]
 
 @evo_operator_registry(name='roulette_selection')
-def roulette_selection(population, fitness, n_sel):
+def roulette_selection(population, n_sel):
     """ Roulette selection operator of GA. It assigns a fitness proportionale 
     probability to each genotype and samples n_sel parents from a categorical 
     dist. with the computed probabilities.
@@ -37,14 +37,14 @@ def roulette_selection(population, fitness, n_sel):
             selected genotypes (respecting the same order)
     =========================================================================
     """
-    probs = [f / np.sum(fitness) for f in fitness]
+    fitness_sum = np.sum([geno.fitness for geno in population])
+    probs = [geno.fitness / fitness_sum for geno in population]
     sel_idxs = np.random.choice(len(population), p=probs, replace=True, size=n_sel)
     selected = [population[i] for i in sel_idxs]
-    fitness_sel = [fitness[i] for i in sel_idxs]
-    return selected, fitness_sel
+    return selected
 
 @evo_operator_registry(name='lin_rank_selection')
-def lin_rank_selection(population, fitness, n_sel, sp=1.5):
+def lin_rank_selection(population, n_sel, sp=1.5):
     """ Linear rank selection operator of GA. Samples stochastically n_sel 
     genotypes using ranks as probabilities in order to mitigate genetic drift.
     Ranks are computed linearly, so that the prob. decreases linearly with the 
@@ -61,16 +61,17 @@ def lin_rank_selection(population, fitness, n_sel, sp=1.5):
             selected genotypes (respecting the same order)
     =========================================================================
     """
-    fitness_order = np.argsort(fitness)
-    population = [population[ii] for ii in fitness_order]
+    ordered = sorted(copy.deepcopy(population), key=lambda genotype: genotype.fitness, reverse=True)
+    # fitness_order = np.argsort(fitness)
+    # population = [population[ii] for ii in fitness_order]
     # * First individual is the worst
     probs = [2 - sp + 2 * (sp - 1) * i / (len(population) - 1) for i in range(len(population))]
     probs[0] += 1 - sum(probs)
 
     sel_idxs = np.random.choice(len(population), replace=True, p=probs, size=n_sel)
-    selected = [population[i] for i in sel_idxs]
-    fitness_sel = [fitness[i] for i in sel_idxs]
-    return selected, fitness_sel
+    selected = [ordered[i] for i in sel_idxs]
+    # fitness_sel = [fitness[i] for i in sel_idxs]
+    return selected
 
 @evo_operator_registry(name='nonlin_rank_selection')
 def nonlin_rank_selection(population, n_sel, p_best=.1):

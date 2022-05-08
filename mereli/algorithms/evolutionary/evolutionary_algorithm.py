@@ -124,9 +124,6 @@ class EvolutionaryAlgorithm:
         return {
             'generation' : self.generation,
             'population' : self.population,
-            'innovation' : self.innovation,
-            'species_count' : self.species_count,
-            'species' : self.species,
             'novelty_search' : self.novelty_search,
             'evolution_hist' : self.evolution_history,
         }

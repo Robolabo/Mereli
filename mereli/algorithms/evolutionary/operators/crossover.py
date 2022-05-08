@@ -4,38 +4,32 @@ from mereli.register import evo_operator_registry
 from ..gene import GraphGenotype
 
 @evo_operator_registry(name='uniform_crossover')
-def uniform_crossover(parents, random_pairs=False, crossover_prob=1.):
+def uniform_crossover(genotypeA, genotypeB, crossover_prob=1.):
     """ Uniform crossover of GA. Genotypes are pairwise grouped and 
     recombined, resulting in two children per recombination. A recombination 
     is applied with a fixed probability crossover_prob. In uniform crossover 
     each gene of the children is selected from one of the parents with the 
     same probability.
-    ========================================================================
-    - Args:
-        parents [list of np.ndarray]: list of genotypes to be recombined.
-        random_pairs [bool]: whether to shuffle the parents or mate them 
-                preserving the order. Note that the mating operation can be
-                accomplished using the mating operators. 
-        crossover_prob [float]: probability of performing crossover between
-                two parents.
-    - Returns:
-        offspring [list of np.ndarray]: list of offspring genotypes 
-                resulting from recombination.
-    ========================================================================
     """
-    offspring = []
-    if random_pairs:
-        np.random.shuffle(parents)
-    if len(parents) % 2:
-        offspring.append(parents.pop(0))
-    for parent1, parent2  in zip(parents[::2], parents[1::2]):
-        crossover_mask = np.random.randint(2, size=parent1.shape[0])
-        new1 = parent1 * crossover_mask + parent2 * (1 - crossover_mask)
-        new2 = parent2 * crossover_mask + parent1 * (1 - crossover_mask)
-        do_crossover = np.random.random() < crossover_prob
-        offspring.append((parent1, np.hstack(new1))[do_crossover])
-        offspring.append((parent2, np.hstack(new2))[do_crossover])
-    return offspring
+    childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    for connA, connB in zip(genotypeA.connections, genotypeB.connections):
+        if np.random.random() < 0.5:
+            childA.add_connection(connA.copy())
+            childB.add_connection(connB.copy())
+        else:
+            childA.add_connection(connB.copy())
+            childB.add_connection(connA.copy())
+    for nodeA, nodeB in zip(genotypeA.nodes, genotypeB.nodes):
+        if np.random.random() < 0.5:
+            childA.add_node(nodeA.copy())
+            childB.add_node(nodeB.copy())
+        else:
+            childA.add_node(nodeB.copy())
+            childB.add_node(nodeA.copy())
+    if np.random.random() < crossover_prob:
+        return [childA, childB]
+    else:
+        return [genotypeA, genotypeB]
 
 @evo_operator_registry(name='onepoint_crossover')
 def onepoint_crossover(parents, random_pairs=False, crossover_prob=1.):
@@ -77,33 +71,32 @@ def onepoint_crossover(parents, random_pairs=False, crossover_prob=1.):
     return offspring
 
 @evo_operator_registry(name='blxalpha_crossover')
-def blxalpha_crossover(parents, random_pairs=False, crossover_prob=1., alpha=.3):
-    offspring = []
-    if random_pairs:
-        np.random.shuffle(parents)
-    if len(parents) % 2:
-        offspring.append(parents.pop(0))
-    for parent1, parent2 in zip(parents[::2], parents[1::2]):
-        p1_genes = parent1.values
-        p2_genes = parent2.values
-        
-        genes_min = np.min((p1_genes, p2_genes), axis=0) - alpha * np.abs(p1_genes - p2_genes)
-        genes_max = np.max((p1_genes, p2_genes), axis=0) + alpha * np.abs(p1_genes - p2_genes)
-        new1 = np.random.random(size=len(parent1)) * (genes_max - genes_min) + genes_min
-        new2 = np.random.random(size=len(parent2)) * (genes_max - genes_min) + genes_min
-        do_crossover = np.random.random() < crossover_prob
-        
-        new_genotype1 = copy.deepcopy(parent1)
-        new_genotype2 = copy.deepcopy(parent2)
-        if do_crossover:
-            for new_gene_val, new_gene in zip(new1, new_genotype1):
-                new_gene.value = new_gene_val
-            for new_gene_val, new_gene in zip(new2, new_genotype2):
-                new_gene.value = new_gene_val
-        offspring.append(new_genotype1)
-        offspring.append(new_genotype2)
-    return offspring
-
+def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
+    childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    for connA, connB in zip(genotypeA.connections, genotypeB.connections):
+        childA.add_connection(connA.copy())
+        childB.add_connection(connB.copy())
+        for param in connA.paramters:
+            paramA = connA.parameters[param]
+            paramB = connB.parameters[param]
+            g_min = min(paramA, paramB) - alpha * np.abs(paramA - paramB)
+            g_max = max(paramA, paramB) + alpha * np.abs(paramA - paramB)
+            childA.get_connection(connA.name).parameters[param] = np.random.random() * (g_max - g_min) + g_min
+            childB.get_connection(connB.name).parameters[param] = np.random.random() * (g_max - g_min) + g_min
+    for nodeA, nodeB in zip(genotypeA.nodes, genotypeB.nodes):
+        childA.add_node(nodeA.copy())
+        childB.add_node(nodeB.copy())
+        for param in nodeA.paramters:
+            paramA = nodeA.parameters[param]
+            paramB = nodeB.parameters[param]
+            g_min = min(paramA, paramB) - alpha * np.abs(paramA - paramB)
+            g_max = max(paramA, paramB) + alpha * np.abs(paramA - paramB)
+            childA.get_node(nodeA.name).parameters[param] = np.random.random() * (g_max - g_min) + g_min
+            childB.get_node(nodeB.name).parameters[param] = np.random.random() * (g_max - g_min) + g_min
+    if np.random.random() < crossover_prob:
+        return [childA, childB]
+    else:
+        return [genotypeA, genotypeB]
 
 @evo_operator_registry(name='combination_crossover')
 def combination_crossover(parents, random_pairs=False, crossover_prob=1., alpha=.3):
