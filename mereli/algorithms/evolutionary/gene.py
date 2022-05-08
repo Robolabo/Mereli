@@ -193,7 +193,6 @@ class GraphGenotype:
         for conn in self.connections:
             phenotype.add_synapse(conn.name, **conn.as_dict())    
         phenotype.build()
-        import pdb; pdb.set_trace()
         return phenotype
 
     def add_node(self, gene):   
