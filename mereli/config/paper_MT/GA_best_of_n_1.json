@@ -110,7 +110,7 @@
                 "mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.02}}
         },
         "alg_params" : {
-            "crossover_operator" : "blxalpha",
+            "crossover_operator" : "uniform",
             "num_elite" : 2
         }
     }
