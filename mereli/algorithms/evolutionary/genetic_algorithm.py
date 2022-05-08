@@ -48,35 +48,3 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         self.population = elites + offspring
         # Dynamic Mutation Prob.
         # self.mutation_prob = exp_schedule(self.mutation_prob, 0.01)
-
-
-    # def save_population(self, generation):
-    #     """ Saves the checkpoint with the necessary information to resume the 
-    #     evolution.
-    #     """
-    #     pop_checkpoint = {
-    #         'populations' : {name : np.stack(pop.population) for name, pop in self.populations.items()},
-    #         'generation' : generation,
-    #         'mutation_prob' : {name : pop.mutation_prob for name, pop in self.populations.items()},
-    #         'evolution_hist' : self.evolution_history,
-    #     }
-    #     file_name = 'mereli/checkpoints/populations/' + self.checkpoint_name
-    #     save_pickle(pop_checkpoint, file_name)
-    #     logging.info('Successfully saved evolution checkpoint.')
-        
-    # def load_population(self):
-    #     """ Loads a previously saved checkpoint to resume evolution.
-    #     """
-    #     checkpoint = load_pickle('mereli/checkpoints/populations/' + self.checkpoint_name)
-    #     logging.info('Resuming GA evolution using checkpoint ' +  self.checkpoint_name)
-    #     #! for robot in self.world.robots:
-    #     #!    robot.controller.neural_net.graph = checkpoint['ann_graph']
-    #     for name, pop in checkpoint['populations'].items():
-    #         self.populations[name].population = [v for v in checkpoint['populations'][name]]
-    #         self.populations[name].mutatation_prob = checkpoint['mutation_prob'][name]
-    #         robots = [copy.deepcopy(robot) for robot in self.world.robots.values()]
-    #         interface = GeneticInterface(robots[0].controller.neural_network)
-    #         self.populations[name].segment_lengths = [interface.submit_query(query, primitive='LEN')\
-    #                                         for query in self.populations[name].objects]
-    #     self.init_generation = checkpoint['generation']
-    #     self.evolution_history = checkpoint['evolution_hist']

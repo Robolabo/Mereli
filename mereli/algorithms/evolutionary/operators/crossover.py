@@ -32,7 +32,7 @@ def uniform_crossover(genotypeA, genotypeB, crossover_prob=1.):
         return [genotypeA, genotypeB]
 
 @evo_operator_registry(name='onepoint_crossover')
-def onepoint_crossover(parents, random_pairs=False, crossover_prob=1.):
+def onepoint_crossover(genotypeA, genotypeB, crossover_prob=1.):
     """ One-point crossover of GA. Genotypes are pairwise grouped and 
     recombined, resulting in two children per recombination. A recombination 
     is applied with a fixed probability crossover_prob. In one-point 
@@ -43,32 +43,20 @@ def onepoint_crossover(parents, random_pairs=False, crossover_prob=1.):
         Parent 1: AB|C  -> AB|F
                         
         Parent 2: DE|F  -> DE|C
-    ========================================================================
-    - Args:
-        parents [list of np.ndarray]: list of genotypes to be recombined.
-        random_pairs [bool]: whether to shuffle the parents or mate them 
-                preserving the order. Note that the mating operation can be
-                accomplished using the mating operators. 
-        crossover_prob [float]: probability of performing crossover between
-                two parents.
-    - Returns:
-        offspring [list of np.ndarray]: list of offspring genotypes 
-                resulting from recombination.
-    ========================================================================
     """
-    offspring = []
-    if random_pairs:
-        np.random.shuffle(parents)
-    if len(parents) % 2:
-        offspring.append(parents.pop(0))
-    for parent1, parent2 in zip(parents[::2], parents[1::2]):
-        cut_idx = np.random.randint(parent1.shape[0])
-        new1 = np.hstack((parent1[:cut_idx], parent2[cut_idx:]))
-        new2 = np.hstack((parent2[:cut_idx], parent1[cut_idx:]))
-        do_crossover = np.random.random() < crossover_prob
-        offspring.append((parent1, np.hstack(new1))[do_crossover])
-        offspring.append((parent2, np.hstack(new2))[do_crossover])
-    return offspring
+    childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
+    cut_conn_idx = np.random.randint(len(genotypeA.connections))
+    cut_nodes_idx = np.random.randint(len(genotypeA.nodes))
+    for i, (connA, connB) in enumerate(zip(genotypeA.connections, genotypeB.connections)):
+        childA.add_connection(connA if i <= cut_conn_idx else connB)
+        childB.add_connection(connB if i <= cut_conn_idx else connA)
+    for i, (nodeA, nodeB) in enumerate(zip(genotypeA.nodes, genotypeB.nodes)):
+        childA.add_node(nodeA if i <= cut_nodes_idx else nodeB)
+        childB.add_node(nodeB if i <= cut_nodes_idx else nodeA)  
+    if np.random.random() < crossover_prob:
+        return [childA, childB]
+    else:
+        return [genotypeA, genotypeB]
 
 @evo_operator_registry(name='blxalpha_crossover')
 def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
@@ -76,7 +64,7 @@ def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
     for connA, connB in zip(genotypeA.connections, genotypeB.connections):
         childA.add_connection(connA.copy())
         childB.add_connection(connB.copy())
-        for param in connA.paramters:
+        for param in connA.parameters:
             paramA = connA.parameters[param]
             paramB = connB.parameters[param]
             g_min = min(paramA, paramB) - alpha * np.abs(paramA - paramB)
@@ -86,7 +74,7 @@ def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
     for nodeA, nodeB in zip(genotypeA.nodes, genotypeB.nodes):
         childA.add_node(nodeA.copy())
         childB.add_node(nodeB.copy())
-        for param in nodeA.paramters:
+        for param in nodeA.parameters:
             paramA = nodeA.parameters[param]
             paramB = nodeB.parameters[param]
             g_min = min(paramA, paramB) - alpha * np.abs(paramA - paramB)
@@ -117,6 +105,7 @@ def combination_crossover(parents, random_pairs=False, crossover_prob=1., alpha=
 
 @evo_operator_registry(name='multipoint_crossover')
 def multipoint_crossover(parents, ncuts=3, crossover_prob=1.):
+    #! TODO
     offspring = []
     if len(parents) % 2: 
         offspring.append(parents.pop(np.random.choice(len(parents))))
@@ -179,7 +168,6 @@ def combined_crossover(parents, eta=1., crossover_prob=1.):
 
 
 def neat_crossover(parents, crossover_prob=0.8, disable_prob=0.75):
-    #! First version, to be optimized
     offspring = []
     if len(parents) % 2 != 0:
         offspring.append(parents.pop(0))
