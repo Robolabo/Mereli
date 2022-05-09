@@ -5,13 +5,14 @@
         "time_scale" : 1,
         "stimuli": {
             "I1" : {"n" : 8, "sensor" : "IR_receiver:msg"},
-            "I2" : {"n" : 1, "sensor" : "ground_sensor"},
-            "I3" : {"n" : 1, "sensor" : "reward"}
+            "I2" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I3" : {"n" : 1, "sensor" : "ground_sensor"},
+            "I4" : {"n" : 1, "sensor" : "reward"}
         },
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "H1" :  {"n" : 10, "params" : {"activation" : "sigmoid"}},
+            "H1" :  {"n" : 20, "params" : {"activation" : "sigmoid"}},
             "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
             "OUT_COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
         },
@@ -22,6 +23,9 @@
         "synapses" :  {
             "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
             "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
+            "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
+            "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
+            "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.4},
             "H1-M" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
             "H1-C" : {"pre":"H1","post":"OUT_COMM", "trainable":true, "p":1.0}
         },
