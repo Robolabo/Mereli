@@ -1,6 +1,6 @@
 from .utils import *
 from .base_actuator import  Actuator, HighLevelActuator
-from .wheel_actuator import  WheelActuator
+from .wheel_actuator import  *
 from .communication_transmitter import CommunicationTransmitter
 from .RF_transmitter import RF_Transmitter
 from .led_actuator import LedActuator

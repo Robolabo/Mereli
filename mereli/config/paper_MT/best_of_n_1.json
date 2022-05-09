@@ -11,12 +11,12 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "OUT_MOT" : {"n" : 2, "params" : {"activation" : "tanh"}},
+            "OUT_MOT" : {"n" : 5, "params" : {"activation" : "tanh"}},
             "OUT_COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
         },
         "outputs" : {
             "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
-            "outA" : {"ensemble" : "OUT_MOT", "actuator" :  "joint_velocity_actuator"}
+            "outA" : {"ensemble" : "OUT_MOT", "actuator" :  "disc_wheel_actuator"}
         },
         "synapses" :  {
             "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
@@ -27,8 +27,8 @@
             "I3-M" : {"pre":"I3","post":"OUT_MOT", "trainable":true, "p":1.0}
         },
         "decoding" : {
-            "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-            "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
+            "outB" : {"scheme" : "IdentityDecoding", "params" : {}},
+            "outA" : {"scheme" : "SoftmaxDecoding", "params" : {}}
         },
         "learning_rule" : {}
     },
@@ -48,14 +48,14 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 15,
+                "num_instances" : 5,
                 "controller" : "neural_controller",
                 "sensors" : {
                     "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
                     "ground_sensor" : {}                
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10},
+                    "disc_wheel_actuator" : {"max_velocity" : 5},
                     "IR_transmitter" : {"range" : 0.5, "msg_length":1}
                 },
                 "initializers" : {

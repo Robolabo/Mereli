@@ -152,17 +152,6 @@ class EvolutionaryAlgorithm:
     def rank(self):
         return MPI.COMM_WORLD.Get_rank() if MPI_AVAILABLE else 0
 
-    def initialize_population(self, interface):
-        raise NotImplementedError
-
-    def save_population(self, generation):
-        """ Save the algorithm checkpoint. To be implemented in the particular algorithm. """
-        raise NotImplementedError
-
-    def load_population(self):
-        """ Load the algorithm checkpoint. To be implemented in the particular algorithm. """
-        raise NotImplementedError
-
     def evaluate(self, trials=30, timesteps=3000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 

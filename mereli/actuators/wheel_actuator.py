@@ -34,3 +34,31 @@ class WheelActuator(Actuator):
         self.actuator_owner.orientation = self.actuator_owner.orientation % (2 * np.pi)
         self.delta_pos = np.zeros(2)
         self.delta_theta = 0.0
+
+
+@actuator_registry(name='disc_wheel_actuator')
+class DiscreteWheelActuator(Actuator):
+    """ 
+    """
+    def __init__(self, *args, max_velocity=8, **kwargs):
+        super(DiscreteWheelActuator, self).__init__(*args, **kwargs)
+        self.max_velocity = max_velocity
+        self.joint_ids = [0,1]
+    
+    def step(self, action):
+        v_mot = np.array({
+            0 : [0,0], # Stop
+            1 : [1,1], # Go straight
+            2 : [1,-1], # Turn Right
+            3 : [-1,1], # Turn Left
+            4 : [-1,-1], # Go back
+        }.get(action[0], [0,0]))
+        v_mot *= self.max_velocity # Convert range [-1,1] to [-w_max, w_max].
+        self.physics_client.control_joints(self.owner_id, self.joint_ids, v_mot, control_type='velocity')
+
+            
+    def reset(self,):
+        """ Resets the actuator."""
+        if self.physics_client is not None:
+            self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
+        
