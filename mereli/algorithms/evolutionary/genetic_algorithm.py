@@ -1,5 +1,7 @@
 import copy
 from itertools import chain
+
+from mereli.utils.decorators import time_elapsed
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from mereli.register import algorithm_registry, evo_operators
 
@@ -25,6 +27,7 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         self.num_elite = num_elite
         self.population = []
 
+    @time_elapsed
     def evolve(self):
         #* --- Save elite based on highest fitness ---
         elites = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[:self.num_elite]
