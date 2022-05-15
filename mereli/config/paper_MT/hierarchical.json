@@ -12,7 +12,7 @@
         "neuron_model" : "rate_model",
         "synapse_model" : "static_synapse",
         "ensembles": {
-            "BEHAVIOR" : {"n" : 2, "params" : {"activation" : "sigmoid"}},
+            "BEHAVIOR" : {"n" : 3, "params" : {"activation" : "sigmoid"}},
             "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
         },
         "outputs" : {
