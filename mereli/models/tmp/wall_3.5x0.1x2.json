@@ -1,0 +1,1 @@
+{"links": [{"name": "base", "mass": 1000, "xy": [0, 0], "rpy": 0, "moment": {"type": "poly", "params": {"vertices": [[-175.0, -5.0], [175.0, -5.0], [175.0, 5.0], [-175.0, 5.0]]}}}], "shapes": [{"body": "base", "type": "poly", "color": "0,0,0", "params": {"vertices": [[-175.0, -5.0], [175.0, -5.0], [175.0, 5.0], [-175.0, 5.0]]}}], "joints": []}

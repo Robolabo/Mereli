@@ -62,7 +62,7 @@ class Species:
         #* Node parameter's distance
         if len(node_params):
             for param in node_params:
-                if param == 'activation':
+                if param not in genotype.gene_info:
                     continue
                 param_repr = np.array([self.representative.get_node(node).parameters[param] 
                             for node in geno_nodes.intersection(repr_nodes)])

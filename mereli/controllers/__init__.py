@@ -4,6 +4,7 @@ from .controller import Controller, RobotController
 from .random_movement_controller import RandomMovementController
 from .braitenberg import Braitenberg2B, Braitenberg2A
 from .basic_obstacle_avoider import BasicObstacleAvoider
+from .aggregation_controller import *
 from .neural_controller import NeuralController
 
 #* Light Controllers

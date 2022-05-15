@@ -15,19 +15,21 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
-                "controller" : "basic_obstacle_avoider",
+                "num_instances" : 15,
+                "controller" : "follow_robot",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.74}
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10},
+                    "IR_transmitter" : {"range" : 0.5, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "grid",  "params" : {"shuffle": false}},
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1], "high" : [1,1], "size" : 2, "min_dist" : 0.2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0, "high" : 6.28}}
                 },
                 "perturbations" : {},
+                "comm_sys" : {"name" :"IR_comm", "params" : {}},
                 "params" : {"trainable" : true}
             }
         }

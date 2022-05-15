@@ -277,8 +277,9 @@ class World(object):
                     controller = None
                     if obj['controller'] is not None:
                         #* Create Controller and add sensors and actuators
-                        controller_cls = controllers[obj['controller']]
-                        controller = controller_cls()
+                        controller_cls = controllers[obj['controller'] if not isinstance(obj['controller'], dict) else obj['controller']['name']]
+                        params = obj['controller']['params'] if isinstance(obj['controller'], dict) else {}
+                        controller = controller_cls(**params)
                         controller.add_sensors_from_dict(obj['sensors'])
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):

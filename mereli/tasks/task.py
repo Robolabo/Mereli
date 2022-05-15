@@ -150,9 +150,9 @@ class GotoNestTask(Task):
         return False
 
 @task_registry(name="best_of_n")
-class GotoNestTask(Task):
+class BestofN(Task):
     def __init__(self, *args, num_areas=3, **kwargs):
-        super(GotoNestTask,self).__init__(*args, **kwargs)
+        super(BestofN,self).__init__(*args, **kwargs)
         self.num_areas = num_areas
         self.qualities = [1, 0.5, 0, 0, 0]
         np.random.shuffle(self.qualities)
@@ -165,14 +165,14 @@ class GotoNestTask(Task):
         #     return np.array([-1])
         # nests = [ent for ent in entities.values() if isinstance(ent, GroundArea)]
         nest = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color == 'green'][0]
-        other_nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color != 'green'] 
+        # other_nests = [ent for ent in entities.values() if isinstance(ent, GroundArea) and ent.color != 'green'] 
         inside_nest = np.linalg.norm(robot.position[:2] - nest.position[:2]) < nest.radius
         if inside_nest:
             return np.array([1.])#self.qualities[np.where(inside_nests)[0][0]]
-        else:
-            inside_other = [np.linalg.norm(robot.position[:2] - other.position[:2]) < other.radius for other in other_nests]
-            if any(inside_other):
-                return np.array([-1])
+        # else:
+        #     inside_other = [np.linalg.norm(robot.position[:2] - other.position[:2]) < other.radius for other in other_nests]
+        #     if any(inside_other):
+        #         return np.array([-1])
         return np.array([0.])
 
     def done_generator(self, entities):

@@ -1,0 +1,119 @@
+{
+    "checkpoint_file" : "chk_hierarchical",
+    "topology" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 8, "sensor" : "distance_sensor"},
+            "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
+            "I3" : {"n" : 1, "sensor" : "ground_sensor"},
+            "I4" : {"n" : 1, "sensor" : "reward"}
+        },
+        "neuron_model" : "rate_model",
+        "synapse_model" : "static_synapse",
+        "ensembles": {
+            "BEHAVIOR" : {"n" : 2, "params" : {"activation" : "sigmoid"}},
+            "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
+        },
+        "outputs" : {
+            "outA" : {"ensemble" : "BEHAVIOR", "actuator" :  "BEHAVIOR"},
+            "outB" : {"ensemble" : "COMM", "actuator" :  "IR_transmitter"}
+        },
+        "synapses" :  {
+            "I1-B" : {"pre":"I1","post":"BEHAVIOR", "trainable":true, "p":1.0},
+            "I2-B" : {"pre":"I2","post":"BEHAVIOR", "trainable":true, "p":1.0},
+            "I3-B" : {"pre":"I3","post":"BEHAVIOR", "trainable":true, "p":1.0},
+            "I4-B" : {"pre":"I4","post":"BEHAVIOR", "trainable":true, "p":1.0},
+            "I1-C" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
+            "I2-C" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0},
+            "I3-C" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0},
+            "I4-C" : {"pre":"I4","post":"COMM", "trainable":true, "p":1.0}
+        },
+        "decoding" : {
+            "outA" : {"scheme" : "SoftmaxDecoding", "params" : {}},
+            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
+        },
+        "learning_rule" : {}
+    },
+    "world": {
+        "name" : "square_arena",
+        "arena_params" : {
+            "height": 3,
+            "width" : 3
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 4000,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [
+                {"name" : "best_of_n", "params" : {"num_areas" : 3}}
+            ]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 15,
+                "controller" : {"name" : "neural_orchestrator", "params" : {"behaviors" : ["perlin_walk", "follow_robot", "stay"]}},
+                "sensors" : {
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
+                    "ground_sensor" : {}             
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 7},
+                    "IR_transmitter" : {"range" : 0.5, "msg_length":1}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.1}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "comm_sys" : {"name" :"IR_comm", "params" : {}},
+                "params" : {"trainable" : true}
+            },
+            "ground_area" : {
+                "type" : "ground_area",
+                "num_instances": 4,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
+                },
+                "params" : {"radius" : 0.3, "color" : "grey"}
+            },
+            "ground_area2" : {
+                "type" : "ground_area",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
+                },
+                "params" : {"radius" : 0.3, "color" : "green"}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "evolvable_object" : "robotA",
+        "population_size" : 50,
+        "generations" : 1000,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 1,
+        "fitness_function" : "reward_integration",
+        "gene_info" : {
+            "connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}}
+        },
+        "alg_params" : {
+            "p_weight_mut" : 0.4,
+            "p_node_mut" : 0.05,
+            "p_conn_mut" : 0.15,
+            "compatib_thresh" : 1.4,
+            "c1" : 1,
+            "c2" : 1,
+            "c3" : 1,
+            "species_elites" : 2
+        }
+    }
+}

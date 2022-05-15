@@ -1,22 +1,13 @@
 import numpy as np
 from mereli.controllers import RobotController
 from mereli.neural_networks import NeuralNetwork
-from mereli.register import controller_registry
+from mereli.register import controller_registry, controllers
 from mereli.utils import flatten_dict, key_of, increase_time, RegexpDict
 
 @controller_registry(name='neural_controller')
 class NeuralController(RobotController):
     """ Neural controller class for robots.
-    ==================================================================================
-    - Params:
-        topology [dict]: configuration dict of the ANN topology.
-    - Attributes:
-        neural_network [NeuralNetwork] : neural network instance to 
-                process stimuli and generate actions.
-        out_act_mapping [dict] : map between ouput names and actuator names.
-        comm_state [int] : State or mode of the communication (if any).
-                The currently implemented states are 0 (RELAY) and 1 (SEND/BROADCAST).
-    ===================================================================================
+   
     """
     def __init__(self, *args, **kwargs):
         super(NeuralController, self).__init__(*args, **kwargs)
@@ -70,36 +61,24 @@ class NeuralController(RobotController):
         if self.neural_network is not None:
             self.neural_network.reset()
 
+@controller_registry(name='neural_orchestrator')
+class NeuralOrchestrator(NeuralController):
+    def __init__(self, *args, behaviors=[], **kwargs):
+        super(NeuralOrchestrator, self).__init__(*args, **kwargs)
+        self.behaviors = [controllers[beh](*args,  **kwargs) for beh in behaviors]
+        self.init_state = self.behaviors[0]
+        self.state = self.init_state
 
+    def step(self, state, reward=0.0):
+        self.state.step(state)
+        actions = super().step(state, reward=0.0)
+        if "BEHAVIOR" in actions:
+            self.state = self.behaviors[actions["BEHAVIOR"].item()]
+            actions.pop("BEHAVIOR")
+        # print(f'Executing {type(self.state).__name__}')
+        return {**self.state.step(state), **actions}
 
-
-
-# class Postprocessing:
-#     pass
-
-# import copy
-
-# #! PROV: MOVER A OTRO FICHERO
-# class Preprocessing:
-#     def __init__(self, sensors):
-#         self.operations = RegexpDict({
-#             'max' : lambda x, key=None: np.array(max(x)),
-#             'mean' : lambda x, key=None: np.mean(x),
-#             'min' : lambda x, key=None: min(x),
-#             'index=[0-9]{1,2}$' : lambda x, key: x[int(key.split('=')[1])],
-#             'index=([0-9]{1,2}:[0-9]{1,2})' : lambda x, key: np.array([x[i] for i in range(*map(int, key.split('=')[1].split(':')))]),
-#             #'index=(([0-9]{1,2}),){1,20}[0-9]{1,2}$' : lambda x, key: np.array([x[i] for i in key.split(',')])
-#         })
-#         self.sensors = {sens.split('@')[0] : sens for sens in sensors}
-#         # self.sensor_preproc = {sens : self.operations.get(op, lambda x: x)\
-#         #         for sens, op in map(lambda z: z.split('@'), filter(lambda x: '@' in x, copy(sensors)))}
-#         self.sensor_preproc = copy.deepcopy({sens.split('@')[0] : self.operations.get(sens.split('@')[1], None)
-#         if '@' in sens else None for sens in sensors})
-#     def __call__(self, stimuli):
-#         for key, stim in stimuli.items():
-#             # if key == 'yellow_light_sensor' : import pdb; pdb.set_trace()
-#             if self.sensors.get(key) and '@' in self.sensors.get(key):
-#                 ope = self.operations[self.sensors[key].split('@')[1]]
-#                 stimuli[key] = ope(stim)
-#         return stimuli        
+    def reset(self):
+        super().reset()
+        self.state = self.init_state
 
