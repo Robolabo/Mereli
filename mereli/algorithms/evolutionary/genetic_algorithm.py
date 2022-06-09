@@ -15,7 +15,7 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
             mutation_operator='gaussian',
             mating_operator='random',
             mutation_prob=0.05, 
-            crossover_prob=0.9,
+            crossover_prob=1,
             num_elite=5, **kwargs):
         super(GeneticAlgorithm, self).__init__(*args, **kwargs)
         self.selection_operator = evo_operators[selection_operator + '_selection']
@@ -44,7 +44,7 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         #* --- Apply mutation operator ---
         for genotype in offspring:
             #*Parameter Mutations
-            for gene in chain(genotype.nodes, genotype.connections):
+            for gene in chain(genotype.connections, genotype.nodes):
                 gene.mutate()
         
         #* --- Update new population ---

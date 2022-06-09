@@ -35,12 +35,28 @@ class Evaluator:
     def batch_evaluate(self, genotypes, generation):
         return [self.evaluate(geno, generation) for geno in genotypes]
 
+    def build_phenotype(self, genotype):
+        #* Build phenotype
+        for ent_name, entity in self.world.hierarchy.items():
+            phenotype = genotype.as_phenotype()
+            for target, pheno in phenotype.items():
+                target_route, target_asset = target.split('@')
+                target_route = target_route.split(':')
+                if entity.group == target_route[0]:
+                    res = entity
+                    for tar_point in target_route[1:]:
+                        res = getattr(res, tar_point) if not isinstance(res, dict) else res[tar_point]
+                    setattr(res, target_asset, pheno)
+            # entity.controller.neural_network = genotype.as_phenotype()
+
     def evaluate(self, genotype, generation):
         assert self.world is not None
         self.world.connect()
-        #* 
-        for robot in self.robots:
-            robot.controller.neural_network = genotype.as_phenotype()
+        if isinstance(genotype, list):
+            for geno_i in genotype:
+                self.build_phenotype(geno_i)
+        else:
+            self.build_phenotype(genotype)
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
         seed = generation * self.num_evaluations
@@ -63,13 +79,23 @@ class Evaluator:
             if self.fitness_fn is not None:
                 fitness += self.fitness_fn.fitness
         mean_survival_time /= self.num_evaluations
-        genotype.novelty_variables = {
-            'eval_time' : mean_survival_time, 
-            'fitness' : fitness / self.num_evaluations,
-            'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
-        }
+        #TODO Mejorar.
+        if isinstance(genotype, list):
+            for geno_i in genotype:
+                geno_i.novelty_variables = {
+                    'eval_time' : mean_survival_time, 
+                    'fitness' : fitness / self.num_evaluations,
+                    'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
+                }
+                geno_i.fitness = fitness / self.num_evaluations
+        else:
+            genotype.novelty_variables = {
+                    'eval_time' : mean_survival_time, 
+                    'fitness' : fitness / self.num_evaluations,
+                    'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
+                }
+            genotype.fitness = fitness / self.num_evaluations
         self.world.disconnect()
-        genotype.fitness = fitness / self.num_evaluations        
         return genotype
 
     @property

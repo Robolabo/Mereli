@@ -96,8 +96,8 @@ def config_checker(cfg_dict):
             if 'IR_receiver' in obj['sensors'].keys() and 'IR_transmitter' not in obj['actuators'].keys():
                 logging.warning('A communication receiver was created '\
                     'but no communication transmitter was specified. ')
-    if 'topology' in cfg_dict.keys() and cfg_dict['topology'] is not None and len(cfg_dict['topology']):
-        neural_net_checker(cfg_dict['topology'])
+    # if 'topology' in cfg_dict.keys() and cfg_dict['topology'] is not None and len(cfg_dict['topology']):
+    #     neural_net_checker(cfg_dict['topology'])
     return cfg_dict  
 
 def config_autocompletion(cfg_dict):
@@ -149,5 +149,6 @@ def config_autocompletion(cfg_dict):
                 if  obj['type'] == 'robot' and 'perturbations' not in obj.keys():
                     obj['perturbations'] = {}
     if 'topology' in cfg_dict.keys() and cfg_dict['topology'] is not None and len(cfg_dict['topology']):
-        cfg_dict['topology'] = autocomplete_neural_net(cfg_dict['topology'])
+        for name, topo in cfg_dict['topology'].items():
+            cfg_dict['topology'][name] = autocomplete_neural_net(topo)
     return cfg_dict

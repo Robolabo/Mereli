@@ -46,21 +46,37 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     # import pdb; pdb.set_trace()
 
     if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
-        ga_config = cfg_dict['algorithm']
-        algorithm_cls = algorithms[cfg_dict['algorithm']['name']]
-        opt_alg = algorithm_cls(world, ga_config['generations'], ga_config['population_size'], 
-                    num_evaluations=ga_config['num_evaluations'],
-                    resume=resume, fitness_fn=ga_config['fitness_function'], 
-                    novelty_search=ga_config.get('novelty_search'), 
-                    checkpoint_name=cfg_dict["checkpoint_file"], **ga_config["alg_params"])
-        # opt_alg.create_world(cfg_dict['world'], ann_config=cfg_dict['topology'])
-        opt_alg.initialize(ga_config["gene_info"], cfg_dict['topology'])
+        alg_config = cfg_dict['algorithm']
+        if alg_config['name'] == 'multi_EA':
+            opt_alg = algorithms['multi_EA'](world, alg_config['generations'], alg_config['population_size'], None, 
+                        num_evaluations=alg_config['num_evaluations'],
+                        resume=resume, fitness_fn=alg_config['fitness_function'], 
+                        novelty_search=alg_config.get('novelty_search'), 
+                        checkpoint_name=cfg_dict["checkpoint_file"])
+            for i, alg_cfg in enumerate(alg_config['algs'].values()):
+                alg_cls = algorithms[alg_cfg['name']]
+                alg = alg_cls(world, alg_config['generations'], 
+                        alg_config['population_size'], alg_cfg['targets'],
+                        resume=resume, fitness_fn=alg_config['fitness_function'], 
+                        checkpoint_name=cfg_dict["checkpoint_file"]+'_'+str(i+1), **alg_cfg["alg_params"])
+                alg.initialize(alg_cfg['gene_info'], cfg_dict['topology'])
+                opt_alg.add_algorithm(alg)
+        else:
+            algorithm_cls = algorithms[cfg_dict['algorithm']['name']]
+            opt_alg = algorithm_cls(world, alg_config['generations'], 
+                        alg_config['population_size'], alg_config['targets'],
+                        num_evaluations=alg_config['num_evaluations'],
+                        resume=resume, fitness_fn=alg_config['fitness_function'], 
+                        novelty_search=alg_config.get('novelty_search'), 
+                        checkpoint_name=cfg_dict["checkpoint_file"], **alg_config["alg_params"])
+            # opt_alg.create_world(cfg_dict['world'], ann_config=cfg_dict['topology'])
+            opt_alg.initialize(alg_config["gene_info"], cfg_dict['topology'])
         #* Run GA
         if not eval:
             opt_alg.run()
         else:
             #* Evaluate after evolution
-            opt_alg.evaluate()
+            opt_alg.validate()
     else: #* Non-optimizable simulation
         world.connect()
         world.reset()

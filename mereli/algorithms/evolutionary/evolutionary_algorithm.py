@@ -1,9 +1,9 @@
+from heapq import merge
 import time
-import copy
 import logging
-from collections import deque
 import numpy as np
 import matplotlib.pyplot as plt
+from mereli.register import algorithm_registry
 # try:
 #     import multiprocessing
 # except:
@@ -18,15 +18,19 @@ from mereli.utils import save_pickle, load_pickle
 from mereli.algorithms.evaluator import Evaluator
 from mereli.algorithms.evolutionary.gene import GraphGenotype
 from mereli.algorithms.evolutionary.novelty_search import NoveltySearch
-from mereli.algorithms.interfaces import InterfaceFactory
 from mereli.utils import DataLogger
 from mereli.sensors.utils import list_sensors
 from mereli.actuators.utils import list_actuators
 from mereli.algorithms.evaluator import Evaluator, MPI_Evaluator
 
+
+
+
+
+
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
-    def __init__(self, world, n_generations, population_size,
+    def __init__(self, world, n_generations, population_size, targets,
                  num_evaluations=1,
                  fitness_fn=None,
                  novelty_search=None,
@@ -34,6 +38,7 @@ class EvolutionaryAlgorithm:
                  resume=False):
         self.world = world
         self.resume = resume
+        self.targets = targets
         self.generation = 0
         self.n_generations = n_generations
         self.population_size = population_size
@@ -51,7 +56,7 @@ class EvolutionaryAlgorithm:
             else:
                 for g_id in range(self.population_size):
                     genotype = GraphGenotype(g_id)
-                    genotype.configure(gene_info, neural_net_config)
+                    genotype.configure(self.targets, gene_info, neural_net_config)
                     genotype.initialize()
                     self.population.append(genotype)
         if self.use_mpi:
@@ -60,7 +65,41 @@ class EvolutionaryAlgorithm:
 
     def create_world(self, world_config, ann_config=None):
         self.evaluator.create_world(world_config, ann_config=ann_config)
- 
+
+    def evaluate(self):
+        self.population = self.evaluator.batch_evaluate(self.population, self.generation)
+
+    def run_step(self):
+        t0 = time.time()
+        #* Evaluate all the genotypes
+        self.evaluate()
+
+        if self.rank == 0:
+            #* Apply novelty search (if any)
+            if self.novelty_search is not None:
+                for geno in self.population:
+                    self.novelty_search.update(geno.novelty_variables)
+                    ns_metric = self.novelty_search.novelty_metric(geno.novelty_variables)
+                    ns_weight = self.novelty_search.weight
+                    geno.fitness = (1 - ns_weight) * geno.fitness + ns_weight * ns_metric
+            #* Save evolution state 
+            self.save()
+            time_taken = time.time() - t0
+            #* Print Stuff
+            print(f"Generation {self.generation+1}: mean fitness={self.mean_fitness:3f},",
+                    f"max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.", 
+                    flush=True)
+            #* Evolve Population
+            self.evolve()
+            self.generation += 1
+        self.broadcast_population()
+    
+    def broadcast_population(self):
+        if self.use_mpi:
+            #* Broadcast evolved population to all nodes
+            self.population = MPI.COMM_WORLD.bcast(self.population, root=0)
+            MPI.COMM_WORLD.Barrier()
+
     def run(self):
         """ Run method common to all evolutionary computation algs. It parallelizes the 
         genotype evaluation to obtain the fitness and performs the evolution step. 
@@ -70,31 +109,7 @@ class EvolutionaryAlgorithm:
         information to resume the evolution periodically.
         """
         while self.generation <= self.n_generations:
-            t0 = time.time()
-            #* Evaluate all the genotypes
-            self.population = self.evaluator.batch_evaluate(self.population, self.generation)
-            if self.rank == 0:
-                #* Apply novelty search (if any)
-                if self.novelty_search is not None:
-                    for geno in self.population:
-                        self.novelty_search.update(geno.novelty_variables)
-                        ns_metric = self.novelty_search.novelty_metric(geno.novelty_variables)
-                        ns_weight = self.novelty_search.weight
-                        geno.fitness = (1-ns_weight) * geno.fitness + ns_weight * ns_metric
-                #* Save evolution state 
-                self.save()
-                time_taken = time.time() - t0
-                #* Print Stuff
-                print(f"Generation {self.generation+1}: mean fitness={self.mean_fitness:3f},",
-                      f"max finess={self.max_fitness:3f}, time elapsed={time_taken:2f} s.", 
-                      flush=True)
-                #* Evolve Population
-                self.evolve()
-                self.generation += 1
-            if self.use_mpi:
-                #* Broadcast evolved population to all nodes
-                self.population = MPI.COMM_WORLD.bcast(self.population, root=0)
-                MPI.COMM_WORLD.Barrier()
+            self.run_step()
 
     def evolve(self):
         raise NotImplementedError
@@ -152,7 +167,7 @@ class EvolutionaryAlgorithm:
     def rank(self):
         return MPI.COMM_WORLD.Get_rank() if MPI_AVAILABLE else 0
 
-    def evaluate(self, trials=30, timesteps=3000):
+    def validate(self, trials=30, timesteps=3000):
         """ Evaluates an individual of a population without any evolution. 
         Records the data for the specified amount of evaluation trials and time steps and 
         saves all the data records as a csv dataset (stored in mereli/logs/data).
@@ -176,7 +191,10 @@ class EvolutionaryAlgorithm:
         fieldnames = fieldnames + [y for x in [['position_x_'+name, 'position_y_'+name] for name in {**lights, **cubes}] for y in x]
         data_logger = DataLogger(fieldnames)
         self.evaluator.use_seed = False
-        best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
+        if type(self).__name__ == 'MultiEA':
+            best = [sorted(alg.population, key=lambda x: x.fitness, reverse=True)[0] for alg in self.algorithms]
+        else: 
+            best = sorted(self.population, key=lambda x: x.fitness, reverse=True)[0]
         self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
         # for trial in range(trials):
@@ -240,3 +258,69 @@ class EvolutionaryAlgorithm:
                 fn_ts = np.array([fn_ts[i-5:i].mean() for i in range(5, len(fn_ts))])        
             plt.plot(np.arange(spc.creation_generation, spc.creation_generation + len(fn_ts)), fn_ts)
         plt.show()
+
+@algorithm_registry(name="multi_EA")
+class MultiEA(EvolutionaryAlgorithm):
+    def __init__(self, *args, **kwargs):
+        super(MultiEA, self).__init__(*args, **kwargs)
+        self.algorithms = []
+
+    def merge_population(self):
+        aux_pop = []
+        for p in range(self.pop_size):
+            aux_pop.append([alg.population[p] for alg in self.algorithms])
+        return aux_pop
+
+    def add_algorithm(self, alg):
+        self.algorithms.append(alg)
+
+    def evaluate(self):
+        merged_pop = self.merge_population()
+        merged_pop = self.evaluator.batch_evaluate(merged_pop, self.generation)
+        if self.use_mpi and self.rank == 0:
+            for p in range(self.pop_size):
+                for alg, genotype in zip(self.algorithms, merged_pop[p]):
+                    alg.population[p] = genotype
+            # self.population = merged_pop
+
+    def broadcast_population(self):
+        if self.use_mpi:
+            #* Broadcast evolved population to all nodes
+            self.algorithms = MPI.COMM_WORLD.bcast(self.algorithms, root=0)
+            MPI.COMM_WORLD.Barrier()
+
+    def evolve(self):
+        for alg in self.algorithms:
+            alg.evolve()
+
+    def save(self):
+        """ Saves the checkpoint with the necessary information to resume the evolution. 
+        """
+        for k in range(len(self.algorithms)):
+            self.algorithms[k].checkpoint_name = self.checkpoint_name + '_' + str(k+1)
+            self.algorithms[k].save()
+                
+    def load(self):
+        """ Loads a previously saved checkpoint to resume evolution.
+        """
+        import pdb; pdb.set_trace()
+        for k in range(len(self.algorithms)):
+            self.algorithms[k].checkpoint_name = self.checkpoint_name + '_' + str(k+1)
+            self.algorithms[k].load()
+        
+
+    @property
+    def pop_size(self):
+        return len(self.algorithms[0].population)
+
+    @property
+    def mean_fitness(self):
+        return np.mean([geno.fitness for geno in self.algorithms[0].population])
+
+    @property
+    def max_fitness(self):
+        return np.max([geno.fitness for geno in self.algorithms[0].population])
+
+    @property
+    def min_fitness(self):
+        return np.min([geno.fitness for geno in self.algorithms[0].population])

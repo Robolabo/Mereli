@@ -122,14 +122,11 @@ def tournament_selection(population,  n_sel, tournament_size=3):
     =========================================================================
     """
     selected = []
-    selected_fitness = []
     for _ in range(n_sel):
         competitors_idx = np.random.choice(len(population), replace=True, size=tournament_size)
         competitors = [population[idx] for idx in competitors_idx]
         competitors_fitness = [population[idx].fitness for idx in competitors_idx]
         selected.append(competitors[np.argmax(competitors_fitness)])
-        selected_fitness.append(np.max(competitors_fitness))
-    # selected = [v for v, _ in sorted(zip(selected, selected_fitness), key=lambda x: x[1])]
     return selected
 
 

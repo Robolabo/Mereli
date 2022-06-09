@@ -86,18 +86,18 @@ class NodeGene(BaseGene):
         self.idx = None
         self.is_output = False
         self.enabled = True
+        self.topology = None
 
     def configure(self, gene_info):
         for name, info in gene_info.items():
-            if name.split(':')[0] == 'nodes':
-                param_name = name.split(':')[1]
+            topology, struct, param_name = name.split(':')[:3]
+            if struct == 'nodes' and topology == self.topology:
                 self._mutation[param_name] = self.configure_mutation(info)
                 self._initialization[param_name] = self.configure_initialization(info)
                 self._normalization[param_name] = self.configure_normalization(info)
                 if param_name not in self.parameters:
                     self.parameters[param_name] = None # Init later
 
-    
     def add_parameter(self, name, value):
         self.parameters[name] = value
 
@@ -119,17 +119,19 @@ class ConnectionGene(BaseGene):
         self.idx = None
         self.enabled = True
         self.learning_rule = None
+        self.topology = None
 
 
     def configure(self, gene_info):
         for name, info in gene_info.items():
-            if name.split(':')[0] == 'connections':
-                param_name = name.split(':')[1]
+            topology, struct, param_name = name.split(':')[:3]
+            if struct == 'connections' and topology == self.topology:
                 self._mutation[param_name] = self.configure_mutation(info)
                 self._initialization[param_name] = self.configure_initialization(info)
                 self._normalization[param_name] = self.configure_normalization(info)
                 self.parameters[param_name] = None # Init later
-
+            # elif struct == 'connections':
+            #     import pdb; pdb.set_trace()
         
     def add_parameter(self, name, value):
         self.parameters[name] = value
@@ -167,33 +169,52 @@ class GraphGenotype:
         for conn in self.connections:
             conn.initialize()
 
-    def configure(self, gene_info, ann_config):
+    def configure(self, targets, gene_info, ann_config):
         self.gene_info = gene_info
         self.neural_net_config = ann_config
-        self._phenotype = NeuralNetwork(ann_config['dt'], time_scale=ann_config['time_scale'],\
-                neuron_model=ann_config['neuron_model'], synapse_model=ann_config['synapse_model'])
-        self._phenotype.build_from_dict(ann_config)
-        
-        for name, node in self._phenotype.graph['neurons'].items():
-            self.add_node_from_dict(name, **node)
-            self.get_node(name).configure(gene_info)
-        for name, conn in self._phenotype.graph['synapses'].items():
-            self.add_conn_from_dict(name, **conn)
-            self.get_connection(name).configure(gene_info)
+        self.targets = targets
+        self._phenotype = {}
+        for target in targets:
+            # Create phenotype provisionally to build genotype.
+            topology_name = target['topology']
+            topology = self.neural_net_config[topology_name]
+            self._phenotype[topology_name] = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
+                neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
+            self._phenotype[topology_name].build_from_dict(topology)
+            # Add genes to genotype
+            for name, node in self._phenotype[topology_name].graph['neurons'].items():
+                gene_name = name
+                self.add_node_from_dict(gene_name, **node)
+                self.get_node(gene_name).topology = topology_name
+                self.get_node(gene_name).configure(gene_info)
+            for name, conn in self._phenotype[topology_name].graph['synapses'].items():
+                gene_name = name
+                self.add_conn_from_dict(gene_name, **conn)
+                self.get_connection(gene_name).topology = topology_name
+                self.get_connection(gene_name).configure(gene_info)
+                self.get_connection(gene_name).group = conn['group']
+                
 
     def as_phenotype(self):
-        phenotype = NeuralNetwork(self.neural_net_config['dt'], time_scale=self.neural_net_config['time_scale'],\
-                neuron_model=self.neural_net_config['neuron_model'], synapse_model=self.neural_net_config['synapse_model'])
-        phenotype.build_from_dict(self.neural_net_config)
-        phenotype.reset_graph()
-        for node in self.nodes:
-            phenotype.add_neuron(node.name, **node.as_dict())
-            if node.is_output:
-                phenotype.set_motor(node.ensemble)
-        for conn in self.connections:
-            phenotype.add_synapse(conn.name, **conn.as_dict())    
-        phenotype.build()
-        return phenotype
+        phenotypes = {}
+        for target in self.targets:
+            topology_name = target['topology']
+            topology = self.neural_net_config[topology_name]
+            phenotype = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
+                    neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
+            phenotype.build_from_dict(topology)
+            phenotype.reset_graph()
+            for node in self.nodes:
+                if node.topology == topology_name:
+                    phenotype.add_neuron(node.name, **node.as_dict())
+                    if node.is_output:
+                        phenotype.set_motor(node.ensemble)
+            for conn in self.connections:
+                if conn.topology == topology_name:
+                    phenotype.add_synapse(conn.name, **conn.as_dict())
+            phenotype.build()
+            phenotypes[target['object']] = phenotype
+        return phenotypes
 
     def add_node(self, gene):   
         self._node_genes.append(gene)

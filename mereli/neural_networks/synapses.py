@@ -45,10 +45,12 @@ class Synapses(ABC):
                     pre_idx = ann_graph['inputs'][syn['pre']]['idx']
                 else:
                     pre_idx = ann_graph['neurons'][syn['pre']]['idx'] + n_inputs
-                post_idx = ann_graph['neurons'][syn['post']]['idx'] 
+                post_idx = ann_graph['neurons'][syn['post']]['idx']# - n_inputs
                 self.mask[post_idx, pre_idx] = True
-                self.trainable_mask[post_idx, pre_idx] = syn['trainable']                
-                self.weights[post_idx, pre_idx] = syn['weight'] if syn['weight'] != 'random' else np.round(0.1 * np.random.randn(), decimals=5)
+                self.trainable_mask[post_idx, pre_idx] = syn['trainable']           
+                self.weights[post_idx, pre_idx] = np.round(syn['weight'],4) if syn['weight'] != 'random' else np.round(0.1 * np.random.randn(), decimals=5)
+                # if syn['weight'] not in [0.,1.] and not syn['pre'] in ann_graph['inputs']:
+                #     import pdb; pdb.set_trace()
         # self.weights = np.stack([w_row / np.sum(w_row != 0.0)  if any(w_row != 0) else w_row for w_row in self.weights]).round(4)
 
     # @GET("synapses:weights")

@@ -283,7 +283,7 @@ class World(object):
                         controller.add_sensors_from_dict(obj['sensors'])
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
-                            controller.add_ann_from_dict(ann_topology)
+                            controller.add_ann_from_dict(ann_topology[obj['controller']['topology']])
                     #* Instantiate robot entity
                     robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
                     #* If any, initialize robot's reward generator
@@ -292,7 +292,7 @@ class World(object):
                     if "comm_sys" in obj:
                         robot.add_communication(communication_systems[obj['comm_sys']['name']](**obj['comm_sys']['params']))
                     self.register_entity(obj_name + '_' + str(i), robot, group=obj_name)
-
+                    robot.group = obj_name
                 #* Add perturbations (if any) to the robot states and actions (not physical perturbs)
                 #* For example: inhibit a certain sensor reading or ignore some action of a robot.
                 if len(obj['perturbations']) > 0:
@@ -310,6 +310,7 @@ class World(object):
                 for i, position in enumerate(entity_positions):
                     world_obj = object_cls(position, [0, 0, 0], controller=controller, **obj['params'])
                     self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
+                    world_obj.group = obj_name
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initializes

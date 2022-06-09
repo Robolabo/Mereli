@@ -110,9 +110,10 @@ class FixedRandomInitializer(Initializer):
         super(FixedRandomInitializer, self).__init__(*args,  **kwargs)
         self.replacement = replacement
         self.possible_values = possible_values
+
         if not isinstance_of_any(possible_values[0], [list, np.ndarray]):
             self.possible_values = [[val] for val in self.possible_values]
-        assert self.replacement or len(self.possible_values) < self.num_points
+        # assert self.replacement or len(self.possible_values) < self.num_points
 
     @initializer_handler
     def __call__(self):

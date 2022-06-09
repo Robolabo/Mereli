@@ -17,6 +17,9 @@ def add_node(genotype, innovation):
 
     """
     #* Randomly select an enabled connection
+    if len([*genotype.enabled_connections]) == 0:
+        print('No available connections for mutation.')
+        return genotype, innovation
     sel_conn = np.random.choice([*genotype.enabled_connections])
 
     #* Create and add new node gene in-between pre and post nodes of sel_conn
@@ -28,6 +31,7 @@ def add_node(genotype, innovation):
     #* Create, initialize and add node
     new_node = NodeGene(node_name)
     new_node.idx = genotype.num_nodes
+    new_node.topology = sel_conn.topology
     new_node.configure(genotype.gene_info)
     new_node.initialize()
     genotype.add_node(new_node)
@@ -37,6 +41,7 @@ def add_node(genotype, innovation):
         new_conn = ConnectionGene(f'{pre}-{post}', pre=pre, post=post)
         new_conn.idx = genotype.num_connections
         new_conn.innovation = innovation.assign(pre, post)
+        new_conn.topology = sel_conn.topology
         new_conn.configure(genotype.gene_info)
         if n == 0:
             new_conn.parameters = sel_conn.parameters
@@ -64,6 +69,7 @@ def add_connection(genotype, input_nodes, innovation):
     #* Create new connection gene
     conn_name = '-'.join(new_conn)
     new_connection = ConnectionGene(conn_name, pre=new_conn[0], post=new_conn[1])
+    new_connection.topology = genotype.get_node(new_conn[0]).topology
     new_connection.configure(genotype.gene_info)
     new_connection.initialize()
     new_connection.idx = len([*genotype.connections])

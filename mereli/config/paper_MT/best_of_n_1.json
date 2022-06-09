@@ -35,8 +35,8 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.025,
-        "T_control" : 0.025,
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
         "task_manager" : {
             "total_duration" : 2000,
             "num_slots" : 1,
@@ -48,18 +48,18 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 15,
+                "num_instances" : 10,
                 "controller" : "neural_controller",
                 "sensors" : {
-                    "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
+                    "IR_receiver" : {"n_sectors" : 8, "range" : 1.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
                     "ground_sensor" : {}                
                 },
                 "actuators" : {
                     "disc_wheel_actuator" : {"max_velocity" : 5},
-                    "IR_transmitter" : {"range" : 0.5, "msg_length":1}
+                    "IR_transmitter" : {"range" : 1.5, "msg_length":1}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.1}},
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.8,-0.8], "high": [0.8,0.8], "size" : 2, "min_dist" : 0.1}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {"stimuli_inhibition" : {"affected_robots": [1,3,5,7,9,11,13,15], "stimuli" : "reward", "replace_value" : 0}},
@@ -68,9 +68,9 @@
             },
             "ground_area" : {
                 "type" : "ground_area",
-                "num_instances": 4,
+                "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.8,-0.8], "high": [0.8,0.8], "size" : 2, "min_dist" : 0.5}}
                 },
                 "params" : {"radius" : 0.3, "color" : "grey"}
             },
@@ -78,9 +78,9 @@
                 "type" : "ground_area",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-1,-1], "high": [1,1], "size" : 2, "min_dist" : 0.5}}
+                    "positions" : {"name" : "random_uniform",  "params" : {"low" : [-0.8,-0.8], "high": [0.8,0.8], "size" : 2, "min_dist" : 0.5}}
                 },
-                "params" : {"radius" : 0.3, "color" : "green"}
+                "params" : {"radius" : 0.4, "color" : "green"}
             }
         }
     },

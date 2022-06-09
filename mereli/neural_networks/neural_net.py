@@ -26,7 +26,7 @@ def monitor(func):
             monitor_vars = {
                 # 'encoded_inputs' : encoded_stimuli.copy(),
                 'stimuli' : np.hstack(tuple(self.stimuli.values())).copy(),
-                'voltages' : voltages.copy(),
+                'voltages' : voltages.copy() if voltages is not None else spikes.copy(),
                 'currents' : Isynapses.copy(),
                 'outputs' : spikes.copy()
             }
@@ -85,6 +85,8 @@ class NeuralNetwork(BaseNeuralNet):
         neurons = neuron_models[self.neuron_model](self.dt)
         synapses = synapse_models[self.synapse_model](self.dt)
         super(NeuralNetwork, self).__init__(neurons, synapses, encoders=EncodingWrapper(self.time_scale))
+        if neuron_model == 'perceptron':
+            self.monitor = None
         self.learning_rule = None #! OJO: provisional
         self.ww_buffer = []
 
@@ -102,36 +104,12 @@ class NeuralNetwork(BaseNeuralNet):
         ====================================================================================
         """
         soma_currents = self.synapses.step(np.r_[stimuli, self.spikes], self.voltages)
-        # import pdb; pdb.set_trace()
         spikes, voltages = self.neurons.step(soma_currents)
         return spikes, soma_currents, voltages
 
-    def step(self, stimuli, reward=None):
-        """ Simulation step of the neural network.
-        It is composed by four main steps:
-            1) Encoding of stimuli to spikes (if SNN used).
-            2) Synapses step.
-            3) Neurons step.
-            4) Decoding of spikes or activities into actions.
-        ===============================================================
-        - Args: 
-            stimuli [dict]: dict mapping stimuli name and numpy array 
-                    containing its values.
-        - Returns:
-            actions [dict]: dict mapping output names and actions.
-        ===============================================================
-        """
-        task = stimuli['task']
-        #* --- Convert stimuli into spikes (Encoders Step) ---
-        if len(stimuli) == 0 or stimuli is None:
-            stimuli = {'dummy_input' : np.array([])}
-            # raise Exception(logging.error('The ANN received empty stimuli.'))
-        stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
-        inputs = self.encoders.step(stimuli)
-        self.stimuli = stimuli.copy()
+    def _step_recurrent(self, inputs):
         if self.time_scale == 1:
             inputs = inputs[np.newaxis]
-
         #* --- Apply update rules to synapses ---
         if self.learning_rule is not None and self.t > 1:
             # If reward is None  while learning rule is not, then 
@@ -151,33 +129,52 @@ class NeuralNetwork(BaseNeuralNet):
         #* --- Convert spikes into actions (Decoding Step) ---
         actions = self.decoders.step(spikes_window[:, self.motor_neurons])
         self.prev_input = inputs[-1].copy()
+        return actions
+
+    def _step_mlp(self, inputs):
+        ready = [True] * len(inputs) + [False] * len(self.voltages)
+        while not all(ready):
+            currents = self.synapses.step(np.r_[inputs, self.voltages], None)
+            outputs = self.neurons.step(currents)[0]
+            ready[len(inputs):] = np.logical_or(ready[len(inputs):], self.weights[:, ready].sum(1) != 0.0)
+        outputs = outputs[np.array([self.ensemble_indices(out) for out in self.motor_ensemble_names]).flatten()]
+        return self.decoders.step(outputs[np.newaxis])
+    
+    def step(self, stimuli, reward=None):
+        """ Simulation step of the neural network.
+        It is composed by four main steps:
+            1) Encoding of stimuli to spikes (if SNN used).
+            2) Synapses step.
+            3) Neurons step.
+            4) Decoding of spikes or activities into actions.
+        ===============================================================
+        - Args: 
+            stimuli [dict]: dict mapping stimuli name and numpy array 
+                    containing its values.
+        - Returns:
+            actions [dict]: dict mapping output names and actions.
+        ===============================================================
+        """
+        task = stimuli.get('task',0)
+        stimuli['sin_signal'] = np.sin(2 * np.pi  * 0.8 * self.dt * self.t) 
+        #* --- Convert stimuli into spikes (Encoders Step) ---
+        if len(stimuli) == 0 or stimuli is None:
+            stimuli = {'dummy_input' : np.array([])}
+            # raise Exception(logging.error('The ANN received empty stimuli.'))
+        stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
+        inputs = self.encoders.step(stimuli)
+        self.stimuli = stimuli.copy()
+        if not self.neuron_model == 'perceptron':
+            actions = self._step_recurrent(inputs)
+        else:
+            actions = self._step_mlp(inputs)
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 3999 and self.monitor is not None:
+        if self.t == self.time_scale * 499 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
-            # grasp0 = self.monitor.get('outputs')['OUT_GRASP_0']
-            # plot_spikes(self)
-
-            # ww = np.stack(self.ww_buffer)
             import pdb; pdb.set_trace()
-        # actions['outB'] = [np.sin(2*np.pi*self.t*0.01)]
-        # self.ww_buffer.append(self.weights)
-        # if stimuli['reward'] > 0.01:
-        # actions['outA'] = [1, -1]
-        # if task == 1:
-        #     actions['outB'] = [1]
-        # else: 
-        #     actions['outB'] = [0]
-        # else:
-        #     # if any(stimuli['mean_neigh_state'] == 1):
-        #     actions['outB'] = [0,0]
-            # else: 
-            #     actions['outB'] = [0, 0]
-
-        # actions['outA'] = [0, 0]
-        # import pdb; pdb.set_trace()
         return actions
     
     def reset(self):

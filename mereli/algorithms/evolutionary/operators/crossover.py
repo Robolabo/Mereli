@@ -15,6 +15,7 @@ def uniform_crossover(genotypeA, genotypeB, crossover_prob=1.):
     for child in [childA, childB]:
         child.gene_info = genotypeA.gene_info
         child.neural_net_config = genotypeA.neural_net_config
+        child.targets = genotypeA.targets
     for connA, connB in zip(genotypeA.connections, genotypeB.connections):
         if np.random.random() < 0.5:
             childA.add_connection(connA.copy())
@@ -65,11 +66,12 @@ def onepoint_crossover(genotypeA, genotypeB, crossover_prob=1.):
         return [genotypeA, genotypeB]
 
 @evo_operator_registry(name='blxalpha_crossover')
-def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
+def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.1):
     childA, childB = GraphGenotype(genotypeA.g_id), GraphGenotype(genotypeB.g_id)
     for child in [childA, childB]:
         child.gene_info = genotypeA.gene_info
         child.neural_net_config = genotypeA.neural_net_config
+        child.targets = genotypeA.targets
     for connA, connB in zip(genotypeA.connections, genotypeB.connections):
         childA.add_connection(connA.copy())
         childB.add_connection(connB.copy())
@@ -84,7 +86,7 @@ def blxalpha_crossover(genotypeA, genotypeB, crossover_prob=1., alpha=.3):
         childA.add_node(nodeA.copy())
         childB.add_node(nodeB.copy())
         for param in nodeA.parameters:
-            if param not in [x.split(':')[1] for x in genotypeA.gene_info]:
+            if param not in [x.split(':')[2] for x in genotypeA.gene_info]:
                 continue 
             paramA = nodeA.parameters[param]
             paramB = nodeB.parameters[param]
@@ -187,6 +189,7 @@ def neat_crossover(parents, crossover_prob=0.8, disable_prob=0.75):
         for child in children:
             child.gene_info = parent1.gene_info
             child.neural_net_config = parent1.neural_net_config
+            child.targets = parent1.targets
         innovations_1 = set([gene.innovation for gene in parent1.connections])
         innovations_2 = set([gene.innovation for gene in parent2.connections])
         common_genes = innovations_1.intersection(innovations_2)

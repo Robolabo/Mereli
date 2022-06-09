@@ -3,6 +3,7 @@ import numpy as np
 from mereli.register import sensor_registry
 from mereli.sensors import DirectionalSensor, Sensor
 from mereli.objects import Robot
+from mereli.neural_networks import NeuralNetwork
 
 @sensor_registry(name='stateful_rx')
 class StatefulCommRX(Sensor):
@@ -12,6 +13,16 @@ class StatefulCommRX(Sensor):
         super(StatefulCommRX, self).__init__(*args, **kwargs)
         self.range = range
         self.state_dim = state_dim
+        self.attention_network = None
+    
+    def build_attention(self, topology):
+        self.attention_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
+        neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
+        self.neural_network.build_from_dict(topology)
+
+    def reset(self):
+        if self.attention_network is not None:
+            self.attention_network.reset()
 
     def step(self, neighborhood):
         """ 
@@ -27,9 +38,18 @@ class StatefulCommRX(Sensor):
         if len(neigh_state) == 0:
             neigh_state = np.array([0] * self.state_dim)
         else:
-            # neigh_state = np.stack(neigh_state)
-            neigh_state = np.mean(neigh_state, 0)
-            # neigh_state = sorted(neigh_state, key=lambda x: np.sum(x), reverse=True)[0]
+            if  self.attention_network is not None:
+                # import pdb; pdb.set_trace()
+                weights = np.hstack([self.attention_network.step({"stateful_rx:state" : st})['weight'] for st in neigh_state])
+                if np.isnan(weights.sum()):
+                    print(weights,self.attention_network.weights)
+                    import pdb; pdb.set_trace()
+                neigh_state = np.dot(weights, neigh_state)
+               
+            else:
+                # neigh_state = np.stack(neigh_state)
+                neigh_state = np.mean(neigh_state, 0)
+                # neigh_state = sorted(neigh_state, key=lambda x: np.sum(x), reverse=True)[0]
 
         return {'mean_neigh_state' : neigh_state,# + np.random.randn(self.state_dim) * 0.0,
                 'own_state' : own_state}# + np.random.randn()* 0.0}

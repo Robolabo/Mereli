@@ -113,9 +113,10 @@ class BaseNeuralNet:
                         self.motor_ensemble_names)
         else:
             self.monitor = None
-        self.synapses.weights = np.round(self.synapses.weights, 4)
+        # self.synapses.weights = np.round(self.synapses.weights, 4)
         # #* --- Reset dynamics ---
         # self.reset()
+        
 
     def build_from_adjmat(self, w_matrix):
         #! OJO NORMALIZACION weights !!!

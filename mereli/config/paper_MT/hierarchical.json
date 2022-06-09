@@ -1,39 +1,41 @@
 {
     "checkpoint_file" : "chk_hierarchical",
     "topology" : {
-        "dt" : 0.1,
-        "time_scale" : 1,
-        "stimuli": {
-            "I1" : {"n" : 8, "sensor" : "distance_sensor"},
-            "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
-            "I3" : {"n" : 1, "sensor" : "ground_sensor"},
-            "I4" : {"n" : 1, "sensor" : "reward"}
-        },
-        "neuron_model" : "rate_model",
-        "synapse_model" : "static_synapse",
-        "ensembles": {
-            "BEHAVIOR" : {"n" : 3, "params" : {"activation" : "sigmoid"}},
-            "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
-        },
-        "outputs" : {
-            "outA" : {"ensemble" : "BEHAVIOR", "actuator" :  "BEHAVIOR"},
-            "outB" : {"ensemble" : "COMM", "actuator" :  "IR_transmitter"}
-        },
-        "synapses" :  {
-            "I1-B" : {"pre":"I1","post":"BEHAVIOR", "trainable":true, "p":1.0},
-            "I2-B" : {"pre":"I2","post":"BEHAVIOR", "trainable":true, "p":1.0},
-            "I3-B" : {"pre":"I3","post":"BEHAVIOR", "trainable":true, "p":1.0},
-            "I4-B" : {"pre":"I4","post":"BEHAVIOR", "trainable":true, "p":1.0},
-            "I1-C" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
-            "I2-C" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0},
-            "I3-C" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0},
-            "I4-C" : {"pre":"I4","post":"COMM", "trainable":true, "p":1.0}
-        },
-        "decoding" : {
-            "outA" : {"scheme" : "SoftmaxDecoding", "params" : {}},
-            "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
-        },
-        "learning_rule" : {}
+        "main_ann" : {
+            "dt" : 0.1,
+            "time_scale" : 1,
+            "stimuli": {
+                "I1" : {"n" : 8, "sensor" : "distance_sensor"},
+                "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
+                "I3" : {"n" : 1, "sensor" : "ground_sensor"},
+                "I4" : {"n" : 1, "sensor" : "reward"}
+            },
+            "neuron_model" : "rate_model",
+            "synapse_model" : "static_synapse",
+            "ensembles": {
+                "BEHAVIOR" : {"n" : 3, "params" : {"activation" : "sigmoid"}},
+                "COMM" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
+            },
+            "outputs" : {
+                "outA" : {"ensemble" : "BEHAVIOR", "actuator" :  "BEHAVIOR"},
+                "outB" : {"ensemble" : "COMM", "actuator" :  "IR_transmitter"}
+            },
+            "synapses" :  {
+                "I1-B" : {"pre":"I1","post":"BEHAVIOR", "trainable":true, "p":1.0},
+                "I2-B" : {"pre":"I2","post":"BEHAVIOR", "trainable":true, "p":1.0},
+                "I3-B" : {"pre":"I3","post":"BEHAVIOR", "trainable":true, "p":1.0},
+                "I4-B" : {"pre":"I4","post":"BEHAVIOR", "trainable":true, "p":1.0},
+                "I1-C" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
+                "I2-C" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0},
+                "I3-C" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0},
+                "I4-C" : {"pre":"I4","post":"COMM", "trainable":true, "p":1.0}
+            },
+            "decoding" : {
+                "outA" : {"scheme" : "SoftmaxDecoding", "params" : {}},
+                "outB" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"}
+            },
+            "learning_rule" : {}
+        }
     },
     "world": {
         "name" : "square_arena",
@@ -56,7 +58,10 @@
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 15,
-                "controller" : {"name" : "neural_orchestrator", "params" : {"behaviors" : ["perlin_walk", "follow_robot", "stay"]}},
+                "controller" : {
+                    "name" : "neural_orchestrator",
+                    "topology" : "main_ann",
+                    "params" : {"behaviors" : ["perlin_walk", "follow_robot", "stay"]}},
                 "sensors" : {
                     "IR_receiver" : {"n_sectors" : 8, "range" : 0.5, "msg_length" : 1, "selection_scheme" : "full", "noise_sigma" : 0.05},
                     "ground_sensor" : {}             
@@ -93,6 +98,7 @@
     },
     "algorithm" : {
         "name" : "NEAT",
+        "targets" : {"topology" : "main_ann", "object" :"robotA:controller@neural_network"}, 
         "evolvable_object" : "robotA",
         "population_size" : 50,
         "generations" : 1000,
@@ -100,7 +106,7 @@
         "num_evaluations" : 1,
         "fitness_function" : "reward_integration",
         "gene_info" : {
-            "connections:weight:all" : {
+            "main_ann:connections:weight:all" : {
                 "normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
                 "initialization" : {"type" : "gaussian", "sigma" : 1},
                 "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.02}}

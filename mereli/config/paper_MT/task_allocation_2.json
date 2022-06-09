@@ -1,0 +1,92 @@
+{
+    "checkpoint_file" : "chk_task_allocation_2",
+    "topology" : {
+        "main_ann" : {
+            "dt" : 0.1,
+            "time_scale" : 1,
+            "stimuli": {
+                "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 3, "sensor" : "own_state"},
+                "I3" : {"n" : 1, "sensor" : "sin_signal"}
+            },
+            "neuron_model" : "rate_model",
+            "synapse_model" : "static_synapse",
+            "ensembles": {
+                "Hidden" : {"n" : 15, "params" : {"activation" : "sigmoid"}},
+                "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid"}},
+                "OUT_TASK" : {"n" : 2, "params" : {"activation" : "sigmoid"}}
+            },
+            "outputs" : {
+                "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
+                "outA" : {"ensemble" : "OUT_TASK", "actuator" : "led_actuator"}
+            },
+            "synapses" :  {
+                "I1-H" : {"pre":"I1","post":"Hidden", "trainable":true, "p":1.0},
+                "I2-H" : {"pre":"I2","post":"Hidden", "trainable":true, "p":1.0},
+                "I3-H" : {"pre":"I3","post":"Hidden", "trainable":true, "p":1.0},
+                "Hidden-C" : {"pre":"Hidden","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "Hidden-T" : {"pre":"Hidden","post":"OUT_TASK", "trainable":true, "p":1.0}
+            },
+            "decoding" : {
+                "outB" : {"scheme" : "IdentityDecoding"},
+                "outA" : {"scheme" : "SoftmaxDecoding"}
+            },
+            "learning_rule" : {}
+        } 
+    },
+    "world": {
+        "name" : "flat_world",
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 800,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 2, "agents_per_task": 1}}]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 2,
+                "controller" : {
+                    "name" : "neural_controller",
+                    "topology" : "main_ann",
+                    "params" : {}},
+                "sensors" : {
+                    "stateful_rx" : {"state_dim" : 3, "range" : 4}
+                },
+                "actuators" : {
+                    "stateful_tx" : {"state_dim" : 3, "range" : 4},
+                    "led_actuator" : {}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "fixed_random",  "params" : {"possible_values" : [[0,0], [0,1]], "replacement" : false}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "GA",
+        "population_size" : 50,
+        "generations" : 1000,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 1,
+        "fitness_function" : "reward_integration",
+        "targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
+        "gene_info" : {
+            "main_ann:connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
+        },
+        "alg_params" : {
+            "crossover_operator" : "uniform",
+            "selection_operator" : "tournament",
+            "num_elite" : 2
+        }
+    }
+}

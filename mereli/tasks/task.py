@@ -102,18 +102,20 @@ class TaskAllocation(Task):
         
     def reward_generator(self, entities, robot_name):
         if robot_name not in self.prev_task:
-            self.prev_task[robot_name] = 0
+            self.prev_task[robot_name] = -1
             self.times_task[robot_name] = 0
         robot_led = int(entities[robot_name].actuators['led_actuator'].action[0])
         others_led = np.array([int(ent.actuators['led_actuator'].action[0])\
-            for ent in entities.values() if issubclass(type(ent), Robot) if ent.id != entities[robot_name].id])
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         if not any(led == robot_led for led in others_led):
+        # if robot_led != others_led[0]:
+        #     return np.array([1])
             if robot_led == self.prev_task[robot_name]:
                 self.times_task[robot_name] += 1
             else:
                 self.times_task[robot_name] = 1
             self.prev_task[robot_name] = robot_led
-            return np.array([min(self.times_task[robot_name]/10, 1)])
+            return np.array([self.times_task[robot_name]])
         else:
             self.times_task[robot_name] = 0
             self.prev_task[robot_name] = robot_led
