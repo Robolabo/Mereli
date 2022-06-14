@@ -78,14 +78,14 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 4, "range" : 1}
+                    "stateful_rx" : {"state_dim" : 4, "range" : 3}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 4, "range" : 1},
+                    "stateful_tx" : {"state_dim" : 4, "range" : 3},
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-2,-2],"high" : [2,2], "size" : 2}},
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1],"high" : [1,1], "size" : 2}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
