@@ -129,6 +129,24 @@ class TaskAllocation(Task):
         self.prev_task = {}
         self.times_task = {}
 
+@task_registry(name="obstacle_avoidance")
+class ObstacleAvoidance(Task):
+    def __init__(self, *args, **kwargs):
+        super(ObstacleAvoidance,self).__init__(*args, **kwargs)
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        ds = robot.sensors['distance_sensor'].reading
+        wheels = robot.actuators['joint_velocity_actuator'].action / robot.actuators['joint_velocity_actuator'].max_velocity
+        rA = 0. if any(ds > 0.4) else 1.
+        rB = max(1 - np.abs(wheels[0] - wheels[1]), 0) * np.linalg.norm(wheels)
+        return rA * rB
+
+    def done_generator(self, entities):
+        return False
+
+
+ 
 @task_registry(name="goto_nest")
 class GotoNestTask(Task):
     def __init__(self, *args, color='grey', **kwargs):

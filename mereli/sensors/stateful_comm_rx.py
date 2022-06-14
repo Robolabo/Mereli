@@ -38,7 +38,7 @@ class StatefulCommRX(Sensor):
         if len(neigh_state) == 0:
             neigh_state = np.array([0] * self.state_dim)
         else:
-            if  self.attention_network is not None:
+            if self.attention_network is not None:
                 # import pdb; pdb.set_trace()
                 weights = np.hstack([self.attention_network.step({"stateful_rx:state" : st})['weight'] for st in neigh_state])
                 if np.isnan(weights.sum()):

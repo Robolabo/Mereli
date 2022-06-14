@@ -175,6 +175,7 @@ class NeuralNetwork(BaseNeuralNet):
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             import pdb; pdb.set_trace()
+        # actions['outA'] = [1,1]
         return actions
     
     def reset(self):

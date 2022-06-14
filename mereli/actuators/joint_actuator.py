@@ -22,6 +22,7 @@ class JointVelocityActuator(Actuator):
         self.joint_ids = joint_ids
         self.max_velocity = max_velocity
         self.inverse_mirrored = inverse_mirrored
+        self.action = None
 
     def step(self, action):
         """ Steps the actuator by transforming the action planed by the robot controller into an actual 
@@ -36,14 +37,17 @@ class JointVelocityActuator(Actuator):
         if len(action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
+        self.action = action
         action *= self.max_velocity # Convert range [-1,1] to [-w_max, w_max].
         self.physics_client.control_joints(self.owner_id, self.joint_ids, action, control_type='velocity')
         if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
             self.physics_client.control_joints(self.owner_id, [self.inverse_mirrored], 
                     [-action[0]], control_type='velocity')
+        
             
     def reset(self,):
         """ Resets the actuator."""
+        self.action = None
         if self.physics_client is not None:
             self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
 
