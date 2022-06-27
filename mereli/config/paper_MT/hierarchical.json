@@ -7,8 +7,7 @@
             "stimuli": {
                 "I1" : {"n" : 8, "sensor" : "distance_sensor"},
                 "I2" : {"n" : 8, "sensor" : "IR_receiver:msg"},
-                "I3" : {"n" : 1, "sensor" : "ground_sensor"},
-                "I4" : {"n" : 1, "sensor" : "reward"}
+                "I3" : {"n" : 1, "sensor" : "ground_sensor"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -24,11 +23,9 @@
                 "I1-B" : {"pre":"I1","post":"BEHAVIOR", "trainable":true, "p":1.0},
                 "I2-B" : {"pre":"I2","post":"BEHAVIOR", "trainable":true, "p":1.0},
                 "I3-B" : {"pre":"I3","post":"BEHAVIOR", "trainable":true, "p":1.0},
-                "I4-B" : {"pre":"I4","post":"BEHAVIOR", "trainable":true, "p":1.0},
                 "I1-C" : {"pre":"I1","post":"COMM", "trainable":true, "p":1.0},
                 "I2-C" : {"pre":"I2","post":"COMM", "trainable":true, "p":1.0},
-                "I3-C" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0},
-                "I4-C" : {"pre":"I4","post":"COMM", "trainable":true, "p":1.0}
+                "I3-C" : {"pre":"I3","post":"COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "SoftmaxDecoding", "params" : {}},
