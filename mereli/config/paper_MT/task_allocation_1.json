@@ -36,8 +36,8 @@
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "sigmoid"}},
-                "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid"}}
+                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 3}},
+                "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 3}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -78,10 +78,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 4, "range" : 1}
+                    "stateful_rx" : {"state_dim" : 4, "range" : 4}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 4, "range" : 1},
+                    "stateful_tx" : {"state_dim" : 4, "range" : 4},
                     "led_actuator" : {}
                 },
                 "initializers" : {
@@ -108,26 +108,11 @@
                     "main_ann:connections:weight:all" : {
                         "normalization" : {"type": "linear", "min_val" : -10, "max_val" : 10}, 
                         "initialization" : {"type" : "gaussian", "sigma" : 1},
-                        "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
+                        "mutation" : {"type" : "gaussian", "mutation_prob": 0.7, "sigma" : 0.1}}
                 },
                 "alg_params" : {
                     "p_weight_mut" : 0.4, "p_node_mut" : 0.05, "p_conn_mut" : 0.15, "compatib_thresh" : 1.4,
                     "c1" : 1, "c2" : 1, "c3" : 1, "species_elites" : 2
-                }
-            }, 
-            "neat_2" : {
-                "name" : "GA", 
-                "targets" : [{"topology" : "msg_sel_ann", "object" :"robotA:sensors:stateful_rx@attention_network"}], 
-                "gene_info" : {
-                    "msg_sel_ann:connections:weight:all" : {
-                        "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
-                        "initialization" : {"type" : "gaussian", "sigma" : 0.5},
-                        "mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
-                },
-                "alg_params" : {
-                    "crossover_operator" : "uniform",
-                    "selection_operator" : "tournament",
-                    "num_elite" : 2
                 }
             }
         }
