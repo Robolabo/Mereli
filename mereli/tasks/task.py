@@ -4,6 +4,7 @@ from mereli.globals import global_states
 from mereli.objects import Robot, LightSource, GroundArea
 from mereli.register import tasks, task_registry
 
+
 class Task:
     def __init__(self, duration=1000, use_done=False):
         self.duration = duration
@@ -107,15 +108,17 @@ class TaskAllocation(Task):
         robot_led = int(entities[robot_name].actuators['led_actuator'].action[0])
         others_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
-        if not any(led == robot_led for led in others_led):
-        # if robot_led != others_led[0]:
-        #     return np.array([1])
-            if robot_led == self.prev_task[robot_name]:
-                self.times_task[robot_name] += 1
-            else:
-                self.times_task[robot_name] = 1
-            self.prev_task[robot_name] = robot_led
-            return np.array([self.times_task[robot_name]])
+        all_led = np.array([int(ent.actuators['led_actuator'].action[0])\
+            for ent in entities.values() if issubclass(type(ent), Robot)])
+        # if not any(led == robot_led for led in others_led):
+        if all(led != led2 for i, led in enumerate(all_led) for j, led2 in enumerate(all_led)):
+            return np.array([1])
+            # if robot_led == self.prev_task[robot_name]:
+            #     self.times_task[robot_name] += 1
+            # else:
+            #     self.times_task[robot_name] = 1
+            # self.prev_task[robot_name] = robot_led
+            # return np.array([self.times_task[robot_name]])
         else:
             self.times_task[robot_name] = 0
             self.prev_task[robot_name] = robot_led

@@ -2,6 +2,7 @@ import logging
 from functools import wraps
 import numpy as np
 
+
 # Own imports
 from mereli.register import neuron_models, synapse_models
 from mereli.utils import increase_time
@@ -175,6 +176,7 @@ class NeuralNetwork(BaseNeuralNet):
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
+            import matplotlib.pyplot as plt
             import pdb; pdb.set_trace()
         # actions['outA'] = [1,1]
         return actions
