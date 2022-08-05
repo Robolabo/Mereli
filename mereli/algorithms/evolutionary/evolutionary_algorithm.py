@@ -24,10 +24,6 @@ from mereli.actuators.utils import list_actuators
 from mereli.algorithms.evaluator import Evaluator, MPI_Evaluator
 
 
-
-
-
-
 class EvolutionaryAlgorithm:
     """ Base class for evolutionary algorithms """
     def __init__(self, world, n_generations, population_size, targets,

@@ -13,3 +13,5 @@ tmp/*
 dist/*
 mereli.egg-info/*
 build/*
+*.swp
+*/**/*.swp
