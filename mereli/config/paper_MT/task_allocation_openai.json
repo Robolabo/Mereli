@@ -15,6 +15,7 @@
                 "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
                 "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
                 "H" : {"n" : 10, "params" : {"activation" : "sigmoid", "tau" : 1}}
+                "H2" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -24,11 +25,12 @@
                 "I1-H" : {"pre":"I1","post":"H", "trainable":true, "p":1.0},
                 "I2-H" : {"pre":"I2","post":"H", "trainable":true, "p":1.0},
                 "I3-H" : {"pre":"I3","post":"H", "trainable":true, "p":1.0},
+                "H-H2" : {"pre":"H","post":"H2", "trainable":true, "p":1.0},
 		
                 "C-C" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "T-T" : {"pre":"OUT_TASK","post":"OUT_TASK", "trainable":true, "p":1.0},
-                "H-C" : {"pre":"H","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "H-T" : {"pre":"H","post":"OUT_TASK", "trainable":true, "p":1.0}
+                "H-C" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "H-T" : {"pre":"H2","post":"OUT_TASK", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outB" : {"scheme" : "IdentityDecoding"},
@@ -74,10 +76,10 @@
     },
     "algorithm" : {
         "name" : "multi_EA",
-        "population_size" : 50,
+        "population_size" : 150,
         "generations" : 1000,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 3,
         "fitness_function" : "reward_integration",
         "algs" : {
             "neat_1" : {
@@ -86,10 +88,10 @@
                 "gene_info" : {
                     "main_ann:connections:weight:all" : {
                         "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
-                        "initialization" : {"type" : "gaussian", "sigma" : 1},
-                        "mutation" : {"type" : "gaussian", "mutation_prob": 0.2, "sigma" : 0.07}}
+                        "initialization" : {"type" : "gaussian", "sigma" : 1.5},
+                        "mutation" : {"type" : "gaussian", "mutation_prob": 0.6, "sigma" : 0.07}}
                 },
-                "alg_params" : {}
+                "alg_params" : {"learning_rate" : 0.07}
             }
         }
     }

@@ -22,17 +22,19 @@ class OpenAI_ES(EvolutionaryAlgorithm):
         return (self.mu + self.sigma * sample, sample)
     
     def evolve(self):
+        nsel = 50
         # self.best = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[0]
         fitness_vector = [geno.fitness for geno in self.population]
         fitness_order = np.argsort(fitness_vector.copy())[::-1]
-        ord_samples = [self.z_samples[idx].copy() for idx in fitness_order]
-        ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])
+        ord_samples = [self.z_samples[idx].copy() for idx in fitness_order][:n_sel]
+        ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])[:n_sel]
 
-        utilities = np.array([((max(0, np.log(1 + 0.5 * len(self.population)) - np.log(i + 1)))\
-                    / np.sum([max(0, np.log(1 + 0.5 * len(self.population)) - np.log(j + 1))\
-                    for j in range(len(self.population))]))\
-                    for i in range(len(self.population))])
-        utilities -= 1 / len(self.population)
+
+        utilities = np.array([((max(0, np.log(1 + 0.5 * n_sel) - np.log(i + 1)))\
+                    / np.sum([max(0, np.log(1 + 0.5 * n_sel)) - np.log(j + 1))\
+                    for j in range(n_sel)]))\
+                    for i in range(n_sel)])
+        # utilities -= 1 / len(self.population)
 
         #* --- Update distribution -- *#
         self.mu += (self.learning_rate / (self.sigma * len(ord_fitness))) * np.sum([ui * sample \
