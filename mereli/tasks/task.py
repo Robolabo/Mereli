@@ -110,7 +110,8 @@ class TaskAllocation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         all_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot)])
-        if all(led == led2 for led in all_led for led2 in all_led):
+        if all(led != led2 for led in all_led for led2 in all_led):
+            __import__('pdb').set_trace()
             return np.array([5.])
         if not any(led == robot_led for led in others_led):
             #return np.array([1])
