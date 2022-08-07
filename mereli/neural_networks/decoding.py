@@ -186,7 +186,7 @@ class SoftmaxDecoding(Decoder):
 
     def step(self, activities):
         activities = activities[-1] #* choose last state for action generation
-        action = np.random.choice(len(activities), p=softmax(5 * activities))
+        action = np.random.choice(len(activities), p=softmax(activities, tau=.1))
         return action
     
 @decoding_registry
