@@ -113,7 +113,7 @@ class TaskAllocation(Task):
         if all(led != led2 for led in all_led for led2 in all_led):
             return np.array([5.])
         if not any(led == robot_led for led in others_led):
-            #return np.array([1])
+            return np.array([1])
             if robot_led == self.prev_task[robot_name]:
                 self.times_task[robot_name] += 1
             else:
