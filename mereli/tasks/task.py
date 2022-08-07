@@ -110,14 +110,16 @@ class TaskAllocation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         all_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot)])
+        if all(led == led2 for led in all_led for led2 in all_led):
+            return np.array([5.])
         if not any(led == robot_led for led in others_led):
-            return np.array([1])
-            # if robot_led == self.prev_task[robot_name]:
-            #     self.times_task[robot_name] += 1
-            # else:
-            #     self.times_task[robot_name] = 1
-            # self.prev_task[robot_name] = robot_led
-            # return np.array([self.times_task[robot_name]])
+            #return np.array([1])
+            if robot_led == self.prev_task[robot_name]:
+                self.times_task[robot_name] += 1
+            else:
+                self.times_task[robot_name] = 1
+                self.prev_task[robot_name] = robot_led
+                return np.array([min(self.times_task[robot_name], 25) / 25])
         else:
             self.times_task[robot_name] = 0
             self.prev_task[robot_name] = robot_led

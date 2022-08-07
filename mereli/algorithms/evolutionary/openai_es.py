@@ -22,7 +22,7 @@ class OpenAI_ES(EvolutionaryAlgorithm):
         return (self.mu + self.sigma * sample, sample)
     
     def evolve(self):
-        nsel = 50
+        n_sel = 50
         # self.best = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[0]
         fitness_vector = [geno.fitness for geno in self.population]
         fitness_order = np.argsort(fitness_vector.copy())[::-1]
@@ -30,9 +30,9 @@ class OpenAI_ES(EvolutionaryAlgorithm):
         ord_fitness = np.array([fitness_vector[idx] for idx in fitness_order])[:n_sel]
 
 
-        utilities = np.array([((max(0, np.log(1 + 0.5 * n_sel) - np.log(i + 1)))\
-                    / np.sum([max(0, np.log(1 + 0.5 * n_sel)) - np.log(j + 1))\
-                    for j in range(n_sel)]))\
+        utilities = np.array([(max(0, np.log(1 + 0.5 * n_sel) - np.log(i + 1)))\
+                    / np.sum([max(0, np.log(1 + 0.5 * n_sel)) - np.log(j + 1)\
+                    for j in range(n_sel)])\
                     for i in range(n_sel)])
         # utilities -= 1 / len(self.population)
 

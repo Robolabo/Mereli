@@ -14,7 +14,7 @@
             "ensembles": {
                 "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
                 "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "H" : {"n" : 10, "params" : {"activation" : "sigmoid", "tau" : 1}}
+                "H" : {"n" : 10, "params" : {"activation" : "sigmoid", "tau" : 1}},
                 "H2" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}}
             },
             "outputs" : {
@@ -76,7 +76,7 @@
     },
     "algorithm" : {
         "name" : "multi_EA",
-        "population_size" : 150,
+        "population_size" : 100,
         "generations" : 1000,
         "evaluation_steps" : 3000,
         "num_evaluations" : 3,
