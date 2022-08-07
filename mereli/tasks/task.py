@@ -111,10 +111,10 @@ class TaskAllocation(Task):
         all_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot)])
         if all(led != led2 for led in all_led for led2 in all_led):
-            print("High reward")
+            # print("High reward")
             return np.array([5.])
         if all(led != robot_led for led in others_led):
-            print("Low reward")
+            # print("Low reward")
             return np.array([1])
             if robot_led == self.prev_task[robot_name]:
                 self.times_task[robot_name] += 1
@@ -125,7 +125,7 @@ class TaskAllocation(Task):
         else:
             self.times_task[robot_name] = 0
             self.prev_task[robot_name] = robot_led
-        print("No reward")
+        # print("No reward")
         return np.array([0.])
 
     def done_generator(self, entities):
