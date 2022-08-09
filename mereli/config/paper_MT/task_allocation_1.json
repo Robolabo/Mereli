@@ -26,12 +26,11 @@
             "learning_rule" : {}
         },
         "main_ann" : {
-            "dt" : 0.1,
+            "dt" : 0.07,
             "time_scale" : 1,
             "stimuli": {
                 "I1" : {"n" : 4, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 4, "sensor" : "own_state"},
-                "I3" : {"n" : 1, "sensor" : "sin_signal"}
+                "I2" : {"n" : 4, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -49,7 +48,9 @@
                 "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-T" : {"pre":"I2","post":"OUT_TASK", "trainable":true, "p":1.0},
                 "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-T" : {"pre":"I3","post":"OUT_TASK", "trainable":true, "p":1.0}
+                "I3-T" : {"pre":"I3","post":"OUT_TASK", "trainable":true, "p":1.0},
+                "T-T" : {"pre":"OUT_TASK","post":"OUT_TASK", "trainable":true, "p":1.0},
+                "C-C" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outB" : {"scheme" : "IdentityDecoding"},
@@ -64,7 +65,7 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 500,
+            "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 3, "agents_per_task": 1}}]

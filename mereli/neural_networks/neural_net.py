@@ -177,7 +177,8 @@ class NeuralNetwork(BaseNeuralNet):
             II = np.stack(tuple(self.monitor.get('currents').values()))
             vv = np.stack(tuple(self.monitor.get('voltages').values()))
             import matplotlib.pyplot as plt
-            import pdb; pdb.set_trace()
+            __import__('pdb').set_trace()
+            # import pdb; pdb.set_trace()
         # actions['outA'] = [1,1]
         return actions
     
