@@ -47,8 +47,6 @@
                 "I1-T" : {"pre":"I1","post":"OUT_TASK", "trainable":true, "p":1.0},
                 "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-T" : {"pre":"I2","post":"OUT_TASK", "trainable":true, "p":1.0},
-                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-T" : {"pre":"I3","post":"OUT_TASK", "trainable":true, "p":1.0},
                 "T-T" : {"pre":"OUT_TASK","post":"OUT_TASK", "trainable":true, "p":1.0},
                 "C-C" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
