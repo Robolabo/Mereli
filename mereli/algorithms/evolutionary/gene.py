@@ -5,7 +5,6 @@ from mereli.neural_networks import NeuralNetwork
 from mereli.register import normalizations, distributions, mutations
 
 class BaseGene:
-
     def __init__(self):
         self._innovation = None
         self._value = None

@@ -1,42 +1,18 @@
 {
     "checkpoint_file" : "chk_task_allocation_1",
     "topology" : {
-        "msg_sel_ann" : {
+        "main_ann" : {
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 4, "sensor" : "stateful_rx:state"}
-            },
-            "neuron_model" : "perceptron",
-            "synapse_model" : "static_synapse",
-            "ensembles": {
-                "H" : {"n" : 10, "params" : {"activation" : "sigmoid"}},
-                "WEIGHT" : {"n" : 1, "params" : {"activation" : "sigmoid"}}
-            },
-            "outputs" : {
-                "weight" : {"ensemble" : "WEIGHT", "actuator" : "WEIGHT", "enc": "real"}
-            },
-            "synapses" :  {
-                "I1-H" : {"pre":"I1","post":"H", "trainable":true, "p":1.0},
-                "H-W" : {"pre":"H","post":"WEIGHT", "trainable":true, "p":1.0}
-            },
-            "decoding" : {
-                "weight" : {"scheme" : "IdentityDecoding"}
-            },
-            "learning_rule" : {}
-        },
-        "main_ann" : {
-            "dt" : 0.07,
-            "time_scale" : 1,
-            "stimuli": {
-                "I1" : {"n" : 4, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 4, "sensor" : "own_state"}
+                "I1" : {"n" : 5, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 5, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}}
+                "OUT_COMM" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}},
+                "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -66,25 +42,25 @@
             "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 3, "agents_per_task": 1}}]
+            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 5, "agents_per_task": 1}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 3,
+                "num_instances" : 5,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 4, "range" : 4}
+                    "stateful_rx" : {"state_dim" : 5, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 4, "range" : 4},
+                    "stateful_tx" : {"state_dim" : 5, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-1,-1],"high" : [1,1], "size" : 2}},
+                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 1,"initial_pos" : [0,0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
