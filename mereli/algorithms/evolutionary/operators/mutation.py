@@ -69,7 +69,7 @@ def add_connection(genotype, input_nodes, innovation):
     #* Create new connection gene
     conn_name = '-'.join(new_conn)
     new_connection = ConnectionGene(conn_name, pre=new_conn[0], post=new_conn[1])
-    new_connection.topology = genotype.get_node(new_conn[0]).topology
+    new_connection.topology = genotype.get_node(new_conn[1]).topology
     new_connection.configure(genotype.gene_info)
     new_connection.initialize()
     new_connection.idx = len([*genotype.connections])

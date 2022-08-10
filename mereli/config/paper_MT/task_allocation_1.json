@@ -69,7 +69,7 @@
         }
     },
     "algorithm" : {
-        "name" : "neat",
+        "name" : "NEAT",
         "population_size" : 150,
         "generations" : 1000,
         "evaluation_steps" : 3000,
@@ -82,7 +82,7 @@
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.05}}
 	},
-	"params" : {
+	"alg_params" : {
 	    "p_weight_mut" : 0.4, "p_node_mut" : 0.2, "p_conn_mut" : 0.2, "compatib_thresh" : 1.5,
 	    "c1" : 1, "c2" : 1, "c3" : 1, "species_elites" : 2
 	}

@@ -161,6 +161,7 @@ class NEAT(EvolutionaryAlgorithm):
         super().initialize(*args, **kwargs)
         self.input_nodes = [*chain(*[[name + '_' + str(num) for num in range(stim['n'])]
                 for name, stim in [*args[1].values()][0]['stimuli'].items()])]
+        __import__('pdb').set_trace()
         if self.rank == 0:
             #* Only initialize weights randomly, the structure is always the same.
             for genotype in self.population:
