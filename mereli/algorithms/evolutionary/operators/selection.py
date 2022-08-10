@@ -104,7 +104,7 @@ def nonlin_rank_selection(population, n_sel, p_best=.1):
 
 
 @evo_operator_registry(name='tournament_selection')
-def tournament_selection(population,  n_sel, tournament_size=3):
+def tournament_selection(population,  n_sel, tournament_size=6):
     """ Tournament selection operator of GA. Firstly, n_sel tournaments are 
     arraged, with tournament contestants elected randomly (with same prob., 
     regardless of their fitness). For each tournament, of sizes tournament_size,

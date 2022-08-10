@@ -2,7 +2,7 @@ import copy
 import time
 import logging
 import numpy as np
-
+from itertools import chain
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from mereli.register import algorithm_registry
 from .species import Species
@@ -54,8 +54,6 @@ class NEAT(EvolutionaryAlgorithm):
     def evolve(self):
         t0 = time.time()
         offspring = []
-        # for genotype, fitness in zip(self.population, fitness_vector):
-        #     genotype.fitness = fitness
         self.best = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[0]
         #* Update species fitness statistics
         for spc in self.species:
@@ -161,6 +159,8 @@ class NEAT(EvolutionaryAlgorithm):
         self.species = []#Species(self.species_count, 0, compatib_thresh=self.compatib_thresh, 
                             #c1=self.c1, c2=self.c2, c3=self.c3)]
         super().initialize(*args, **kwargs)
+        self.input_nodes = [*chain(*[[name + '_' + str(num) for num in range(stim['n'])]
+                for name, stim in [*args[1].values()][0]['stimuli'].items()])]
         if self.rank == 0:
             #* Only initialize weights randomly, the structure is always the same.
             for genotype in self.population:

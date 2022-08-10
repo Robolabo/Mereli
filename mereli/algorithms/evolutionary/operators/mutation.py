@@ -44,7 +44,7 @@ def add_node(genotype, innovation):
         new_conn.topology = sel_conn.topology
         new_conn.configure(genotype.gene_info)
         if n == 0:
-            new_conn.parameters = sel_conn.parameters
+            new_conn.parameters = sel_conn.parameters.copy()
         else:
             new_conn.initialize()
         new_conn.learning_rule = sel_conn.learning_rule
