@@ -114,7 +114,7 @@ class TaskAllocation(Task):
         if all(led_res):    
             return np.array([10.])
         else:
-            return np.mean(led_res)
+            return np.exp(np.mean(led_res)) - 1
         # if all(led != robot_led for led in others_led):
         #     # print("Low reward")
         #     return np.array([1])
