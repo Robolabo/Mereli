@@ -67,6 +67,7 @@ class Robot(WorldObject):
         #* Add reward as a new state entry.
         state['reward'] = np.array([self.reward]).flatten()
         state['task'] = self.task
+        print(self.reward)
         #* Apply perturbations to stimuli 
         if perturbations is not None:
             for pert in perturbations:
