@@ -5,14 +5,14 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 3, "sensor" : "own_state"}
+                "I1" : {"n" : 4, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 4, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}}
+                "OUT_TASK" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}},
+                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -22,9 +22,7 @@
                 "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I1-T" : {"pre":"I1","post":"OUT_TASK", "trainable":true, "p":1.0},
                 "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I2-T" : {"pre":"I2","post":"OUT_TASK", "trainable":true, "p":1.0},
-                "T-T" : {"pre":"OUT_TASK","post":"OUT_TASK", "trainable":true, "p":1.0},
-                "C-C" : {"pre":"OUT_COMM","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I2-T" : {"pre":"I2","post":"OUT_TASK", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outB" : {"scheme" : "IdentityDecoding"},
@@ -42,21 +40,21 @@
             "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 5, "agents_per_task": 1}}]
+            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 4, "agents_per_task": 1}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 4,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 3, "range" : 1.2}
+                    "stateful_rx" : {"state_dim" : 4, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 3, "range" : 1.2},
+                    "stateful_tx" : {"state_dim" : 4, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {

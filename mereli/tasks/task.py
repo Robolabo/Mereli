@@ -116,21 +116,16 @@ class TaskAllocation(Task):
             reward = np.array([10.])
         else:
             reward = np.exp(np.mean(led_res)) - 1
-        return reward
-        # if all(led != robot_led for led in others_led):
-        #     # print("Low reward")
-        #     return np.array([1])
-        #     if robot_led == self.prev_task[robot_name]:
-        #         self.times_task[robot_name] += 1
-        #     else:
-        #         self.times_task[robot_name] = 1
-        #         self.prev_task[robot_name] = robot_led
-        #         return np.array([min(self.times_task[robot_name], 25) / 25])
-        # else:
-        #     self.times_task[robot_name] = 0
-        #     self.prev_task[robot_name] = robot_led
-        # print("No reward")
-        return np.array([0.])
+        if all(led != robot_led for led in others_led):
+            if robot_led == self.prev_task[robot_name]:
+                self.times_task[robot_name] += 1
+            else:
+                self.times_task[robot_name] = 1
+                self.prev_task[robot_name] = robot_led
+        else:
+            self.times_task[robot_name] = 0
+            self.prev_task[robot_name] = robot_led
+        return reward *  min(self.times_task[robot_name], 50) / 50])
 
     def done_generator(self, entities):
         return False
