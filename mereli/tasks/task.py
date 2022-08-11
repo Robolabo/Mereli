@@ -110,21 +110,23 @@ class TaskAllocation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         all_led = np.array([int(ent.actuators['led_actuator'].action[0])\
             for ent in entities.values() if issubclass(type(ent), Robot)])
-        if all(led != led2 for led in all_led for led2 in all_led):
-            # print("High reward")
-            return np.array([5.])
-        if all(led != robot_led for led in others_led):
-            # print("Low reward")
-            return np.array([1])
-            if robot_led == self.prev_task[robot_name]:
-                self.times_task[robot_name] += 1
-            else:
-                self.times_task[robot_name] = 1
-                self.prev_task[robot_name] = robot_led
-                return np.array([min(self.times_task[robot_name], 25) / 25])
+        led_res = [all(all_led[i] != all_led[j] for j in range(len(all_led)) if i != j) for i in range(len(all_led))]
+        if all(led_res):    
+            return np.array([10.])
         else:
-            self.times_task[robot_name] = 0
-            self.prev_task[robot_name] = robot_led
+            return np.mean(led_res)
+        # if all(led != robot_led for led in others_led):
+        #     # print("Low reward")
+        #     return np.array([1])
+        #     if robot_led == self.prev_task[robot_name]:
+        #         self.times_task[robot_name] += 1
+        #     else:
+        #         self.times_task[robot_name] = 1
+        #         self.prev_task[robot_name] = robot_led
+        #         return np.array([min(self.times_task[robot_name], 25) / 25])
+        # else:
+        #     self.times_task[robot_name] = 0
+        #     self.prev_task[robot_name] = robot_led
         # print("No reward")
         return np.array([0.])
 
