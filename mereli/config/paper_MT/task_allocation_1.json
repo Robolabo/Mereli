@@ -5,13 +5,13 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 5, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 5, "sensor" : "own_state"}
+                "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 3, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}},
+                "OUT_COMM" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
                 "OUT_TASK" : {"n" : 5, "params" : {"activation" : "sigmoid", "tau" : 1}}
             },
             "outputs" : {
@@ -53,10 +53,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 5, "range" : 1.2}
+                    "stateful_rx" : {"state_dim" : 3, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 5, "range" : 1.2},
+                    "stateful_tx" : {"state_dim" : 3, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
@@ -78,8 +78,8 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
-		"initialization" : {"type" : "gaussian", "sigma" : 1},
+		"normalization" : {"type": "linear", "min_val" : -1, "max_val" : 1}, 
+		"initialization" : {"type" : "gaussian", "sigma" : 0.1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.05}}
 	},
 	"alg_params" : {
