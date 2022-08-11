@@ -78,8 +78,6 @@ class Evaluator:
             mean_survival_time += survival_time
             if self.fitness_fn is not None:
                 fitness += self.fitness_fn.fitness
-                print(fitness)
-                __import__('pdb').set_trace()
         mean_survival_time /= self.num_evaluations
         #TODO Mejorar.
         if isinstance(genotype, list):
