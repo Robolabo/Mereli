@@ -125,7 +125,7 @@ class TaskAllocation(Task):
         else:
             self.times_task[robot_name] = 0
             self.prev_task[robot_name] = robot_led
-        return reward *  min(self.times_task[robot_name], 50) / 50
+        return reward #*  min(self.times_task[robot_name], 50) / 50
 
     def done_generator(self, entities):
         return False

@@ -12,7 +12,7 @@
             "synapse_model" : "static_synapse",
             "ensembles": {
                 "OUT_TASK" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}}
+                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "tanh", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
