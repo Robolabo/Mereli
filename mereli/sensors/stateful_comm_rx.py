@@ -48,9 +48,10 @@ class StatefulCommRX(Sensor):
             else:
                 # neigh_state = np.stack(neigh_state)
                 #neigh_state = neigh_state[np.random.choice(len(neigh_state))]
-                neigh_state = np.mean(neigh_state, 0)
+                state_agg = np.mean([st - own_state for st in neigh_state], 0)
+                # neigh_state = np.mean(neigh_state, 0)
 
-        return {'mean_neigh_state' : neigh_state,# + np.random.randn(self.state_dim) * 0.0,
+        return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.0,
                 'own_state' : own_state}# + np.random.randn()* 0.0}
 
 
