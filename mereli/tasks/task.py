@@ -113,18 +113,20 @@ class TaskAllocation(Task):
         led_res = [all(all_led[i] != all_led[j] for j in range(len(all_led)) if i != j) for i in range(len(all_led))]
         reward = 0.
         if all(led_res):    
+            __import__('pdb').set_trace()
             reward = np.array([10.])
-        else:
-            reward = np.exp(np.mean(led_res)) - 1
-        if all(led != robot_led for led in others_led):
-            if robot_led == self.prev_task[robot_name]:
-                self.times_task[robot_name] += 1
-            else:
-                self.times_task[robot_name] = 1
-                self.prev_task[robot_name] = robot_led
-        else:
-            self.times_task[robot_name] = 0
-            self.prev_task[robot_name] = robot_led
+        elif sum(led_res) >= 3:
+            __import__('pdb').set_trace()
+            reward = np.mean(led_res) - 3#np.exp(np.mean(led_res)) - 1
+        # if all(led != robot_led for led in others_led):
+        #     if robot_led == self.prev_task[robot_name]:
+        #         self.times_task[robot_name] += 1
+        #     else:
+        #         self.times_task[robot_name] = 1
+        #         self.prev_task[robot_name] = robot_led
+        # else:
+        #     self.times_task[robot_name] = 0
+        #     self.prev_task[robot_name] = robot_led
         return reward #*  min(self.times_task[robot_name], 50) / 50
 
     def done_generator(self, entities):
