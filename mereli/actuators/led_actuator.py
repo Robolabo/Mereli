@@ -11,7 +11,7 @@ class LedActuator(Actuator):
     the action. """
     def __init__(self, *args, num_colors=2, **kwargs):
         super(LedActuator, self).__init__(*args, **kwargs)
-        self.colors = [[1,1,1], [0,1,0], [1,1,0], [0,0,1], [1,0,0]]
+        self.colors = [[0,0,1], [0,1,0], [0,1,1], [1,0,0], [1,0,1], [1,1,0], [1,1,1]]
         self.color_on = [1,0,0]
         self.color_off = [1,1,1]
         self.color_fault = [1,0,0]

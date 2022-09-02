@@ -283,7 +283,6 @@ class RandomGraphInitializer(Initializer):
                 cov_mat = np.array([[sigma_x, rho * sigma_x * sigma_y], [rho * sigma_x * sigma_y, sigma_y]])
                 new_pos = 0.8 * np.random.multivariate_normal(mu, cov_mat, size=1).flatten() + points[-1]
             points.append(new_pos)
-
         return points
      
 

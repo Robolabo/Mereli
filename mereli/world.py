@@ -133,7 +133,6 @@ class World(object):
         :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
                   Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
-        # import pdb; pdb.set_trace()
         states = deque()
         actions = deque()
         pre_perturbations = []

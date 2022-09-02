@@ -5,14 +5,14 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 4, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 4, "sensor" : "own_state"}
+                "I1" : {"n" : 6, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 6, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_TASK" : {"n" : 4, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "OUT_COMM" : {"n" : 4, "params" : {"activation" : "tanh", "tau" : 1}}
+                "OUT_TASK" : {"n" : 6, "params" : {"activation" : "sigmoid", "tau" : 1}},
+                "OUT_COMM" : {"n" : 6, "params" : {"activation" : "tanh", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -37,33 +37,33 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 300,
+            "total_duration" : 800,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 4, "agents_per_task": 1}}]
+            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 6, "agents_per_task": 1}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 6,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 4, "range" : 1.2}
+                    "stateful_rx" : {"state_dim" : 6, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 4, "range" : 1.2},
+                    "stateful_tx" : {"state_dim" : 6, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph",  "params" : {"max_rad": 1,"initial_pos" : [0,0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
-                "perturbations" : {},
+               "perturbations" : {},
                 "params" : {"trainable" : true}
-            }
+	    }
         }
     },
     "algorithm" : {

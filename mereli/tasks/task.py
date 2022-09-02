@@ -113,10 +113,8 @@ class TaskAllocation(Task):
         led_res = [all(all_led[i] != all_led[j] for j in range(len(all_led)) if i != j) for i in range(len(all_led))]
         reward = 0.
         if all(led_res):    
-            __import__('pdb').set_trace()
             reward = np.array([10.])
         elif sum(led_res) >= 3:
-            __import__('pdb').set_trace()
             reward = np.mean(led_res) - 3#np.exp(np.mean(led_res)) - 1
         # if all(led != robot_led for led in others_led):
         #     if robot_led == self.prev_task[robot_name]:
