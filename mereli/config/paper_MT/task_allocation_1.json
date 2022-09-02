@@ -5,14 +5,14 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 6, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 6, "sensor" : "own_state"}
+                "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 3, "sensor" : "own_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_TASK" : {"n" : 6, "params" : {"activation" : "sigmoid", "tau" : 1}},
-                "OUT_COMM" : {"n" : 6, "params" : {"activation" : "tanh", "tau" : 1}}
+                "OUT_TASK" : {"n" : 3, "params" : {"activation" : "sigmoid", "tau" : 1}},
+                "OUT_COMM" : {"n" : 3, "params" : {"activation" : "tanh", "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"},
@@ -40,21 +40,21 @@
             "total_duration" : 800,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 6, "agents_per_task": 1}}]
+            "tasks" : [{"name" : "task_allocation", "params" : {"num_tasks" : 3, "agents_per_task": 1}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 6,
+                "num_instances" : 3,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 6, "range" : 1.2}
+                    "stateful_rx" : {"state_dim" : 3, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 6, "range" : 1.2},
+                    "stateful_tx" : {"state_dim" : 3, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
@@ -76,8 +76,8 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
-		"initialization" : {"type" : "gaussian", "sigma" : 2},
+		"normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3},

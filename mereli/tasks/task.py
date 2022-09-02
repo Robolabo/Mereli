@@ -112,10 +112,10 @@ class TaskAllocation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot)])
         led_res = [all(all_led[i] != all_led[j] for j in range(len(all_led)) if i != j) for i in range(len(all_led))]
         reward = 0.
-        if all(led_res):    
+        if all(led_res): 
             reward = np.array([10.])
         else:
-            reward = np.mean(led_res)#np.exp(np.mean(led_res)) - 1
+            reward = np.mean(led_res) #np.exp(np.mean(led_res)) - 1
         # if all(led != robot_led for led in others_led):
         #     if robot_led == self.prev_task[robot_name]:
         #         self.times_task[robot_name] += 1
