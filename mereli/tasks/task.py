@@ -114,8 +114,8 @@ class TaskAllocation(Task):
         reward = 0.
         if all(led_res):    
             reward = np.array([10.])
-        elif sum(led_res) >= 3:
-            reward = np.mean(led_res) - 3#np.exp(np.mean(led_res)) - 1
+        else:
+            reward = np.mean(led_res)#np.exp(np.mean(led_res)) - 1
         # if all(led != robot_led for led in others_led):
         #     if robot_led == self.prev_task[robot_name]:
         #         self.times_task[robot_name] += 1
