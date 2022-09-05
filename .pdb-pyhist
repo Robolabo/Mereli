@@ -1,3 +1,9 @@
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
 jjjj
 plt.plot(oo.T[:, :3])
 plt.show()
@@ -41,3 +47,454 @@ interact
 closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
 closest
 [np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+x
+c
+jjjj
+plt.plot(oo.T[:, :3])
+plt.show()
+reward
+all_led
+plt.plot(oo.T[:, :3]);plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(vv.T)
+plt.show(
+entities
+entities[robot_name]
+entities[robot_name].sensors
+entities[robot_name].sensors['statefull_rx']
+entities[robot_name].sensors['stateful_rx']
+entities[robot_name].sensors['stateful_rx'].state
+closest
+np.linalg.norm(pt - my_state) for pt in self.points
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+self.points
+len(self.points)
+[np.linalg.norm(pt - my_state) for pt in self.points]
+interact
+[np.linalg.norm(pt - my_state) for pt in self.points]
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
+np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+interact
+closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
+closest
+[np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()

@@ -32,10 +32,10 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 500,
+            "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[0, 0], [1, 1], [0, 1], [1, 0]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1, -1], [1, 1], [-1, 1], [1, -1]]}}]
         },
         "objects" : {
             "robotA" : {
