@@ -14,6 +14,7 @@ class StatefulCommRX(Sensor):
         self.range = range
         self.state_dim = state_dim
         self.attention_network = None
+        self.state = None
     
     def build_attention(self, topology):
         self.attention_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
@@ -21,6 +22,7 @@ class StatefulCommRX(Sensor):
         self.neural_network.build_from_dict(topology)
 
     def reset(self):
+        self.state = np.array([0] * self.state_dim)
         if self.attention_network is not None:
             self.attention_network.reset()
 
@@ -50,7 +52,7 @@ class StatefulCommRX(Sensor):
                 #neigh_state = neigh_state[np.random.choice(len(neigh_state))]
                 state_agg = np.mean([st - own_state for st in neigh_state], 0)
                 # neigh_state = np.mean(neigh_state, 0)
-
+        self.state = own_state
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.0,
                 'own_state' : own_state}# + np.random.randn()* 0.0}
 

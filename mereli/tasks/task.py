@@ -136,6 +136,30 @@ class TaskAllocation(Task):
         self.prev_task = {}
         self.times_task = {}
 
+
+@task_registry(name="comm_formation")
+class CommFormation(Task):
+    def __init__(self, *args, points=[], **kwargs):
+        super(CommFormation, self).__init__(*args, **kwargs)
+        self.points = np.array(points) 
+        
+    def reward_generator(self, entities, robot_name):
+        my_state = entities[robot_name].sensors['stateful_rx'].state
+        others_state = np.array([ent.sensors['stateful_rx'].state\
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+        closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points]) 
+        alpha = 2
+        r1 = np.exp(-alpha * np.linalg.norm(my_state - closest))
+        r2 = np.mean([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) 
+        reward = r1 * r2 
+        return reward
+
+    def done_generator(self, entities):
+        return False
+    
+    def reset(self):
+        super().reset()
+
 @task_registry(name="obstacle_avoidance")
 class ObstacleAvoidance(Task):
     def __init__(self, *args, **kwargs):
