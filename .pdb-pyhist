@@ -1,7 +1,3 @@
-interact
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
 plt.plot(ii.T[:,2:]);plt.show()
 c
 jjjj
@@ -497,4 +493,8 @@ interact
 closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
 closest
 [np.linalg.norm(pt - my_state) for pt in self.points]
+plt.plot(ii.T[:,2:]);plt.show()
+self.evaluator.fitness
+self.evaluator.fitness_fn
+self.evaluator.fitness_fn.fitness
 plt.plot(ii.T[:,2:]);plt.show()

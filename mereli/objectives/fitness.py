@@ -298,15 +298,19 @@ class FitnessFunction:
 @fitness_func_registry(name='reward_integration')
 class RewardIntegration(FitnessFunction):
     """Fitness function for the exploration task."""
-    def __init__(self, *args, t_warm_up=20, **kwargs):
+    def __init__(self, *args, aggregation='prod', t_warm_up=20, **kwargs):
         self.required_info = []
         self.t_warm_up = t_warm_up
+        self.aggregation = aggregation
         super(RewardIntegration, self).__init__(*args, **kwargs)
         
     @increase_time
     def __call__(self):
         if self.t > self.t_warm_up:
-            self._fitness += np.mean(self.rewards)
+            if self.aggregation == 'mean':
+                self._fitness += np.mean(self.rewards)
+            elif self.aggregation == 'prod':
+                self._fitness += np.prod(self.rewards)
 
     @property
     def fitness(self):
