@@ -298,7 +298,7 @@ class FitnessFunction:
 @fitness_func_registry(name='reward_integration')
 class RewardIntegration(FitnessFunction):
     """Fitness function for the exploration task."""
-    def __init__(self, *args, aggregation='prod', t_warm_up=20, **kwargs):
+    def __init__(self, *args, aggregation='mean', t_warm_up=20, **kwargs):
         self.required_info = []
         self.t_warm_up = t_warm_up
         self.aggregation = aggregation

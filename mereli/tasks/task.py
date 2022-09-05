@@ -149,8 +149,8 @@ class CommFormation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points]) 
         alpha = 2
-        r1 = np.exp(-alpha * np.linalg.norm(my_state - closest))
-        r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) 
+        r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
+        r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
         reward = r1 * r2 
         return reward
 
