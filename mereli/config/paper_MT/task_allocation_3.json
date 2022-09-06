@@ -65,7 +65,7 @@
     },
     "algorithm" : {
         "name" : "NEAT",
-        "population_size" : 100,
+        "population_size" : 200,
         "generations" : 200,
         "evaluation_steps" : 3000,
         "num_evaluations" : 4,
@@ -82,7 +82,7 @@
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
 	},
 	"alg_params" : {
-	    "p_weight_mut" : 0.4, "p_node_mut" : 0.01, "p_conn_mut" : 0.05, "compatib_thresh" : 4,
+	    "p_weight_mut" : 0.4, "p_node_mut" : 0.01, "p_conn_mut" : 0.05, "compatib_thresh" : 4.5,
 	    "c1" : 1, "c2" : 1, "c3" : 3, "species_elites" : 2
 	}
     }

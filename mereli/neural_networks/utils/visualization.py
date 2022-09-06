@@ -24,6 +24,42 @@ import graphviz
 #     nx.draw(G_ann, nodes_pos)
 #     plt.show()
 
+def plot_ann2(neural_net):
+    import pygraphviz as pgv
+    G = pgv.AGraph(directed=True)
+    
+    for in_ens in neural_net.input_ensemble_names:
+        for in_name, inp in neural_net.graph['inputs'].items():
+            if inp['ensemble'] == in_ens:
+                G.add_node(inp['index'])
+                G.get_node(inp['index']).attr['label'] = in_name 
+                G.get_node(inp['index']).attr['fillcolor'] = 'yellow' 
+
+    #* Hidden
+    for ensemble in neural_net.ensemble_names:
+        if ensemble not in neural_net.motor_ensemble_names:
+            for name, node in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                G.add_node(node['index'])
+                G.get_node(node['index']).attr['label'] = name 
+                G.get_node(node['index']).attr['fillcolor'] = 'blue' 
+    #* Motor
+    for ensemble in neural_net.ensemble_names:
+        if ensemble in neural_net.motor_ensemble_names:
+            for name, node in filter(lambda mot: mot[1]['ensemble'] == ensemble, neural_net.graph['neurons'].items()):
+                G.add_node(node['index'])
+                G.get_node(node['index']).attr['label'] = name 
+                G.get_node(node['index']).attr['fillcolor'] = 'red' 
+
+    hidden_nodes = [name for name, node in neural_net.graph['neurons'].items() if not node['is_motor']]
+    motor_nodes = [name for name, node in neural_net.graph['neurons'].items() if node['is_motor']]
+    # Hidden-Hidden
+    for conn_name, conn in neural_net.graph['synapses'].items():
+        if not conn['enabled']:
+            continue
+        graph.edge(conn['pre'], conn['post'],fontsize='9',**conn_attr)
+
+
+
 
 def plot_weight_hist(neural_net):
     plt.hist(neural_net.weights[neural_net.weights != 0.0])
