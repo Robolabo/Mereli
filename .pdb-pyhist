@@ -1,9 +1,3 @@
-self.points
-len(self.points)
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-closest
 [np.linalg.norm(pt - my_state) for pt in self.points]
 np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
 np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
@@ -498,3 +492,9 @@ arch_conn_distancelen(diff_genes)
 len(diff_genes)
 max(len(repr_innovations), len(genotype_innovations))
 param_distance
+total_distance
+total_dist
+parameter_distance
+param_distance
+arch_conn_distance
+arch_node_distance
