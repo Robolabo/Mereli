@@ -1,21 +1,3 @@
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-plt.plot(oo.T)
-plt.show()
-plt.plot(vv.T)
-plt.show(
-entities
-entities[robot_name]
-entities[robot_name].sensors
-entities[robot_name].sensors['statefull_rx']
-entities[robot_name].sensors['stateful_rx']
-entities[robot_name].sensors['stateful_rx'].state
-closest
-np.linalg.norm(pt - my_state) for pt in self.points
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
 self.points
 len(self.points)
 [np.linalg.norm(pt - my_state) for pt in self.points]
@@ -498,3 +480,21 @@ state_diffs
 state_diffs[0]
 state_diffs[0][1]
 state_diffs[0][1])
+plt.plot(ii.T[:,2:4]);plt.show()
+plt.plot(OO.T[:,:2]);plt.show()
+plt.plot(oo.T[:,:2]);plt.show()
+plt.plot(ii.T[:,2:4]);plt.show()
+plt.plot(oo.T);plt.show()
+self.neurons
+self.neurons.gain
+plt.plot(oo.T);plt.show()
+total_dist
+param_dist
+param_distance
+arch_node_distance
+arch_conn_distanc
+arch_conn_distance
+arch_conn_distancelen(diff_genes)
+len(diff_genes)
+max(len(repr_innovations), len(genotype_innovations))
+param_distance

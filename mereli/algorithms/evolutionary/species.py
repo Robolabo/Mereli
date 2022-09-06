@@ -52,17 +52,12 @@ class Species:
         #* Connection parameter's distance 
         if len(conn_params):
             for param in conn_params:
-                # try:
-                # print([*self.representative.connections][-1].parameters)
-                # print
                 param_repr = np.array([g.parameters[param] for g in self.representative.connections
                                             if g.innovation in common_genes])
-                # except:
-                #     import pdb; pdb.set_trace()
                 param_genotype = np.array([g.parameters[param] for g in genotype.connections 
                                         if g.innovation in common_genes])
                 assert len(param_repr) == len(param_genotype)
-                param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+                param_distance += np.linalg.norm(param_repr - param_genotype) #/ np.sqrt(len(param_genotype))
             param_distance /= len(conn_params)
         #* Node parameter's distance
         if len(node_params):
@@ -77,13 +72,14 @@ class Species:
                 if param == 'activation':
                     param_distance += np.mean(param_repr == param_genotype)
                 else:
-                    param_distance += np.linalg.norm(param_repr - param_genotype) / np.sqrt(len(param_genotype))
+                    param_distance += np.linalg.norm(param_repr - param_genotype) # / np.sqrt(len(param_genotype))
             param_distance /= len(node_params) 
         
         #* Topological distance
-        arch_conn_distance = len(diff_genes) / 10 #max(len(repr_innovations), len(genotype_innovations))
-        arch_node_distance = len(geno_nodes - repr_nodes) / max(len(geno_nodes), len(repr_nodes))
+        arch_conn_distance = len(diff_genes)# / 10 #max(len(repr_innovations), len(genotype_innovations))
+        arch_node_distance = len(geno_nodes - repr_nodes)# / max(len(geno_nodes), len(repr_nodes))
         total_dist = self.c1 * (arch_conn_distance + arch_node_distance) + self.c3 * param_distance
+        # if arch_conn_distance > 0 and arch_node_distance > 0:__import__('pdb').set_trace()
         return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):
