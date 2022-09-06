@@ -80,6 +80,7 @@ class Species:
         arch_node_distance = len(geno_nodes - repr_nodes)# / max(len(geno_nodes), len(repr_nodes))
         total_dist = self.c1 * (arch_conn_distance + arch_node_distance) + self.c3 * param_distance
         # if arch_conn_distance > 0 and arch_node_distance > 0:__import__('pdb').set_trace()
+        if total_dist < self.compatib_thresh: __import__('pdb').set_trace()
         return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):
