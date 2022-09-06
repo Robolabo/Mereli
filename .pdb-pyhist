@@ -1,16 +1,3 @@
-plt.plot(ii.T[:,2:]);plt.show()
-c
-jjjj
-plt.plot(oo.T[:, :3])
-plt.show()
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-x
-c
-jjjj
-plt.plot(oo.T[:, :3])
-plt.show()
 reward
 all_led
 plt.plot(oo.T[:, :3]);plt.show()
@@ -498,3 +485,16 @@ self.evaluator.fitness
 self.evaluator.fitness_fn
 self.evaluator.fitness_fn.fitness
 plt.plot(ii.T[:,2:]);plt.show()
+closest_state
+mean_neigh_state
+state_agg
+state_diffs
+interact
+[np.linalg.norm(st_df) for st_df in state_diffs]
+neigh_states
+neigh_state
+own_state
+state_diffs
+state_diffs[0]
+state_diffs[0][1]
+state_diffs[0][1])
