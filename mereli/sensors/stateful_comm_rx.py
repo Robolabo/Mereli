@@ -55,9 +55,9 @@ class StatefulCommRX(Sensor):
         state_agg = np.mean(state_diffs, 0)
         self.state = own_state
         closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.0,
-                'closest_state' : closest_state,
-                'own_state' : own_state}# + np.random.randn()* 0.0}
+        return {'mean_neigh_state' : state_agg + np.random.randn(self.state_dim) * 0.05,
+                'closest_state' : closest_state  + np.random.randn(self.state_dim) * 0.05,
+                'own_state' : own_state + np.random.randn() * 0.05}
 
 
 @sensor_registry(name='comm_rx_a')

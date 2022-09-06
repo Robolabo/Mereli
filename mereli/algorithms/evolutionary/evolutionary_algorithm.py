@@ -192,7 +192,7 @@ class EvolutionaryAlgorithm:
         else: 
             best, second, third = sorted(self.population, key=lambda x: x.fitness, reverse=True)[:3]
         get_weights = lambda x: np.array([x.parameters['weight'] for x in x.connections])
-        self.evaluator.evaluate(second, 0)
+        self.evaluator.evaluate(best, 0)
         import pdb; pdb.set_trace()
         # for trial in range(trials):
             

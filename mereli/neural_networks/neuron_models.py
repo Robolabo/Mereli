@@ -218,7 +218,7 @@ class RateModel(NonSpikingNeuronModel):
         return outputs, self._volt.copy()
 
     #! pasarlo a base
-    def add(self, tau=1., gain=1., bias=0., activation='sigmoid'):
+    def add(self, tau=1., gain=4., bias=0., activation='sigmoid'):
         self._volt = np.hstack((self._volt, 0))
         self.tau = np.hstack((self.tau, tau)) # np.insert(self.tau, index, values=tau, axis=0)
         self.bias = np.hstack((self.bias, bias))
