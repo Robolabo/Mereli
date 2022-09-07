@@ -148,11 +148,15 @@ class CommFormation(Task):
         others_state = np.array([ent.sensors['stateful_rx'].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        num_closest = np.sum([np.linalg.norm(st - closest) < 0.2 for st in others_state])
         alpha = 2
-        r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
-        r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
-        r2 = np.exp(5 * r2 - 5)
-        reward = r1 * r2 
+        if num_closest == 0:
+            r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
+            r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
+            # r2 = np.exp(5 * r2 - 5)
+            reward = r1 * r2 
+        else:
+            reward = 0
         return reward
 
     def done_generator(self, entities):
