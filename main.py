@@ -1,6 +1,7 @@
 import click
 import os
 import logging
+from datetime import datetime
 try:
     from mpi4py import MPI
     USE_MPI = True
@@ -11,6 +12,7 @@ from mereli.register import fitness_functions
 from mereli.config_parser import json_parser
 from mereli.register import algorithms, worlds, physics_engines
 from mereli.globals import global_states
+from mereli.data_logging import CSVLogger
 
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')
@@ -21,19 +23,28 @@ from mereli.globals import global_states
         help='Execute in eval mode. No optimization will be carried out.')
 @click.option('-v', '--verbose', default=False, is_flag=True,\
         help='Execute in verbose mode (info msgs enabled).')
+@click.option('-l', '--log', default=False, is_flag=True, help='Log data into a file.')
 @click.option('-n', '--ncpu', default=1, help='Number of CPU cores.')
 @click.option('-f', '--cfg', default='default', help='Name of the JSON config. file.')
-def main(render, resume, cfg, debug, eval, verbose, ncpu):
+def main(render, resume, cfg, debug, eval, verbose, log, ncpu):
     #* Set globals
-    global_states.set_states(render=render, eval=eval, debug=debug, info=verbose)
+    global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose)
     #* Parse JSON
     cfg_dict = json_parser(cfg)
     
+    if log:
+        logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
+        logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
+        now = datetime.now()
+        logs_path = os.path.join(logs_path, logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
+        global_states.set_data_logging(logs_path)
+
     # Set loggings
-    # logs_folder = cfg_dict.get('logging_dir', cfg)
-    # logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
-    # if not os.path.isdir(logs_path):
-    #     os.mkdir(logs_path)
+    # if log:
+    #     logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
+    #     logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
+    #     if not os.path.isdir(logs_path):
+    #         os.mkdir(logs_path)
 
     # __import__('pdb').set_trace()
 

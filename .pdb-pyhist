@@ -1,24 +1,3 @@
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-self.points
-len(self.points)
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
-np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
-np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-interact
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
-plt.plot(ii.T[:,2:]);plt.show()
-c
-jjjj
-plt.plot(oo.T[:, :3])
 plt.show()
 reward
 all_led
@@ -498,3 +477,24 @@ closest
 np.linalg.norm(my_state - closest)
 my_state
 plt.plot(ii.T[:, 2:4]);plt.show()
+self.name
+self.id
+global_states.LOG
+global_states.LOG_PATH
+self.path
+os.path.isdir(self.path)
+os.mkdir(self.path)
+os.path.isdir(self.path)
+self.state
+state
+self.robots
+bots = [*self.robots.values()]
+bots
+bots[0].data_logger
+bots[0].data_logger.data
+plt.plot(bots[0].data_logger.data)
+import matplotlib.pyplot as plt
+plt.plot(bots[0].data_logger.data)
+plt.show()
+plt.plot(bots[0].data_logger.data)np.stack(bot.data_logger.data)
+np.stack(bot.data_logger.data)

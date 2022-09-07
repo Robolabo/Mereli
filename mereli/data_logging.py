@@ -1,32 +1,19 @@
 import os
-
-
+import numpy as np
 
 
 class BaseLogger:
 
-    def __init__(self, filename, log_dir):
-        self.filename = filename
-        self.log_dir = log_dir
-        self.path = None
+    def __init__(self, path, filename):
+        self.path = path 
         self.data = None
+        self.filename = filename
 
     def add(self):
         pass
 
     def empty(self):
         pass
-
-class CSVLogger(BaseLogger):
-    def __init__(self, *args, **kwargs):
-       pass 
-
-    def add(self):
-        pass
-
-    def empty(self):
-        pass
-
 
 class PickleLogger(BaseLogger):
     def __init__(self, *args, **kwargs):
@@ -48,3 +35,27 @@ class PickleLogger(BaseLogger):
 
     def empty(self):
         self.data = {} 
+
+
+class CSVLogger(BaseLogger):
+    def __init__(self, *args, **kwargs):
+        super(CSVLogger, self).__init__(*args, **kwargs)
+        self.data = []
+        self.labels = []
+
+        if not os.path.isdir(self.path):
+            os.mkdir(self.path)
+
+    def set_labels(self, labels):
+        self.labels = labels
+
+    def add(self, data_item):
+        self.data.append(data_item)
+
+    def save(self):
+        np.savetxt(os.path.join(self.path, self.filename), self.data)
+
+    def empty(self):
+        pass
+
+
