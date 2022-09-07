@@ -23,6 +23,7 @@ from .physics_engines import *
 from .world import *
 from .objectives import *
 from .algorithms import *
+from .config_parser import *
 
 ROOT_DIR = Path(__file__).parents[0].parents[0]
 sys.path.append(os.path.abspath(os.path.join('..', 'config')))

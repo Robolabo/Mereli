@@ -151,6 +151,7 @@ class CommFormation(Task):
         alpha = 2
         r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
         r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
+        r2 = np.exp(5*r2 - 5)
         reward = r1 * r2 
         return reward
 

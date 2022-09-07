@@ -1,5 +1,6 @@
 {
     "checkpoint_file" : "chk_task_allocation_3",
+    "logging_dir" : "task_allocation_3",
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -82,8 +83,8 @@
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
 	},
 	"alg_params" : {
-	    "p_weight_mut" : 0.4, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
-	    "c1" : 1, "c2" : 1, "c3" : 3, "species_elites" : 2
+	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
+	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }
 }

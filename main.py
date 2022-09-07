@@ -1,4 +1,5 @@
 import click
+import os
 import logging
 try:
     from mpi4py import MPI
@@ -28,6 +29,14 @@ def main(render, resume, cfg, debug, eval, verbose, ncpu):
     #* Parse JSON
     cfg_dict = json_parser(cfg)
     
+    # Set loggings
+    # logs_folder = cfg_dict.get('logging_dir', cfg)
+    # logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
+    # if not os.path.isdir(logs_path):
+    #     os.mkdir(logs_path)
+
+    # __import__('pdb').set_trace()
+
     #* Create World
     physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
                         dt=cfg_dict['world'].get('physics_dt', 0.02), 
