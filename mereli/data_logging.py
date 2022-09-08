@@ -43,8 +43,8 @@ class CSVLogger(BaseLogger):
         self.data = []
         self.labels = []
 
-        if not os.path.isdir(self.path):
-            os.mkdir(self.path)
+        # if not os.path.isdir(self.path):
+        #     os.mkdir(self.path)
 
     def set_labels(self, labels):
         self.labels = labels

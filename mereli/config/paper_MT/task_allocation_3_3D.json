@@ -43,7 +43,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 6,
+                "num_instances" : 8,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
@@ -69,7 +69,7 @@
         "population_size" : 200,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 8,
+        "num_evaluations" : 4,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
