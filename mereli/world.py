@@ -176,19 +176,19 @@ class World(object):
         if self.is_done and global_states.LOG:
             
             import matplotlib.pyplot as plt
-            ax = plt.axes(projection='3d')
+            # ax = plt.axes(projection='3d')
             for bot in self.robots.values():
                 data = np.stack(bot.data_logger.data)
                 # plt.plot(data[:,0], data[:,1])
                 # ax.plot3D(data[:][0], data[:][1], data[:][2])
-                ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
+                # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
                 # plt.scatter(data[0,0], data[0,1], color='red')
-                # plt.scatter(data[-1,0], data[-1,1], color='blue')
-            # plt.xlim([-1.1, 1.1])
-            # plt.ylim([-1.1, 1.1])
-            # plt.title('Communication State Space')
-            # plt.xlabel('Comm State 0')
-            # plt.ylabel('Comm State 1')
+                plt.scatter(data[-1,0], data[-1,1], color='blue')
+            plt.xlim([-1.1, 1.1])
+            plt.ylim([-1.1, 1.1])
+            plt.title('Communication State Space')
+            plt.xlabel('Comm State 0')
+            plt.ylabel('Comm State 1')
             plt.show()
             __import__('pdb').set_trace()
         return states, actions
