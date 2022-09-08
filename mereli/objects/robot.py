@@ -96,7 +96,8 @@ class Robot(WorldObject):
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
         
-        # self.data_logger.add(state['own_state'])
+        if global_states.LOG:
+            self.data_logger.add(state['own_state'])
         return state, actions
 
     def plan_actions(self, actions):
@@ -178,8 +179,9 @@ class Robot(WorldObject):
             self.comm_sys.set_owner(self.id)
             self.comm_sys.reset()
 
-        # self.data_logger = CSVLogger(path=global_states.LOG_PATH, filename=f'robot_{self.id}.csv')
-        # self.data_logger.set_labels(['comm_state_0', 'comm_state_1'])
+        if global_states.LOG:
+            self.data_logger = CSVLogger(path=global_states.LOG_PATH, filename=f'robot_{self.id}.csv')
+            self.data_logger.set_labels(['comm_state_0', 'comm_state_1'])
 
     def add_communication(self, comm_sys):
         if comm_sys.tx_name not in self.actuators:

@@ -1,10 +1,3 @@
-plt.show()
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-x
-c
-jjjj
 plt.plot(oo.T[:, :3])
 plt.show()
 reward
@@ -498,3 +491,10 @@ plt.plot(bots[0].data_logger.data)
 plt.show()
 plt.plot(bots[0].data_logger.data)np.stack(bot.data_logger.data)
 np.stack(bot.data_logger.data)
+np.stack(bot.data_logger.data
+plt.plot(oo.T)
+plt.show()
+plt.plot(oo.T)
+plt.show()
+plt.plot(oo.T)
+plt.show()
