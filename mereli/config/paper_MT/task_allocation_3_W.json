@@ -1,19 +1,19 @@
 {
-    "checkpoint_file" : "chk_task_allocation_3_3D",
-    "logging" : {"file" : "task_allocation_3_3D"},
+    "checkpoint_file" : "chk_task_allocation_3_W",
+    "logging" : {"file" : "task_allocation_3_W"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 3, "sensor" : "mean_neigh_state"},
-                "I2" : {"n" : 3, "sensor" : "own_state"},
-                "I3" : {"n" : 3, "sensor" : "closest_state"}
+                "I1" : {"n" : 2, "sensor" : "mean_neigh_state"},
+                "I2" : {"n" : 2, "sensor" : "own_state"},
+                "I3" : {"n" : 2, "sensor" : "closest_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 3, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+                "OUT_COMM" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
             },
             "outputs" : {
                 "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"}
@@ -38,21 +38,21 @@
             "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1,-1,-1], [-1, -1, 1], [-1, 1, -1],[-1,1,1], [1,-1,-1], [1,-1,1], [1,1, -1], [1,1,1]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1,1], [-0.75, 1], [0, 0], [0.75, 1], [1, 1], [-0.25,-0.25], [0.25,-0.25], [0, -0.5], [-0.5,-1], [0.5, -1]]}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 8,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 3, "range" : 2}
+                    "stateful_rx" : {"state_dim" : 2, "range" : 5}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 3, "range" : 2},
+                    "stateful_tx" : {"state_dim" : 2, "range" : 5},
                     "led_actuator" : {}
                 },
                 "initializers" : {
