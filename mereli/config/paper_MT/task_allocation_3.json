@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_task_allocation_3",
+    "checkpoint_file" : "chk_task_allocation_3c",
     "logging" : {"file" : "task_allocation_3"},
     "topology" : {
         "main_ann" : {
@@ -22,7 +22,8 @@
             "synapses" :  {
                 "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I4-C" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outB" : {"scheme" : "IdentityDecoding"}
