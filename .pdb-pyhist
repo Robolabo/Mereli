@@ -1,5 +1,3 @@
-[np.linalg.norm(pt - my_state) for pt in self.points]
-self.points
 len(self.points)
 [np.linalg.norm(pt - my_state) for pt in self.points]
 interact
@@ -498,3 +496,5 @@ poss
 plt.scatter(poss[:,0], poss[:,1])
 plt.show()
 c
+self.sensor_owner
+self.sensor_owner.task_s

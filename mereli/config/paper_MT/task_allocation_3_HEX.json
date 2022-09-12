@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_task_allocation_3",
-    "logging" : {"file" : "task_allocation_3"},
+    "checkpoint_file" : "chk_task_allocation_3b",
+    "logging" : {"file" : "task_allocation_3b"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -8,8 +8,7 @@
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "mean_neigh_state"},
                 "I2" : {"n" : 2, "sensor" : "own_state"},
-                "I3" : {"n" : 2, "sensor" : "closest_state"},
-                "I4" : {"n" : 2, "sensor" : "closest_target"}
+                "I3" : {"n" : 2, "sensor" : "closest_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -39,25 +38,25 @@
             "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1, -1], [1, 1], [-1, 1], [1, -1], [0, 0]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[0.866,0.5], [0, 1], [-0.866, 0.5], [-0.866, -0.5], [0, -1], [0.866,-0.5]]}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 6,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 2, "range" : 1}
+                    "stateful_rx" : {"state_dim" : 2, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 2, "range" : 1},
+                    "stateful_tx" : {"state_dim" : 2, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 1.1,"initial_pos" : [0,0]}},
+                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 1,"initial_pos" : [0,0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                "perturbations" : {},
