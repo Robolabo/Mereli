@@ -158,7 +158,7 @@ class CommFormation(Task):
             # r2 = np.exp(5 * r2 - 5)
             reward = r1# * r2 
         else:
-            r2 = np.exp(10 * np.linalg.norm(my_state - closest) - 5) 
+            r2 = np.exp(10 * np.linalg.norm(my_state - closest)/np.sqrt(8) - 5) 
             reward = r2
         return reward
 
