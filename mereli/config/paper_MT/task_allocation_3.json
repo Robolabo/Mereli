@@ -40,7 +40,7 @@
             "total_duration" : 300,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1, -1], [1, 1], [-1, 1], [1, -1], [0, 0]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1, -1], [1, 1], [-1, 1], [1, -1]]}}]
         },
         "objects" : {
             "robotA" : {
@@ -78,7 +78,7 @@
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.1}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.6, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},

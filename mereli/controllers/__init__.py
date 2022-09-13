@@ -6,6 +6,7 @@ from .braitenberg import Braitenberg2B, Braitenberg2A
 from .basic_obstacle_avoider import BasicObstacleAvoider
 from .aggregation_controller import *
 from .neural_controller import NeuralController
+from .formation_controller import FormationController
 
 #* Light Controllers
 from .light_position_controller import LightOrbitController, LightRndPositionController
