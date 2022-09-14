@@ -183,7 +183,7 @@ class World(object):
                 # ax.plot3D(data[:][0], data[:][1], data[:][2])
                 # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
                 # plt.scatter(data[0,0], data[0,1], color='red')
-                plt.scatter(data[-1,0], data[-1,1], color='blue')
+                plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
             plt.xlim([-1.1, 1.1])
             plt.ylim([-1.1, 1.1])
             plt.title('Communication State Space')

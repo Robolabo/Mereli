@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_task_allocation_3c",
-    "logging" : {"file" : "task_allocation_3"},
+    "checkpoint_file" : "chk_leader",
+    "logging" : {"file" : "leader"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -38,12 +38,16 @@
             "total_duration" : 500,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-1, -1], [1, 1], [-1, 1], [1, -1]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {
+		    "threshold" : 0.1,
+		    "points" : [[-1.0, -1.0], [-1.0, -0.5], [-1.0, 0.0], [-0.5, -1.0], [-0.5, -0.5], [-0.5, 0.0], [0.0, -1.0], [0.0, -0.5], [0.0, 0.0], [1, 1]]
+		    }
+	    }]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 4,
+                "num_instances" : 16,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
