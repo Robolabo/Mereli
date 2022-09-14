@@ -155,14 +155,11 @@ class CommFormation(Task):
         if num_closest == 0:
             r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
 
-            # r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
+            r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
             # r2 = np.exp(5 * r2 - 5)
-            reward = r1# * r2 
+            reward = r1 * r2 
         else:
-            aux = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
-
-            r2 = np.exp(10 * aux - 5) 
-            reward = r2
+            reward = 0
         return reward
 
     def done_generator(self, entities):
