@@ -56,10 +56,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 2, "range" : 1.2}
+                    "stateful_rx" : {"state_dim" : 2, "range" : 12}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 2, "range" : 1.2},
+                    "stateful_tx" : {"state_dim" : 2, "range" : 12},
                     "led_actuator" : {}
                 },
                 "initializers" : {
