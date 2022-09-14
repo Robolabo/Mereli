@@ -28,7 +28,7 @@ class StatefulCommTX(Actuator):
 
     def reset(self):
         # self.state = np.zeros(self.state_dim)  
-        self.state = np.random.random(self.state_dim)# np.zeros(self.state_dim)  
+        self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
 
 @actuator_registry(name='comm_tx_a')
 class CommTXTypeA(Actuator):
