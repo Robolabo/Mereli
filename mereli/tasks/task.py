@@ -139,16 +139,17 @@ class TaskAllocation(Task):
 
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
-        self.points = np.array(points) 
+        self.points = np.array(points)
+        self.threshold = threshold
         
     def reward_generator(self, entities, robot_name):
         my_state = entities[robot_name].sensors['stateful_rx'].state
         others_state = np.array([ent.sensors['stateful_rx'].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
-        num_closest = np.sum([np.linalg.norm(st - closest) < 0.2 for st in others_state]) #Thresh before 0.2 
+        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         # inside_area = np.linalg.norm(my_state - closest) < 0.2
         alpha = 2
         # if inside_area:
