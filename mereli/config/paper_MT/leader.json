@@ -8,7 +8,8 @@
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "mean_neigh_state"},
                 "I2" : {"n" : 2, "sensor" : "own_state"},
-                "I3" : {"n" : 2, "sensor" : "closest_state"}
+                "I3" : {"n" : 2, "sensor" : "closest_state"},
+                "I4" : {"n" : 2, "sensor" : "closest_target"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -21,7 +22,8 @@
             "synapses" :  {
                 "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I4-C" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outB" : {"scheme" : "IdentityDecoding"}
