@@ -49,10 +49,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 2, "range" : 1}
+                    "stateful_rx" : {"state_dim" : 2, "range" : 1.2}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 2, "range" : 1},
+                    "stateful_tx" : {"state_dim" : 2, "range" : 1.2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
@@ -76,7 +76,7 @@
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.6, "sigma" : 0.05}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.1}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
