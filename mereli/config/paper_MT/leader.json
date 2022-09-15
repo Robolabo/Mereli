@@ -82,11 +82,11 @@
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.05}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.05}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.2, "sigma" : 0.05}}
 	},
 	"alg_params" : {
 	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
