@@ -152,7 +152,7 @@ class CommFormation(Task):
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         inside_area = np.linalg.norm(my_state - closest) < self.threshold 
 
-        alpha = 10
+        alpha = 5
         # if inside_area:
         r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
         # r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
