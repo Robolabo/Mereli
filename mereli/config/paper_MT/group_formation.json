@@ -39,7 +39,7 @@
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "comm_formation", "params" : {
-		    "threshold" : 0.1,
+		    "threshold" : 0.2,
 		    "points" : [[-1,1], [-1, 0.75], [-0.75, 1], [-0.75, 0.75], 
 			    	[1,1], [0.75,1], [1, 0.75],[0.75,0.75],
 		    		[-1,-1],[-1,-0.75],[-0.75,-1],[-0.75, -0.75],
@@ -76,21 +76,21 @@
         "population_size" : 200,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 4,
+        "num_evaluations" : 5,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.5, "sigma" : 0.05}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.3, "sigma" : 0.05}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
 	},
 	"alg_params" : {
-	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
+	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
 	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }

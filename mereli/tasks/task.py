@@ -152,12 +152,14 @@ class CommFormation(Task):
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         inside_area = np.linalg.norm(my_state - closest) < self.threshold 
 
-        alpha = 5
+        alpha = 30
         # if inside_area:
         r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
         # r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
         if inside_area and num_closest == 0:
             return r1
+        elif inside_area and num_closest > 0:
+            return -r1
         return 0.0 
     
     def reward_generator2(self, entities, robot_name):
