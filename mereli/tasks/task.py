@@ -148,7 +148,9 @@ class CommFormation(Task):
         my_state = entities[robot_name].sensors['stateful_rx'].state
         others_state = np.array([ent.sensors['stateful_rx'].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
-        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        # closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        free_spots = [*filter(lambda pt: all([np.linalg.norm(st - pt) > self.threshold for st in others_state]), self.points)]
+        closest = free_spots[np.argmin([np.linalg.norm(pt - my_state) for pt in free_spots])] 
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         inside_area = np.linalg.norm(my_state - closest) < self.threshold 
 
