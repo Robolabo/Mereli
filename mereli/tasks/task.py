@@ -157,7 +157,7 @@ class CommFormation(Task):
         alpha = 10
         # if inside_area:
         r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
-        # r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
+        r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
         if inside_area and num_closest == 0:
             return r1
         else:
