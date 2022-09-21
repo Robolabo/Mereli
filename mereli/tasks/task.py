@@ -144,7 +144,7 @@ class CommFormation(Task):
         self.points = np.array(points)
         self.threshold = threshold
         
-    def reward_generator(self, entities, robot_name):
+    def reward_generator2(self, entities, robot_name):
         my_state = entities[robot_name].sensors['stateful_rx'].state
         others_state = np.array([ent.sensors['stateful_rx'].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
@@ -164,7 +164,7 @@ class CommFormation(Task):
             return r1*r2
         return 0.0 
     
-    def reward_generator2(self, entities, robot_name):
+    def reward_generator(self, entities, robot_name):
         my_state = entities[robot_name].sensors['stateful_rx'].state
         others_state = np.array([ent.sensors['stateful_rx'].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
