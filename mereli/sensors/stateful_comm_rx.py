@@ -56,10 +56,8 @@ class StatefulCommRX(Sensor):
         state_agg = neigh_mean
         self.state = own_state
         closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        target_points = np.array([[-1,1], [-1, 0.75], [-0.75, 1], [-0.75, 0.75], 
-                                [1,1], [0.75,1], [1, 0.75],[0.75,0.75],
-                                [-1,-1],[-1,-0.75],[-0.75,-1],[-0.75, -0.75],
-                                [1,-1],[1, -0.75],[0.75, -1],[0.75, -0.75]])	
+        target_points = np.array([[.75, .75], [.75, -.75], [-.75, .75], [-.75, -.75]])
+                                
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - self.state) for pt in target_points])] 
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.05,
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,

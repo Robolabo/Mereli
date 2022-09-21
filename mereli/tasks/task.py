@@ -188,6 +188,36 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
 
+@task_registry(name="group_formation")
+class GroupFormation(Task):
+    def __init__(self, *args, num_members=4, radius=0.3, centroids=[], **kwargs):
+        super(GroupFormation, self).__init__(*args, **kwargs)
+        self.centroids= np.array(centroids)
+        self.radius = radius
+        self.num_members = num_members
+    
+    def reward_generator(self, entities, robot_name):
+        my_state = entities[robot_name].sensors['stateful_rx'].state
+        others_state = np.array([ent.sensors['stateful_rx'].state\
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+        centroid = self.centroids[np.argmin([np.linalg.norm(pt - my_state) for pt in self.centroids])] 
+        inside_area = np.linalg.norm(centroid - my_state) <= self.radius
+        num_others_inside = np.sum([np.linalg.norm(st - centroid) < self.radius for st in others_state]) #Thresh before 0.2 
+        if inside_area and num_others_inside < self.num_members:
+            return 1.0
+        elif inside_area and  num_others_inside == self.num_members - 1:
+            return 2.0
+        else:
+            return 0.0 
+        
+    def done_generator(self, entities):
+        return False
+    
+    def reset(self):
+        super().reset()
+
+
+
 @task_registry(name="obstacle_avoidance")
 class ObstacleAvoidance(Task):
     def __init__(self, *args, **kwargs):
