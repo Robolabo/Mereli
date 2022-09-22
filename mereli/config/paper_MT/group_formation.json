@@ -39,15 +39,15 @@
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "group_formation", "params" : {
-		    "radius" : 0.3,
-		    "num_members" : 4,
+		    "radius" : 0.2,
+		    "num_members" : 2,
 		    "centroids" : [[0.75, -0.75], [0.75, 0.75], [-0.75, -0.75], [-0.75, 0.75]] 
 	    }}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 16,
+                "num_instances" : 8,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
