@@ -1,18 +1,4 @@
 [np.linalg.norm(pt - my_state) for pt in self.points]
-self.points
-len(self.points)
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
-np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
-np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-interact
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
 plt.plot(ii.T[:,2:]);plt.show()
 c
 jjjj
@@ -497,4 +483,18 @@ self.rewards
 self.task
 self.tasks
 plt.plot(vv.T)
+plt.show()
+self.robots
+self.robots['robotA_0']
+self.robots['robotA_0'].position
+self.robots['robotA_0'].orientation
+force
+plt.plot(oo.T)
+plt.show()
+plt.plot(ii.T)
+plt.show()
+plt.plot(ii.T)
+plt.plot(oo.T)
+plt.show()
+plt.plot(oo.T)
 plt.show()

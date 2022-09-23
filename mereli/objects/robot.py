@@ -218,3 +218,13 @@ class Epuck(Robot):
     def __init__(self, *args, **kwargs):
         super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)
         self.scaling = 1/4.13
+
+@world_object_registry(name='particle')
+class Particle(Robot):
+    """ Class for the Epuck. """
+    def __init__(self, *args, **kwargs):
+        super(Particle, self).__init__(*args, model_file=None, **kwargs)
+
+    @property
+    def vertices(self): 
+        return None
