@@ -3,7 +3,7 @@ from itertools import chain
 import numpy as np
 
 class Species:
-    def __init__(self, id, generation, compatib_thresh=3, c1=1, c2=1, c3=2.):
+    def __init__(self, id, generation, compatib_thresh=3, c1=1, c2=1, c3=2., stagnation_generations=15):
         self.id = id
         self.compatib_thresh = compatib_thresh
         self.c1 = c1
@@ -19,7 +19,8 @@ class Species:
         self.creation_generation = generation
         self.history = {key : [] for key in ['num_genotypes', 'mean_fitness',
                                         'max_fitness', 'min_fitness', 'sum_fitness']}
-        self.last_improvement = 0
+        self.stagnation_generations = stagnation_generations
+        self.stagnation_counter = 0
 
     def compatibility(self, genotype):
         """ Computes the compatibility distance of the genotype to the species 
@@ -89,7 +90,7 @@ class Species:
         self.history['max_fitness'].append(max(fitness_scores))
         self.history['min_fitness'].append(min(fitness_scores))
         self.history['sum_fitness'].append(sum(fitness_scores))
-
+        self.history['std_fitness'].append(np.std(fitness_scores))
         adj_fitness_scores = fitness_scores.copy() / self.num_genotypes
         self.mean_fitness.update({
             'raw' : np.mean(fitness_scores),
@@ -107,6 +108,11 @@ class Species:
             'raw' : sum(fitness_scores),
             'adjusted': sum(adj_fitness_scores)
         })
+        # Assess stagnation
+        if not self.assess_improvement():
+            self.stagnation_counter += 1
+        else:
+            self.stagnation_counter = 0
 
     @property
     def adjusted_fitness(self):
@@ -114,5 +120,13 @@ class Species:
 
     @property
     def is_extinct(self):
-        return self.last_improvement >= 15
+        return self.stagnation_counter >= self.stagnation_generations
         
+    def assess_improvement(self):
+        """ Verifies if the species adjusted fitness has improved based on the last gen."""
+        conf_interv = 1.96 * self.history['std_fitness'] / np.sqrt(self.num_genotypes) 
+        curr_fitness = self.adjusted_fitness
+        old_fitness = self.history[-2]['mean_fitness'] / self.history[-2]['num_genotypes']
+        return curr_fitness > old_fitness + conf_interv 
+
+
