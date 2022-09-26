@@ -21,8 +21,7 @@ class Species:
                                 'max_fitness', 'min_fitness', 'sum_fitness', 'std_fitness']}
         self.stagnation_generations = stagnation_generations
         self.stagnation_counter = 0
-
-    def compatibility(self, genotype):
+def compatibility(self, genotype):
         """ Computes the compatibility distance of the genotype to the species 
         as defined in the NEAT paper. It returns both the distance and whether the 
         genotype is compatible to the species or not.
@@ -124,7 +123,7 @@ class Species:
         
     def assess_improvement(self):
         """ Verifies if the species adjusted fitness has improved based on the last gen."""
-        conf_interv = 1.96 * self.history['std_fitness'] / np.sqrt(self.num_genotypes) 
+        conf_interv = 1.96 * self.history[-1]['std_fitness'] / np.sqrt(self.num_genotypes) 
         curr_fitness = self.adjusted_fitness
         old_fitness = self.history[-2]['mean_fitness'] / self.history[-2]['num_genotypes']
         return curr_fitness > old_fitness + conf_interv 
