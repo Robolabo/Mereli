@@ -115,11 +115,12 @@ class NEAT(EvolutionaryAlgorithm):
         #* Assign Species. Use representatives from the previous generation.
         #* If a new species is created the current representative is the genotype 
         #* that created it.
-        for spc in self.species:
+        for i, spc in enumerate(self.species):
             if spc.is_extinct:
                 logging.info('Extint Species {} due to stagnation.'.format(species.id))
                 self.species.pop(i)
-            spc.num_genotypes = 0
+            else:
+                spc.num_genotypes = 0
 
         for genotype in self.population:
             if len(self.species) != 0:
@@ -143,7 +144,7 @@ class NEAT(EvolutionaryAlgorithm):
                 genotype.species = self.species[species_idx].id
         #* Check extintion and update representatives.
         for i, species in enumerate(self.species):
-            if species.num_genotypes == 0 or species.is_extinct:
+            if species.num_genotypes == 0:
                 logging.info('Extint Species {}'.format(species.id))
                 self.species.pop(i)
             else:
