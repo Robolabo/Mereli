@@ -18,7 +18,7 @@ class Species:
         self.fitness_sum = {'raw' : 0, 'adjusted' : 0}
         self.creation_generation = generation
         self.history = {key : [] for key in ['num_genotypes', 'mean_fitness',
-                                        'max_fitness', 'min_fitness', 'sum_fitness']}
+                                'max_fitness', 'min_fitness', 'sum_fitness', 'std_fitness']}
         self.stagnation_generations = stagnation_generations
         self.stagnation_counter = 0
 
