@@ -82,7 +82,7 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : 8, "max_val" : 8}, 
+		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.25, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
