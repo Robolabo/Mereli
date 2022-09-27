@@ -43,9 +43,9 @@
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "group_formation", "params" : {
-		    "radius" : 0.2,
+		    "radius" : 0.26,
 		    "num_members" : 4,
-		    "centroids" : [[0.75, 0.75], [-0.75, -0.75]] 
+		    "centroids" : [[0.75, 0.75], [-0.75, -0.75], [0.75, -0.75], [-0.75, 0.75]] 
 	    }}]
         },
         "objects" : {
