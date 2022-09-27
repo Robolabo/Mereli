@@ -43,7 +43,7 @@
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "group_formation", "params" : {
-		    "radius" : 0.26,
+		    "radius" : 0.4,
 		    "num_members" : 4,
 		    "centroids" : [[0.75, 0.75], [-0.75, -0.75], [0.75, -0.75], [-0.75, 0.75]] 
 	    }}]
@@ -51,7 +51,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 8,
+                "num_instances" : 16,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
@@ -77,7 +77,7 @@
         "population_size" : 150,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 5,
+        "num_evaluations" : 4,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
