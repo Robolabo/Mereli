@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_group_formation",
-    "logging" : {"file" : "group_formation"},
+    "checkpoint_file" : "chk_group_formation_LINE",
+    "logging" : {"file" : "group_formation_LINE"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -44,8 +44,8 @@
             "use_done" : false,
             "tasks" : [{"name" : "group_formation", "params" : {
 		    "radius" : 0.2,
-		    "num_members" : 4,
-		    "centroids" : [[0.75, 0.75], [-0.75, -0.75]] 
+		    "num_members" : 2,
+		    "centroids" : [[0.75, -0.75], [0.75, 0.75], [-0.75, -0.75], [-0.75, 0.75]] 
 	    }}]
         },
         "objects" : {

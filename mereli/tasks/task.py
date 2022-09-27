@@ -203,12 +203,15 @@ class GroupFormation(Task):
         centroid = self.centroids[np.argmin([np.linalg.norm(pt - my_state) for pt in self.centroids])] 
         inside_area = np.linalg.norm(centroid - my_state) <= self.radius
         num_others_inside = np.sum([np.linalg.norm(st - centroid) < self.radius for st in others_state]) #Thresh before 0.2 
-        if inside_area and num_others_inside < self.num_members:
-            return 1.0
-        elif inside_area and  num_others_inside == self.num_members - 1:
-            return 2.0
+        if inside_area:
+            if num_others_inside < self.num_members:
+                return 1.0
+            elif num_others_inside == self.num_members - 1:
+                return 2.0
+            else:
+                return 0.0
         else:
-            return 0.0 
+            return 0.0
         
     def done_generator(self, entities):
         return False

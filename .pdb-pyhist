@@ -1,14 +1,3 @@
-[np.linalg.norm(pt - my_state) for pt in self.points]
-plt.plot(ii.T[:,2:]);plt.show()
-c
-jjjj
-plt.plot(oo.T[:, :3])
-plt.show()
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-x
-c
 jjjj
 plt.plot(oo.T[:, :3])
 plt.show()
@@ -498,3 +487,14 @@ plt.plot(oo.T)
 plt.show()
 plt.plot(oo.T)
 plt.show()
+inside_area
+my_state
+centroid
+num_others_inside
+inside_area
+my_state
+centroid
+np.linalg.norm(my_state - centroid)
+num_others_inside
+others_states
+others_state

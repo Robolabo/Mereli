@@ -117,7 +117,7 @@ class NEAT(EvolutionaryAlgorithm):
         #* that created it.
         for i, spc in enumerate(self.species):
             if spc.is_extinct:
-                logging.info('Extint Species {} due to stagnation.'.format(species.id))
+                logging.info('Extint Species {} due to stagnation.'.format(spc.id))
                 self.species.pop(i)
             else:
                 spc.num_genotypes = 0

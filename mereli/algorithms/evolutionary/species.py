@@ -84,6 +84,8 @@ class Species:
         return total_dist < self.compatib_thresh, total_dist
 
     def update_stats(self, fitness_scores):
+        if len(fitness_scores) == 0:
+            return
         self.history['num_genotypes'].append(self.num_genotypes)
         self.history['mean_fitness'].append(np.mean(fitness_scores))
         self.history['max_fitness'].append(max(fitness_scores))
