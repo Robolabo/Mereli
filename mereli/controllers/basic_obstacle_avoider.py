@@ -12,9 +12,10 @@ class BasicObstacleAvoider(RobotController):
     :param float sensitivity: value in [0, 1] that defines the threshold in the distance sensor reading 
         to interpret an obstacle detection. 
     """
-    def __init__(self, *args, sensitivity=0.1, **kwargs):
+    def __init__(self, *args, sensitivity=0.1, no_obstacle_action=[1.,1.],  **kwargs):
         super(BasicObstacleAvoider, self).__init__(*args, **kwargs)
         self.sensitivity = sensitivity
+        self.no_obstacle_action = no_obstacle_action
 
     def step(self, state, reward=0.0):
         """ Method to execute once the controller program. It reads the current distance sensor measurement, 
@@ -42,7 +43,7 @@ class BasicObstacleAvoider(RobotController):
             action = np.array([-1, 1.])
         else:
             # print('GO straight over')
-            action = np.array([1., 1.])
+            action = np.array(self.no_obstacle_action)
         # Turn on the LED of the obstacle direction.
         if 'led_actuator' in self.enabled_actuators:
             led_action = st_ds > self.sensitivity

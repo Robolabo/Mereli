@@ -220,6 +220,46 @@ class GroupFormation(Task):
         super().reset()
 
 
+@task_registry(name="task_sequence")
+class TaskSequence(Task):
+    def __init__(self, *args, radius=0.3, centroids=[], **kwargs):
+        super(TaskSequence, self).__init__(*args, **kwargs)
+        self.centroids= np.array(centroids)
+        self.radius = radius
+        self.correct_sequence = np.arange(len(centroids))
+        self.curr_tsk_idx = 0
+        self.seq_done = False 
+    
+    def reward_generator(self, entities, robot_name):
+        my_state = entities[robot_name].sensors['stateful_rx'].state
+        others_state = np.array([ent.sensors['stateful_rx'].state\
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+        inside_area = np.linalg.norm(self.current_task - my_state) <= self.radius
+        all_inside_area = np.all([np.linalg.norm(st - self.current_task) < self.radius for st in others_state]) 
+        
+        if inside_area and not all_inside_area:
+            return self.curr_tsk_idx + 1
+        elif inside_area and all_inside_area:
+            self.curr_tsk_idx += 1
+            if self.curr_tsk_idx == len(self.correct_sequence):
+                self.seq_done = True
+            return self.curr_tsk_idx + 1 
+        else:
+            return 0.0
+
+
+    def done_generator(self, entities):
+        return self.seq_done 
+    
+    @property
+    def current_task(self):
+        return self.centroids[self.curr_tsk_idx]
+
+    def reset(self):
+        super().reset()
+        self.curr_tsk_idx = 0
+        np.random.shuffle(self.correct_sequence)
+        self.seq_done = False 
 
 @task_registry(name="obstacle_avoidance")
 class ObstacleAvoidance(Task):
