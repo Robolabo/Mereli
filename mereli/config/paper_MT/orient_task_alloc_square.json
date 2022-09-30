@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_group_formation",
-    "logging" : {"file" : "group_formation"},
+    "checkpoint_file" : "chk_orient_task_allocation_square",
+    "logging" : {"file" : "orient_task_allocation_square"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -8,9 +8,7 @@
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "mean_neigh_state"},
                 "I2" : {"n" : 2, "sensor" : "own_state"},
-                "I3" : {"n" : 2, "sensor" : "closest_state"},
-                "I4" : {"n" : 1, "sensor" : "inside_area"},
-                "I5" : {"n" : 1, "sensor" : "area_full"}
+                "I3" : {"n" : 2, "sensor" : "closest_state"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -18,17 +16,15 @@
                 "OUT_COMM" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
             },
             "outputs" : {
-                "outB" : {"ensemble" : "OUT_COMM", "actuator" : "stateful_tx", "enc": "real"}
+                "outA" : {"ensemble" : "OUT_COMM", "actuator" : "ori_stateful_tx", "enc": "real"}
             },
             "synapses" :  {
-                "I1-C" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I2-C" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-C" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I4-C" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I5-C" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
-                "outB" : {"scheme" : "IdentityDecoding"}
+                "outA" : {"scheme" : "IdentityDecoding"}
             },
             "learning_rule" : {}
         } 
@@ -39,28 +35,24 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 1600,
+            "total_duration" : 500,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "group_formation", "params" : {
-		    "radius" : 0.4,
-		    "num_members" : 4,
-		    "centroids" : [[0.75, 0.75], [-0.75, -0.75], [0.75, -0.75], [-0.75, 0.75]] 
-	    }}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-0.75, -0.75], [0.75, 0.75], [-0.75, 0.75], [0.75, -0.75]]}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 16,
+                "num_instances" : 4,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "stateful_rx" : {"state_dim" : 2, "range" : 32}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 12}
                 },
                 "actuators" : {
-                    "stateful_tx" : {"state_dim" : 2, "range" : 32},
+                    "ori_stateful_tx" : {"state_dim" : 2, "range" : 12},
                     "led_actuator" : {}
                 },
                 "initializers" : {
@@ -82,16 +74,16 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8}, 
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.25, "sigma" : 0.05}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.1}},
 	    "main_ann:nodes:bias:all" : {
-		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8},
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.25, "sigma" : 0.05}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
 	},
 	"alg_params" : {
-	    "p_weight_mut" : 0.8, "p_node_mut" : 0.05, "p_conn_mut" : 0.15, "compatib_thresh" : 3,
+	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
 	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }

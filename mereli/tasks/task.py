@@ -165,8 +165,9 @@ class CommFormation(Task):
         return 0.0 
     
     def reward_generator(self, entities, robot_name):
-        my_state = entities[robot_name].sensors['stateful_rx'].state
-        others_state = np.array([ent.sensors['stateful_rx'].state\
+        sensor = 'ori_stateful_rx'
+        my_state = entities[robot_name].sensors[sensor].state
+        others_state = np.array([ent.sensors[sensor].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 

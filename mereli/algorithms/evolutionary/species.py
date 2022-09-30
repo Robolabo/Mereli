@@ -21,6 +21,8 @@ class Species:
                                 'max_fitness', 'min_fitness', 'sum_fitness', 'std_fitness']}
         self.stagnation_generations = stagnation_generations
         self.stagnation_counter = 0
+
+
     def compatibility(self, genotype):
         """ Computes the compatibility distance of the genotype to the species 
         as defined in the NEAT paper. It returns both the distance and whether the 
@@ -121,6 +123,8 @@ class Species:
 
     @property
     def is_extinct(self):
+        if not hasattr(self, 'stagnation_counter'):
+            return False
         return self.stagnation_counter >= self.stagnation_generations
         
     def assess_improvement(self):

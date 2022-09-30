@@ -30,6 +30,35 @@ class StatefulCommTX(Actuator):
         # self.state = np.zeros(self.state_dim)  
         self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
 
+@actuator_registry(name='ori_stateful_tx')
+class OrientStatefulCommTX(Actuator):
+    """
+    """
+    def __init__(self, *args, dt=0.1, tau_ori=5, tau_st=10, range=4, state_dim=5, **kwargs):
+        super(OrientStatefulCommTX, self).__init__(*args, **kwargs)
+        self.state_dim = state_dim
+        self.range = range
+        self.dt = dt
+        self.tau_ori = tau_ori
+        self.tau_st = tau_st
+        self.orientation = 0
+        self.reset()
+        
+    def step(self, control):
+        delta_ori = control[0]
+        speed = (control[1] + 1) / 2
+        self.orientation += (self.dt / self.tau_ori) * delta_ori 
+        self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
+        heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
+        self.state += (self.dt / self.tau_st) * speed * heading_ori  
+        self.state = np.clip(self.state, a_min=-1, a_max=1)
+
+    def reset(self):
+        # self.state = np.zeros(self.state_dim)  
+        self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
+        self.orientation = np.random.uniform(0, 2*np.pi)
+
+
 @actuator_registry(name='comm_tx_a')
 class CommTXTypeA(Actuator):
     """

@@ -227,4 +227,9 @@ class Particle(Robot):
 
     @property
     def vertices(self): 
-        return None
+        vertices = [[10,0],[-10,-10],[-10,10]]
+        tf_mat = np.array([
+             [np.cos(self.orientation), -np.sin(-self.orientation)],
+             [np.sin(-self.orientation), np.cos(self.orientation)],
+        ])
+        return [list(self.position + np.array(vert).dot(tf_mat)) for vert in self._base_vertices]

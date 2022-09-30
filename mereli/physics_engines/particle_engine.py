@@ -18,6 +18,7 @@ class ParticleEngine(BaseEngine):
         self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
+        self.entities = {}
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -26,25 +27,13 @@ class ParticleEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        # with HidePrintf():
-        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
-        self.engine.resetSimulation(physicsClientId=self.client)
-        # p.resetSimulation(physicsClientId=self.client)
-        self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
-        self.engine.setGravity(0, 0, -9.8)
-        self.engine.setTimeStep(self.dt)
-        # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
-        plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
-        p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
-        # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
-        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-        self.add_objects(objects)
-        self.connected = True
-        # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
-            # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.engine.resetDebugVisualizerCamera(cameraDistance=2, cameraYaw=30,\
-                    cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
+            pg.init()
+            display = (1680, 1050)
+            pg.display.set_mode(display, DOUBLEBUF|OPENGL)
+            gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
+            glTranslatef(0.0, 0.0, -5)
+        self.connected = True
 
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
@@ -59,6 +48,15 @@ class ParticleEngine(BaseEngine):
 
     def step_render(self):
         """ Iterates the graphics visualization at given FPS. """
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                quit()
+         glRotatef(1, 1, 1, 1)
+         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+         world.draw()
+         pg.display.flip()
+         pg.time.wait(10)
        
 
     def add_objects(self, objects):
