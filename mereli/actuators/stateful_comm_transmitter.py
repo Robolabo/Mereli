@@ -34,7 +34,7 @@ class StatefulCommTX(Actuator):
 class OrientStatefulCommTX(Actuator):
     """
     """
-    def __init__(self, *args, dt=0.1, tau_ori=5, tau_st=10, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, dt=0.1, tau_ori=10, tau_st=20, range=4, state_dim=5, **kwargs):
         super(OrientStatefulCommTX, self).__init__(*args, **kwargs)
         self.state_dim = state_dim
         self.range = range
@@ -47,7 +47,7 @@ class OrientStatefulCommTX(Actuator):
     def step(self, control):
         delta_ori = control[0]
         speed = (control[1] + 1) / 2
-        self.orientation += (self.dt / self.tau_ori) * delta_ori 
+        self.orientation += (self.dt / self.tau_ori) * (delta_ori - self.orientation) 
         self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
         heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
         self.state += (self.dt / self.tau_st) * speed * heading_ori  

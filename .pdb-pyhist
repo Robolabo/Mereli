@@ -1,5 +1,3 @@
-plt.plot(oo.T)
-plt.show()
 plt.plot(vv.T)
 plt.show(
 entities
@@ -496,5 +494,7 @@ actions
 states
 self.t
 actions
+plt.plot(oo.T)
+plt.show()
 plt.plot(oo.T)
 plt.show()
