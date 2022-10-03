@@ -42,9 +42,7 @@ class ParticleEngine(BaseEngine):
         self.connected = False
 
     def step_physics(self):
-        """ Iterates all the 3D physics of the world entities using pybullet. """
-        for i in range(int(self.T_control//self.dt)):
-            p.stepSimulation(physicsClientId=self.client)
+        pass
 
     def step_render(self):
         """ Iterates the graphics visualization at given FPS. """
@@ -167,71 +165,54 @@ class ParticleEngine(BaseEngine):
         """ Pybullet engine client used in the simulation. """
         return self.engine._client
 
+    def control_joints(self, obj_id, joints, actions, control_type='velocity'):
+        """
+        """
+        max_speed = 1
+        v_motors = max_speed * actions 
+        current_pos = self.entities[obj_id]['position'] 
+        current_theta = self.entities[obj_id]['orientation'] 
+        # v_motors[np.abs(v_motors)] < min_thresh] = 0.0
+        delta_t = 0.1
+        robot_radius = 9
+        R = .5 * robot_radius * v_motors.sum() / (v_motors[0] - v_motors[1] + 1e-3)
+        w = (v_motors[0] - v_motors[1] + 1e-3) / (robot_radius * .5)
+        icc = current_pos + R * np.array([-np.sin(current_theta), np.cos(current_theta)])
+        transf_mat = lambda x: np.array([[np.cos(x), -np.sin(x)], [np.sin(x), np.cos(x)]])
+        self.delta_pos = transf_mat(w * delta_t).dot(current_pos - icc) + icc - current_pos
+        self.delta_theta = w * delta_t
+        new_pos = current_pos + self.delta_pos.astype(float)
+        self.entites[obj_id]['position'] = new_pos
+        self.entites[obj_id]['orientation'] = self.orientation + self.delta_theta) % 2*np.pi  
+
+    def read_joints(self, obj_id, joints):
+        """ Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
+        """
+        pass
 
     def get_body_position(self, identifier, body_id, z_offset=0.0):
         """
-        Getter method of the current position of the root link of an entity with the 
-        given identifier.
-
-        :param int identifier: identifier of the entity whose position is requested.
-        :param int body_id: deprecated, to be removed
-
-        :returns: numpy array of shape (3,) with the entities' position.
         """
-        pos = np.array(p.getBasePositionAndOrientation(identifier, physicsClientId=self.client)[0])        
-        if np.isnan(pos).any(): 
-            print(pos, self.__dict__)
-            import pdb; pdb.set_trace()
-        return pos
+        return self.entities[identifier]['position']
     
     def get_body_orientation(self, identifier, body_id):
         """ 
-        Getter method of the current Euler orientation of the root link of an entity with the 
-        given identifier.
-
-        :param int identifier: identifier of the entity whose position is requested.
-        :param int body_id: deprecated, to be removed
-
-        :returns: numpy array of shape (3,) with the entities' Euler orientation.
         """
-        quaternion_orientation = p.getBasePositionAndOrientation(identifier, physicsClientId=self.client)[1]
-        return np.array(p.getEulerFromQuaternion(quaternion_orientation, physicsClientId=self.client))
+        return self.entities[identifier]['orientation']
          
 
     def get_body_velocity(self, identifier, body_id):
         """ 
-        Getter method of the current velocity of the root link of an entity with the 
-        given identifier.
-
-        :param int identifier: identifier of the entity whose position is requested.
-        :param int body_id: deprecated, to be removed
-
-        :returns: numpy array of shape (3,) with the entities' velocity.
         """
-        return p.getBaseVelocity(identifier, physicsClientId=self.client)[0]
-    
+        return None 
+
     def get_body_angular_velocity(self, identifier, body_id):
         """ 
-        Getter method of the current angular velocity of the root link of an entity with the 
-        given identifier.
-
-        :param int identifier: identifier of the entity whose position is requested.
-        :param int body_id: deprecated, to be removed
-
-        :returns: numpy array of shape (3,) with the entities' angular velocity.
         """
-        return p.getBaseVelocity(identifier, physicsClientId=self.client)[0]
+        return None
 
     def set_body_state(self, identifier, body_id, position, orientation):
         """ 
-        Sets the physics state (position and orientation) of a registered entity with the given
-        identifier. 
-
-        :param int identifier: identifier of the entity whose position is requested.
-        :param int body_id: deprecated, to be removed
-        :param np.ndarray position: new 3D position of the entity.
-        :param np.ndarray orientation: new 3D Euler orientation of the entity. It is also possible to 
-            introduce an angle scalar in radians so that orientation = [0,0,orientation].
         """
         if len(orientation) == 1:
             orientation = [0., 0., orientation]
@@ -239,75 +220,13 @@ class ParticleEngine(BaseEngine):
             p.getQuaternionFromEuler(orientation), physicsClientId=self.client)
 
     def ray_cast(self, origin, destination):
-        """ Casts a batch of rays between pairwise coordinates in origin and destination lists
-        and verifies if there is some object/obstacle in between. 
-        It returns the id of the first encountered object.
+        pass 
 
-        Example::
-        
-        >>> # Cast two rays, both of them starting at [0,0,0] and with destinations
-        >>> # [1,0,0] and [1,1,0] respectively.  
-        >>> origins = [np.array([0,0,0])] * 2
-        >>> destinations = [np.array([1,0,0]), np.array([1,1,0])]
-        >>> # The result is a list with 2 components, each storing the id of the first 
-        >>> # obstacle detected in the ray trajectory (or -1 if no object was detected). 
-        >>> ids_list = ray_cast(origins, destinations) 
-
-        :param list origin: list of numpy arrays with the set of origin coordinates.
-        :param list destination: list of numpy arrays with the set of destination coordinates.
-
-        :returns: list of int identifiers of the first intersected WorldObject by each of the casted rays
-            between pairwise origins and destinations. For each ray, if no obstacle was detected it returns 
-            a -1.
-        """
-        origin, dest = zip(*[(o + 1.2 * (d - o), o + 0.1 * (d - o)) for o, d in zip(origin, destination)])
-        ray_res = p.rayTestBatch(origin, dest, collisionFilterMask=0b001, physicsClientId=self.client)
-        ray_res, ray_pos = zip(*[(ray[0], ray[3]) for ray in ray_res])
-        if len(ray_res) == 1:
-            ray_res = ray_res[0]
-            ray_pos = ray_pos[0]
-        return ray_res, ray_pos
-    
     def get_closest_point(self, idA, idB, linkA=-1, linkB=-1, max_dist=10):
-        """ Computes the closest points between two links of two registered entities.
-
-        :param int idA: identifier of the first WorldObject entity.
-        :param int idB: identifier of the second WorldObject entity.
-        :param int linkA: identifier of the link of the first WorldObject entity.
-        :param int linkB: identifier of the link of the second WorldObject entity.
-        :param float max_dist: maximum distance between the objects.
-
-        :returns: 3D numpy array with the coordinates of the closest point in linkB of entity with idB. 
-        """
-        if linkB is None:
-            closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, physicsClientId=self.client)
-        else:
-            closest_points = p.getClosestPoints(idA, idB, max_dist, linkIndexA=linkA, linkIndexB=linkB, physicsClientId=self.client)
-        if len(closest_points) == 0:
-            return closest_points
-        return np.array(closest_points[np.argmin([v[8] for v in closest_points])][6])
+        pass
 
     def get_contact_points(self, obj_id, ghost_ids=None):
-        """ Computes the contact points between any link of the given entity and any other 
-        entity. It steps the collision detection engine to perform the query. The identifier 
-        of ghost links can be specified in order to momentarily activate collisions and detect 
-        obstacles.
-
-        :param int obj_id: identifier of the WorldObject entity.
-        :param list ghost_ids: list of the identifiers of the entity ghost links.
-
-        :returns: list of tuples, each composed by the following entries: (objB_id, linkA_id, linkB_id).
-        """
-        if ghost_ids is not None:
-            for idx in ghost_ids:
-                # import pdb; pdb.set_trace()
-                p.setCollisionFilterGroupMask(obj_id, idx, 0b01, 0b01, physicsClientId=self.client)
-        p.performCollisionDetection(physicsClientId=self.client)
-        contact_points = p.getContactPoints(obj_id, physicsClientId=self.client)
-        if ghost_ids is not None:
-            for idx in ghost_ids:
-                p.setCollisionFilterGroupMask(obj_id, idx, 0b0, 0b0,  physicsClientId=self.client)
-        return [(pt[2], pt[3], pt[4]) for pt in contact_points]
+        pass
 
     def get_link_state(self, obj_id, link_idx):
         """ Getter of the position and orientation of a given link in the specified entity.
@@ -367,39 +286,6 @@ class ParticleEngine(BaseEngine):
         """
         return self.physical_sensors[sensor_name][sector]['orientation'][-1] #!only yaw ftm
 
-    def control_joints(self, obj_id, joints, actions, control_type='velocity'):
-        """ Control a series of robot joints either by velocity or by position.
-        
-        :param int obj_id: identifier of the robot whose joints will be controlled.
-        :param list joints: list of identifiers of the joints of the robot to be controlled.
-        :param list actions: list or np.ndarray of actions to control each joint.
-        :param str control_type: type of joint control (either "velocity" or "position").
-        """
-        assert len(joints) == len(actions)
-        for action, joint in zip(actions, joints):
-            if control_type == 'velocity':
-                p.setJointMotorControl2(obj_id, joint, targetVelocity=action, velocityGain=1,
-                    controlMode=p.VELOCITY_CONTROL, physicsClientId=self.client)
-            elif control_type == 'position':
-                p.setJointMotorControl2(obj_id, joint, targetPosition=action, controlMode=p.POSITION_CONTROL,
-                    positionGain=1.1, velocityGain=1.1, physicsClientId=self.client)
-            else:
-                raise Exception(logging.error('Joints cannot be controlled by {}.'\
-                     'Please Select either "velocity" or "position".'.format(control_type)))
-
-    def read_joints(self, obj_id, joints):
-        """ Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
-        a tuple (joint_velocities, joint_positions) with the arrays of the measurements of each kind.
-
-        :param int obj_id: identifier of the robot whose joints will be read.
-        :param list joints: list of identifiers of the joints of the robot to be read.
-
-        :returns: tuple of the form (joint_velocities, joint_positions) with the arrays of the measurements of each kind.
-        """
-        positions, velocities = map(np.array, zip(*[p.getJointState(obj_id, joint, 
-                                    physicsClientId=self.client)[:2] for joint in joints]))
-        positions = (positions + np.pi) % (2 * np.pi) - np.pi #! Check
-        return (positions, velocities)
      
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Sets the color and opacity of a link of an entity. 

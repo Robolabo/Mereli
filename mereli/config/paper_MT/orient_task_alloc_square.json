@@ -8,7 +8,8 @@
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "mean_neigh_state"},
                 "I2" : {"n" : 2, "sensor" : "own_state"},
-                "I3" : {"n" : 2, "sensor" : "closest_state"}
+                "I3" : {"n" : 2, "sensor" : "closest_state"},
+                "I4" : {"n" : 2, "sensor" : "closest_target"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -21,7 +22,8 @@
             "synapses" :  {
                 "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I4-ORI" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -76,14 +78,14 @@
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.8, "sigma" : 0.1}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.4, "sigma" : 0.1}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
 	},
 	"alg_params" : {
-	    "p_weight_mut" : 0.4, "p_node_mut" : 0.07, "p_conn_mut" : 0.2, "compatib_thresh" : 5,
+	    "p_weight_mut" : 0.4, "p_node_mut" : 0.02, "p_conn_mut" : 0.1, "compatib_thresh" : 3,
 	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }
