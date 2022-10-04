@@ -1,5 +1,3 @@
-plt.plot(vv.T)
-plt.show(
 entities
 entities[robot_name]
 entities[robot_name].sensors
@@ -494,6 +492,8 @@ actions
 states
 self.t
 actions
+plt.plot(oo.T)
+plt.show()
 plt.plot(oo.T)
 plt.show()
 plt.plot(oo.T)

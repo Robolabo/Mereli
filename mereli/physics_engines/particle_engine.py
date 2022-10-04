@@ -76,8 +76,6 @@ class ParticleEngine(BaseEngine):
 
         :param WorldObject obj: entity to be added to the engine.
         """
-        # print(obj)
-        t0 = time.time()
         if obj.model_file is None:
             return
         obj.physics_client = self
@@ -85,80 +83,21 @@ class ParticleEngine(BaseEngine):
             p.getQuaternionFromEuler(obj.init_orientation),
             globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 1), 
             physicsClientId=self.client)
-        # print('Load: ', time.time() - t0)
-        t0 = time.time()
         p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
         p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
         for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
             p.setCollisionFilterGroupMask(obj.id, i, 0b001, 0b01, physicsClientId=self.client)
             p.setCollisionFilterPair(0, obj.id, -1, i, 1, physicsClientId=self.client)
-
         if hasattr(obj, 'color'):
             color = list(colors.to_rgb(obj.color)) + [1.]
             p.changeVisualShape(obj.id, -1, rgbaColor=color, physicsClientId=self.client)
         if hasattr(obj, 'mass'):
             p.changeDynamics(obj.id, -1, mass=obj.mass, physicsClientId=self.client)
-        #! Prov loop
-        # for i in range(2):
-        #     p.changeDynamics(obj.id, i, contactStiffness=.1, physicsClientId=self.client)
-        # print('Config and colls: ', time.time() - t0)
-        t0 = time.time()
         self.parse_urdf(obj) #
-        # print('Parser:',time.time() - t0)
 
 
     def parse_urdf(self, obj):
-        link_names = np.array([p.getJointInfo(obj.id, i, physicsClientId=self.client)[12]\
-                for i in range(p.getNumJoints(obj.id, physicsClientId=self.client))]).astype(str)
-        tree = ET.parse(obj.model_file)
-        root = tree.getroot()
-        for sensor in root.findall(".//sensor"):
-            sensor_name = sensor.get('name')
-            if sensor_name not in self.physical_sensors:
-                self.physical_sensors[sensor_name] = {}
-            for sector in sensor.findall("sector"):
-                sector_idx = int(sector.get('index'))
-                link = sector.find('parent').get('link')
-                orientation = np.array(sector.find('origin').get('rpy').split(' ')).astype(float)
-                link_idx = np.where(link_names == link)[0][0]
-                ghost_link = sector.find('ghost').get('link') if sector.find('ghost') is not None else None
-                ghost_link_idx = np.where(link_names == ghost_link)[0][0] if ghost_link is not None else None
-                if ghost_link_idx is not None:
-                    p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
-                    p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
-                    # if sensor_name == 'distance_sensor':
-                    #     self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=1.0)
-                    self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
-                # import pdb; pdb.set_trace()
-                p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)
-                self.physical_sensors[sensor_name][sector_idx] = {
-                    'link' : link, 'ghost_link': ghost_link, 
-                    'orientation' : orientation, 'idx' : link_idx, 'ghost_link_idx': ghost_link_idx,
-                }
-        
-        for actuator in root.findall(".//actuator"):
-            actuator_name = actuator.get('name')
-            if actuator_name in self.physical_actuators:
-                continue
-            else:
-                self.physical_actuators[actuator_name] = {}
-            self.physical_actuators[actuator_name] = {}
-            for sector in actuator.findall("sector"):
-                sector_idx = int(sector.get('index'))
-                link = sector.find('parent').get('link')
-                link_idx = np.where(link_names == link)[0][0]
-                self.physical_actuators[actuator_name][sector_idx] = {
-                    'link' : link,  'idx' : link_idx
-                }
-
-        for ls in root.findall(".//lightsource"):
-            link = ls.get('link')
-            link_idx = np.where(link_names == link)[0][0] if len(link_names) else -1
-            lum = int(ls.get('luminosity'))
-            color = ls.get('color')
-            if hasattr(obj, 'color'):
-                color = obj.color
-            self.luminous_objects[obj.id] = {'link' : link, 'link_idx': link_idx, 'color' : color, 'luminosity' : lum}
+        pass
 
     @property
     def client(self):
