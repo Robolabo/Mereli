@@ -232,4 +232,4 @@ class Particle(Robot):
              [np.cos(self.orientation), -np.sin(-self.orientation)],
              [np.sin(-self.orientation), np.cos(self.orientation)],
         ])
-        return [list(self.position + np.array(vert).dot(tf_mat)) for vert in self._base_vertices]
+        return [list(self.position + np.array(vert).dot(tf_mat)) for vert in vertices]

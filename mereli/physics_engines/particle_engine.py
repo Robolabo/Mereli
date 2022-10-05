@@ -13,7 +13,7 @@ from OpenGL.GLU import *
 @physics_engine_registry(name='particle')
 class ParticleEngine(BaseEngine):
     def __init__(self, *args, **kwargs):
-        super(ParticleEngine, self).__init__('3D', *args, **kwargs)
+        super(ParticleEngine, self).__init__('2D', *args, **kwargs)
         self.physical_sensors = {}
         self.physical_actuators = {}
         self.luminous_objects = {}
@@ -33,6 +33,7 @@ class ParticleEngine(BaseEngine):
             pg.display.set_mode(display, DOUBLEBUF|OPENGL)
             gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
             glTranslatef(0.0, 0.0, -5)
+        self.add_objects(objects)
         self.connected = True
 
     def disconnect(self):
@@ -45,14 +46,24 @@ class ParticleEngine(BaseEngine):
         pass
 
     def step_render(self):
-        """ Iterates the graphics visualization at given FPS. """
-        for event in pg.event.get():
+         """ Iterates the graphics visualization at given FPS. """
+         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
                 quit()
          glRotatef(1, 1, 1, 1)
          glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-         world.draw()
+         
+         for ent_st in self.entitites.values():
+             vertices = ent_st['vertices']
+             glBegin(GL_QUADS)                                  # start drawing a rectangle
+             # glBegin(GL_LINES)
+             vertices = self.vertices
+             glVertex2f(vertices[0][0], vertices[0][1])                                   # bottom left point
+             glVertex2f(vertices[1][0], vertices[1][1])                                   # bottom left point
+             glVertex2f(vertices[2][0], vertices[2][1])                                   # bottom left point
+             glVertex2f(vertices[0][0], vertices[0][1])                                   # bottom left point
+             glEnd()
          pg.display.flip()
          pg.time.wait(10)
        
@@ -76,25 +87,11 @@ class ParticleEngine(BaseEngine):
 
         :param WorldObject obj: entity to be added to the engine.
         """
-        if obj.model_file is None:
-            return
         obj.physics_client = self
-        obj.id = p.loadURDF(obj.model_file, obj.init_position,\
-            p.getQuaternionFromEuler(obj.init_orientation),
-            globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 1), 
-            physicsClientId=self.client)
-        p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
-        p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
-        for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
-            p.setCollisionFilterGroupMask(obj.id, i, 0b001, 0b01, physicsClientId=self.client)
-            p.setCollisionFilterPair(0, obj.id, -1, i, 1, physicsClientId=self.client)
-        if hasattr(obj, 'color'):
-            color = list(colors.to_rgb(obj.color)) + [1.]
-            p.changeVisualShape(obj.id, -1, rgbaColor=color, physicsClientId=self.client)
-        if hasattr(obj, 'mass'):
-            p.changeDynamics(obj.id, -1, mass=obj.mass, physicsClientId=self.client)
-        self.parse_urdf(obj) #
-
+        idx = 1 if len(self.entities) == 0 else 1 + max([*self.entities.keys()])
+        ori = obj.init_orientation[-1] if not isinstance(type(obj.init_orientation), list) else obj.init_orientation  
+        self.entities[idx] = {'position' : obj.init_position, 'orientation' : ori, 'vertices' : obj.vertices}
+        obj.id = idx
 
     def parse_urdf(self, obj):
         pass
@@ -102,7 +99,7 @@ class ParticleEngine(BaseEngine):
     @property
     def client(self):
         """ Pybullet engine client used in the simulation. """
-        return self.engine._client
+        return self
 
     def control_joints(self, obj_id, joints, actions, control_type='velocity'):
         """
@@ -121,8 +118,8 @@ class ParticleEngine(BaseEngine):
         self.delta_pos = transf_mat(w * delta_t).dot(current_pos - icc) + icc - current_pos
         self.delta_theta = w * delta_t
         new_pos = current_pos + self.delta_pos.astype(float)
-        self.entites[obj_id]['position'] = new_pos
-        self.entites[obj_id]['orientation'] = self.orientation + self.delta_theta) % 2*np.pi  
+        self.entities[obj_id]['position'] = new_pos
+        self.entities[obj_id]['orientation'] = (self.entities[obj_id]['orientation'] + self.delta_theta) % 2*np.pi  
 
     def read_joints(self, obj_id, joints):
         """ Reads the position (rad) and velocity (rad/s) of the requested joints of a robot. It returns 
@@ -153,10 +150,8 @@ class ParticleEngine(BaseEngine):
     def set_body_state(self, identifier, body_id, position, orientation):
         """ 
         """
-        if len(orientation) == 1:
-            orientation = [0., 0., orientation]
-        p.resetBasePositionAndOrientation(identifier, position,\
-            p.getQuaternionFromEuler(orientation), physicsClientId=self.client)
+        self.entities[identifier]['position'] = position
+        self.entities[identifier]['orientation'] = orientation
 
     def ray_cast(self, origin, destination):
         pass 
@@ -175,8 +170,7 @@ class ParticleEngine(BaseEngine):
 
         :returns: ``tuple`` with the 3D numpy position and 3D orientation of the link.
         """
-        pos, qt_ori =  p.getLinkState(obj_id, link_idx, physicsClientId=self.client)[:2]
-        return (np.array(pos), np.array(p.getEulerFromQuaternion(qt_ori, physicsClientId=self.client)))
+        return self.entities[obj_id]['position'], self.entities[obj_id]['orientation']
 
     def get_sensor_position(self, obj_id, sensor_name, sector=0):
         """ Getter of the physical position of a sensor within a robot. Sensors are attached to 

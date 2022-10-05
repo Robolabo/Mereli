@@ -5,7 +5,7 @@
     },
     "world": {
         "name" : "flat_world",
-        "engine" : "pybullet",
+        "engine" : "particle",
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
@@ -16,16 +16,14 @@
         },
         "objects" : {
             "robotA" : {
-                "type" : "epuck",
+                "type" : "particle",
                 "num_instances" : 5,
                 "controller" : {
-                    "name" : "phototaxis",
+                    "name" : "random_walk",
                     "topology" : null,
                     "params" : {}
 		},
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1},
-                    "light_sensor" : {"n_sectors" : 8, "range" : 20}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10}
@@ -36,23 +34,7 @@
                 },
                "perturbations" : {},
                 "params" : {"trainable" : true}
-	    },
-            "light_red" : {
-                "type" : "light_source",
-                "num_instances": 1,
-                "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
-                },
-                "params" : {"range" : 10, "color" : "red"}
-            },
-            "light_red" : {
-                "type" : "light_source",
-                "num_instances": 1,
-                "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-2, -2, 1]]}}
-                },
-                "params" : {"range" : 10, "color" : "red"}
-            } 
+	    }
         }
     },
     "algorithm" : {

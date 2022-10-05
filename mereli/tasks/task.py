@@ -370,6 +370,7 @@ class TaskManager:
         
 
     def render_task(self):
+        return
         if global_states.RENDER:
             if self.t == 1:
                 self.label_id = p.addUserDebugText(str(self.current_task_idx), (0,0,0.1), 

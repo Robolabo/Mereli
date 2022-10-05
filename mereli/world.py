@@ -301,7 +301,9 @@ class World(object):
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology[obj['controller']['topology']])
                     #* Instantiate robot entity
-                    robot = object_cls([0,0,0], [0,0,0], controller=controller, **obj['params'])
+                    pos = [0,0,0] if self.physics_engine._engine_type == '3D' else [0,0]
+                    ori = [0,0,0] if self.physics_engine._engine_type == '3D' else 0.0
+                    robot = object_cls(pos, ori, controller=controller, **obj['params'])
                     #* If any, initialize robot's reward generator
                     # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)

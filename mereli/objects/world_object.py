@@ -88,6 +88,8 @@ class WorldObject(ABC):
         :returns: numpy array with the entities' orientation if 3D or
             ``float`` if 2D.
         """
+        if self.id is None:
+            return 0.0 
         return self.physics_client.get_body_orientation(self.id, 0)
 
         
