@@ -4,11 +4,14 @@ import logging
 import numpy as np
 from .base_engine import BaseEngine
 from mereli.register import physics_engine_registry
-import pygame as pg
-from pygame.locals import *
-from OpenGL.GL import *
-from OpenGL.GLUT import *
-from OpenGL.GLU import *
+try:
+    import pygame as pg
+    from pygame.locals import *
+    from OpenGL.GL import *
+    from OpenGL.GLUT import *
+    from OpenGL.GLU import *
+except:
+    print("Running without graphic libs.")
 
 @physics_engine_registry(name='particle')
 class ParticleEngine(BaseEngine):
