@@ -9,7 +9,7 @@
                 "I1" : {"n" : 1, "sensor" : "dist_closest_tar"},
                 "I2" : {"n" : 1, "sensor" : "phi_closest_tar"},
                 "I3" : {"n" : 1, "sensor" : "dist_closest_st"},
-                "I4" : {"n" : 1, "sensor" : "phi_closest_tar"}
+                "I4" : {"n" : 1, "sensor" : "phi_closest_st"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
