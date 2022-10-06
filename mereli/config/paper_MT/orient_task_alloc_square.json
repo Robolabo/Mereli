@@ -68,7 +68,7 @@
     },
     "algorithm" : {
         "name" : "NEAT",
-        "population_size" : 150,
+        "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
         "num_evaluations" : 4,
