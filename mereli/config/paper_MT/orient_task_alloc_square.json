@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_orient_task_allocation_square",
-    "logging" : {"file" : "orient_task_allocation_square"},
+    "checkpoint_file" : "chk_orient_task_allocation_square_v2",
+    "logging" : {"file" : "orient_task_allocation_square_v2"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
