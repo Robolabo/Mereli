@@ -316,7 +316,8 @@ class RewardIntegration(FitnessFunction):
     def fitness(self):
         if self.t < self.t_warm_up:
             return 0.
-        return max(self._fitness / (self.t - self.t_warm_up), 1e-5)
+        # return max(self._fitness / (self.t - self.t_warm_up), 1e-5)
+        return self._fitness / (self.t - self.t_warm_up)
 
 @fitness_func_registry(name='task_switch')
 class TaskSwitch(FitnessFunction):
