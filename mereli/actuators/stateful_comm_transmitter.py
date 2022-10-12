@@ -55,8 +55,8 @@ class OrientStatefulCommTX(Actuator):
         # self.state = np.clip(self.state, a_min=-1, a_max=1)
 
     def reset(self):
-        # self.state = np.zeros(self.state_dim)  
-        self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
+        self.state = np.zeros(self.state_dim)  
+        # self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
         self.orientation = np.random.uniform(0, 2*np.pi)
 
 

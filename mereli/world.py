@@ -191,6 +191,9 @@ class World(object):
             plt.xlabel('Comm State 0')
             plt.ylabel('Comm State 1')
             plt.show()
+            np.save('data.npy', np.stack(data_all))
+            import sys
+            # sys.exit('Safe program termination')
             __import__('pdb').set_trace()
         return states, actions
 

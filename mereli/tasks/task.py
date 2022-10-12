@@ -174,11 +174,12 @@ class CommFormation(Task):
         # inside_area = np.linalg.norm(my_state - closest) < 0.2
         alpha = 2
         # if inside_area:
-        r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
-        r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
+        r1 = max(0, 1 - np.linalg.norm(my_state - closest) / self.threshold)
+        # r1 = np.exp(-alpha * np.linalg.norm(my_state - closest)) 
+        # r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
         if num_closest == 0:
             # r2 = np.exp(5 * r2 - 5)
-            reward = r1 * r2 
+            reward = r1 #* r2 
         else:
             reward = 0 
         return reward
