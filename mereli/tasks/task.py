@@ -179,7 +179,8 @@ class CommFormation(Task):
         r2 = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state]) / np.sqrt(8) 
         if num_closest == 0:
             # r2 = np.exp(5 * r2 - 5)
-            reward = r1 #* r2 
+            # __import__('pdb').set_trace()
+            reward = r1 * r2 
         else:
             reward = 0 
         return reward
