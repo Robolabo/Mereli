@@ -192,14 +192,15 @@ class CommFormation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
         closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
-        alpha = 2
+        alpha = 10 
         dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
         dist_tar = np.linalg.norm(my_state - closest) 
         
         if dist_neigh < self.threshold:
             return 0.0
         else:
-            return np.exp(-alpha * dist_tar) 
+            return max(0, 1 - dist_tar/self.threshold)
+            # return np.exp(-alpha * dist_tar) 
     
     def done_generator(self, entities):
         return False
