@@ -164,7 +164,7 @@ class CommFormation(Task):
             return r1*r2
         return 0.0 
     
-    def reward_generator3(self, entities, robot_name):
+    def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
         my_state = entities[robot_name].sensors[sensor].state
         others_state = np.array([ent.sensors[sensor].state\
@@ -185,7 +185,7 @@ class CommFormation(Task):
             reward = 0 
         return reward
 
-    def reward_generator(self, entities, robot_name):
+    def reward_generator_3(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
         my_state = entities[robot_name].sensors[sensor].state
         others_state = np.array([ent.sensors[sensor].state\
