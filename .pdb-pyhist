@@ -1,9 +1,3 @@
-plt.plot(vv.T)
-plt.show(
-entities
-entities[robot_name]
-entities[robot_name].sensors
-entities[robot_name].sensors['statefull_rx']
 entities[robot_name].sensors['stateful_rx']
 entities[robot_name].sensors['stateful_rx'].state
 closest
@@ -498,3 +492,9 @@ dist_neigh
  - (1 - dist_neigh / self.threshold)
 dist_tar
 dist_neigh
+plt.plot(oo.T)
+plt.show()
+plt.plot(ii.T[:,0])
+plt.show()
+plt.plot(ii.T[:,1])
+plt.show()

@@ -34,7 +34,7 @@ class StatefulCommTX(Actuator):
 class OrientStatefulCommTX(Actuator):
     """
     """
-    def __init__(self, *args, dt=0.1, tau_ori=1, tau_st=3, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, dt=0.1, tau_ori=5, tau_st=10, range=4, state_dim=5, **kwargs):
         super(OrientStatefulCommTX, self).__init__(*args, **kwargs)
         self.state_dim = state_dim
         self.range = range
@@ -50,9 +50,9 @@ class OrientStatefulCommTX(Actuator):
         self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
         self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
         heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
-        self.state += (self.dt / self.tau_st) * speed * heading_ori
-        self.state = tanh(self.state)
-        # self.state = np.clip(self.state, a_min=-1, a_max=1)
+        if speed > 0.5
+            self.state += (self.dt / self.tau_st) * heading_ori
+        self.state = np.clip(self.state, a_min=-1, a_max=1)
 
     def reset(self):
         # self.state = np.zeros(self.state_dim)  
