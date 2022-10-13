@@ -196,12 +196,12 @@ class CommFormation(Task):
         dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
         dist_tar = np.linalg.norm(my_state - closest) 
         
-        if dist_neigh < self.threshold:
-            return - (1 - dist_neigh / self.threshold) 
-        else:
-            # return max(0, 1 - dist_tar/self.threshold)
-            return np.exp(-alpha * dist_tar) 
-    
+        # if dist_neigh < self.threshold:
+        #     return - (1 - dist_neigh / self.threshold) 
+        # else:
+        #     # return max(0, 1 - dist_tar/self.threshold)
+        return np.exp(-alpha * dist_tar) 
+
     def done_generator(self, entities):
         return False
     
