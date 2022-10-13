@@ -50,7 +50,7 @@ class OrientStatefulCommTX(Actuator):
         self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
         self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
         heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
-        if speed > 0.5
+        if speed > 0.5:
             self.state += (self.dt / self.tau_st) * heading_ori
         self.state = np.clip(self.state, a_min=-1, a_max=1)
 
