@@ -1,9 +1,3 @@
-[np.linalg.norm(pt - my_state) for pt in self.points]
-self.points
-len(self.points)
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
 closest
 [np.linalg.norm(pt - my_state) for pt in self.points]
 np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
@@ -497,4 +491,10 @@ plt.show()
 plt.plot(oo.T[:, 0])
 plt.show()
 plt.plot(oo.T[:, 0])
+plt.show()
+aa = np.stack(data_all)
+np.save('data_test.npy', aa)
+plt.plot(oo.T[:])
+plt.show()
+plt.plot(oo.T[:, :2])
 plt.show()
