@@ -199,8 +199,8 @@ class CommFormation(Task):
         if dist_neigh < self.threshold:
             return 0.0#- (1 - dist_neigh / self.threshold) 
         else:
-            return np.exp(-2 * dist_tar)) 
-            # return max(0, 1 - dist_tar/self.threshold)
+            return np.exp(-2 * dist_tar) 
+            # return max(0, 1 - dist_tar/self.threshol)
 
     def done_generator(self, entities):
         return False
