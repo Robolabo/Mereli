@@ -40,7 +40,7 @@
             "total_duration" : 800,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-0.5, -0.5], [0.5, 0.5], [-0.5, 0.5], [0.5, -0.5]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-0.6, -0.6], [0.6, 0.6], [-0.6, 0.6], [0.6, -0.6]]}}]
         },
         "objects" : {
             "robotA" : {
