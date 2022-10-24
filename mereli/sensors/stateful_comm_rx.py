@@ -106,7 +106,8 @@ class OrientStatefulCommRX(Sensor):
         self.state = own_state
         thresh = 0.3
         closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        target_points = np.array([[.6, .6], [-.6, -.6], [-.6, .6], [.6, -.6]])
+        target_points = np.array([[0.866,0.5], [0, 1], [-0.866, 0.5], [-0.866, -0.5], [0, -1], [0.866,-0.5]])
+        # target_points = np.array([[.6, .6], [-.6, -.6], [-.6, .6], [.6, -.6]])
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] - self.state
         phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
         phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0

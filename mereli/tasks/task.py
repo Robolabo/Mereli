@@ -196,6 +196,23 @@ class CommFormation(Task):
         dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
         dist_tar = np.linalg.norm(my_state - closest) 
        
+        if dist_neigh < self.threshold or dist_tar > self.threshold:
+            return 0.0 # - (1 - dist_neigh / self.threshold) 
+        else:
+            return np.exp(-2 * dist_tar) 
+            # return max(0, 1 - dist_tar/self.threshol)
+
+    def reward_generator4(self, entities, robot_name):
+        sensor = 'ori_stateful_rx'
+        my_state = entities[robot_name].sensors[sensor].state
+        others_state = np.array([ent.sensors[sensor].state\
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
+        alpha = 1 
+        dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
+        dist_tar = np.linalg.norm(my_state - closest) 
+       
         if dist_neigh < self.threshold:
             return 0.0#- (1 - dist_neigh / self.threshold) 
         else:
