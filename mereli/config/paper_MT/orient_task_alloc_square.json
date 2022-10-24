@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_orient_task_allocation_square_v3",
-    "logging" : {"file" : "orient_task_allocation_square_v4"},
+    "checkpoint_file" : "chk_orient_task_allocation_square_v5",
+    "logging" : {"file" : "orient_task_allocation_square_v5"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -40,7 +40,7 @@
             "total_duration" : 800,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-0.75, -0.75], [0.75, 0.75], [-0.75, 0.75], [0.75, -0.75]]}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"points" : [[-0.5, -0.5], [0.5, 0.5], [-0.5, 0.5], [0.5, -0.5]]}}]
         },
         "objects" : {
             "robotA" : {

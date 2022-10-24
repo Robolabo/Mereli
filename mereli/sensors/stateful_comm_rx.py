@@ -104,15 +104,16 @@ class OrientStatefulCommRX(Sensor):
         # state_agg = np.mean(state_diffs, 0)
         state_agg = neigh_mean
         self.state = own_state
+        thresh = 0.3
         closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        target_points = np.array([[.75, .75], [-.75, -.75], [-.75, .75], [.75, -.75]])
+        target_points = np.array([[.5, .5], [-.5, -.5], [-.5, .5], [.5, -.5]])
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] - self.state
         phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
         phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0
         dist_closest_st =  np.linalg.norm(closest_state) 
         dist_closest_tar = np.linalg.norm(closest_tar)
-        inside_area = np.linalg.norm(closest_tar - own_state) < 0.4
-        area_full = np.sum([np.linalg.norm(st - closest_tar) < 0.4 for st in neigh_state]) > 3
+        inside_area = np.linalg.norm(closest_tar - own_state) < thresh 
+        area_full = np.sum([np.linalg.norm(st - closest_tar) < thresh for st in neigh_state]) > 3
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.05,
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,
                 'closest_target' : closest_tar - own_state, 

@@ -139,7 +139,7 @@ class TaskAllocation(Task):
 
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, threshold=0.4, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.3, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
         self.points = np.array(points)
         self.threshold = threshold
@@ -421,7 +421,7 @@ class TaskManager:
     @property
     def rewards(self):
         return self.current_task.rewards
-
+        
     def reset(self, seed=None):
         if seed is not None:
             np.random.seed(seed)
