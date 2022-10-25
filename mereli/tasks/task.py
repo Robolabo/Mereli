@@ -139,7 +139,7 @@ class TaskAllocation(Task):
 
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, threshold=0.3, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
         self.points = np.array(points)
         self.threshold = threshold
