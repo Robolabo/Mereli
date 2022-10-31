@@ -75,7 +75,7 @@
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 4,
+        "num_evaluations" : 1,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
