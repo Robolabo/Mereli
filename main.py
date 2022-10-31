@@ -35,9 +35,13 @@ def main(render, resume, cfg, debug, eval, verbose, log, ncpu):
     if log:
         logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
         logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
+        if not os.path.isdir(logs_path):
+            os.mkdir(logs_path)
         now = datetime.now()
         logs_path = os.path.join(logs_path, logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
         global_states.set_data_logging(logs_path)
+        if not os.path.isdir(logs_path):
+            os.mkdir(logs_path)
 
     # Set loggings
     # if log:

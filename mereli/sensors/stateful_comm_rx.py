@@ -72,14 +72,16 @@ class StatefulCommRX(Sensor):
 class OrientStatefulCommRX(Sensor):
     """ 
     """
-    def __init__(self, *args,  range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, range=4, state_dim=5, **kwargs):
         super(OrientStatefulCommRX, self).__init__(*args, **kwargs)
         self.range = range
         self.state_dim = state_dim
         self.state = None
+        self.target_spots = []
 
     def reset(self):
         self.state = np.zeros(self.state_dim)
+        self.target_spots = []
 
     def step(self, neighborhood):
         """ 
@@ -106,13 +108,32 @@ class OrientStatefulCommRX(Sensor):
         self.state = own_state
         thresh = 0.2
         closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        target_points = np.array([[0.866,0.5], [0, 1], [-0.866, 0.5], [-0.866, -0.5], [0, -1], [0.866,-0.5]])
-        # target_points = np.array([[.6, .6], [-.6, -.6], [-.6, .6], [.6, -.6]])
+        # target_points = np.array([[0.866,0.5], [0, 1], [-0.866, 0.5], [-0.866, -0.5], [0, -1], [0.866,-0.5]])
+        # target_points = np.array([[0.3, 0.1],[-0.5,.2],[0.3, 0.7],[-0.1, -0.6],[0.9, 0.2],[-0.8, -.5]])
+        # # target_points = np.array([[.6, .6], [-.6, -.6], [-.6, .6], [.6, -.6]])
+        # target_points = np.array([[ 0.6951128 , -0.68198036],
+        #    [ 0.81699608, -0.41782854],
+        #    [ 0.30321314, -0.11263831],
+        #    [-0.76069942,  0.28863416],
+        #    [-0.74204351, -0.9134813 ],
+        #    [ 0.85693412,  0.25682784],
+        #    [ 0.18767415,  0.68150247],
+        #    [-0.59958989, -0.41436703],
+        #    [-0.2025987 ,  0.19248337],
+        #    [ 0.44274261,  0.5605687 ]])
+        target_points = self.target_spots if len(self.target_spots) > 0 else np.array([[0.5,0.5]])
+        idle_tars = [not any([np.linalg.norm(st - tar) < thresh for st in neigh_state]) for tar in target_points]
+        target_points_av = target_points[idle_tars]
+        closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] - self.state
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] - self.state
+
         phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
         phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0
+        phi_closest_tar_av = np.arccos(closest_tar_av.dot(heading_vec) / np.linalg.norm(closest_tar_av)) if np.linalg.norm(closest_tar_av) > 0 else 0.0
         dist_closest_st =  np.linalg.norm(closest_state) 
         dist_closest_tar = np.linalg.norm(closest_tar)
+        dist_closest_tar_av = np.linalg.norm(closest_tar_av)
+        
         inside_area = np.linalg.norm(closest_tar - own_state) < thresh 
         area_full = np.sum([np.linalg.norm(st - closest_tar) < thresh for st in neigh_state]) > 3
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.05,
@@ -122,9 +143,13 @@ class OrientStatefulCommRX(Sensor):
                 'phi_closest_tar' : np.array([phi_closest_tar / (2*np.pi)]),
                 'dist_closest_st' : np.array([dist_closest_st]), 
                 'dist_closest_tar' : np.array([dist_closest_tar]), 
+                'dist_closest_tar_av' : np.array([dist_closest_tar_av]), 
+                'phi_closest_tar_av' : np.array([phi_closest_tar_av / (2*np.pi)]),
                 'inside_area' : np.array([int(inside_area)]),
                 'area_full' : np.array([int(area_full)]) if inside_area else np.array([0.]),
                 'own_state' : own_state}#+ np.random.randn() * 0.05}
+
+
 
 @sensor_registry(name='comm_rx_a')
 class CommRXTypeA(Sensor):

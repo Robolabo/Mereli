@@ -141,9 +141,47 @@ class TaskAllocation(Task):
 class CommFormation(Task):
     def __init__(self, *args, threshold=0.2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
-        self.points = np.array(points)
+        if points == 'random':
+            self.random_sample(6, threshold)
+            self.is_random = True
+        else:
+            self.points = np.array(points)
+            self.is_random = False
         self.threshold = threshold
         
+    def reward_generator(self, entities, robot_name):
+        sensor = 'ori_stateful_rx'
+        ###! BYPASS
+        if len(entities[robot_name].sensors[sensor].target_spots) == 0:
+            entities[robot_name].sensors[sensor].target_spots = self.points
+        #####
+        my_state = entities[robot_name].sensors[sensor].state
+        others_state = np.array([ent.sensors[sensor].state\
+            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
+        alpha = 1 
+        dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
+        dist_tar = np.linalg.norm(my_state - closest) 
+       
+        if dist_neigh < self.threshold or dist_tar > self.threshold:
+            return 0.0 # - (1 - dist_neigh / self.threshold) 
+        else:
+            return np.exp(-2 * dist_tar) 
+            # return max(0, 1 - dist_tar/self.threshol)
+    
+    def random_sample(self, n_points, min_dist):
+        points = []
+        while len(points) < n_points:
+            new_candidate = np.random.uniform(low=-1, high=1, size=2)
+            if len(points) == 0:
+                points.append(new_candidate)
+            else:
+                distances = np.array([np.linalg.norm(pt - new_candidate) for pt in points])
+                if all(distances > min_dist):
+                    points.append(new_candidate)
+        self.points = np.vstack(points)
+
     def reward_generator2(self, entities, robot_name):
         my_state = entities[robot_name].sensors['stateful_rx'].state
         others_state = np.array([ent.sensors['stateful_rx'].state\
@@ -185,22 +223,6 @@ class CommFormation(Task):
             reward = 0 
         return reward
 
-    def reward_generator(self, entities, robot_name):
-        sensor = 'ori_stateful_rx'
-        my_state = entities[robot_name].sensors[sensor].state
-        others_state = np.array([ent.sensors[sensor].state\
-            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
-        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
-        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
-        alpha = 1 
-        dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
-        dist_tar = np.linalg.norm(my_state - closest) 
-       
-        if dist_neigh < self.threshold or dist_tar > self.threshold:
-            return 0.0 # - (1 - dist_neigh / self.threshold) 
-        else:
-            return np.exp(-2 * dist_tar) 
-            # return max(0, 1 - dist_tar/self.threshol)
 
     def reward_generator4(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
@@ -224,6 +246,8 @@ class CommFormation(Task):
     
     def reset(self):
         super().reset()
+        if self.is_random:
+            self.random_sample(6, self.threshold)
 
 @task_registry(name="group_formation")
 class GroupFormation(Task):
@@ -440,14 +464,14 @@ class TaskManager:
         return self.current_task.rewards
         
     def reset(self, seed=None):
-        if seed is not None:
-            np.random.seed(seed)
+        # if seed is not None:
+        #     np.random.seed(seed)
         self.block = 0
         self.t = 0
         self.task_order = np.random.choice(self.num_tasks, size=self.num_slots, replace=False)
         for tsk in self.tasks:
             tsk.reset()
-        if seed is not None:
-            np.random.seed()
+        # if seed is not None:
+        #     np.random.seed()
 
 

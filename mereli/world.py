@@ -168,7 +168,6 @@ class World(object):
                 obj.actuate(self.hierarchy)
         if self.task_manager is not None:
             self.task_manager(self.hierarchy)
-
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
@@ -177,6 +176,18 @@ class World(object):
             data_all = []  
             import matplotlib.pyplot as plt
             # ax = plt.axes(projection='3d')
+            tars = np.array([
+                [ 0.6951128 , -0.68198036],
+                [ 0.81699608, -0.41782854],
+                [ 0.30321314, -0.11263831],
+                [-0.76069942,  0.28863416],
+                [-0.74204351, -0.9134813 ],
+                [ 0.85693412,  0.25682784],
+                [ 0.18767415,  0.68150247],
+                [-0.59958989, -0.41436703],
+                [-0.2025987 ,  0.19248337],
+                [ 0.44274261,  0.5605687 ]])
+            plt.scatter(tars[:,0], tars[:,1], color='r')
             for bot in self.robots.values():
                 data = np.stack(bot.data_logger.data)
                 plt.plot(data[:,0], data[:,1])
@@ -191,10 +202,11 @@ class World(object):
             plt.xlabel('Comm State 0')
             plt.ylabel('Comm State 1')
             plt.show()
-            np.save('data.npy', np.stack(data_all))
-            import sys
+            __import__('pdb').set_trace()            
+            import os
+            log_path = os.path.join(global_states.log_info['path'], 'data.npy')
+            np.save(log_path, np.stack(data_all))
             # sys.exit('Safe program termination')
-            __import__('pdb').set_trace()
         return states, actions
 
     def register_entity(self, name, obj, group=None):

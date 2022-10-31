@@ -12,7 +12,7 @@ from mereli.communication import IRFrame
 class StatefulCommTX(Actuator):
     """
     """
-    def __init__(self, *args, dt=0.1, tau_m=20, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, dt=0.1, tau_m=10, range=4, state_dim=2, **kwargs):
         super(StatefulCommTX, self).__init__(*args, **kwargs)
         self.state_dim = state_dim
         self.range = range
@@ -34,10 +34,12 @@ class StatefulCommTX(Actuator):
 class OrientStatefulCommTX(Actuator):
     """
     """
-    def __init__(self, *args, dt=0.1, tau_ori=5, tau_st=10, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, dt=0.1, init_state='random', init_ori='random', tau_ori=5, tau_st=5, range=4, state_dim=5, **kwargs):
         super(OrientStatefulCommTX, self).__init__(*args, **kwargs)
         self.state_dim = state_dim
         self.range = range
+        self.init_state = init_state
+        self.init_ori = init_ori
         self.dt = dt
         self.tau_ori = tau_ori
         self.tau_st = tau_st
@@ -45,6 +47,10 @@ class OrientStatefulCommTX(Actuator):
         self.reset()
         
     def step(self, control):
+        ########
+        # if self.actuator_owner.id > 1:
+        #     control = [0,-1]
+        ##########
         delta_ori = control[0]
         speed = (control[1] + 1) / 2
         self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
@@ -55,10 +61,23 @@ class OrientStatefulCommTX(Actuator):
         self.state = np.clip(self.state, a_min=-1, a_max=1)
 
     def reset(self):
-        # self.state = np.zeros(self.state_dim)  
-        self.state = np.random.uniform(-0.05, 0.05, self.state_dim)# np.zeros(self.state_dim)  
-        self.orientation = np.random.uniform(0, 2*np.pi)
-
+        # position = {2 : [0.2, 0.2], 3 : [-0.2, -0.2], 4 : [-0.2, 0.2]}.get(self.actuator_owner.id)
+        # if position is not None:
+        #     position = np.array(position)
+        #     self.state = position
+        # else:
+        if self.init_state == 'random':
+            self.state = np.random.uniform(-0.05, 0.05, self.state_dim)
+        elif self.init_state == 'zero':
+            self.state = np.array([0.0, 0.0])
+        else:
+            self.state = np.array(self.init_state).astype(float)
+        if self.init_ori == 'random':
+            self.orientation = np.random.uniform(0, 2*np.pi)
+        elif self.init_ori == 'zero':
+            self.orientation = 0.0
+        else:
+            self.orientation = self.init_ori
 
 @actuator_registry(name='comm_tx_a')
 class CommTXTypeA(Actuator):

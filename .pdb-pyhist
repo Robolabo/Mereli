@@ -50,51 +50,6 @@ closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
 closest
 [np.linalg.norm(pt - my_state) for pt in self.points]
 plt.plot(ii.T[:,2:]);plt.show()
-c
-jjjj
-plt.plot(oo.T[:, :3])
-plt.show()
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-x
-c
-jjjj
-plt.plot(oo.T[:, :3])
-plt.show()
-reward
-all_led
-plt.plot(oo.T[:, :3]);plt.show()
-plt.plot(oo.T)
-plt.show()
-plt.plot(vv.T)
-plt.show(
-entities
-entities[robot_name]
-entities[robot_name].sensors
-entities[robot_name].sensors['statefull_rx']
-entities[robot_name].sensors['stateful_rx']
-entities[robot_name].sensors['stateful_rx'].state
-closest
-np.linalg.norm(pt - my_state) for pt in self.points
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-self.points
-len(self.points)
-[np.linalg.norm(pt - my_state) for pt in self.points]
-interact
-[np.linalg.norm(pt - my_state) for pt in self.points]
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
-np.argmin[np.linalg.norm(pt - my_state) for pt in self.points])
-np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-interact
-closest = np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])
-closest
-[np.linalg.norm(pt - my_state) for pt in self.points]
-plt.plot(ii.T[:,2:]);plt.show()
 self.evaluator.fitness
 self.evaluator.fitness_fn
 self.evaluator.fitness_fn.fitness
@@ -498,3 +453,48 @@ plt.show()
 c
 aa = np.stack(data_all)
 np.save('data_test.npy', aa)
+aa = np.stack(data_all)
+np.save('data_test_hex.npy', aa)
+d
+self.actuator_owner
+self.actuator_owner.id
+globals
+global_states
+global_states.log_info
+os.path
+import os
+os.path.join
+os.path.join('aa', 'bbb')
+global_states.log_info
+logs_folder
+logs_path
+self.init_state
+self.init_state.astype('float')
+self.init_state.astype(float)
+self.init_state
+self.init_state.astype(float)
+self.init_state
+self.state
+logs_path
+neigh_staes
+neigh_states
+neigh_state
+target_points
+target_points[[False, True, False, True, True, False]]
+self.task_manager
+self.hierarchy
+entities
+Robot
+ent
+ent.sensors[sensor].target_spots
+self.points
+ent.sensors[sensor].target_spots
+target_points
+np.random.get_state()
+np.random.random()
+points
+np.random.random()
+seed
+np.random.random()
+plt.plot(vv.T)
+plt.show()
