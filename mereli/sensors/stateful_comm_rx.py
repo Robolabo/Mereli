@@ -124,8 +124,12 @@ class OrientStatefulCommRX(Sensor):
         target_points = self.target_spots if len(self.target_spots) > 0 else np.array([[0.5,0.5]])
         idle_tars = [not any([np.linalg.norm(st - tar) < thresh for st in neigh_state]) for tar in target_points]
         target_points_av = target_points[idle_tars]
-        closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] - self.state
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] - self.state
+        if np.sum(idle_tars) == 0:
+            closest_tar_av = closest_tar.copy()
+        else:
+            closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] - self.state
+
 
         phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
         phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0

@@ -176,17 +176,7 @@ class World(object):
             data_all = []  
             import matplotlib.pyplot as plt
             # ax = plt.axes(projection='3d')
-            tars = np.array([
-                [ 0.6951128 , -0.68198036],
-                [ 0.81699608, -0.41782854],
-                [ 0.30321314, -0.11263831],
-                [-0.76069942,  0.28863416],
-                [-0.74204351, -0.9134813 ],
-                [ 0.85693412,  0.25682784],
-                [ 0.18767415,  0.68150247],
-                [-0.59958989, -0.41436703],
-                [-0.2025987 ,  0.19248337],
-                [ 0.44274261,  0.5605687 ]])
+            tars = self.task_manager.tasks[0].points
             plt.scatter(tars[:,0], tars[:,1], color='r')
             for bot in self.robots.values():
                 data = np.stack(bot.data_logger.data)
