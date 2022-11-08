@@ -51,13 +51,30 @@ class OrientStatefulCommTX(Actuator):
         # if self.actuator_owner.id > 1:
         #     control = [0,-1]
         ##########
-        delta_ori = control[0]
-        speed = (control[1] + 1) / 2
-        self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
-        self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
-        heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
-        if speed > 0.5:
-            self.state += (self.dt / self.tau_st) * heading_ori
+        if self.state_dim == 2:
+            delta_ori = control[0]
+            speed = (control[1] + 1) / 2
+            self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
+            self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
+            heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
+            if speed > 0.5:
+                self.state += (self.dt / self.tau_st) * heading_ori
+        else:
+            ori = 1 if control[0] > 0.5 else -1 
+            speed = (control[1] + 1) / 2
+            if speed > 0.5:
+                self.state += (self.dt / self.tau_st) * ori 
+
+        if self.state[0] > 1:
+            self.state[0] -= 2
+        elif self.state[0] < -1:
+            self.state[0] += 2
+        if self.state_dim > 1:
+            if self.state[1] > 1:
+                self.state[1] -= 2
+            elif self.state[1] < -1:
+                self.state[1] += 2
+
         self.state = np.clip(self.state, a_min=-1, a_max=1)
 
     def reset(self):

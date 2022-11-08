@@ -4,6 +4,7 @@ from mereli.register import sensor_registry
 from mereli.sensors import DirectionalSensor, Sensor
 from mereli.objects import Robot
 from mereli.neural_networks import NeuralNetwork
+from mereli.utils import torus_distance, torus_angle, ring_angle, ring_distance
 
 @sensor_registry(name='stateful_rx')
 class StatefulCommRX(Sensor):
@@ -107,48 +108,50 @@ class OrientStatefulCommRX(Sensor):
         state_agg = neigh_mean
         self.state = own_state
         thresh = 0.2
-        closest_state = state_diffs[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        # target_points = np.array([[0.866,0.5], [0, 1], [-0.866, 0.5], [-0.866, -0.5], [0, -1], [0.866,-0.5]])
-        # target_points = np.array([[0.3, 0.1],[-0.5,.2],[0.3, 0.7],[-0.1, -0.6],[0.9, 0.2],[-0.8, -.5]])
-        # # target_points = np.array([[.6, .6], [-.6, -.6], [-.6, .6], [.6, -.6]])
-        # target_points = np.array([[ 0.6951128 , -0.68198036],
-        #    [ 0.81699608, -0.41782854],
-        #    [ 0.30321314, -0.11263831],
-        #    [-0.76069942,  0.28863416],
-        #    [-0.74204351, -0.9134813 ],
-        #    [ 0.85693412,  0.25682784],
-        #    [ 0.18767415,  0.68150247],
-        #    [-0.59958989, -0.41436703],
-        #    [-0.2025987 ,  0.19248337],
-        #    [ 0.44274261,  0.5605687 ]])
-        target_points = self.target_spots if len(self.target_spots) > 0 else np.array([[0.5,0.5]])
+        closest_state = neigh_state[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
+        
+        target_points = self.target_spots if len(self.target_spots) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
         idle_tars = [not any([np.linalg.norm(st - tar) < thresh for st in neigh_state]) for tar in target_points]
         target_points_av = target_points[idle_tars]
-        closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] - self.state
+        closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] 
         if np.sum(idle_tars) == 0:
             closest_tar_av = closest_tar.copy()
         else:
-            closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] - self.state
+            closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] 
 
-
-        phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
-        phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0
-        phi_closest_tar_av = np.arccos(closest_tar_av.dot(heading_vec) / np.linalg.norm(closest_tar_av)) if np.linalg.norm(closest_tar_av) > 0 else 0.0
-        dist_closest_st =  np.linalg.norm(closest_state) 
-        dist_closest_tar = np.linalg.norm(closest_tar)
-        dist_closest_tar_av = np.linalg.norm(closest_tar_av)
+        angle_fn = torus_angle if self.state_dim == 2 else ring_angle
+        dist_fn = torus_distance if self.state_dim == 2 else ring_distance
+        phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec) 
+        phi_closest_tar = angle_fn(closest_tar, self.state, ref_vec=heading_vec) 
+        phi_closest_tar_av = angle_fn(closest_tar_av, self.state, ref_vec=heading_vec) 
+        dist_closest_st = dist_fn(closest_state, self.state) 
+        dist_closest_tar = dist_fn(closest_tar, self.state) 
+        dist_closest_tar_av = dist_fn(closest_tar_av, self.state) 
+        if self.state_dim == 2:
+            phi_closest_st = np.array([phi_closest_st / (2*np.pi)])
+            phi_closest_tar = np.array([phi_closest_tar / (2*np.pi)])
+            phi_closest_tar_av = np.array([phi_closest_tar_av / (2*np.pi)])
+            dist_closest_st = np.array([dist_closest_st])
+            dist_closest_tar = np.array([dist_closest_tar])
+            dist_closest_tar_av = np.array([dist_closest_tar_av])
+        # phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
+        # phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0
+        # phi_closest_tar_av = np.arccos(closest_tar_av.dot(heading_vec) / np.linalg.norm(closest_tar_av)) if np.linalg.norm(closest_tar_av) > 0 else 0.0
+        # dist_closest_st =  np.linalg.norm(closest_state - self.state) 
+        # dist_closest_tar = np.linalg.norm(closest_tar - self.state)
+        # dist_closest_tar_av = np.linalg.norm(closest_tar_av - self.state)
         
         inside_area = np.linalg.norm(closest_tar - own_state) < thresh 
         area_full = np.sum([np.linalg.norm(st - closest_tar) < thresh for st in neigh_state]) > 3
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.05,
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,
                 'closest_target' : closest_tar - own_state, 
-                'phi_closest_st' : np.array([phi_closest_st / (2*np.pi)]),
-                'phi_closest_tar' : np.array([phi_closest_tar / (2*np.pi)]),
-                'dist_closest_st' : np.array([dist_closest_st]), 
-                'dist_closest_tar' : np.array([dist_closest_tar]), 
-                'dist_closest_tar_av' : np.array([dist_closest_tar_av]), 
-                'phi_closest_tar_av' : np.array([phi_closest_tar_av / (2*np.pi)]),
+                'phi_closest_st' : phi_closest_st, 
+                'phi_closest_tar' :phi_closest_tar, 
+                'dist_closest_st' : dist_closest_st, 
+                'dist_closest_tar' : dist_closest_tar, 
+                'dist_closest_tar_av' : dist_closest_tar_av, 
+                'phi_closest_tar_av' : phi_closest_tar_av, 
                 'inside_area' : np.array([int(inside_area)]),
                 'area_full' : np.array([int(area_full)]) if inside_area else np.array([0.]),
                 'own_state' : own_state}#+ np.random.randn() * 0.05}

@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_generaliz_v1",
-    "logging" : {"file" : "generaliz_v1"},
+    "checkpoint_file" : "chk_generaliz_1D",
+    "logging" : {"file" : "generaliz_1D"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -41,24 +41,24 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 1500,
+            "total_duration" : 500,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 6, "points" : "random"}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2, "n_points" : 4, "point_dim" : 1, "points" : "random"}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 6,
+                "num_instances" : 4,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 12}
+                    "ori_stateful_rx" : {"state_dim" : 1, "range" : 12}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "init_state" : "random", "init_ori" : "random",  "range" : 12},
+                    "ori_stateful_tx" : {"state_dim" : 1, "init_state" : "random", "init_ori" : "random",  "range" : 12},
                     "led_actuator" : {}
                 },
                 "initializers" : {

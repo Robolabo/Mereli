@@ -28,6 +28,42 @@ def compute_angle(u, v=None):
         # if(u[0]*v[1] - u[1]*v[0] < 0): theta *= -1
         return theta
 
+def torus_distance(u, v):
+    H = 2
+    W = 2
+    fw = min(W - np.abs(u[0] - v[0]), np.abs(u[0] - v[0]))
+    fh = min(H - np.abs(u[1] - v[1]), np.abs(u[1] - v[1]))
+    return np.sqrt(fw ** 2 + fh ** 2)
+
+def torus_angle(u, v, ref_vec=None):
+    H = 2
+    W = 2
+    if ref_vec is None:
+        ref_vec = np.array([1, 0])
+    fw = min(W - np.abs(u[0] - v[0]), np.abs(u[0] - v[0]))
+    fh = min(H - np.abs(u[1] - v[1]), np.abs(u[1] - v[1]))
+    eps_w = np.sign(u[0] - v[0]) 
+    eps_h = np.sign(u[1] - v[1]) 
+    if fw == W - np.abs(u[0] - v[0]):
+        eps_w *= -1
+    if fh == H - np.abs(u[1] - v[1]):
+        eps_h *= -1
+    v_aux = np.array([eps_w * fw, eps_h * fh]) 
+    return np.arccos(v_aux.dot(ref_vec) / np.linalg.norm(v_aux)) if np.linalg.norm(ref_vec) > 0 else 0.0
+
+
+def ring_distance(u, v):
+    W = 2
+    return min(W - np.abs(u - v), np.abs(u - v))
+
+def ring_angle(u, v, ref_vec=None):
+    W = 2
+    fW = min(W - np.abs(u - v), np.abs(u - v))
+    eps_w = np.sign(u - v)
+    if fW == W - np.abs(u - v):
+        return -eps_w
+    else:
+        return eps_w
 
 def angle_diff(x, y):
     """ Compute the difference between two angles in radians."""

@@ -139,16 +139,23 @@ class TaskAllocation(Task):
 
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, threshold=0.2, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.4, n_points=6, point_dim=2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
+        self.point_dim = point_dim
+        self.n_points = n_points
         if points == 'random':
-            self.random_sample(6, threshold)
+            self.random_sample(self.n_points, 1.5 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
             self.is_random = False
         self.threshold = threshold
         
+    def reset(self):
+        super().reset()
+        if self.is_random:
+            self.random_sample(self.n_points, 1.5 *  self.threshold)
+
     def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
         ###! BYPASS
@@ -167,13 +174,13 @@ class CommFormation(Task):
         if dist_neigh < self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
-            return np.exp(-2 * dist_tar) 
+            return np.exp(-5 * dist_tar) 
             # return max(0, 1 - dist_tar/self.threshol)
     
     def random_sample(self, n_points, min_dist):
         points = []
         while len(points) < n_points:
-            new_candidate = np.random.uniform(low=-1, high=1, size=2)
+            new_candidate = np.random.uniform(low=-1, high=1, size=self.point_dim)
             if len(points) == 0:
                 points.append(new_candidate)
             else:
@@ -244,10 +251,6 @@ class CommFormation(Task):
     def done_generator(self, entities):
         return False
     
-    def reset(self):
-        super().reset()
-        if self.is_random:
-            self.random_sample(6, self.threshold)
 
 @task_registry(name="group_formation")
 class GroupFormation(Task):
