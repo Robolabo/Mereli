@@ -144,7 +144,7 @@ class CommFormation(Task):
         self.point_dim = point_dim
         self.n_points = n_points
         if points == 'random':
-            self.random_sample(self.n_points, 1.5 * threshold)
+            self.random_sample(self.n_points, 1.2 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
@@ -154,7 +154,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 1.5 *  self.threshold)
+            self.random_sample(self.n_points, 1.2 *  self.threshold)
 
     def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx'

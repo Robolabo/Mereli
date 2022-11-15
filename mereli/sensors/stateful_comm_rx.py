@@ -73,16 +73,46 @@ class StatefulCommRX(Sensor):
 class OrientStatefulCommRX(Sensor):
     """ 
     """
-    def __init__(self, *args, range=4, state_dim=5, **kwargs):
+    def __init__(self, *args, range=4, state_dim=5, use_estimation=True, **kwargs):
         super(OrientStatefulCommRX, self).__init__(*args, **kwargs)
         self.range = range
         self.state_dim = state_dim
         self.state = None
+        self.use_estimation = use_estimation
         self.target_spots = []
+        self.swarm_table = {}
+        self.t = 1
 
     def reset(self):
+        self.t = 1
         self.state = np.zeros(self.state_dim)
         self.target_spots = []
+        self.swarm_table = {}
+
+    def update_table(self, neighbors):
+        my_id = self.sensor_owner.id
+        # self.swarm_table.update({my_id : {'st' : self.state, 'hops' : 0}})
+        for neigh in neighbors:
+            self.swarm_table.update({neigh.id : {'st' : neigh.actuators['ori_stateful_tx'].state.copy(), 'hops' : 1, 'timeout' : 5}})
+
+    def merge_tables(self, new_table):
+        my_id = self.sensor_owner.id
+        setA = set(self.swarm_table.keys())
+        setB = set(new_table.keys())
+        # for aid in setA.union(setB):
+        for aid in new_table.keys():
+            if aid == my_id: 
+                continue
+            hops = new_table[aid]['hops'] + 1
+            # if hops > 2:
+            #     __import__('pdb').set_trace()
+            if aid not in self.swarm_table: # Not in table
+                self.swarm_table.update({aid : {'st' : new_table[aid]['st'].copy(), 'hops' : hops, 'timeout' : 5}})
+            else:
+                if hops < self.swarm_table[aid]['hops']:
+                    self.swarm_table.update({aid : {'st' : new_table[aid]['st'].copy(), 'hops' : hops, 'timeout' : 5}})
+                elif hops == self.swarm_table[aid]['hops']:
+                    self.swarm_table.update({aid : {'st' : new_table[aid]['st'].copy(), 'hops' : hops, 'timeout' : 5}})
 
     def step(self, neighborhood):
         """ 
@@ -91,6 +121,7 @@ class OrientStatefulCommRX(Sensor):
         neigh_oris = []
         own_state = self.sensor_owner.actuators['ori_stateful_tx'].state
         own_ori = self.sensor_owner.actuators['ori_stateful_tx'].orientation
+        neighbors = []
         for obj in neighborhood: 
             if self.sensor_owner.id != obj.id and isinstance(obj, Robot):
                 if 'ori_stateful_tx' in obj.actuators:
@@ -98,6 +129,13 @@ class OrientStatefulCommRX(Sensor):
                     if dist < self.range:
                         neigh_state.append(obj.actuators['ori_stateful_tx'].state.copy())
                         neigh_oris.append(obj.actuators['ori_stateful_tx'].orientation)
+                        if self.use_estimation and self.t % 5 == 0:    
+                            rx_table = obj.sensors['ori_stateful_rx'].swarm_table
+                            self.merge_tables(rx_table)
+                        neighbors.append(obj)
+        if self.use_estimation: 
+            self.update_table(neighbors)
+            neigh_state = [entry['st'] for entry in self.swarm_table.values()]
         if len(neigh_state) == 0:
             neigh_state = 0.0
         else:
@@ -107,7 +145,7 @@ class OrientStatefulCommRX(Sensor):
         # state_agg = np.mean(state_diffs, 0)
         state_agg = neigh_mean
         self.state = own_state
-        thresh = 0.2
+        thresh = 0.4
         closest_state = neigh_state[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
         
         target_points = self.target_spots if len(self.target_spots) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
@@ -143,6 +181,7 @@ class OrientStatefulCommRX(Sensor):
         
         inside_area = np.linalg.norm(closest_tar - own_state) < thresh 
         area_full = np.sum([np.linalg.norm(st - closest_tar) < thresh for st in neigh_state]) > 3
+        self.t += 1
         return {'mean_neigh_state' : state_agg,# + np.random.randn(self.state_dim) * 0.05,
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,
                 'closest_target' : closest_tar - own_state, 

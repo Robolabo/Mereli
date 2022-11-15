@@ -274,7 +274,7 @@ class RandomGraphInitializer(Initializer):
         R_max = self.max_rad
         for _ in range(self.num_points-1):
             new_pos = points[-1]
-            while any([np.linalg.norm(new_pos - pos) < 0.4 for pos in points]) or np.min([np.linalg.norm(new_pos - pos) for pos in points]) > 1:
+            while any([np.linalg.norm(new_pos - pos) < 0.6 for pos in points]) or np.min([np.linalg.norm(new_pos - pos) for pos in points]) > 1.4:
                 delta_X = points[-1] #- 500
                 mu = tanh(-(delta_X / R_max) ** 3)
                 sigma_x = np.sin(compute_angle(delta_X / R_max)) ** 2 if np.linalg.norm(delta_X) > R_max/2 else 1
