@@ -1,6 +1,6 @@
 {
-    "checkpoint_file" : "chk_generaliz_v2",
-    "logging" : {"file" : "generaliz_v2"},
+    "checkpoint_file" : "chk_task_elio",
+    "logging" : {"file" : "task_elio"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
@@ -10,8 +10,7 @@
                 "I2" : {"n" : 1, "sensor" : "phi_closest_tar"},
                 "I3" : {"n" : 1, "sensor" : "dist_closest_st"},
                 "I4" : {"n" : 1, "sensor" : "phi_closest_st"},
-                "I5" : {"n" : 1, "sensor" : "dist_closest_tar_av"},
-                "I6" : {"n" : 1, "sensor" : "phi_closest_tar_av"}
+                "I5" : {"n" : 2, "sensor" : "sensor_readings"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -26,8 +25,7 @@
                 "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I4-ORI" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I5-ORI" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I6-ORI" : {"pre":"I6","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I5-ORI" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -41,32 +39,39 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 2000,
+            "total_duration" : 600,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 5, "points" : "random"}}]
+            "tasks" : [{"name" : "elio_task", "params" : {"n_points" : 4, "points" : [[0.7, 0.7], [0.7, -0.7], [-0.7, 0.7], [-0.7,-0.7]]}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 50,
+                "num_instances" : 2,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 2, "use_estimation" : true}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 2, "use_estimation" : true},
+                    "ground_sensor" : {}
                 },
                 "actuators" : {
                     "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 2,"initial_pos" : [0,0]}},
+                    "positions" :  {"name" : "fixed",  "params" : {"fixed_values": [[0,0] , [1, 1]]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
+	    }, 
+	    "ground_area_1" : {
+	    	"type" : "ground_area",
+		"num_instances" : 2,
+		"params" : {"radius" : 0.6},
+	        "initializers" : {"positions" : {"name" : "fixed",  "params" : {"fixed_values": [[0,0] , [1, 1]]}}}	
 	    }
         }
     },

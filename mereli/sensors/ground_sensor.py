@@ -15,6 +15,8 @@ class GroundSensor(Sensor):
     """
     def __init__(self, *args, **kwargs):
         super(GroundSensor, self).__init__(*args, **kwargs)
+        self.coding = {"black" : 0.5, "grey" : 1.0}
+        self.reading = np.array([0.0])
 
     def step(self, neighborhood):
         """ Step method for reading the ground sensor. 
@@ -24,10 +26,15 @@ class GroundSensor(Sensor):
         :returns: numpy array of length 1 with the binary reading. A reading of 1.0 means that a ground 
             area has been detected and a value of 0.0 means that no ground areas was detected.
         """
+        self.reading = np.array([0.0]) 
         for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
             if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) <= ground_area.radius:
-                return np.array([1.0])
-        return np.array([0.0])
+                self.reading = np.array([self.coding.get(ground_area.color, 0.0)])
+                return self.reading 
+        return self.reading 
+
+    def reset(self, seed=None):
+        self.reading  = np.array([0.])
 
 # @sensor_registry(name='grey_ground_sensor')
 # class GreyGroundSensor(Sensor):

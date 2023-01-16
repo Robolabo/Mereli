@@ -1,3 +1,4 @@
+import numpy as np
 from mereli.objects import WorldObject
 from mereli.register import world_object_registry
 
@@ -23,4 +24,5 @@ class GroundArea(WorldObject):
         pass
 
     def reset(self, seed=None):
-        pass
+        self.color = np.random.choice(['black', 'grey'])
+        self.physics_client.set_color(self.id, -1, self.color)

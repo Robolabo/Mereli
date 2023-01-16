@@ -76,9 +76,7 @@ class PybulletEngine(BaseEngine):
         self.connected = True
         # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
-            # self.gui_params['robot_focus'] = self.physics_client.addUserDebugParameter('Robot focus', 1, -1, 1)
-            self.engine.resetDebugVisualizerCamera(cameraDistance=2, cameraYaw=30,\
-                    cameraPitch=-90, cameraTargetPosition=[0, 0, 0])
+            self.set_camera_focus([0,0,0], 2, yaw=30, pitch=-90)
 
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
@@ -90,6 +88,7 @@ class PybulletEngine(BaseEngine):
         """ Iterates all the 3D physics of the world entities using pybullet. """
         for i in range(int(self.T_control//self.dt)):
             p.stepSimulation(physicsClientId=self.client)
+
 
     def step_render(self):
         """ Iterates the graphics visualization at given FPS. """

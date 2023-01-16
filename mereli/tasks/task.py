@@ -137,6 +137,49 @@ class TaskAllocation(Task):
         self.times_task = {}
 
 
+@task_registry(name="elio_task")
+class ElioTask(Task):
+    def __init__(self, *args, threshold=0.4, n_points=6, point_dim=2, points=[], **kwargs):
+        super(ElioTask, self).__init__(*args, **kwargs)
+        self.point_dim = point_dim
+        self.n_points = n_points
+        self.points = np.array(points)
+        self.is_random = False
+        self.threshold = threshold
+        
+    def reset(self):
+        super().reset()
+
+    def reward_generator(self, entities, robot_name):
+        sensor = 'ori_stateful_rx'
+        others = [ent for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id]
+        my_state = entities[robot_name].sensors[sensor].state
+        others_state = np.array([ent.sensors[sensor].state for ent in others])
+        ###! BYPASS
+        if len(entities[robot_name].sensors[sensor].target_spots) == 0:
+            entities[robot_name].sensors[sensor].target_spots = self.points
+        #####
+        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
+        alpha = 1 
+        dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
+        dist_tar = np.linalg.norm(my_state - closest) 
+        ground_reads = np.hstack([ent.sensors['ground_sensor'].reading for ent in [ent for ent in entities.values() if issubclass(type(ent), Robot)]])
+        
+        corr_env = np.argmin(np.linalg.norm(np.array([[0.5, 0.5], [0.5, 1], [1, 0.5], [1, 1]]) - ground_reads, axis=1))
+        corr_spot = self.points[corr_env]
+        if np.sum(corr_spot - closest) != 0.0:
+            return 0.0
+        if dist_neigh < self.threshold or dist_tar > self.threshold:
+            return 0.0 # - (1 - dist_neigh / self.threshold) 
+        else:
+            return np.exp(-5 * dist_tar) 
+            # return max(0, 1 - dist_tar/self.threshol)
+    
+
+    def done_generator(self, entities):
+        return False
+    
 @task_registry(name="comm_formation")
 class CommFormation(Task):
     def __init__(self, *args, threshold=0.4, n_points=6, point_dim=2, points=[], **kwargs):

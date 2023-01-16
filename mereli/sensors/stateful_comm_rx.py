@@ -156,7 +156,8 @@ class OrientStatefulCommRX(Sensor):
             closest_tar_av = closest_tar.copy()
         else:
             closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] 
-
+        own_sensor_read = self.sensor_owner.sensors['ground_sensor'].reading
+        sensor_readings = [own_sensor_read] + [nei.sensors['ground_sensor'].reading for nei in neighbors]
         angle_fn = torus_angle if self.state_dim == 2 else ring_angle
         dist_fn = torus_distance if self.state_dim == 2 else ring_distance
         phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec) 
@@ -193,7 +194,9 @@ class OrientStatefulCommRX(Sensor):
                 'phi_closest_tar_av' : phi_closest_tar_av, 
                 'inside_area' : np.array([int(inside_area)]),
                 'area_full' : np.array([int(area_full)]) if inside_area else np.array([0.]),
+                'sensor_readings' : np.array([sensor_readings]).flatten(),
                 'own_state' : own_state}#+ np.random.randn() * 0.05}
+
 
 
 
