@@ -168,6 +168,7 @@ class ElioTask(Task):
         
         corr_env = np.argmin(np.linalg.norm(np.array([[0.5, 0.5], [0.5, 1], [1, 0.5], [1, 1]]) - ground_reads, axis=1))
         corr_spot = self.points[corr_env]
+        print(corr_env)
         if np.sum(corr_spot - closest) != 0.0:
             return 0.0
         if dist_neigh > self.threshold or dist_tar > self.threshold:
