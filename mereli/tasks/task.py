@@ -170,7 +170,7 @@ class ElioTask(Task):
         corr_spot = self.points[corr_env]
         if np.sum(corr_spot - closest) != 0.0:
             return 0.0
-        if dist_neigh < self.threshold or dist_tar > self.threshold:
+        if dist_neigh > self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
             return np.exp(-5 * dist_tar) 
