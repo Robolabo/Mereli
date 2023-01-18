@@ -147,8 +147,6 @@ class ElioTask(Task):
         self.is_random = False
         self.threshold = threshold
         
-    def reset(self):
-        super().reset()
 
     def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
@@ -169,14 +167,16 @@ class ElioTask(Task):
         corr_env = np.argmin(np.linalg.norm(np.array([[0.5, 0.5], [0.5, 1], [1, 0.5], [1, 1]]) - ground_reads, axis=1))
         corr_spot = self.points[corr_env]
         # print(corr_env)
-        if np.sum(corr_spot - closest) != 0.0:
+        if np.all(corr_spot == closest):
             return 0.0
-        if dist_neigh > self.threshold or dist_tar > self.threshold:
+        if dist_neigh > 2 * self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
             return np.exp(-5 * dist_tar) 
             # return max(0, 1 - dist_tar/self.threshol)
     
+    def reset(self):
+        super().reset()
 
     def done_generator(self, entities):
         return False

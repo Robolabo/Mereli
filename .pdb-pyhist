@@ -1,9 +1,4 @@
 states[0]
-states[1]
-states[2]
-states[3]
-states
-states[0]
 states[0]['own_state']
 states[1]['own_state']
 states[2]['own_state']
@@ -498,3 +493,8 @@ self.points.shape
 corr_spot
 self.points
 corr_env
+closest
+corr_spot
+corr_spot == closest
+np.all(corr_spot == closest)
+np.all(corr_spot == np.array([0.7,0.7]))
