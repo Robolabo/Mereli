@@ -215,6 +215,7 @@ class World(object):
             plt.xlabel('Comm State 0')
             plt.ylabel('Comm State 1')
             plt.show()
+            print('Hola')
             __import__('pdb').set_trace()            
             import os
             log_path = os.path.join(global_states.log_info['path'], 'data.npy')

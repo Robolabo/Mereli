@@ -169,7 +169,7 @@ class ElioTask(Task):
         # print(corr_spot)
         if not np.all(corr_spot == closest):
             return 0.0
-        if dist_neigh > 2 * self.threshold or dist_tar > self.threshold:
+        if  dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
             return np.exp(-5 * dist_tar) 
