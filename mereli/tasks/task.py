@@ -169,7 +169,7 @@ class ElioTask(Task):
         # print(corr_spot)
         if not np.all(corr_spot == closest):
             return 0.0
-        if  dist_tar > self.threshold:
+        if dist_neigh > 2 * self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
             return np.exp(-5 * dist_tar) 
@@ -183,12 +183,12 @@ class ElioTask(Task):
     
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, threshold=0.2, n_points=6, point_dim=2, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.4, n_points=6, point_dim=2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
         self.point_dim = point_dim
         self.n_points = n_points
         if points == 'random':
-            self.random_sample(self.n_points, 2 * threshold)
+            self.random_sample(self.n_points, 1.2 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
@@ -198,7 +198,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 2 *  self.threshold)
+            self.random_sample(self.n_points, 1.2 *  self.threshold)
 
     def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx'
@@ -218,7 +218,7 @@ class CommFormation(Task):
         if dist_neigh < self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
-            return np.exp(-20 * dist_tar) 
+            return np.exp(-5 * dist_tar) 
             # return max(0, 1 - dist_tar/self.threshol)
     
     def random_sample(self, n_points, min_dist):

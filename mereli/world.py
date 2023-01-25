@@ -216,9 +216,9 @@ class World(object):
             plt.ylabel('Comm State 1')
             plt.show()
             __import__('pdb').set_trace()            
-            # import os
-            # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
-            # np.save(log_path, np.stack(data_all))
+            import os
+            log_path = os.path.join(global_states.log_info['path'], 'data.npy')
+            np.save(log_path, np.stack(data_all))
             # sys.exit('Safe program termination')
         return states, actions
 

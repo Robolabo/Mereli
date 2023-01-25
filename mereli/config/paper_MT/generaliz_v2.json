@@ -49,16 +49,16 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 50,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 20, "use_estimation" : true}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 2, "use_estimation" : true}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 5, "tau_ori" : 5, "init_state" : "random", "init_ori" : "random",  "range" : 20},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 2},
                     "led_actuator" : {}
                 },
                 "initializers" : {
