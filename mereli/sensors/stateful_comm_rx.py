@@ -145,7 +145,7 @@ class OrientStatefulCommRX(Sensor):
         # state_agg = np.mean(state_diffs, 0)
         state_agg = neigh_mean
         self.state = own_state
-        thresh = 0.4
+        thresh = 0.2
         closest_state = neigh_state[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
         
         target_points = self.target_spots if len(self.target_spots) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
