@@ -1,6 +1,8 @@
 {
-    "checkpoint_file" : "chk_generaliz_v2",
-    "logging" : {"file" : "generaliz_v2"},
+    "checkpoint_file" : "chk_generaliz_v3",
+    "created" : "25-01-2023",
+    "description" : "Communication framework for task alloc with randomly chosen landmarks. The difference with v2 (v2 in den, v3 in esp) is that v3 tries to solve the connectivity issue in task allocation by using the consensus OK or NOT_OK plane.",
+    "logging" : {"file" : "generaliz_v3"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
