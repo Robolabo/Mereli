@@ -69,6 +69,59 @@ class StatefulCommRX(Sensor):
                 'area_full' : np.array([int(area_full)]) if inside_area else np.array([0.]),
                 'own_state' : own_state}#+ np.random.randn() * 0.05}
 
+
+@sensor_registry(name='ori_stateful_rx_new')
+class NewOrientStatefulCommRX(Sensor):
+    """ 
+    """
+    def __init__(self, *args, range=4, state_dim=5, use_estimation=True, **kwargs):
+        super(NewOrientStatefulCommRX, self).__init__(*args, **kwargs)
+        self.range = range
+        self.state_dim = state_dim
+        self.state = None
+        self.landmarks = []
+        self.t = 1
+
+    def reset(self):
+        self.t = 1
+        self.state = np.zeros(self.state_dim)
+
+    def step(self, neighborhood):
+        """ 
+        """
+        neighbors = []
+        neigh_states = []
+        neigh_oris = []
+        own_state = self.sensor_owner.actuators['ori_stateful_tx'].state
+        own_ori = self.sensor_owner.actuators['ori_stateful_tx'].orientation
+        for obj in neighborhood: 
+            if self.sensor_owner.id != obj.id and isinstance(obj, Robot):
+                if 'ori_stateful_tx' in obj.actuators:
+                    dist = np.linalg.norm(obj.position - self.sensor_owner.position)
+                    if dist < self.range:
+                        neigh_states.append(obj.actuators['ori_stateful_tx'].state.copy())
+                        neigh_oris.append(obj.actuators['ori_stateful_tx'].orientation)
+                        neighbors.append(obj)
+        if len(neigh_states) == 0:
+            neigh_states = 0.0
+        else:
+            state_diffs = [st - own_state for st in neigh_states]
+            neigh_mean = np.mean(neigh_states, 0)
+        heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]
+        state_agg = neigh_mean
+        self.state = own_state
+        thresh = 0.2
+        if len(self.landmarks) == 0: self.landmarks = np.zeros(5) #Provisional #Provisional
+        dist_landmarks = np.sum([[np.exp(-50*np.linalg.norm(lmark - st)**2) for lmark in self.landmarks] for st in neigh_states], axis=0)
+        own_dist_lmarks = np.array([np.exp(-50*np.linalg.norm(lmark - self.state)**2) for lmark in self.landmarks])
+        # if len(self.landmarks) > 0:__import__('pdb').set_trace()
+        self.t += 1
+        return {'neigh_dist_lmarks' : dist_landmarks,# + np.random.randn(self.state_dim) * 0.05,
+                'own_dist_lmarks' : own_dist_lmarks,#  + np.random.randn(self.state_dim) * 0.05,
+                'own_state' : own_state}#+ np.random.randn() * 1.05}
+
+
+
 @sensor_registry(name='ori_stateful_rx')
 class OrientStatefulCommRX(Sensor):
     """ 
@@ -171,12 +224,6 @@ class OrientStatefulCommRX(Sensor):
             dist_closest_st = np.array([dist_closest_st])
             dist_closest_tar = np.array([dist_closest_tar])
             dist_closest_tar_av = np.array([dist_closest_tar_av])
-        # phi_closest_st = np.arccos(closest_state.dot(heading_vec) / np.linalg.norm(closest_state)) if np.linalg.norm(closest_state) > 0 else 0.0
-        # phi_closest_tar = np.arccos(closest_tar.dot(heading_vec) / np.linalg.norm(closest_tar)) if np.linalg.norm(closest_tar) > 0 else 0.0
-        # phi_closest_tar_av = np.arccos(closest_tar_av.dot(heading_vec) / np.linalg.norm(closest_tar_av)) if np.linalg.norm(closest_tar_av) > 0 else 0.0
-        # dist_closest_st =  np.linalg.norm(closest_state - self.state) 
-        # dist_closest_tar = np.linalg.norm(closest_tar - self.state)
-        # dist_closest_tar_av = np.linalg.norm(closest_tar_av - self.state)
         
         inside_area = np.linalg.norm(closest_tar - own_state) < thresh 
         area_full = np.sum([np.linalg.norm(st - closest_tar) < thresh for st in neigh_state]) > 3

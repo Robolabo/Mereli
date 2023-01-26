@@ -174,9 +174,6 @@ class World(object):
             self.physics_engine.step_render()
 
         ########
-        ref_rob = self.robots['robotA_0']
-        estim_sts = np.vstack([rob.sensors['ori_stateful_rx'].state for rob in self.robots.values() if rob.id != ref_rob.id])
-        real_sts = np.vstack([entry['st'] for entry in ref_rob.sensors['ori_stateful_rx'].swarm_table.values()])
         # if self.t == 200:
         # if self.is_done:
         #     import matplotlib.pyplot as plt

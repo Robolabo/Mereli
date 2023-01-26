@@ -201,14 +201,17 @@ class CommFormation(Task):
             self.random_sample(self.n_points, 1.3 *  self.threshold)
 
     def reward_generator(self, entities, robot_name):
-        sensor = 'ori_stateful_rx'
+        sensor = 'ori_stateful_rx_new'
+    
         ###! BYPASS
-        if len(entities[robot_name].sensors[sensor].target_spots) == 0:
-            entities[robot_name].sensors[sensor].target_spots = self.points
+        if len(entities[robot_name].sensors[sensor].landmarks) == 0:
+            entities[robot_name].sensors[sensor].landmarks = self.points
         #####
         my_state = entities[robot_name].sensors[sensor].state
         others_state = np.array([ent.sensors[sensor].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+
+        # Classif of the agent trying to state if the task is complete or not.
         closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         alpha = 1 

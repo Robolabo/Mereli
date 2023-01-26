@@ -8,13 +8,9 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 1, "sensor" : "dist_closest_tar"},
-                "I2" : {"n" : 1, "sensor" : "phi_closest_tar"},
-                "I3" : {"n" : 1, "sensor" : "dist_closest_st"},
-                "I4" : {"n" : 1, "sensor" : "phi_closest_st"},
-                "I5" : {"n" : 1, "sensor" : "dist_closest_tar_av"},
-                "I6" : {"n" : 1, "sensor" : "phi_closest_tar_av"}
-            },
+                "I1" : {"n" : 5, "sensor" : "neigh_dist_lmarks"},
+                "I2" : {"n" : 5, "sensor" : "own_dist_lmarks"}
+		},
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
@@ -25,11 +21,7 @@
             },
             "synapses" :  {
                 "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I4-ORI" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I5-ORI" : {"pre":"I5","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I6-ORI" : {"pre":"I6","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -57,7 +49,7 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 2, "use_estimation" : true}
+                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 2, "use_estimation" : true}
                 },
                 "actuators" : {
                     "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 2},

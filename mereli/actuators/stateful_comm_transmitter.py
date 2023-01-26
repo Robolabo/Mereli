@@ -44,17 +44,14 @@ class OrientStatefulCommTX(Actuator):
         self.tau_ori = tau_ori
         self.tau_st = tau_st
         self.orientation = 0
+        self.is_ok_clf = 0
         self.reset()
         
     def step(self, control):
-        ########
-        # if self.actuator_owner.id > 1:
-        #     control = [0,-1]
-        ##########
         if self.state_dim == 2:
             delta_ori = control[0]
             speed = (control[1] + 1) / 2
-            self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation) 
+            self.orientation += (self.dt / self.tau_ori) * (2*np.pi*delta_ori - self.orientation)
             self.orientation = np.clip(self.orientation, a_min=0, a_max=2*np.pi)
             heading_ori = np.r_[np.cos(self.orientation), np.sin(self.orientation)]
             if speed > 0.5:
@@ -83,6 +80,7 @@ class OrientStatefulCommTX(Actuator):
         #     position = np.array(position)
         #     self.state = position
         # else:
+        self.is_ok_clf = 0
         if self.init_state == 'random':
             self.state = np.random.uniform(-0.05, 0.05, self.state_dim)
         elif self.init_state == 'zero':
