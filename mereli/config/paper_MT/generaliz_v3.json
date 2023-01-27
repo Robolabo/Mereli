@@ -49,10 +49,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 2, "use_estimation" : true}
+                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20, "use_estimation" : true}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 2},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 20},
                     "led_actuator" : {}
                 },
                 "initializers" : {
