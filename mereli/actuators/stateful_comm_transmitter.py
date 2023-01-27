@@ -44,7 +44,6 @@ class OrientStatefulCommTX(Actuator):
         self.tau_ori = tau_ori
         self.tau_st = tau_st
         self.orientation = 0
-        self.is_ok_clf = 0
         self.reset()
         
     def step(self, control):
@@ -80,9 +79,8 @@ class OrientStatefulCommTX(Actuator):
         #     position = np.array(position)
         #     self.state = position
         # else:
-        self.is_ok_clf = 0
         if self.init_state == 'random':
-            self.state = np.random.uniform(-0.05, 0.05, self.state_dim)
+            self.state = np.random.uniform(-0.1, 0.1, self.state_dim)
         elif self.init_state == 'zero':
             self.state = np.array([0.0, 0.0])
         else:

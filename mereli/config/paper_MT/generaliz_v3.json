@@ -14,7 +14,7 @@
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+                "OUT_COMM" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 1, "tau" : 1}}
             },
             "outputs" : {
                 "outA" : {"ensemble" : "OUT_COMM", "actuator" : "ori_stateful_tx", "enc": "real"}
@@ -49,10 +49,10 @@
                     "topology" : "main_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20, "use_estimation" : true}
+                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 20},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 5, "tau_ori" : 5, "init_state" : "random", "init_ori" : "random",  "range" : 20},
                     "led_actuator" : {}
                 },
                 "initializers" : {

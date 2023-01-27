@@ -212,14 +212,14 @@ class CommFormation(Task):
         others_state = np.array([ent.sensors[sensor].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
-        dist_landmarks = np.sum([[np.exp(-50*np.linalg.norm(lmark - st)**2) for lmark in self.points] for st in others_state], axis=0)
-        own_dist_lmarks = np.array([np.exp(-50*np.linalg.norm(lmark - my_state)**2) for lmark in self.points]) 
+        dist_landmarks = np.sum([[np.exp(-60*np.linalg.norm(lmark - st)**2) for lmark in self.points] for st in others_state], axis=0)
+        own_dist_lmarks = np.array([np.exp(-60*np.linalg.norm(lmark - my_state)**2) for lmark in self.points]) 
         other_lmark_v = dist_landmarks > 0.1
         own_lmark_v = own_dist_lmarks > 0.1
         if not np.any(own_lmark_v):
             return 0.0
         own_lmark = np.argmax(own_lmark_v)
-        reward = 1 if other_lmark_v[own_lmark] == 0 else 0.0 
+        reward = own_dist_lmarks[own_lmark] if other_lmark_v[own_lmark] == 0 else 0.0 
         return reward
     
     def prev_taskreward_generator(self, entities, robot_name):
