@@ -117,7 +117,6 @@ class NewOrientStatefulCommRX(Sensor):
         # __import__('pdb').set_trace()
         dist_landmarks = np.mean([[np.exp(-2*dist_fn(lmark, st)**2) for lmark in self.landmarks] for st in neigh_states], axis=0)
         own_dist_lmarks = np.array([np.exp(-2*dist_fn(lmark, self.state)**2) for lmark in self.landmarks])
-        print(own_dist_lmarks, self.landmarks)
         self.t += 1
         return {'neigh_dist_lmarks' : dist_landmarks,# + np.random.randn(self.state_dim) * 0.05,
                 'own_dist_lmarks' : own_dist_lmarks,#  + np.random.randn(self.state_dim) * 0.05,
