@@ -205,7 +205,7 @@ class CommFormation(Task):
         sensor = 'ori_stateful_rx_new'
     
         ###! BYPASS
-        if len(entities[robot_name].sensors[sensor].landmarks) == 0:
+        if np.sum(entities[robot_name].sensors[sensor].landmarks) == 0:
             entities[robot_name].sensors[sensor].landmarks = self.points
         #####
         
