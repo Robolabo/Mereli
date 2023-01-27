@@ -3,6 +3,7 @@ import pybullet as p
 from mereli.globals import global_states
 from mereli.objects import Robot, LightSource, GroundArea
 from mereli.register import tasks, task_registry
+from mereli.utils import torus_distance, torus_angle, ring_angle, ring_distance
 
 
 class Task:
@@ -188,7 +189,7 @@ class CommFormation(Task):
         self.point_dim = point_dim
         self.n_points = n_points
         if points == 'random':
-            self.random_sample(self.n_points, 1.3 * threshold)
+            self.random_sample(self.n_points, 2 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
@@ -198,7 +199,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 1.3 *  self.threshold)
+            self.random_sample(self.n_points, 2 *  self.threshold)
 
     def reward_generator(self, entities, robot_name):
         sensor = 'ori_stateful_rx_new'
@@ -212,8 +213,9 @@ class CommFormation(Task):
         others_state = np.array([ent.sensors[sensor].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
-        dist_landmarks = np.sum([[np.exp(-60*np.linalg.norm(lmark - st)**2) for lmark in self.points] for st in others_state], axis=0)
-        own_dist_lmarks = np.array([np.exp(-60*np.linalg.norm(lmark - my_state)**2) for lmark in self.points]) 
+        dist_landmarks = np.sum([[np.exp(-60*torus_distance(lmark, st)**2) for lmark in self.points] for st in others_state], axis=0)
+        own_dist_lmarks = np.array([np.exp(-60*torus_distance(lmark, my_state)**2) for lmark in self.points]) 
+
         other_lmark_v = dist_landmarks > 0.1
         own_lmark_v = own_dist_lmarks > 0.1
         if not np.any(own_lmark_v):
