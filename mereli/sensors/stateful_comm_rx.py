@@ -114,7 +114,6 @@ class NewOrientStatefulCommRX(Sensor):
         if len(self.landmarks) == 0: self.landmarks = np.zeros([5, 2]) #Provisional #Provisional
         
         dist_fn = torus_distance if self.state_dim == 2 else ring_distance
-        # __import__('pdb').set_trace()
         dist_landmarks = np.mean([[np.exp(-6*dist_fn(lmark, st)**2) for lmark in self.landmarks] for st in neigh_states], axis=0)
         own_dist_lmarks = np.array([np.exp(-6*dist_fn(lmark, self.state)**2) for lmark in self.landmarks])
         self.t += 1

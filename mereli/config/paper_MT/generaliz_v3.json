@@ -52,7 +52,7 @@
                     "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 5, "tau_ori" : 5, "init_state" : "random", "init_ori" : "random",  "range" : 20},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 20, "tau_ori" : 20, "init_state" : "random", "init_ori" : "random",  "range" : 20},
                     "led_actuator" : {}
                 },
                 "initializers" : {
