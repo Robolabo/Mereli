@@ -9,9 +9,16 @@ class Phototaxis(RobotController):
         super(Phototaxis, self).__init__(*args, **kwargs)
         self.color = color
         self.ls_sensor = self.color + '_light_sensor' 
-        self.obstacle_avoider = BasicObstacleAvoider(no_obstacle_action=[0,0]) 
-        
+        # self.obstacle_avoider = BasicObstacleAvoider(no_obstacle_action=[0,0]) 
+        self._phi_basis = []  
+
+
     def step(self, state, reward=0.0):
+        target_point = np.array([0.8, 0, 0, 0])
+        aaa = np.array([np.max(state[f'{light}_light_sensor']) for light in ['red', 'green', 'blue', 'yellow']])
+        phi_v = np.array([np.argmax(state[f'{light}_light_sensor']) for light in ['red', 'green', 'blue', 'yellow']])
+        __import__('pdb').set_trace()
+        target_point - aaa
         action_photo = np.zeros(2)
         action_obsav = self.obstacle_avoider.step(state, reward=reward)
         action_photo[0] = np.max(state[self.ls_sensor][[4, 5, 6, 7]])

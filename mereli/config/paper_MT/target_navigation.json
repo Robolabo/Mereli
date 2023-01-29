@@ -1,27 +1,25 @@
 {
-    "checkpoint_file" : "chk_generaliz_v3",
-    "created" : "2023-01-25",
-    "description" : "Exp that uses the comm. framework to solve task alloc with random landmarks. If differs from v2 in that here we try to solve the connectivity issue with a new consensus plane (OK or NO_OK). Unlike v2, this exp was created in ESP.",
-    "logging" : {"file" : "generaliz_v3"},
+    "checkpoint_file" : "chk_target_navigation",
+    "logging" : {"file" : "target_navigation"},
     "topology" : {
         "main_ann" : {
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 5, "sensor" : "neigh_dist_lmarks"},
-                "I2" : {"n" : 5, "sensor" : "own_dist_lmarks"}
+                "I1" : {"n" : 4, "sensor" : "max_light_v"},
+                "I2" : {"n" : 1, "sensor" : "reward"}
 		},
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "OUT_COMM" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+                "OUT" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
             },
             "outputs" : {
-                "outA" : {"ensemble" : "OUT_COMM", "actuator" : "ori_stateful_tx", "enc": "real"}
+                "outA" : {"ensemble" : "OUT", "actuator" : "joint_velocity_actuator", "enc": "real"}
             },
-            "synapses" :  {
-                "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
+	    "synapses" :  {
+                "I1-OUT" : {"pre":"I1","post":"OUT", "trainable":true, "p":1.0},
+                "I2-OUT" : {"pre":"I2","post":"OUT", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -32,28 +30,28 @@
     "world": {
         "name" : "flat_world",
         "engine" : "pybullet",
-        "physics_dt" : 0.05,
-        "T_control" : 0.05,
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
         "task_manager" : {
-            "total_duration" : 2000,
+            "total_duration" : 500,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 5, "points" : "random"}}]
+            "tasks" : [{"name" : "reach_sensing_reference", "params" : {}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 1,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
-                    "params" : {}},
+                    "params" : {}
+		},
                 "sensors" : {
-                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20}
+                    "light_sensor" : {"n_sectors" : 8, "range" : 20}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 20},
-                    "led_actuator" : {}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 10}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph",  "params" : {"max_rad": 2,"initial_pos" : [0,0]}},
@@ -61,7 +59,39 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-	    }
+	    },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, -1, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "red"}
+            },
+            "light_yellow" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 1, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "yellow"}
+            },
+            "light_blue" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, -1, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "blue"}
+            },
+            "light_green" : {
+                "type" : "light_source",
+                "num_instances": 1,
+                "initializers" : {
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, 1, 1]]}}
+                },
+                "params" : {"range" : 10, "color" : "green"}
+            }
         }
     },
     "algorithm" : {

@@ -330,6 +330,7 @@ class World(object):
                     pos = [0,0,0] if self.physics_engine._engine_type == '3D' else [0,0]
                     ori = [0,0,0] if self.physics_engine._engine_type == '3D' else 0.0
                     robot = object_cls(pos, ori, controller=controller, **obj['params'])
+                    controller.controller_owner = robot
                     #* If any, initialize robot's reward generator
                     # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)

@@ -366,6 +366,8 @@ class PybulletEngine(BaseEngine):
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.
 
         .. note::
+        __import__('pdb').set_trace()
+        _import__('pdb').set_trace()
             For the moment only directional sensor positions can be queried.
         
         :param int obj_id: identifier of the robot owning the sensor.

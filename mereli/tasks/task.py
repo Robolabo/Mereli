@@ -59,6 +59,22 @@ class DummyTask(Task):
     def done_generator(self, *args):
         return False
 
+@task_registry(name="reach_sensing_reference")
+class ReachSensingRef(Task):
+    def __init__(self, *args, range=0.5, color='red', **kwargs):
+        super(ReachSensingRef, self).__init__(*args, **kwargs)
+
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        readings = robot.sensors['light_sensor'].reading['max_light_v']
+        ref_v = np.array([0, 0., 0., 0.8])
+        rew = np.exp(-50*np.linalg.norm(readings[-1] - ref_v[-1])**2)
+        return rew
+
+    def done_generator(self, entities):
+        return False 
+
+
 @task_registry(name="goto_light")
 class GotoLightTask(Task):
     def __init__(self, *args, range=0.5, color='red', **kwargs):
@@ -213,7 +229,10 @@ class CommFormation(Task):
         others_state = np.array([ent.sensors[sensor].state\
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
-        lmark_v = np.sum([[torus_distance(lmark, st) <= 0.2 for lmark in self.points] for st in others_state], axis=0)
+        if len(others_state) == 0:
+            lmark_v = np.zeros(len(self.points))
+        else:
+            lmark_v = np.sum([[torus_distance(lmark, st) <= 0.2 for lmark in self.points] for st in others_state], axis=0)
         own_lmark_v = np.array([torus_distance(lmark, my_state) <= 0.2 for lmark in self.points]) 
 
         if not np.any(own_lmark_v):

@@ -26,12 +26,16 @@ from mereli.data_logging import CSVLogger
 @click.option('-l', '--log', default=False, is_flag=True, help='Log data into a file.')
 @click.option('-n', '--ncpu', default=1, help='Number of CPU cores.')
 @click.option('-f', '--cfg', default='default', help='Name of the JSON config. file.')
-def main(render, resume, cfg, debug, eval, verbose, log, ncpu):
+@click.option('-i', '--interactive', default=False,is_flag=True, help='Run in interactive mode.')
+def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     #* Set globals
     global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose)
+
+    import streamlit as st
+    st.write('HOLA')
+
     #* Parse JSON
     cfg_dict = json_parser(cfg)
-    
     if log:
         logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
         logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
@@ -109,4 +113,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, ncpu):
         
                
 if __name__ == "__main__":
+    # import sys
+    # from streamlit.web import cli as stclib
+    # sys.argv = ["streamlit", "run", "mereli/dashboard/Hello.py"]
     main()

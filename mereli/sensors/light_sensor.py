@@ -100,6 +100,7 @@ class LightSensor(DirectionalSensor):
         for color in reading:
             # reading[color] += np.random.randn() * 0.0
             self.reading[color] += (0.2) * (reading[color]  - self.reading[color])
+        self.reading['max_light_v'] = np.array([np.max(ls_read) for name, ls_read in self.reading.items() if name != 'max_light_v'])
         return self.reading
 
     def step_fast(self, neighborhood):
