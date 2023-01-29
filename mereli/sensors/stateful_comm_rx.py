@@ -102,15 +102,10 @@ class NewOrientStatefulCommRX(Sensor):
                         neigh_states.append(obj.actuators['ori_stateful_tx'].state.copy())
                         neigh_oris.append(obj.actuators['ori_stateful_tx'].orientation)
                         neighbors.append(obj)
-        if len(neigh_states) == 0:
-            neigh_states = 0.0
-        else:
-            state_diffs = [st - own_state for st in neigh_states]
-            neigh_mean = np.mean(neigh_states, 0)
-        heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]
-        state_agg = neigh_mean
+        # if len(neigh_states) == 0:
+        #     neigh_states = 0.0
+        # heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]
         self.state = own_state
-        thresh = 0.2
         if len(self.landmarks) == 0: self.landmarks = np.zeros([5, 2]) #Provisional #Provisional
         
         dist_fn = torus_distance if self.state_dim == 2 else ring_distance
