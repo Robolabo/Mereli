@@ -219,7 +219,7 @@ class CommFormation(Task):
         if not np.any(own_lmark_v):
             return 0.0
         own_lmark = np.argmax(own_lmark_v)
-        reward = 1.0 if lmark_v[own_lmark] == 0 else 0.0 
+        reward = np.exp(-50*torus_distance(self.points[own_lmark], my_state)**2) if lmark_v[own_lmark] == 0 else 0.0 
         return reward
     
     def prev_taskreward_generator(self, entities, robot_name):
