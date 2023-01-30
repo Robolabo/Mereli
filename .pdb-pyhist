@@ -1,74 +1,3 @@
-states[0]['own_state']
-states[1]['own_state']
-states[2]['own_state']
-states[3]['own_state']
-states[0]['own_state']
-states[1]['own_state']
-states[2]['own_state']
-plt.plot(oo.T)
-plt.show()
-interact
-plt.plot(oo.T)
-plt.show()
-robot_naem
-robot_name
-vv.T.shaep
-vv.T.shape
-plt.plot(vv.T)
-plt.show()
-states
-self.evaluator
-self.reward
-self.rewards
-self.task
-self.tasks
-plt.plot(vv.T)
-plt.show()
-self.robots
-self.robots['robotA_0']
-self.robots['robotA_0'].position
-self.robots['robotA_0'].orientation
-force
-plt.plot(oo.T)
-plt.show()
-plt.plot(ii.T)
-plt.show()
-plt.plot(ii.T)
-plt.plot(oo.T)
-plt.show()
-plt.plot(oo.T)
-plt.show()
-inside_area
-my_state
-centroid
-num_others_inside
-inside_area
-my_state
-centroid
-np.linalg.norm(my_state - centroid)
-num_others_inside
-others_states
-others_state
-states
-states[0]
-interact
-[st['my_state'] for st in states]
-[st['own_state'] for st in states]
-[st['own_state'] for st in states][0]
-[st['reward'] for st in states][0]
-[st['reward'] for st in states]
-[st['own_state'] for st in states]
-[st['reward'] for st in states]
-[st['own_state'] for st in states]
-[st['reward'] for st in states]
-[st['own_state'] for st in states]
-[st['reward'] for st in states]
-own_state
-my_state
-others_state
-[st['reward'] for st in states]
-[st['own_state'] for st in states]
-[st['inside_area'] for st in states]
 [st['area_full'] for st in states]
 [st['own_state'] for st in states]
 num_others_inside
@@ -498,3 +427,74 @@ corr_spot == closest
 np.all(corr_spot == closest)
 np.all(corr_spot == np.array([0.7,0.7]))
 ç
+self.robots
+self.robots['robotA_0']
+self.robots['robotA_0'].velocity
+np.ones(len(self.robots))
+np.outer(np.ones(len(self.robots))
+positions = [robot.position for robot in self.robots.values()]
+positions
+positions = [robot.position[:2] for robot in self.robots.values()]
+positions
+positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
+positions
+positions.shape
+np.outer(np.ones(2), positions)
+np.outer(np.ones(2), positions).shape
+from itertools import permutations 
+permutations([1, 2, 3]) 
+tuple(permutations([1, 2, 3])) 
+tuple(permutations([1, 2, 3], 2)) 
+tuple(permutations([1, 2, 2], 2)) 
+tuple(permutations([1, 2, 3], 2)) 
+from itertools import permutations 
+positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
+tuple(permutations(positions, 2)) 
+tuple(permutations(positions, 2))[0] 
+np.outer(np.ones(6))
+np.outer(np.ones(6), positions)
+np.outer(np.ones(6), positions).shape
+np.outer(np.ones(6), positions)[:,0]
+np.outer(np.ones(6,2), positions)[:,0]
+np.outer(np.ones([6,2]), positions)[:,0]
+np.outer(np.ones([6,2]), positions)[0]
+np.outer(np.ones([6,2]), positions).shape
+np.multiply.outer(np.ones(6), positions)
+np.multiply.outer(np.ones(6), positions).shap
+np.multiply.outer(np.ones(6), positions).shape
+aa1 = np.multiply.outer(np.ones(6), positions)
+aa1[0]
+aa1[0,0]
+aa1[0,1]
+aa1[1,0]
+aa1[2,0]
+aa2 = np.multiply.outer(positions, np.ones(6))
+aa2
+aa1 - aa2
+aa2.hape
+aa2.shape
+aa1.shape
+aa2[0,0]
+aa1.T
+aa1.T.shape
+np.transpose(aa1, (1, 0, 2))
+aa2 = np.transpose(aa1, (1, 0, 2))
+aa1
+aa1.shape
+aa2.shape
+aa2 - aa1
+aa = aa2 - aa1
+aa[0,1]
+aa[1,0]
+aad = np.linalg.norm(aa)
+aad
+aad = np.linalg.norm(aa, axis=2)
+aad
+aa2 = np.transpose(aa1, (1, 0, 2)
+robot_names
+robot_names[i]
+self.neighbor_matrix
+self.neighbor_matrix[i]
+robot_names[self.neighbor_matrix[i]]
+np.array(robot_names)[self.neighbor_matrix[i]]
+stimuli

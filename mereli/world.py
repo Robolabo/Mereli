@@ -100,9 +100,20 @@ class World(object):
         self.initializers = {}
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
-
+        self.neighbors = {}
+        self.neighbor_matrix = None
         self.done_signal = None
         self.t = 0
+    
+    def update_neighbor_matrix(self):
+        positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
+        aux_mat = np.multiply.outer(np.ones(len(self.robots)), positions)
+        dist_mat = np.linalg.norm(aux_mat - np.transpose(aux_mat, (1, 0, 2)), axis=2)
+        self.neighbor_matrix = dist_mat > 1
+        robot_names = np.array(tuple(self.robots.keys()))
+        for i in range(len(robot_names)):
+            self.neighbors[robot_names[i]] = robot_names[self.neighbor_matrix[i]] 
+
 
     @increase_time
     @mov_average_timeit
@@ -136,6 +147,8 @@ class World(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
+        # self.update_neighbor_matrix()
+
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
@@ -172,22 +185,9 @@ class World(object):
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-
-        ########
-        # if self.t == 200:
-        # if self.is_done:
-        #     import matplotlib.pyplot as plt
-        #     print(estim_sts)
-        #     print(real_sts)
-        #     plt.scatter(estim_sts[:,0] + 0.001, estim_sts[:,1]+0.001, marker='+')
-        #     plt.scatter(real_sts[:,0], real_sts[:,1], marker='+')
-        #     plt.xlim(-1,1)
-        #     plt.ylim(-1,1)
-        #     plt.show()
-        #     __import__('pdb').set_trace()
-        
-        #########
-
+    
+        if self.is_done:
+            __import__('pdb').set_trace()
         if self.is_done and global_states.LOG:
             data_all = []  
             import matplotlib.pyplot as plt

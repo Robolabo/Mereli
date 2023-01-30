@@ -43,7 +43,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 2,
+                "num_instances" : 6,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
@@ -63,6 +63,15 @@
                 "params" : {"trainable" : true}
 	    }
         }
+    },
+    "communication_space" : {
+	"name" : "",
+   	"robots" : {
+		"name" : "robotA",
+		"controller" : {"name" : "neural_controller"},
+		"dynamics" : null	
+	},
+        "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },
     "algorithm" : {
         "name" : "NEAT",
