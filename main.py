@@ -31,8 +31,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     #* Set globals
     global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose)
 
-    import streamlit as st
-    st.write('HOLA')
+    # import streamlit as st
+    # st.write('HOLA')
 
     #* Parse JSON
     cfg_dict = json_parser(cfg)

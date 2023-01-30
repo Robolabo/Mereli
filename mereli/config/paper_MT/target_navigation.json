@@ -33,7 +33,7 @@
         "physics_dt" : 0.01,
         "T_control" : 0.01,
         "task_manager" : {
-            "total_duration" : 500,
+            "total_duration" : 1500,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "reach_sensing_reference", "params" : {}}]
@@ -64,7 +64,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, -1, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, -1,  0.5]]}}
                 },
                 "params" : {"range" : 10, "color" : "red"}
             },
@@ -72,7 +72,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 1, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 1, 0.5]]}}
                 },
                 "params" : {"range" : 10, "color" : "yellow"}
             },
@@ -80,7 +80,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, -1, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, -1, 0.5]]}}
                 },
                 "params" : {"range" : 10, "color" : "blue"}
             },
@@ -88,7 +88,7 @@
                 "type" : "light_source",
                 "num_instances": 1,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, 1, 1]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[-1, 1, 0.5]]}}
                 },
                 "params" : {"range" : 10, "color" : "green"}
             }
