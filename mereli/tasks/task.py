@@ -205,7 +205,7 @@ class CommFormation(Task):
         self.point_dim = point_dim
         self.n_points = n_points
         if points == 'random':
-            self.random_sample(self.n_points, 1.3 * threshold)
+            self.random_sample(self.n_points, 2 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
@@ -215,7 +215,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 1.3 *  self.threshold)
+            self.random_sample(self.n_points, 2 *  self.threshold)
 
 #    def reward_generator(self, entities, robot_name):
 #        sensor = 'ori_stateful_rx_new'
@@ -253,16 +253,17 @@ class CommFormation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
         # Classif of the agent trying to state if the task is complete or not.
-        closest = self.points[np.argmin([np.linalg.norm(pt - my_state) for pt in self.points])] 
+        closest = self.points[np.argmin([torus_distance(pt, my_state) for pt in self.points])] 
         num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
         alpha = 1 
-        dist_neigh = np.min([np.linalg.norm(oth_st - my_state) for oth_st in others_state])
-        dist_tar = np.linalg.norm(my_state - closest) 
+        dist_neigh = np.min([torus_distance(oth_st, my_state) for oth_st in others_state])
+        dist_tar = torus_distance(my_state, closest) 
        
         if dist_neigh < self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
-            return np.exp(-20 * dist_tar) 
+            # return np.exp(-20 * dist_tar) 
+            return np.exp(-50 * dist_tar**2) 
             # return max(0, 1 - dist_tar/self.threshol)
     
     def random_sample(self, n_points, min_dist):
