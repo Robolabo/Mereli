@@ -1,15 +1,16 @@
 {
     "checkpoint_file" : "chk_generaliz_v3",
     "created" : "2023-01-25",
-    "description" : "Exp that uses the comm. framework to solve task alloc with random landmarks. If differs from v2 in that here we try to solve the connectivity issue with a new consensus plane (OK or NO_OK). Unlike v2, this exp was created in ESP.",
     "logging" : {"file" : "generaliz_v3"},
     "topology" : {
         "robot_ann" : {
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 5, "sensor" : "neigh_dist_lmarks"},
-                "I2" : {"n" : 5, "sensor" : "own_dist_lmarks"}
+                "I1" : {"n" : 1, "sensor" : "dist_closest_tar"},
+                "I2" : {"n" : 1, "sensor" : "phi_closest_tar"},
+                "I3" : {"n" : 1, "sensor" : "dist_closest_st"},
+                "I4" : {"n" : 1, "sensor" : "phi_closest_st"}
 		},
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -21,7 +22,9 @@
             },
             "synapses" :  {
                 "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
-                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
+                "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I3-ORI" : {"pre":"I3","post":"OUT_COMM", "trainable":true, "p":1.0},
+                "I4-ORI" : {"pre":"I4","post":"OUT_COMM", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -71,13 +74,13 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 6,
+                "num_instances" : 5,
                 "controller" : {
                     "name" : "neural_controller",
-                    "topology" : "main_ann",
+                    "topology" : "robot_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx_new" : {"state_dim" : 2, "range" : 20}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 20}
                 },
                 "actuators" : {
                     "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 20},
@@ -104,7 +107,7 @@
         "evaluation_steps" : 3000,
         "num_evaluations" : 1,
         "fitness_function" : "reward_integration",
-	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
+	"targets" : [{"topology" : "robot_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 

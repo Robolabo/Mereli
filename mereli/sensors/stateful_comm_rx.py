@@ -132,14 +132,14 @@ class OrientStatefulCommRX(Sensor):
         self.state_dim = state_dim
         self.state = None
         self.use_estimation = use_estimation
-        self.target_spots = []
+        self.landmarks = []
         self.swarm_table = {}
         self.t = 1
 
     def reset(self):
         self.t = 1
         self.state = np.zeros(self.state_dim)
-        self.target_spots = []
+        self.landmarks = []
         self.swarm_table = {}
 
     def update_table(self, neighbors):
@@ -201,7 +201,7 @@ class OrientStatefulCommRX(Sensor):
         thresh = 0.2
         closest_state = neigh_state[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
         
-        target_points = self.target_spots if len(self.target_spots) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
+        target_points = self.landmarks if len(self.landmarks) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
         idle_tars = [not any([np.linalg.norm(st - tar) < thresh for st in neigh_state]) for tar in target_points]
         target_points_av = target_points[idle_tars]
         closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] 

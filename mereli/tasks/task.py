@@ -217,32 +217,32 @@ class CommFormation(Task):
         if self.is_random:
             self.random_sample(self.n_points, 1.2 *  self.threshold)
 
-    def reward_generator(self, entities, robot_name):
-        sensor = 'ori_stateful_rx_new'
+#    def reward_generator(self, entities, robot_name):
+#        sensor = 'ori_stateful_rx_new'
     
-        ###! BYPASS
-        if np.sum(entities[robot_name].sensors[sensor].landmarks) == 0:
-            entities[robot_name].sensors[sensor].landmarks = self.points
-        #####
+#        ###! BYPASS
+#        if np.sum(entities[robot_name].sensors[sensor].landmarks) == 0:
+#            entities[robot_name].sensors[sensor].landmarks = self.points
+#        #####
         
-        my_state = entities[robot_name].sensors[sensor].state
-        others_state = np.array([ent.sensors[sensor].state\
-            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
+#        my_state = entities[robot_name].sensors[sensor].state
+#        others_state = np.array([ent.sensors[sensor].state\
+#            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
-        if len(others_state) == 0:
-            lmark_v = np.zeros(len(self.points))
-        else:
-            lmark_v = np.sum([[torus_distance(lmark, st) <= 0.2 for lmark in self.points] for st in others_state], axis=0)
-        own_lmark_v = np.array([torus_distance(lmark, my_state) <= 0.2 for lmark in self.points]) 
+#        if len(others_state) == 0:
+#            lmark_v = np.zeros(len(self.points))
+#        else:
+#            lmark_v = np.sum([[torus_distance(lmark, st) <= 0.2 for lmark in self.points] for st in others_state], axis=0)
+#        own_lmark_v = np.array([torus_distance(lmark, my_state) <= 0.2 for lmark in self.points]) 
 
-        if not np.any(own_lmark_v):
-            return 0.0
-        own_lmark = np.argmax(own_lmark_v)
-        reward = np.exp(-50*torus_distance(self.points[own_lmark], my_state)**2) if lmark_v[own_lmark] == 0 else 0.0 
-        return reward
+#        if not np.any(own_lmark_v):
+#            return 0.0
+#        own_lmark = np.argmax(own_lmark_v)
+#        reward = np.exp(-50*torus_distance(self.points[own_lmark], my_state)**2) if lmark_v[own_lmark] == 0 else 0.0 
+#        return reward
     
-    def prev_taskreward_generator(self, entities, robot_name):
-        sensor = 'ori_stateful_rx_new'
+    def reward_generator(self, entities, robot_name):
+        sensor = 'ori_stateful_rx'
     
         ###! BYPASS
         if len(entities[robot_name].sensors[sensor].landmarks) == 0:
