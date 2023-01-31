@@ -204,12 +204,15 @@ class OrientStatefulCommRX(Sensor):
         dist_closest_tar = dist_fn(closest_tar, self.state) 
         dist_closest_tar_av = dist_fn(closest_tar_av, self.state) 
         if self.state_dim == 2:
-            phi_closest_st = np.array([phi_closest_st / (2*np.pi)])
-            phi_closest_tar = np.array([phi_closest_tar / (2*np.pi)])
-            phi_closest_tar_av = np.array([phi_closest_tar_av / (2*np.pi)])
-            dist_closest_st = np.array([dist_closest_st])
-            dist_closest_tar = np.array([dist_closest_tar])
-            dist_closest_tar_av = np.array([dist_closest_tar_av])
+            # phi_closest_st = np.array([phi_closest_st / (2*np.pi)])
+            # phi_closest_tar = np.array([phi_closest_tar / (2*np.pi)])
+            # phi_closest_tar_av = np.array([phi_closest_tar_av / (2*np.pi)])
+            phi_closest_st = np.array([1 / (phi_closest_st+1)])
+            phi_closest_tar = np.array([1 / (phi_closest_tar + 1)])
+            phi_closest_tar_av = np.array([1 / (phi_closest_tar_av + 1)])
+            dist_closest_st = np.array([1 / (2*dist_closest_st + 1)])
+            dist_closest_tar = np.array([1 / (2*dist_closest_tar+1)])
+            dist_closest_tar_av = np.array([1 / (2*dist_closest_tar_av+1)])
         self.t += 1
         return {
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,
