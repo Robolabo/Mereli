@@ -70,24 +70,24 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 2000,
+            "total_duration" : 3000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 5, "points" : "random"}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 10, "threshold" : 0.1, "points" : "random"}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "robot_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 20}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 5}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 20},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 5},
                     "led_actuator" : {}
                 },
                 "initializers" : {
