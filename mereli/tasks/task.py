@@ -200,12 +200,12 @@ class ElioTask(Task):
     
 @task_registry(name="comm_formation")
 class CommFormation(Task):
-    def __init__(self, *args, threshold=0.3, n_points=6, point_dim=2, points=[], **kwargs):
+    def __init__(self, *args, threshold=0.2, n_points=6, point_dim=2, points=[], **kwargs):
         super(CommFormation, self).__init__(*args, **kwargs)
         self.point_dim = point_dim
         self.n_points = n_points
         if points == 'random':
-            self.random_sample(self.n_points, 1.2 * threshold)
+            self.random_sample(self.n_points, 1.3 * threshold)
             self.is_random = True
         else:
             self.points = np.array(points)
@@ -215,7 +215,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 1.2 *  self.threshold)
+            self.random_sample(self.n_points, 1.3 *  self.threshold)
 
 #    def reward_generator(self, entities, robot_name):
 #        sensor = 'ori_stateful_rx_new'
