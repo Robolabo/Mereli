@@ -4,7 +4,7 @@
     "description" : "Exp that uses the comm. framework to solve task alloc with random landmarks. If differs from v2 in that here we try to solve the connectivity issue with a new consensus plane (OK or NO_OK). Unlike v2, this exp was created in ESP.",
     "logging" : {"file" : "generaliz_v3"},
     "topology" : {
-        "main_ann" : {
+        "robot_ann" : {
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
@@ -22,6 +22,34 @@
             "synapses" :  {
                 "I1-ORI" : {"pre":"I1","post":"OUT_COMM", "trainable":true, "p":1.0},
                 "I2-ORI" : {"pre":"I2","post":"OUT_COMM", "trainable":true, "p":1.0}
+            },
+            "decoding" : {
+                "outA" : {"scheme" : "IdentityDecoding"}
+            },
+            "learning_rule" : {}
+        },
+        "comm_ann" : {
+            "dt" : 0.1,
+            "time_scale" : 1,
+            "stimuli": {
+                "I1" : {"n" : 1, "sensor" : "dist_clst_neigh"},
+                "I2" : {"n" : 1, "sensor" : "phi_clst_neigh"},
+                "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"},
+                "I4" : {"n" : 1, "sensor" : "phi_clst_lmark"}
+  		},
+            "neuron_model" : "rate_model",
+            "synapse_model" : "static_synapse",
+            "ensembles": {
+                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+            },
+            "outputs" : {
+                "out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}
+            },
+            "synapses" :  {
+                "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
+                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0},
+                "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0},
+                "I4-CONTROL" : {"pre":"I4","post":"CONTROL", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "outA" : {"scheme" : "IdentityDecoding"}
@@ -64,13 +92,9 @@
 	    }
         }
     },
-    "communication_space" : {
+    "virtual_space" : {
 	"name" : "",
-   	"robots" : {
-		"name" : "robotA",
-		"controller" : {"name" : "neural_controller"},
-		"dynamics" : null	
-	},
+	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },
     "algorithm" : {

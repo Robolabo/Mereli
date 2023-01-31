@@ -1,14 +1,23 @@
 import numpy as np
-
+from mereli.controllers import NeuralController 
 
 class VirtualParticle:
-    def __init__(self, real_robot):
-        self.real_robot = real_robot
+    def __init__(self):
         self.state = None
         self.orientation = None
         self.controller = None
     
-    def step_control(self):
+    def attach_to_robot(self, real_robot):
+        self.real_robot = real_robot
+        self.real_robot.virtual_particle = self
+
+    def set_controller(self, topology):
+        self.controller = NeuralController()
+        self.controller.add_ann_from_dict(topology) 
+    
+    def step_control(self, neigh_states):
+        # Aggregate info
+        
         pass
 
     def step_dynamics(self, control):
@@ -26,16 +35,27 @@ class VirtualParticle:
 
 class CommunicationSpace:
 
-    def __init__(self, robot_names):
-        self.robots = [] 
+    def __init__(self):
+        self.particles = {}
         self.lmarks = []
+
+    def add_particle(self, robot_name, real_robot):
+        particle = VirtualParticle()
+        particle.attach_to_robot(real_robot)
+        self.particles[robot_name] = particle 
+    
+    def add_landmark(self, position):
+        self.lmark.append(position)
 
     def distance(self, pointA, pointB):
         raise NotImplementedError
     
 
     def step(self):
-        pass
+        for particle in self.particles:
+            particle.step_control()
+        for particle in self.particles:
+            particle.step_dynamics()
 
     def generate_rnd_lmarks(self, n_lmarks, min_dist, spc_dim):
         points = []

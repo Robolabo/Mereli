@@ -15,6 +15,7 @@ from mereli.utils import (increase_time, mov_average_timeit, isinstance_of_any)
 from mereli.globals import global_states
 from mereli.objectives import done
 from mereli.tasks import TaskManager
+from mereli.communication import CommunicationSpace
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -101,6 +102,7 @@ class World(object):
         #* Dict mapping object groups to environmental perturbations
         self.env_perturbations = {}
         self.neighbors = {}
+        self.virtual_space = None
         self.neighbor_matrix = None
         self.done_signal = None
         self.t = 0
@@ -186,8 +188,8 @@ class World(object):
         if self.render:
             self.physics_engine.step_render()
     
-        if self.is_done:
-            __import__('pdb').set_trace()
+        # if self.is_done:
+        #     __import__('pdb').set_trace()
         if self.is_done and global_states.LOG:
             data_all = []  
             import matplotlib.pyplot as plt
@@ -278,6 +280,12 @@ class World(object):
             ent_name = group_name + '_' + i
             self.add_entity(ent_name, entity_cls, pos, ori, controller=controller, group_name=group_name)
         
+    def create_virtual_space(self, **vspace_cfg):
+        self.virtual_space = CommunicationSpace()
+        for robot_name, robot in self.robots.items():
+            self.virtual_space.add_particle(robot_name, robot)
+            # self.virtual_space.particles[robot_name].set_controller(vspace_cfg)
+
     def build_from_dict(self, world_dict, ann_topology=None):
         """ 
         Initializes all the entities and adds them to the world/environment using a ``dict`` structure as input.

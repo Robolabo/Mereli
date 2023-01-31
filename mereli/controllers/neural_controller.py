@@ -45,7 +45,7 @@ class NeuralController(RobotController):
         #* Convert all actions to numpy arrays
         for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
             actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
-            
+
         if 'wheel_actuator' in actions.keys():
             if type(actions['wheel_actuator']) in [int, bool]:
                 actions['wheel_actuator'] = np.array(([0., 0.], [.5, -.5], [-.5, .5])[actions['wheel_actuator']])

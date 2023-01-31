@@ -64,6 +64,10 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
+    
+    # Create virtual space (if any)
+    if 'virtual_space' in cfg_dict:
+        world.create_virtual_space()
 
     # import copy
     # world2 = copy.deepcopy(world)
