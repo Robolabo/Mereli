@@ -74,7 +74,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 5,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "robot_ann",
