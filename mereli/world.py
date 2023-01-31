@@ -149,14 +149,15 @@ class World(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
-        # self.update_neighbor_matrix()
-
+        self.update_neighbor_matrix()
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
             if not issubclass(type(obj), Robot):
                 obj.step(self.hierarchy.values())
                 continue
+            
+            obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
                             if not pert.postprocessing and idx in pert.affected_robots]

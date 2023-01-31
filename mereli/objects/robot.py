@@ -45,7 +45,8 @@ class Robot(WorldObject):
         self.task = np.array([0])
         # self.reset()
         self.data_logger = None 
-
+        self._neighbors = []
+        
     def step(self, neighborhood, perturbations=None):
         """ Step method of the robots. 
         It is composed by the following main steps:
@@ -141,6 +142,7 @@ class Robot(WorldObject):
                 readings[sensor_name] = reading
         return readings
 
+
     def reset(self, seed=None):
         """
         Resets the robot dynamics, sensors, actuators and controller. Position and orientation 
@@ -192,6 +194,14 @@ class Robot(WorldObject):
         #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
         self.comm_sys = comm_sys
         
+
+    @property
+    def neighbors(self):
+        return self._neighbors
+
+    @neighbors.setter
+    def neighbors(self, neighbors):
+        self._neighbors = neighbors
 
     @property
     def food(self):
