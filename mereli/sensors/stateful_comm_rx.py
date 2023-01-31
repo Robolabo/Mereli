@@ -181,25 +181,22 @@ class OrientStatefulCommRX(Sensor):
 
         if len(neigh_states) == 0:
             neigh_states = 0.0
-        else:
-            state_diffs = [st - own_state for st in neigh_states]
-            neigh_mean = np.mean(neigh_states, 0)
         heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]
-        # state_agg = np.mean(state_diffs, 0)
         self.state = own_state
         thresh = 0.2
-        closest_state = neigh_states[np.argmin([np.linalg.norm(st_df) for st_df in state_diffs])] 
-        
+        angle_fn = torus_angle if self.state_dim == 2 else ring_angle
+        dist_fn = torus_distance if self.state_dim == 2 else ring_distance
+
         target_points = self.landmarks if len(self.landmarks) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
-        idle_tars = [not any([np.linalg.norm(st - tar) < thresh for st in neigh_states]) for tar in target_points]
+        closest_state = neigh_states[np.argmin([dist_fn(st, own_state) for st in neigh_states])] 
+        closest_tar = target_points[np.argmin([dist_fn(pt, own_state) for pt in target_points])] 
+        
+        idle_tars = [not any([dist_fn(st, tar) < thresh for st in neigh_states]) for tar in target_points]
         target_points_av = target_points[idle_tars]
-        closest_tar = target_points[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points])] 
         if np.sum(idle_tars) == 0:
             closest_tar_av = closest_tar.copy()
         else:
             closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] 
-        angle_fn = torus_angle if self.state_dim == 2 else ring_angle
-        dist_fn = torus_distance if self.state_dim == 2 else ring_distance
         phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec) 
         phi_closest_tar = angle_fn(closest_tar, self.state, ref_vec=heading_vec) 
         phi_closest_tar_av = angle_fn(closest_tar_av, self.state, ref_vec=heading_vec) 
