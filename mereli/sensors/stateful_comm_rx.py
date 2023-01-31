@@ -180,7 +180,7 @@ class OrientStatefulCommRX(Sensor):
             neigh_oris.append(ngh.actuators['ori_stateful_tx'].orientation)
 
         if len(neigh_states) == 0:
-            neigh_states = 0.0
+            neigh_states = [own_state.copy()] 
         heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]
         self.state = own_state
         thresh = 0.2
@@ -196,7 +196,7 @@ class OrientStatefulCommRX(Sensor):
         if np.sum(idle_tars) == 0:
             closest_tar_av = closest_tar.copy()
         else:
-            closest_tar_av = target_points_av[np.argmin([np.linalg.norm(pt - own_state) for pt in target_points_av])] 
+            closest_tar_av = target_points_av[np.argmin([dist_fn(pt, own_state) for pt in target_points_av])] 
         phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec) 
         phi_closest_tar = angle_fn(closest_tar, self.state, ref_vec=heading_vec) 
         phi_closest_tar_av = angle_fn(closest_tar_av, self.state, ref_vec=heading_vec) 
@@ -215,7 +215,7 @@ class OrientStatefulCommRX(Sensor):
                 'closest_state' : closest_state,#  + np.random.randn(self.state_dim) * 0.05,
                 'closest_target' : closest_tar - own_state, 
                 'phi_closest_st' : phi_closest_st, 
-                'phi_closest_tar' :phi_closest_tar, 
+                'phi_closest_tar' : phi_closest_tar, 
                 'dist_closest_st' : dist_closest_st, 
                 'dist_closest_tar' : dist_closest_tar, 
                 'dist_closest_tar_av' : dist_closest_tar_av, 
