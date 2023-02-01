@@ -111,7 +111,7 @@ class World(object):
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
         aux_mat = np.multiply.outer(np.ones(len(self.robots)), positions)
         dist_mat = np.linalg.norm(aux_mat - np.transpose(aux_mat, (1, 0, 2)), axis=2)
-        self.neighbor_matrix = dist_mat > 1
+        self.neighbor_matrix = np.all((dist_mat < 10, dist_mat > 0), axis=0)
         robot_names = np.array(tuple(self.robots.keys()))
         for i in range(len(robot_names)):
             self.neighbors[robot_names[i]] = robot_names[self.neighbor_matrix[i]] 

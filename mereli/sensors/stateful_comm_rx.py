@@ -134,6 +134,7 @@ class OrientStatefulCommRX(Sensor):
         self.use_estimation = use_estimation
         self.landmarks = []
         self.swarm_table = {}
+        self.neighbors = []
         self.t = 1
 
     def reset(self):
@@ -141,6 +142,7 @@ class OrientStatefulCommRX(Sensor):
         self.state = np.zeros(self.state_dim)
         self.landmarks = []
         self.swarm_table = {}
+        self.neighbors = []
 
     def update_table(self, neighbors):
         my_id = self.sensor_owner.id
@@ -173,12 +175,20 @@ class OrientStatefulCommRX(Sensor):
         own_state = self.sensor_owner.actuators['ori_stateful_tx'].state
         own_ori = self.sensor_owner.actuators['ori_stateful_tx'].orientation
         neighbors = self.sensor_owner.neighbors
+        neighborhood = neighbors        
+        if self.t == 1 or self.t % 70 == 0:
+            num_neighbors = 2 #np.random.choice(range(1, len(neighborhood)))
+            random_sample = np.random.choice(len(neighborhood), size=num_neighbors, replace=False)
+            self.neighbors = np.array(list(neighborhood))[random_sample]  
+            neighbors = self.neighbors
+        else:
+            neighbors = self.neighbors
+        
         neigh_states = []
         neigh_oris = []
         for ngh in neighbors:
             neigh_states.append(ngh.actuators['ori_stateful_tx'].state.copy())
             neigh_oris.append(ngh.actuators['ori_stateful_tx'].orientation)
-
         if len(neigh_states) == 0:
             neigh_states = [own_state.copy()] 
         heading_vec = np.r_[np.cos(own_ori), np.sin(own_ori)]

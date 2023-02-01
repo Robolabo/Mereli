@@ -73,7 +73,7 @@
             "total_duration" : 3000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 10, "threshold" : 0.1, "points" : "random"}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 10, "threshold" : 0.2, "points" : "random"}}]
         },
         "objects" : {
             "robotA" : {
@@ -84,14 +84,14 @@
                     "topology" : "robot_ann",
                     "params" : {}},
                 "sensors" : {
-                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 5}
+                    "ori_stateful_rx" : {"state_dim" : 2, "range" : 100}
                 },
                 "actuators" : {
-                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 5},
+                    "ori_stateful_tx" : {"state_dim" : 2, "tau_st" : 10, "tau_ori" : 10, "init_state" : "random", "init_ori" : "random",  "range" : 100},
                     "led_actuator" : {}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 2,"initial_pos" : [0,0]}},
+                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 1,"initial_pos" : [0,0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
