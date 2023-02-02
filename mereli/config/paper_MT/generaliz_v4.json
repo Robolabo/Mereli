@@ -41,8 +41,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height": 3,
-            "width" : 3
+            "height": 2,
+            "width" : 2
         },
         "engine" : "pybullet",
         "physics_dt" : 0.1,
@@ -51,7 +51,7 @@
             "total_duration" : 3000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.5}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
         },
         "objects" : {
             "robotA" : {
@@ -77,9 +77,9 @@
     },
     "virtual_space" : {
 	"name" : "",
-	"H" : 5,
-	"W" : 5,
-	"threshold" : 0.5,
+	"H" : 2,
+	"W" : 2,
+	"threshold" : 0.2,
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },

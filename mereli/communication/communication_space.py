@@ -65,7 +65,7 @@ class CommunicationSpace:
         # Aggregate info
         #MAYBE PROPERTY
         particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-        if self.t == 1 or self.t % 100 == 0:
+        if self.t == 1 or self.t % 70 == 0:
             particle.simulate_dynamic_neighborhood(particle.neighbors)     
 
         neigh_states = []
