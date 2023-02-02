@@ -98,7 +98,7 @@ class Robot(WorldObject):
         # print('A')
         
         if global_states.LOG:
-            self.data_logger.add(state['own_state'])
+            self.data_logger.add(self.virtual_particle.state)
         return state, actions
 
     def plan_actions(self, actions):
@@ -113,6 +113,8 @@ class Robot(WorldObject):
             actuators.
         """
         for actuator_name, actuator in self.actuators.items():
+            if self.planned_actions[actuator_name][0] is None:
+                continue
             if issubclass(type(actuator), HighLevelActuator):
                 actuator.step(*iter(self.planned_actions[actuator_name]), neighborhood)
             else:

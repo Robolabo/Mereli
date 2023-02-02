@@ -180,6 +180,7 @@ class GraphGenotype:
             self._phenotype[topology_name] = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
                 neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
             self._phenotype[topology_name].build_from_dict(topology)
+            __import__('pdb').set_trace()
             # Add genes to genotype
             for name, node in self._phenotype[topology_name].graph['neurons'].items():
                 gene_name = name

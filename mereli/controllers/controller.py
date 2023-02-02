@@ -97,6 +97,18 @@ class RobotController(Controller):
         self.enabled_actuators.update({actuator_name : actuator_params})
 
 
+@controller_registry(name="dummy_controller")
+class DummyController(RobotController):
+    def __init__(self):
+        pass
+
+    def step(self, state, **kwargs):
+        return {act : None for act in self.enabled_actuators}
+
+    def reset(self):
+        pass
+
+
 
 
 

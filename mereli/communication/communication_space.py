@@ -10,6 +10,8 @@ class VirtualParticle:
         self.real_robot = None
         self.control = None
         self.neighbors = []
+        self.dist_clst_neighbor = None
+        self.dist_clst_lmark = None
    
     def attach_to_robot(self, real_robot):
         self.real_robot = real_robot
@@ -24,6 +26,8 @@ class VirtualParticle:
         self.neighbors = []
         self.controller.reset()
         self.control = None
+        self.dist_clst_neighbor = None
+        self.dist_clst_lmark = None
     
     def step_control(self, stimuli):
         control = self.controller.step(stimuli)
@@ -58,21 +62,19 @@ class CommunicationSpace:
         self.t += 1
 
     def perceive(self, particle):
-
         # Aggregate info
         #MAYBE PROPERTY
-        self.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-
+        particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+        if self.t == 1 or self.t % 100 == 0:
+            particle.simulate_dynamic_neighborhood(particle.neighbors)     
 
         neigh_states = []
         neigh_oris = []
-        for ngh in self.neighbors:
+        for ngh in particle.neighbors:
             neigh_states.append(ngh.state.copy())
             neigh_oris.append(ngh.orientation)
         if len(neigh_states) == 0:
             neigh_states = [particle.state.copy()] 
-
-        self.thresh = 0.2
 
         # Compute closest state and landmark
         clst_state = neigh_states[np.argmin([self.distance(st, particle.state) for st in neigh_states])] 
@@ -93,6 +95,8 @@ class CommunicationSpace:
         dist_clst_st = self.distance(particle.state, clst_state)
         dist_clst_lmark = self.distance(particle.state, clst_lmark)
         dist_clst_lmark_av = self.distance(particle.state, clst_lmark_av)
+        particle.dist_clst_neighbor = dist_clst_st
+        particle.dist_clst_lmark = dist_clst_lmark
         # Normalize 
         phi_clst_st = np.array([1 / (phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (phi_clst_lmark + 1)])

@@ -198,9 +198,10 @@ class World(object):
             import matplotlib.pyplot as plt
             # ax = plt.axes(projection='3d')
             tars = self.task_manager.tasks[0].points
-            if tars.shape[1] == 1:
-                tars = np.hstack((np.zeros_like(tars), tars))
-            plt.scatter(tars[:,0], tars[:,1], color='r')
+            landmarks = self.virtual_space.landmarks
+            if landmarks.shape[1] == 1:
+                landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
+            plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
             for bot in self.robots.values():
                 data = np.stack(bot.data_logger.data)
                 if data.shape[1] == 1:
@@ -211,8 +212,8 @@ class World(object):
                 # plt.scatter(data[0,0], data[0,1], color='red')
                 plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
                 data_all.append(data)
-            plt.xlim([-1.1, 1.1])
-            plt.ylim([-1.1, 1.1])
+            plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
+            plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
             plt.title('Communication State Space')
             plt.xlabel('Comm State 0')
             plt.ylabel('Comm State 1')
@@ -283,8 +284,8 @@ class World(object):
             ent_name = group_name + '_' + i
             self.add_entity(ent_name, entity_cls, pos, ori, controller=controller, group_name=group_name)
         
-    def create_virtual_space(self,topology=None, **vspace_cfg):
-        self.virtual_space = CommunicationSpace()
+    def create_virtual_space(self, topology=None, **vspace_cfg):
+        self.virtual_space = CommunicationSpace(H=vspace_cfg['H'], W=vspace_cfg['W'], threshold=vspace_cfg['threshold'])
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
             self.virtual_space.particles[robot_name].set_controller(topology=topology)

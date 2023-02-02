@@ -217,6 +217,19 @@ class CommFormation(Task):
         if self.is_random:
             self.random_sample(self.n_points, 2 *  self.threshold)
 
+    def reward_generator(self, entities, robot_name):
+        # own_st = entities[robot_name].virtual_particle.state
+        # clst_st = entities[robot_name].virtual_particle.clst_st
+        # clst_lmark = entities[robot_name].virtual_particle.clst_lmark
+        dist_clst_st = entities[robot_name].virtual_particle.dist_clst_neighbor
+        dist_clst_lmark = entities[robot_name].virtual_particle.dist_clst_lmark
+        if dist_clst_st is None or dist_clst_lmark is None:
+            return 0.0
+        if dist_clst_st < self.threshold or dist_clst_lmark > self.threshold:
+            return 0.0 # - (1 - dist_neigh / self.threshold) 
+        else:
+            return np.exp(-50 * dist_clst_lmark**2) 
+
 #    def reward_generator(self, entities, robot_name):
 #        sensor = 'ori_stateful_rx_new'
     
@@ -241,29 +254,6 @@ class CommFormation(Task):
 #        reward = np.exp(-50*torus_distance(self.points[own_lmark], my_state)**2) if lmark_v[own_lmark] == 0 else 0.0 
 #        return reward
     
-    def reward_generator(self, entities, robot_name):
-        sensor = 'ori_stateful_rx'
-    
-        ###! BYPASS
-        if len(entities[robot_name].sensors[sensor].landmarks) == 0:
-            entities[robot_name].sensors[sensor].landmarks = self.points
-        #####
-        my_state = entities[robot_name].sensors[sensor].state
-        others_state = np.array([ent.sensors[sensor].state\
-            for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
-
-        # Classif of the agent trying to state if the task is complete or not.
-        closest = self.points[np.argmin([torus_distance(pt, my_state, H=10, W=10) for pt in self.points])] 
-        alpha = 1 
-        dist_neigh = np.min([torus_distance(oth_st, my_state, H=10, W=10) for oth_st in others_state])
-        dist_tar = torus_distance(my_state, closest, H=10, W=10) 
-       
-        if dist_neigh < self.threshold or dist_tar > self.threshold:
-            return 0.0 # - (1 - dist_neigh / self.threshold) 
-        else:
-            # return np.exp(-20 * dist_tar) 
-            return np.exp(-50 * dist_tar**2) 
-            # return max(0, 1 - dist_tar/self.threshol)
     
     def random_sample(self, n_points, min_dist):
         points = []
