@@ -64,10 +64,10 @@ class CommunicationSpace:
     def perceive(self, particle):
         # Aggregate info
         #MAYBE PROPERTY
-        particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-        if self.t == 1 or self.t % 70 == 0:
+        if self.t == 1 or self.t % 100  == 0:
+            particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
             particle.simulate_dynamic_neighborhood(particle.neighbors)     
-
+            # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
         neigh_states = []
         neigh_oris = []
         for ngh in particle.neighbors:
@@ -126,20 +126,21 @@ class CommunicationSpace:
 
             # Apply torus teleportation
             if particle.state[0] > self.W / 2:
-                particle.state[0] -= self.W / 2
+                particle.state[0] -= self.W
             elif particle.state[0] < -self.W / 2:
-                particle.state[0] += self.W / 2
+                particle.state[0] += self.W
             if particle.state[1] > self.H/2:
-                particle.state[1] -= self.H / 2
+                particle.state[1] -= self.H
             elif particle.state[1] < -self.H/2:
-                particle.state[1] += self.H/2 
+                particle.state[1] += self.H 
             particle.state = np.clip(particle.state, a_min=-self.H/2, a_max=self.H/2)
 
     def reset(self, seed=None):
+        self.t = 1
         self.generate_rnd_lmarks(len(self.particles), self.threshold, 2)
         for particle in self.particles.values():
             particle.reset()
-            particle.state = np.random.uniform(low=(-self.W / 2, -self.H / 2), high=(self.W / 2, self.H / 2))
+            particle.state = np.random.uniform(low=(-0.1*self.W / 2, -0.1*self.H / 2), high=(0.1*self.W / 2, 0.1*self.H / 2))
             particle.orientation = np.random.uniform(low=0, high=2*np.pi)
 
     def add_particle(self, robot_name, real_robot):
