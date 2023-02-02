@@ -1,7 +1,10 @@
 {
     "checkpoint_file" : "chk_generaliz_v3",
     "created" : "2023-01-25",
-    "logging" : {"file" : "generaliz_v3"},
+    "logging" : {
+	"file" : "generaliz_v3"
+   	  
+    },
     "topology" : {
         "robot_ann" : {
             "dt" : 0.1,
@@ -39,8 +42,8 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 1, "sensor" : "dist_clst_neigh"},
-                "I2" : {"n" : 1, "sensor" : "phi_clst_neigh"},
+                "I1" : {"n" : 1, "sensor" : "dist_clst_st"},
+                "I2" : {"n" : 1, "sensor" : "phi_clst_st"},
                 "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"},
                 "I4" : {"n" : 1, "sensor" : "phi_clst_lmark"}
   		},
@@ -59,7 +62,7 @@
                 "I4-CONTROL" : {"pre":"I4","post":"CONTROL", "trainable":true, "p":1.0}
             },
             "decoding" : {
-                "outA" : {"scheme" : "IdentityDecoding"}
+                "out" : {"scheme" : "IdentityDecoding"}
             },
             "learning_rule" : {}
         } 
@@ -73,12 +76,12 @@
             "total_duration" : 3000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 10, "threshold" : 0.2, "points" : "random"}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 20, "threshold" : 0.5, "points" : "random"}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 10,
+                "num_instances" : 20,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "robot_ann",

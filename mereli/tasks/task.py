@@ -253,11 +253,10 @@ class CommFormation(Task):
             for ent in entities.values() if issubclass(type(ent), Robot) and ent.id != entities[robot_name].id])
 
         # Classif of the agent trying to state if the task is complete or not.
-        closest = self.points[np.argmin([torus_distance(pt, my_state) for pt in self.points])] 
-        num_closest = np.sum([np.linalg.norm(st - closest) < self.threshold for st in others_state]) #Thresh before 0.2 
+        closest = self.points[np.argmin([torus_distance(pt, my_state, H=10, W=10) for pt in self.points])] 
         alpha = 1 
-        dist_neigh = np.min([torus_distance(oth_st, my_state) for oth_st in others_state])
-        dist_tar = torus_distance(my_state, closest) 
+        dist_neigh = np.min([torus_distance(oth_st, my_state, H=10, W=10) for oth_st in others_state])
+        dist_tar = torus_distance(my_state, closest, H=10, W=10) 
        
         if dist_neigh < self.threshold or dist_tar > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
@@ -269,7 +268,7 @@ class CommFormation(Task):
     def random_sample(self, n_points, min_dist):
         points = []
         while len(points) < n_points:
-            new_candidate = np.random.uniform(low=-1, high=1, size=self.point_dim)
+            new_candidate = np.random.uniform(low=-5, high=5, size=self.point_dim)
             if len(points) == 0:
                 points.append(new_candidate)
             else:

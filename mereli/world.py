@@ -184,6 +184,8 @@ class World(object):
                 obj.actuate(self.hierarchy)
         if self.task_manager is not None:
             self.task_manager(self.hierarchy)
+        if self.virtual_space is not None:
+            self.virtual_space.step()
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
@@ -203,7 +205,7 @@ class World(object):
                 data = np.stack(bot.data_logger.data)
                 if data.shape[1] == 1:
                     data=np.hstack((np.zeros_like(data), data))
-                plt.plot(data[:,0], data[:,1])
+                # plt.plot(data[:,0], data[:,1])
                 # ax.plot3D(data[:][0], data[:][1], data[:][2])
                 # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
                 # plt.scatter(data[0,0], data[0,1], color='red')
@@ -281,11 +283,11 @@ class World(object):
             ent_name = group_name + '_' + i
             self.add_entity(ent_name, entity_cls, pos, ori, controller=controller, group_name=group_name)
         
-    def create_virtual_space(self, **vspace_cfg):
+    def create_virtual_space(self,topology=None, **vspace_cfg):
         self.virtual_space = CommunicationSpace()
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
-            # self.virtual_space.particles[robot_name].set_controller(vspace_cfg)
+            self.virtual_space.particles[robot_name].set_controller(topology=topology)
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """ 
@@ -385,7 +387,9 @@ class World(object):
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
-
+        if self.virtual_space is not None:
+            self.virtual_space.reset(seed=seed)
+            
     def connect(self):
         """ Connect to the physics engine. """
         self.physics_engine.connect(self.hierarchy.values())

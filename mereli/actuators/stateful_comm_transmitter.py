@@ -62,16 +62,16 @@ class OrientStatefulCommTX(Actuator):
                 self.state += (self.dt / self.tau_st) * ori 
 
         if self.state[0] > 1:
-            self.state[0] -= 2
+            self.state[0] -= 5
         elif self.state[0] < -1:
-            self.state[0] += 2
+            self.state[0] += 5
         if self.state_dim > 1:
             if self.state[1] > 1:
-                self.state[1] -= 2
+                self.state[1] -= 5
             elif self.state[1] < -1:
-                self.state[1] += 2
+                self.state[1] += 5
 
-        self.state = np.clip(self.state, a_min=-1, a_max=1)
+        self.state = np.clip(self.state, a_min=-5, a_max=5)
 
     def reset(self):
         # position = {2 : [0.2, 0.2], 3 : [-0.2, -0.2], 4 : [-0.2, 0.2]}.get(self.actuator_owner.id)

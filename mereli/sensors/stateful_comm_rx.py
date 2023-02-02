@@ -198,21 +198,22 @@ class OrientStatefulCommRX(Sensor):
         dist_fn = torus_distance if self.state_dim == 2 else ring_distance
 
         target_points = self.landmarks if len(self.landmarks) > 0 else 0.5 * np.ones(self.state_dim).reshape(1,-1)
-        closest_state = neigh_states[np.argmin([dist_fn(st, own_state) for st in neigh_states])] 
-        closest_tar = target_points[np.argmin([dist_fn(pt, own_state) for pt in target_points])] 
+        closest_state = neigh_states[np.argmin([dist_fn(st, own_state, H=10, W=10) for st in neigh_states])] 
+        closest_tar = target_points[np.argmin([dist_fn(pt, own_state, H=10, W=10) for pt in target_points])] 
         
-        idle_tars = [not any([dist_fn(st, tar) < thresh for st in neigh_states]) for tar in target_points]
+        idle_tars = [not any([dist_fn(st, tar, H=10, W=10) < thresh for st in neigh_states]) for tar in target_points]
         target_points_av = target_points[idle_tars]
         if np.sum(idle_tars) == 0:
             closest_tar_av = closest_tar.copy()
         else:
             closest_tar_av = target_points_av[np.argmin([dist_fn(pt, own_state) for pt in target_points_av])] 
-        phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec) 
-        phi_closest_tar = angle_fn(closest_tar, self.state, ref_vec=heading_vec) 
-        phi_closest_tar_av = angle_fn(closest_tar_av, self.state, ref_vec=heading_vec) 
-        dist_closest_st = dist_fn(closest_state, self.state) 
-        dist_closest_tar = dist_fn(closest_tar, self.state) 
-        dist_closest_tar_av = dist_fn(closest_tar_av, self.state) 
+        phi_closest_st = angle_fn(closest_state, self.state, ref_vec=heading_vec, H=10, W=10) 
+        phi_closest_tar = angle_fn(closest_tar, self.state, ref_vec=heading_vec, H=10, W=10) 
+        phi_closest_tar_av = angle_fn(closest_tar_av, self.state, ref_vec=heading_vec, H=10, W=10)  
+        dist_closest_st = dist_fn(closest_state, self.state, H=10, W=10)  
+        dist_closest_tar = dist_fn(closest_tar, self.state, H=10, W=10)  
+        dist_closest_tar_av = dist_fn(closest_tar_av, self.state, H=10, W=10)  
+ 
         if self.state_dim == 2:
             # phi_closest_st = np.array([phi_closest_st / (2*np.pi)])
             # phi_closest_tar = np.array([phi_closest_tar / (2*np.pi)])

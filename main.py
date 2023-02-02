@@ -67,7 +67,9 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     
     # Create virtual space (if any)
     if 'virtual_space' in cfg_dict:
-        world.create_virtual_space()
+        # is_neural_ctlr = cfg_dict['virtual_space']['controller']['name'] == 'neural_controller'
+        topology_name = cfg_dict['virtual_space']['controller'].get('topology')
+        world.create_virtual_space(**cfg_dict['virtual_space'], topology=cfg_dict['topology'].get(topology_name))
 
     # import copy
     # world2 = copy.deepcopy(world)

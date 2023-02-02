@@ -28,16 +28,12 @@ def compute_angle(u, v=None):
         # if(u[0]*v[1] - u[1]*v[0] < 0): theta *= -1
         return theta
 
-def torus_distance(u, v):
-    H = 2
-    W = 2
+def torus_distance(u, v, H=2, W=2):
     fw = min(W - np.abs(u[0] - v[0]), np.abs(u[0] - v[0]))
     fh = min(H - np.abs(u[1] - v[1]), np.abs(u[1] - v[1]))
     return np.sqrt(fw ** 2 + fh ** 2)
 
-def torus_angle(u, v, ref_vec=None):
-    H = 2
-    W = 2
+def torus_angle(u, v, ref_vec=None, H=2, W=2):
     if ref_vec is None:
         ref_vec = np.array([1, 0])
     fw = min(W - np.abs(u[0] - v[0]), np.abs(u[0] - v[0]))
