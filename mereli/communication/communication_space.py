@@ -101,9 +101,9 @@ class CommunicationSpace:
         phi_clst_st = np.array([1 / (phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (phi_clst_lmark + 1)])
         phi_clst_lmark_av = np.array([1 / (phi_clst_lmark_av + 1)])
-        dist_clst_st = np.array([1 / (2*dist_clst_st + 1)])
-        dist_clst_lmark = np.array([1 / (2*dist_clst_lmark+1)])
-        dist_clst_lmark_av = np.array([1 / (2*dist_clst_lmark_av+1)])
+        dist_clst_st = np.array([1 / (dist_clst_st + 1)])
+        dist_clst_lmark = np.array([1 / (dist_clst_lmark+1)])
+        dist_clst_lmark_av = np.array([1 / (dist_clst_lmark_av+1)])
 
         return {
             'phi_clst_st' : phi_clst_st, 
@@ -140,7 +140,7 @@ class CommunicationSpace:
         self.generate_rnd_lmarks(len(self.particles), self.threshold, 2)
         for particle in self.particles.values():
             particle.reset()
-            particle.state = np.random.uniform(low=(-0.1*self.W / 2, -0.1*self.H / 2), high=(0.1*self.W / 2, 0.1*self.H / 2))
+            particle.state = np.random.uniform(low=(-0.5*self.W / 2, -0.5*self.H / 2), high=(0.5*self.W / 2, 0.5*self.H / 2))
             particle.orientation = np.random.uniform(low=0, high=2*np.pi)
 
     def add_particle(self, robot_name, real_robot):
