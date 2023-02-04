@@ -43,12 +43,13 @@ class VirtualParticle:
         return np.r_[np.cos(self.orientation), np.sin(self.orientation)]
 
 class CommunicationSpace:
-    def __init__(self, H=2, W=2, tau_st=10, tau_ori=10, threshold=0.2):
+    def __init__(self, H=2, W=2, tau_st=10, tau_ori=10, threshold=0.2, randomize_neighbors=False):
         self.H = H
         self.W = W
         self.tau_st = tau_st
         self.tau_ori = tau_ori
         self.threshold = threshold
+        self.randomize_neighbors = randomize_neighbors
         self.dt = 0.1
         self.particles = {}
         self.landmarks = []
@@ -64,10 +65,13 @@ class CommunicationSpace:
     def perceive(self, particle):
         # Aggregate info
         #MAYBE PROPERTY
-        if self.t == 1 or self.t % 100  == 0:
+        if self.randomize_neighbors:
+            if self.t == 1 or self.t % 100  == 0:
+                particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+                particle.simulate_dynamic_neighborhood(particle.neighbors)     
+                # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+        else:
             particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-            particle.simulate_dynamic_neighborhood(particle.neighbors)     
-            # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
         neigh_states = []
         neigh_oris = []
         for ngh in particle.neighbors:

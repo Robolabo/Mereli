@@ -1,8 +1,9 @@
 {
     "checkpoint_file" : "chk_generaliz_v4",
     "logging" : {
-	"file" : "generaliz_v4"
-   	  
+	"file" : "generaliz_v4",
+	"data": {
+    	}
     },
     "topology" : {
         "comm_ann" : {
@@ -81,6 +82,7 @@
 	"W" : 5,
 	"threshold" : 0.5,
 	"tau_st" : 5,
+	"randomized_neighbors" : true,  
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },
