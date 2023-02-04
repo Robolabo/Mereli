@@ -79,7 +79,8 @@
 	"name" : "",
 	"H" : 2,
 	"W" : 2,
-	"threshold" : 0.3,
+	"threshold" : 0.4,
+	"tau_st" : 5,
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },

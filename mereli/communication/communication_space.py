@@ -64,7 +64,7 @@ class CommunicationSpace:
     def perceive(self, particle):
         # Aggregate info
         #MAYBE PROPERTY
-        if self.t == 1 or self.t % 50  == 0:
+        if self.t == 1 or self.t % 80  == 0:
             particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
             particle.simulate_dynamic_neighborhood(particle.neighbors)     
             # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
@@ -98,12 +98,13 @@ class CommunicationSpace:
         particle.dist_clst_neighbor = dist_clst_st
         particle.dist_clst_lmark = dist_clst_lmark
         # Normalize 
+        a = 2
         phi_clst_st = np.array([1 / (phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (phi_clst_lmark + 1)])
         phi_clst_lmark_av = np.array([1 / (phi_clst_lmark_av + 1)])
-        dist_clst_st = np.array([1 / (dist_clst_st + 1)])
-        dist_clst_lmark = np.array([1 / (dist_clst_lmark+1)])
-        dist_clst_lmark_av = np.array([1 / (dist_clst_lmark_av+1)])
+        dist_clst_st = np.array([1 / (a*dist_clst_st + 1)])
+        dist_clst_lmark = np.array([1 / (a*dist_clst_lmark+1)])
+        dist_clst_lmark_av = np.array([1 / (a*dist_clst_lmark_av+1)])
 
         return {
             'phi_clst_st' : phi_clst_st, 
