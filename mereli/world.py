@@ -16,6 +16,7 @@ from mereli.globals import global_states
 from mereli.objectives import done
 from mereli.tasks import TaskManager
 from mereli.communication import CommunicationSpace
+from mereli.data_logging import DataLogger
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -105,6 +106,7 @@ class World(object):
         self.virtual_space = None
         self.neighbor_matrix = None
         self.done_signal = None
+        self.data_logger = None
         self.t = 0
     
     def update_neighbor_matrix(self):
@@ -196,14 +198,13 @@ class World(object):
         if self.is_done and global_states.LOG:
             data_all = []  
             import matplotlib.pyplot as plt
-            # ax = plt.axes(projection='3d')
-            tars = self.task_manager.tasks[0].points
             landmarks = self.virtual_space.landmarks
             if landmarks.shape[1] == 1:
                 landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
             plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
-            for bot in self.robots.values():
-                data = np.stack(bot.data_logger.data)
+            for bot in self.robots:
+                data = self.data_logger.data[bot +':virtual_particle@state']
+                # for variable in self.data_logger.data:
                 if data.shape[1] == 1:
                     data=np.hstack((np.zeros_like(data), data))
                 # plt.plot(data[:,0], data[:,1])
@@ -219,10 +220,12 @@ class World(object):
             plt.ylabel('Comm State 1')
             plt.show()
             __import__('pdb').set_trace()            
-            import os
-            log_path = os.path.join(global_states.log_info['path'], 'data.npy')
-            np.save(log_path, np.stack(data_all))
+            # import os
+            # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
+            # np.save(log_path, np.stack(data_all))
             # sys.exit('Safe program termination')
+        if global_states.LOG:
+            self.data_logger.update()
         return states, actions
 
     def register_entity(self, name, obj, group=None):
@@ -289,6 +292,11 @@ class World(object):
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
             self.virtual_space.particles[robot_name].set_controller(topology=topology)
+
+    def config_data_logger(self, log_info):
+        self.data_logger = DataLogger()
+        self.data_logger.configure(self, log_info)
+        
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """ 

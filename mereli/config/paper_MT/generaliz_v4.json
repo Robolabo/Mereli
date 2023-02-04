@@ -2,8 +2,11 @@
     "checkpoint_file" : "chk_generaliz_v4",
     "logging" : {
 	"file" : "generaliz_v4",
-	"data": {
-    	}
+	"data": [
+	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
+
+	]
     },
     "topology" : {
         "comm_ann" : {
@@ -57,7 +60,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 50,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},

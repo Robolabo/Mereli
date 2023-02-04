@@ -6,7 +6,6 @@ from mereli.objects import WorldObject
 from mereli.actuators.base_actuator import HighLevelActuator
 from mereli.register import sensors, actuators, world_object_registry
 from mereli.globals import global_states 
-from mereli.data_logging import CSVLogger 
 
 @world_object_registry(name='robot')
 class Robot(WorldObject):
@@ -44,7 +43,6 @@ class Robot(WorldObject):
         self.reward = np.array([0])
         self.task = np.array([0])
         # self.reset()
-        self.data_logger = None 
         self._neighbors = []
         
     def step(self, neighborhood, perturbations=None):
@@ -97,8 +95,6 @@ class Robot(WorldObject):
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
         
-        if global_states.LOG:
-            self.data_logger.add(self.virtual_particle.state)
         return state, actions
 
     def plan_actions(self, actions):
@@ -183,9 +179,6 @@ class Robot(WorldObject):
             self.comm_sys.set_owner(self.id)
             self.comm_sys.reset()
 
-        if global_states.LOG:
-            self.data_logger = CSVLogger(path=global_states.LOG_PATH, filename=f'robot_{self.id}.csv')
-            self.data_logger.set_labels(['comm_state_0', 'comm_state_1'])
 
     def add_communication(self, comm_sys):
         if comm_sys.tx_name not in self.actuators:

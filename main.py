@@ -64,7 +64,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
-    
+    world.config_data_logger(cfg_dict['logging']['data'])
+
     # Create virtual space (if any)
     if 'virtual_space' in cfg_dict:
         # is_neural_ctlr = cfg_dict['virtual_space']['controller']['name'] == 'neural_controller'
