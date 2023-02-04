@@ -34,7 +34,7 @@ class VirtualParticle:
         self.control = np.array(control['out'])
 
     def simulate_dynamic_neighborhood(self, base_neighbors):
-        num_neighbors = np.random.choice(range(1, len(base_neighbors)))
+        num_neighbors = np.random.choice(range(2, len(base_neighbors)))
         random_sample = np.random.choice(len(base_neighbors), size=num_neighbors, replace=False)
         self.neighbors = np.array(list(base_neighbors))[random_sample] 
 

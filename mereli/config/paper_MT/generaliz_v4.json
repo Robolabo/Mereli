@@ -56,7 +56,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 20,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -77,9 +77,9 @@
     },
     "virtual_space" : {
 	"name" : "",
-	"H" : 2,
-	"W" : 2,
-	"threshold" : 0.4,
+	"H" : 5,
+	"W" : 5,
+	"threshold" : 0.3,
 	"tau_st" : 5,
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
