@@ -41,14 +41,14 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height": 4,
-            "width" : 4
+            "height": 5,
+            "width" : 5
         },
         "engine" : "pybullet",
         "physics_dt" : 0.1,
         "T_control" : 0.1,
         "task_manager" : {
-            "total_duration" : 3000,
+            "total_duration" : 2000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
@@ -56,7 +56,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 10,
+                "num_instances" : 5,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -77,8 +77,8 @@
     },
     "virtual_space" : {
 	"name" : "",
-	"H" : 5,
-	"W" : 5,
+	"H" : 2,
+	"W" : 2,
 	"threshold" : 0.3,
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	

@@ -34,7 +34,7 @@ class VirtualParticle:
         self.control = np.array(control['out'])
 
     def simulate_dynamic_neighborhood(self, base_neighbors):
-        num_neighbors = 2 #np.random.choice(range(1, len(base_neighbors)))
+        num_neighbors = np.random.choice(range(1, len(base_neighbors)))
         random_sample = np.random.choice(len(base_neighbors), size=num_neighbors, replace=False)
         self.neighbors = np.array(list(base_neighbors))[random_sample] 
 
@@ -64,7 +64,7 @@ class CommunicationSpace:
     def perceive(self, particle):
         # Aggregate info
         #MAYBE PROPERTY
-        if self.t == 1 or self.t % 100  == 0:
+        if self.t == 1 or self.t % 50  == 0:
             particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
             particle.simulate_dynamic_neighborhood(particle.neighbors)     
             # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
