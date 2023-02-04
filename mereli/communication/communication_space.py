@@ -64,7 +64,7 @@ class CommunicationSpace:
     def perceive(self, particle):
         # Aggregate info
         #MAYBE PROPERTY
-        if self.t == 1 or self.t % 80  == 0:
+        if self.t == 1 or self.t % 100  == 0:
             particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
             particle.simulate_dynamic_neighborhood(particle.neighbors)     
             # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
