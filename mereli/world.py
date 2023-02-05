@@ -113,7 +113,7 @@ class World(object):
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
         aux_mat = np.multiply.outer(np.ones(len(self.robots)), positions)
         dist_mat = np.linalg.norm(aux_mat - np.transpose(aux_mat, (1, 0, 2)), axis=2)
-        self.neighbor_matrix = np.all((dist_mat < 10, dist_mat > 0), axis=0)
+        self.neighbor_matrix = np.all((dist_mat < 2, dist_mat > 0), axis=0)
         robot_names = np.array(tuple(self.robots.keys()))
         for i in range(len(robot_names)):
             self.neighbors[robot_names[i]] = robot_names[self.neighbor_matrix[i]] 
@@ -196,30 +196,32 @@ class World(object):
         # if self.is_done:
         #     __import__('pdb').set_trace()
         if self.is_done and global_states.LOG:
-            data_all = []  
-            import matplotlib.pyplot as plt
-            landmarks = self.virtual_space.landmarks
-            if landmarks.shape[1] == 1:
-                landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
-            plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
-            for bot in self.robots:
-                data = self.data_logger.data[bot +':virtual_particle@state']
-                # for variable in self.data_logger.data:
-                if data.shape[1] == 1:
-                    data=np.hstack((np.zeros_like(data), data))
-                # plt.plot(data[:,0], data[:,1])
-                # ax.plot3D(data[:][0], data[:][1], data[:][2])
-                # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
-                # plt.scatter(data[0,0], data[0,1], color='red')
-                plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
-                data_all.append(data)
-            plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
-            plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
-            plt.title('Communication State Space')
-            plt.xlabel('Comm State 0')
-            plt.ylabel('Comm State 1')
-            plt.show()
-            __import__('pdb').set_trace()            
+            # data_all = []
+            # import matplotlib.pyplot as plt
+            # landmarks = self.virtual_space.landmarks
+            # if landmarks.shape[1] == 1:
+            #     landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
+            # plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
+            # for bot in self.robots:
+            #     data = self.data_logger.data[bot +':virtual_particle@state']
+            #     # for variable in self.data_logger.data:
+            #     if data.shape[1] == 1:
+            #         data=np.hstack((np.zeros_like(data), data))
+            #     # plt.plot(data[:,0], data[:,1])
+            #     # ax.plot3D(data[:][0], data[:][1], data[:][2])
+            #     # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
+            #     # plt.scatter(data[0,0], data[0,1], color='red')
+            #     plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
+            #     data_all.append(data)
+            # plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
+            # plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
+            # plt.title('Communication State Space')
+            # plt.xlabel('Comm State 0')
+            # plt.ylabel('Comm State 1')
+            # plt.show()
+            # __import__('pdb').set_trace()
+            self.data_logger.save_pickle()
+            
             # import os
             # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
             # np.save(log_path, np.stack(data_all))
