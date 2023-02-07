@@ -1,7 +1,7 @@
 {
-    "checkpoint_file" : "chk_generaliz_v4",
+    "checkpoint_file" : "chk_generaliz_1d_rn",
     "logging" : {
-	"file" : "generaliz_rw",
+	"file" : "generaliz_1d_rn",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
        	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
@@ -44,12 +44,12 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height": 4,
-            "width" : 4 
+            "height": 5,
+            "width" : 5
         },
         "engine" : "pybullet",
-        "physics_dt" : 0.05,
-        "T_control" : 0.05,
+        "physics_dt" : 0.1,
+        "T_control" : 0.1,
         "task_manager" : {
             "total_duration" : 3000,
             "num_slots" : 1,
@@ -59,18 +59,18 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 10,
                 "controller" : {
-                    "name" : "basic_obstacle_avoider",
+                    "name" : "dummy_controller",
                     "params" : {}},
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8, "range" : 1}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 7}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "grid",  "params" : {"center": [0, 0]}},
+                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 0.5,"initial_pos" : [0,0]}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
@@ -79,12 +79,13 @@
         }
     },
     "virtual_space" : {
-	"name" : "torus2D",
-	"H" : 3,
-	"W" : 3,
-	"threshold" : 0.5,
-	"tau_st" : 5,
-	"randomized_neighbors" : false,  
+	"name" : "ring1D",
+	"params" : {
+		"L" : 5,
+		"threshold" : 0.3,
+		"randomize_neighbors" : true,  
+		"tau_st" : 5
+	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },

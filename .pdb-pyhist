@@ -1,18 +1,3 @@
-os
-import os
-os.path.pwd()
-os.pwd()
-np.save('data01.npy', data)
-data_all
-aa = np.stack(data_all)
-aa.shape
-np.save('data01.npy', aa)
-aa = np.stack(data_all)
-np.save('data03.npy', aa)
-self.state
-plt.plot(oo.T)
-plt.sho
-plt.plot(oo.T[:, :2])
 plt.show()
 aa = np.stack(data_all)
 np.save('data_test.npy', aa)
@@ -498,3 +483,18 @@ bot
 state
 data_logger.save_pickle()
 self.data_logger.save_pickle()
+comm_space_cls
+particle.state
+stimuli
+phi_clst_st
+phi_clst_lmark
+phi_clst_lmark_av
+phi_clst_lmark
+phi_clst_st
+phi_clst_lmark
+phi_clst_lmark_av
+phi_clst_lmark
+[A
+phi_clst_lmark
+phi_clst_lmark_av
+stimuli

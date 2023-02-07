@@ -23,6 +23,7 @@ dones = {}
 tasks = {}
 communication_systems = {}
 physics_engines = {}
+comm_spaces = {}
 
 
 mutations = {}
@@ -214,3 +215,11 @@ def physics_engine_registry(*args, **kwargs):
         physics_engines[name] = cls
         return cls
     return decorator
+
+def comm_space_registry(*args, **kwargs):
+    def decorator(cls):
+        name = (cls.__name__, kwargs['name'])['name' in kwargs.keys()]
+        comm_spaces[name] = cls
+        return cls
+    return decorator
+

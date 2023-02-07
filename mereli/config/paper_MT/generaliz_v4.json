@@ -80,12 +80,14 @@
         }
     },
     "virtual_space" : {
-	"name" : "",
-	"H" : 5,
-	"W" : 5,
-	"threshold" : 0.5,
-	"tau_st" : 5,
-	"randomized_neighbors" : true,  
+	"name" : "torus2D",
+	"params" : {
+		"H" : 5,
+		"W" : 5,
+		"threshold" : 0.5,
+		"randomize_neighbors" : true,  
+		"tau_st" : 5
+	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
     },

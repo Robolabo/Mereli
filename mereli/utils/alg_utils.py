@@ -48,18 +48,19 @@ def torus_angle(u, v, ref_vec=None, H=2, W=2):
     return np.arccos(v_aux.dot(ref_vec) / np.linalg.norm(v_aux)) if np.linalg.norm(ref_vec) > 0 else 0.0
 
 
-def ring_distance(u, v):
-    W = 2
-    return min(W - np.abs(u - v), np.abs(u - v))
+def ring_distance(u, v, L=2):
+    return min(L - np.abs(u - v), np.abs(u - v))
 
-def ring_angle(u, v, ref_vec=None):
-    W = 2
-    fW = min(W - np.abs(u - v), np.abs(u - v))
+def ring_angle(u, v, ref_vec=None, L=2):
+    fW = min(L - np.abs(u - v), np.abs(u - v))
     eps_w = np.sign(u - v)
-    if fW == W - np.abs(u - v):
-        return -eps_w
+    ang = eps_w
+    if fW == L - np.abs(u - v):
+        ang = -eps_w
+    if ang == -1:
+        return 0.0
     else:
-        return eps_w
+        return 1.0
 
 def angle_diff(x, y):
     """ Compute the difference between two angles in radians."""
