@@ -1,5 +1,6 @@
 import click
 import os
+import subprocess
 import logging
 from datetime import datetime
 try:
@@ -12,7 +13,6 @@ from mereli.register import fitness_functions
 from mereli.config_parser import json_parser
 from mereli.register import algorithms, worlds, physics_engines
 from mereli.globals import global_states
-from mereli.data_logging import CSVLogger
 
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')
@@ -28,11 +28,10 @@ from mereli.data_logging import CSVLogger
 @click.option('-f', '--cfg', default='default', help='Name of the JSON config. file.')
 @click.option('-i', '--interactive', default=False,is_flag=True, help='Run in interactive mode.')
 def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
+    if interactive:
+        process = subprocess.Popen(["panel", "serve", "--port" , "8086", 'mereli/dashboard/dashboard.py'])
     #* Set globals
-    global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose)
-
-    # import streamlit as st
-    # st.write('HOLA')
+    global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose, interactive=interactive)
 
     #* Parse JSON
     cfg_dict = json_parser(cfg)
@@ -111,17 +110,12 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         if not eval:
             opt_alg.run()
         else:
-            #* Evaluate after evolution
             opt_alg.validate()
     else: #* Non-optimizable simulation
         world.connect()
         world.reset()
         while(True):
             state, action = world.step()
-        
-               
+
 if __name__ == "__main__":
-    # import sys
-    # from streamlit.web import cli as stclib
-    # sys.argv = ["streamlit", "run", "mereli/dashboard/Hello.py"]
     main()

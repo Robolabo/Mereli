@@ -4,7 +4,10 @@
 	"file" : "generaliz_1d_rn",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
-       	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks", 
+	"robotA:virtual_particle@dist_clst_neighbor",
+	"robotA:virtual_particle@dist_clst_lmark",
+	"robotA:virtual_particle@dist_clst_lmark_av"
 	]
     },
     "topology" : {
@@ -59,7 +62,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 10,
+                "num_instances" : 5,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},

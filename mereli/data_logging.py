@@ -9,12 +9,23 @@ class DataLogger:
         self.data = {}
         self.info = []
         self.target_object = None 
+        self.last_row = {}
+        self.num_rows = 0
+    
+    def get_last_row(self):
+        if self.num_rows == 0:
+            return {}
+        for key, val in self.data.items():
+            if self.num_rows == 1:
+                last_val = val.tolist() if isinstance(val, np.ndarray) else val 
+            else:
+                last_val = val[-1].tolist() if isinstance(val[-1], np.ndarray) else val[-1] 
+            self.last_row[key] = last_val
+        return self.last_row
 
     def configure(self, target_object, info):
         self.target_object = target_object
         self.info = info
-        
-        
         for key in info:
             path, asset, time = self.decode_variable(key) 
             if path[0] in self.target_object.groups:
@@ -38,6 +49,7 @@ class DataLogger:
         
         
     def update(self):
+        self.num_rows += 1
         for variable in self.data:
             path_items, asset, time = self.decode_variable(variable)
             aux_pointer = self.target_object
@@ -57,7 +69,8 @@ class DataLogger:
                 else:
                     self.data[variable] = np.vstack((self.data[variable], data)) 
             except:
-                __import__('pdb').set_trace()
+                self.data[variable] = data if isinstance(data, list) else [data]
+                pass
 
     def save_pickle(self):
         save_path = self.path + '.pickle'
@@ -69,8 +82,10 @@ class DataLogger:
         pass
 
     def reset(self):
+        self.num_rows = 0
         for key in self.data:
             self.data[key] = []
+            self.last_row[key] = None
 
 class BaseLogger:
 

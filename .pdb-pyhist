@@ -1,108 +1,4 @@
 plt.show()
-aa = np.stack(data_all)
-np.save('data_test.npy', aa)
-aa = np.stack(data_all)
-np.save('data_test.npy', aa)
-states
-states[0]
-states[0]['my:state']
-states[0]['my_state']
-states[0]['own_state']
-np.linalg.norm(np.r_[-.75, -.75] - states[0]['own_state'])
-self.actuator_owner
-self.actuator_owner.id
-self.actuator_owner.__dict__
-np.linalg.norm(np.r_[-.75, -.75] - states[0]['own_state'])
- states[0]['own_state']
-np.linalg.norm(np.r_[.75, -.75] - states[0]['own_state'])
- states[0]['dist_closest_st']
- states[0]['dist_closest_tar']
- states[1]['dist_closest_tar']
-closest
-own_state
-my_state
-r1
-num_closest
-r1
-dist_neigh
- - (1 - dist_neigh / self.threshold)
-dist_tar
-dist_neigh
-plt.plot(oo.T)
-plt.show()
-plt.plot(ii.T[:,0])
-plt.show()
-plt.plot(ii.T[:,1])
-plt.show()
-plt.plot(oo.T)
-plt.show()
-plt.plot(oo.T[:, 0])
-plt.show()
-plt.plot(oo.T[:, 0])
-plt.show()
-aa = np.stack(data_all)
-np.save('data_test.npy', aa)
-plt.plot(oo.T[:])
-plt.show()
-plt.plot(oo.T[:, :2])
-plt.show()
-c
-aa = np.stack(data_all)
-np.save('data_test.npy', aa)
-aa = np.stack(data_all)
-np.save('data_test_hex.npy', aa)
-d
-self.actuator_owner
-self.actuator_owner.id
-globals
-global_states
-global_states.log_info
-os.path
-import os
-os.path.join
-os.path.join('aa', 'bbb')
-global_states.log_info
-logs_folder
-logs_path
-self.init_state
-self.init_state.astype('float')
-self.init_state.astype(float)
-self.init_state
-self.init_state.astype(float)
-self.init_state
-self.state
-logs_path
-neigh_staes
-neigh_states
-neigh_state
-target_points
-target_points[[False, True, False, True, True, False]]
-self.task_manager
-self.hierarchy
-entities
-Robot
-ent
-ent.sensors[sensor].target_spots
-self.points
-ent.sensors[sensor].target_spots
-target_points
-np.random.get_state()
-np.random.random()
-points
-np.random.random()
-seed
-np.random.random()
-plt.plot(vv.T)
-plt.show()
-c
-plt.plot(ii.T[::2])
-plt.show()
-plt.plot(ii.T[:, ::2])
-plt.show()
-plt.plot(oo.T[:])
-plt.show()
-plt.plot(oo.T[:, 0])
-plt.show()
 c
 neigh_state
 neigh_diffs
@@ -498,3 +394,107 @@ phi_clst_lmark
 phi_clst_lmark
 phi_clst_lmark_av
 stimuli
+import syimport sts
+import syimport sys
+import sys
+sys.argv
+self.data_logger
+self.data_logger.data
+sys.argv
+import sys
+sys.argv
+self.data.keys()
+val
+list(val)
+val
+val.tolist
+val.tolist()=
+val.tolist()
+last_row
+self.data_logger.last_row
+args[0]
+args[0].paused
+args[0].t
+args[0].t == 1
+interactive
+interact
+args[0].t == 1
+args[0].t
+args[0].paused
+interactive
+interact
+args[0].paused
+self.data_logger.last_row
+self.data_logger.get_last_row()
+self.data_logger.data
+self.data_logger
+self.data_logger.get_last_row()
+self.data_logger.data
+self.data_logger.get_last_row()
+res = json.dumps( data )
+import json
+res = json.dumps( data )
+res = json.dumps(self.data_logger.data)
+self.data_logger.get_last_row()
+res = json.dumps(self.data_logger.data)
+import json
+res = json.dumps(self.data_logger.data)
+res = json.dumps(self.data_logger.get_last_row())
+res
+json.load(res)
+json
+res
+json.loads(res)
+val
+self.data
+self.data['virtual_space@landmarks']
+self.n
+self.n_rows
+self.num_rows
+self.data['virtual_space@landmarks']
+self.time_series
+k
+data
+data[k]
+self.time_series[k] += [data[k]]
+self.time_series[k] + [data[k]]
+self.time_series[k] + data[k]
+self.time_series[k] + list(data[k])
+self.time_series[k]
+self.time_series[k].value
+self.time_series[k].append
+self.time_series[k][0]
+self.time_series
+self.time_series = np.vstack((self.time_series, data))
+self.time_series
+ann_voltage_ts
+ann_voltage_ts.time_series
+self.data_logger.get_last_row
+self.data_logger.get_last_row()
+self.data_logger.get_last_row()['robotA_1:virtual_particle@neighbors']
+self.data_logger.get_last_row()['robotA_1:virtual_particle@neighbors'][0]
+self.data_logger.get_last_row()['robotA_1:virtual_particle@neighbors'][0][0]
+self.data_logger.get_last_row()['robotA_1:virtual_particle@neighbors'][0][0].__dict__
+self.robots
+self.robots['robotA_0']
+self.robots['robotA_0'].name
+self.robots['robotA_0'].id
+self.neighbors
+neighbors
+data_dict[f'robotA_{robot_selector.value}@neighbor_names']
+neighbors
+state_x
+focus_bot
+focus
+focus_robot
+focus_bot
+robot_selector
+robot_selector.value
+c
+[*map(lambda x: int(x.split('_')[1]), data_dict[f'robotA_{robot_selector.value}@neighbor_names'][0])]
+data_dict[f'robotA_{robot_selector.value}@neighbor_names']
+[*map(lambda x: int(x.split('_')[1]), data_dict[f'robotA_{robot_selector.value}@neighbor_names'][0])]
+variable
+data
+neighbors
+data_dict[f'robotA_{robot_selector.value}@neighbor_names']

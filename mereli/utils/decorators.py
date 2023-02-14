@@ -47,6 +47,10 @@ def increase_time(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
-        args[0].t += 1
+        if hasattr(args[0], 'paused'):
+            if not args[0].paused:
+                args[0].t += 1
+        else:
+            args[0].t += 1
         return result
     return wrapper

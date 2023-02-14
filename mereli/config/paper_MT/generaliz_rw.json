@@ -4,7 +4,9 @@
 	"file" : "generaliz_rw",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
-       	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks",
+	"robotA@neighbor_names",
+        "robotA:virtual_particle:controller@voltages"
 	]
     },
     "topology" : {
@@ -48,8 +50,8 @@
             "width" : 4 
         },
         "engine" : "pybullet",
-        "physics_dt" : 0.05,
-        "T_control" : 0.05,
+        "physics_dt" : 0.07,
+        "T_control" : 0.07,
         "task_manager" : {
             "total_duration" : 3000,
             "num_slots" : 1,
@@ -59,7 +61,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "basic_obstacle_avoider",
                     "params" : {}},

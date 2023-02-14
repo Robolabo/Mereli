@@ -13,6 +13,7 @@ class VirtualParticle:
         self.neighbors = []
         self.dist_clst_neighbor = None 
         self.dist_clst_lmark = None
+        self.dist_clst_lmark_av = None 
    
     def attach_to_robot(self, real_robot):
         self.real_robot = real_robot
@@ -29,6 +30,7 @@ class VirtualParticle:
         self.control = None
         self.dist_clst_neighbor = None
         self.dist_clst_lmark = None
+        self.dist_clst_lmark_av = None 
     
     def step_control(self, stimuli):
         control = self.controller.step(stimuli)
@@ -100,6 +102,7 @@ class CommunicationSpace:
         dist_clst_lmark_av = self.distance(particle.state, clst_lmark_av)
         particle.dist_clst_neighbor = dist_clst_st
         particle.dist_clst_lmark = dist_clst_lmark
+        particle.dist_clst_lmark_av = dist_clst_lmark_av
         # Normalize 
         phi_clst_st = np.array([1 / (self.b*phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (self.b*phi_clst_lmark + 1)])

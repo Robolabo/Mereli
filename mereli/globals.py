@@ -1,5 +1,8 @@
 import logging
 
+
+sim_status = 'idle'
+
 class Globals:
     def __init__(self):
         self._EVAL = False
@@ -7,6 +10,7 @@ class Globals:
         self._RENDER = True
         self._INFO = True
         self._LOG = False
+        self._INTERACTIVE = False
         self.log_info = {} 
 
     def set_eval_state(self, new_state):
@@ -28,12 +32,13 @@ class Globals:
     def set_data_logging(self, path):
         self.log_info = {'path' : path}
 
-    def set_states(self, render=True, eval=False, debug=False, log=False, info=False):
+    def set_states(self, render=True, eval=False, debug=False, log=False, info=False, interactive=False):
         self._EVAL = eval
         self._RENDER = render
         self._DEBUG = debug
         self._LOG = log
         self._INFO = info
+        self._INTERACTIVE = interactive
         if debug:
             # logging.basicConfig(level=logging.DEBUG)
             logging.getLogger().level = logging.DEBUG
@@ -61,6 +66,11 @@ class Globals:
     @property
     def LOG(self):
         return self._LOG
+
+    @property
+    def INTERACTIVE(self):
+        return self._INTERACTIVE
+
 
     @property
     def LOG_PATH(self):

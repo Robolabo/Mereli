@@ -165,6 +165,7 @@ class NeuralNetwork(BaseNeuralNet):
         stimuli = {s : stimuli[s].copy() for s in self.stimuli_names}
         inputs = self.encoders.step(stimuli)
         self.stimuli = stimuli.copy()
+        self.inputs = inputs.copy()
         if not self.neuron_model == 'perceptron':
             actions = self._step_recurrent(inputs)
         else:

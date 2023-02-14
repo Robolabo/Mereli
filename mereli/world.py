@@ -3,6 +3,7 @@ import time
 import copy
 from collections import deque
 import numpy as np
+    
 
 
 
@@ -17,6 +18,7 @@ from mereli.objectives import done
 from mereli.tasks import TaskManager
 from mereli.communication import CommunicationSpace
 from mereli.data_logging import DataLogger
+from mereli.dashboard.connection import DashboardConnection
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -108,9 +110,11 @@ class World(object):
         self.done_signal = None
         self.data_logger = None
         self.t = 0
-    
+        self.paused = global_states.INTERACTIVE
+        self.dashboard_conn = DashboardConnection() if global_states.INTERACTIVE else None 
+
     def update_neighbor_matrix(self):
-        rad = 10 if self.virtual_space.randomize_neighbors else 2. 
+        rad = 10 if self.virtual_space.randomize_neighbors else 2 
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
         aux_mat = np.multiply.outer(np.ones(len(self.robots)), positions)
         dist_mat = np.linalg.norm(aux_mat - np.transpose(aux_mat, (1, 0, 2)), axis=2)
@@ -149,6 +153,11 @@ class World(object):
         :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
                   Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
+        if global_states.INTERACTIVE:
+            self.paused = self.dashboard_conn.process(self.t, len(self.robots), self.data_logger)
+            if self.paused:
+                return {}, {}
+            print(f'Simulating step {self.t}')
         states = deque()
         actions = deque()
         pre_perturbations = []
@@ -160,6 +169,7 @@ class World(object):
                 obj.step(self.hierarchy.values())
                 continue
             
+            obj.neighbor_names = self.neighbors[obj_name]
             obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
             if len(self.env_perturbations) > 0:
                 pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
@@ -193,7 +203,8 @@ class World(object):
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
-    
+
+
         # if self.is_done:
         #     __import__('pdb').set_trace()
         if self.is_done and global_states.LOG:
@@ -224,7 +235,6 @@ class World(object):
             # plt.xlabel('Comm State 0')
             # plt.ylabel('Comm State 1')
             # plt.show()
-            # __import__('pdb').set_trace()
             self.data_logger.save_pickle()
             
             # import os
@@ -394,6 +404,7 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
+        self.paused = global_states.INTERACTIVE
         if self.task_manager is not None:
             self.task_manager.reset(seed=seed)
         #* Initialize object dynamics.
