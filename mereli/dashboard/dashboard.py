@@ -85,10 +85,6 @@ class BaseClass(param.Parameterized):
                 self.neighbors = [*map(lambda x: int(x.split('_')[1]), neighbors)]
             except:
                 __import__('pdb').set_trace()
-            ts = self.time_series + [data_dict[f'robotA_{robot_selector.value}:virtual_particle:controller@voltages'][0]]
-            if len(ts) > 200:
-                ts = ts[1:]
-            self.time_series = ts
             self.positions_x = []
             self.positions_y = []
             for i in range(data_dict['n']):
