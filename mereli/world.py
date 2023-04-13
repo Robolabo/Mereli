@@ -114,7 +114,10 @@ class World(object):
         self.dashboard_conn = DashboardConnection() if global_states.INTERACTIVE else None 
 
     def update_neighbor_matrix(self):
-        rad = 10 if self.virtual_space.randomize_neighbors else 2 
+        rad = 10
+        if self.virtual_space is not None:
+            if self.virtual_space.randomize_neighbors: 
+                rad = 2 
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
         aux_mat = np.multiply.outer(np.ones(len(self.robots)), positions)
         dist_mat = np.linalg.norm(aux_mat - np.transpose(aux_mat, (1, 0, 2)), axis=2)
@@ -490,7 +493,10 @@ class World(object):
 
     @property
     def is_done(self):
-        return self.task_manager.is_done
+        if self.task_manager is None:
+            return False
+        else:
+            return self.task_manager.is_done
 
     @property
     def lights(self):

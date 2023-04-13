@@ -1,0 +1,4 @@
+ann.weights
+ann.weights.shape
+ann.weights.sum()
+10*5000+5000*10
