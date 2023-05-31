@@ -18,7 +18,10 @@ from mereli.objectives import done
 from mereli.tasks import TaskManager
 from mereli.communication import CommunicationSpace
 from mereli.data_logging import DataLogger
-from mereli.dashboard.connection import DashboardConnection
+try:
+    from mereli.dashboard.connection import DashboardConnection
+except:
+    pass
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
