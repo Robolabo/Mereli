@@ -112,6 +112,8 @@ class World(object):
         self.t = 0
         self.paused = global_states.INTERACTIVE
         self.dashboard_conn = DashboardConnection() if global_states.INTERACTIVE else None 
+        self.__robots = {} 
+        
 
     def update_neighbor_matrix(self):
         rad = 10
@@ -126,9 +128,26 @@ class World(object):
         for i in range(len(robot_names)):
             self.neighbors[robot_names[i]] = robot_names[self.neighbor_matrix[i]] 
 
+    def schedule_workload(self):
+        num_robots = len(self.robots)
+        Ts = 10 # Control loop executed every 10 times the sim dt.
+        t_iter = int(self.t % Ts)
+        niter = np.floor(num_robots / Ts)
+        nremaining = num_robots % Ts
+        
+        if self.t < Ts:
+            return np.arange(num_robots) if self.t == 0 else []
+        if t_iter < nremaining:
+            nsel = niter + 1 
+            selected = np.arange(t_iter * (niter + 1), (t_iter + 1) * (niter + 1))
+        else:
+            nsel = niter
+            selected = np.arange(nremaining * (niter + 1) + (t_iter - nremaining) * niter, nremaining * (niter + 1) + (t_iter - nremaining + 1) * niter)
+        return selected
+        # print(f'In t={self.t} and titer= {t_iter} {nsel} robots where selected')
 
+    # @mov_average_timeit
     @increase_time
-    @mov_average_timeit
     def step(self):
         # language=rst
         """ Step function of the world to run it one timestep. This method is must be executed at every step of 
@@ -165,51 +184,61 @@ class World(object):
         actions = deque()
         pre_perturbations = []
         self.update_neighbor_matrix()
+        selected = self.schedule_workload()
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
             if not issubclass(type(obj), Robot):
+                # Step non-robot entities (e.g. dynamic lights)
                 obj.step(self.hierarchy.values())
                 continue
-            
+            # Update neighborhood of robots 
             obj.neighbor_names = self.neighbors[obj_name]
             obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
-            if len(self.env_perturbations) > 0:
-                pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
-                            if not pert.postprocessing and idx in pert.affected_robots]
-            # #* Compute robot reward 
-            # reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
-            #         if self.reward_generator is not None else None
-            state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
-            states.append(state_obj)
-            actions.append(action_obj)
+            if idx in selected:
+                # Apply sensor perturbations/constrains if any
+                if len(self.env_perturbations) > 0:
+                    pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
+                                if not pert.postprocessing and idx in pert.affected_robots]
+                # #* Compute robot reward 
+                # reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
+                #         if self.reward_generator is not None else None
+                 
+                # Actual step of the robot - Executes sensors, control and actuator planners
+                state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
+            # else:
+                # print(obj.state, obj.actions)
+            states.append(obj.state)
+            actions.append(obj.actions)
+            obj.plan_actions()
         if len(states) > 0:
             states = np.stack(states)
         if len(actions) > 0:
             actions = np.stack(actions)
 
-        #* Apply environmental perturbations (Postprocessing)
+        #* Apply perturbations/constrains to actions if any (Postprocessing)
         if len(self.env_perturbations) > 0:
             for perturbation in tuple(self.env_perturbations.values())[0]:
                 if perturbation.postprocessing:
                     states, actions = perturbation(states, actions, self.robots)
 
-        #* Actuate
-        for obj in self.controllable_objects.values():
-            if obj.tangible:
+        #* Actuate based on the actions planned by the robot.step() method
+        for idx, obj in enumerate(self.controllable_objects.values()):
+            if obj.tangible and idx in selected:
                 obj.actuate(self.hierarchy)
+        # Apply task manager (if any) when there is an opt or eval process on top 
         if self.task_manager is not None:
             self.task_manager(self.hierarchy)
+        # Step the virtual/communication space controllers (if any).
         if self.virtual_space is not None:
             self.virtual_space.step()
+
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
 
-
-        # if self.is_done:
-        #     __import__('pdb').set_trace()
+        # DEBUG CODE
         if self.is_done and global_states.LOG:
             # data_all = []
             # import matplotlib.pyplot as plt
@@ -244,6 +273,8 @@ class World(object):
             # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
             # np.save(log_path, np.stack(data_all))
             # sys.exit('Safe program termination')
+
+        # Collect data when Logging mode is enabled.
         if global_states.LOG:
             self.data_logger.update()
         return states, actions
@@ -259,6 +290,8 @@ class World(object):
                            obj as unique element.
         """
         self.hierarchy.update({name : obj})
+        if issubclass(type(obj), Robot):
+            self.__robots.update({name : obj})
         #* Register group element
         if group is None:
             group = name
@@ -488,8 +521,9 @@ class World(object):
     @property
     def robots(self):
         """ Dict with all robots. """
-        return {name : obj for name, obj in self.hierarchy.items()\
-            if issubclass(type(obj), Robot)}
+        return self.__robots
+        # return {name : obj for name, obj in self.hierarchy.items()\
+        #     if issubclass(type(obj), Robot)}
 
     @property
     def is_done(self):
@@ -506,8 +540,9 @@ class World(object):
     @property
     def controllable_objects(self):
         """ Dict with all controllable objects (ie with a controller). """
-        return {name : obj for name, obj in self.hierarchy.items()\
-                if obj.controllable}
+        return self.__robots
+        # return {name : obj for name, obj in self.hierarchy.items()\
+        #         if obj.controllable}
     @property
     def uncontrollable_objects(self):
         """ Dict with all uncontrollable objects. """
@@ -543,6 +578,15 @@ class World(object):
         :param float distance: distance between the entity and the camera.
         """
         self.physics_engine.set_camera_focus(obj.position, distance)
+
+    def measure_time(self):
+        import cProfile
+        import pstats
+        profile = cProfile.Profile()
+        res = profile.runctx('self.step()', globals(), locals())
+        ps = pstats.Stats(profile)
+        ps.print_stats()
+        profile.dump_stats('profile.prof')
 
 
 @world_registry(name='flat_world')

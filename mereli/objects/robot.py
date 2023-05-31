@@ -42,6 +42,8 @@ class Robot(WorldObject):
         self.reward_generator = None
         self.reward = np.array([0])
         self.task = np.array([0])
+        self.state = {}
+        self.actions = {}
         # self.reset()
         self._neighbors = []
         
@@ -84,8 +86,8 @@ class Robot(WorldObject):
         if self.comm_sys is not None:
             actions = self.comm_sys.step_post(actions)
 
-        #* Plan actions for future execution
-        self.plan_actions(actions)
+        ##* Plan actions for future execution
+        #self.plan_actions(actions)
         #* Convert again tx frame to dict for its use in the opt. algs. 
         if self.comm_sys is not None:
             actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
@@ -94,11 +96,12 @@ class Robot(WorldObject):
         # if self.reward_generator is not None:
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
         # print('A')
-        
+        self.state = state
+        self.actions = actions
         return state, actions
 
-    def plan_actions(self, actions):
-        for actuator, action in actions.items():
+    def plan_actions(self):
+        for actuator, action in self.actions.items():
             self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
                     and [action, self.position, self.orientation]  or [action]
 
@@ -148,6 +151,8 @@ class Robot(WorldObject):
 
         :param int seed: seed for random initialization.
         """
+        self.state = {}
+        self.actions = {}
         self._food = False
         self.reward = np.array([0]) #* Current Reward perceived by the robot.
         self.task = np.array([0])

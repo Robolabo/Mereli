@@ -44,8 +44,7 @@ class PybulletEngine(BaseEngine):
         It maps entity identifiers to physical information, such as the luminous link id, the color of the light 
         or the luminosity. TODO: The complete integration of this feature and actual use of it in the simulation 
         is in process.  
-    :var dict gui_params: unused ftm.
-    """
+    :var dict gui_params: unused ftm.  """
     def __init__(self, *args, **kwargs):
         super(PybulletEngine, self).__init__('3D', *args, **kwargs)
         self.physical_sensors = {}
@@ -68,11 +67,28 @@ class PybulletEngine(BaseEngine):
         self.engine.setGravity(0, 0, -9.8)
         self.engine.setTimeStep(self.dt)
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
-        plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)
+
+        plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)#, globalScaling=5)
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
+        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[1, 1, 1],fileName = "map.txt", heightfieldTextureScaling=128)
+        # terrain  = p.createMultiBody(0, terrainShape)
+        # p.resetBasePositionAndOrientation(terrain,[0,0,-1], [0,0,0,1])
+       
+
+        # USE OF HEIGHTMAPS
+        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[.1,.1,24],fileName = "heightmaps/wm_height_out.png")
+        # textureId = p.loadTexture("heightmaps/gimp_overlay_out.png")
+        # terrain  = p.createMultiBody(0, terrainShape)
+        # p.changeVisualShape(terrain, -1, textureUniqueId = textureId)
+
         # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
-        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        # p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
+        p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)
         self.add_objects(objects)
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
         self.connected = True
         # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
@@ -165,13 +181,17 @@ class PybulletEngine(BaseEngine):
                 orientation = np.array(sector.find('origin').get('rpy').split(' ')).astype(float)
                 link_idx = np.where(link_names == link)[0][0]
                 ghost_link = sector.find('ghost').get('link') if sector.find('ghost') is not None else None
-                ghost_link_idx = np.where(link_names == ghost_link)[0][0] if ghost_link is not None else None
+                ghost_link_idx = np.where(link_names == ghost_link)[0] if ghost_link is not None else None
+                if ghost_link_idx.size == 0:
+                    ghost_link_idx = None
+                else:
+                    ghost_link_idx = ghost_link_idx[0]
                 if ghost_link_idx is not None:
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
                     # if sensor_name == 'distance_sensor':
-                    #     self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=1.0)
-                    self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
+                    self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.5)
+                    # self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
                 # import pdb; pdb.set_trace()
                 p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)
                 self.physical_sensors[sensor_name][sector_idx] = {

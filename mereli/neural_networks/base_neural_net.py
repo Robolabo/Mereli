@@ -71,9 +71,10 @@ class BaseNeuralNet:
         for out in topology['outputs'].values():
             self.set_motor(out['ensemble'])
         #* Add encoders
-        for input_name, encoder in topology['encoding'].items():
-            self.add_encoder(encoder['scheme'], topology['stimuli'][input_name]['sensor'],\
-                receptive_field=encoder['receptive_field']['name'], receptive_field_params=encoder['receptive_field']['params'])
+        if 'encoding' in topology:
+            for input_name, encoder in topology['encoding'].items():
+                self.add_encoder(encoder['scheme'], topology['stimuli'][input_name]['sensor'],\
+                    receptive_field=encoder['receptive_field']['name'], receptive_field_params=encoder['receptive_field']['params'])
         #! #* Add Learning Rule
         #! if topology.get('learning_rule', {}).get('rule') is not None:
         #!     self.learning_rule = learning_rules.get(topology.get('learning_rule', {}).get('rule'))() #TODO decouple, improve.

@@ -85,35 +85,49 @@ class DistanceSensor(DirectionalSensor):
 
         :returns: np.ndarray with the reading of each sector.
         """
-        
+        # if self.t % 10 != 0:
+        #     self.t += 1
+        #     return self.reading 
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         reading = np.zeros(len(g_ids))
-        if self.contact_points is None or self.t % 10 == 0:
-            self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        # Every T=10 time steps verify if the robot ghost coverage objects are touching other tangible entities. 
+        # Ghost cov. obj. do not detect each other.
+        # if self.contact_points is None or self.t % 10 == 0:
+        self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         # return np.zeros(8)
         oris = self.directions(self.sensor_owner.orientation[-1])
         
         for i in range(8):
             ori = oris[i]
+            # list of entities that can be detected (are in range) by the i-th prox. sensor.
             tar_ents = [pt[0] for pt in self.contact_points if pt[1] == g_ids[i] and pt[0]\
                     not in self.sensor_owner.physics_client.luminous_objects and pt[0] != 0]
             signal_strength = 0.0
             if len(tar_ents) > 0:
                 origin = self.get_sensor_position(i)
                 ray_angles = np.linspace(-self.aperture/2, self.aperture/2, 3)
-                ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
+                # ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
+          
+                ray_dests = [self.range * np.array([np.cos(ori + ray_angles[ii]), np.sin(ori + ray_angles[ii]), -0.05]) + origin for ii in range(len(ray_angles))]
                 
                 # for o, d in zip([origin]*len(ray_dests), ray_dests):
                 #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.5)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
-                    
-                    rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1 and idx != 0])
-                    signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
-                    # if self.t == 171:import pdb; pdb.set_trace()
+                    nvalid = 0
+                    for k in range(len(ray_res)):
+                        if ray_res[k] != -1 and ray_res[k] != 0:
+                            phi = ray_angles[k]
+                            rho = np.linalg.norm(ray_positions[k] - origin)
+                            signal_strength += self.propagation(rho, phi)
+                            nvalid += 1
+                    # rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1 and idx != 0])
+                    # signal_strength = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, ray_angles.flatten())])
+                    signal_strength /= nvalid
             reading[i] += signal_strength #+ np.random.randn() * 0.05
         self.t += 1
-        self.reading += (0.2) * (np.array(reading) - self.reading)
+        self.reading = np.array(reading)
+        # self.reading += (0.2) * (np.array(reading) - self.reading)
         # if self.t > 171:import pdb; pdb.set_trace()
         return self.reading
 

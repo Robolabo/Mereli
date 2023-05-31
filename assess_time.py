@@ -2,13 +2,16 @@ import click
 import os
 import subprocess
 import logging
-import time
 from datetime import datetime
 try:
     from mpi4py import MPI
     USE_MPI = True
 except:
     USE_MPI = False
+import cProfile
+import pstats
+
+
 from mereli import MultiWorldWrapper
 from mereli.register import fitness_functions
 from mereli.config_parser import json_parser
@@ -113,15 +116,17 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         else:
             opt_alg.validate()
     else: #* Non-optimizable simulation
-        world.connect()
-        print('Connected!')
+        import cProfile
+        import pstats
+        profile = cProfile.Profile()
+        res = profile.runctx('world.connect()', globals(), locals())
+        ps = pstats.Stats(profile)
+        ps.print_stats()
+        profile.dump_stats('profile.prof')
         world.reset()
-        t0 = time.time()
         # while(True):
-
-        for i in range(100000):
-            state, action = world.step()
-        time_elapsed = time.time() - t0 
-        print(f'Simulation elapsed {time_elapsed}')
+        for t in range(101):
+            world.step()
+        world.measure_time() 
 if __name__ == "__main__":
     main()

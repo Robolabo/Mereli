@@ -314,6 +314,11 @@ class GridInitializer(Initializer):
         """
         H = int(np.floor(np.sqrt(self.num_points)))
         W = int(np.ceil(np.sqrt(self.num_points)))
+        while(H * W != self.num_points):
+            if H*W > self.num_points:
+                W -= 1
+            else:
+                H += 1
         x = np.linspace(self.center[0] - self.delta_x*W/2, self.center[0] + self.delta_x*W/2, W) 
         y = np.linspace(self.center[1] - self.delta_y*H/2, self.center[1] + self.delta_y*W/2, H) 
         xx, yy = np.meshgrid(x, y)

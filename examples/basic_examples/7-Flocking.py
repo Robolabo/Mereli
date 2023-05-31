@@ -1,5 +1,5 @@
 import numpy as np
-from mereli import World
+from mereli import FlatWorld 
 from mereli.physics_engines import PybulletEngine
 from mereli.objects import Epuck
 from mereli.utils.initializers import RandomUniformInitializer, RandomGraphInitializer
@@ -15,37 +15,58 @@ class FlockingController(RobotController):
         super(FlockingController, self).__init__(self, *args, **kwargs)
         self.add_sensor('distance_sensor', {'n_sectors': 8, 'range' : 2.0})
         self.add_actuator("joint_velocity_actuator",  {"joint_ids" : [0, 1], "max_velocity" : 4})
+        self.eps_coll = 0.1
+        self.eps_coh = 0.6 
         
-    
-    def step(self, state, reward=0.0):
-        ds_st = state['distance_sensor']
-        print(ds_st)
-        delta = 0.5
-
-        phis = np.array([0.26179, 0.78539, 1.57079, 2.61799,  3.66519, 4.71238, 5.4977, 6.0213])
-        V = np.array([[np.cos(phi), np.sin(phi)] for phi in phis])
-
-        delta_pos = V.T.dot(ds_st - delta)
-        delta_pos = delta_pos.tolist() + [0.]
-        mod = np.linalg.norm(delta_pos)
-        ang = np.array(delta_pos)[:2].dot([1, 0]) / mod
-        if ang < 0 :
-            action = mod * np.array([1, 1-ang])
+    def step_collision_avoidance(self, st_ds):
+        if any(st_ds[[0,1]] > self.eps_coll):
+            # print('Turn Left')
+            action = np.array([1., -1])
+            avoid = True
+        elif any(st_ds[[6,7]] > self.eps_coll):
+            # print('Turn Right')
+            action = np.array([-1, 1.])
+            avoid = True
         else:
-            action = mod * np.array([1-ang, 1])
-        return {"joint_velocity_actuator" : action/2}
+            # print('GO straight over')
+            action = np.array([1,1])
+            avoid = False
+        return avoid, action
+
+    def step_cohesion(self, st_ds):
+        if any(st_ds[[0,1,2,3]] > self.eps_coh):
+            # print('Turn Left')
+            action = np.array([-1., 1])
+        elif any(st_ds[[6,7, 4, 5]] > self.eps_coh):
+            # print('Turn Right')
+            action = np.array([1, -1.])
+        else:
+            # print('GO straight over')
+            action = np.array([1, 1])
+            action = np.random.uniform(low=0.1, high=1, size=2)
+        return  action / 2.5
+
+    def step(self, state, reward=0.0):
+        st_ds = state['distance_sensor']
+        avoid, action1 = self.step_collision_avoidance(st_ds)
+        if not avoid:
+            # Cohesion
+            action = self.step_cohesion(st_ds)
+        else:
+            action = action1
+        return {"joint_velocity_actuator" : action}
         
 
-n_robots = 3 # Number of robots.
+n_robots = 20 # Number of robots.
 
 # Create physics engine with 0.02sec of discretization.
-phy_engine = PybulletEngine(dt=0.02)
+phy_engine = PybulletEngine(dt=0.01)
 # Create empty world with physics Engine
-world = World(phy_engine)
+world = FlatWorld(phy_engine)
 
 
 ini_ori = RandomUniformInitializer(n_robots, low=0, high=6.28, size=1, engine='3D', variable='orientations')
-ini_pos = RandomGraphInitializer(n_robots, max_rad=3, initial_pos=[0, 0], engine='3D',  variable='positions')
+ini_pos = RandomGraphInitializer(n_robots, max_rad=1, initial_pos=[0, 0], engine='3D',  variable='positions')
 world.set_initializer('swarm', ini_pos, initializer_ori=ini_ori)
 for i, (pos, ori) in enumerate(zip(ini_pos(), ini_ori())):
     robot = Epuck(pos, ori, controller=FlockingController())
