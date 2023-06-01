@@ -13,6 +13,17 @@ class Normalization:
     def revert(self, value):
         pass
 
+@normalization(name="identity")
+class IdentityNormalization(Normalization):
+    def __init__(self, *args, **kwargs):
+        super(IdentityNormalization, self).__init__(*args, min_val=None, max_val=None, **kwargs)
+
+    def apply(self, value):
+        return value
+
+    def revert(self, value):
+        return value
+
 @normalization(name="linear")
 class LinearNormalization(Normalization):
     def __init__(self, *args, **kwargs):

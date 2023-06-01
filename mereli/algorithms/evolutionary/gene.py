@@ -25,7 +25,7 @@ class BaseGene:
         return distributions.get(dist_type)(**params)
 
     def configure_normalization(self, gene_info):
-        if gene_info['normalization'] is None:
+        if len(gene_info['normalization']) == 0:
             return None
         norm_type = gene_info['normalization']['type']
         params = {key : value for key, value in gene_info['normalization'].items() if key != 'type'}
@@ -42,6 +42,8 @@ class BaseGene:
     def mutate(self):
         for name, param in self.parameters.items():
             if name in self._mutation:
+                if name == "categorical":
+                    __import__('pdb').set_trace()
                 self.parameters[name] = self._mutation[name](param)
 
 

@@ -156,6 +156,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
+        __import__('pdb').set_trace()
         task = stimuli.get('task',0)
         stimuli['sin_signal'] = np.sin(2 * np.pi  * 0.8 * self.dt * self.t) 
         #* --- Convert stimuli into spikes (Encoders Step) ---
@@ -170,6 +171,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions = self._step_recurrent(inputs)
         else:
             actions = self._step_mlp(inputs)
+
         #* --- Debugging stuff (DEBUG MODE) --- #
         if self.t == self.time_scale * 1299 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
