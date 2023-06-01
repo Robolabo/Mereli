@@ -156,7 +156,6 @@ class NeuralNetwork(BaseNeuralNet):
             actions [dict]: dict mapping output names and actions.
         ===============================================================
         """
-        __import__('pdb').set_trace()
         task = stimuli.get('task',0)
         stimuli['sin_signal'] = np.sin(2 * np.pi  * 0.8 * self.dt * self.t) 
         #* --- Convert stimuli into spikes (Encoders Step) ---
