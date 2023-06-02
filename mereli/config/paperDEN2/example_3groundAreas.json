@@ -1,0 +1,117 @@
+{
+    "checkpoint_file" : "chk_paperDEN2_example3Areas",
+    "logging" : {
+	"file" : "paperDEN2_example3Areas",
+	"data": [
+	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
+
+	]
+    },
+    "topology" : {
+        "comm_ann" : {
+            "dt" : 0.1,
+            "time_scale" : 1,
+            "stimuli": {
+                "I1" : {"n" : 2, "sensor" : "own_state"},
+                "I2" : {"n" : 2, "sensor" : "neigh_state"}
+  		},
+            "neuron_model" : "perceptron",
+            "synapse_model" : "static_synapse",
+            "ensembles": {
+                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4}}
+            },
+            "outputs" : {
+                "out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}
+            },
+            "synapses" :  {
+                "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
+                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0}
+            },
+            "decoding" : {
+                "out" : {"scheme" : "IdentityDecoding"}
+            },
+            "learning_rule" : {}
+        } 
+    },
+    "world": {
+        "name" : "square_arena",
+        "arena_params" : {
+            "height": 5,
+            "width" : 5
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 5000,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 5,
+                "controller" : {
+                    "name" : "dummy_controller",
+                    "params" : {}},
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 1}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 0.5,"initial_pos" : [0,0]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+	    }
+        }
+    },
+    "virtual_space" : {
+	"name" : "CPPNSpace",
+	"params" : {
+		"H" : 5,
+		"W" : 5,
+		"threshold" : 0.5,
+		"randomize_neighbors" : true,  
+		"tau_st" : 5
+	},
+	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
+        "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
+    },
+    "algorithm" : {
+        "name" : "NEAT",
+        "population_size" : 50,
+        "generations" : 200,
+        "evaluation_steps" : 3000,
+        "num_evaluations" : 1,
+        "fitness_function" : "reward_integration",
+	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
+	"gene_info" : {
+	    "comm_ann:connections:weight:all" : {
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+		"initialization" : {"type" : "gaussian", "sigma" : 1},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+	    "comm_ann:nodes:bias:all" : {
+		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8},
+		"initialization" : {"type" : "gaussian", "sigma" : 2},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+	    "comm_ann:nodes:gain:all" : {
+		"normalization" : {"type": "linear", "min_val" : 0.05, "max_val" : 10},
+		"initialization" : {"type" : "exponential", "sigma" : 5},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+            "comm_ann:nodes:activation:all" : {
+                "normalization" : {"type" : "identity"},
+                "initialization" : {"type" : "multinomial", "choices" : ["sigmoid", "tanh", "gaussian", "sin", "square_sin"]},
+                "mutation" : {"type" : "categorical", "mutation_prob": 0.1, "choices" : ["sigmoid", "tanh", "gaussian", "sin", "square_sin"]}}
+	},
+	"alg_params" :{ 
+	    "p_weight_mut" : 0.7, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
+	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
+	}
+    }
+}

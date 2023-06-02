@@ -172,7 +172,7 @@ class NeuralNetwork(BaseNeuralNet):
             actions = self._step_mlp(inputs)
 
         #* --- Debugging stuff (DEBUG MODE) --- #
-        if self.t == self.time_scale * 1299 and self.monitor is not None:
+        if self.t == self.time_scale * 199 and self.monitor is not None:
             oo = np.stack(tuple(self.monitor.get('outputs').values()))
             ii = np.stack(tuple(self.monitor.get('stimuli').values()))
             II = np.stack(tuple(self.monitor.get('currents').values()))

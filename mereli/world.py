@@ -243,34 +243,34 @@ class World(object):
 
         # DEBUG CODE
         if self.is_done and global_states.LOG:
-            # data_all = []
-            # import matplotlib.pyplot as plt
-            # landmarks = self.virtual_space.landmarks
-            # if landmarks.shape[1] == 1:
-            #     landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
-            # plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
-            # for bot in self.robots:
-            #     data = self.data_logger.data[bot +':virtual_particle@state']
-            #     # for variable in self.data_logger.data:
-            #     if data.shape[1] == 1:
-            #         data=np.hstack((np.zeros_like(data), data))
-            #     # plt.plot(data[:,0], data[:,1])
-            #     # ax.plot3D(data[:][0], data[:][1], data[:][2])
-            #     # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
-            #     # plt.scatter(data[0,0], data[0,1], color='red')
-            #     plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
-            #     data_all.append(data)
-            # if type(self.virtual_space).__name__ == 'Torus2dSpace':
-            #     plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
-            #     plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
-            # else:
-            #     plt.xlim([-self.virtual_space.L/2, self.virtual_space.L/2])
-            #     plt.ylim([-self.virtual_space.L/2, self.virtual_space.L/2])
-            # plt.title('Communication State Space')
-            # plt.xlabel('Comm State 0')
-            # plt.ylabel('Comm State 1')
-            # plt.show()
-            self.data_logger.save_pickle()
+            data_all = []
+            import matplotlib.pyplot as plt
+            landmarks = self.virtual_space.landmarks
+            if landmarks.shape[1] == 1:
+                landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
+            plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
+            for bot in self.robots:
+                data = self.data_logger.data[bot +':virtual_particle@state']
+                # for variable in self.data_logger.data:
+                if data.shape[1] == 1:
+                    data=np.hstack((np.zeros_like(data), data))
+                # plt.plot(data[:,0], data[:,1])
+                # ax.plot3D(data[:][0], data[:][1], data[:][2])
+                # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
+                # plt.scatter(data[0,0], data[0,1], color='red')
+                plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
+                data_all.append(data)
+            if type(self.virtual_space).__name__ in ['Torus2dSpace', 'CPPNSpace']:
+                plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
+                plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
+            else:
+                plt.xlim([-self.virtual_space.L/2, self.virtual_space.L/2])
+                plt.ylim([-self.virtual_space.L/2, self.virtual_space.L/2])
+            plt.title('Communication State Space')
+            plt.xlabel('Comm State 0')
+            plt.ylabel('Comm State 1')
+            plt.show()
+            # self.data_logger.save_pickle()
             
             # import os
             # log_path = os.path.join(global_states.log_info['path'], 'data.npy')

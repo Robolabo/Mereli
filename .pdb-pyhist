@@ -92,3 +92,14 @@ gene_info
 mutations
 self.neurons
 self.neurons.activation
+ii
+plt.plot(oo.T[:,-1])
+plt.show()
+plt.plot(oo.T)
+plt.show()
+self.neurons.activation
+plt.plot(oo.T[:,-1])
+plt.show()
+stimuli_all
+neigh
+particle.control
