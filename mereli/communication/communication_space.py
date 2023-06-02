@@ -292,7 +292,6 @@ class CPPNSpace(Torus2dSpace):
             for lmark in self.landmarks: 
                 stimuli = {'neigh_state' : lmark, 'own_state' : particle.state, 'is_lmark' : np.array([1.0])} 
                 particle.step_control(stimuli)
-                # __import__('pdb').set_trace()
                 general_control += particle.control
 
             particle.control = general_control
