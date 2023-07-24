@@ -270,14 +270,14 @@ class CPPNSpace(Torus2dSpace):
             particle.state[1] += delta_y 
 
             # Apply torus teleportation
-            if particle.state[0] > self.W / 2:
-                particle.state[0] -= self.W
-            elif particle.state[0] < -self.W / 2:
-                particle.state[0] += self.W
-            if particle.state[1] > self.H/2:
-                particle.state[1] -= self.H
-            elif particle.state[1] < -self.H/2:
-                particle.state[1] += self.H 
+            # if particle.state[0] > self.W / 2:
+            #     particle.state[0] -= self.W
+            # elif particle.state[0] < -self.W / 2:
+            #     particle.state[0] += self.W
+            # if particle.state[1] > self.H/2:
+            #     particle.state[1] -= self.H
+            # elif particle.state[1] < -self.H/2:
+            #     particle.state[1] += self.H 
             particle.state = np.clip(particle.state, a_min=-self.H/2, a_max=self.H/2)
 
     def step(self):
@@ -289,10 +289,10 @@ class CPPNSpace(Torus2dSpace):
                 particle.step_control(stimuli)
                 # __import__('pdb').set_trace()
                 general_control += particle.control
-            for lmark in self.landmarks: 
-                stimuli = {'neigh_state' : lmark, 'own_state' : particle.state, 'is_lmark' : np.array([1.0])} 
-                particle.step_control(stimuli)
-                general_control += particle.control
+            # for lmark in self.landmarks: 
+            #     stimuli = {'neigh_state' : lmark, 'own_state' : particle.state, 'is_lmark' : np.array([1.0])} 
+            #     particle.step_control(stimuli)
+            #     general_control += particle.control
 
             particle.control = general_control
         self.step_dynamics()

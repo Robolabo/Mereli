@@ -47,7 +47,7 @@
             "total_duration" : 5000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 5,"threshold" : 0.2}}]
         },
         "objects" : {
             "robotA" : {

@@ -254,7 +254,7 @@ class World(object):
                 # for variable in self.data_logger.data:
                 if data.shape[1] == 1:
                     data=np.hstack((np.zeros_like(data), data))
-                # plt.plot(data[:,0], data[:,1])
+                plt.plot(data[:,0], data[:,1])
                 # ax.plot3D(data[:][0], data[:][1], data[:][2])
                 # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
                 # plt.scatter(data[0,0], data[0,1], color='red')

@@ -215,7 +215,7 @@ class CommFormation(Task):
     def reset(self):
         super().reset()
         if self.is_random:
-            self.random_sample(self.n_points, 2 *  self.threshold)
+            self.random_sample(self.n_points, 2 * self.threshold)
 
     def reward_generator(self, entities, robot_name):
         # own_st = entities[robot_name].virtual_particle.state
