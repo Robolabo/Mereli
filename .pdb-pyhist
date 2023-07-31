@@ -103,3 +103,9 @@ plt.show()
 stimuli_all
 neigh
 particle.control
+general_control
+min_neighbors
+min_neighs
+np.random.choice(range(min_neighs,\040len(base_neighbors)))
+len(base_neighbors)
+min_neighs

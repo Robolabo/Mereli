@@ -38,6 +38,7 @@ class VirtualParticle:
 
     def simulate_dynamic_neighborhood(self, base_neighbors):
         min_neighs = max(2, len(base_neighbors) // 4)
+        __import__('pdb').set_trace()
         num_neighbors = np.random.choice(range(min_neighs, len(base_neighbors)))
         random_sample = np.random.choice(len(base_neighbors), size=num_neighbors, replace=False)
         self.neighbors = np.array(list(base_neighbors))[random_sample] 
@@ -319,4 +320,7 @@ class CPPNSpace(Torus2dSpace):
         return {
             'neigh_states' : neigh_states 
         }
+    def generate_rnd_lmarks(self, n_lmarks, min_dist):
+        self.landmarks = np.vstack([[0.7, 0.7], [-0.7, 0.7], [0,-1]])
+
 

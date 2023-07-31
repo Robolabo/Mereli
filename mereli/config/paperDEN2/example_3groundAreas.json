@@ -14,7 +14,8 @@
             "time_scale" : 1,
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "own_state"},
-                "I2" : {"n" : 2, "sensor" : "neigh_state"}
+                "I2" : {"n" : 2, "sensor" : "neigh_state"},
+                "I3" : {"n" : 1, "sensor" : "is_lmark"}
   		},
             "neuron_model" : "perceptron",
             "synapse_model" : "static_synapse",
@@ -26,7 +27,8 @@
             },
             "synapses" :  {
                 "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
-                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0}
+                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0},
+                "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "out" : {"scheme" : "IdentityDecoding"}
@@ -47,12 +49,12 @@
             "total_duration" : 5000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 5,"threshold" : 0.2}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 3,"threshold" : 0.2}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 3,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -77,7 +79,7 @@
 		"H" : 5,
 		"W" : 5,
 		"threshold" : 0.5,
-		"randomize_neighbors" : true,  
+		"randomize_neighbors" : false,  
 		"tau_st" : 5
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
