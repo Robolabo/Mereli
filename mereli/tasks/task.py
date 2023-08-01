@@ -224,12 +224,10 @@ class CommFormation(Task):
         dist_clst_st = entities[robot_name].virtual_particle.dist_clst_neighbor
         dist_clst_lmark = entities[robot_name].virtual_particle.dist_clst_lmark
         if dist_clst_st is None or dist_clst_lmark is None:
-            __import__('pdb').set_trace()
             return 0.0
         if dist_clst_st < self.threshold or dist_clst_lmark > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
-            __import__('pdb').set_trace()
             return np.exp(-50 * dist_clst_lmark**2) 
 
 #    def reward_generator(self, entities, robot_name):
