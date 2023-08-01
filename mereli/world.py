@@ -198,7 +198,8 @@ class World(object):
             # Update neighborhood of robots 
             obj.neighbor_names = self.neighbors[obj_name]
             obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
-            if idx in selected:
+            # if idx in selected:
+            if True:
                 # Apply sensor perturbations/constrains if any
                 if len(self.env_perturbations) > 0:
                     pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\

@@ -113,6 +113,7 @@ class CommunicationSpace:
         dist_clst_lmark = np.array([1 / (self.a*dist_clst_lmark+1)]).flatten()
         dist_clst_lmark_av = np.array([1 / (self.a*dist_clst_lmark_av+1)]).flatten()
         return {
+            'neigh_states' : neigh_states,
             'phi_clst_st' : phi_clst_st, 
             'phi_clst_lmark' : phi_clst_lmark, 
             'phi_clst_lmark_av' : phi_clst_lmark_av, 
@@ -299,27 +300,28 @@ class CPPNSpace(Torus2dSpace):
         self.step_dynamics()
         self.t += 1
 
-    def perceive(self, particle):
-        # Aggregate info
-        #MAYBE PROPERTY
-        if self.randomize_neighbors:
-            if self.t == 1 or self.t % 100  == 0:
-                particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-                particle.simulate_dynamic_neighborhood(particle.neighbors)     
-                # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-        else:
-            particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-        neigh_states = []
-        neigh_oris = []
-        for ngh in particle.neighbors:
-            neigh_states.append(ngh.state.copy())
-            neigh_oris.append(ngh.orientation)
-        if len(neigh_states) == 0:
-            neigh_states = [particle.state.copy()] 
+    #def perceive(self, particle):
+    #    # Aggregate info
+    #    #MAYBE PROPERTY
+    #    if self.randomize_neighbors:
+    #        if self.t == 1 or self.t % 100  == 0:
+    #            particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+    #            particle.simulate_dynamic_neighborhood(particle.neighbors)     
+    #            # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+    #    else:
+    #        particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+    #    neigh_states = []
+    #    neigh_oris = []
+    #    for ngh in particle.neighbors:
+    #        neigh_states.append(ngh.state.copy())
+    #        neigh_oris.append(ngh.orientation)
+    #    if len(neigh_states) == 0:
+    #        neigh_states = [particle.state.copy()] 
         
-        return {
-            'neigh_states' : neigh_states 
-        }
+    #    return {
+    #        'neigh_states' : neigh_states 
+    #    }
+
     def generate_rnd_lmarks(self, n_lmarks, min_dist):
         self.landmarks = np.vstack([[0.7, 0.7], [-0.7, 0.7], [0,-1]])
 
