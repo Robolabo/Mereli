@@ -15,7 +15,7 @@
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "own_state"},
                 "I2" : {"n" : 2, "sensor" : "neigh_state"},
-                "I3" : {"n" : 1, "sensor" : "is_lmark"}
+                "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"}
   		},
             "neuron_model" : "perceptron",
             "synapse_model" : "static_synapse",
@@ -95,7 +95,7 @@
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {
 	    "comm_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "comm_ann:nodes:bias:all" : {

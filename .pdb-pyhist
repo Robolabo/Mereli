@@ -1,7 +1,4 @@
 _HiStOrY_V2_
-np.where(link_names\040==\040ghost_link)[0].size()
-np.where(link_names\040==\040ghost_link)[0].size
-ghost_link_idx
 sensor_name
 ghost_link_idx
 obj
@@ -499,3 +496,6 @@ dist_clst_st
 self.virtual_space
 self.virtual_space\040is\040not\040None
 dist_clst_lmark
+self.virtual_space\040is\040not\040None
+neigh
+stimuli_all

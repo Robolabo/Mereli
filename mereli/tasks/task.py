@@ -228,7 +228,7 @@ class CommFormation(Task):
         if dist_clst_st < self.threshold or dist_clst_lmark > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:
-            return np.exp(-50 * dist_clst_lmark**2) 
+            return np.exp(-50 * dist_clst_lmark**2)
 
 #    def reward_generator(self, entities, robot_name):
 #        sensor = 'ori_stateful_rx_new'

@@ -265,11 +265,11 @@ class CPPNSpace(Torus2dSpace):
     def step_dynamics(self):
         for particle in self.particles.values():
             control = particle.control
-            delta_x = 0.1 * control[0]
-            delta_y = 0.1 * control[1]
+            delta_x = 0.01 * control[0]
+            delta_y = 0.01 * control[1]
 
-            particle.state[0] += delta_x 
-            particle.state[1] += delta_y 
+            particle.state[0] += delta_x
+            particle.state[1] += delta_y
 
             # Apply torus teleportation
             # if particle.state[0] > self.W / 2:
@@ -287,7 +287,7 @@ class CPPNSpace(Torus2dSpace):
             stimuli_all = self.perceive(particle)
             general_control = np.zeros(2)
             for neigh in stimuli_all['neigh_states']:
-                stimuli = {'neigh_state' : neigh, 'own_state' : particle.state, 'is_lmark' : np.array([0.0])} 
+                stimuli = {'neigh_state' : neigh, 'own_state' : particle.state, 'is_lmark' : np.array([0.0]), 'dist_clst_lmark' : stimuli_all['dist_clst_lmark']} 
                 particle.step_control(stimuli)
                 # __import__('pdb').set_trace()
                 general_control += particle.control
