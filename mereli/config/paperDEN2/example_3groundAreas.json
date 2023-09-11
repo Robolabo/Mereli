@@ -14,7 +14,6 @@
             "time_scale" : 1,
             "stimuli": {
                 "I1" : {"n" : 2, "sensor" : "own_state"},
-                "I2" : {"n" : 2, "sensor" : "neigh_state"},
                 "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"}
   		},
             "neuron_model" : "perceptron",
@@ -27,7 +26,6 @@
             },
             "synapses" :  {
                 "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
-                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0},
                 "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0}
             },
             "decoding" : {
@@ -54,7 +52,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 3,
+                "num_instances" : 1,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
