@@ -225,6 +225,7 @@ class CommFormation(Task):
         dist_clst_lmark = entities[robot_name].virtual_particle.dist_clst_lmark
         if dist_clst_st is None or dist_clst_lmark is None:
             return 0.0
+        # if dist_clst_st < self.threshold or dist_clst_lmark > self.threshold:
         if dist_clst_st < self.threshold or dist_clst_lmark > self.threshold:
             return 0.0 # - (1 - dist_neigh / self.threshold) 
         else:

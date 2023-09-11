@@ -1,6 +1,4 @@
 _HiStOrY_V2_
-sensor_name
-ghost_link_idx
 obj
 entity_positions
 len(entity_positions)
@@ -499,3 +497,5 @@ dist_clst_lmark
 self.virtual_space\040is\040not\040None
 neigh
 stimuli_all
+dist_clst_lmark
+np.exp(-50\040*\040dist_clst_lmark**2)
