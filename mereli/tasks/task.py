@@ -221,6 +221,21 @@ class CommFormation(Task):
         # own_st = entities[robot_name].virtual_particle.state
         # clst_st = entities[robot_name].virtual_particle.clst_st
         # clst_lmark = entities[robot_name].virtual_particle.clst_lmark
+        
+        lmark = entities[robot_name].virtual_particle.lmark
+        if lmark is None:
+            return 0.0
+        others_lmark = [ent.virtual_particle.lmark for name, ent in entities.items() if issubclass(type(ent), Robot) and name != robot_name]
+        if lmark not in others_lmark:
+            return 1.0
+        else
+            return 0.0
+        
+
+    def reward_generator2(self, entities, robot_name):
+        # own_st = entities[robot_name].virtual_particle.state
+        # clst_st = entities[robot_name].virtual_particle.clst_st
+        # clst_lmark = entities[robot_name].virtual_particle.clst_lmark
         dist_clst_st = entities[robot_name].virtual_particle.dist_clst_neighbor
         dist_clst_lmark = entities[robot_name].virtual_particle.dist_clst_lmark
         if dist_clst_st is None or dist_clst_lmark is None:

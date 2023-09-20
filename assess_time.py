@@ -114,7 +114,15 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         if not eval:
             opt_alg.run()
         else:
+            import cProfile
+            import pstats
+            profile = cProfile.Profile()
+            res = profile.runctx('world.connect()', globals(), locals())
+            ps = pstats.Stats(profile)
+            ps.print_stats()
+            profile.dump_stats('profile.prof')
             opt_alg.validate()
+            opt_alg.world.measure_time() 
     else: #* Non-optimizable simulation
         import cProfile
         import pstats
@@ -128,5 +136,6 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         for t in range(101):
             world.step()
         world.measure_time() 
+        
 if __name__ == "__main__":
     main()

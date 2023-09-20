@@ -133,6 +133,7 @@ class NeuralNetwork(BaseNeuralNet):
         return actions
 
     def _step_mlp(self, inputs):
+        __import__('pdb').set_trace()
         ready = [True] * len(inputs) + [False] * len(self.voltages)
         while not all(ready):
             currents = self.synapses.step(np.r_[inputs, self.voltages], None)
@@ -181,6 +182,7 @@ class NeuralNetwork(BaseNeuralNet):
             __import__('pdb').set_trace()
             # import pdb; pdb.set_trace()
         # actions['outA'] = [1,1]
+        self.t += 1
         return actions
     
     def reset(self):

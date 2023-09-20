@@ -14,6 +14,7 @@ class VirtualParticle:
         self.dist_clst_neighbor = None 
         self.dist_clst_lmark = None
         self.dist_clst_lmark_av = None 
+        self.lmark = None
    
     def attach_to_robot(self, real_robot):
         self.real_robot = real_robot
@@ -31,6 +32,7 @@ class VirtualParticle:
         self.dist_clst_neighbor = None
         self.dist_clst_lmark = None
         self.dist_clst_lmark_av = None 
+        self.lmark = None
     
     def step_control(self, stimuli):
         control = self.controller.step(stimuli)
@@ -38,7 +40,7 @@ class VirtualParticle:
 
     def simulate_dynamic_neighborhood(self, base_neighbors):
         min_neighs = max(2, len(base_neighbors) // 4)
-        __import__('pdb').set_trace()
+        # __import__('pdb').set_trace()
         num_neighbors = np.random.choice(range(min_neighs, len(base_neighbors)))
         random_sample = np.random.choice(len(base_neighbors), size=num_neighbors, replace=False)
         self.neighbors = np.array(list(base_neighbors))[random_sample] 
@@ -59,6 +61,7 @@ class CommunicationSpace:
         self.t = 1
 
     def step(self):
+        import time 
         for particle in self.particles.values():
             stimuli = self.perceive(particle)
             particle.step_control(stimuli)
@@ -66,6 +69,7 @@ class CommunicationSpace:
         self.t += 1
 
     def perceive(self, particle):
+        import time 
         # Aggregate info
         #MAYBE PROPERTY
         if self.randomize_neighbors:
@@ -86,7 +90,9 @@ class CommunicationSpace:
         # Compute closest state and landmark
         clst_state = neigh_states[np.argmin([self.distance(st, particle.state) for st in neigh_states])] 
         clst_lmark = self.landmarks[np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])] 
-       
+         
+        
+        # clst_lmark_av = clst_lmark.copy()
         # Compute closest unoccupied landmark
         idle_lmarks = [not any([self.distance(st, lmark) < self.threshold for st in neigh_states]) for lmark in self.landmarks]
         idle_lmarks_v = self.landmarks[idle_lmarks]
@@ -105,6 +111,7 @@ class CommunicationSpace:
         particle.dist_clst_neighbor = dist_clst_st
         particle.dist_clst_lmark = dist_clst_lmark
         particle.dist_clst_lmark_av = dist_clst_lmark_av
+        particle.lmark = np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
         # Normalize 
         phi_clst_st = np.array([1 / (self.b*phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (self.b*phi_clst_lmark + 1)])

@@ -1,7 +1,7 @@
 {
-    "checkpoint_file" : "chk_paperDEN2_example3Areas",
+    "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "paperDEN2_example3Areas",
+	"file" : "generaliz_v5_20",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
        	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
@@ -13,20 +13,28 @@
             "dt" : 0.1,
             "time_scale" : 1,
             "stimuli": {
-                "I1" : {"n" : 2, "sensor" : "own_state"},
-                "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"}
+                "I1" : {"n" : 1, "sensor" : "dist_clst_st"},
+                "I2" : {"n" : 1, "sensor" : "phi_clst_st"},
+                "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"},
+                "I4" : {"n" : 1, "sensor" : "phi_clst_lmark"},
+                "I5" : {"n" : 1, "sensor" : "dist_clst_lmark_av"},
+                "I6" : {"n" : 1, "sensor" : "phi_clst_lmark_av"}
   		},
-            "neuron_model" : "perceptron",
+            "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 1}}
+                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
             },
             "outputs" : {
                 "out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}
             },
             "synapses" :  {
                 "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
-                "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0}
+                "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0},
+                "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0},
+                "I4-CONTROL" : {"pre":"I4","post":"CONTROL", "trainable":true, "p":1.0},
+                "I5-CONTROL" : {"pre":"I5","post":"CONTROL", "trainable":true, "p":1.0},
+                "I6-CONTROL" : {"pre":"I6","post":"CONTROL", "trainable":true, "p":1.0}
             },
             "decoding" : {
                 "out" : {"scheme" : "IdentityDecoding"}
@@ -44,15 +52,15 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 5000,
+            "total_duration" : 1000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"n_points" : 3,"threshold" : 0.5}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 2}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 30,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -60,7 +68,7 @@
                     "distance_sensor" : {"n_sectors" : 8, "range" : 1}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 5}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6}
                 },
                 "initializers" : {
                     "positions" : {"name" : "random_graph",  "params" : {"max_rad": 0.5,"initial_pos" : [0,0]}},
@@ -68,21 +76,21 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-	    }
+	    } 
         }
     },
     "virtual_space" : {
-	"name" : "CPPNSpace",
+	"name" : "torus2D",
 	"params" : {
-		"H" : 5,
-		"W" : 5,
+		"H" : 6,
+		"W" : 6,
 		"threshold" : 0.5,
 		"randomize_neighbors" : false,  
-		"tau_st" : 5
+		"tau_st" : 10,
+	       "tau_ori" : 10  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	
-    },
+        "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,
@@ -93,21 +101,13 @@
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {
 	    "comm_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "comm_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8},
 		"initialization" : {"type" : "gaussian", "sigma" : 2},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
-	    "comm_ann:nodes:gain:all" : {
-		"normalization" : {"type": "linear", "min_val" : 0.05, "max_val" : 10},
-		"initialization" : {"type" : "exponential", "sigma" : 5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
-            "comm_ann:nodes:activation:all" : {
-                "normalization" : {"type" : "identity"},
-                "initialization" : {"type" : "multinomial", "choices" : ["sigmoid", "tanh", "gaussian", "sin", "square_sin"]},
-                "mutation" : {"type" : "categorical", "mutation_prob": 0.1, "choices" : ["sigmoid", "tanh", "gaussian", "sin", "square_sin"]}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
 	},
 	"alg_params" :{ 
 	    "p_weight_mut" : 0.7, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,

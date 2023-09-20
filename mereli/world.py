@@ -119,7 +119,7 @@ class World(object):
         
 
     def update_neighbor_matrix(self):
-        rad = 10
+        rad = 20
         if self.virtual_space is not None:
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
@@ -188,6 +188,7 @@ class World(object):
         pre_perturbations = []
         self.update_neighbor_matrix()
         selected = self.schedule_workload()
+        # t0 = time.time()
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
@@ -198,8 +199,8 @@ class World(object):
             # Update neighborhood of robots 
             obj.neighbor_names = self.neighbors[obj_name]
             obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
-            # if idx in selected:
-            if True:
+            if idx in selected:
+            # if True:
                 # Apply sensor perturbations/constrains if any
                 if len(self.env_perturbations) > 0:
                     pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
@@ -219,6 +220,7 @@ class World(object):
             states = np.stack(states)
         if len(actions) > 0:
             actions = np.stack(actions)
+        # print('Real.sp time: ', time.time() - t0)
 
         #* Apply perturbations/constrains to actions if any (Postprocessing)
         if len(self.env_perturbations) > 0:
@@ -234,9 +236,10 @@ class World(object):
         if self.task_manager is not None:
             self.task_manager(self.hierarchy)
         # Step the virtual/communication space controllers (if any).
+        # t0 = time.time()
         if self.virtual_space is not None:
             self.virtual_space.step()
-
+        # print('V.sp time: ', time.time() - t0)
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:

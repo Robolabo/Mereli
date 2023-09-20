@@ -8,7 +8,7 @@ from .aggregation_controller import *
 from .neural_controller import NeuralController
 from .formation_controller import FormationController
 from .phototaxis import Phototaxis
-
+from .basic_goto_coords import BasicGOTOCoords
 #* Light Controllers
 from .light_position_controller import LightOrbitController, LightRndPositionController
 # from .flocking_controller import FlockingController

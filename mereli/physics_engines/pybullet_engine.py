@@ -190,7 +190,7 @@ class PybulletEngine(BaseEngine):
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
                     # if sensor_name == 'distance_sensor':
-                    self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.5)
+                    # self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.5)
                     # self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
                 # import pdb; pdb.set_trace()
                 p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)

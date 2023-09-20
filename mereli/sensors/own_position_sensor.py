@@ -9,4 +9,4 @@ class OwnPositionSensor(Sensor):
         super(OwnPositionSensor, self).__init__(*args, **kwargs)
 
     def step(self, neighborhood):
-        return self.sensor_owner.pos
+        return self.sensor_owner.position
