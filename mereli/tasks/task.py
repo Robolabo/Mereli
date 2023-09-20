@@ -228,7 +228,7 @@ class CommFormation(Task):
         others_lmark = [ent.virtual_particle.lmark for name, ent in entities.items() if issubclass(type(ent), Robot) and name != robot_name]
         if lmark not in others_lmark:
             return 1.0
-        else
+        else:
             return 0.0
         
 
