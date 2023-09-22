@@ -45,8 +45,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height": 5,
-            "width" : 5
+            "height": 8,
+            "width" : 8
         },
         "engine" : "pybullet",
         "physics_dt" : 0.05,

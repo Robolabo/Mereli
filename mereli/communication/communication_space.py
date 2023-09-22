@@ -89,17 +89,30 @@ class CommunicationSpace:
 
         # Compute closest state and landmark
         clst_state = neigh_states[np.argmin([self.distance(st, particle.state) for st in neigh_states])] 
-        clst_lmark = self.landmarks[np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])] 
+        sorted_lmarks = np.argsort([self.distance(pt, particle.state) for pt in self.landmarks])
+
+        clst_lmark_idx = sorted_lmarks[0] 
+        clst_lmark = self.landmarks[clst_lmark_idx] 
          
         
-        # clst_lmark_av = clst_lmark.copy()
-        # Compute closest unoccupied landmark
-        idle_lmarks = [not any([self.distance(st, lmark) < self.threshold for st in neigh_states]) for lmark in self.landmarks]
-        idle_lmarks_v = self.landmarks[idle_lmarks]
-        if np.sum(idle_lmarks) == 0:
+        # t0 = time.time()
+        clst_lmark_av = None
+        # ord_lmarks = 
+        for lm_idx in sorted_lmarks:
+            lm = self.landmarks[lm_idx] 
+            is_empty = False
+            for st in neigh_states:
+                if self.distance(st, lm) < self.threshold:
+                    is_empty = True
+                    break 
+            if is_empty == 0:
+                clst_lmark_av = lm.copy()
+                break
+        if clst_lmark_av is None: 
             clst_lmark_av = clst_lmark.copy()
-        else:
-            clst_lmark_av= idle_lmarks_v[np.argmin([self.distance(pt, particle.state) for pt in idle_lmarks_v])] 
+        # print('New : ', time.time() - t0)
+
+
         
         # Obtain distances and angles
         phi_clst_st = self.angle(particle, clst_state)
@@ -111,7 +124,7 @@ class CommunicationSpace:
         particle.dist_clst_neighbor = dist_clst_st
         particle.dist_clst_lmark = dist_clst_lmark
         particle.dist_clst_lmark_av = dist_clst_lmark_av
-        particle.lmark = np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
+        particle.lmark = clst_lmark_idx # np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
         # Normalize 
         phi_clst_st = np.array([1 / (self.b*phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (self.b*phi_clst_lmark + 1)])

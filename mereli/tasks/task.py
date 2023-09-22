@@ -217,7 +217,7 @@ class CommFormation(Task):
         if self.is_random:
             self.random_sample(self.n_points, 2 * self.threshold)
 
-    def reward_generator(self, entities, robot_name):
+    def reward_generator2(self, entities, robot_name):
         # own_st = entities[robot_name].virtual_particle.state
         # clst_st = entities[robot_name].virtual_particle.clst_st
         # clst_lmark = entities[robot_name].virtual_particle.clst_lmark
@@ -232,7 +232,7 @@ class CommFormation(Task):
             return 0.0
         
 
-    def reward_generator2(self, entities, robot_name):
+    def reward_generator(self, entities, robot_name):
         # own_st = entities[robot_name].virtual_particle.state
         # clst_st = entities[robot_name].virtual_particle.clst_st
         # clst_lmark = entities[robot_name].virtual_particle.clst_lmark
