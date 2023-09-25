@@ -60,7 +60,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 10,
+                "num_instances" : 30,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -90,7 +90,7 @@
 	       "tau_ori" : 10  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 10, "positions" : "random"}	}, 
+        "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,

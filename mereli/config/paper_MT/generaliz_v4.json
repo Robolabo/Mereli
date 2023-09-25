@@ -1,5 +1,5 @@
 {
-    "checkpoint_file" : "chk_generaliz_v4",
+    "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
 	"file" : "generaliz_v4_20",
 	"data": [
@@ -60,7 +60,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 30,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "basic_goto_coords",
                     "params" : {}},
@@ -109,15 +109,15 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 4,
-		"W" : 4,
-		"threshold" : 0.3,
+		"H" : 2,
+		"W" : 2,
+		"threshold" : 0.5,
 		"randomize_neighbors" : false,  
 		"tau_st" : 10,
 	       "tau_ori" : 10 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 
+        "landmarks" : {"n_lmarks" : 10, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,

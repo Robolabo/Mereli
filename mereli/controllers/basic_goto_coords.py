@@ -69,17 +69,17 @@ class BasicGOTOCoords(RobotController):
         if lmark is None:
             self.target_coords =  np.array([0, 0]) 
 
-        # if lmark == 0: 
-        #     self.target_coords = np.array([-1, 0]) 
-        # elif lmark in [1,2]: 
-        #     self.target_coords = np.array([1, 0]) 
-        # elif lmark in [3, 4, 5]: 
-        #     self.target_coords = np.array([0, 1]) 
-        # elif lmark in [6, 7, 8, 9]: 
-        #     self.target_coords = np.array([0, -1]) 
-        # else:
-        #     self.target_coords = np.array([0, 0]) 
-        # return
+        if lmark == 0: 
+            self.target_coords = np.array([-1, 0]) 
+        elif lmark in [1,2]: 
+            self.target_coords = np.array([1, 0]) 
+        elif lmark in [3, 4, 5]: 
+            self.target_coords = np.array([0, 1]) 
+        elif lmark in [6, 7, 8, 9]: 
+            self.target_coords = np.array([0, -1]) 
+        else:
+            self.target_coords = np.array([0, 0]) 
+        return
        
         n_robs = 30 
         all_lmarks = np.arange(n_robs)
