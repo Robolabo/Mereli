@@ -114,7 +114,7 @@
 		"threshold" : 0.3,
 		"randomize_neighbors" : false,  
 		"tau_st" : 10,
-	       "tau_ori" : 5
+	       "tau_ori" : 10 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
         "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 

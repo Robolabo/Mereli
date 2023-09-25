@@ -23,7 +23,7 @@
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 1, "tau" : 1}}
             },
             "outputs" : {
                 "out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}
@@ -55,12 +55,12 @@
             "total_duration" : 1000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 2}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 30,
+                "num_instances" : 10,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -82,21 +82,21 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 6,
-		"W" : 6,
-		"threshold" : 0.5,
+		"H" : 3,
+		"W" : 3,
+		"threshold" : 0.2,
 		"randomize_neighbors" : false,  
 		"tau_st" : 10,
 	       "tau_ori" : 10  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 
+        "landmarks" : {"n_lmarks" : 10, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 5,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {
@@ -105,12 +105,12 @@
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "comm_ann:nodes:bias:all" : {
-		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8},
-		"initialization" : {"type" : "gaussian", "sigma" : 2},
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
+		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
 	},
 	"alg_params" :{ 
-	    "p_weight_mut" : 0.7, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
+	    "p_weight_mut" : 0.5, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
 	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }

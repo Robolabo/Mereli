@@ -229,6 +229,27 @@ class Torus2dSpace(CommunicationSpace):
         self.landmarks = np.vstack(points)
 
 
+    def generate_rnd_lmarks2(self, n_lmarks, min_dist):
+        H = int(np.floor(np.sqrt(n_lmarks)))
+        W = int(np.ceil(np.sqrt(n_lmarks)))
+        dx = 0.5 
+        dy = 0.5 
+        while(H * W != n_lmarks):
+            if H*W > n_lmarks:
+                W -= 1
+            else:
+                H += 1
+        x = np.linspace(-dx*W/2, dx*W/2, W) 
+        y = np.linspace(-dy*H/2, dy*H/2, H) 
+        xx, yy = np.meshgrid(x, y)
+        points = []
+        for x_i, y_i in zip(xx.flatten(), yy.flatten()):
+            points.append(np.array([x_i, y_i]))
+        # if self.shuffle:
+        #     np.random.shuffle(points)
+        self.landmarks = np.vstack(points)
+
+
 @comm_space_registry(name='ring1D')
 class Ring1dSpace(CommunicationSpace):
     def __init__(self, L=2, tau_st=10,  **kwargs):

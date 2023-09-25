@@ -50,7 +50,22 @@ class BasicGOTOCoords(RobotController):
 
     def select_coords_lmark(self):
         lmark = self.controller_owner.virtual_particle.lmark
-        
+        state = self.controller_owner.virtual_particle.state
+
+        # if state[0] > 0:
+        #      if state[1] > 0:
+        #         self.target_coords = np.array([-1, 0]) 
+        #      else:
+        #         self.target_coords = np.array([1, 0]) 
+
+        # else:
+        #      if state[1] > 0:
+        #         self.target_coords = np.array([0, -1]) 
+        #      else:
+        #         self.target_coords = np.array([0, 1]) 
+
+        # return
+
         if lmark is None:
             self.target_coords =  np.array([0, 0]) 
 
@@ -64,6 +79,7 @@ class BasicGOTOCoords(RobotController):
         #     self.target_coords = np.array([0, -1]) 
         # else:
         #     self.target_coords = np.array([0, 0]) 
+        # return
        
         n_robs = 30 
         all_lmarks = np.arange(n_robs)
