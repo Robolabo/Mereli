@@ -150,7 +150,7 @@ class World(object):
         # print(f'In t={self.t} and titer= {t_iter} {nsel} robots where selected')
 
     # @mov_average_timeit
-    @increase_time
+    # @increase_time
     def step(self):
         # language=rst
         """ Step function of the world to run it one timestep. This method is must be executed at every step of 
@@ -178,6 +178,10 @@ class World(object):
         :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
                   Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
+        if self.physics_engine.paused:
+            if self.render:
+                self.physics_engine.step_render()
+            return {}, {}
         if global_states.INTERACTIVE:
             self.paused = self.dashboard_conn.process(self.t, len(self.robots), self.data_logger)
             if self.paused:
@@ -284,6 +288,7 @@ class World(object):
         # Collect data when Logging mode is enabled.
         if global_states.LOG:
             self.data_logger.update()
+        self.t += 1
         return states, actions
 
     def register_entity(self, name, obj, group=None):
@@ -435,7 +440,9 @@ class World(object):
                 controller_cls = controllers.get(obj.get('controller'))
                 controller = controller_cls is not None and controller_cls() or None
                 for i, position in enumerate(entity_positions):
-                    world_obj = object_cls(position, [0, 0, 0], controller=controller, **obj['params'])
+                # entity_orientations = self.initializers[obj_name]['orientations']()
+                # for i, (position, orientation) in enumerate(zip(entity_positions, entity_orientations)):
+                    world_obj = object_cls([0,0,0], [0,0,0], **obj['params'])
                     self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                     world_obj.group = obj_name
 

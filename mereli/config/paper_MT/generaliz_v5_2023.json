@@ -60,7 +60,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 30,
+                "num_instances" : 20,
                 "controller" : {
                     "name" : "dummy_controller",
                     "params" : {}},
@@ -76,7 +76,16 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-	    } 
+	    },
+	    "cubeA" : {
+	    	"type" : "cube",
+		"num_instances" : 10, 
+		"params" : {"color" : "blue", "side_len" : 0.05},
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [1,1],"high" : [4,4]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                }
+	    }
         }
     },
     "virtual_space" : {

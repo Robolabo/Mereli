@@ -118,8 +118,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         world.reset()
         t0 = time.time()
         # while(True):
-
-        for i in range(100000):
+        while (world.t < 1000):
+        # for i in range(100000):
             state, action = world.step()
         time_elapsed = time.time() - t0 
         print(f'Simulation elapsed {time_elapsed}')

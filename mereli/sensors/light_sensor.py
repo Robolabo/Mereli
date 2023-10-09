@@ -45,8 +45,9 @@ class LightSensor(DirectionalSensor):
 
         :returns: np.ndarray with the reading of each sector. 
         """
-        g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
+        __import__('pdb').set_trace()
         reading = {'red' : np.zeros(8), 'yellow': np.zeros(8), 'blue' : np.zeros(8), 'green' : np.zeros(8)}
+        g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
         oris = self.directions(self.sensor_owner.orientation[-1])
         # List the entities that overlap with the robot ghost cones.
         if self.contact_points is None or self.t % 10 == 0:

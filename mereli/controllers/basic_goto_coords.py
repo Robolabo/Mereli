@@ -15,24 +15,23 @@ class BasicGOTOCoords(RobotController):
     """
     def __init__(self, *args, sensitivity=0.1, no_obstacle_action=[1.,1.],  **kwargs):
         super(BasicGOTOCoords, self).__init__(*args, **kwargs)
-        self.sensitivity = 0.5
+        self.sensitivity = 0.7
+        self.t = 0
     
     def step_obstacle_avoid(self, state):
         st_ds = state['distance_sensor']
         obstacle = False
-        if any(st_ds[[0,1]] > self.sensitivity):
-            obstacle = True 
-            # print('Turn Left')
-            action = np.array([1., 0])
-        elif any(st_ds[[6,7]] > self.sensitivity):
-            obstacle = True 
-            # print('Turn Right')
-            action = np.array([0, 1.])
-        else:
-            # print('GO straight over')
-            action = np.array([0,0])
-        return {'joint_velocity_actuator' : action}, obstacle
-    
+        v_obstacle = np.zeros(2)
+        oris = self.controller_owner.sensors['distance_sensor'].directions(self.controller_owner.orientation[-1])
+        n = 0
+        # for i, ds_i in enumerate(st_ds):
+        #     if ds_i > self.sensitivity:
+        #         # obstacle in direction 
+        #         obs_dir = np.r_[np.cos(oris[i]), np.sin(oris[i])]
+        #         v_obstacle += ds_i * obs_dir 
+        #         n+=1
+        return v_obstacle
+
     def select_coords_id(self):
         robnum = self.controller_owner.id - 5 
         # if robnum < 5: 
@@ -48,40 +47,53 @@ class BasicGOTOCoords(RobotController):
         else:
             self.target_coords = np.array([0, -2])
 
+    def select_coords_lmark_formation(self):
+        lmark = self.controller_owner.virtual_particle.lmark
+        state = self.controller_owner.virtual_particle.state
+        formationA = np.array([[0, .5], [-.25, 0], [.25,0], [-.5, -.5], [.5, -.5], [0,-.5]])
+        formationB = np.array([[0, 0.75], [-.25, 0], [.25,0], [-.5, 0], [.5, 0], [0,-.75]])
+        xx = np.linspace(0, 2* np.pi, 9)
+        formationD = .7 * np.array([np.r_[np.cos(x), np.sin(x)] for x in xx])
+
+        center =  np.mean([epk.position for epk in self.controller_owner.neighbors], 0)[:2]
+
+        self.target_coords = formationA[lmark] if lmark is not None else np.zeros(2)
+        self.target_coords += center
+        return 
+
     def select_coords_lmark(self):
         lmark = self.controller_owner.virtual_particle.lmark
         state = self.controller_owner.virtual_particle.state
 
-        # if state[0] > 0:
-        #      if state[1] > 0:
-        #         self.target_coords = np.array([-1, 0]) 
-        #      else:
-        #         self.target_coords = np.array([1, 0]) 
-
-        # else:
-        #      if state[1] > 0:
-        #         self.target_coords = np.array([0, -1]) 
-        #      else:
-        #         self.target_coords = np.array([0, 1]) 
-
-        # return
-
         if lmark is None:
             self.target_coords =  np.array([0, 0]) 
 
+#         if lmark == 0: 
+#             self.target_coords = np.array([-1, 0]) 
+#         elif lmark in [1,2]: 
+#             self.target_coords = np.array([1, 0]) 
+#         elif lmark in [3, 4, 5]: 
+#             self.target_coords = np.array([0, 1]) 
+#         elif lmark in [6, 7, 8, 9]: 
+#             self.target_coords = np.array([0, -1]) 
+#         else:
+#             self.target_coords = np.array([0, 0]) 
+#         return
+       
         if lmark == 0: 
-            self.target_coords = np.array([-1, 0]) 
-        elif lmark in [1,2]: 
-            self.target_coords = np.array([1, 0]) 
-        elif lmark in [3, 4, 5]: 
-            self.target_coords = np.array([0, 1]) 
-        elif lmark in [6, 7, 8, 9]: 
-            self.target_coords = np.array([0, -1]) 
+            self.target_coords = np.array([-.5, 0]) 
+        elif lmark == 1: 
+            self.target_coords = np.array([.5, 0]) 
+        elif lmark == 2: 
+            self.target_coords = np.array([0, .5]) 
+        elif lmark == 3: 
+            self.target_coords = np.array([0, -.5]) 
         else:
             self.target_coords = np.array([0, 0]) 
+        # self.target_coords *= 0.5
         return
-       
-        n_robs = 30 
+
+        n_robs = 10 
         all_lmarks = np.arange(n_robs)
         # np.random.shuffle(all_lmarks)
         gr1 = all_lmarks[:n_robs//3]
@@ -107,49 +119,46 @@ class BasicGOTOCoords(RobotController):
         # else:
         #     print("I shouldn't be here!")
         #     self.target_coords = np.array([0, 0]) 
-        
-        # if lmark == 0: 
-        #     self.target_coords = np.array([1,0]) 
-        # elif lmark == 1: 
-        #     self.target_coords = np.array([-1, 0])
-        # elif lmark == 2: 
-        #     self.target_coords = np.array([0, 1])
-        # elif lmark == 3: 
-        #     self.target_coords = np.array([0, -1])
-        # elif lmark == 4:
-        #     self.target_coords = np.array([1, 1])
-        # elif lmark == 5:
-        #     self.target_coords = np.array([-1, -1])
-        # elif lmark == 6:
-        #     self.target_coords = np.array([1, -1])
-        # elif lmark == 7:
-        #     self.target_coords = np.array([-1, 1])
-        # elif lmark == 8:
-        #     self.target_coords = np.array([1, 1])
-        # else:
-        #     self.target_coords = np.array([0, -1])
 
 
     def step(self, state, reward=0.0):
-        # __import__('pdb').set_trace()
+        self.t += 1
+        if self.t == 1500:
+            self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
+
         area_read = state['ground_sensor']
         curr_pos = state['own_position_sensor'][:2]
-        self.select_coords_lmark()
+        self.select_coords_lmark_formation()
         # if area_read > 0 and np.linalg.norm(curr_pos - self.target_coords) < 0.4:
         #     return {'joint_velocity_actuator' : np.array([0, 0])}
-        action_obsav, is_obstacle = self.step_obstacle_avoid(state)
-        if False:#is_obstacle: 
-            return action_obsav
+        v_obstacle = self.step_obstacle_avoid(state)
+
+
+
+        dist_tar = np.linalg.norm(self.target_coords - curr_pos)
+        desired_dir = (self.target_coords - curr_pos) / dist_tar
+        desired_dir -= v_obstacle
+
+
+        robot_ori = self.controller_owner.orientation[-1]
+        heading_ori = np.r_[np.cos(robot_ori), np.sin(robot_ori)]
+        a1 = compute_angle(desired_dir)
+        a2 = compute_angle(heading_ori)
+        A = 1 / (1 + np.exp(-20 * (dist_tar - .1)))
+        B = np.cos(a1 - a2)
+
+
+        if np.abs(a1 - a2) <= 0.5:
+            action = A * np.array([1, 1])
+        elif a1 > a2:
+            action =  np.array([1., 0])
         else:
-            desired_dir = (self.target_coords - curr_pos) / np.linalg.norm(self.target_coords - curr_pos)
-            robot_ori = self.controller_owner.orientation[-1]
-            heading_ori = np.r_[np.cos(robot_ori), np.sin(robot_ori)]
-            a1 = compute_angle(desired_dir)
-            a2 = compute_angle(heading_ori)
-            if np.abs(a1 - a2) <= 0.4:
-                action = np.array([1, 1])
-            elif a1 > a2:
-                action = np.array([1., -1])/4
-            else:
-                action = np.array([-1., 1])/4
-            return {'joint_velocity_actuator' : action}
+            action =  np.array([-1., 0])
+        
+        # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
+        #     action = np.array([0,0])
+
+        return {'joint_velocity_actuator' : action/3}
+
+    def reset(self):
+        self.t = 0 

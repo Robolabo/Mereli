@@ -29,7 +29,19 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-            }
+            },
+	    "wall1":{
+                "type" : "wall",
+                "num_instances" : 1,
+		"controller" : "dummy_controller",
+                "initializers" : {
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[0,1,0]]}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0, "high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"height" : 0.1, "width" : 1}
+	    
+	    }
         }
     }
 }

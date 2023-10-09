@@ -15,6 +15,7 @@ class VirtualParticle:
         self.dist_clst_lmark = None
         self.dist_clst_lmark_av = None 
         self.lmark = None
+        self.disabled_lmarks = []
    
     def attach_to_robot(self, real_robot):
         self.real_robot = real_robot
@@ -33,6 +34,7 @@ class VirtualParticle:
         self.dist_clst_lmark = None
         self.dist_clst_lmark_av = None 
         self.lmark = None
+        self.disabled_lmarks = []
     
     def step_control(self, stimuli):
         control = self.controller.step(stimuli)
@@ -58,6 +60,7 @@ class CommunicationSpace:
         self.dt = 0.1
         self.particles = {}
         self.landmarks = []
+        self.lmarks_enabled = []
         self.t = 1
 
     def step(self):
@@ -86,20 +89,22 @@ class CommunicationSpace:
             neigh_oris.append(ngh.orientation)
         if len(neigh_states) == 0:
             neigh_states = [particle.state.copy()] 
-
+        print(particle.disabled_lmarks)
+        valid_lmarks = [lm for lm in range(len(self.landmarks)) if lm not in particle.disabled_lmarks]
+        valid_lmarks = [self.landmarks[i] for i in valid_lmarks]
         # Compute closest state and landmark
         clst_state = neigh_states[np.argmin([self.distance(st, particle.state) for st in neigh_states])] 
-        sorted_lmarks = np.argsort([self.distance(pt, particle.state) for pt in self.landmarks])
+        sorted_lmarks = np.argsort([self.distance(pt, particle.state) for pt in valid_lmarks]) 
 
-        clst_lmark_idx = sorted_lmarks[0] 
-        clst_lmark = self.landmarks[clst_lmark_idx] 
+        clst_lmark_idx = sorted_lmarks[0]
+        clst_lmark = valid_lmarks[clst_lmark_idx] 
          
         
         # t0 = time.time()
         clst_lmark_av = None
         # ord_lmarks = 
         for lm_idx in sorted_lmarks:
-            lm = self.landmarks[lm_idx] 
+            lm = valid_lmarks[lm_idx] 
             is_empty = False
             for st in neigh_states:
                 if self.distance(st, lm) < self.threshold:
@@ -227,6 +232,7 @@ class Torus2dSpace(CommunicationSpace):
                 if all(distances > min_dist):
                     points.append(new_candidate)
         self.landmarks = np.vstack(points)
+        self.lmarks_enabled = [True for _ in range(len(self.landmarks))]
 
 
     def generate_rnd_lmarks2(self, n_lmarks, min_dist):

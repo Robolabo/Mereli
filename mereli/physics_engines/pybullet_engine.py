@@ -51,6 +51,8 @@ class PybulletEngine(BaseEngine):
         self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
+        self.paused = True 
+
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -70,19 +72,41 @@ class PybulletEngine(BaseEngine):
 
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)#, globalScaling=5)
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
+
         # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[1, 1, 1],fileName = "map.txt", heightfieldTextureScaling=128)
         # terrain  = p.createMultiBody(0, terrainShape)
         # p.resetBasePositionAndOrientation(terrain,[0,0,-1], [0,0,0,1])
+
+        # numHeightfieldRows = 100
+        # numHeightfieldColumns = 100
+        # heightfieldData = [-0.1]*numHeightfieldRows*numHeightfieldColumns
+        # for j in range (int(numHeightfieldColumns/2)):
+        #     for i in range (int(numHeightfieldRows/2) ):
+        #         height = np.random.choice([0,1], p=[0.99,.01])
+        #         height = 0.1 
+        #         heightfieldData[2*i+2*j*numHeightfieldRows]=height
+        #         heightfieldData[2*i+1+2*j*numHeightfieldRows]=height
+        #         heightfieldData[2*i+(2*j+1)*numHeightfieldRows]=height
+        #         heightfieldData[2*i+1+(2*j+1)*numHeightfieldRows]=height
+
+
+        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[20,20,20], heightfieldTextureScaling=(numHeightfieldRows-1)/5, heightfieldData=heightfieldData, numHeightfieldRows=numHeightfieldRows, numHeightfieldColumns=numHeightfieldColumns)
+        # terrain  = p.createMultiBody(0, terrainShape, physicsClientId=self.client)
+        # p.resetBasePositionAndOrientation(terrain,[0,0,0], [0,0,0,1])
+        # p.setCollisionFilterGroupMask(terrain, -1, 0b0, 0b0, physicsClientId=self.client)
+        # for i in range(p.getNumJoints(terrain, physicsClientId=self.client)):
+        #     p.setCollisionFilterGroupMask(terrain, i, 0b01, 0b01, physicsClientId=self.client)
+            # p.setCollisionFilterPair(0, terrain, -1, i, 1, physicsClientId=self.client)
        
 
         # USE OF HEIGHTMAPS
-        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[.1,.1,24],fileName = "heightmaps/wm_height_out.png")
+        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[.05,.05,4],fileName = "heightmaps/wm_height_out.png")
         # textureId = p.loadTexture("heightmaps/gimp_overlay_out.png")
         # terrain  = p.createMultiBody(0, terrainShape)
         # p.changeVisualShape(terrain, -1, textureUniqueId = textureId)
 
-        # self.engine.changeDynamics(planeId, linkIndex=-1, lateralFriction=0.9)
-        # p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+        # self.engine.changeDynamics(planeId, linkInde1, lateralFriction=0.9)
+        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
         p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
         p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
@@ -92,7 +116,7 @@ class PybulletEngine(BaseEngine):
         self.connected = True
         # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
-            self.set_camera_focus([0,0,0], 2, yaw=30, pitch=-90)
+            self.set_camera_focus([0,0,0], 2, yaw=60, pitch=-90)
 
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
@@ -108,6 +132,16 @@ class PybulletEngine(BaseEngine):
 
     def step_render(self):
         """ Iterates the graphics visualization at given FPS. """
+        pKey = ord('p')
+        rKey = ord('r')
+        keys = p.getKeyboardEvents()
+        if pKey in keys and keys[pKey]&p.KEY_WAS_TRIGGERED:
+            self.paused = True
+            print('KEY P PRESSED!')
+        if rKey in keys and keys[rKey]&p.KEY_WAS_TRIGGERED:
+            self.paused = False
+            print('KEY R PRESSED!')
+
         # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
         #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
         #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)

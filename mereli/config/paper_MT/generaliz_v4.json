@@ -60,7 +60,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 10,
+                "num_instances" : 6,
                 "controller" : {
                     "name" : "basic_goto_coords",
                     "params" : {}},
@@ -78,32 +78,7 @@
                 },
                 "perturbations" : {},
                 "params" : {"trainable" : true}
-	    }, 
-	    "g1" : {
-		"type" : "ground_area",
-	    	"num_instances" : 1,
-                "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[-1,0]]}}
-		},
-		"params" : {"radius" : 0.5, "color" : "grey"}
-	    },
-	    "g2" : {
-		"type" : "ground_area",
-	    	"num_instances" : 1,
-                "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[1,0]]}}
-		},
-		"params" : {"radius" : 0.5, "color" : "grey"}
-	    },
-	    "g3" : {
-		"type" : "ground_area",
-	    	"num_instances" : 1,
-                "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[0,1]]}}
-		},
-		"params" : {"radius" : 0.5, "color" : "grey"}
-	    }
-
+	    } 
         }
     },
     "virtual_space" : {
@@ -117,7 +92,7 @@
 	       "tau_ori" : 10 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 10, "positions" : "random"}	}, 
+        "landmarks" : {"n_lmarks" : 6, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,

@@ -246,6 +246,8 @@ class CommFormation(Task):
         else:
             return np.exp(-50 * dist_clst_lmark**2)
 
+
+
 #    def reward_generator(self, entities, robot_name):
 #        sensor = 'ori_stateful_rx_new'
     

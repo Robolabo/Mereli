@@ -15,9 +15,10 @@ class Wall(WorldObject):
     :param float width: width in metres of the wall.   
     
     """
-    def __init__(self, *args, height=1, width=5, **kwargs):
+    def __init__(self, *args, height=1, width=5, depth=0.2, **kwargs):
         self.height = height
         self.width = width
+        self.depth = depth
         # Tmp solution
         self.resize_wall()
         # self.resize_wall2D()
@@ -50,3 +51,7 @@ class Wall(WorldObject):
 
     def reset(self, seed=None):
         pass
+
+@world_object_registry(name='arena_wall')
+class ArenaWall(WorldObject):
+    pass

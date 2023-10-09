@@ -1,28 +1,13 @@
 _HiStOrY_V2_
-opt_alg
-opt_alg.world
-neigh_states
-neigh_statesneigh_states = np.stack(neigh_states)
-neigh_states = np.stack(neigh_states)
-neigh_states
-neigh_states.shape
-self.lmarks
-self.landmarks
-self.landmarks - neigh_states
-entities
-entities[robot_name]
-entities[robot_name].virtual_particle
-entities[robot_name].virtual_particle.region
-entities[robot_name].virtual_particle.__dict__.keys()
-entities[robot_name].virtual_particle.lmark
- [ent.virtual_particle.lmark for ent in entities.values() if issubclass(ent, Robot)]
-aaa =  [ent.virtual_particle.lmark for ent in entities.values() if issubclass(ent, Robot)]
-aaa =  [ent.virtual_particle.lmark for ent in entities.values() if issubclass(type(ent), Robot)]
-aaa
-entitite
-entities
-issubclass(type(entities[robot_name]), Robot)
-aaa =  [ent.virtual_particle.lmark for ent in entities.values() if issubclass(type(ent), Robot)]
-lmark
-others_lmarks
-others_lmark
+c
+self.hierarchy
+p.getNumJoints(terrain,\040physicsClientId=self.client)
+interact
+p.getNumJoints(terrain,\040physicsClientId=self.client)
+terrain
+self.controller_owner
+self.controller_owner.virtual_particle
+self.controller_owner.virtual_particle.__dict__
+self.controller_owner.virtual_particle.lmark.
+self.controller_owner.virtual_particle.lmark
+particle.disabled_lmarks
