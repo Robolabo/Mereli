@@ -6,8 +6,8 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-            "height": 4,
-            "width" : 4
+            "height": 5,
+	   "width" : 5
         },
         "engine" : "pybullet",
         "physics_dt" : 0.05,
@@ -15,7 +15,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 5,
+                "num_instances" : 10,
                 "controller" : "basic_obstacle_avoider",
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.74}
@@ -24,7 +24,7 @@
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8}
                 },
                 "initializers" : {
-                    "positions" : {"name" : "grid",  "params" : {"shuffle": false}},
+                    "positions" : {"name" : "grid",  "params" : {"center" : [0,0], "shuffle": false}},
                     "orientations" : {"name" : "random_uniform",  "params" : {"low": 0, "high" : 6.28, "size" : 1}}
                 },
                 "perturbations" : {},
@@ -32,14 +32,14 @@
             },
 	    "wall1":{
                 "type" : "wall",
-                "num_instances" : 1,
+                "num_instances" : 2,
 		"controller" : "dummy_controller",
                 "initializers" : {
-                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[0,1,0]]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0, "high" : 6.28, "size" : 1}}
+                    "positions" : {"name" : "fixed",  "params" : {"fixed_values": [[1, 10], [-1,-10]]}},
+                    "orientations" : {"name" : "fixed",  "params" : {"fixed_values": [1.57, 3.15]}}
                 },
                 "perturbations" : {},
-                "params" : {"height" : 0.1, "width" : 1}
+                "params" : {"height" : 0.2, "width" : 1}
 	    
 	    }
         }

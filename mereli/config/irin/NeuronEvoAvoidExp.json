@@ -1,0 +1,101 @@
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : false, 
+	 "animated_layout" : {
+		"enabled" : true,
+		"grid" : "A;B",
+	 	"plots" : [
+			{"plot_type" : "epuck_polar",  "name" : "A"},
+			{"plot_type" : "animated_ann",  "name" : "B"}
+		] 
+	 }
+    },
+    "checkpoint_file" : "chk_neuron_evo_avoid",
+    "topology" : {
+        "main_ann" : {
+            "dt" : 0.1,
+            "time_scale" : 1,
+            "stimuli": {
+                "I1" : {"n" : 8, "sensor" : "distance_sensor"}
+            },
+            "neuron_model" : "rate_model",
+            "synapse_model" : "static_synapse",
+            "ensembles": {
+                "H" : {"n" : 4, "params" : {"activation" : "sigmoid"}},
+                "OUT" : {"n" : 2, "params" : {"activation" : "tanh"}}
+            },
+            "outputs" : {
+                "outA" : {"ensemble" : "OUT", "actuator" : "joint_velocity_actuator"}
+            },
+            "synapses" :  {
+                "I1-H" : {"pre":"I1","post":"H", "trainable":true, "p":1.0},
+                "H-O" : {"pre":"H","post":"OUT", "trainable":true, "p":1.0}
+            },
+            "decoding" : {
+                "outA" : {"scheme" : "IdentityDecoding"}
+            },
+            "learning_rule" : {}
+        } 
+    },
+    "world": {
+        "name" : "arena",
+        "arena_params" : {"map_file" : "map.txt"},
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 500,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [{"name" : "obstacle_avoidance", "params" : {}}]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"orientations" : 0.0,
+                "controller" : {
+                    "name" : "neural_controller",
+                    "topology" : "main_ann",
+                    "params" : {}},
+                "sensors" : {
+                   "distance_sensor" : {"range" :0.8} 
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                },
+                "initializers" : {
+                    "positions" : {"name" : "random_uniform",  "params" : {"low": [-0.7,-0.7],"high" : [0.7,0.7], "size" : 2}},
+                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
+                },
+                "perturbations" : {},
+                "params" : {"trainable" : true}
+            }
+        }
+    },
+    "algorithm" : {
+        "name" : "GA",
+        "population_size" : 50,
+        "generations" : 1000,
+        "evaluation_steps" : 1000,
+        "num_evaluations" : 1,
+        "fitness_function" : "reward_integration",
+        "targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
+        "gene_info" : {
+            "main_ann:connections:weight:all" : {
+                "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1},
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}},
+            "main_ann:nodes:bias:all" : {
+                "normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2}, 
+                "initialization" : {"type" : "gaussian", "sigma" : 1}, 
+                "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
+        },
+        "alg_params" : {
+		"crossover" : "onepoint"
+        }
+    }
+}

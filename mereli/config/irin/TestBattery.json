@@ -1,0 +1,39 @@
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : true  
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "epucks" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"orientations" : 0.0,
+		"battery" : true,
+                "controller" : "test_battery",
+                "sensors" : {
+                    "light_sensor" : {"n_sectors" : 8, "range" : 10},
+		    "battery_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
+		    "battery_sensor" : {}
+                }
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 2,
+		"positions" : [[1,0,0.5], [3,0,0.5]],
+                "params" : {"range" : 5, "color" : "red"}
+            }
+        }
+    }
+}

@@ -29,4 +29,6 @@ class Cube(WorldObject):
         pass
 
     def reset(self, seed=None):
+        super().reset(seed=seed)
         self.is_grasped = False
+

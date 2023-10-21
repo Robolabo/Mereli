@@ -16,5 +16,3 @@ class Map(WorldObject):
     def step(self):
         pass
 
-    def reset(self, seed=None):
-        pass

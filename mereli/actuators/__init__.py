@@ -7,3 +7,5 @@ from .led_actuator import LedActuator
 from .joint_actuator import JointPositionActuator, JointVelocityActuator
 from .grasp_actuator import GraspActuator
 from .stateful_comm_transmitter import *
+
+from .switch_light_actuator import SwitchLightActuator

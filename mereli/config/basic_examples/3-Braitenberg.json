@@ -6,7 +6,7 @@
     "world": {
         "name" : "circular_arena",
         "arena_params" : {
-            "radius":7
+            "radius":3
         },
         "engine" : "pybullet",
         "physics_dt" : 0.05,
@@ -33,7 +33,7 @@
                 "type" : "light_source",
                 "num_instances": 2,
                 "initializers" : {
-                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[2,2,1.5], [-2,2,1.5]]}}
+                    "positions" : {"name" : "fixed", "params" : {"fixed_values": [[1, 1, 0.5], [-1, 1, 0.5]]}}
                 },
                 "params" : {"range" : 5, "color" : "red"}
             }

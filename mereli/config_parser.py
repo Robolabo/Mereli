@@ -17,8 +17,14 @@ def ExceptionDuplicates(kv_pairs):
 
 def json_parser(file):
     """ Converts the JSON configuration file into a dictionary. """
-    json_path = os.path.join('mereli', 'config', file + '.json')
-    with open(json_path) as json_file:
+    if '.json' not in file: 
+        file = os.path.join(file + '.json')
+    if not os.path.exists(file):
+        aux_file = os.path.join('mereli', 'config', file)
+        assert os.path.exists(aux_file)
+        file = aux_file      
+    # json_path = os.path.join('mereli', 'config', file + '.json')
+    with open(file) as json_file:
         config_dict = json.load(json_file, object_pairs_hook=ExceptionDuplicates)
     config_dict = config_checker(config_dict)
     config_dict = config_autocompletion(config_dict)

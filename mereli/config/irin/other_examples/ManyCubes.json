@@ -1,0 +1,30 @@
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : true, 
+         "camera_options" : {
+            "focus" : false,
+            "focus_coords" : [0,0,0],
+            "focus_target" : 0,
+            "distance" : 4,  
+            "yaw" : 0,
+            "pitch" : -45
+        }
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {},
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "cubes" : {
+                "type" : "ball",
+                "num_instances" : 200,
+		"positions" : {"type" : "random", "low" : [-2,-2,1], "high" : [2,2,2]},
+		"params" : {"radius" : 0.05}
+            }
+        }
+    }
+}

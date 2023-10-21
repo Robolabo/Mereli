@@ -1,0 +1,32 @@
+{
+    "simulation" : {
+	 "timesteps" : 1000000,
+	 "trials" : 1,
+	 "start_paused" : false 
+    },
+    "world": {
+        "name" : "arena",
+        "arena_params" : {
+            "map_file": "maze_complex1.txt",
+	    "arena_size" : 13 
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+                "controller" : "wall_follower",
+		"positions" : {"type" : "random", "low" : [-1.5, -1.5], "high" : [1.5, 1.5]},
+		"orientations" : "random",
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.74}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8}
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,41 @@
+
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : true  
+    },
+    "world": {
+        "name" : "arena",
+        "arena_params" : {
+		"map_file" : "map.txt"
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "objects" : {
+            "swarm" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+                "controller" : "motor_schemas2",
+		"positions" : [0,0,0],
+		"orientations" : "random",
+                "sensors" : {
+                    "light_sensor" : {"n_sectors" : 8, "range" : 5},
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
+		    "battery_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                }
+
+            },
+            "light_red" : {
+                "type" : "light_source",
+                "num_instances": 1,
+		"positions" : [2, 0, 0.5],
+                "params" : {"range" : 5, "color" : "red"}
+            }
+        }
+    }
+}

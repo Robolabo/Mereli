@@ -57,7 +57,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         self.t = 0
 
 
-    def step(self, neighborhood):
+    def step(self):
         """ Steps the communication receiver. With the sensed frames from all directions it
         applies the selection of a
         unique frame is carried out among those frames whose sender is not the receiver.

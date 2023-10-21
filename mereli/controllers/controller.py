@@ -39,7 +39,31 @@ class RobotController(Controller):
         self.controller_owner = controller_owner
         self.enabled_sensors = {}
         self.enabled_actuators = {}
+
+    def get_sensor(self, sensor):
+        if not self.is_sensor_enabled:
+            print(f'Sensor {sensor} is not enabled!')
+            return None
+        return self.robot.sensors[sensor] 
     
+    def get_actuator(self, actuator):
+        if not self.is_actuator_enabled:
+            print(f'Actuator {actuator} is not enabled!')
+            return None
+        return self.robot.actuators[actuator] 
+
+    def get_sensor_reading(self, sensor):
+        if 'light_sensor' in sensor:
+            return self.robot.sensors['light_sensor'].reading[sensor]
+        else:    
+            return self.robot.sensors[sensor].reading
+
+    def is_sensor_enabled(self, sensor):
+        return sensor in self.enabled_sensors
+
+    def is_actuator_enabled(self, actuator):
+        return actuator in self.enabled_actuators
+
     def add_sensors_from_dict(self, robot_sensors):
         """ Add the sensors that the controller can make use of in the form of a python dict.
         The dict structure must be {"sensor_name" : sensor_params}.
@@ -96,6 +120,13 @@ class RobotController(Controller):
         """
         self.enabled_actuators.update({actuator_name : actuator_params})
 
+    @property
+    def robot(self):
+        return self.controller_owner
+
+    @property
+    def t(self):
+        return self.controller_owner.t
 
 @controller_registry(name="dummy_controller")
 class DummyController(RobotController):

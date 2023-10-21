@@ -9,9 +9,11 @@ with contextlib.redirect_stdout(None):
     import pybullet_data
     import pybullet_utils.bullet_client as bc
 from matplotlib import colors
+from mereli.objects import Robot
 from mereli.utils.utils import HidePrintf
 from .base_engine import BaseEngine
 from mereli.register import physics_engine_registry
+
 
 
 @physics_engine_registry(name='pybullet')
@@ -51,8 +53,18 @@ class PybulletEngine(BaseEngine):
         self.physical_actuators = {}
         self.luminous_objects = {}
         self.gui_params = {}
-        self.paused = True 
-
+        self.robot_ids = []
+        self.camera_options = {
+            'focus' : True,
+            'focus_coords' : [0,0,0],
+            'focus_target' : 0,
+            'distance' : 1.5,  
+            'yaw' : 0,
+            'pitch' : -89
+        }
+        self.fps = 240
+        self.paused = False 
+        self.debug = False 
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -61,9 +73,19 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        # with HidePrintf():
-        self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT)
+        wpx = 1400#1920
+        hpx = 1080
+        options = f'--width={wpx} --height={hpx}' if self.render else ''
+        with HidePrintf():
+            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT, options=options)
+        # import os
+        # plugin_fn = os.path.join(
+        #     p.__file__.split("bullet3")[0],
+        #     "bullet3/build/lib.linux-x86_64-3.5/eglRenderer.cpython-35m-x86_64-linux-gnu.so")
+        # plugin = p.loadPlugin(plugin_fn, "_tinyRendererPlugin")
+        p.setInternalSimFlags(0)
         self.engine.resetSimulation(physicsClientId=self.client)
+
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
@@ -73,50 +95,23 @@ class PybulletEngine(BaseEngine):
         plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)#, globalScaling=5)
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
 
-        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[1, 1, 1],fileName = "map.txt", heightfieldTextureScaling=128)
-        # terrain  = p.createMultiBody(0, terrainShape)
-        # p.resetBasePositionAndOrientation(terrain,[0,0,-1], [0,0,0,1])
-
-        # numHeightfieldRows = 100
-        # numHeightfieldColumns = 100
-        # heightfieldData = [-0.1]*numHeightfieldRows*numHeightfieldColumns
-        # for j in range (int(numHeightfieldColumns/2)):
-        #     for i in range (int(numHeightfieldRows/2) ):
-        #         height = np.random.choice([0,1], p=[0.99,.01])
-        #         height = 0.1 
-        #         heightfieldData[2*i+2*j*numHeightfieldRows]=height
-        #         heightfieldData[2*i+1+2*j*numHeightfieldRows]=height
-        #         heightfieldData[2*i+(2*j+1)*numHeightfieldRows]=height
-        #         heightfieldData[2*i+1+(2*j+1)*numHeightfieldRows]=height
-
-
-        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[20,20,20], heightfieldTextureScaling=(numHeightfieldRows-1)/5, heightfieldData=heightfieldData, numHeightfieldRows=numHeightfieldRows, numHeightfieldColumns=numHeightfieldColumns)
-        # terrain  = p.createMultiBody(0, terrainShape, physicsClientId=self.client)
-        # p.resetBasePositionAndOrientation(terrain,[0,0,0], [0,0,0,1])
-        # p.setCollisionFilterGroupMask(terrain, -1, 0b0, 0b0, physicsClientId=self.client)
-        # for i in range(p.getNumJoints(terrain, physicsClientId=self.client)):
-        #     p.setCollisionFilterGroupMask(terrain, i, 0b01, 0b01, physicsClientId=self.client)
-            # p.setCollisionFilterPair(0, terrain, -1, i, 1, physicsClientId=self.client)
-       
-
-        # USE OF HEIGHTMAPS
-        # terrainShape = p.createCollisionShape(shapeType = p.GEOM_HEIGHTFIELD, meshScale=[.05,.05,4],fileName = "heightmaps/wm_height_out.png")
-        # textureId = p.loadTexture("heightmaps/gimp_overlay_out.png")
-        # terrain  = p.createMultiBody(0, terrainShape)
-        # p.changeVisualShape(terrain, -1, textureUniqueId = textureId)
-
         # self.engine.changeDynamics(planeId, linkInde1, lateralFriction=0.9)
-        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
-        p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
-        p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
-        p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)
-        self.add_objects(objects)
-        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
-        self.connected = True
         # p.setPhysicsEngineParameter(enableConeFriction=0)
         if self.render:
-            self.set_camera_focus([0,0,0], 2, yaw=60, pitch=-90)
+            p.configureDebugVisualizer(p.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_KEYBOARD_SHORTCUTS, 0)
+        self.add_objects(objects)
+        if self.render:
+            if len(self.robot_ids) == 0:
+                self.camera_options['focus'] = False
+            p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 1)
+        # p.setPhysicsEngineParameter(numSolverIterations=10)
+        # p.setPhysicsEngineParameter(contactBreakingThreshold=0.001)
+        self.connected = True
 
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
@@ -126,28 +121,93 @@ class PybulletEngine(BaseEngine):
 
     def step_physics(self):
         """ Iterates all the 3D physics of the world entities using pybullet. """
-        for i in range(int(self.T_control//self.dt)):
-            p.stepSimulation(physicsClientId=self.client)
+        if self.connected:
+            for i in range(int(self.T_control//self.dt)):
+                p.stepSimulation(physicsClientId=self.client)
 
 
     def step_render(self):
         """ Iterates the graphics visualization at given FPS. """
         pKey = ord('p')
         rKey = ord('r')
+        tabKey = ord('\t')
+        plusKey = 93
+        minusKey = 47 
+        ctrlKey = 65307 
+        delKey = 8 
+        jKey = ord('j') 
+        hKey = ord('h') 
+        kKey = ord('k') 
+        lKey = ord('l') 
+        wKey = ord('w') 
+        aKey = ord('a') 
+        sKey = ord('s') 
+        dKey = ord('d') 
         keys = p.getKeyboardEvents()
-        if pKey in keys and keys[pKey]&p.KEY_WAS_TRIGGERED:
-            self.paused = True
-            print('KEY P PRESSED!')
-        if rKey in keys and keys[rKey]&p.KEY_WAS_TRIGGERED:
-            self.paused = False
-            print('KEY R PRESSED!')
-
-        # if self.physics_client.readUserDebugParameter(self.gui_params['robot_focus']) == 1:
-        #     self.physics_client.resetDebugVisualizerCamera(cameraDistance=5, cameraYaw=30,\
-        #         cameraTargetPosition=self.robots['robotA_0'].position, cameraPitch=-70)#-60,)
-        # time.sleep(1/240.) # Fast mode
-        # time.sleep(1/10) # Slow mode
-        pass
+        if len(keys) > 0:
+            if pKey in keys and keys[pKey]&p.KEY_WAS_TRIGGERED:
+                self.paused = True
+                print('KEY P PRESSED!')
+            if rKey in keys and keys[rKey]&p.KEY_WAS_TRIGGERED:
+                self.paused = False
+                print('KEY R PRESSED!')
+            if tabKey in keys and keys[tabKey]&p.KEY_WAS_TRIGGERED:
+                print('KEY Tab PRESSED!')
+                if self.debug and self.camera_options['focus']:
+                    self.hide_ghost_objects(self.robot_ids[self.camera_options['focus_target']])
+                self.camera_options['focus'] = True
+                if self.camera_options['focus_target'] is None:
+                    self.camera_options['focus_target']= 0
+                else:
+                    self.camera_options['focus_target'] = (self.camera_options['focus_target']+ 1) % len(self.robot_ids)            
+                if self.debug and self.camera_options['focus']:
+                    self.show_ghost_objects(self.robot_ids[self.camera_options['focus_target']])
+            if delKey in keys and keys[delKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['focus'] = False 
+                if self.debug:
+                    self.hide_ghost_objects(self.robot_ids[self.camera_options['focus_target']])
+            if plusKey in keys and keys[plusKey]&p.KEY_WAS_TRIGGERED:
+                if ctrlKey in keys: 
+                    self.fps = min(250, self.fps + 10)
+                    print(f'Simulation FPS increased to {self.fps}')
+                else:
+                    self.camera_options['distance'] -= 0.25
+            if minusKey in keys and keys[minusKey]&p.KEY_WAS_TRIGGERED:
+                if ctrlKey in keys:
+                    self.fps = max(10, self.fps - 10)
+                    print(f'Simulation FPS decreased to {self.fps}')
+                else:
+                    self.camera_options['distance'] += 0.25
+            # Control Pitch and yaw of camera using h, j, k and l
+            if lKey in keys and keys[lKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['yaw'] += 5
+                # print(f'Camera Yaw changed to {self.yaw}')
+            if hKey in keys and keys[hKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['yaw'] -= 5
+                # print(f'Camera Yaw changed to {self.yaw}')
+            if kKey in keys and keys[kKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['pitch'] = min(self.camera_options['pitch'] + 5, 1)
+                # print(f'Camera pitch changed to {self.pitch}')
+            if jKey in keys and keys[jKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['pitch']= max(self.camera_options['pitch'] - 5, -89) 
+                # print(f'Camera Pitch changed to {self.pitch}')
+        if self.camera_options['focus'] and self.camera_options['focus_target'] is not None: 
+            self.camera_options['focus_coords'] = self.get_body_position(self.robot_ids[self.camera_options['focus_target']], -1)
+        else:
+            # Manual free control using w, a, s and d (only if focus is disabled)
+            if wKey in keys and keys[wKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['focus_coords'][1] += 0.25 
+            if sKey in keys and keys[sKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['focus_coords'][1] -= 0.25 
+            if aKey in keys and keys[aKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['focus_coords'][0] -= 0.25 
+            if dKey in keys and keys[dKey]&p.KEY_WAS_TRIGGERED:
+                self.camera_options['focus_coords'][0] += 0.25 
+        #     camera_focus = (0,0,0)
+        p.resetDebugVisualizerCamera(cameraDistance=self.camera_options['distance'], cameraYaw=self.camera_options['yaw'], \
+                cameraTargetPosition=self.camera_options['focus_coords'], cameraPitch=self.camera_options['pitch'])#-60,)
+        if self.fps < 250: 
+            time.sleep(1 / self.fps)
 
 
     def add_objects(self, objects):
@@ -157,8 +217,53 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
+        import time
+        t0= time.time()
         for obj in objects:
-            self.add_physics(obj)
+            # self.add_physics(obj)
+            obj.physics_client = self
+            obj.render()
+            if issubclass(type(obj), Robot):
+                self.robot_ids.append(obj.id)
+                shapeId = p.createCollisionShape(shapeType=p.GEOM_SPHERE, radius = 0.4)
+                p.changeVisualShape(obj.id, self.physical_sensors['distance_sensor'][0]['ghost_link_idx'],shapeIndex=shapeId)
+                self.physical_sensors['distance_sensor'][0]['ghost_link_idx']
+        # print('Render time ', time.time() - t0)
+
+    def load_from_urdf(self, obj):
+        # self.set_camera_focus([0,0,-2], 1)
+        obj.id = p.loadURDF(obj.model_file, obj.init_position,\
+            p.getQuaternionFromEuler(obj.init_orientation),
+            globalScaling=1 * (obj.scaling if hasattr(obj, 'scaling') else 1), 
+            # flags= p.URDF_ENABLE_SLEEPING | p.URDF_ENABLE_WAKEUP,# | p.URDF_ENABLE_CACHED_GRAPHICS_SHAPES,
+            physicsClientId=self.client)
+
+        p.setCollisionFilterGroupMask(obj.id, -1, 0b001, 0b001, physicsClientId=self.client)
+        p.setCollisionFilterPair(0, obj.id, -1, -1, 1, physicsClientId=self.client)
+        for i in range(p.getNumJoints(obj.id, physicsClientId=self.client)):
+            p.setCollisionFilterGroupMask(obj.id, i, 0b001, 0b01, physicsClientId=self.client)
+            p.setCollisionFilterPair(0, obj.id, -1, i, 1, physicsClientId=self.client)
+
+        if hasattr(obj, 'color'):
+            color = list(colors.to_rgb(obj.color)) + [1.]
+            p.changeVisualShape(obj.id, -1, rgbaColor=color, physicsClientId=self.client)
+        if hasattr(obj, 'mass'):
+            p.changeDynamics(obj.id, -1, mass=obj.mass, physicsClientId=self.client)
+        self.parse_urdf(obj) #
+
+    def create_box(self, A=1, B=1, H=0.2, mass=0):
+        colBoxId = p.createCollisionShape(p.GEOM_BOX, halfExtents=[A / 2, B / 2, H], )
+        # textureId = p.loadTexture("mereli/models/textures/brick.jpeg")
+        boxId = p.createMultiBody(baseMass=mass, baseCollisionShapeIndex=colBoxId)
+        # p.changeVisualShape(boxId, 0, textureUniqueId=textureID)
+        # textureId = p.loadTexture("floor_diffuse.jpg")
+        # terrain  = p.createMultiBody(0, terrainShape)
+        p.changeVisualShape(boxId, -1, rgbaColor=[0.,0.,.4,1])
+        p.setCollisionFilterGroupMask(boxId, -1, 0b001, 0b001, physicsClientId=self.client)
+
+        # p.setCollisionFilterPair(0, colBoxId, -1, -1, 1, physicsClientId=self.client)
+        return boxId
+
 
     def add_physics(self, obj):
         """
@@ -170,7 +275,6 @@ class PybulletEngine(BaseEngine):
         :param WorldObject obj: entity to be added to the engine.
         """
         # print(obj)
-        t0 = time.time()
         if obj.model_file is None:
             return
         obj.physics_client = self
@@ -195,9 +299,9 @@ class PybulletEngine(BaseEngine):
         # for i in range(2):
         #     p.changeDynamics(obj.id, i, contactStiffness=.1, physicsClientId=self.client)
         # print('Config and colls: ', time.time() - t0)
-        t0 = time.time()
         self.parse_urdf(obj) #
-        # print('Parser:',time.time() - t0)
+        if issubclass(type(obj), Robot):
+            self.robot_ids.append(obj.id)
 
 
     def parse_urdf(self, obj):
@@ -355,13 +459,29 @@ class PybulletEngine(BaseEngine):
             between pairwise origins and destinations. For each ray, if no obstacle was detected it returns 
             a -1.
         """
-        origin, dest = zip(*[(o + 1.2 * (d - o), o + 0.1 * (d - o)) for o, d in zip(origin, destination)])
+        dest = destination
+        # origin, dest = zip(*[(o + 1.2 * (d - o), o + 0.1 * (d - o)) for o, d in zip(origin, destination)])
         ray_res = p.rayTestBatch(origin, dest, collisionFilterMask=0b001, physicsClientId=self.client)
-        ray_res, ray_pos = zip(*[(ray[0], ray[3]) for ray in ray_res])
-        if len(ray_res) == 1:
-            ray_res = ray_res[0]
-            ray_pos = ray_pos[0]
-        return ray_res, ray_pos
+        ray_responses = []
+        ray_positions = []
+        for i in range(len(ray_res)):
+            ray_i = ray_res[i]
+            ori = origin[i]
+            dest = destination[i]
+            ray_responses.append(ray_i[0])
+            if ray_i[0] != -1:
+                coll = ori + ray_i[2] * (dest - ori)
+                # __import__('pdb').set_trace()
+                # ray_positions.append(ray_i[2] * np.array(ray_i[3]))
+                ray_positions.append(coll)
+            else:
+                ray_positions.append(ray_i[3])
+        return ray_responses, ray_positions
+        # ray_res, ray_pos = zip(*[(ray[0], ray[2]*ray[3]) for ray in ray_res])
+        # if len(ray_res) == 1:
+        #     ray_res = ray_res[0]
+        #     ray_pos = ray_pos[0]
+        # return ray_res, ray_pos
     
     def get_closest_point(self, idA, idB, linkA=-1, linkB=-1, max_dist=10):
         """ Computes the closest points between two links of two registered entities.
@@ -420,8 +540,6 @@ class PybulletEngine(BaseEngine):
         robot links and, therefore, it returns the 3D coordinates of the corresponding link.
 
         .. note::
-        __import__('pdb').set_trace()
-        _import__('pdb').set_trace()
             For the moment only directional sensor positions can be queried.
         
         :param int obj_id: identifier of the robot owning the sensor.
@@ -497,7 +615,14 @@ class PybulletEngine(BaseEngine):
                                     physicsClientId=self.client)[:2] for joint in joints]))
         positions = (positions + np.pi) % (2 * np.pi) - np.pi #! Check
         return (positions, velocities)
-     
+
+    def compute_inverse_kinematics(self, target_position, target_orientation, obj_id, end_effector_link=-1):
+        joint_actions = p.calculateInverseKinematics(obj_id, end_effector_link, target_position, lowerLimits=[-5, -5], upperLimits=[5, 5])
+        return joint_actions
+    
+    def change_dynamics(self, obj_id, **kwargs):
+        p.changeDynamics(obj_id, -1,  physicsClientId=self.client, **kwargs)
+
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Sets the color and opacity of a link of an entity. 
         
@@ -510,6 +635,13 @@ class PybulletEngine(BaseEngine):
             color = list(colors.to_rgb(color))
         rgba_color = color + [opacity]
         p.changeVisualShape(obj_id, link_id, rgbaColor=rgba_color, physicsClientId=self.client)
+
+    def set_texture(self, obj_id, link_id, texture_file):
+        texture = p.loadTexture('mereli/models/textures/bricks2.jpeg')
+        p.changeVisualShape(obj_id, link_id, textureUniqueId=texture)
+
+    def set_camera_options(self, **kwargs):
+        self.camera_options.update(kwargs)
 
     def set_camera_focus(self, position, distance, yaw=0, pitch=-90):
         """ Sets of the camera target position and distance in the environment. 
@@ -525,3 +657,16 @@ class PybulletEngine(BaseEngine):
         if self.render:
             self.engine.resetDebugVisualizerCamera(cameraDistance=distance, cameraYaw=yaw,\
                     cameraPitch=pitch, cameraTargetPosition=tuple(position))
+
+    def show_ghost_objects(self, obj_id):
+        for i in range(8):
+            self.set_color(obj_id, self.physical_sensors['distance_sensor'][i]['ghost_link_idx'], [1,0,0], opacity=0.4)
+
+    def hide_ghost_objects(self, obj_id):
+        for i in range(8):
+            self.set_color(obj_id, self.physical_sensors['distance_sensor'][i]['ghost_link_idx'], [1,0,0], opacity=0.0)
+    
+    def is_focused(self, obj_id):
+        return self.camera_options['focus'] and self.robot_ids[self.camera_options['focus_target']] == obj_id
+
+

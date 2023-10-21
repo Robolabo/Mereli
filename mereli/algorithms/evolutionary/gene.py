@@ -198,6 +198,7 @@ class GraphGenotype:
 
     def as_phenotype(self):
         phenotypes = {}
+        if not hasattr(self, 'targets'):__import__('pdb').set_trace()
         for target in self.targets:
             topology_name = target['topology']
             topology = self.neural_net_config[topology_name]
@@ -281,6 +282,13 @@ class GraphGenotype:
         for conn in self._connection_genes:
             yield conn
 
+    @property
+    def num_nodes(self):
+        return len(self._node_genes)
+
+    @property   
+    def num_connections(self):
+        return len(self._connection_genes)
 
     @property
     def enabled_connections(self):

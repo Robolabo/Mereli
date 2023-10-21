@@ -1,3 +1,4 @@
+from matplotlib import colors
 from mereli.objects import WorldObject
 from mereli.register import world_object_registry
 
@@ -19,7 +20,8 @@ class LightSource(WorldObject):
         self.range = range
         self.color = color
         self.scaling = 0.25
-        self.reset()
+        self.is_on = True 
+        # self.reset()
 
     def step(self, neighborhood):
         """ Step method of the light source. Even though lights are not technically controlled, they can 
@@ -36,6 +38,32 @@ class LightSource(WorldObject):
                 self.position = self.controller.step(self.position)
         return (0, 0)
 
+    def change_color(self, new_color):
+        self.color = new_color
+        self.physics_client.set_color(self.id, -1, self.color, opacity=1)
+
+    def switch(self):
+        if self.is_on:
+            self.turn_off()
+        else:
+            self.turn_on()
+        # self.is_on = not self.is_on
+        # self.physics_client.set_color(self.id, -1, self.color, opacity=(.3, 1)[self.is_on])
+
+    
+    def turn_on(self):
+        self.is_on = True 
+        self.physics_client.set_color(self.id, -1, self.color, opacity=1)
+        self.physics_client.luminous_objects[self.id]['is_on'] = True
+
+    def turn_off(self):
+        self.is_on = False
+        self.physics_client.set_color(self.id, -1, self.color, opacity=.3)
+        self.physics_client.luminous_objects[self.id]['is_on'] = False 
+
     def reset(self, seed=None):
+        super().reset(seed=seed)
+        self.is_on = True
+        self.turn_on()
         if self.controller is not None:
             self.controller.reset()

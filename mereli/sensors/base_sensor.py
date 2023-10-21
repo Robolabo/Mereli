@@ -17,7 +17,7 @@ class Sensor:
         self.range = range
         self.reading = None
 
-    def step(self, neighborhood):
+    def step(self):
         raise NotImplementedError
 
     @property

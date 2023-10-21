@@ -23,7 +23,7 @@ class Propagation:
         """
         raise NotImplementedError
     
-    def plot(self, max_rad=5, sensor_name=None):
+    def plot(self, max_rad=1, sensor_name=None):
         """ Illustrates the polar plot of a sector coverage.
 
         :param float max_rad: maximum coverage range (to set the limits of the plot) 
@@ -94,7 +94,7 @@ class ExpDecayPropagation(Propagation):
         self.phi_att = phi_att
 
     def __call__(self, rho, phi):
-        return np.exp(-self.rho_att * rho) * np.exp(-self.phi_att* phi ** 2)# 1.5 DS, 0.75 LS
+        return np.exp(-self.rho_att * (rho)) * np.exp(-self.phi_att* phi ** 2)# 1.5 DS, 0.75 LS
 
 class RSSI_Propagation(Propagation):
     """ 

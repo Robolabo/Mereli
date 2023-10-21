@@ -8,6 +8,18 @@
 
 	]
     },
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : true,
+	 "animated_layout" : {
+		"enabled" : false, 
+		"grid" : "A;.",
+	 	"plots" : [
+			{"plot_type" : "comm_space",  "name" : "A"}
+		] 
+	 }
+    },
     "topology" : {
         "comm_ann" : {
             "dt" : 0.1,
@@ -43,16 +55,13 @@
         } 
     },
     "world": {
-        "name" : "square_arena",
-        "arena_params" : {
-            "height": 8,
-            "width" : 8
-        },
+        "name" : "flat_world",
+        "arena_params" : {},
         "engine" : "pybullet",
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 1000,
+            "total_duration" : 100000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
@@ -60,46 +69,57 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 4,
+		"positions" : {"type" : "random", "low" : [-0.25, -0.25], "high" : [0.25,0.25]}, 
+		"orientations" : "random",
                 "controller" : {
-                    "name" : "dummy_controller",
+                    "name" : "forage_comm_space",
                     "params" : {}},
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 1}
+                    "distance_sensor" : {"range" : 0.8},
+                    "light_sensor" : {"range" : 4},
+		    "own_position_sensor" : {},
+		    "battery_sensor" : {},
+		    "memory_ground_sensor" : {}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6}
                 },
-                "initializers" : {
-                    "positions" : {"name" : "random_graph",  "params" : {"max_rad": 0.5,"initial_pos" : [0,0]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
-                },
-                "perturbations" : {},
-                "params" : {"trainable" : true}
+		"battery" :false 
 	    },
-	    "cubeA" : {
-	    	"type" : "cube",
-		"num_instances" : 10, 
-		"params" : {"color" : "blue", "side_len" : 0.05},
-                "initializers" : {
-                    "positions" : {"name" : "random_uniform",  "params" : {"low": [1,1],"high" : [4,4]}},
-                    "orientations" : {"name" : "random_uniform",  "params" : {"low": 0,"high" : 6.28, "size" : 1}}
-                }
+	    "red_light" : {
+                "type" : "light_source",
+                "num_instances" : 1,
+		"positions" : [0,1,0.5],
+		"params" : {"range" : 5, "color" : "red"}
+	    },
+	    "nest" : {
+                "type" : "ground_area",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"params" : {"radius" : 0.5, "color" : "black"}
+	    },
+	    "food" : {
+                "type" : "ground_area",
+                "num_instances" : 2,
+		"positions" : [[2,0,0], [-2,0,0]],
+		"params" : {"radius" : 0.2, "color" : "grey"}
 	    }
         }
     },
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 3,
-		"W" : 3,
-		"threshold" : 0.2,
+		"H" : 2,
+		"W" : 2,
+		"num_lmarks" : 5,
+		"threshold" : 0.4,
 		"randomize_neighbors" : false,  
 		"tau_st" : 10,
 	       "tau_ori" : 10  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"n_lmarks" : 30, "positions" : "random"}	}, 
+        "landmarks" : {"n_lmarks" : 5, "positions" : "random"}	}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,

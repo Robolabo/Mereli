@@ -24,5 +24,4 @@ class GroundArea(WorldObject):
         pass
 
     def reset(self, seed=None):
-        self.color = np.random.choice(['black', 'grey'])
-        self.physics_client.set_color(self.id, -1, self.color)
+        super().reset(seed=seed)

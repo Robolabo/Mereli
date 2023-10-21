@@ -595,6 +595,48 @@
             <ghost link='ghost_cone_DS7'/>
         </sector>
     </sensor>
+    <sensor name="light_sensor">
+       <sector index="0">
+            <parent link="IR0"/>
+            <origin xyz="0 0 0" rpy="0 0 0.26179"/>
+            <ghost link='ghost_cone_LS0'/>
+        </sector>
+        <sector index="1">
+            <parent link="IR1"/>
+            <origin xyz="0 0 0" rpy="0 0 0.78539"/>
+            <ghost link='ghost_cone_LS1'/>
+        </sector>
+        <sector index="2">
+            <parent link="IR2"/>
+            <origin xyz="0 0 0" rpy="0 0 1.57079"/>
+            <ghost link='ghost_cone_LS2'/>
+        </sector>
+        <sector index="3">
+            <parent link="IR3"/>
+            <origin xyz="0 0 0" rpy="0 0 2.61799"/>
+            <ghost link='ghost_cone_LS3'/>
+        </sector>
+        <sector index="4">
+            <parent link="IR4"/>
+            <origin xyz="0 0 0" rpy="0 0 3.66519"/>
+            <ghost link='ghost_cone_LS4'/>
+        </sector>
+        <sector index="5">
+            <parent link="IR5"/>
+            <origin xyz="0 0 0" rpy="0 0 4.71238"/>
+            <ghost link='ghost_cone_LS5'/>
+        </sector>
+        <sector index="6">
+            <parent link="IR6"/>
+            <origin xyz="0 0 0" rpy="0 0 5.49778"/>
+            <ghost link='ghost_cone_LS6'/>
+        </sector>
+        <sector index="7">
+            <parent link="IR7"/>
+            <origin xyz="0 0 0" rpy="0 0 6.0213"/>
+            <ghost link='ghost_cone_LS7'/>
+        </sector>
+    </sensor>
 
 
     <sensor name="color_sensor">
@@ -743,15 +785,15 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 2 1"/>       
       </geometry>
       <material name="transparent_red">
-        <color rgba="1 0 0 0.0"/>
+        <color rgba="1 0 0 0.7"/>
       </material>
     </visual>
      <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -771,7 +813,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -779,7 +821,7 @@
     </visual>
     <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -799,7 +841,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>       
+			 <mesh filename="ghost_DS.obj" scale="1 2 1"/>       
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -807,7 +849,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>  
+			 <mesh filename="ghost_DS.obj" scale="1 2 1"/>       
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -829,7 +871,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0.0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -837,7 +879,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale="0.5 0.5 0.5"/>  
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -857,7 +899,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -865,7 +907,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>  
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -885,7 +927,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -913,7 +955,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-			 <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
       </geometry>
       <material name="transparent_red">
         <color rgba="1 0 0 0"/>
@@ -921,7 +963,7 @@
     </visual>
          <collision>
             <geometry>
-            <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>  
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
             </geometry>
             <origin xyz="0 0 0" />
     </collision>
@@ -941,7 +983,7 @@
         <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-                <mesh filename="ghost_DS.obj" scale=".5 .5 ..5"/>       
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
         </geometry>
         <material name="transparent_red">
             <color rgba="1 0 0 0"/>
@@ -949,7 +991,7 @@
         </visual>
             <collision>
                 <geometry>
-                <mesh filename="ghost_DS.obj" scale=".5 .5 .5"/>  
+            <mesh filename="ghost_DS.obj" scale="1 2 1"/>
                 </geometry>
                 <origin xyz="0 0 0" />
         </collision>
@@ -959,4 +1001,8 @@
         <child link="ghost_cone_DS7"/>
         <origin xyz="0 0.0 0.0" rpy="-1.57 0.3 0"/>
     </joint>  
+
+
+
+
 </robot>

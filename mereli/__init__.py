@@ -24,6 +24,7 @@ from .world import *
 from .objectives import *
 from .algorithms import *
 from .config_parser import *
+from .animated_graph import AnimatedLayout
 
 ROOT_DIR = Path(__file__).parents[0].parents[0]
 sys.path.append(os.path.abspath(os.path.join('..', 'config')))

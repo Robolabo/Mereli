@@ -18,6 +18,7 @@ from mereli.objectives import done
 from mereli.tasks import TaskManager
 from mereli.communication import CommunicationSpace
 from mereli.data_logging import DataLogger
+from mereli.animated_graph import AnimatedLayout
 try:
     from mereli.dashboard.connection import DashboardConnection
 except:
@@ -114,7 +115,9 @@ class World(object):
         self.data_logger = None
         self.t = 0
         self.paused = global_states.INTERACTIVE
+        self.start_paused = False
         self.dashboard_conn = DashboardConnection() if global_states.INTERACTIVE else None 
+        self.animated_layout = None
         self.__robots = {} 
         
 
@@ -130,6 +133,7 @@ class World(object):
         robot_names = np.array(tuple(self.robots.keys()))
         for i in range(len(robot_names)):
             self.neighbors[robot_names[i]] = robot_names[self.neighbor_matrix[i]] 
+        
 
     def schedule_workload(self):
         num_robots = len(self.robots)
@@ -190,52 +194,47 @@ class World(object):
         states = deque()
         actions = deque()
         pre_perturbations = []
-        self.update_neighbor_matrix()
-        selected = self.schedule_workload()
+        if len(self.robots) > 0:
+            self.update_neighbor_matrix()
+            selected = np.arange(len(self.robots))#self.schedule_workload()
+            selected = self.schedule_workload()
         # t0 = time.time()
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
         # for obj_name, obj in self.controllable_objects.items():
             if not issubclass(type(obj), Robot):
                 # Step non-robot entities (e.g. dynamic lights)
-                obj.step(self.hierarchy.values())
+                obj.step()
                 continue
+            obj.awaken = idx in selected 
+
             # Update neighborhood of robots 
             obj.neighbor_names = self.neighbors[obj_name]
             obj.neighbors = [self.robots[ngh] for ngh in self.neighbors[obj_name]]
-            # if idx in selected:
-            if True:
+            obj.step()
+            # if True:
                 # Apply sensor perturbations/constrains if any
-                if len(self.env_perturbations) > 0:
-                    pre_perturbations = [pert for pert in self.env_perturbations[self.group_of(obj_name)]\
-                                if not pert.postprocessing and idx in pert.affected_robots]
                 # #* Compute robot reward 
                 # reward = self.reward_generator(self.prev_actions, self.prev_states, obj, info=self.hierarchy.values())\
                 #         if self.reward_generator is not None else None
                  
                 # Actual step of the robot - Executes sensors, control and actuator planners
-                state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
+                # state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
             # else:
                 # print(obj.state, obj.actions)
             states.append(obj.state)
             actions.append(obj.actions)
-            obj.plan_actions()
+            # obj.plan_actions()
         if len(states) > 0:
             states = np.stack(states)
         if len(actions) > 0:
             actions = np.stack(actions)
-        # print('Real.sp time: ', time.time() - t0)
-
-        #* Apply perturbations/constrains to actions if any (Postprocessing)
-        if len(self.env_perturbations) > 0:
-            for perturbation in tuple(self.env_perturbations.values())[0]:
-                if perturbation.postprocessing:
-                    states, actions = perturbation(states, actions, self.robots)
+        # print('Real.sp t0ime: ', time.time() - t0)
 
         #* Actuate based on the actions planned by the robot.step() method
         for idx, obj in enumerate(self.controllable_objects.values()):
-            if obj.tangible and idx in selected:
-                obj.actuate(self.hierarchy)
+            if obj.tangible:
+                obj.actuate()
         # Apply task manager (if any) when there is an opt or eval process on top 
         if self.task_manager is not None:
             self.task_manager(self.hierarchy)
@@ -244,10 +243,16 @@ class World(object):
         if self.virtual_space is not None:
             self.virtual_space.step()
         # print('V.sp time: ', time.time() - t0)
+
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
             self.physics_engine.step_render()
+            if not self.physics_engine.paused and self.animated_layout is not None:
+                if self.physics_engine.camera_options['focus']:
+                    focus_id = self.physics_engine.camera_options['focus_target']
+                    target_robot = list(self.robots.values())[focus_id]
+                    self.animated_layout.update(target_robot)
 
         # DEBUG CODE
         if self.is_done and global_states.LOG:
@@ -278,7 +283,7 @@ class World(object):
             plt.xlabel('Comm State 0')
             plt.ylabel('Comm State 1')
             plt.show()
-            # self.data_logger.save_pickle()
+            self.data_logger.save_pickle()
             
             # import os
             # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
@@ -359,11 +364,17 @@ class World(object):
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
             self.virtual_space.particles[robot_name].set_controller(topology=topology)
+        # for lmk in vspace_cfg['landmarks']:
+        #     __import__('pdb').set_trace()
 
     def config_data_logger(self, log_info):
         self.data_logger = DataLogger()
         self.data_logger.configure(self, log_info)
         
+
+    # def add_robot(self, robot_type, group, position=[0,0,0], orientation=0.0, controller=None):
+    #     robot = Epuck()
+
 
     def build_from_dict(self, world_dict, ann_topology=None):
         """ 
@@ -390,19 +401,10 @@ class World(object):
                 world_obj = object_cls(None, np.zeros(3), np.zeros(3), **obj['params']) #! ojo 2D
                 self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                 continue
-            #* Create group intializers.
-            self.initializers[obj_name] = {
-                key : initializers[value['name']](obj['num_instances'], engine=self.physics_engine.engine_type, 
-                        variable=key, **value['params']) for key, value in obj['initializers'].items()
-            }            
+            num_entities = obj['num_instances']
             #* Loop entities and add them to the world.
-            #* Distinguish between robots and the other objects.
-            
-            entity_positions = self.initializers[obj_name]['positions']()
             if issubclass(object_cls, Robot):# or issubclass(object_cls, Robot3D):
-                entity_orientations = self.initializers[obj_name]['orientations']()
-                #* Add entities one by one at their position and orientation
-                for i, (position, orientation) in enumerate(zip(entity_positions, entity_orientations)):
+                for i in range(num_entities):
                     controller = None
                     if obj['controller'] is not None:
                         #* Create Controller and add sensors and actuators
@@ -413,11 +415,28 @@ class World(object):
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology[obj['controller']['topology']])
+                    positions = obj['positions']
+                    orientations = obj['orientations']
+                    pos_i = [0,0,0]
+                    ori_i = 0.0
+                    if isinstance(positions, list):
+                        pos_i = positions if not isinstance(positions[0], list) else positions[i]
+                    if not isinstance(orientations, str):
+                        ori_i = orientations if not isinstance(orientations, list) else orientations[i]
+
                     #* Instantiate robot entity
-                    pos = [0,0,0] if self.physics_engine._engine_type == '3D' else [0,0]
-                    ori = [0,0,0] if self.physics_engine._engine_type == '3D' else 0.0
-                    robot = object_cls(pos, ori, controller=controller, **obj['params'])
+                    robot = object_cls(pos_i, [0,0,ori_i], controller=controller, **obj.get('params',{}))
                     controller.controller_owner = robot
+                    if isinstance(positions, dict):
+                        robot.pos_init_method = positions
+                    if orientations == 'random':
+                        robot.ori_init_method = 'random' 
+                    if 'battery' in obj:
+                        if isinstance(obj['battery'], bool):
+                            if obj['battery']:
+                                robot.add_battery()
+                        else:
+                            robot.add_battery(**obj['battery'])
                     #* If any, initialize robot's reward generator
                     # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)
@@ -427,7 +446,7 @@ class World(object):
                     robot.group = obj_name
                 #* Add perturbations (if any) to the robot states and actions (not physical perturbs)
                 #* For example: inhibit a certain sensor reading or ignore some action of a robot.
-                if len(obj['perturbations']) > 0:
+                if obj.get('perturbations'):
                     object_perturbations = []
                     for pert_name, perturbations in obj['perturbations'].items():
                         if not isinstance(perturbations, list):
@@ -437,14 +456,22 @@ class World(object):
                                 object_perturbations.append(env_perturbations[pert_name](obj['num_instances'], **pert))
                     self.env_perturbations.update({obj_name : object_perturbations})
             else: #* Non robot objects
-                controller_cls = controllers.get(obj.get('controller'))
-                controller = controller_cls is not None and controller_cls() or None
-                for i, position in enumerate(entity_positions):
-                # entity_orientations = self.initializers[obj_name]['orientations']()
-                # for i, (position, orientation) in enumerate(zip(entity_positions, entity_orientations)):
-                    world_obj = object_cls([0,0,0], [0,0,0], **obj['params'])
+                for i in range(num_entities):
+                    positions = obj['positions']
+                    orientations = obj.get('orientations', 0.0)
+                    pos_i = [0,0,0]
+                    ori_i = 0.0
+                    if isinstance(positions, list):
+                        pos_i = positions if not isinstance(positions[0], list) else positions[i]
+                    if not isinstance(orientations, dict):
+                        ori_i = orientations if not isinstance(orientations, list) else orientations[i]
+                    controller_cls = controllers.get(obj.get('controller'))
+                    controller = controller_cls is not None and controller_cls() or None
+                    world_obj = object_cls(pos_i, [0,0,ori_i], **obj.get('params',{}))
                     self.register_entity(obj_name + '_' + str(i), world_obj, group=obj_name)
                     world_obj.group = obj_name
+                    if isinstance(positions, dict):
+                        world_obj.pos_init_method = positions
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initializes
@@ -455,10 +482,11 @@ class World(object):
         """
         self.t = 0
         self.paused = global_states.INTERACTIVE
+        self.physics_engine.paused = self.start_paused
         if self.task_manager is not None:
             self.task_manager.reset(seed=seed)
         #* Initialize object dynamics.
-        self.run_initializers(seed=seed)
+        # self.run_initializers(seed=seed)
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset(seed=seed)
@@ -468,6 +496,9 @@ class World(object):
                 pert.reset()
         if self.virtual_space is not None:
             self.virtual_space.reset(seed=seed)
+        # OJO TO BE IMPROVED
+        for robot in self.robots.values():
+            robot.static_neighbors = self.lights 
             
     def connect(self):
         """ Connect to the physics engine. """
@@ -506,6 +537,10 @@ class World(object):
                     orientations = group_initializer['orientations']()
                     for orientation, obj in zip(orientations, group_elements):
                         obj.orientation = orientation
+            # else:
+            #     for obj in self.group_objects(group):
+            #         obj.position = obj.init_position
+            #         obj.orientation = obj.init_orientation
         if seed is not None:
             np.random.seed()
 
@@ -602,6 +637,9 @@ class World(object):
         ps.print_stats()
         profile.dump_stats('profile.prof')
 
+    def create_animated_layout(self):
+        self.animated_layout = AnimatedLayout()
+
 
 @world_registry(name='flat_world')
 class FlatWorld(World):
@@ -629,18 +667,21 @@ class SquareArena(World):
         self.width = width
         #* Add world limits
         self.__add_limiting_walls()
+        # self.paint_walls()
+
+        
 
     def __add_limiting_walls(self):
         """ Private method for customizing the size of the limiting walls of the arena. 
         It creates the wall objects individually. They are stored under the group 'side_wall'.
         """
-        self.register_entity('wall_side_up', Wall([self.width/2, 0, .1], [0, 0, np.pi/2], height=0.1,\
+        self.register_entity('wall_side_up', Wall([self.width/2, 0, .1], [0, 0, 0], height=0.1,\
             width=self.width-.1), group='side_wall')
-        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .1], [0, 0, np.pi/2], height=.1,\
+        self.register_entity('wall_side_bottom', Wall([-self.width/2, 0, .1], [0, 0, 0], height=.1,\
             width=self.width-.1), group='side_wall')
-        self.register_entity('wall_side_left', Wall([0, self.height/2, .1], [0, 0, -np.pi/2], height=self.height+.1,\
+        self.register_entity('wall_side_left', Wall([0, self.height/2, .1], [0, 0, 0], height=self.height+.1,\
              width=.1), group='side_wall')
-        self.register_entity('wall_side_right', Wall([0, -self.height/2, .1], [0, 0, -np.pi/2], height=self.height+.1,\
+        self.register_entity('wall_side_right', Wall([0, -self.height/2, .1], [0, 0, 0], height=self.height+.1,\
             width=.1), group='side_wall')
 
 
@@ -697,6 +738,116 @@ class CustomWorld(World):
         self.map_file = map_file
         self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
 
+
+import matplotlib.pyplot as plt
+class AnimatedPlots:
+    def __init__(self):
+        x = np.arange(0, 500)
+        self.x = x
+        self.y = np.zeros([1, x.shape[0]]) 
+        self.y2 = np.zeros([8, x.shape[0]]) 
+        self.fig = plt.figure(figsize=(5,10))
+        self.axes = []
+        self.axes.append(plt.subplot(211))
+        self.axes.append(plt.subplot(212, projection='polar'))
+        # self.fig, self.axes = plt.subplots(nrows=2, ncols=1, figsize=(5,10))
+        self.axes[0].set_ylim([0,1])
+        self.axes[1].set_ylim([0,1])
+        self.axes[1].set_rorigin(-0.1)
+        ln = self.axes[1].plot([0,0], [0,0], color='k')
+        self.axes[1].plot([0,0.0],[0.,0.0],linewidth=5, color='k')
+        for i in range(8):
+            ln = self.axes[1].plot([0,0], [0,0], color='r')
+         
+        self.lines = [self.axes[0].plot(x, self.y[i], animated=True)[0] for i in range(len(self.y))]
+        # plt.legend([f'DS{i}' for i in range(8)])
+        plt.show(block=False)
+        plt.pause(0.1)
+        self.bg = self.fig.canvas.copy_from_bbox(self.fig.bbox)
+        for i in range(len(self.y)):
+            self.axes[0].draw_artist(self.lines[i])
+        self.fig.canvas.blit(self.fig.bbox)
+    
+    def update(self, robot):
+        new_y = robot.sensors['distance_sensor'].reading
+        head_ori = robot.orientation[-1]
+        sensor_dirs = robot.sensors['distance_sensor'].directions(head_ori)
+        for i in range(len(self.y)):
+            self.y[i] = np.r_[self.y[i,1:], new_y[i]]
+        self.fig.canvas.restore_region(self.bg)
+        for i in range(len(self.y)):
+            self.axes[0].get_lines()[i].set_ydata(self.y[i])
+            # re-render the artist, updating the canvas state, but not the screen
+            self.axes[0].draw_artist(self.axes[0].get_lines()[i])
+        for i in range(8):
+            self.axes[1].lines[0].set_ydata(np.r_[new_y, new_y[0]])
+            # self.axes[1].lines[0].set_xdata(np.r_[np.linspace(head_ori, head_ori + 2*np.pi, 8), head_ori])
+            self.axes[1].lines[0].set_xdata(np.r_[sensor_dirs, sensor_dirs[0]])
+            self.axes[1].lines[2+i].set_xdata([sensor_dirs[i], sensor_dirs[i]])
+            self.axes[1].lines[2+i].set_ydata([0, 1])
+            self.axes[1].draw_artist(self.axes[1].lines[0])
+            self.axes[1].draw_artist(self.axes[1].lines[2+i])
+
+            
+        self.axes[1].lines[1].set_xdata(np.array([head_ori, head_ori]))
+        self.axes[1].lines[1].set_ydata(np.array([0,0.1]))
+        self.axes[1].draw_artist(self.axes[1].lines[1])
+            
+
+        # copy the image to the GUI state, but screen might not be changed yet
+        self.fig.canvas.blit(self.fig.bbox)
+        # flush any pending GUI events, re-painting the screen if needed
+        self.fig.canvas.flush_events()
+        # you can put a pause in if you want to slow things down
+        # plt.pause(.1)
+
+
+
+@world_registry(name='arena')
+class Arena(World):
+    def __init__(self, *args, arena_size=3, map_file='map1.txt', **kwargs):
+        super(Arena, self).__init__(*args, **kwargs)
+        self.map_file = map_file
+        self.arena_size = arena_size
+        self.paint_arena_txt()
+        
+
+    def step(self):
+        states, actions = super().step()
+        return states, actions
+
+    def paint_arena_txt(self):
+        arr = np.loadtxt(f"mereli/models/maps/{self.map_file}",delimiter=",", dtype=int)
+        dX = self.arena_size / arr.shape[0]
+        dY = self.arena_size / arr.shape[1]
+        # dX = min(dX, dY)
+        # dY = min(dX,dY)
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                if arr[i][j] == 1:
+                    posX = i * dX - dX / 2 * arr.shape[0]
+                    posY = j * dY - dY / 2 * arr.shape[1]
+                    self.register_entity(f'wall_{i}{j}', Wall([posX, posY, 0], [0, 0, 0], height=dX,\
+                        width=dY), group='side_wall')
+        # __import__('pdb').set_trace()
+
+    def paint_arena_image(self):
+        from PIL import Image
+        arr = 1 - np.array(Image.open(r"mereli/models/maps/Maze.png"))[:,:, 0] / 255
+        # arr = arr[:70,:70]
+        __import__('pdb').set_trace()
+        dX = self.arena_size / arr.shape[0]
+        dY = self.arena_size / arr.shape[1]
+        # dX = min(dX, dY)
+        # dY = min(dX,dY)
+        for i in range(arr.shape[0]):
+            for j in range(arr.shape[1]):
+                if arr[i][j] == 1:
+                    posX = i * dX - dX / 2 * arr.shape[0]
+                    posY = j * dY - dY / 2 * arr.shape[1]
+                    self.register_entity(f'wall_{i}{j}', Wall([posX, posY, 0], [0, 0, 0], height=dX,\
+                        width=dY), group='side_wall')
+        # __import__('pdb').set_trace()
 
 
 

@@ -7,8 +7,10 @@ class Actuator:
     """
     def __init__(self, actuator_owner):
         self.actuator_owner = actuator_owner
+        self.action = None
+    
 
-    def step(self, action):
+    def step(self):
         """ Method to execute an iteration of the actuator. In this base class it is empty and 
         must be overwritten by actuators inheriting from it in order to particularize their 
         functionality. Essentially, this method transforms actions planned by the robot controller 
@@ -27,6 +29,10 @@ class Actuator:
     def owner_id(self):
         """ Returns the identifier of the robot owning the actuator. """
         return self.actuator_owner.id
+    
+    @property
+    def robot(self):
+        return self.actuator_owner
 
 class HighLevelActuator(Actuator):
     """ Base class for high level actuators. A high level actuator is an actuator that either 

@@ -1,0 +1,28 @@
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : false, 
+	 "camera_options" : {"distance" : 0.5}
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {},
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "swarm" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"orientations" : 0.0,
+                "controller" : "test_led",
+                "sensors" : {},
+                "actuators" : {
+                    "led" : {}
+                }
+            }
+        }
+    }
+}

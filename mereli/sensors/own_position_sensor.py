@@ -3,10 +3,8 @@ import numpy.linalg as LA
 from mereli.register import sensor_registry
 from mereli.sensors import Sensor
 
+@sensor_registry(name='gps')
 @sensor_registry(name='own_position_sensor')
-class OwnPositionSensor(Sensor):
-    def __init__(self, *args, **kwargs):
-        super(OwnPositionSensor, self).__init__(*args, **kwargs)
-
+class GPS(Sensor):
     def step(self, neighborhood):
-        return self.sensor_owner.position
+        self.reading = self.sensor_owner.position

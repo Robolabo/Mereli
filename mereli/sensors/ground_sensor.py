@@ -30,22 +30,25 @@ class GroundSensor(Sensor):
         for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
             if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) <= ground_area.radius:
                 self.reading = np.array([self.coding.get(ground_area.color, 0.0)])
-                return self.reading 
-        return self.reading 
 
     def reset(self, seed=None):
         self.reading  = np.array([0.])
 
-# @sensor_registry(name='grey_ground_sensor')
-# class GreyGroundSensor(Sensor):
-#     """ Sensor that detects if there is a ground area underneath the robot (binary reading).
-#     Additionally, it only detects ground areas of a particular color.
-#     """
-#     def __init__(self, *args, color='grey', **kwargs):
-#         super(GroundSensor, self).__init__(*args, **kwargs)
+@sensor_registry(name='memory_ground_sensor')
+class MemoryGroundSensor(Sensor):
+    """ 
+    """
+    def __init__(self, *args, **kwargs):
+        super(MemoryGroundSensor, self).__init__(*args, **kwargs)
+        self.reading = np.array([0.0])
 
-#     def step(self, neighborhood):
-#         for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
-#             if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) >= ground_area.radius:
-#                 return 1.0
-#         return 0.0
+    def step(self, neighborhood):
+        for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
+            if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) <= ground_area.radius:
+                if ground_area.color == 'grey' and self.reading == 0:
+                    self.reading = np.array([1.0])
+                elif self.reading == 1. and ground_area.color == 'black':
+                    self.reading = np.array([0.0])
+
+    def reset(self, seed=None):
+        self.reading  = np.array([0.])

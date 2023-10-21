@@ -7,6 +7,50 @@ from mereli.actuators.base_actuator import HighLevelActuator
 from mereli.register import sensors, actuators, world_object_registry
 from mereli.globals import global_states 
 
+
+class Battery:
+    def __init__(self, robot):
+        self.robot = robot
+        self.color = None 
+        self.discharge_coef = 0.001
+        self.charge_coef = 0.005
+        self.charge_range = 0.3
+        self.level = 1 
+        self.discharge_only_moving = True
+        self.stop_wheels = False
+
+    def step(self, lights):
+        if len(lights) == 0:
+            self.discharge()
+            return
+        lights = list(lights.values())
+        clst_light_idx = np.argmin([np.linalg.norm(ent.position[:2] - self.robot.position[:2]) for ent in lights])
+        clst_light = lights[clst_light_idx] 
+        if np.linalg.norm(clst_light.position[:2] - self.robot.position[:2]) <= self.charge_range:
+            self.charge()
+        else:
+            if self.discharge_only_moving:
+                wheels = self.robot.actuators['joint_velocity_actuator'].action
+                if wheels is not None:
+                    if  abs(wheels[0]) > 0.1 or np.abs(wheels[1]) > 0.1:
+                        self.discharge()
+                # if wheels[0] > 0.1 or np.anwheels[]
+            else:
+                self.discharge()
+        print('BATTERY LEVEL: ', self.level)
+
+
+    def charge(self):
+        self.level +=  self.charge_coef * (1 - self.level ** 2)
+
+    def discharge(self):
+        self.level = max(self.level - self.discharge_coef, 0)  
+
+    def reset(self):
+        self.level = 1.0
+
+
+
 @world_object_registry(name='robot')
 class Robot(WorldObject):
     """
@@ -24,6 +68,9 @@ class Robot(WorldObject):
         super(Robot, self).__init__(model_file, position, orientation,\
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
+        self.t = 0
+        self.battery = None
+        self.battery_enabled = False
         self._food = False
         if self.controllable:
             #* Initialize sensors and actuators according to controller requirements
@@ -38,6 +85,7 @@ class Robot(WorldObject):
         #* Storage for actions selected by the controllers to be fed to actuators
         self.planned_actions = {k : [None] for k in actuators.keys()}
 
+
         #* Current Reward perceived by the robot.
         self.reward_generator = None
         self.reward = np.array([0])
@@ -46,8 +94,10 @@ class Robot(WorldObject):
         self.actions = {}
         # self.reset()
         self._neighbors = []
+        self.static_neighbors = []
+        self.awaken = False
         
-    def step(self, neighborhood, perturbations=None):
+    def step(self):
         """ Step method of the robots. 
         It is composed by the following main steps:
 
@@ -55,75 +105,68 @@ class Robot(WorldObject):
         2. The robot executes its controller in order to compute the
            actions based on the sensory information.
         3. The actions are stored as planned actions to be eventually executed.
-
-        :param list neighborhood: list filled with the neighboring world objects.
-        :param float reward: reward to be fed to the controller update rules, if any.
-        :param list perturbations: list of ``PostProcessingPerturbation`` to apply 
-            to the stimuli before controller step. If there are no perturbations
-            to apply the paramter is ``None``.
-
-        :returns: state and action tuple of the current timestep. Both of them are expressed as 
-            a dict with the sensor/actuator name and the corresponding stimuli/action.
         """
-        #* Sense environment surroundings.
-        state = self.perceive(neighborhood)
+        if not self.awaken:
+            self.t += 1
+            return
+        #* Step sensors and update their sensor readings 
+        self.perceive()
+        state = {name : sensor.reading for name, sensor in self.sensors.items()}
+
         #* Add reward as a new state entry.
         state['reward'] = np.array([self.reward]).flatten()
         state['task'] = self.task
-        #* Apply perturbations to stimuli 
-        if perturbations is not None:
-            for pert in perturbations:
-                state = pert(state, self)
 
         #* Apply communication system pre step (previous to controller) 
-        if self.comm_sys is not None:
-            state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
+        # if self.comm_sys is not None:
+        #     state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=self.reward)
 
         #* Apply communication system pre step (previous to controller) 
-        if self.comm_sys is not None:
-            actions = self.comm_sys.step_post(actions)
+        # if self.comm_sys is not None:
+        #     actions = self.comm_sys.step_post(actions)
 
         ##* Plan actions for future execution
         #self.plan_actions(actions)
         #* Convert again tx frame to dict for its use in the opt. algs. 
-        if self.comm_sys is not None:
-            actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
+        # if self.comm_sys is not None:
+        #     actions[self.comm_sys.tx_name] = {**actions[self.comm_sys.tx_name].as_dict, **{'state' : self.comm_sys.comm_state_code}}
 
         #* Compute robot reward.
         # if self.reward_generator is not None:
         #     self.reward = self.reward_generator(actions, state, self, neighborhood)
-        # print('A')
         self.state = state
         self.actions = actions
-        return state, actions
+        self.t += 1
+        if self.battery_enabled:
+            self.battery.step(self.static_neighbors)
+            if self.battery.level == 0 and self.battery.stop_wheels and 'joint_velocity_actuator' in actions:
+                self.actuators['joint_velocity_actuator'].action = np.zeros(2)
 
     def plan_actions(self):
         for actuator, action in self.actions.items():
             self.planned_actions[actuator] = (actuator == 'wheel_actuator')\
                     and [action, self.position, self.orientation]  or [action]
 
-    def actuate(self, neighborhood):
+    def actuate(self):
         """ Executes the previously planned actions in order to be processed in the world.
-        
-        :param list neighborhood: list of neighoboring entities to be used by some high level 
-            actuators.
         """
+        if not self.awaken:
+            return
         for actuator_name, actuator in self.actuators.items():
-            if self.planned_actions[actuator_name][0] is None:
-                continue
-            if issubclass(type(actuator), HighLevelActuator):
-                actuator.step(*iter(self.planned_actions[actuator_name]), neighborhood)
-            else:
-                actuator.step(*iter(self.planned_actions[actuator_name]))
+            actuator.step()            
+            # if self.planned_actions[actuator_name][0] is None:
+            #     continue
+            # if issubclass(type(actuator), HighLevelActuator):
+            #     actuator.step(*iter(self.planned_actions[actuator_name]), neighborhood)
+            # else:
+            #     actuator.step(*iter(self.planned_actions[actuator_name]))
 
-    def perceive(self, neighborhood):
+    def perceive(self):
         """
         Computes the observed stimuli by steping each of the active sensors one by one.
-        
-        :param list neighborhood:  list filled with the neighboring world objects.
         
         :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
@@ -131,12 +174,12 @@ class Robot(WorldObject):
         # IR receiver reads both the received frame and the distance sensor measurement to 
         # optimize the simulation.
         if 'IR_receiver' in self.sensors:
-            ir_reading = self.sensors['IR_receiver'].step(neighborhood)
+            ir_reading = self.sensors['IR_receiver'].step()
             readings.update({'IR_receiver' : ir_reading[0], 'distance_sensor' : ir_reading[1]})
         for sensor_name, sensor in self.sensors.items():
             if sensor_name == 'IR_receiver':
                 continue
-            reading = sensor.step(neighborhood)
+            reading = sensor.step()
             if isinstance(reading, dict):
                 readings.update(reading)
             else:
@@ -151,6 +194,9 @@ class Robot(WorldObject):
 
         :param int seed: seed for random initialization.
         """
+        super().reset(seed=seed) #init pos and orientation
+        self.t = 0
+        self.awaken = False
         self.state = {}
         self.actions = {}
         self._food = False
@@ -183,7 +229,9 @@ class Robot(WorldObject):
         if self.comm_sys is not None:
             self.comm_sys.set_owner(self.id)
             self.comm_sys.reset()
-
+        # Reset Battery
+        if self.battery_enabled:
+            self.battery.reset()
 
     def add_communication(self, comm_sys):
         if comm_sys.tx_name not in self.actuators:
@@ -194,7 +242,14 @@ class Robot(WorldObject):
         #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
         self.comm_sys = comm_sys
         
+    def add_battery(self, **battery_kw):
+        self.battery_enabled = True 
+        self.battery = Battery(self, **battery_kw)
+    
 
+    def remove_battery(self):
+        self.battery_enabled = False
+    
     @property
     def neighbors(self):
         return self._neighbors

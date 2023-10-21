@@ -17,7 +17,6 @@ class NeuralController(RobotController):
         self.neural_network = None
         self.out_act_mapping = {}
         self.comm_state = 1 # Communication state (0 : RELAY, 1 : SEND)
-        self.t = 0
 
     def add_ann_from_dict(self, topology):
         #! CHECK BUGS
@@ -31,11 +30,11 @@ class NeuralController(RobotController):
         self.neural_network = neural_network
         self.out_act_mapping = actuator_mapping
 
-    @increase_time
     def step(self, state, reward=0.0):
-        if len(state):
-            state = flatten_dict(state)
-        raw_actions = self.neural_network.step(state, reward)
+        stimuli = {k : self.get_sensor_reading(k) for k in self.robot.sensors}
+        if len(stimuli):
+            stimuli = flatten_dict(stimuli)
+        raw_actions = self.neural_network.step(stimuli, reward)
 
         # actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
         #            if 'IR_transmitter' not in self.out_act_mapping[name]}
@@ -46,17 +45,12 @@ class NeuralController(RobotController):
         for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
             actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
 
-        if 'wheel_actuator' in actions.keys():
-            if type(actions['wheel_actuator']) in [int, bool]:
-                actions['wheel_actuator'] = np.array(([0., 0.], [.5, -.5], [-.5, .5])[actions['wheel_actuator']])
-            elif type(actions['wheel_actuator']) in [list, np.ndarray] and len(actions['wheel_actuator']) > 1:
-               actions['wheel_actuator'] = np.array(actions['wheel_actuator'])
-            else:
-                actions['wheel_actuator'] = np.array((actions['wheel_actuator'][0], -actions['wheel_actuator'][0])).flatten()
-        return actions
+        # Update actions to actuators
+        for name, actuator in self.robot.actuators.items():
+            if name in actions:
+                actuator.action = actions[name]
     
     def reset(self):
-        self.t = 0
         self.comm_state = 1 #* role of agent in communication, 0 is relay mode and 1 is send mode.
         if self.neural_network is not None:
             self.neural_network.reset()

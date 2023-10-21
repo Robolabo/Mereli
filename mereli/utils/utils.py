@@ -7,6 +7,7 @@ from collections import deque
 from datetime import datetime
 import numpy as np
 
+
 def merge_dicts(dicts):
     """
     Merges a list of dicts by appending its values if keys are repeated.

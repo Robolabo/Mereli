@@ -5,6 +5,7 @@ from mereli.sensors import Sensor
 
 """ ALSO INCLUDES NEIGHBORHOOD ORIENTATIONS """
 @sensor_registry(name='neighborhood_pos_sensor')
+@sensor_registry(name='neighborhood_gps')
 class NeighborhoodPositionSensor(Sensor):
     def __init__(self, *args, **kwargs):
         super(NeighborhoodPositionSensor, self).__init__(*args, **kwargs)
@@ -12,8 +13,10 @@ class NeighborhoodPositionSensor(Sensor):
 
     def step(self, neighborhood):
         neighborhood_pos = []
-        for obj in neighborhood: 
+        for obj in self.sensor_owner.neighbors: 
             if self.sensor_owner.id != obj.id and obj.controllable:
                 dist = LA.norm(obj.position - self.sensor_owner.position)
                 neighborhood_pos.append(np.hstack((obj.position, obj.orientation)))
-        return np.array(neighborhood_pos)
+        self.readings = np.array(neighborhood_pos)
+
+

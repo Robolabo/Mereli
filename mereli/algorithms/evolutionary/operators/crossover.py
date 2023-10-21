@@ -52,8 +52,9 @@ def onepoint_crossover(genotypeA, genotypeB, crossover_prob=1.):
     for child in [childA, childB]:
         child.gene_info = genotypeA.gene_info
         child.neural_net_config = genotypeA.neural_net_config
-    cut_conn_idx = np.random.randint(len(genotypeA.connections))
-    cut_nodes_idx = np.random.randint(len(genotypeA.nodes))
+        child.targets = genotypeA.targets
+    cut_conn_idx = np.random.randint(genotypeA.num_connections)
+    cut_nodes_idx = np.random.randint(genotypeA.num_nodes)
     for i, (connA, connB) in enumerate(zip(genotypeA.connections, genotypeB.connections)):
         childA.add_connection(connA if i <= cut_conn_idx else connB)
         childB.add_connection(connB if i <= cut_conn_idx else connA)

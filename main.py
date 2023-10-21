@@ -63,9 +63,17 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
-    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict['topology'])
+    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}))
     if log:
         world.config_data_logger(cfg_dict['logging']['data'])
+    if render:
+        simulation_config = cfg_dict.get('simulation', {})
+        world.start_paused = simulation_config.get('start_paused', False)
+    #     if 'animated_layout' in simulation_config:
+    #         anim_config = simulation_config.get('animated_layout')
+    #         world.create_animated_layout()
+    #         world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
+    #         world.animated_layout.initialize()
 
     # Create virtual space (if any)
     if 'virtual_space' in cfg_dict:
@@ -81,7 +89,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     # print(world2.physics_engine.client)
     # import pdb; pdb.set_trace()
 
-    if cfg_dict['algorithm'] is not None and len(cfg_dict['algorithm']):
+    if cfg_dict.get('algorithm', False) and len(cfg_dict['algorithm']):
         alg_config = cfg_dict['algorithm']
         if alg_config['name'] == 'multi_EA':
             opt_alg = algorithms['multi_EA'](world, alg_config['generations'], alg_config['population_size'], None, 
@@ -108,6 +116,14 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             # opt_alg.create_world(cfg_dict['world'], ann_config=cfg_dict['topology'])
             opt_alg.initialize(alg_config["gene_info"], cfg_dict['topology'])
         #* Run GA
+        if render:
+            simulation_config = cfg_dict.get('simulation', {})
+            opt_alg.evaluator.world.start_paused = simulation_config.get('start_paused', False)
+            if 'animated_layout' in simulation_config and simulation_config['animated_layout'].get('enabled', False):
+                anim_config = simulation_config.get('animated_layout')
+                opt_alg.evaluator.world.create_animated_layout()
+                opt_alg.evaluator.world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
+                opt_alg.evaluator.world.animated_layout.initialize()
         if not eval:
             opt_alg.run()
         else:
@@ -115,13 +131,24 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     else: #* Non-optimizable simulation
         world.connect()
         print('Connected!')
-        world.reset()
-        t0 = time.time()
-        # while(True):
-        while (world.t < 1000):
-        # for i in range(100000):
-            state, action = world.step()
-        time_elapsed = time.time() - t0 
-        print(f'Simulation elapsed {time_elapsed}')
+        simulation_config = cfg_dict.get('simulation', {})
+        timesteps = simulation_config.get('timesteps', 10000)
+        trials = simulation_config.get('trials', 1)
+        if render:
+            world.start_paused = simulation_config.get('start_paused', False)
+            if 'camera_options' in simulation_config:
+                world.physics_engine.set_camera_options(**simulation_config['camera_options'])
+            if 'animated_layout' in simulation_config and simulation_config['animated_layout'].get('enabled', False):
+                anim_config = simulation_config.get('animated_layout')
+                world.create_animated_layout()
+                world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
+                world.animated_layout.initialize()
+        for tr in range(trials):
+            world.reset()
+            t0 = time.time()
+            while (world.t < timesteps):
+                state, action = world.step()
+            time_elapsed = time.time() - t0 
+            print(f'Simulation of trial {tr} ended in {time_elapsed}')
 if __name__ == "__main__":
     main()

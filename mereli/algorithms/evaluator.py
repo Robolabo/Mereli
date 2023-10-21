@@ -50,6 +50,8 @@ class Evaluator:
             # entity.controller.neural_network = genotype.as_phenotype()
 
     def evaluate(self, genotype, generation):
+        import time
+        t0 = time.time()
         assert self.world is not None
         self.world.connect()
         if isinstance(genotype, list):
@@ -96,6 +98,7 @@ class Evaluator:
                 }
             genotype.fitness = fitness / self.num_evaluations
         self.world.disconnect()
+        # print(time.time()-t0)
         return genotype
 
     @property

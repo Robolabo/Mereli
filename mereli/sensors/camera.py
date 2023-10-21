@@ -11,21 +11,23 @@ class Camera(Sensor):
     **Reference Name**: ``camera``.
 
     """
-    def __init__(self, *args, **kwargs):
-        self.w = 50
-        self.h = 50
+    def __init__(self, *args, hpx=60, wpx=60, **kwargs):
+        self.w = wpx 
+        self.h = hpx 
         super(Camera, self).__init__(*args, **kwargs)
 
-    def step(self, neighborhood):
+    def step(self):
         """ Step method for reading the camera sensor. 
         
         :param list neighborhood: ``list`` of entities in the surroundings of the robot.
 
         :returns: 
         """
-        camPos = self.sensor_owner.physics_client.get_link_state(self.sensor_owner.id,4)[0]
+        camPos = self.sensor_owner.physics_client.get_link_state(self.sensor_owner.id, 4)[0] 
         ori = self.sensor_owner.orientation[2]
-        tarPos = camPos + 5*np.r_[np.cos(ori), np.sin(ori), camPos[-1]]
+        vcam = np.r_[np.cos(ori), np.sin(ori), camPos[-1]]
+        tarPos = camPos + 2 * vcam
+        camPos += 0.05 * vcam 
 
         viewMatrix = p.computeViewMatrix(camPos, tarPos, (0,0,1),physicsClientId=self.sensor_owner.physics_client.client)
         projectionMatrix = p.computeProjectionMatrixFOV(fov=45, aspect=1, nearVal=.05, farVal=5.1)
@@ -35,9 +37,8 @@ class Camera(Sensor):
                                projectionMatrix=projectionMatrix,
                                shadow=1,
                                lightDirection=[1, 1, 1], physicsClientId=self.sensor_owner.physics_client.client)
-        # plt.imshow(img_arr[2]);plt.show()
-        # import pdb; pdb.set_trace()
-        
-        return img_arr[2]
-
+        self.reading = img_arr[2] 
+    
+    def reset(self):
+        self.reading = np.zeros([self.w, self.h])
        

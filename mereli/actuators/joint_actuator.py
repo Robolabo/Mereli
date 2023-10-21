@@ -22,9 +22,8 @@ class JointVelocityActuator(Actuator):
         self.joint_ids = joint_ids
         self.max_velocity = max_velocity
         self.inverse_mirrored = inverse_mirrored
-        self.action = None
 
-    def step(self, action):
+    def step(self):
         """ Steps the actuator by transforming the action planed by the robot controller into an actual 
         joint rotation speed. The action argument is a vector settling the desired reference velocity of 
         each joint to be controlled. The action references are contrained within [-1, 1], meaning that an 
@@ -34,22 +33,22 @@ class JointVelocityActuator(Actuator):
         :param np.ndarray action: numpy array collection the normalized reference velocities of each joint 
             to be controlled.
         """
-        if len(action) != len(self.joint_ids):
-            raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
-            	'the number of controllable joints.'))
-        self.action = action
-        action *= self.max_velocity # Convert range [-1,1] to [-w_max, w_max].
-        self.physics_client.control_joints(self.owner_id, self.joint_ids, action, control_type='velocity')
-        if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
-            self.physics_client.control_joints(self.owner_id, [self.inverse_mirrored], 
-                    [-action[0]], control_type='velocity')
+        # if len(action) != len(self.joint_ids):
+        #     raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
+        #     	'the number of controllable joints.'))
+        # self.action = action
+        actionFinal = self.action * self.max_velocity
+        self.physics_client.control_joints(self.owner_id, self.joint_ids, actionFinal, control_type='velocity')
+        # if self.inverse_mirrored is not None and len(action) == 1: #! mejorar
+        #     self.physics_client.control_joints(self.owner_id, [self.inverse_mirrored], 
+        #             [-action[0]], control_type='velocity')
         
             
-    def reset(self,):
+    def reset(self):
         """ Resets the actuator."""
-        self.action = None
-        if self.physics_client is not None:
-            self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
+        self.action = np.zeros(2)
+        # if self.physics_client is not None:
+        #     self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
 
 
 @actuator_registry(name='joint_position_actuator')
@@ -70,7 +69,7 @@ class JointPositionActuator(Actuator):
         self.joint_ids = joint_ids
         self.max_velocity = 1.
          
-    def step(self, action):
+    def step(self):
         """ Steps the actuator by transforming the action planed by the robot controller into an actual 
         joint angle position. The action argument is a vector settling the desired reference positions of 
         each joint to be controlled. The action references are contrained within [-1, 1], which are mapped 
@@ -79,13 +78,12 @@ class JointPositionActuator(Actuator):
         :param np.ndarray action: numpy array collection the normalized reference velocities of each joint 
             to be controlled.            
         """
-        if len(action) != len(self.joint_ids):
+        if len(self.action) != len(self.joint_ids):
             raise Exception(logging.error('Size of the action in Joint Actuator differs from '\
             	'the number of controllable joints.'))
-        action *= np.pi # Convert range [-1,1] to [-pi, pi].
-        self.physics_client.control_joints(self.owner_id, self.joint_ids, action, control_type='position')
-        
-    # def reset(self,):
-    #     for joint in self.joint_ids:
-    #         p.setJointMotorControl2(self.actuator_owner.id, joint, targetVelocity=0, velocityGain=0,\
-    #             controlMode=p.VELOCITY_CONTROL, physicsClientId=self.actuator_owner.physics_client)
+        finalAction = action * np.pi # Convert range [-1,1] to [-pi, pi].
+        self.physics_client.control_joints(self.owner_id, self.joint_ids, finalAction, control_type='position')
+            
+    def reset(self):
+        """ Resets the actuator."""
+        self.action = np.zeros(2)

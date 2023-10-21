@@ -13,16 +13,18 @@ class Ball(WorldObject):
     :param float mass: total mass of the ball.
     """
     def __init__(self, position, orientation, *args, 
-                    radius=0.3, color='red', mass=1., **kwargs):
-        super(Ball, self).__init__('entities/ball/ball', position, orientation,\
+                    radius=0.3, color='red', mass=0.1, **kwargs):
+        super(Ball, self).__init__('entities/ball/ball.urdf', position, orientation,\
                         *args, **kwargs)
         self.color = color
         self.mass = mass
         self.radius = radius
         self.scaling = radius
+
  
     def step(self, world_dict):
         pass
 
     def reset(self, seed=None):
-        pass
+        super().reset(seed=seed)
+        # self.physics_client.change_dynamics(self.id, mass=10, restitution=1.0, linearDamping=0, angularDamping=0, rollingFriction=0.001, spinningFriction=0.001)

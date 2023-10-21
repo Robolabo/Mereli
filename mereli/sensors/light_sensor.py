@@ -1,5 +1,6 @@
 import numpy as np
 import pybullet as p
+from mereli.objects import LightSource
 from mereli.register import sensor_registry
 from mereli.sensors import DirectionalSensor
 from .utils.propagation import ExpDecayPropagation
@@ -31,13 +32,41 @@ class LightSensor(DirectionalSensor):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
         self.aperture = 0.785 + .2
-        self.propagation = ExpDecayPropagation(rho_att=0.3, phi_att=0.5)# TFM
+        phi_coef = 0 # 0.5
+        rho_coef = -np.log(0.01)/self.range
+        self.propagation = ExpDecayPropagation(rho_att=rho_coef, phi_att=0)# TFM
         self.contact_points = None
         self.reading = {color + '_light_sensor' : np.zeros(8) for color in ['red', 'yellow', 'blue', 'green']}
         self.t = 0
 
+    def step(self):
+        lights = self.physics_client.luminous_objects
+        if len(lights) == 0:
+            return
+        oris = self.directions(self.sensor_owner.orientation[-1])
+        rob_pos = self.sensor_owner.position[:2]
+        reading = {'red' : np.zeros(8), 'yellow': np.zeros(8), 'blue' : np.zeros(8), 'green' : np.zeros(8)}
+        for lidx, light in lights.items():
+            light_color = light['color'] 
+            ls_pos = self.physics_client.get_body_position(lidx, 0)[:2]
+            light_is_on = light.get('is_on', True)
+            if not light_is_on:
+                continue
+            dir_vec = ls_pos - rob_pos
+            rho = np.linalg.norm(dir_vec)
+            if rho <= self.range:
+                for i in range(len(oris)):
+                    ori = oris[i]
+                    head_dir = np.r_[np.cos(ori), np.sin(ori)]
+                    phi = np.arccos(head_dir.dot(dir_vec) / (np.linalg.norm(head_dir) * np.linalg.norm(dir_vec)))
+                    if phi <= self.aperture / 2 and light_color in reading:
+                        signal_strength = self.propagation(rho, phi)
+                        reading[light_color][i] += signal_strength 
+        reading = {color + '_light_sensor' : vec for color, vec in reading.items()}
+            #     reading[color][i] += np.round(signal_strength[color], 4)
+        self.reading = reading
 
-    def step(self, neighborhood):
+    def step_complex(self):
         """
         
         :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
@@ -45,7 +74,6 @@ class LightSensor(DirectionalSensor):
 
         :returns: np.ndarray with the reading of each sector. 
         """
-        __import__('pdb').set_trace()
         reading = {'red' : np.zeros(8), 'yellow': np.zeros(8), 'blue' : np.zeros(8), 'green' : np.zeros(8)}
         g_ids = [self.physics_client.physical_sensors['light_sensor'][i]['ghost_link_idx'] for i in range(8)]
         oris = self.directions(self.sensor_owner.orientation[-1])
@@ -102,10 +130,7 @@ class LightSensor(DirectionalSensor):
             # reading[color] += np.random.randn() * 0.0
             self.reading[color] += (0.2) * (reading[color]  - self.reading[color])
         self.reading['max_light_v'] = np.array([np.max(ls_read) for name, ls_read in self.reading.items() if name != 'max_light_v'])
-        return self.reading
 
-    def step_fast(self, neighborhood):
-        pass
 
 
     def reset(self):

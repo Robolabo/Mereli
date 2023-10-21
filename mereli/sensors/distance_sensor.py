@@ -29,13 +29,15 @@ class DistanceSensor(DirectionalSensor):
     """ 
     def __init__(self, *args, **kwargs):
         super(DistanceSensor, self).__init__(*args, **kwargs)
-        self.propagation = ExpDecayPropagation(rho_att=0.7, phi_att=1.) # DS=
         self.aperture = 0.55 #1.5 * np.pi / self.n_sectors
+        dist_coef = -np.log(0.01)/(self.range)
+        phi_coef = 0  # -np.log(0.01)/ 2 * self.aperture 
+        self.propagation = ExpDecayPropagation(rho_att=dist_coef, phi_att=phi_coef) # DS=
         self.contact_points = None
         self.reading = np.zeros(8)
         self.t = 0
 
-    def step(self, neighborhood):
+    def step(self):
         r""" Step method of the distance sensor that estimates the distances to nearby entities at the current time instant. 
         It returns a numpy array of length equal to ``n_sectors`` with the reading of each independent sector. 
         The main steps of the reading are the following:
@@ -77,14 +79,10 @@ class DistanceSensor(DirectionalSensor):
     
         The cast of the rays is accomplished by the physics engine, returning both a list of the ids of the fist entity intersecting each ray (or -1 is no obj was hitted) and the 
         position of the intersection to the first intersecting solid object. 
-        
 
-
-        :param list neighborhood: list of world entities. This parameter is not used at all in this sensor, but it is 
-            kept as a parameter because other sensors may need to use it.
-
-        :returns: np.ndarray with the reading of each sector.
         """
+        # import time 
+        # t0 = time.time()
         # if self.t % 10 != 0:
         #     self.t += 1
         #     return self.reading 
@@ -109,16 +107,18 @@ class DistanceSensor(DirectionalSensor):
                 # ray_dests = [self.range*np.r_[np.cos(ang), np.sin(ang), -0.05] + origin for ang in ori + ray_angles]
           
                 ray_dests = [self.range * np.array([np.cos(ori + ray_angles[ii]), np.sin(ori + ray_angles[ii]), -0.05]) + origin for ii in range(len(ray_angles))]
-                
-                # for o, d in zip([origin]*len(ray_dests), ray_dests):
-                #     p.addUserDebugLine(o, d, lineColorRGB=[0, 0, 1], lineWidth=2.0, lifeTime=0.5)
                 ray_res, ray_positions = self.sensor_owner.physics_client.ray_cast([origin]*len(ray_dests), ray_dests)
                 if any(np.array(ray_res) != -1):
                     nvalid = 0
                     for k in range(len(ray_res)):
                         if ray_res[k] != -1 and ray_res[k] != 0:
                             phi = ray_angles[k]
-                            rho = np.linalg.norm(ray_positions[k] - origin)
+                            rho = np.linalg.norm(ray_positions[k][:2] - origin[:2])
+
+                            # print(origin[:2], ray_positions[k][:2], ray_dests[k][:2], rho)
+                            if self.sensor_owner.physics_client.debug and self.sensor_owner.physics_client.is_focused(self.sensor_owner.id):
+                                p.addUserDebugLine(origin, ray_positions[k], lineColorRGB=[0, 0, 1], lineWidth=5.0, lifeTime=0.05)
+                            # if i == 0: 
                             signal_strength += self.propagation(rho, phi)
                             nvalid += 1
                     # rhos, phis = zip(*[(np.linalg.norm(pos - origin), phi) for idx, pos, phi in zip(ray_res, ray_positions, ray_angles) if idx != -1 and idx != 0])
@@ -129,7 +129,7 @@ class DistanceSensor(DirectionalSensor):
         self.reading = np.array(reading)
         # self.reading += (0.2) * (np.array(reading) - self.reading)
         # if self.t > 171:import pdb; pdb.set_trace()
-        return self.reading
+        # print(f'Time elapsed ', time.time()- t0)
 
     def reset(self):
         self.reading = np.zeros(8)

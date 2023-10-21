@@ -23,4 +23,7 @@
     </collision>
   </link>
   <lightsource link='baseLink' luminosity='1' color='red'/>
+
+
+
 </robot>

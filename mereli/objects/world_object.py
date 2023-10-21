@@ -33,6 +33,7 @@ class WorldObject(ABC):
         if model_file is not None:
             self.model_file = model_file + ".urdf"  if '.urdf' not in model_file else model_file # Hcer algo con esto            
             self.model_file = "mereli/models/" + self.model_file
+
         self.init_position = position
         self.init_orientation = orientation
         if isinstance_of_any(orientation, [float, int]):
@@ -45,7 +46,32 @@ class WorldObject(ABC):
         self.trainable = trainable
         self.physics_client = None
         self._id = None
+        self.pos_init_method = {'type' : 'fixed'}
+        self.ori_init_method = 'fixed'
         self.group = None
+
+    def render(self):
+        if self.model_file is None:
+            return
+        self.physics_client.load_from_urdf(self)
+
+    def initialize_state(self):
+        if self.pos_init_method['type'] == 'random':
+            is_ok = False
+            while not is_ok:
+                pos_tmp = np.random.uniform(low=self.pos_init_method['low'], high=self.pos_init_method['high'])  
+                self.position = np.r_[pos_tmp, 0.] if len(pos_tmp) == 2 else pos_tmp
+                colliding_objs = self.physics_client.get_contact_points(self.id)
+                is_ok = len(colliding_objs) == 0 or np.sum([collision[0] for collision in colliding_objs]) == 0 \
+                        or type(self).__name__ == 'GroundArea' 
+                # print('Trying to find a proper pos ', colliding_objs)
+        else: 
+            self.position = self.init_position
+        if self.ori_init_method == 'random':
+            rnd_ori = np.random.random() * 2*np.pi
+            self.orientation = np.array([0,0,rnd_ori])
+        else:
+            self.orientation = self.init_orientation
 
     @abstractmethod
     def step(self):
@@ -54,15 +80,8 @@ class WorldObject(ABC):
         """
         raise NotImplementedError
     
-    @abstractmethod
     def reset(self, seed=None):
-        """ Abstract reset method that is executed at the begginning of every simulation. It normally resets all 
-        the dynamical variables of the entity (position, orientation, controller, etc.). It can receive a seed in 
-        order to be reset at a precise random state.
-
-        :param int seed: seed to reset at a precise random state. None if no seed is used.
-        """
-        raise NotImplementedError
+        self.initialize_state()
 
     @property 
     def position(self):
@@ -74,8 +93,7 @@ class WorldObject(ABC):
         try:
             pos = self.physics_client.get_body_position(self.id, 0)
         except:
-            print(self.__dict__)
-            import pdb; pdb.set_trace()
+            exit(0) 
         if self.z_offset is not None:
             pos[-1] = self.init_position[-1] + self.z_offset
         return pos
@@ -118,7 +136,7 @@ class WorldObject(ABC):
         :param np.ndarray new_position: numpy array with the new position of the entity.
         """
         self.init_position = np.array(new_position).copy()
-        self.physics_client.set_body_state(self.id, 0, np.array(new_position).copy(), self.orientation)
+        self.physics_client.set_body_state(self.id, 0, np.array(new_position), self.orientation)
         
     @orientation.setter
     def orientation(self, new_orientation):

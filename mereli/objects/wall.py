@@ -20,10 +20,14 @@ class Wall(WorldObject):
         self.width = width
         self.depth = depth
         # Tmp solution
-        self.resize_wall()
+        # self.resize_wall()
         # self.resize_wall2D()
         super(Wall, self).__init__('tmp/wall_{}x{}x{}'.format(width, height, 0.2), *args, static=True,\
             controller=None, tangible=True, luminous=False, **kwargs)
+    
+    def render(self):
+        self.id = self.physics_client.create_box(A=self.height, B=self.width, H=self.depth, mass=0) 
+        # self.physics_client.set_body_state(self.id, -1, self.init_position, self.init_orientation)# self.init_position, self.init_orientation)
     
     def resize_wall(self):
         if not os.path.isfile("mereli/models/tmp/wall_{}x{}x{}.urdf".format(self.width, self.height, 0.2)): 
@@ -50,7 +54,10 @@ class Wall(WorldObject):
         pass
 
     def reset(self, seed=None):
-        pass
+        super().reset(seed=seed)
+        # self.physics_client.set_body_state(self.id, -1, self.init_position, self.init_orientation)# self.init_position, self.init_orientation)
+        self.position = self.init_position
+        # self.orientation = self.init_orientation
 
 @world_object_registry(name='arena_wall')
 class ArenaWall(WorldObject):

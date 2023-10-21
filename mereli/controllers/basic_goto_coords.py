@@ -17,20 +17,8 @@ class BasicGOTOCoords(RobotController):
         super(BasicGOTOCoords, self).__init__(*args, **kwargs)
         self.sensitivity = 0.7
         self.t = 0
+        self.flag = False
     
-    def step_obstacle_avoid(self, state):
-        st_ds = state['distance_sensor']
-        obstacle = False
-        v_obstacle = np.zeros(2)
-        oris = self.controller_owner.sensors['distance_sensor'].directions(self.controller_owner.orientation[-1])
-        n = 0
-        # for i, ds_i in enumerate(st_ds):
-        #     if ds_i > self.sensitivity:
-        #         # obstacle in direction 
-        #         obs_dir = np.r_[np.cos(oris[i]), np.sin(oris[i])]
-        #         v_obstacle += ds_i * obs_dir 
-        #         n+=1
-        return v_obstacle
 
     def select_coords_id(self):
         robnum = self.controller_owner.id - 5 
@@ -61,7 +49,7 @@ class BasicGOTOCoords(RobotController):
         self.target_coords += center
         return 
 
-    def select_coords_lmark(self):
+    def select_coords_lmark_groups(self):
         lmark = self.controller_owner.virtual_particle.lmark
         state = self.controller_owner.virtual_particle.state
 
@@ -80,20 +68,20 @@ class BasicGOTOCoords(RobotController):
 #             self.target_coords = np.array([0, 0]) 
 #         return
        
-        if lmark == 0: 
-            self.target_coords = np.array([-.5, 0]) 
-        elif lmark == 1: 
-            self.target_coords = np.array([.5, 0]) 
-        elif lmark == 2: 
-            self.target_coords = np.array([0, .5]) 
-        elif lmark == 3: 
-            self.target_coords = np.array([0, -.5]) 
-        else:
-            self.target_coords = np.array([0, 0]) 
-        # self.target_coords *= 0.5
-        return
+       #  if lmark == 0: 
+       #      self.target_coords = np.array([-.5, 0]) 
+       #  elif lmark == 1: 
+       #      self.target_coords = np.array([.5, 0]) 
+       #  elif lmark == 2: 
+       #      self.target_coords = np.array([0, .5]) 
+       #  elif lmark == 3: 
+       #      self.target_coords = np.array([0, -.5]) 
+       #  else:
+       #      self.target_coords = np.array([0, 0]) 
+       #  # self.target_coords *= 0.5
+       #  return
 
-        n_robs = 10 
+        n_robs = 11 
         all_lmarks = np.arange(n_robs)
         # np.random.shuffle(all_lmarks)
         gr1 = all_lmarks[:n_robs//3]
@@ -123,21 +111,20 @@ class BasicGOTOCoords(RobotController):
 
     def step(self, state, reward=0.0):
         self.t += 1
-        if self.t == 1500:
-            self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
+        # if self.t == 1500:
+        #     self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
 
         area_read = state['ground_sensor']
         curr_pos = state['own_position_sensor'][:2]
-        self.select_coords_lmark_formation()
+        self.select_coords_lmark_groups()
         # if area_read > 0 and np.linalg.norm(curr_pos - self.target_coords) < 0.4:
         #     return {'joint_velocity_actuator' : np.array([0, 0])}
-        v_obstacle = self.step_obstacle_avoid(state)
 
 
 
         dist_tar = np.linalg.norm(self.target_coords - curr_pos)
         desired_dir = (self.target_coords - curr_pos) / dist_tar
-        desired_dir -= v_obstacle
+        # desired_dir -= v_obstacle
 
 
         robot_ori = self.controller_owner.orientation[-1]
@@ -157,8 +144,9 @@ class BasicGOTOCoords(RobotController):
         
         # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
         #     action = np.array([0,0])
-
+        self.flag = True
         return {'joint_velocity_actuator' : action/3}
 
     def reset(self):
         self.t = 0 
+        self.flag = False
