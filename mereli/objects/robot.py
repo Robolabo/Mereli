@@ -9,15 +9,17 @@ from mereli.globals import global_states
 
 
 class Battery:
-    def __init__(self, robot):
+    def __init__(self, robot, discharge_coef=0.001, charge_coef=0.005, 
+                 charge_range=0.3, init_level=1.0, discharge_only_moving=True, stop_wheels=False):
         self.robot = robot
         self.color = None 
-        self.discharge_coef = 0.001
-        self.charge_coef = 0.005
-        self.charge_range = 0.3
-        self.level = 1 
-        self.discharge_only_moving = True
-        self.stop_wheels = False
+        self.discharge_coef = discharge_coef 
+        self.charge_coef = charge_coef 
+        self.charge_range = charge_range 
+        self.init_level = init_level
+        self.level = init_level 
+        self.discharge_only_moving = discharge_only_moving 
+        self.stop_wheels = stop_wheels 
 
     def step(self, lights):
         if len(lights) == 0:
@@ -37,7 +39,7 @@ class Battery:
                 # if wheels[0] > 0.1 or np.anwheels[]
             else:
                 self.discharge()
-        print('BATTERY LEVEL: ', self.level)
+        # print('BATTERY LEVEL: ', self.level)
 
 
     def charge(self):
@@ -47,7 +49,7 @@ class Battery:
         self.level = max(self.level - self.discharge_coef, 0)  
 
     def reset(self):
-        self.level = 1.0
+        self.level = self.init_level 
 
 
 
@@ -118,15 +120,15 @@ class Robot(WorldObject):
         state['task'] = self.task
 
         #* Apply communication system pre step (previous to controller) 
-        # if self.comm_sys is not None:
-        #     state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
+        if self.comm_sys is not None:
+            state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
 
         #* Obtain actions using controller.
         actions = self.controller.step(state, reward=self.reward)
 
         #* Apply communication system pre step (previous to controller) 
-        # if self.comm_sys is not None:
-        #     actions = self.comm_sys.step_post(actions)
+        if self.comm_sys is not None:
+            actions = self.comm_sys.step_post(actions)
 
         ##* Plan actions for future execution
         #self.plan_actions(actions)
@@ -142,7 +144,7 @@ class Robot(WorldObject):
         self.t += 1
         if self.battery_enabled:
             self.battery.step(self.static_neighbors)
-            if self.battery.level == 0 and self.battery.stop_wheels and 'joint_velocity_actuator' in actions:
+            if self.battery.level == 0 and self.battery.stop_wheels and 'joint_velocity_actuator' in self.actuators:
                 self.actuators['joint_velocity_actuator'].action = np.zeros(2)
 
     def plan_actions(self):
@@ -282,8 +284,15 @@ class Epuck(Robot):
     """ Class for the Epuck. """
     def __init__(self, *args, **kwargs):
         super(Epuck, self).__init__(*args, model_file='entities/epuck/epuck.urdf.xacro', **kwargs)
-        self.scaling = 1/4.13
+        self.scaling = 1/2 # 1/4.13
 
+@world_object_registry(name='epuck_simple')
+class EpuckSimple(Robot):
+    """ Class for the Epuck. """
+    def __init__(self, *args, **kwargs):
+        super(EpuckSimple, self).__init__(*args, model_file='entities/epuck/epuck_simple.urdf', **kwargs)
+        # self.scaling = 1/2 # 1/4.13
+        
 @world_object_registry(name='particle')
 class Particle(Robot):
     """ Class for the Epuck. """

@@ -37,7 +37,7 @@ class Evaluator:
 
     def build_phenotype(self, genotype):
         #* Build phenotype
-        for ent_name, entity in self.world.hierarchy.items():
+        for ent_name, entity in self.world.robots.items():
             phenotype = genotype.as_phenotype()
             for target, pheno in phenotype.items():
                 target_route, target_asset = target.split('@')
@@ -50,15 +50,18 @@ class Evaluator:
             # entity.controller.neural_network = genotype.as_phenotype()
 
     def evaluate(self, genotype, generation):
+        assert self.world is not None
+        if not self.world.physics_engine.connected:
+            self.world.connect()
         import time
         t0 = time.time()
-        assert self.world is not None
-        self.world.connect()
         if isinstance(genotype, list):
             for geno_i in genotype:
                 self.build_phenotype(geno_i)
         else:
             self.build_phenotype(genotype)
+        # print('Geno to pheno is ', time.time() - t0)
+
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
         seed = generation * self.num_evaluations
@@ -66,7 +69,6 @@ class Evaluator:
         for trial in range(self.num_evaluations):
             seed += 1
             survival_time = 0
-            
             # Reset the world for a new simulation/episode
             self.world.reset(seed=seed if self.use_seed else None)
             if self.fitness_fn is not None:
@@ -78,6 +80,7 @@ class Evaluator:
                     self.fitness_fn()
                 survival_time += 1
             mean_survival_time += survival_time
+            # print(time.time()-t0)
             if self.fitness_fn is not None:
                 fitness += self.fitness_fn.fitness
         mean_survival_time /= self.num_evaluations
@@ -97,8 +100,9 @@ class Evaluator:
                     'positions' : np.hstack([robot.position[:2] for robot in self.world.robots.values()])
                 }
             genotype.fitness = fitness / self.num_evaluations
-        self.world.disconnect()
-        # print(time.time()-t0)
+
+        # self.world.disconnect()
+        # __import__('pdb').set_trace()
         return genotype
 
     @property

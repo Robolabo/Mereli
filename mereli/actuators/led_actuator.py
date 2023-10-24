@@ -18,6 +18,7 @@ class LedActuator(Actuator):
         self.on = 0
         self.fault = False
         self.prev_action = None
+        self.opacity = 0.6
 
     def step(self):
         if self.action is None:
@@ -41,7 +42,7 @@ class LedActuator(Actuator):
             # elif 0 < led_a < 1:
             #     color = [led_a, 0, 0]
             led_idx = self.physics_client.get_actuator_position(self.actuator_owner.id, 'led_actuator', sector=i)[1]
-            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, led_idx, color, opacity=0.8)
+            self.actuator_owner.physics_client.set_color(self.actuator_owner.id, led_idx, color, opacity=self.opacity)
         self.prev_action = self.action
 
         

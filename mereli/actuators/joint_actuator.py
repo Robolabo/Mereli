@@ -17,7 +17,7 @@ class JointVelocityActuator(Actuator):
         mobile robots that only rotate. In this case, the robot controller would only plan an scalar 
         action with the velocity and sign.
     """
-    def __init__(self, *args, joint_ids=[0], inverse_mirrored=None, max_velocity=10., **kwargs):
+    def __init__(self, *args, joint_ids=[0, 1], inverse_mirrored=None, max_velocity=6.28, **kwargs):
         super(JointVelocityActuator, self).__init__(*args, **kwargs)
         self.joint_ids = joint_ids
         self.max_velocity = max_velocity

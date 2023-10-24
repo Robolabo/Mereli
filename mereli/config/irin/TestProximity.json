@@ -2,7 +2,15 @@
     "simulation" : {
 	 "timesteps" : 10000,
 	 "trials" : 1,
-	 "start_paused" : true  
+	 "start_paused" : true, 
+	 "animated_layout" : {
+		"enabled" : true,
+		"grid" : "A;B",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "sectors" : [0,1,2,3,4,5,6,7], "name" : "A"},
+			{"plot_type" : "epuck_polar", "name" : "B"}
+		] 
+	 }
     },
     "world": {
         "name" : "square_arena",
@@ -21,7 +29,8 @@
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8}
 		},
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {},
+		    "led" : {}
                 }
             }
         }

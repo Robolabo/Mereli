@@ -81,18 +81,9 @@ class DistanceSensor(DirectionalSensor):
         position of the intersection to the first intersecting solid object. 
 
         """
-        # import time 
-        # t0 = time.time()
-        # if self.t % 10 != 0:
-        #     self.t += 1
-        #     return self.reading 
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
         reading = np.zeros(len(g_ids))
-        # Every T=10 time steps verify if the robot ghost coverage objects are touching other tangible entities. 
-        # Ghost cov. obj. do not detect each other.
-        # if self.contact_points is None or self.t % 10 == 0:
         self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
-        # return np.zeros(8)
         oris = self.directions(self.sensor_owner.orientation[-1])
         
         for i in range(8):
@@ -117,7 +108,7 @@ class DistanceSensor(DirectionalSensor):
 
                             # print(origin[:2], ray_positions[k][:2], ray_dests[k][:2], rho)
                             if self.sensor_owner.physics_client.debug and self.sensor_owner.physics_client.is_focused(self.sensor_owner.id):
-                                p.addUserDebugLine(origin, ray_positions[k], lineColorRGB=[0, 0, 1], lineWidth=5.0, lifeTime=0.05)
+                                p.addUserDebugLine(origin, ray_positions[k], lineColorRGB=[0, 0, 1], lineWidth=8.0, lifeTime=0.07)
                             # if i == 0: 
                             signal_strength += self.propagation(rho, phi)
                             nvalid += 1

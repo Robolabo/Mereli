@@ -52,6 +52,7 @@ class PybulletEngine(BaseEngine):
         self.physical_sensors = {}
         self.physical_actuators = {}
         self.luminous_objects = {}
+        self.ground_areas = {}
         self.gui_params = {}
         self.robot_ids = []
         self.camera_options = {
@@ -78,21 +79,21 @@ class PybulletEngine(BaseEngine):
         options = f'--width={wpx} --height={hpx}' if self.render else ''
         with HidePrintf():
             self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT, options=options)
-        # import os
-        # plugin_fn = os.path.join(
-        #     p.__file__.split("bullet3")[0],
-        #     "bullet3/build/lib.linux-x86_64-3.5/eglRenderer.cpython-35m-x86_64-linux-gnu.so")
-        # plugin = p.loadPlugin(plugin_fn, "_tinyRendererPlugin")
-        p.setInternalSimFlags(0)
         self.engine.resetSimulation(physicsClientId=self.client)
 
         # p.resetSimulation(physicsClientId=self.client)
         self.engine.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.engine.setGravity(0, 0, -9.8)
         self.engine.setTimeStep(self.dt)
+        # p.setPhysicsEngineParameter(numSolverIterations=250)
+
+
         # self.engine.setPhysicsEngineParameter(numSolverIterations=10)
 
-        plane_id = p.loadURDF("plane.urdf", physicsClientId=self.client)#, globalScaling=5)
+
+        plane_id = p.loadURDF("plane.urdf", #, globalScaling=5)
+                               # flags= p.URDF_ENABLE_SLEEPING | p.URDF_ENABLE_WAKEUP,# | p.URDF_ENABLE_CACHED_GRAPHICS_SHAPES,
+                               physicsClientId=self.client)
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
 
         # self.engine.changeDynamics(planeId, linkInde1, lateralFriction=0.9)
@@ -116,14 +117,25 @@ class PybulletEngine(BaseEngine):
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
         # self.engine.resetSimulation(physicsClientId=self.engine._client)
-        self.engine.disconnect()
+        p.disconnect(physicsClientId=self.engine._client) 
+        # p.resetSimulation(physicsClientId=self.engine._client)
+        # self.engine.disconnect()
         self.connected = False
 
     def step_physics(self):
+        # rob_id = self.robot_ids[0] 
+        # link_id = self.physical_sensors['distance_sensor'][0]['idx']
+        # link_id2 = self.physical_sensors['distance_sensor'][1]['idx']
+        # p.addUserData(rob_id, 'IR_msg', '12.2', linkIndex=link_id)
+        # p.addUserData(rob_id, 'IR_msg', '0.32', linkIndex=link_id2)
+        
+        # dat = p.getUserData(p.getUserDataId(rob_id, 'IR_msg', linkIndex=link_id)) 
+        # __import__('pdb').set_trace()
+        
         """ Iterates all the 3D physics of the world entities using pybullet. """
         if self.connected:
-            for i in range(int(self.T_control//self.dt)):
-                p.stepSimulation(physicsClientId=self.client)
+            # for i in range(int(self.T_control//self.dt)):
+            p.stepSimulation(physicsClientId=self.client)
 
 
     def step_render(self):
@@ -260,6 +272,7 @@ class PybulletEngine(BaseEngine):
         # terrain  = p.createMultiBody(0, terrainShape)
         p.changeVisualShape(boxId, -1, rgbaColor=[0.,0.,.4,1])
         p.setCollisionFilterGroupMask(boxId, -1, 0b001, 0b001, physicsClientId=self.client)
+        # p.changeDynamics(boxId, -1, activationState=p.ACTIVATION_STATE_SLEEP)
 
         # p.setCollisionFilterPair(0, colBoxId, -1, -1, 1, physicsClientId=self.client)
         return boxId
@@ -327,8 +340,8 @@ class PybulletEngine(BaseEngine):
                 if ghost_link_idx is not None:
                     p.setCollisionFilterGroupMask(obj.id, ghost_link_idx, 0b00, 0b00, physicsClientId=self.client)
                     p.setCollisionFilterPair(0, obj.id, -1, ghost_link_idx, 0, physicsClientId=self.client)
-                    # if sensor_name == 'distance_sensor':
-                    # self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.5)
+                    if self.debug and sensor_name == 'distance_sensor':
+                        self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.5)
                     # self.set_color(obj.id, ghost_link_idx, [1,0,0], opacity=0.0)
                 # import pdb; pdb.set_trace()
                 p.setCollisionFilterGroupMask(obj.id, link_idx, 0b00, 0b00)

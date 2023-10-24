@@ -153,8 +153,8 @@ class World(object):
         return selected
         # print(f'In t={self.t} and titer= {t_iter} {nsel} robots where selected')
 
-    # @mov_average_timeit
     # @increase_time
+    @mov_average_timeit
     def step(self):
         # language=rst
         """ Step function of the world to run it one timestep. This method is must be executed at every step of 
@@ -191,21 +191,19 @@ class World(object):
             if self.paused:
                 return {}, {}
             print(f'Simulating step {self.t}')
+        t0 = time.time() 
         states = deque()
         actions = deque()
-        pre_perturbations = []
         if len(self.robots) > 0:
             self.update_neighbor_matrix()
-            selected = np.arange(len(self.robots))#self.schedule_workload()
+            # selected = np.arange(len(self.robots))#self.schedule_workload()
             selected = self.schedule_workload()
-        # t0 = time.time()
         #* Step controllers
         for idx, (obj_name, obj) in enumerate(self.controllable_objects.items()):
-        # for obj_name, obj in self.controllable_objects.items():
-            if not issubclass(type(obj), Robot):
-                # Step non-robot entities (e.g. dynamic lights)
-                obj.step()
-                continue
+            # if not issubclass(type(obj), Robot):
+            #     # Step non-robot entities (e.g. dynamic lights)
+            #     obj.step()
+            #     continue
             obj.awaken = idx in selected 
 
             # Update neighborhood of robots 
@@ -222,9 +220,10 @@ class World(object):
                 # state_obj, action_obj = obj.step(self.hierarchy.values(), perturbations=pre_perturbations) #!
             # else:
                 # print(obj.state, obj.actions)
+                
             states.append(obj.state)
             actions.append(obj.actions)
-            # obj.plan_actions()
+        # return [],[]
         if len(states) > 0:
             states = np.stack(states)
         if len(actions) > 0:
@@ -232,17 +231,14 @@ class World(object):
         # print('Real.sp t0ime: ', time.time() - t0)
 
         #* Actuate based on the actions planned by the robot.step() method
-        for idx, obj in enumerate(self.controllable_objects.values()):
-            if obj.tangible:
-                obj.actuate()
+        for obj in self.robots.values():
+            obj.actuate()
         # Apply task manager (if any) when there is an opt or eval process on top 
         if self.task_manager is not None:
-            self.task_manager(self.hierarchy)
+            self.task_manager(self.robots)#self.hierarchy)
         # Step the virtual/communication space controllers (if any).
-        # t0 = time.time()
         if self.virtual_space is not None:
             self.virtual_space.step()
-        # print('V.sp time: ', time.time() - t0)
 
         #* Render and physics step.
         self.physics_engine.step_physics()
@@ -251,49 +247,17 @@ class World(object):
             if not self.physics_engine.paused and self.animated_layout is not None:
                 if self.physics_engine.camera_options['focus']:
                     focus_id = self.physics_engine.camera_options['focus_target']
-                    target_robot = list(self.robots.values())[focus_id]
-                    self.animated_layout.update(target_robot)
-
-        # DEBUG CODE
-        if self.is_done and global_states.LOG:
-            data_all = []
-            import matplotlib.pyplot as plt
-            landmarks = self.virtual_space.landmarks
-            if landmarks.shape[1] == 1:
-                landmarks = np.hstack((np.zeros_like(landmarks), landmarks))
-            plt.scatter(landmarks[:,0], landmarks[:,1], color='r')
-            for bot in self.robots:
-                data = self.data_logger.data[bot +':virtual_particle@state']
-                # for variable in self.data_logger.data:
-                if data.shape[1] == 1:
-                    data=np.hstack((np.zeros_like(data), data))
-                plt.plot(data[:,0], data[:,1])
-                # ax.plot3D(data[:][0], data[:][1], data[:][2])
-                # ax.scatter3D(data[-1][0], data[-1][1], data[-1][2], s=40, color='blue')
-                # plt.scatter(data[0,0], data[0,1], color='red')
-                plt.scatter(data[-1,0], data[-1,1], zorder=2, color='blue')
-                data_all.append(data)
-            if type(self.virtual_space).__name__ in ['Torus2dSpace', 'CPPNSpace']:
-                plt.xlim([-self.virtual_space.W/2, self.virtual_space.W/2])
-                plt.ylim([-self.virtual_space.H/2, self.virtual_space.H/2])
-            else:
-                plt.xlim([-self.virtual_space.L/2, self.virtual_space.L/2])
-                plt.ylim([-self.virtual_space.L/2, self.virtual_space.L/2])
-            plt.title('Communication State Space')
-            plt.xlabel('Comm State 0')
-            plt.ylabel('Comm State 1')
-            plt.show()
-            self.data_logger.save_pickle()
-            
-            # import os
-            # log_path = os.path.join(global_states.log_info['path'], 'data.npy')
-            # np.save(log_path, np.stack(data_all))
-            # sys.exit('Safe program termination')
-
-        # Collect data when Logging mode is enabled.
+                    if focus_id in selected:
+                        target_robot = list(self.robots.values())[focus_id]
+                        self.animated_layout.update(target_robot)
         if global_states.LOG:
-            self.data_logger.update()
+            if self.is_done:
+                self.data_logger.save_pickle()
+            # Collect data when Logging mode is enabled.
+            else:
+                self.data_logger.update()
         self.t += 1
+        # print('Simulation step elapsed ', time.time() - t0)
         return states, actions
 
     def register_entity(self, name, obj, group=None):

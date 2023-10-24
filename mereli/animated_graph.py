@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+import matplotlib.patches as patches
+
 
 
 class AnimatedPlot:
@@ -42,7 +44,7 @@ class AnimatedSensorLineplot(AnimatedPlot):
             new_y = robot.sensors['light_sensor'].reading[self.target_sensor]
         else:    
             new_y = robot.sensors[self.target_sensor].reading
-        if isinstance(new_y, float):
+        if isinstance(new_y, float) or isinstance(new_y, int):
             self.yData[0] = np.r_[self.yData[0,1:], new_y]
         else:
             for i in range(len(self.sectors)):
@@ -53,7 +55,7 @@ class AnimatedSensorLineplot(AnimatedPlot):
             self.axis.draw_artist(self.axis.lines[i])
 
     def initialize(self):
-        self.set_ylim(0,1)
+        self.set_ylim(-.1, 1.1)
         self.xData = np.arange(500) 
         self.yData = np.zeros([len(self.sectors), self.xData.shape[0]]) 
         for i in range(len(self.sectors)):
@@ -63,7 +65,7 @@ class AnimatedPolarEpuck(AnimatedPlot):
     def __init__(self, *args, sensors=['distance_sensor'], **kwargs):
         super(AnimatedPolarEpuck, self).__init__(*args, **kwargs)
         self.sensors=sensors
-        self.colors = {'distance_sensor' : 'k', 'red_light_sensor' : 'r', 'blue_light_sensor' : 'b'}
+        self.colors = {'distance_sensor' : 'k', 'red_light_sensor' : 'r', 'blue_light_sensor' : 'b', 'green_light_sensor' : 'g'}
 
     def update(self, robot):
         head_ori = robot.orientation[-1]
@@ -104,20 +106,28 @@ class AnimatedPolarEpuck(AnimatedPlot):
         
 
 class AnimatedCustomLineplot(AnimatedPlot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, variables= None, **kwargs):
         super(AnimatedCustomLineplot, self).__init__(*args, **kwargs)
-        self.variables = ['virtual_particle@dist_clst_lmark', 'virtual_particle@dist_clst_neighbor', 'virtual_particle@dist_clst_lmark_av']
+        self.variables = variables or []#['virtual_particle@dist_clst_lmark', 'virtual_particle@dist_clst_neighbor', 'virtual_particle@dist_clst_lmark_av']
   
     def get_variable(self, robot, varcode):
         aux = varcode.split('@')
         varpath = aux[0]
+        aux_obj = robot
+        for vp in varpath.split(':'):
+            if hasattr(aux_obj, vp):
+                aux_obj = getattr(aux_obj, vp)
+            else:
+                if isinstance(aux_obj, dict) and vp in aux_obj:
+                    aux_obj = aux_obj[vp]
         varname = aux[1]
-        return getattr(getattr(robot, varpath), varname)
+        return getattr(aux_obj, varname)
+
         
     def update(self, robot):
         new_y = []
         for i in range(len(self.variables)):
-            new_y.append(self.get_variable(robot, self.variables[i]))
+            new_y.append(self.get_variable(robot, self.variables[i])[0])
         if isinstance(new_y, float):
             self.yData[0] = np.r_[self.yData[0,1:], new_y]
         else:
@@ -154,7 +164,8 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         disabled = robot.virtual_particle.disabled_lmarks
         lm_colors = [('grey', 'red')[i not in disabled] for i in range(len(lmarks))] 
         self.axis.collections[0].set_offsets(own_state)
-        self.axis.collections[1].set_offsets(neigh_states)
+        if len(neigh_states) > 0:
+            self.axis.collections[1].set_offsets(neigh_states)
         self.axis.collections[2].set_offsets(lmarks)
         self.axis.collections[2].set_facecolor(lm_colors)
         
@@ -162,8 +173,9 @@ class AnimatedCommunicationSpace(AnimatedPlot):
             self.axis.draw_artist(ln)
 
     def initialize(self):
-        self.set_ylim(-1.1,1.1)
-        self.set_xlim(-1.1,1.1)
+        h, w = 3,3 
+        self.set_ylim(-h-.1,h+.1)
+        self.set_xlim(-w-.1,w+.1)
         self.axis.scatter([], [], color='b',zorder=100, s=102, animated=True) # Own state
         self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         self.axis.scatter([], [], marker='*', edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
@@ -193,9 +205,16 @@ class AnimatedNeuralNetwork(AnimatedPlot):
     def __init__(self, *args, **kwargs):
         super(AnimatedNeuralNetwork, self).__init__(*args, **kwargs)
         self.graph_plotted = False
+        self.plot_time_series = True 
+        self.add_names = False 
+        self.interactive = True
+        self.rect_data = np.zeros(50) if self.interactive else None
+        self.rect_node_name  = None
 
     def plot_graph(self, ann):
         layers = np.array(ann.input_ensemble_names + [k for k in ann.ensemble_names if k not in ann.motor_ensemble_names] + ann.motor_ensemble_names)
+        n_inputs = ann.num_inputs 
+        n_outputs = ann.num_motor
         G = nx.Graph()
         node_options = {"edgecolors": "red", "node_size": 800, "alpha": 0.9}
         for inp_name, inp in ann.graph['inputs'].items():
@@ -206,25 +225,81 @@ class AnimatedNeuralNetwork(AnimatedPlot):
             G.add_edge(conn['pre'], conn['post'], zorder=5)
         pos = nx.multipartite_layout(G, subset_key="layer")
         for k in pos:
-            pos[k][0] *= 2
+            pos[k][0] *= 1.5 
             pos[k][1] *= 1.5 
-        # aaa = nx.draw_networkx(G, pos, min_source_margin=100,min_target_margin=100, node_size=500, node_color=['blue']*len(pos),ax=self.axis, )
         wmax = 5
         edge_color = [(1 + conn['weight'] / wmax) / 2 for conn in ann.graph['synapses'].values()]
         nx.draw_networkx_edges(G, pos, ax=self.axis)
-        nx.draw_networkx_edges(
-            G,
-            pos,
-            alpha=0.5,
-            edge_color=edge_color,
-            ax=self.axis,
-            edge_cmap=plt.cm.RdBu,
-        )
+        nx.draw_networkx_edges(G, pos,alpha=0.5, edge_color=edge_color, ax=self.axis, edge_cmap=plt.cm.RdBu)
         aa = nx.draw_networkx_nodes(G, pos, node_size=500, node_color=['blue']*len(pos),ax=self.axis, )
         self.axis.collections[3].set_edgecolor("#000000")
         self.axis.collections[3].set_linewidth(3)
         self.axis.collections[1].set_linewidth(1.5)
         self.axis.collections[2].set_linewidth(5)
+        
+        if self.add_names:
+            nodes = self.axis.collections[3] 
+            input_names = list(ann.graph['inputs'].keys())
+            output_names = list(filter(lambda n: ann.is_motor(n), ann.graph['neurons']))
+            for i in range(n_inputs): 
+                xc = nodes.get_offsets()[i][0] - 0.15
+                yc = nodes.get_offsets()[i][1] -0.05
+                self.axis.text(xc, yc, input_names[i], weight="bold")
+                xlims = self.axis.get_xlim()
+            for i in range(n_outputs): 
+                # idx = ann.motor_neurons[::-1][i]
+                ii = i+1
+                data = nodes.get_offsets().data
+                data = data[np.argsort(data, axis=0)[:,0]]
+                xc = data[-ii][0] + 0.05
+                yc = data[-ii][1] -0.05
+                self.axis.text(xc, yc, output_names[i], weight="bold",zorder=98)
+            xlims = self.axis.get_xlim()
+            self.axis.set_xlim(xlims[0]-0.2, xlims[1] + 0.2) 
+
+            
+        if self.interactive:
+            def annotate(event):
+                x = event.xdata
+                y = event.ydata
+                cursor_pos = np.r_[x,y]
+                node_pos = self.axis.collections[3].get_offsets().data
+                node_rad = 0.1 
+                tmp = np.linalg.norm(cursor_pos - node_pos,axis=1) < node_rad
+                rectangle = self.axis.patches[0] 
+                if any(tmp):
+                    idx = np.where(tmp)[0][0]
+                    self.rect_node_name = idx
+                    rect_pos = node_pos[idx].copy()
+                    xlims = self.axis.get_xlim()
+                    ylims = self.axis.get_ylim()
+                    if ylims[1] - rect_pos[1] < rectangle.get_height():
+                        rect_pos[1] -= rectangle.get_height()
+                    if xlims[1] - rect_pos[0] < rectangle.get_width():
+                        rect_pos[0] -= rectangle.get_width()
+                    rectangle.set_visible(True)
+                    rectangle.set_xy(rect_pos)
+                else:
+                    rectangle.set_visible(False)
+                    self.axis.lines[0].set_data([],[])
+                    self.axis.lines[1].set_data([],[])
+                   
+            self.axis.figure.canvas.mpl_connect('motion_notify_event', annotate)
+            w = 0.2 * self.axis.get_data_ratio()
+            h = 0.3
+            rect = patches.Rectangle((0, 0), h, w, fc=(1,1,1, 1), ec=(0,0,0,1), lw=2, zorder=99)
+            rect.set_alpha(0.8)
+            rect.set_visible(False)
+            self.axis.add_patch(rect) 
+            self.axis.plot([],[], lw=2, color='r', zorder=101)
+            self.axis.plot([],[], lw=2, color=[0,0,0,0.8], zorder=100)
+        if self.plot_time_series:
+            self.ydata = [ np.zeros(30) for i in range(n_inputs + n_outputs)]
+            for i in range(n_inputs + n_outputs):
+                self.axis.plot([],[], color='k', lw=2)
+            xlims = self.axis.get_xlim()
+            self.axis.set_xlim(np.round(xlims[0]-0.3,2), np.round(xlims[1] + 0.3,2)) 
+
 
     def update(self, robot):
         ann = robot.controller.neural_network
@@ -236,15 +311,76 @@ class AnimatedNeuralNetwork(AnimatedPlot):
         
         color_inputs = [cmap_inp(int( i  * 256) ) for i in ann.inputs]
         color_neurons = [cmap_neu(int(((i + 1) / 2) * 256)) for i in ann.spikes]
-        nodes = self.axis.collections[3] 
+        nodes = self.axis.collections[3]
         nodes.set_facecolor(color_inputs + color_neurons)
-        # self.axis.collections[2].set_zorder(1) 
-        # self.axis.collections[1].set_zorder(2)
+        if self.plot_time_series:
+            self.update_time_series(robot)
+        if self.interactive:
+            rectangle = self.axis.patches[0]
+            if rectangle.get_visible():
+                rect_pos = rectangle.get_xy() 
+                w = rectangle.get_width()
+                h = rectangle.get_height()
+                if self.rect_node_name < ann.num_inputs:
+                    new_data = ann.inputs[self.rect_node_name]
+                else:
+                    neuron_idx = self.rect_node_name - ann.num_inputs 
+                    layer_num = np.argsort([neuron_idx in ann.ensemble_indices(lay) for lay in ann.ensemble_names])[::-1]
+                    # neuron_idx 
+                    # __import__('pdb').set_trace()
+                      
+                    new_data = ann.voltages[neuron_idx] / 3 
+                new_data *= h/2
+                self.rect_data = np.r_[self.rect_data[1:], new_data]
+                self.axis.lines[0].set_ydata(self.rect_data + rect_pos[1] + h/2)
+                self.axis.lines[0].set_xdata(np.linspace(rect_pos[0], rect_pos[0] + w, 50))
+                self.axis.lines[1].set_data([rect_pos[0], rect_pos[0] + w], [rect_pos[1]+h/2,rect_pos[1]+h/2])
+                # self.axis.lines[1].set_xdata(np.linspace(rect_pos[0], rect_pos[0] + w, 50))
+            else:
+                self.rect_data = np.zeros(50)
+
         for ln in self.axis.collections:
             self.axis.draw_artist(ln)
+        for p in self.axis.patches:
+            self.axis.draw_artist(p)
+        for ln in self.axis.lines:
+            self.axis.draw_artist(ln)
+        if self.add_names:
+            for tx in self.axis.texts:
+                self.axis.draw_artist(tx)
+
+    def update_time_series(self, robot):
+        ann = robot.controller.neural_network
+        n_inputs = ann.num_inputs 
+        n_outputs = ann.num_motor
+        nodes = self.axis.collections[3] 
+        loffset = 2 if self.interactive else 0
+        for i in range(n_inputs):
+            xc = nodes.get_offsets()[i][0]
+            yc = nodes.get_offsets()[i][1]
+            xdat = xc + np.linspace(-0.3, -0.1, 30)
+            ynew = 0.2 * robot.controller.neural_network.inputs[i] 
+            self.ydata[i] = np.r_[self.ydata[i][1:],ynew]
+            ydat = yc + self.ydata[i]
+            self.axis.lines[i + loffset].set_xdata(xdat)
+            self.axis.lines[i + loffset].set_ydata(ydat)
+        for i in range(n_outputs):
+            idx = ann.motor_neurons[::-1][i]
+            ii = i+1
+            xc = nodes.get_offsets()[-ii][0]
+            yc = nodes.get_offsets()[-ii][1]
+            xdat = xc + np.linspace(0.1, 0.3, 30)
+            ynew = 0.1 * np.round(robot.controller.neural_network.spikes[idx],3)
+            self.ydata[-ii] = np.r_[self.ydata[-ii][1:],ynew]
+            ydat = yc + self.ydata[-ii]
+            self.axis.lines[-ii].set_xdata(xdat)
+            self.axis.lines[-ii].set_ydata(ydat)
+        
 
     def initialize(self):
         self.axis.scatter([], [], color='k', s=103, ) # Own state
+        self.axis.get_xaxis().set_visible(False)
+        self.axis.get_yaxis().set_visible(False)
         # self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         # self.axis.scatter([], [], edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
 
@@ -273,6 +409,7 @@ class AnimatedLayout:
         for p in self.plots:
             p.draw_artist() 
         self.fig.canvas.blit(self.fig.bbox)
+
 
     def add_plot(self, plot_type='sensor_lineplot', name=None, **kwargs):
         new_plot = None

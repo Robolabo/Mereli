@@ -17,7 +17,7 @@ class Task:
     def __call__(self, entities):
         self.t += 1
         robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
-        self._rewards = {name : self.reward_generator(entities, name) for name in robot_names}
+        # self._rewards = {name : self.reward_generator(entities, name) for name in robot_names}
         for name in robot_names:
             self._rewards[name] = self.reward_generator(entities, name)
             entities[name].reward = self._rewards[name]
@@ -429,10 +429,17 @@ class ObstacleAvoidance(Task):
     def reward_generator(self, entities, robot_name):
         robot = entities[robot_name]
         ds = robot.sensors['distance_sensor'].reading
-        wheels = robot.actuators['joint_velocity_actuator'].action / robot.actuators['joint_velocity_actuator'].max_velocity
-        rA = 0. if any(ds > 0.4) else 1.
-        rB = max(1 - np.abs(wheels[0] - wheels[1]), 0) * np.linalg.norm(wheels)
-        return rA * rB
+        wheels = robot.actuators['joint_velocity_actuator'].action #/ robot.actuators['joint_velocity_actuator'].max_velocity
+        V = np.abs(wheels).sum()
+        i = np.max(ds) 
+        dv = np.abs(wheels[0] + .5 - (wheels[1] + 0.5))
+        f = max(0, V * (1 - np.sqrt(dv)) * (1 - i))
+        # if f > 1: __import__('pdb').set_trace()
+        return f
+
+        # rA = 0. if any(ds > 0.4) else 1.
+        # rB = max(1 - np.abs(wheels[0] - wheels[1]), 0) * np.linalg.norm(wheels)
+        # return rA * rB
 
     def done_generator(self, entities):
         return False
@@ -513,6 +520,8 @@ class TaskManager:
 
     def __call__(self, entities):
         self.t += 1
+        if len(self.tasks) == 1:
+            return self.current_task(entities)
         # print(self.t,self.current_task_idx)
         if self.block >= self.num_slots:
             return
@@ -522,7 +531,6 @@ class TaskManager:
             if self.block >= self.num_slots:
                 return
             self.current_task.reset()
-        self.render_task()
         robot_names = [name for name, ent in entities.items() if issubclass(type(ent), Robot)]
         for robot in robot_names:
             entities[robot].task = np.array([self.current_task_idx / (self.num_tasks - 1)])

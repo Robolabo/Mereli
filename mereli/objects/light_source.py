@@ -22,13 +22,14 @@ class LightSource(WorldObject):
         self.scaling = 0.25
         self.is_on = True 
         # self.reset()
+    def render(self):
+        super().render()
+        self.physics_client.engine.setCollisionFilterGroupMask(self.id, -1, 0b00, 0b00)
 
     def step(self, neighborhood):
         """ Step method of the light source. Even though lights are not technically controlled, they can 
         have a 'virtual controller' for allowing custom behaviours such as mobile lights or preys in the 
         predator and prey game. The controller can be implemented just as in the robots. 
-        
-        :param list neighborhood: list filled with the neighboring entities. 
         """
         if self.controllable:
             if type(self.controller).__name__ == 'PreyController':
@@ -67,3 +68,5 @@ class LightSource(WorldObject):
         self.turn_on()
         if self.controller is not None:
             self.controller.reset()
+        # self.physics_client.get_contact_points(2, ghost_ids=[-1])
+        # __import__('pdb').set_trace()

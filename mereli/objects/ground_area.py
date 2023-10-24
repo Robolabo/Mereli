@@ -20,6 +20,10 @@ class GroundArea(WorldObject):
         self.radius = radius
         self.scaling = radius
 
+    def render(self):
+        super().render()
+        self.physics_client.ground_areas.update({self.id : {'center' : self.position[:2], 'color' : self.color, 'radius' :self.radius}})
+
     def step(self):
         pass
 

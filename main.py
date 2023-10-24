@@ -15,6 +15,58 @@ from mereli.config_parser import json_parser
 from mereli.register import algorithms, worlds, physics_engines
 from mereli.globals import global_states
 
+def get_irin_exp(num):
+    experiments = ["irin/TestWheels.json", "irin/TestContact.json", "irin/TestPoximity.json", "irin/TestRedLightSensor.json",
+     "irin/TestBlueLightSensor.json", "irin/TestGreenLightSensor.json", "irin/TestLED.json", "irin/TestBattery.json", 
+     "irin/TestEncoder.json", "irin/ObstacleAvoidance.json", "irin/NeuronEvoAvoidExp.json"] 
+    if num > len(experiments):
+        print('Experiment Code does not exist!')
+        exit(0)
+    return experiments[num-1]
+
+def print_welcome():
+    print("")
+    print("WELCOME TO MERELI:\n")
+    print("You forgot the configuration file required to properly run an experiment.")
+    print("In the table below you can find some basic experiments. \n")
+    print("In order to run an experiment please execute:\n ")
+    print("python main.py -f CODE ")
+    print("or")
+    print("python main.py -f config_file_path")
+    print("")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| EXPERIMENT       | CODE |      CONFIG FILE LOCATION           |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST WHEELS      |  1  | mereli/config/irin/TestWheels.json  |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST CONTACT     |  2  | mereli/config/irin/TestContact.json  |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST PROXIMITY   |  3  | mereli/config/irin/TestProximity.json  |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST RED         |  4  | mereli/config/irin/TestRedLightSensor.json  |")
+    print("| LIGHT SENSOR     |     |                                     |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST BLUE        |  5  | mereli/config/irin/TestBlueLightSensor.json  |")
+    print("| LIGHT SENSOR     |     |                                     |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST GREEN       |  6  | mereli/config/irin/TestGreenLightSensor.json  |")
+    print("| LIGHT SENSOR     |     |                                     |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST LED         |  7  | mereli/config/irin/TestLED.json  |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST BATTERY     |  8  | mereli/config/irin/TestBattery.json  |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| TEST ENCONDER    |  9  |  mereli/config/irin/TestEncoder.json |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| BASIC OBSTACLE   | 10  |  mereli/config/irin/ObstacleAvoidance.json |")
+    print("|   AVOIDANCE      |     |                                     |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("| EVOLVED OBSTACLE | 11  |  mereli/config/irin/NeuronEvoAvoidExp.json |")
+    print("|   AVOIDANCE      |     |                                     |")
+    print("+------------------+-----+--------------------------------------------+") 
+    print("")
+
+
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')
 @click.option('-d', '--debug', default=False, is_flag=True,  help='Execute in debug mode.')
@@ -26,14 +78,21 @@ from mereli.globals import global_states
         help='Execute in verbose mode (info msgs enabled).')
 @click.option('-l', '--log', default=False, is_flag=True, help='Log data into a file.')
 @click.option('-n', '--ncpu', default=1, help='Number of CPU cores.')
-@click.option('-f', '--cfg', default='default', help='Name of the JSON config. file.')
+@click.option('-f', '--cfg', default=None, help='Name of the JSON config. file.')
 @click.option('-i', '--interactive', default=False,is_flag=True, help='Run in interactive mode.')
 def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
-    if interactive:
-        process = subprocess.Popen(["panel", "serve", "--port" , "8086", 'mereli/dashboard/dashboard.py'])
+    if cfg is None:
+       print_welcome() 
+       exit(0)
+    # if interactive:
+    #     process = subprocess.Popen(["panel", "serve", "--port" , "8086", 'mereli/dashboard/dashboard.py'])
     #* Set globals
+    if len(cfg) <=3: # Is an exp code
+        if not render and int(cfg) != 11:
+            render = True
+        cfg = get_irin_exp(int(cfg))
     global_states.set_states(render=render, eval=eval, debug=debug, log=log, info=verbose, interactive=interactive)
-
+    
     #* Parse JSON
     cfg_dict = json_parser(cfg)
     if log:

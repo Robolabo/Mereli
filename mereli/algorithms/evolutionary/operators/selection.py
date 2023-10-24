@@ -38,6 +38,7 @@ def roulette_selection(population, n_sel):
     =========================================================================
     """
     fitness_sum = np.sum([geno.fitness for geno in population])
+
     probs = [geno.fitness / fitness_sum for geno in population]
     sel_idxs = np.random.choice(len(population), p=probs, replace=True, size=n_sel)
     selected = [population[i] for i in sel_idxs]

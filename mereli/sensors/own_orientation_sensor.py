@@ -10,7 +10,7 @@ class Compass(Sensor):
     def __init__(self, *args, **kwargs):
         super(Compass, self).__init__(*args, **kwargs)
 
-    def step(self, neighborhood):
+    def step(self):
         # ang = (self.sensor_owner.orientation, self.sensor_owner.orientation + 2 * np.pi)[self.sensor_owner.orientation < 0]
         ang = self.sensor_owner.orientation
         self.reading = ang / (2*np.pi)

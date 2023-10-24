@@ -6,5 +6,5 @@ from mereli.sensors import Sensor
 @sensor_registry(name='gps')
 @sensor_registry(name='own_position_sensor')
 class GPS(Sensor):
-    def step(self, neighborhood):
+    def step(self):
         self.reading = self.sensor_owner.position

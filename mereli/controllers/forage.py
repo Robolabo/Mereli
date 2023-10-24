@@ -7,7 +7,6 @@ from mereli.utils import compute_angle, angle_diff
 class ForageCommSpace(RobotController):
     def __init__(self, *args,  **kwargs):
         super(ForageCommSpace, self).__init__(*args, **kwargs)
-        self.t = 0
         self.flag = False
         self.roles = ['NEST', 'FOOD_1', 'FOOD_2', 'LOAD_BAT']
         self.priorities = [2, 2, 1, 1, 3]
@@ -31,12 +30,13 @@ class ForageCommSpace(RobotController):
             self.curr_role = 'FOOD_2'
 
     def load_battery(self, state):
-        bat_lv = state['battery_sensor']
+        bat_lv = self.get_sensor_reading('battery_sensor') 
         action = np.array([0,0])
         # self.flags['load'] = False 
-        ls_read = state['red_light_sensor']
+        ls_read = self.get_sensor_reading('red_light_sensor') 
         if np.max(ls_read) > 0.85:
-            return {'joint_velocity_actuator' : np.zeros(2)}
+            self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
+            return 
 
         if ls_read[0] * ls_read[7] == 0:
             light_left = np.sum(ls_read[[7,6,5,4]])
@@ -47,16 +47,15 @@ class ForageCommSpace(RobotController):
                 action = 0.1 * np.array([1, -1]) 
         else:
             action = 0.7 * np.array([1,1])
-        return {'joint_velocity_actuator' : action}
+        self.get_actuator('joint_velocity_actuator').action = action 
 
     def step(self, state, reward=0.0):
-        self.t += 1
         # if self.t == 1500:
         #     self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
 
-        area_read = state['memory_ground_sensor']
-        curr_pos = state['own_position_sensor'][:2]
-        bat = state['battery_sensor']
+        area_read = self.get_sensor_reading('memory_ground_sensor')
+        curr_pos = self.get_sensor_reading('own_position_sensor')[:2]
+        bat = self.get_sensor_reading('battery_sensor')
         if bat < 0.5 or (self.waiting_bat and bat < 0.9):
             self.waiting_bat = True
             self.controller_owner.virtual_particle.disabled_lmarks = []
@@ -93,7 +92,8 @@ class ForageCommSpace(RobotController):
         #     return action 
         dist_tar = np.linalg.norm(self.target_coords - curr_pos)
         if dist_tar < 0.3 and self.curr_role == 'NEST':
-            return {'joint_velocity_actuator' : np.zeros(2)}
+            self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
+            return
         desired_dir = (self.target_coords - curr_pos) / dist_tar
         # desired_dir -= v_obstacle
 
@@ -116,13 +116,14 @@ class ForageCommSpace(RobotController):
         # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
         #     action = np.array([0,0])
         self.flag = True
-        return {'joint_velocity_actuator' : action/3}
+        self.get_actuator('joint_velocity_actuator').action = action / 3 
 
 
 
     def reset(self):
-        self.t = 0 
         self.flag = False
         self.waiting_bat = False
         self.controller_owner.virtual_particle.lmark_priorities = self.priorities
+        self.obstacle_avoider.reset()
+        self.obstacle_avoider.controller_owner = self.controller_owner
 

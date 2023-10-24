@@ -1,0 +1,44 @@
+{
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : true,  
+	 "animated_layout" : {
+		"enabled" : true,
+		"grid" : "A;C",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "blue_light_sensor", "name" : "A", "sectors" : [0,1,2,3,4,5,6,7]}, 
+			{"plot_type" : "epuck_polar", "sensors" : ["blue_light_sensor"],  "name" : "C"}
+		] 
+	 }
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {},
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "swarm" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"orientations" : 0.0,
+                "controller" : "test_blue_light_sensor",
+                "sensors" : {
+                    "light_sensor" : {"n_sectors" : 8, "range" : 3}
+		},
+                "actuators" : {
+                    "joint_velocity_actuator" : {},
+		    "led" : {}
+                }
+            },
+            "light_blue" : {
+                "type" : "light_source",
+                "num_instances": 1,
+		"positions" : [3,0,0.5],
+                "params" : {"range" : 3, "color" : "blue"}
+            }
+        }
+    }
+}

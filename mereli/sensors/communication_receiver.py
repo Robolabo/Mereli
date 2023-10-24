@@ -75,8 +75,7 @@ class IRCommunicationReceiver(DirectionalSensor):
         frames = [self.empty_frame for _ in range(self.n_sectors)]
         signal_strengths = np.zeros(8)
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
-        if self.contact_points is None or self.t % 5 == 0:
-            self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
+        self.contact_points = self.sensor_owner.physics_client.get_contact_points(self.sensor_owner.id, ghost_ids=g_ids)
         oris = self.directions(self.sensor_owner.orientation[-1])
         for i in range(8):
             ori = oris[i]

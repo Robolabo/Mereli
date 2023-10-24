@@ -18,18 +18,17 @@ class GroundSensor(Sensor):
         self.coding = {"black" : 0.5, "grey" : 1.0}
         self.reading = np.array([0.0])
 
-    def step(self, neighborhood):
+    def step(self):
         """ Step method for reading the ground sensor. 
-        
-        :param list neighborhood: ``list`` of entities in the surroundings of the robot.
 
         :returns: numpy array of length 1 with the binary reading. A reading of 1.0 means that a ground 
             area has been detected and a value of 0.0 means that no ground areas was detected.
         """
         self.reading = np.array([0.0]) 
-        for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
-            if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) <= ground_area.radius:
-                self.reading = np.array([self.coding.get(ground_area.color, 0.0)])
+        ground_areas = self.physics_client.ground_areas
+        for ground_area in ground_areas.items():
+            if np.linalg.norm(self.sensor_owner.position[:2] - ground_area['center']) <= ground_area['radius']:
+                self.reading = np.array([self.coding.get(ground_area['color'], 0.0)])
 
     def reset(self, seed=None):
         self.reading  = np.array([0.])
@@ -42,12 +41,15 @@ class MemoryGroundSensor(Sensor):
         super(MemoryGroundSensor, self).__init__(*args, **kwargs)
         self.reading = np.array([0.0])
 
-    def step(self, neighborhood):
-        for ground_area in filter(lambda x: type(x).__name__ == 'GroundArea', neighborhood):
-            if np.linalg.norm(self.sensor_owner.position[:2] - ground_area.position[:2]) <= ground_area.radius:
-                if ground_area.color == 'grey' and self.reading == 0:
+    def step(self):
+        ground_areas = self.physics_client.ground_areas
+        for idx, ground_area in ground_areas.items():
+            ga_center = ground_area['center']
+            ga_rad = ground_area['radius']
+            if np.linalg.norm(self.sensor_owner.position[:2] - ga_center) <= ga_rad:
+                if ground_area['color'] == 'grey' and self.reading == 0:
                     self.reading = np.array([1.0])
-                elif self.reading == 1. and ground_area.color == 'black':
+                elif self.reading == 1. and ground_area['color'] == 'black':
                     self.reading = np.array([0.0])
 
     def reset(self, seed=None):

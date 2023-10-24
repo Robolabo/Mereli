@@ -34,6 +34,8 @@ class NeuralController(RobotController):
         stimuli = {k : self.get_sensor_reading(k) for k in self.robot.sensors}
         if len(stimuli):
             stimuli = flatten_dict(stimuli)
+        else:
+            stimuli = state
         raw_actions = self.neural_network.step(stimuli, reward)
 
         # actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
@@ -44,11 +46,12 @@ class NeuralController(RobotController):
         #* Convert all actions to numpy arrays
         for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
             actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
-
+        __import__('pdb').set_trace()
         # Update actions to actuators
         for name, actuator in self.robot.actuators.items():
             if name in actions:
                 actuator.action = actions[name]
+        return actions
     
     def reset(self):
         self.comm_state = 1 #* role of agent in communication, 0 is relay mode and 1 is send mode.

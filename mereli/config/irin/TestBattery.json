@@ -2,7 +2,16 @@
     "simulation" : {
 	 "timesteps" : 10000,
 	 "trials" : 1,
-	 "start_paused" : true  
+	 "start_paused" : true, 
+	 "animated_layout" : {
+		"enabled" : true,
+		"grid" : "AB;CC",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "A", "sectors" : [0,1,2,3,4,5,6,7]}, 
+			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "B"},
+			{"plot_type" : "epuck_polar", "sensors" : ["red_light_sensor"],  "name" : "C"}
+		] 
+	 }
     },
     "world": {
         "name" : "flat_world",
@@ -17,15 +26,14 @@
                 "num_instances" : 1,
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
-		"battery" : true,
+		"battery" : {"discharge_coef" :  0.01, "charge_coef" : 0.01, "stop_wheels" : true},
                 "controller" : "test_battery",
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 10},
+                    "light_sensor" : {"n_sectors" : 8, "range" : 5},
 		    "battery_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4},
-		    "battery_sensor" : {}
+                    "joint_velocity_actuator" : {}
                 }
             },
             "light_red" : {

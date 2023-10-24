@@ -2,7 +2,7 @@
     "simulation" : {
 	 "timesteps" : 10000,
 	 "trials" : 1,
-	 "start_paused" : true  
+	 "start_paused" : true
     },
     "world": {
         "name" : "flat_world",
@@ -11,15 +11,26 @@
         "physics_dt" : 0.01,
         "T_control" : 0.01,
         "objects" : {
-            "swarm" : {
-                "type" : "epuck",
+            "epuck" : {
+                "type" : "epuck_simple",
                 "num_instances" : 1,
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
                 "controller" : "test_wheels",
                 "sensors" : {},
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
+                }
+	},
+       	"epuck2" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0, 0.5,0],
+		"orientations" : 0.0,
+                "controller" : "test_wheels",
+                "sensors" : {},
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
                 }
             }
         }

@@ -69,6 +69,8 @@ class CommunicationSpace:
 
     def step(self):
         for particle in self.particles.values():
+            # if not particle.real_robot.awaken:
+            #     continue
             stimuli = self.perceive(particle)
             particle.step_control(stimuli)
         self.step_dynamics()
@@ -137,7 +139,10 @@ class CommunicationSpace:
         #####
 
         # Obtain distances and angles
+        
         phi_clst_st = self.angle(particle, clst_state)
+        if np.isnan(phi_clst_st):
+            phi_clst_st = 0
         phi_clst_lmark = self.angle(particle, clst_lmark)
         phi_clst_lmark_av = self.angle(particle, clst_lmark_av)
         dist_clst_st = self.distance(particle.state, clst_state)
@@ -209,6 +214,8 @@ class Torus2dSpace(CommunicationSpace):
 
     def step_dynamics(self):
         for particle in self.particles.values():
+            # if not particle.real_robot.awaken:
+            #     continue
             control = particle.control
             target_orientation = 2*np.pi*control[0]
             speed = (control[1] + 1) / 2
@@ -238,7 +245,6 @@ class Torus2dSpace(CommunicationSpace):
    
     def angle(self, particle, pointB):
        return torus_angle(particle.state, pointB, ref_vec=particle.heading_vector, H=self.H, W=self.W) 
-
 
     def generate_rnd_lmarks(self, n_lmarks, min_dist):
         spc_dim = 2

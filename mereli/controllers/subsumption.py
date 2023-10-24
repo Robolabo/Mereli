@@ -11,7 +11,7 @@ class NavigateController(RobotController):
         self.flag = True 
 
     def step(self, state, reward=0):
-        return {'joint_velocity_actuator' : np.array([1,1])}
+        self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
 
 
 @controller_registry(name="load_battery")
@@ -23,12 +23,12 @@ class LoadBatteryController(RobotController):
         self.bat_threshold = 0.5
 
     def step(self, state, reward=0):
-        bat_lv = state['battery_sensor']
+        bat_lv = self.get_sensor_reading('battery_sensor')
         action = np.array([0,0])
         self.flag = False 
         # self.flags['load'] = False 
         if bat_lv <= self.bat_threshold:
-            ls_read = state['red_light_sensor']
+            ls_read = self.get_sensor_reading('red_light_sensor')
             if ls_read[0] * ls_read[7] == 0:
                 self.flag = True 
                 light_left = np.sum(ls_read[[7,6,5,4]])
@@ -37,7 +37,7 @@ class LoadBatteryController(RobotController):
                     action = np.array([-1, 1]) 
                 else: 
                     action = np.array([1, -1]) 
-        return {'joint_velocity_actuator' : action}
+        self.get_actuator('joint_velocity_actuator').action = action
 
 
 @controller_registry(name='subsumption')
@@ -59,7 +59,7 @@ class SubsumptionController(RobotController):
     def step(self, state, reward=0.0):
         for k, routine in self.routines.items():
             action = routine.step(state)
-            self.activations[k] = action['joint_velocity_actuator']
+            self.activations[k] = self.get_actuator('joint_velocity_actuator').action
         return self.coordinate()
 
     def coordinate(self):
@@ -68,7 +68,7 @@ class SubsumptionController(RobotController):
         for k in names:   
             if self.routines[k].flag:
                 action_wheels = self.activations[k]
-                return {'joint_velocity_actuator' : np.array(action_wheels)}
+                self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
 
     def reset(self):
         for rt in self.routines.values():
