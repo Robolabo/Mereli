@@ -116,21 +116,22 @@ class TestEncoderController(RobotController):
         self.dist_walked = 0
 
     def compute_odom(self,state):
+        dt = 10 * self.robot.physics_client.dt
         b = 0.04# Dist between wheels
-        R = 0.02# Wheel radius
+        R = 0.0390625 # Wheel radius
         enc = self.get_sensor_reading('encoder')
-        dUl = R*enc[0]*.01
-        dUr = R*enc[1] * .01
-        d_theta = (dUr - dUl) / b 
+        dUl = R * enc[0] * dt
+        dUr = R * enc[1] * dt
+        d_theta = 0#(dUr - dUl) / b 
         d_rho = (dUr + dUl) / 2
         r = np.tan(d_theta) * d_rho 
         d_rho2 = (r + b/2) * 2 * np.sin(d_theta / 2)
-        self.estim_pos += d_rho2 * np.r_[np.cos(self.estim_ori + d_theta / 2),np.sin(self.estim_ori+ d_theta / 2)] 
+        self.estim_pos += d_rho * np.r_[np.cos(self.estim_ori + d_theta / 2),np.sin(self.estim_ori+ d_theta / 2)] 
         self.estim_ori += d_theta
 
 
     def step(self, state, reward=0.0):
-        action_wheels = (1,1)
+        action_wheels = (1,0)
         self.compute_odom(state)
         real_pos = self.controller_owner.position[:2]
         error = self.estim_pos - real_pos
@@ -141,7 +142,7 @@ class TestEncoderController(RobotController):
         # R = 0.00197
         # self.dist_walked += state['encoder'][0] * R
         # real_dist_walked = self.controller_owner.position[0]
-        if real_pos[0] > 3.999:
+        if real_pos[0] > 0.999:
             __import__('pdb').set_trace()
         # error = self.dist_walked - real_dist_walked
         # print(f'Distance walked {self.dist_walked}, real={real_dist_walked} and  error={error}' )

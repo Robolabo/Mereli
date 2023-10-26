@@ -182,7 +182,6 @@ class NeuralNetwork(BaseNeuralNet):
             import matplotlib.pyplot as plt
             __import__('pdb').set_trace()
             # import pdb; pdb.set_trace()
-        # actions['outA'] = [1,1]
         self.t += 1
         return actions
     

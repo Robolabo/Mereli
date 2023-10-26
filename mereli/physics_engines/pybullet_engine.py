@@ -120,10 +120,9 @@ class PybulletEngine(BaseEngine):
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
         # self.engine.resetSimulation(physicsClientId=self.engine._client)
-        p.disconnect(physicsClientId=self.engine._client) 
+        # p.disconnect(physicsClientId=self.engine._client) 
         # p.resetSimulation(physicsClientId=self.engine._client)
-        # self.engine.disconnect()
-        # del self.engine
+        self.engine.disconnect()
         self.connected = False
 
     def step_physics(self):

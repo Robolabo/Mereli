@@ -30,7 +30,7 @@
                 "num_instances" : 1,
                 "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0, "load_battery" : 1, "navigate" : 2}}},
 		"positions" : [0,0,0],
-		"orientations" : "random",
+		"orientations" : 0.0,
 		"battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 5},

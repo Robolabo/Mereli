@@ -430,16 +430,18 @@ class ObstacleAvoidance(Task):
         robot = entities[robot_name]
         ds = robot.sensors['distance_sensor'].reading
         wheels = robot.actuators['joint_velocity_actuator'].action #/ robot.actuators['joint_velocity_actuator'].max_velocity
+
         V = np.abs(wheels).sum()
         i = np.max(ds) 
-        dv = np.abs(wheels[0] + .5 - (wheels[1] + 0.5))
-        f = max(0, V * (1 - np.sqrt(dv)) * (1 - i))
-        # if f > 1: __import__('pdb').set_trace()
-        return f
+        # dv = np.abs(wheels[0] + .5 - (wheels[1] + 0.5))
+        # f = max(0, V * (1 - np.sqrt(dv)) * (1 - i))
+        # return f
 
         # rA = 0. if any(ds > 0.4) else 1.
-        # rB = max(1 - np.abs(wheels[0] - wheels[1]), 0) * np.linalg.norm(wheels)
-        # return rA * rB
+        rA = 1 - i 
+        dW = np.abs(wheels[0] - wheels[1]) * 2
+        rB = max(1 - dW, 0)  
+        return V * rA * rB
 
     def done_generator(self, entities):
         return False

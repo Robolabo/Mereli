@@ -4,7 +4,7 @@
 	 "trials" : 1,
 	 "start_paused" : false, 
 	 "animated_layout" : {
-		"enabled" : true,
+		"enabled" : false,
 		"grid" : "AB;CC",
 	 	"plots" : [
 			{"plot_type" : "custom_lineplot", "variables":["controller:neural_network@spikes"],  "name" : "A"},
@@ -37,7 +37,7 @@
     },
     "world": {
         "name" : "arena",
-        "arena_params" : {"map_file" : "map.txt", "arena_size" : 7},
+        "arena_params" : {"map_file" : "map.txt", "arena_size" : 6},
         "engine" : "pybullet",
         "physics_dt" : 0.05,
         "T_control" : 0.05,
@@ -51,8 +51,8 @@
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 1,
-		"positions" : {"type" : "random" , "low" : [-3,-3], "high" : [3,3]},
-		"orientations" : "random",
+		"positions" : [1.5, 0,0], 
+		"orientations" : 0.0,
                 "controller" : {
                     "name" : "neural_controller",
                     "topology" : "main_ann",
@@ -67,7 +67,7 @@
         }
     },
     "algorithm" : {
-        "name" : "NEAT",
+        "name" : "GA",
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
@@ -76,17 +76,16 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -1, "max_val" : 1}, 
-		"initialization" : {"type" : "gaussian", "sigma" : 0.1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
+		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2}, 
+		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}},
 	    "main_ann:nodes:bias:all" : {
-		"normalization" : {"type": "linear", "min_val" : -1, "max_val" : 1},
-		"initialization" : {"type" : "gaussian", "sigma" : 0.1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
+		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2},
+		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}}
 	},
 	"alg_params" :{ 
-	    "p_weight_mut" : 0.7, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 3,
-	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
+		"crossover" : "blxalpha"
 	}
     }
 }
