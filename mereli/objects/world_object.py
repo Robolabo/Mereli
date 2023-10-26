@@ -81,7 +81,11 @@ class WorldObject(ABC):
         raise NotImplementedError
     
     def reset(self, seed=None):
+        if seed is not None:
+            np.random.seed(seed)
         self.initialize_state()
+        if seed is not None:
+            np.random.seed()
 
     @property 
     def position(self):

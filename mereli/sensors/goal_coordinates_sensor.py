@@ -15,7 +15,7 @@ class GoalCoordinatesSensor(Sensor):
         self.yrange = xrange
 
     def step(self):
-        self.reading = (self.sensor_owner.position[:2] - self.goal_coordinates) /2  
+        self.reading = (self.goal_coordinates - self.sensor_owner.position[:2])  
     
 
     def set_goal_coordinates(self, new_coords):
@@ -25,5 +25,5 @@ class GoalCoordinatesSensor(Sensor):
     def reset(self):
         # self.reading = self.goal_coordinates
         if self.random_generation:
-            self.goal_coordinates = np.random.uniform(low=[self.xrange[0], self.yrange[0]],high=[self.xrange[1], self.yrange[1]], size=2)
+            self.goal_coordinates = np.array([0.7,0.9])#np.random.uniform(low=[self.xrange[0], self.yrange[0]],high=[self.xrange[1], self.yrange[1]], size=2)
             

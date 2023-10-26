@@ -4,11 +4,10 @@
 	 "trials" : 1,
 	 "start_paused" : false, 
 	 "animated_layout" : {
-		"enabled" : true,
-		"grid" : "AB;CC",
+		"enabled" : false,
+		"grid" : "AA;CC",
 	 	"plots" : [
-			{"plot_type" : "custom_lineplot", "variables":["controller:neural_network@spikes"],  "name" : "A"},
-			{"plot_type" : "epuck_polar",  "name" : "B"},
+			{"plot_type" : "custom_lineplot", "variables":["sensors:goal_coordinates_sensor@reading"],  "name" : "A"},
 			{"plot_type" : "animated_ann",  "name" : "C"}
 		] 
 	 }
@@ -18,24 +17,20 @@
         "main_ann" : {
             "dt" : 0.1,
             "stimuli": {
-                "I1" : {"n" : 8, "sensor" : "distance_sensor"},
+                "I1" : {"n" : 1, "sensor" : "compass"},
                 "I2" : {"n" : 2, "sensor" : "goal_coordinates_sensor"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "H1" : {"n" : 2, "params" : {"activation" : "sigmoid"}},
-                "H2" : {"n" : 2, "params" : {"activation" : "sigmoid"}},
                 "OUT" : {"n" : 2, "params" : {"activation" : "tanh"}}
             },
             "outputs" : {
                 "joint_velocity_actuator" : {"ensemble" : "OUT"}
             },
             "synapses" :  {
-                "s1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
-                "s2" : {"pre":"I2","post":"H2", "trainable":true, "p":1.0},
-                "s4" : {"pre":"H1","post":"OUT", "trainable":true, "p":1.0},
-                "s5" : {"pre":"H2","post":"OUT", "trainable":true, "p":1.0}
+                "s1" : {"pre":"I1","post":"OUT", "trainable":true, "p":1.0},
+                "s2" : {"pre":"I2","post":"OUT", "trainable":true, "p":1.0}
 	    } 
         } 
     },
@@ -46,7 +41,7 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 500,
+            "total_duration" : 200,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "goto_coordinates", "params" : {}}]
@@ -64,7 +59,8 @@
                 "sensors" : {
                    "distance_sensor" : {"range" :0.8}, 
                    "goal_coordinates_sensor" : {"goal_coordinates" : "random"}, 
-                   "gps" : {} 
+                   "gps" : {},
+		  "compass" : {} 
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
@@ -74,7 +70,7 @@
     },
     "algorithm" : {
         "name" : "GA",
-        "population_size" : 100,
+        "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
         "num_evaluations" : 10,
@@ -82,13 +78,13 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2}, 
-		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}},
+		"normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+		"initialization" : {"type" : "gaussian", "sigma" : 1},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.5}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2},
 		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.5}}
 	},
 	"alg_params" :{ 
 		"crossover" : "blxalpha"

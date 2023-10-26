@@ -121,11 +121,14 @@ class GaussianMutation:
     def __init__(self, mutation_prob=0.05, sigma=0.05):
         self.mutation_prob = mutation_prob
         self.sigma = sigma
+        self.mutated = False
 
     def __call__(self, value):
         if np.random.random() < self.mutation_prob:
+            self.mutated = True
             return np.clip(value + np.random.randn() * self.sigma, a_max=1, a_min=0)
         else:
+            self.mutated = False
             return value
 
 @mutation(name="bitflip")

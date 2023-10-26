@@ -1,6 +1,6 @@
 import copy
+import numpy as np
 from itertools import chain
-import time
 from mereli.utils.decorators import time_elapsed
 from .evolutionary_algorithm import EvolutionaryAlgorithm
 from mereli.register import algorithm_registry, evo_operators
@@ -32,21 +32,37 @@ class GeneticAlgorithm(EvolutionaryAlgorithm):
         #* --- Save elite based on highest fitness ---
         elites = sorted(copy.deepcopy(self.population), key=lambda genotype: genotype.fitness, reverse=True)[:self.num_elite]
         #* --- Apply Selection operator ---
-        parents = self.selection(self.population, len(self.population) - self.num_elite)
+        parents = self.selection(self.population,len(self.population) - self.num_elite)# int(0.3*self.pop_size))#len(self.population) - self.num_elite)
         #* --- Apply Mating operator ---
-        parents = self.mating(parents)
+        # parents = self.mating(parents)
         #* --- Apply Crossover operator ---
         offspring = []
-        for p1, p2 in zip(parents[::2], parents[1::2]):
+        i = 0
+        # for p1, p2 in zip(parents[::2], parents[1::2]):
+        while(len(offspring) < len(self.population)- self.num_elite):
+            if i < len(parents)-1:
+                p1 = parents[i]
+                p2 = parents[i+1]
+                i += 1
+            else:
+                p1 = parents[np.random.randint(len(parents))]
+                p2 = parents[np.random.randint(len(parents))]
             offspring.extend(self.crossover(p1,p2, crossover_prob=self.crossover_prob))
-        if len(parents) % 2 != 0:
-            offspring.append(parents[-1])
+        assert len(offspring) == len(self.population)- self.num_elite 
+        # if len(parents) % 2 != 0:
+        #     offspring.append(parents[-1])
         #* --- Apply mutation operator ---
+        total_mutations = 0
+        genos_mutated = 0  
         for genotype in offspring:
+            geno_mutated = False
             #*Parameter Mutations
             for gene in chain(genotype.connections, genotype.nodes):
-                gene.mutate()
-        
+                gene_mutations  = gene.mutate()
+                geno_mutated = geno_mutated or (gene_mutations > 0)
+                total_mutations += gene_mutations
+            genos_mutated += geno_mutated
+        print(total_mutations, genos_mutated) 
         #* --- Update new population ---
         self.population = elites + offspring
         # Dynamic Mutation Prob.

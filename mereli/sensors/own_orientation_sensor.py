@@ -12,5 +12,5 @@ class Compass(Sensor):
 
     def step(self):
         # ang = (self.sensor_owner.orientation, self.sensor_owner.orientation + 2 * np.pi)[self.sensor_owner.orientation < 0]
-        ang = self.sensor_owner.orientation
+        ang = self.sensor_owner.orientation[-1]
         self.reading = ang / (2*np.pi)

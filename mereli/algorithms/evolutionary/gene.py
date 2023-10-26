@@ -40,12 +40,14 @@ class BaseGene:
                 self.parameters[name] = value
         
     def mutate(self):
+        n_mutations = 0
         for name, param in self.parameters.items():
             if name in self._mutation:
                 if name == "categorical":
                     __import__('pdb').set_trace()
                 self.parameters[name] = self._mutation[name](param)
-
+                n_mutations += self._mutation[name].mutated
+        return n_mutations
 
     def copy(self):
         return copy.deepcopy(self)
