@@ -1,5 +1,4 @@
 _HiStOrY_V2_
-nodes
 nodes.get_offsets
 nodes.get_offsets()
 ann.__dict__.keys()
@@ -499,3 +498,4 @@ self.t\040*\040.01
 4\040*\0400.03*\0400.01\040*\040640
 4\040*\0400.04*\0400.01\040*\040640
 0.0015625676281300629\040*self.t
+self.goal_coordinates

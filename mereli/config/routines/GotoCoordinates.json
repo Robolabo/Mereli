@@ -19,8 +19,7 @@
             "dt" : 0.1,
             "stimuli": {
                 "I1" : {"n" : 8, "sensor" : "distance_sensor"},
-                "I2" : {"n" : 2, "sensor" : "gps"},
-                "I3" : {"n" : 2, "sensor" : "goal_coordinates_sensor"}
+                "I2" : {"n" : 2, "sensor" : "goal_coordinates_sensor"}
             },
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
@@ -35,7 +34,6 @@
             "synapses" :  {
                 "s1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
                 "s2" : {"pre":"I2","post":"H2", "trainable":true, "p":1.0},
-                "s3" : {"pre":"I3","post":"H2", "trainable":true, "p":1.0},
                 "s4" : {"pre":"H1","post":"OUT", "trainable":true, "p":1.0},
                 "s5" : {"pre":"H2","post":"OUT", "trainable":true, "p":1.0}
 	    } 
@@ -57,7 +55,7 @@
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 1,
-		"positions" : {"type" : "random" , "low" : [-1,-1], "high" : [1,1]},
+		"positions" : [0,0,0], 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "neural_controller",
@@ -76,10 +74,10 @@
     },
     "algorithm" : {
         "name" : "GA",
-        "population_size" : 50,
+        "population_size" : 100,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 10,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
