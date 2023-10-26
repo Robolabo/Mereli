@@ -110,12 +110,13 @@ def issubclass_of_any(var, list_types):
     """ Checks if var is instance of any of the classes in the list. """
     return any([issubclass(type(var), type_elem) for type_elem in list_types])
 
-def save_pickle(dc, filename):
-    with open(filename + '.pickle', 'wb') as f:
+def save_pickle(dc, filename, extension='pickle'):
+
+    with open(filename + '.' + extension, 'wb') as f:
         pickle.dump(dc, f)
 
-def load_pickle(filename):
-    with open(filename + '.pickle', 'rb') as f:
+def load_pickle(filename, extension='pickle'):
+    with open(filename + '.' + extension, 'rb') as f:
         checkpoint = pickle.load(f)
     return checkpoint
 

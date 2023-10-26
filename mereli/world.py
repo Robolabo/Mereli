@@ -122,7 +122,7 @@ class World(object):
         
 
     def update_neighbor_matrix(self):
-        rad = 20
+        rad = 20 
         if self.virtual_space is not None:
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
@@ -328,8 +328,10 @@ class World(object):
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
             self.virtual_space.particles[robot_name].set_controller(topology=topology)
-        # for lmk in vspace_cfg['landmarks']:
-        #     __import__('pdb').set_trace()
+        for lmk in range(vspace_cfg['landmarks']['num_lmarks']):
+            pos = vspace_cfg['landmarks']['positions'] 
+            lm_pos = vspace_cfg['landmarks'].get('scale',1)*np.array(pos[lmk]) if pos != "random" else None
+            self.virtual_space.add_landmark(lm_pos)
 
     def config_data_logger(self, log_info):
         self.data_logger = DataLogger()
@@ -449,8 +451,8 @@ class World(object):
         self.physics_engine.paused = self.start_paused
         if self.task_manager is not None:
             self.task_manager.reset(seed=seed)
-        #* Initialize object dynamics.
-        # self.run_initializers(seed=seed)
+        if self.virtual_space is not None:
+            self.virtual_space.reset(seed=seed)
         #* Reset objects
         for obj in self.hierarchy.values():
             obj.reset(seed=seed)
@@ -458,8 +460,6 @@ class World(object):
         for group_pert in self.env_perturbations.values():
             for pert in group_pert:
                 pert.reset()
-        if self.virtual_space is not None:
-            self.virtual_space.reset(seed=seed)
         # OJO TO BE IMPROVED
         for robot in self.robots.values():
             robot.static_neighbors = self.lights 

@@ -18,7 +18,7 @@
     "world": {
         "name" : "arena",
         "arena_params" : {
-		"arena_size" : 5,
+		"arena_size" : 8,
 		"map_file" : "map.txt"
         },
         "engine" : "pybullet",
@@ -31,13 +31,14 @@
                 "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0, "load_battery" : 1, "navigate" : 2}}},
 		"positions" : [0,0,0],
 		"orientations" : "random",
+		"battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
 		    "battery_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {}
                 }
 
             },

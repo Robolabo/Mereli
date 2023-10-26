@@ -61,7 +61,7 @@ class DataLogger:
                 if path_item in self.target_object.hierarchy:
                     aux_pointer = getattr(aux_pointer, path_item)
                 else:
-                    aux_pointer = getattr(aux_pointer, path_item)
+                    aux_pointer = getattr(aux_pointer, path_item) if not isinstance(aux_pointer, dict) else aux_pointer[path_item]
             data = getattr(aux_pointer, asset)
             try:
                 if len(self.data[variable]) == 0:

@@ -77,6 +77,9 @@ class PybulletEngine(BaseEngine):
         wpx = 1400#1920
         hpx = 1080
         options = f'--width={wpx} --height={hpx}' if self.render else ''
+        # options += " --mp4=moviename.mp4 --mp4fps=30"
+
+        # options = options + 
         with HidePrintf():
             self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT, options=options)
         self.engine.resetSimulation(physicsClientId=self.client)
@@ -120,6 +123,7 @@ class PybulletEngine(BaseEngine):
         p.disconnect(physicsClientId=self.engine._client) 
         # p.resetSimulation(physicsClientId=self.engine._client)
         # self.engine.disconnect()
+        # del self.engine
         self.connected = False
 
     def step_physics(self):

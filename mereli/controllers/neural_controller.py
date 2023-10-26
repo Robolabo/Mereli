@@ -9,16 +9,23 @@ class NeuralController(RobotController):
     """ Neural controller class for robots.
    
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, checkpoint=None, **kwargs):
         super(NeuralController, self).__init__(*args, **kwargs)
         #self.preprocessing = Preprocessing([sens['sensor'] for sens in topology['stimuli'].values()])
         #for val in topology['stimuli'].values():
         #    val['sensor'] = val['sensor'].split('@')[0]
+        self.checkpoint = checkpoint
         self.neural_network = None
         self.out_act_mapping = {}
         self.comm_state = 1 # Communication state (0 : RELAY, 1 : SEND)
+        if self.checkpoint is not None:
+            self.neural_network = NeuralNetwork(0.1) 
+            self.neural_network.load(self.checkpoint)
+            __import__('pdb').set_trace()
+            
 
     def add_ann_from_dict(self, topology):
+        return
         #! CHECK BUGS
         self.neural_network = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
                 neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
@@ -34,25 +41,25 @@ class NeuralController(RobotController):
         stimuli = {k : self.get_sensor_reading(k) for k in self.robot.sensors}
         if len(stimuli):
             stimuli = flatten_dict(stimuli)
-        else:
-            stimuli = state
         raw_actions = self.neural_network.step(stimuli, reward)
 
         # actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items() \
         #            if 'IR_transmitter' not in self.out_act_mapping[name]}
 
         #* Map neuron output names to the corresponding actuator name
-        actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items()}
+        if len(self.out_act_mapping) > 0:
+            actions = {self.out_act_mapping[name] : ac for name, ac in raw_actions.items()}
+        else:
+            actions = raw_actions.copy()
         #* Convert all actions to numpy arrays
         for key, action in filter(lambda item: not isinstance(item[1], np.ndarray), actions.items()):
             actions[key] = np.array(action) if isinstance(action, list) else np.array([action])
-        __import__('pdb').set_trace()
         # Update actions to actuators
         for name, actuator in self.robot.actuators.items():
             if name in actions:
                 actuator.action = actions[name]
         return actions
-    
+        
     def reset(self):
         self.comm_state = 1 #* role of agent in communication, 0 is relay mode and 1 is send mode.
         if self.neural_network is not None:

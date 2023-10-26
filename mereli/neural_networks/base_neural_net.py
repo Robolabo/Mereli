@@ -1,4 +1,5 @@
 import logging
+import os
 import numpy as np
 from itertools import product
 
@@ -9,6 +10,7 @@ from .encoding import EncodingWrapper
 from .neuron_models import NonSpikingNeuronModel, SpikingNeuronModel, Activation
 from mereli.neural_networks.synapses import DynamicSynapses
 from .utils.monitor import NeuralNetMonitor
+from mereli.utils import save_pickle, load_pickle
 
 class BaseNeuralNet:
     def __init__(self, neurons, synapses, encoders=None, decoders=None, monitor=None):
@@ -455,6 +457,17 @@ class BaseNeuralNet:
         """
         index = self.graph['neurons'][ensemble + '_' + str(neuron)]['idx']
         return self.neurons.voltages[index]
+
+    def save(self, filename):
+        path = os.path.join('mereli', 'checkpoints', 'neural_networks', filename )
+        save_pickle(self, path, extension='ann')
+        logging.info('Successfully saved evolution checkpoint.')
+    
+    def load(self, filename):
+        path = os.path.join('mereli', 'checkpoints', 'neural_networks', filename)
+        ann = load_pickle(path, extension='ann')
+        for k, v in ann.__dict__.items():
+            self.__dict__[k] = v
 
     @property
     def num_neurons(self):

@@ -20,5 +20,6 @@ from .forage import ForageCommSpace
 from .slam import * 
 #* Test Controllers 
 from .test import * 
+from .movement_patterns import *
 # from .flocking_controller import FlockingController
 # from .cascade_controller import  CascadeController

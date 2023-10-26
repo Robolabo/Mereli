@@ -102,6 +102,7 @@ class Evaluator:
             genotype.fitness = fitness / self.num_evaluations
 
         # self.world.disconnect()
+         
         # __import__('pdb').set_trace()
         return genotype
 

@@ -12,22 +12,23 @@ class ForageCommSpace(RobotController):
         self.priorities = [2, 2, 1, 1, 3]
         self.curr_role = None
         self.waiting_bat = False
-        self.obstacle_avoider = controllers['basic_obstacle_avoider'](sensitivity=0.8)
+        self.obstacle_avoider = controllers['basic_obstacle_avoider'](sensitivity=0.4)
     
     def select_role(self):
         lmk = self.controller_owner.virtual_particle.lmark
-        if lmk == 0: 
-            self.curr_role = 'NEST'
-        elif lmk == 1: 
-            self.curr_role = 'NEST'
-        elif lmk == 2: 
-            self.curr_role = 'FOOD_1'
-        elif lmk== 3: 
-            self.curr_role = 'FOOD_2'
-        elif lmk== 4: 
-            self.curr_role = 'LOAD_BAT'
-        else:
-            self.curr_role = 'FOOD_2'
+        self.curr_role = self.roles[int(lmk)]
+        # if lmk == 0: 
+        #     self.curr_role = 'NEST'
+        # elif lmk == 1: 
+        #     self.curr_role = 'NEST'
+        # elif lmk == 2: 
+        #     self.curr_role = 'FOOD_1'
+        # elif lmk== 3: 
+        #     self.curr_role = 'FOOD_2'
+        # elif lmk== 4: 
+        #     self.curr_role = 'LOAD_BAT'
+        # else:
+        #     self.curr_role = 'FOOD_2'
 
     def load_battery(self, state):
         bat_lv = self.get_sensor_reading('battery_sensor') 
@@ -50,13 +51,16 @@ class ForageCommSpace(RobotController):
         self.get_actuator('joint_velocity_actuator').action = action 
 
     def step(self, state, reward=0.0):
+        if self.t < 500:
+            return
         # if self.t == 1500:
         #     self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
 
         area_read = self.get_sensor_reading('memory_ground_sensor')
         curr_pos = self.get_sensor_reading('own_position_sensor')[:2]
         bat = self.get_sensor_reading('battery_sensor')
-        if bat < 0.5 or (self.waiting_bat and bat < 0.9):
+        if bat < 0.5 and np.linalg.norm(curr_pos - np.zeros(2)) > 1 or (self.waiting_bat and bat < 0.9):
+            print('BATTERY')
             self.waiting_bat = True
             self.controller_owner.virtual_particle.disabled_lmarks = []
             for i in range(len(self.roles)): 
@@ -67,9 +71,9 @@ class ForageCommSpace(RobotController):
             self.controller_owner.virtual_particle.disabled_lmarks = [len(self.priorities)-1]
             
         nest_pos = np.array([0,0])
-        food_pos = np.array([[-2, 0],[2, 0]])
+        food_pos = np.array([[-3, 0],[3, 0]])
         self.select_role()
-        print(self.curr_role)
+        # print(self.curr_role)
         if self.curr_role == 'NEST':
             self.target_coords = nest_pos
         elif self.curr_role == 'LOAD_BAT':
@@ -87,9 +91,9 @@ class ForageCommSpace(RobotController):
         else:
             self.target_coords = food_pos[1] 
 
-        # action = self.obstacle_avoider.step(state)
-        # if self.obstacle_avoider.flag:
-        #     return action 
+        action = self.obstacle_avoider.step(state)
+        if self.obstacle_avoider.flag:
+            return action 
         dist_tar = np.linalg.norm(self.target_coords - curr_pos)
         if dist_tar < 0.3 and self.curr_role == 'NEST':
             self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
@@ -102,27 +106,36 @@ class ForageCommSpace(RobotController):
         heading_ori = np.r_[np.cos(robot_ori), np.sin(robot_ori)]
         a1 = compute_angle(desired_dir)
         a2 = compute_angle(heading_ori)
-        A = 1 / (1 + np.exp(-20 * (dist_tar - .1)))
-        B = np.cos(a1 - a2)
 
-
-        if angle_diff(a1, a2) <= 0.5:
-            action = A * np.array([1, 1])
+        angle = angle_diff(a1,a2)
+        # a1 = a1 % (2*np.pi)
+        # a2 = a2 % (2*np.pi)
+        if angle <= 0.5:
+            action = np.array([1, 1])
+        # elif np.abs(angle - np.pi) <= 0.3:
+        #     action = A*np.array([-1,-1])
         elif a1 > a2:
-            action =  np.array([1., -1])
+            if a1 - a2 > np.pi:
+                action =  .3*np.array([-1., 1])
+            else:
+                action =  .3* np.array([1., -1])
         else:
-            action =  np.array([-1., 1])
-        
-        # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
-        #     action = np.array([0,0])
+            if a2-a1 >np.pi:
+                action =  .3* np.array([1., -1])
+            else:
+                action =  .3*np.array([-1., 1])
+
         self.flag = True
-        self.get_actuator('joint_velocity_actuator').action = action / 3 
+        self.get_actuator('joint_velocity_actuator').action = action 
 
 
 
     def reset(self):
         self.flag = False
         self.waiting_bat = False
+        n_lmarks = len(self.robot.virtual_particle.landmarks)
+        self.roles = ['NEST'] * int((n_lmarks-1) // 2) + ['FOOD_1'] * int((n_lmarks - 1) // 4) + ['FOOD_2'] * int((n_lmarks - 1) // 4)  + ['LOAD_BAT']
+        self.priorities = [{'NEST' : 2, 'FOOD_1' : 1, 'FOOD_2' : 1, 'LOAD_BAT' : 3}.get(role) for role in self.roles]
         self.controller_owner.virtual_particle.lmark_priorities = self.priorities
         self.obstacle_avoider.reset()
         self.obstacle_avoider.controller_owner = self.controller_owner

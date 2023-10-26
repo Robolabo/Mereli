@@ -54,8 +54,8 @@ class VirtualParticle:
         return np.r_[np.cos(self.orientation), np.sin(self.orientation)]
 
 class CommunicationSpace: 
-    def __init__(self, num_lmarks=2, threshold=0.2, randomize_neighbors=False, a=1, b=1): 
-        self.num_lmarks = num_lmarks
+    def __init__(self, threshold=0.2, randomize_neighbors=False, a=1, b=1): 
+        self.num_lmarks = 0 
         self.threshold = threshold
         self.randomize_neighbors = randomize_neighbors 
         self.a = a
@@ -63,6 +63,7 @@ class CommunicationSpace:
         self.dt = 0.1
         self.particles = {}
         self.landmarks = []
+        self.lmk_init_method = 'fixed'
         self.lmarks = [{'idx' : i, 'pos' : None, 'pr' : 0} for i in range(self.num_lmarks)]
         self.lmarks_enabled = []
         self.t = 1
@@ -114,7 +115,11 @@ class CommunicationSpace:
         # t0 = time.time()
         clst_lmark_av = None
         # ord_lmarks = 
-        sorted_lmarks = np.argsort(particle.lmark_priorities)
+        try:
+            if any(np.array(particle.lmark_priorities) != particle.lmark_priorities[0]):
+                sorted_lmarks = np.argsort(particle.lmark_priorities)
+        except:
+            __import__('pdb').set_trace()
         for lm_idx in sorted_lmarks:
             if lm_idx in particle.disabled_lmarks:
                 continue
@@ -174,16 +179,21 @@ class CommunicationSpace:
         particle = VirtualParticle()
         particle.attach_to_robot(real_robot)
         self.particles[robot_name] = particle 
-    
+   
     def add_landmark(self, position):
-        self.landmark.append(position)
+        self.num_lmarks += 1
+        if position is not None: # If None it means random
+            self.landmarks.append(position)
+        else:
+            self.lmk_init_method = 'random'
 
     def step_dynamics(self): pass
 
     def reset(self, seed=None):
         self.t = 1
+        if self.lmk_init_method == 'random':
+            self.generate_rnd_lmarks(self.num_lmarks, self.threshold)
 
-        self.generate_rnd_lmarks(self.num_lmarks, self.threshold)
         for particle in self.particles.values():
             particle.reset()
             self.initialize_particle(particle, seed=seed)

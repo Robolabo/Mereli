@@ -17,26 +17,32 @@ class NavigateController(RobotController):
 @controller_registry(name="load_battery")
 class LoadBatteryController(RobotController):
 
-    def __init__(self, *args,  **kwargs):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(LoadBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
         self.bat_threshold = 0.5
+        self.wait_full_load = True
+        self.charging = False
 
     def step(self, state, reward=0):
         bat_lv = self.get_sensor_reading('battery_sensor')
         action = np.array([0,0])
         self.flag = False 
-        # self.flags['load'] = False 
-        if bat_lv <= self.bat_threshold:
+        if self.wait_full_load and bat_lv >= 0.95:
+            self.charging = False
+        if bat_lv <= self.bat_threshold or self.charging and bat_lv < 0.95:
+            self.charging = self.wait_full_load 
             ls_read = self.get_sensor_reading('red_light_sensor')
-            if ls_read[0] * ls_read[7] == 0:
+            if np.max(ls_read) > 0.9:
+                action = np.zeros(2)
+            elif ls_read[0] * ls_read[7] == 0:
                 self.flag = True 
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
-                    action = np.array([-1, 1]) 
+                    action = 0.25*np.array([-1, 1]) 
                 else: 
-                    action = np.array([1, -1]) 
+                    action = 0.25*np.array([1, -1]) 
         self.get_actuator('joint_velocity_actuator').action = action
 
 
@@ -69,6 +75,7 @@ class SubsumptionController(RobotController):
             if self.routines[k].flag:
                 action_wheels = self.activations[k]
                 self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
+                break
 
     def reset(self):
         for rt in self.routines.values():

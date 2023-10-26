@@ -38,24 +38,32 @@ class BasicObstacleAvoider(RobotController):
         """
         # st_ds = state['distance_sensor']
         st_ds = self.get_sensor('distance_sensor').reading
-        self.flag = False
+        self.flag = np.max(st_ds) > self.sensitivity 
+        # if any(st_ds[[0,1]] > 0.95): # critical
+        #     action = np.array([-1., -1])
+        # elif any(st_ds[[3,4]] > 0.9):
+        #     # print('Turn Right')
+        #     action = np.array([1, 1.])
         if any(st_ds[[0,1]] > self.sensitivity):
             # print('Turn Left')
             action = np.array([1., -1])
-            self.flag = True
         elif any(st_ds[[6,7]] > self.sensitivity):
             # print('Turn Right')
             action = np.array([-1, 1.])
-            self.flag = True
+        # elif st_ds[3] > self.sensitivity:
+        #     action = np.array([1, 1.])
+        #     self.falg = True
+        # elif st_ds[4] > self.sensitivity:
+        #     action = np.array([-1, 1.])
+        #     self.falg = True
         else:
             # print('GO straight over')
             action = np.array(self.no_obstacle_action)
-        
+        action *= 0.5 #!!!!!!!!!! 
         self.get_actuator('joint_velocity_actuator').action = action
         if self.is_actuator_enabled('led'):
             self.get_actuator('led').action = int(self.flag)
         # Turn on the LED of the obstacle direction.
-        return {'joint_velocity_actuator' : action}
 
 @controller_registry(name='epuck_obstacle_avoider')
 class EpuckObstacleAvoid(RobotController):

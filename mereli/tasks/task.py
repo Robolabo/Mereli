@@ -445,6 +445,20 @@ class ObstacleAvoidance(Task):
         return False
 
 
+@task_registry(name="goto_coordinates")
+class GotoCoodinatesTask(Task):
+    def reward_generator(self, entities, robot_name):
+        robot = entities[robot_name]
+        goal_pos = robot.sensors['goal_coordinates_sensor'].reading
+        position = robot.position[:2]
+        dist_tar = np.linalg.norm(position - goal_pos)
+        # rew = max(0, 1 - dist_tar / 2) 
+        rew = np.exp(-5*dist_tar) 
+        return rew 
+
+    def done_generator(self, entities):
+        return False
+
  
 @task_registry(name="goto_nest")
 class GotoNestTask(Task):
