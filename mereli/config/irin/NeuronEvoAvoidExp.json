@@ -78,11 +78,11 @@
 	    "main_ann:connections:weight:all" : {
 		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.1}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2},
 		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.1}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.1}}
 	},
 	"alg_params" :{ 
 		"crossover" : "blxalpha"

@@ -12,9 +12,8 @@
 		] 
 	 }
     },
-    "checkpoint_file" : "chk_neuron_evo_avoid",
-    "topology" : {
-        "main_ann" : {
+    "checkpoint_file" : "chk_goto_coords",
+    "topology" : { "main_ann" : {
             "dt" : 0.1,
             "stimuli": {
                 "I1" : {"n" : 1, "sensor" : "compass"},
