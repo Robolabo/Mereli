@@ -17,6 +17,7 @@ class GoalCoordinatesSensor(Sensor):
 
     def step(self):
         self.reading = (self.goal_coordinates - self.sensor_owner.position[:2])  
+        print(self.reading)
     
 
     def set_goal_coordinates(self, new_coords):

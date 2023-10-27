@@ -454,8 +454,8 @@ class GotoCoodinatesTask(Task):
         goal_pos = robot.sensors['goal_coordinates_sensor'].reading
         position = robot.position[:2]
         dist_tar = np.linalg.norm(goal_pos)
-        rew = max(0, 1 - dist_tar / 2) 
-        # rew = np.exp(-5*dist_tar) 
+        # rew = max(0, 1 - dist_tar / 2) 
+        rew = np.exp(-5*dist_tar) 
         return rew 
 
     def done_generator(self, entities):

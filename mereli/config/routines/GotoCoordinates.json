@@ -78,13 +78,13 @@
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
 	    "main_ann:connections:weight:all" : {
-		"normalization" : {"type": "linear", "min_val" : -3, "max_val" : 3}, 
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.5}},
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.05, "sigma" : 0.5}},
 	    "main_ann:nodes:bias:all" : {
 		"normalization" : {"type": "linear", "min_val" : -2, "max_val" : 2},
 		"initialization" : {"type" : "gaussian", "sigma" : 0.5},
-		"mutation" : {"type" : "gaussian", "mutation_prob": 0.01, "sigma" : 0.5}}
+		"mutation" : {"type" : "gaussian", "mutation_prob": 0.05, "sigma" : 0.5}}
 	},
 	"alg_params" :{ 
 		"crossover" : "blxalpha"
