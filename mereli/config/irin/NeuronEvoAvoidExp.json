@@ -23,15 +23,13 @@
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "H" : {"n" : 5, "params" : {"activation" : "tanh"}},
                 "OUT" : {"n" : 2, "params" : {"activation" : "tanh"}}
             },
             "outputs" : {
                 "joint_velocity_actuator" : {"ensemble" : "OUT"}
             },
             "synapses" :  {
-                "s1" : {"pre":"I1","post":"H", "trainable":true, "p":1.0},
-                "s2" : {"pre":"H","post":"OUT", "trainable":true, "p":1.0}
+                "s1" : {"pre":"I1","post":"OUT", "trainable":true, "p":1.0}
 	    } 
         } 
     },
@@ -50,7 +48,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 5,
 		"positions" : [1.5, 0,0], 
 		"orientations" : 0.0,
                 "controller" : {
@@ -71,7 +69,7 @@
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 5,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "main_ann", "object" :"robotA:controller@neural_network"}],
 	"gene_info" : {
