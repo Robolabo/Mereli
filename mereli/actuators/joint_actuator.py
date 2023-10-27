@@ -47,8 +47,8 @@ class JointVelocityActuator(Actuator):
     def reset(self):
         """ Resets the actuator."""
         self.action = np.zeros(2)
-        # if self.physics_client is not None:
-        #     self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
+        if self.physics_client is not None:
+            self.physics_client.control_joints(self.owner_id, self.joint_ids, np.zeros(len(self.joint_ids)), control_type='velocity')
 
 
 @actuator_registry(name='joint_position_actuator')

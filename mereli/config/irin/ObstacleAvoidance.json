@@ -1,8 +1,9 @@
 {
     "simulation" : {
-	 "timesteps" : 50000,
-	 "trials" : 1,
-	 "start_paused" : false, 
+	 "seed" : 112,
+	 "timesteps" : 1000,
+	 "trials" : 3,
+	 "start_paused" : true, 
 	 "animated_layout" : {
 		"enabled" : false,
 		"grid" : "A;B",
@@ -24,7 +25,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 10,
                 "controller" : "basic_obstacle_avoider",
 		"positions" : {"type" : "random", "low" : [-2.5, -2.5], "high" : [2.5, 2.5]},
 		"orientations" : "random",

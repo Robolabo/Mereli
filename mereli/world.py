@@ -447,7 +447,6 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
-        self.paused = global_states.INTERACTIVE
         self.physics_engine.paused = self.start_paused
         if self.task_manager is not None:
             self.task_manager.reset(seed=seed)
@@ -463,6 +462,7 @@ class World(object):
         # OJO TO BE IMPROVED
         for robot in self.robots.values():
             robot.static_neighbors = self.lights 
+        self.physics_engine.reset()
             
     def connect(self):
         """ Connect to the physics engine. """

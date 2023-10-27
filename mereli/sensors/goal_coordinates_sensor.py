@@ -1,5 +1,6 @@
 
 import numpy as np
+from mereli.globals import global_states
 from mereli.sensors import Sensor
 from mereli.register import sensor_registry
 
@@ -26,4 +27,5 @@ class GoalCoordinatesSensor(Sensor):
         # self.reading = self.goal_coordinates
         if self.random_generation:
             self.goal_coordinates = np.random.uniform(low=[self.xrange[0], self.yrange[0]],high=[self.xrange[1], self.yrange[1]], size=2)
+        # print(self.goal_coordinates)
             

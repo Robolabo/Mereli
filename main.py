@@ -4,6 +4,7 @@ import subprocess
 import logging
 import time
 from datetime import datetime
+import numpy as np
 try:
     from mpi4py import MPI
     USE_MPI = True
@@ -193,9 +194,10 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         else:
             opt_alg.validate()
     else: #* Non-optimizable simulation
+        simulation_config = cfg_dict.get('simulation', {})
+        seed = simulation_config.get('seed', None)
         world.connect()
         print('Connected!')
-        simulation_config = cfg_dict.get('simulation', {})
         timesteps = simulation_config.get('timesteps', 10000)
         trials = simulation_config.get('trials', 1)
         if render:
@@ -207,12 +209,14 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                 world.create_animated_layout()
                 world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
                 world.animated_layout.initialize()
+        np.random.seed(seed)
         for tr in range(trials):
             world.reset()
             t0 = time.time()
             while (world.t < timesteps):
                 state, action = world.step()
             time_elapsed = time.time() - t0 
+            print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
             print(f'Simulation of trial {tr} ended in {time_elapsed}')
 if __name__ == "__main__":
     main()

@@ -11,6 +11,8 @@ class Globals:
         self._INFO = True
         self._LOG = False
         self._INTERACTIVE = False
+        self._USE_SEED = False
+        self._SEED = None 
         self.log_info = {} 
 
     def set_eval_state(self, new_state):
@@ -21,6 +23,11 @@ class Globals:
 
     def set_log_state(self, new_state):
         self._LOG = new_state
+
+    def set_seed(self, new_seed):
+        self._SEED = new_seed 
+        if self._SEED is not None:
+            self._USE_SEED = True
 
     def set_debug_state(self, new_state):
         if new_state:
@@ -66,6 +73,14 @@ class Globals:
     @property
     def LOG(self):
         return self._LOG
+
+    @property
+    def SEED(self):
+        return self._SEED
+
+    @property
+    def USE_SEED(self):
+        return self._USE_SEED
 
     @property
     def INTERACTIVE(self):

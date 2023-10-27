@@ -7,6 +7,7 @@ try:
 except:
     MPI_AVAILABLE = False
     logging.warning('MPI is not installed. Running without mpi4py.')
+from mereli.globals import global_states 
 from mereli.register import worlds, physics_engines
 from mereli.algorithms.interfaces import InterfaceFactory
 from mereli.register import fitness_functions
@@ -64,13 +65,17 @@ class Evaluator:
 
         # Genotype is evaluated N_E independent trials  
         mean_survival_time = 0
-        seed = generation * self.num_evaluations
         fitness = 0
+        # Set the same seed for every geno eval in generation (seed=generation) 
+        # Seed before trial loop so that every trial is different
+        seed = generation #* self.num_evaluations
+        global_states.set_seed(seed)
+        np.random.seed(seed)            
         for trial in range(self.num_evaluations):
-            seed += 1
+            # seed += 1
             survival_time = 0
             # Reset the world for a new simulation/episode
-            self.world.reset(seed=seed if self.use_seed else None)
+            self.world.reset() # seed=seed if self.use_seed else None)
             if self.fitness_fn is not None:
                 self.fitness_fn.reset()
             while (not self.world.is_done):

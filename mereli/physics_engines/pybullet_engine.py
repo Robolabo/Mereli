@@ -66,6 +66,14 @@ class PybulletEngine(BaseEngine):
         self.fps = 240
         self.paused = False 
         self.debug = False 
+        self.savedState = None 
+
+    def reset(self):
+        # self.engine.resetSimulation(physicsClientId=self.client)
+        for i in self.robot_ids:
+            p.resetBaseVelocity(i,linearVelocity=(0,0,0), angularVelocity=(0,0,0), physicsClientId=self.client)
+        # if self.savedState is not None:
+        #     p.restoreState(self.savedState, physicsClientId=self.client)
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -116,6 +124,7 @@ class PybulletEngine(BaseEngine):
         # p.setPhysicsEngineParameter(numSolverIterations=10)
         # p.setPhysicsEngineParameter(contactBreakingThreshold=0.001)
         self.connected = True
+        self.savedStates = p.saveState()
 
     def disconnect(self):
         """ Disconnects the pybullet based physics and render engines. """
