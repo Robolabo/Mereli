@@ -33,6 +33,39 @@ class AnimatedPlot:
     def subplot_kw(self):
         return {self.name : {}}
 
+class GeneralInformation(AnimatedPlot):
+    def __init__(self, *args, variables=None,  **kwargs):
+        super(GeneralInformation, self).__init__(*args, **kwargs)
+        if variables is None:
+            self.variables = ['name', 'position']
+        else:
+            self.variables = variables 
+
+    def get_variable(self, robot, varcode):
+        aux = varcode.split('@')
+        varpath = aux[0]
+        aux_obj = robot
+        for vp in varpath.split(':'):
+            if hasattr(aux_obj, vp):
+                aux_obj = getattr(aux_obj, vp)
+            else:
+                if isinstance(aux_obj, dict) and vp in aux_obj:
+                    aux_obj = aux_obj[vp]
+        varname = aux[1]
+        return getattr(aux_obj, varname)
+
+        
+    def update(self, robot):
+        pass
+
+    def initialize(self):
+        for var in range(len(self.variables)):
+                self.axis.text(0.1, 0.9 - 0.1*var, self.variables[var], weight="bold")
+        self.set_ylim(0,1)
+        self.set_xlim(0,1)
+
+
+
 class AnimatedSensorLineplot(AnimatedPlot):
     def __init__(self, *args, sensor='distance_sensor', sectors=[0], **kwargs):
         super(AnimatedSensorLineplot, self).__init__(*args, **kwargs)
@@ -125,9 +158,10 @@ class AnimatedCustomLineplot(AnimatedPlot):
 
         
     def update(self, robot):
-        new_y = []
+        new_y = [] 
         for i in range(len(self.variables)):
-            new_y.append(self.get_variable(robot, self.variables[i])[0])
+            new_y.append(self.get_variable(robot, self.variables[i])[3])
+        # new_y = np.array(new_y)
         if isinstance(new_y, float):
             self.yData[0] = np.r_[self.yData[0,1:], new_y]
         else:
@@ -153,8 +187,10 @@ class AnimatedCustomLineplot(AnimatedPlot):
             ln = self.axis.plot(self.xData, self.yData[i], animated=True)
 
 class AnimatedCommunicationSpace(AnimatedPlot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, H=2, W=2,**kwargs):
         super(AnimatedCommunicationSpace, self).__init__(*args, **kwargs)
+        self.H = H 
+        self.W = W
     
     def update(self, robot):
         own_state = robot.virtual_particle.state 
@@ -162,20 +198,29 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         neigh_states = [vv.state for vv in robot.virtual_particle.neighbors]
         lmarks = robot.virtual_particle.landmarks
         disabled = robot.virtual_particle.disabled_lmarks
-        lm_colors = [('grey', 'red')[i not in disabled] for i in range(len(lmarks))] 
         self.axis.collections[0].set_offsets(own_state)
         if len(neigh_states) > 0:
             self.axis.collections[1].set_offsets(neigh_states)
         self.axis.collections[2].set_offsets(lmarks)
+        lm_colors = []
+        priorities = robot.virtual_particle.lmark_priorities
+        for i in range(len(lmarks)):
+            lm_color = 'red'
+            if i in disabled:
+                lm_color = 'grey'
+            else:
+                lm_color = ['red', 'yellow', 'blue', 'green'][int(priorities[i])]
+            lm_colors.append(lm_color)
+        # lm_colors = [('grey', 'red')[i not in disabled] for i in range(len(lmarks))] 
         self.axis.collections[2].set_facecolor(lm_colors)
         
         for ln in self.axis.collections:
             self.axis.draw_artist(ln)
 
     def initialize(self):
-        h, w = 3,3 
-        self.set_ylim(-h-.1,h+.1)
-        self.set_xlim(-w-.1,w+.1)
+        h, w =self.H, self.W 
+        self.set_ylim(-h/2-.1,h/2+.1)
+        self.set_xlim(-w/2-.1,w/2+.1)
         self.axis.scatter([], [], color='b',zorder=100, s=102, animated=True) # Own state
         self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         self.axis.scatter([], [], marker='*', edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
@@ -425,6 +470,8 @@ class AnimatedLayout:
             new_plot = AnimatedNeuralNetwork(name, **kwargs)
         elif plot_type == 'animated_image':
             new_plot = AnimatedImage(name, **kwargs)
+        elif plot_type == 'general_info':
+            new_plot = GeneralInformation(name, **kwargs)
         else:
             pass
         self.plots.append(new_plot)

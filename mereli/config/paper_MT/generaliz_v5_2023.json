@@ -4,19 +4,22 @@
 	"file" : "generaliz_v5_20",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
+	"robotA:virtual_particle@lmark",
        	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
 
 	]
     },
     "simulation" : {
-	 "timesteps" : 10000,
+	 "timesteps" : 1000,
 	 "trials" : 1,
-	 "start_paused" : true,
+	 "start_paused" : false,
 	 "animated_layout" : {
 		"enabled" : false, 
-		"grid" : "A;.",
+		"grid" : "A;B;C",
 	 	"plots" : [
-			{"plot_type" : "comm_space",  "name" : "A"}
+			{"plot_type" : "general_info",  "name" : "A"},
+			{"plot_type" : "comm_space",  "name" : "B"},
+			{"plot_type" : "custom_lineplot",  "name" : "C", "variables" : ["virtual_particle@lmark_memory"]}
 		] 
 	 }
     },
@@ -61,7 +64,7 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 100000,
+            "total_duration" : 20000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
@@ -69,7 +72,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 20,
+                "num_instances" : 8,
 		"positions" : {"type" : "random", "low" : [-2, -2], "high" : [2, 2]}, 
 		"orientations" : "random",
                 "controller" : {
@@ -83,14 +86,15 @@
 		    "memory_ground_sensor" : {}
                 },
                 "actuators" : {
+		    "led" : {},
                     "joint_velocity_actuator" : {}
                 },
-		"battery" : {"discharge_coef" : 0.000005, "charge_coef" : 0.01, "charge_range" :  1} 
+		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01, "charge_range" :  1} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",
-                "num_instances" : 1,
-		"positions" : [0,2,0.5],
+                "num_instances" : 3,
+		"positions" :[[-3,2,0.5],[3,2,0.5], [0,2,0.5]],
 		"params" : {"range" : 6, "color" : "red"}
 	    },
 	    "green_light" : {
@@ -116,22 +120,22 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 8,
-		"W" : 8,
+		"H" : 6,
+		"W" : 6,
 		"threshold" : 1,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
 	       "tau_ori" : 20  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks"  : 21 , "positions" : "random"}	
+        "landmarks" : {"num_lmarks"  : 9, "positions" : "random"}	
     }, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,
         "generations" : 200,
-        "evaluation_steps" : 3000,
-        "num_evaluations" : 5,
+        "evaluation_steps" : 1,
+        "num_evaluations" : 1,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {

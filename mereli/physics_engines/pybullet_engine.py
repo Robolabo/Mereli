@@ -1,4 +1,3 @@
-
 import time
 import logging
 import numpy as np
@@ -116,6 +115,7 @@ class PybulletEngine(BaseEngine):
             p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
             p.configureDebugVisualizer(p.COV_ENABLE_RENDERING, 0)
             p.configureDebugVisualizer(p.COV_ENABLE_KEYBOARD_SHORTCUTS, 0)
+            p.configureDebugVisualizer(p.COV_ENABLE_MOUSE_PICKING, 0)
         self.add_objects(objects)
         if self.render:
             if len(self.robot_ids) == 0:
@@ -145,9 +145,11 @@ class PybulletEngine(BaseEngine):
         # __import__('pdb').set_trace()
         
         """ Iterates all the 3D physics of the world entities using pybullet. """
+        # t0 = time.time()
         if self.connected:
             # for i in range(int(self.T_control//self.dt)):
             p.stepSimulation(physicsClientId=self.client)
+        # print('Simulation Step elapsed: ',time.time() - t0)
 
 
     def step_render(self):
@@ -241,8 +243,7 @@ class PybulletEngine(BaseEngine):
 
         :param iterable objects: iterable of WorldObjects whose physics have to be simulated.
         """
-        import time
-        t0= time.time()
+        # t0= time.time()
         for obj in objects:
             # self.add_physics(obj)
             obj.physics_client = self
@@ -693,5 +694,9 @@ class PybulletEngine(BaseEngine):
     
     def is_focused(self, obj_id):
         return self.camera_options['focus'] and self.robot_ids[self.camera_options['focus_target']] == obj_id
+
+    def draw_line(self, dest,  origin):
+        p.addUserDebugLine(origin, dest, lineColorRGB=[1, 0, 0], lineWidth=8.0, lifeTime=0.5)
+        
 
 

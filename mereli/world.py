@@ -122,7 +122,8 @@ class World(object):
         
 
     def update_neighbor_matrix(self):
-        rad = 20 
+        rad = 50 
+        # rad = 1.5 
         if self.virtual_space is not None:
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
@@ -281,6 +282,7 @@ class World(object):
         else:
             self.groups[group] = [name]
         obj.group = group 
+        obj.gid = len(self.groups[group]) - 1
 
     def set_initializer(self, group_name, initializer_pos, initializer_ori=None):
         """ Bounds and registers entity initializers to groups of entities. 

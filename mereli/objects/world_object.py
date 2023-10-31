@@ -49,6 +49,7 @@ class WorldObject(ABC):
         self.pos_init_method = {'type' : 'fixed'}
         self.ori_init_method = 'fixed'
         self.group = None
+        self.gid = None # Group ID 
 
     def render(self):
         if self.model_file is None:

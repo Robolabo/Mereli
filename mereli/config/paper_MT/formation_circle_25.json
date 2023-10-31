@@ -13,7 +13,7 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : true, 
+		"enabled" : false, 
 		"grid" : "A;.",
 	 	"plots" : [
 			{"plot_type" : "comm_space",  "name" : "A", "H" : 6, "W" : 6 }
@@ -70,13 +70,13 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 9,
-		"positions" : {"type" : "random", "low" : [0,0], "high" : [1,1]}, 
+                "num_instances" : 25,
+		"positions" : {"type" : "random", "low" : [-1,-1], "high" : [1,1]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "subsumption",
                     "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
-			    		 	"basic_goto_coords" : {"priority" : 1, "formation" : "formationC"}}}},
+			    		 	"basic_goto_coords" : {"priority" : 1, "params" : {"formation" : "formation_circle_25"}}}}},
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8},
                     "ground_sensor" : {},
@@ -91,17 +91,40 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 6,
-		"W" : 6,
+		"H" : 8,
+		"W" : 8,
 		"threshold" : 1,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
 	       "tau_ori" : 20 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks" : 9, "scale" : 2, "positions" : [
-		[0, 0], [1, 0], [0.71,0.71], [0, 1],
-                [-0.71, 0.71], [-1,0], [-0.71, -0.71], [0,-1], [0.71, -0.71]
+        "landmarks" : {"num_lmarks" : 25, "scale" : 1, "positions" : [
+		 [ 0,    0  ],
+		 [ 1,    0  ],
+		 [ 0.62, 0.78],
+		 [-0.22,  0.97],
+		 [-0.9,   0.43],
+		 [-0.9,  -0.43],
+		 [-0.22, -0.97],
+		 [ 0.62, -0.78],
+		 [ 1,    0  ],
+		 [ 2,     0  ],
+		 [ 1.83,  0.81],
+		 [ 1.34,  1.49],
+		 [ 0.62,  1.9 ],
+		 [-0.21,  1.99],
+		 [-1 ,   1.73],
+		 [-1.62,  1.18],
+		 [-1.96,  0.42],
+		 [-1.96, -0.42],
+		 [-1.62, -1.18],
+		 [-1,   -1.73],
+		 [-0.21, -1.99],
+		 [ 0.62, -1.9 ],
+		 [ 1.34, -1.49],
+		 [ 1.83, -0.81],
+		 [ 2,   0  ]
 	]}}, 
     "algorithm" : {
         "name" : "NEAT",

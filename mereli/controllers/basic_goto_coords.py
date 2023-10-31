@@ -31,7 +31,33 @@ def get_formation(formation_name):
                       'edges' : [[0,1,3], [1,0,2,4], [2,1,5], [3,0,4,6], [4,1,3,5,7], [5,2,4,8],[6,3,7], [7,4,6,8], [8,5,7]]},
         'formationE' : {'leader' : -1, 'nodes' : np.array([[0, 0], [-.25, -0.5], [.25,-0.5], [-.5, -1], [.5, -1], [0,-1],
                                                             [-.25, 0.5], [.25,0.5], [-.5,1], [.5,1], [0,1]])},
-        'formationF' : {'leader' : -1, 'nodes' : np.array([[-2.5,0],[-2,0],[-1.5,0],[-1,0],[-0.5,0], [0,0], [.5,0],[1,0],[1.5,0], [2,0], [2.5,0]])}
+        'formationF' : {'leader' : -1, 'nodes' : np.array([[-2.5,0],[-2,0],[-1.5,0],[-1,0],[-0.5,0], [0,0], [.5,0],[1,0],[1.5,0], [2,0], [2.5,0]])},
+            'formation_circle_25' : {'nodes' : 
+		0.5 * np.array([[ 0,    0  ],
+		 [ 1,    0  ],
+		 [ 0.62, 0.78],
+		 [-0.22,  0.97],
+		 [-0.9,   0.43],
+		 [-0.9,  -0.43],
+		 [-0.22, -0.97],
+		 [ 0.62, -0.78],
+		 [ 1,    0  ],
+		 [ 2,     0  ],
+		 [ 1.83,  0.81],
+		 [ 1.34,  1.49],
+		 [ 0.62,  1.9 ],
+		 [-0.21,  1.99],
+		 [-1 ,   1.73],
+		 [-1.62,  1.18],
+		 [-1.96,  0.42],
+		 [-1.96, -0.42],
+		 [-1.62, -1.18],
+		 [-1,   -1.73],
+		 [-0.21, -1.99],
+	 [ 0.62, -1.9 ],
+	 [ 1.34, -1.49],
+	 [ 1.83, -0.81],
+		 [ 2,   0  ]])}
         }.get(formation_name)
     
 
@@ -46,14 +72,16 @@ class BasicGOTOCoords(RobotController):
     :param float sensitivity: value in [0, 1] that defines the threshold in the distance sensor reading 
         to interpret an obstacle detection. 
     """
-    def __init__(self, *args, sensitivity=0.1, no_obstacle_action=[1.,1.],  **kwargs):
+    def __init__(self, *args, formation='formationC', sensitivity=0.1, no_obstacle_action=[1.,1.],  **kwargs):
         super(BasicGOTOCoords, self).__init__(*args, **kwargs)
+        self.formation_name = formation
+        print(formation)
         self.flag = False
 
     def select_coords_lmark_formation(self):
         # import matplotlib.pyplot as plt
         lmark = self.controller_owner.virtual_particle.lmark
-        self.formation = get_formation('formationC')
+        self.formation = get_formation(self.formation_name)
         # self.formation = get_formation('formationE')
         if lmark is None:
             self.target_coords = np.zeros(2)
@@ -64,10 +92,11 @@ class BasicGOTOCoords(RobotController):
         # plt.scatter(formationB[:,0], formationB[:,1])
         # plt.show()
         # __import__('pdb').set_trace()
+
         neigh_positions = [epk.position[:2] for epk in self.controller_owner.neighbors]
         center = np.mean(neigh_positions,0)
 
-        # fneighs = get_formation_neighbors(self.formation,lmark , max_dist=1.5)
+        # fneighs = get_formation_neighbors(self.formation,lmark , max_dist=15)
         # center = np.zeros(2)
         # n = 0
         # for lm in range(len(self.formation['nodes'])):
@@ -145,6 +174,9 @@ class BasicGOTOCoords(RobotController):
 
 
     def step(self, state, reward=0.0):
+        # if self.t < 1500:
+        #     self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
+        #     return
         # if self.t == 1500:
         #     self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
 
@@ -223,5 +255,5 @@ class BasicGOTOCoords(RobotController):
 
     def reset(self):
         self.flag = False
-        self.controller_owner.virtual_particle.lmark_priorities = np.ones(11) 
+        self.robot.virtual_particle.lmark_priorities = np.ones(len(self.robot.virtual_particle.landmarks)) 
         

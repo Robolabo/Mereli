@@ -70,13 +70,13 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 9,
+                "num_instances" : 10,
 		"positions" : {"type" : "random", "low" : [0,0], "high" : [1,1]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "subsumption",
                     "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
-			    		 	"basic_goto_coords" : {"priority" : 1, "formation" : "formationC"}}}},
+			    		 	"basic_goto_coords" : {"priority" : 1,"params" : {"formation" : "formationB"}}}}},
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8},
                     "ground_sensor" : {},
@@ -99,10 +99,10 @@
 	       "tau_ori" : 20 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks" : 9, "scale" : 2, "positions" : [
-		[0, 0], [1, 0], [0.71,0.71], [0, 1],
-                [-0.71, 0.71], [-1,0], [-0.71, -0.71], [0,-1], [0.71, -0.71]
-	]}}, 
+        "landmarks" : {"num_lmarks" : 10, "scale" : 2, "positions" : [
+		[0, 0.25], [-0.25, 0], [0.25,0], [-0.5, -0.5],
+                [0.5, -0.5], [-1,-1], [-0.25, -1],[0.25,-1],[1,-1], [0,-0.5] ]
+	}}, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,

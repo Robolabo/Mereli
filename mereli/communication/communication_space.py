@@ -17,6 +17,26 @@ class VirtualParticle:
         self.lmark = None
         self.valid_lmark = None
         self.disabled_lmarks = []
+        self.lmark_memory = None
+        self.trace_matrix= None
+        self.neigh_mask_vec = None
+        self.time_settled = 0
+
+    def update_memory(self, occupation_matrix):
+        if self.trace_matrix is None:
+            self.trace_matrix = occupation_matrix.copy()
+        else:
+            # update traces with real info
+            self.trace_matrix[self.neigh_mask_vec] = occupation_matrix[self.neigh_mask_vec]
+            tau = 2000#500# if len(lmarks_status) < 15 else 500
+            # Update traces of robots not in neighborhood
+            self.trace_matrix[~self.neigh_mask_vec] += (1/tau) * (-self.trace_matrix[~self.neigh_mask_vec])
+            # assert any(self.trace_matrix[~self.neigh_mask_vec])
+        # if self.lmark_memory is not None:
+        #     tau = 300 if len(lmarks_status) < 15 else 500
+        #     self.lmark_memory += (1/tau) * (-self.lmark_memory)
+        #     self.lmark_memory[self.lmark] = 1
+        #     self.lmark_memory[lmarks_status.astype(bool)] = 1
    
     def attach_to_robot(self, real_robot):
         self.real_robot = real_robot
@@ -37,10 +57,20 @@ class VirtualParticle:
         self.lmark = None
         self.valid_lmark = None
         self.disabled_lmarks = []
-    
+        self.lmark_memory = None
+        self.time_settled = 0
+        self.trace_matrix  = None 
+
     def step_control(self, stimuli):
         control = self.controller.step(stimuli)
         self.control = np.array(control['out'])
+        
+        #manual
+        # d_tar = stimuli['dist_clst_lmark_av']
+        # phi_tar = stimuli['phi_clst_lmark_av'] / (2*np.pi)
+        # # print(phi_tar, d_tar)
+        # sp = 0.5 if d_tar[0] > 0.2 else -1
+        # self.control = np.r_[phi_tar, sp]
 
     def simulate_dynamic_neighborhood(self, base_neighbors):
         min_neighs = max(2, len(base_neighbors) // 4)
@@ -52,6 +82,10 @@ class VirtualParticle:
     @property
     def heading_vector(self):
         return np.r_[np.cos(self.orientation), np.sin(self.orientation)]
+
+    @property
+    def id(self):
+        return self.real_robot.gid
 
 class CommunicationSpace: 
     def __init__(self, threshold=0.2, randomize_neighbors=False, a=1, b=1): 
@@ -66,85 +100,103 @@ class CommunicationSpace:
         self.lmk_init_method = 'fixed'
         self.lmarks = [{'idx' : i, 'pos' : None, 'pr' : 0} for i in range(self.num_lmarks)]
         self.lmarks_enabled = []
-        self.t = 1
+        self.occupation_matrix = None # mask matrix N_robots x N_lmarks that states if robot i is in lmark j
+        self.distance_matrix = None # same as above but with distances between robots and lmarks 
+        
 
     def step(self):
         for particle in self.particles.values():
+            self.update_matrices(particle)
+        stimuli_all = np.repeat({}, len(self.particles)) 
+        for particle in self.particles.values():
             # if not particle.real_robot.awaken:
             #     continue
-            stimuli = self.perceive(particle)
-            particle.step_control(stimuli)
+            stimuli_all[particle.id] = self.perceive(particle)
+        # for particle in self.particles.values():
+            particle.step_control(stimuli_all[particle.id])
         self.step_dynamics()
         self.t += 1
+    
+    def update_matrices(self, particle):
+        st = particle.state
+        pidx = particle.id
+        for lm_idx, lmk in enumerate(self.landmarks):
+            dist_lm = self.distance(lmk, st)
+            self.distance_matrix[pidx, lm_idx] = dist_lm 
+        self.occupation_matrix[pidx] = 0
+        clst_lm = np.argsort(self.distance_matrix[pidx])[0]
+        particle.lmark = clst_lm
+        self.occupation_matrix[pidx,clst_lm] = 1 
+
 
     def perceive(self, particle):
-    
         import time 
         t0 = time.time()
-        # Aggregate info
-        #MAYBE PROPERTY
-        if self.randomize_neighbors:
-            if self.t == 1 or self.t % 100  == 0:
-                particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-                particle.simulate_dynamic_neighborhood(particle.neighbors)     
-                # particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
-        else:
-            particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
         neigh_states = []
         neigh_oris = []
+        pidx = particle.id
+        neigh_mask_vec = np.repeat(False, len(self.particles.keys()))
+        neigh_mask_vec[pidx] = True
+        particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
         for ngh in particle.neighbors:
+            neigh_mask_vec[ngh.id] = True
             neigh_states.append(ngh.state.copy())
             neigh_oris.append(ngh.orientation)
+        particle.neigh_mask_vec = neigh_mask_vec
         if len(neigh_states) == 0:
             neigh_states = [particle.state.copy()] 
-        # print(particle.disabled_lmarks)
-        valid_lmarks = [lm for lm in range(len(self.landmarks)) if lm not in particle.disabled_lmarks]
-        valid_priorities = [particle.lmark_priorities[i] for i in valid_lmarks]
-        valid_lmarks = np.array([self.landmarks[i] for i in valid_lmarks])
+        
         # Compute closest state and landmark
         clst_state = neigh_states[np.argmin([self.distance(st, particle.state) for st in neigh_states])] 
-        sorted_lmarks = np.argsort([self.distance(pt, particle.state) for pt in valid_lmarks]) 
+        sorted_lmarks = np.argsort(self.distance_matrix[pidx])        
+        # sorted_lmarks = np.argsort([self.distance(pt, particle.state) for pt in self.landmarks]) 
         clst_lmark_idx = sorted_lmarks[0]
-        clst_lmark = valid_lmarks[clst_lmark_idx] 
-        if len(valid_lmarks) != len(self.landmarks):
-            particle.lmark = np.where(np.sum(self.landmarks - valid_lmarks[sorted_lmarks[0]],1) == 0)[0][0]
-        else:
-            particle.lmark = clst_lmark_idx # np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
-         
+        clst_lmark = self.landmarks[clst_lmark_idx] 
+        # particle.time_settled = particle.time_settled + 1 if particle.lmark == clst_lmark_idx else 0
+        # particle.lmark = clst_lmark_idx # np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
+        # assert particle.lmark == np.argmin([self.distance(pt, particle.state) for pt in self.landmarks])
         
+        occupied_lmarks = np.array([np.sum([neigh.lmark == lm and neigh.time_settled > 100000 
+                                    for neigh in particle.neighbors]) > 0 for lm in range(len(particle.landmarks))]).astype(int)
+        particle.update_memory(self.occupation_matrix) 
         # t0 = time.time()
         clst_lmark_av = None
         # ord_lmarks = 
-        try:
-            if any(np.array(particle.lmark_priorities) != particle.lmark_priorities[0]):
-                sorted_lmarks = np.argsort(particle.lmark_priorities)
-        except:
-            __import__('pdb').set_trace()
+        new_sorted = []
+        for i in np.unique(particle.lmark_priorities):
+            sorted_lm_priorities = np.array(particle.lmark_priorities)[sorted_lmarks]
+            new_sorted.append(sorted_lmarks[sorted_lm_priorities == i])
+        sorted_lmarks = np.hstack(new_sorted)
         for lm_idx in sorted_lmarks:
-            if lm_idx in particle.disabled_lmarks:
-                continue
-            lm = self.landmarks[lm_idx] 
-            is_empty = True 
-            for neigh in particle.neighbors:
-                st = neigh.state
-                neigh_lm = neigh.lmark 
-                if neigh_lm == lm_idx and self.distance(st, lm) < self.distance(particle.state, lm):#self.threshold:
-                    is_empty = False # Is occupied by at least one neigh 
-                    break 
+            # if lm_idx in particle.disabled_lmarks:
+            #     continue
+            # if particle.lmark_priorities[lm_idx] == 3:
+            #     continue
+            lm = self.landmarks[lm_idx]
+            if particle.lmark_priorities[lm_idx] == 0: # Priority=0 allows many lmark visitors
+                clst_lmark_av = lm.copy()
+                break
+            dist_lm = self.distance_matrix[pidx, lm_idx]
+            # Aux vector storing the distnaces of neighbors and self that are in region of lm_idx
+            aux_vec = self.occupation_matrix[neigh_mask_vec, lm_idx] * self.distance_matrix[neigh_mask_vec, lm_idx]
+            # Is empty if no one in lmark region or particle is closest among neighbors.
+            is_empty = np.sum(aux_vec) == 0 or np.min(aux_vec[aux_vec > 0]) >= dist_lm 
+            # if self.occupation_matrix[:, lm_idx].sum() > 2 and is_empty and self.t > 100:
+            #     __import__('pdb').set_trace()
+            # if is_empty:
+            #     is_empty = np.sum(particle.trace_matrix[~neigh_mask_vec, lm_idx] > 0.1) == 0
             if is_empty:
                 clst_lmark_av = lm.copy()
-                # print(lm_idx)
                 break
         if clst_lmark_av is None: 
             clst_lmark_av = clst_lmark.copy()
         # print('New : ', time.time() - t0)
 
-        #OJO
+        # OJO
         clst_lmark = clst_lmark_av.copy()
         #####
-
-        # Obtain distances and angles
-        
+        # print(clst_lmark, clst_lmark_av, self.landmarks[lm_idx])
+       
         phi_clst_st = self.angle(particle, clst_state)
         if np.isnan(phi_clst_st):
             phi_clst_st = 0
@@ -156,6 +208,7 @@ class CommunicationSpace:
         particle.dist_clst_neighbor = dist_clst_st
         particle.dist_clst_lmark = dist_clst_lmark
         particle.dist_clst_lmark_av = dist_clst_lmark_av
+        # print(f'Particle {particle.id} is going to {lm_idx} with dist={dist_clst_lmark_av}, {dist_clst_lmark} and in {particle.lmark}')
         # Normalize 
         phi_clst_st = np.array([1 / (self.b*phi_clst_st+1)])
         phi_clst_lmark = np.array([1 / (self.b*phi_clst_lmark + 1)])
@@ -193,11 +246,16 @@ class CommunicationSpace:
         self.t = 1
         if self.lmk_init_method == 'random':
             self.generate_rnd_lmarks(self.num_lmarks, self.threshold)
-
+        
         for particle in self.particles.values():
             particle.reset()
             self.initialize_particle(particle, seed=seed)
             particle.landmarks = self.landmarks.copy()
+            particle.lmark_memory = np.zeros(len(self.landmarks))
+        self.occupation_matrix = np.zeros((len(self.particles), len(self.landmarks)))
+        self.distance_matrix = np.zeros((len(self.particles), len(self.landmarks)))
+        if isinstance(self.landmarks, list):
+            self.landmarks = np.array(self.landmarks)
 
     def initialize_particle(self, particle, seed=None):
         pass
@@ -230,9 +288,10 @@ class Torus2dSpace(CommunicationSpace):
             target_orientation = 2*np.pi*control[0]
             speed = (control[1] + 1) / 2
             particle.orientation += (self.dt / self.tau_ori) * (target_orientation - particle.orientation)
+            # particle.orientation = 2*np.pi*2*np.pi*control[0]
             particle.orientation = np.clip(particle.orientation, a_min=0, a_max=2*np.pi)
             if speed > 0.5:
-                sp = 5 * particle.dist_clst_lmark
+                sp = 5 * particle.dist_clst_lmark 
                 particle.state += sp * (self.dt / self.tau_st) * particle.heading_vector
 
             # Apply torus teleportation
@@ -267,7 +326,10 @@ class Torus2dSpace(CommunicationSpace):
                 distances = np.array([self.distance(pt, new_candidate) for pt in points])
                 if all(distances > min_dist):
                     points.append(new_candidate)
+
         self.landmarks = np.vstack(points)
+        order = np.argsort([self.distance(self.landmarks[0], lm) for lm in self.landmarks])
+        self.landmarks = self.landmarks[order]
         self.lmarks_enabled = [True for _ in range(len(self.landmarks))]
 
 

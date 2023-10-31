@@ -4,9 +4,11 @@ def geom_mean(v):
     """Geometrical mean of the elements of a numpy array."""
     return np.prod(v) ** (1/v.shape[0])
 
-def angle_mean(angles):
+def angle_mean(angles, weights=None):
+    if weights is None:
+        weights = np.repeat(1/len(angles), len(angles))
     """ Compute average angle of a vector of angles in radians.""" 
-    return np.angle(np.sum([np.exp(1j * ang) for ang in angles]))
+    return np.angle(np.sum([w*np.exp(1j * ang) for w, ang in zip(weights,angles)]))
 
 
 def compute_angle(u, v=None):

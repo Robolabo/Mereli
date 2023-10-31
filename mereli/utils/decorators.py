@@ -5,6 +5,9 @@ from collections import deque
 import numpy as np
 from mereli.globals import global_states
 
+
+
+
 def time_elapsed(func):
     """ Computes the amount of time that a function elapses.
     Only works in DEBUG mode.
