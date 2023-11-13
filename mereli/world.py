@@ -254,6 +254,7 @@ class World(object):
         if global_states.LOG:
             if self.is_done:
                 self.data_logger.save_pickle()
+                __import__('pdb').set_trace()
             # Collect data when Logging mode is enabled.
             else:
                 self.data_logger.update()

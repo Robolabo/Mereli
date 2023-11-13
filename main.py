@@ -109,8 +109,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         now = datetime.now()
         logs_path = os.path.join(logs_path, logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
         global_states.set_data_logging(logs_path)
-        if not os.path.isdir(logs_path):
-            os.mkdir(logs_path)
+        # if not os.path.isdir(logs_path):
+        #     os.mkdir(logs_path)
 
     # Set loggings
     # if log:

@@ -1,8 +1,4 @@
 _HiStOrY_V2_
-self.weights.dot(inn)
-self.voltages
-self.weights.dot(np.r_[inn,\040voltages])
-self.weights.dot(np.r_[inn,\040self.voltages])
 self.weights.dot(np.r_[inn,\040[1,1,0,0]])
 self.weights.dot(np.r_[inn,\040[0,0,1,1]])
 self.weights.dot(np.r_[np.zeros(8),\040[0,0,1,1]])
@@ -499,3 +495,7 @@ self.robot.physics_client.ground_areas
 [*self.robot.physics_client.ground_areas.values()][0]['center']
 food_pos
 nest_pos
+logs_path
+\040os.path.isdir(logs_path)
+logs_path
+logs_folder

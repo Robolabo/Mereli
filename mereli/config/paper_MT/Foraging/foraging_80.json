@@ -125,7 +125,7 @@
 	       "tau_ori" : 20  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks"  : 61, "positions" : "random"}	
+        "landmarks" : {"num_lmarks"  : 81, "positions" : "random"}	
     }, 
     "algorithm" : {
         "name" : "NEAT",
