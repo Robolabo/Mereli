@@ -1,190 +1,116 @@
 import numpy as np
 from mereli.controllers import RobotController
 from mereli.register import controller_registry
-
-import random
-
-class Perlin:
-    def __init__(self):
-        self.gradients = []
-        self.lowerBound = 0
+from mereli.utils import compute_angle, angle_diff
 
 
-    def valueAt(self, t):
-        if(t<self.lowerBound):
-            print("ERROR: Input parameter out of bounds!")
+
+
+@controller_registry(name='comm_space_group_agg') 
+class CommSpaceGroupAgg(RobotController):
+    def __init__(self, *args,   **kwargs):
+        super(CommSpaceGroupAgg, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.ga_centers = np.array([[1,0], [-1,0], [0,1]])
+        self.num_ga = [0.25, 0.25, 0.5]
+
+
+    def select_coords(self):
+        lmark = self.robot.virtual_particle.lmark
+        state = self.robot.virtual_particle.state
+        if lmark is None:
+            self.target_coords = np.zeros(2)
             return
-        # Add to gradients until it covers t
-        while t >= len(self.gradients)-1+self.lowerBound:
-            self.gradients.append(random.uniform(-1, 1))
-
-        discarded = int(self.lowerBound) # getting number of gradients that have been discarded
-        # Compute products between surrounding gradients and distances from them
-        d1 = (t-t//1)
-        d2 = d1-1
-        a1 = self.gradients[(int)(t//1)-discarded]*d1
-        a2 = self.gradients[(int)(t//1+1)-discarded]*d2
-
-        amt = self.__ease(d1)
-
-        return self.__lerp(a1,a2,amt)
-
-    def discard(self, amount):
-        gradientsToDiscard = int(amount+self.lowerBound%1)
-        self.gradients = self.gradients[gradientsToDiscard:]
-        self.lowerBound += amount
-
-    def __ease(self, x):
-        return 6*x**5-15*x**4+10*x**3
-
-
-    def __lerp(self, start, stop, amt):
-        return amt*(stop-start)+start
-
-# import matplotlib.pyplot as plt 
-# per = Perlin()
-# vals = [per.valueAt(t) for t in np.linspace(0,10,10000)]
-# plt.plot(vals)
-# plt.show()
-# import pdb; pdb.set_trace()
-
-
-
-
-@controller_registry(name='perlin_walk')
-class PerlinWalk(RobotController):
-    """
-    """
-    def __init__(self, *args, **kwargs):
-        super(PerlinWalk, self).__init__(*args, **kwargs)
-        self.perlin_generator = Perlin()
-        self.sensitivity = 0.19
-        self.t = 0
-
-    def step(self, state, reward=0.0):
-        """
-        """
-        st_ds = state['distance_sensor']
-        if not any(st_ds > self.sensitivity):
-            delta_ori = self.perlin_generator.valueAt(self.t)
-            wh_speed = 0.2 * (np.abs(delta_ori) * 2 - 1)
-            if delta_ori < 0:
-                action = np.array([1., wh_speed])
-            else: 
-                action = np.array([wh_speed, 1.])
-        else:
-            if any(st_ds[[0,1]] > self.sensitivity):
-                # print('Turn Left')
-                action = np.array([1., -1])
-            elif any(st_ds[[6,7]] > self.sensitivity):
-                # print('Turn Right')
-                action = np.array([-1, 1.])
+        # g1 = [0,1,2,3,4]
+        # g2 = [5,6,7,8,9]
+        # g3 = [10,11,12,13,14]
+        g1 = np.arange(0, 10)
+        g2 = np.arange(10, 20)
+        g3 = np.arange(20, 40)
+        my_group = None
+        center1 = np.array([rob.position[:2] for rob in self.robot.neighbors if rob.virtual_particle.lmark in g1])
+        center2 = np.array([rob.position[:2] for rob in self.robot.neighbors if rob.virtual_particle.lmark in g2])
+        center3 = np.array([rob.position[:2] for rob in self.robot.neighbors if rob.virtual_particle.lmark in g3])
+        if lmark in g1:
+            if len(center1) > 0:
+                center1 = np.vstack((center1, self.robot.position[:2]))
             else:
-                # print('GO straight over')
-                action = np.array([1., 1.])
-        self.t += 0.1
-        return {'joint_velocity_actuator' : action}
-
-@controller_registry(name='follow_robot')
-class FollowRobot(RobotController):
-    """
-    """
-    def __init__(self, *args, **kwargs):
-        super(FollowRobot, self).__init__(*args, **kwargs)
-        self.perlin_walk = PerlinWalk(*args, **kwargs)
-        self.aux = np.random.random() < 0.3
-        print(self.aux)
-
-    def step(self, state, reward=0.0):
-        """
-        """
-        st_ds = state['distance_sensor']
-        ir_rx = state['IR_receiver']['msg']
-        if not any(ir_rx != 0.0) or self.aux:
-            return {**self.perlin_walk.step(state), 'IR_transmitter' : np.array([1.])}
-        elif any(st_ds[[0,1]] > 0.6):
-            return {'joint_velocity_actuator' : np.array([0., 0.]), 'IR_transmitter' : np.array([self.aux])}
-        else:
-            if any(ir_rx[[0,7]] != 0.0):
-                action = np.array([1., 1.])
-            elif any(ir_rx[[1,2,3]] != 0.0):
-                action = np.array([-1., 1.])
-            elif any(ir_rx[[6,5,4]] != 0.0):
-                action = np.array([1., -1.])
+                center1 = self.robot.position[:2]
+            my_group = 0
+        if lmark in g2:
+            if len(center2) > 0:
+                center2 = np.vstack((center2, self.robot.position[:2]))
             else:
-                action = np.array([0., 0.])
-            return {'joint_velocity_actuator' : action, 'IR_transmitter' : np.array([self.aux])}
+                center2 = self.robot.position[:2]
+            my_group = 1
+        if lmark in g3:
+            try:
+                if len(center3) > 0:
+                    center3 = np.vstack((center3, self.robot.position[:2]))
+                else:
+                    center3 = self.robot.position[:2]
+            except:
+                __import__('pdb').set_trace()
+            my_group = 2
+        center1 = np.mean(center1,0) 
+        center2 = np.mean(center2,0) 
+        center3 = np.mean(center3,0)
+        centers = [center1, center2, center3]
+        my_center = centers[my_group]
+        v_repel = np.zeros(2)
+        dmin = 3
+        for i,center in enumerate([center1, center2, center3]):
+            if not np.isnan(center).any() and i != my_group:
+                if np.linalg.norm(center-my_center)<3:
+                    v_repel += center - my_center
+
+        self.target_coords = my_center - v_repel
 
 
-
-
-@controller_registry(name='stay')
-class StayController(RobotController):
-    def __init__(self, *args, **kwargs):
-        super(StayController, self).__init__(*args, **kwargs)
-    def step(*args, **kwargs):
-        return {'joint_velocity_actuator' : np.array([0.,0.]), 'IR_transmitter' : np.array([1.])}
-
-@controller_registry(name='aggregation')
-class AggregationController(RobotController):
-    """ Controller devoted to the obstacle avoidance task. This means that the controller 
-    will read from the distance sensor, process the measurements and return joint velocity 
-    actions required to avoid colliding with any other tangible entity. This controller is 
-    currently hard coded for the Epuck robot.
-
-    :param float sensitivity: value in [0, 1] that defines the threshold in the distance sensor reading 
-        to interpret an obstacle detection. 
-    """
-    def __init__(self, *args, sensitivity=0.1, avoid_collide=True, **kwargs):
-        super(AggregationController, self).__init__(*args, **kwargs)
-        self.perlin_walk = PerlinWalk(*args, **kwargs)
-        self.sensitivity = sensitivity
-        self.avoid_collide = avoid_collide
 
     def step(self, state, reward=0.0):
-        """ Method to execute once the controller program. It reads the current distance sensor measurement, 
-        and plans the action as follows:
+        # if self.t < 1500:
+        #     self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
+        #     return
+        # if self.t == 1500:
+        #     self.controller_owner.virtual_particle.disabled_lmarks.append(self.controller_owner.virtual_particle.lmark)
 
-        .. code-block:: 
+        # area_read = state['ground_sensor']
+        curr_pos = self.get_sensor_reading('own_position_sensor')[:2]
+        self.select_coords()
+
+        dist_tar = np.linalg.norm(self.target_coords - curr_pos)
+        desired_dir = (self.target_coords - curr_pos) / dist_tar
+
+
+        robot_ori = self.controller_owner.orientation[-1]
+        heading_ori = np.r_[np.cos(robot_ori), np.sin(robot_ori)]
+        a1 = compute_angle(desired_dir)
+        a2 = compute_angle(heading_ori)
+        lmark = self.controller_owner.virtual_particle.lmark
+        angle = angle_diff(a1,a2)
+        if angle <= 0.5:
+            action = np.array([1, 1])
+        elif np.abs(angle - np.pi) <= 0.3:
+            action = np.array([-1,-1])
+        elif a1 > a2:
+            if a1 - a2 > np.pi:
+                action =  .5*np.array([-1., 1])
+            else:
+                action =  .5* np.array([1., -1])
+        else:
+            if a2-a1 >np.pi:
+                action =  .5* np.array([1., -1])
+            else:
+                action =  .5*np.array([-1., 1])
+
         
-            IF DS[0] > SENSITIVITY OR DS[1] > SENSITIVITY THEN
-                TURN LEFT
-            ELSE IF DS[6] > SENSITIVITY OR DS[7] > SENSITIVITY THEN
-                TURN RIGHT
-            ELSE THEN
-                GO STRAIGHT OVER
+        # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
+        #     action = np.array([0,0])
+        self.flag = True
+        self.get_actuator('joint_velocity_actuator').action = action
+
+    def reset(self):
+        self.flag = False
+        self.robot.virtual_particle.lmark_priorities = np.ones(len(self.robot.virtual_particle.landmarks)) 
         
-        :param dict state: state with the sensor reading. The dict maps the reference name of the sensor to 
-            the sensor np.ndarray reading.
-        :param float reward: reward (if any). Not used in this controller.
-        """
-        st_ds = state['distance_sensor']
-        ir_rx = state['IR_receiver']['msg']
-        max_val = np.max(st_ds)
-        max_dir = np.argmax(st_ds)
-        min_dir = np.argmin(st_ds)
-        if not any(ir_rx != 0.0) or ir_rx[max_dir] == 0.:
-            return self.perlin_walk.step(state)
-        else:
-            num_ok = np.logical_and(0.2 <= st_ds, st_ds <= 0.7)
-            if np.sum(num_ok) >= 2: 
-                action = np.array([0,0])
-            else:
-                return self.perlin_walk.step(state)
-            # import pdb; pdb.set_trace()
-            # if max_val > 0.6: # Too close, avoid
-            #     if min_dir in [7,6,5,4]:
-            #         action = np.array([-1, 1.]) # Turn right
-            #     else:
-            #         action = np.array([1., -1]) # Turn left
-            # else: # Aggregate
-            #     if 0.4 < max_val < 0.6:
-            #         action = np.array([0,0])
-            #     else:
-            #         if max_dir in [7,0]:
-            #             action = np.array([1, 1.]) # Straight
-            #         elif max_dir in [1,2,3]:
-            #             action = np.array([1., -1]) # Turn left
-            #         else:
-            #             action = np.array([-1, 1.]) # Turn right
-        return {'joint_velocity_actuator' : action, 'IR_transmitter' : np.array([1.])}

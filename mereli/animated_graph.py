@@ -221,7 +221,7 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         h, w =self.H, self.W 
         self.set_ylim(-h/2-.1,h/2+.1)
         self.set_xlim(-w/2-.1,w/2+.1)
-        self.axis.scatter([], [], color='b',zorder=100, s=102, animated=True) # Own state
+        self.axis.scatter([], [], color='r',zorder=102, s=102, animated=True) # Own state
         self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         self.axis.scatter([], [], marker='*', edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
     
@@ -441,7 +441,7 @@ class AnimatedLayout:
     def initialize(self):
         from mereli.utils import merge_dicts
         subplot_kw = merge_dicts([p.subplot_kw for p in self.plots])
-        self.fig, axes = plt.subplot_mosaic(self.grid, per_subplot_kw=subplot_kw, figsize=self.figsize) 
+        self.fig, axes = plt.subplot_mosaic(self.grid, per_subplot_kw=subplot_kw, figsize=self.figsize)
         plt.subplots_adjust(top=0.97, bottom=0.08, left=0.10, right=0.97, hspace=0.1, wspace=0.15)
         for p in self.plots:
             p.axis = axes[p.name]

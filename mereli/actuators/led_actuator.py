@@ -39,6 +39,10 @@ class LedActuator(Actuator):
                 color = self.color_fault
             else:
                 color = self.colors[int(led_a)]
+
+
+            color = ('orange', 'b', 'b', 'g', 'g', 'r', 'r', 'purple')[self.actuator_owner.gid]
+
             # elif 0 < led_a < 1:
             #     color = [led_a, 0, 0]
             led_idx = self.physics_client.get_actuator_position(self.actuator_owner.id, 'led_actuator', sector=i)[1]

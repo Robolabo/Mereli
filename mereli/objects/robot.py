@@ -98,6 +98,7 @@ class Robot(WorldObject):
         self._neighbors = []
         self.static_neighbors = []
         self.awaken = False
+        self.is_focussed = False
         
     def step(self):
         """ Step method of the robots. 

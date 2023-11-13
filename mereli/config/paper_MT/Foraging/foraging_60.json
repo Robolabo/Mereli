@@ -1,23 +1,24 @@
 {
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "generaliz_v4_20",
+	"file" : "foraging_60",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
-       	"robotA:virtual_particle@orientation", "virtual_space@landmarks", 
-	"robotA:virtual_particle@lmark", "robotA:controller:routines:basic_goto_coords@target_coords" 
+	"robotA:virtual_particle@lmark",
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks" 
 	]
     },
     "simulation" : {
-	 "timesteps" : 10000,
+	 "timesteps" : 1000,
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
 		"enabled" : false, 
-		"grid" : "A;.",
+		"grid" : "A;B",
 	 	"plots" : [
-			{"plot_type" : "comm_space",  "name" : "A", "H" : 8, "W" : 8 }
-		]  
+			{"plot_type" : "general_info",  "name" : "A"},
+			{"plot_type" : "comm_space",  "H" : 8, "W": 8, "name" : "B"}
+		] 
 	 }
     },
     "topology" : {
@@ -35,7 +36,7 @@
             "neuron_model" : "rate_model",
             "synapse_model" : "static_synapse",
             "ensembles": {
-                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 4, "tau" : 1}}
+                "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 1, "tau" : 1}}
             },
             "outputs" : {
                 "out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}
@@ -56,79 +57,81 @@
     },
     "world": {
         "name" : "flat_world",
-        "arena_params" : {
-        },
+        "arena_params" : {},
         "engine" : "pybullet",
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 10000,
+            "total_duration" : 20000,
             "num_slots" : 1,
             "use_done" : false,
-            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 2}}]
+            "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 0.2}}]
         },
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 23,
-		"positions" : {"type" : "random", "low" : [-1,-1], "high" : [1,1]}, 
+                "num_instances" : 60,
+		"positions" : {"type" : "random", "low" : [-5, -5], "high" : [5, 5]}, 
 		"orientations" : "random",
                 "controller" : {
-                    "name" : "subsumption",
-                    "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
-			    		 	"basic_goto_coords" : {"priority" : 1, "params" : {"formation" : "formation_circle_25"}}}}},
+                    "name" : "forage_comm_space",
+                    "params" : {}},
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8},
-                    "ground_sensor" : {},
-                    "own_position_sensor" : {}
+                    "distance_sensor" : {"range" : 0.8},
+                    "light_sensor" : {"range" : 5},
+		    "own_position_sensor" : {},
+		    "battery_sensor" : {},
+		    "memory_ground_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6}
-                }
-	    } 
+                    "joint_velocity_actuator" : {"max_velocity" : 10}
+                },
+		"battery" : {"discharge_coef" : 0.0005, "charge_coef" : 0.001, "charge_range" :  1} 
+	    },
+	    "red_light" : {
+                "type" : "light_source",
+                "num_instances" : 6,
+		"positions" :[[-10,5,0.5],[10,5,0.5], [0,5,0.5],[-10,-5,0.5],[10,-5,0.5], [0,-5,0.5] ],
+		"params" : {"range" : 6, "color" : "red"}
+	    },
+	    "green_light" : {
+                "type" : "light_source",
+                "num_instances" : 1,
+		"positions" : [0,0,0.5],
+		"params" : {"range" : 2, "color" : "green"}
+	    },
+	    "nest" : {
+                "type" : "ground_area",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"params" : {"radius" : 2, "color" : "black"}
+	    },
+	    "food" : {
+                "type" : "ground_area",
+                "num_instances" : 2,
+		"positions" : [[10,0,0], [-10,0,0]],
+		"params" : {"radius" : 1.5, "color" : "grey"}
+	    }
         }
     },
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 8,
-		"W" : 8,
+		"H" : 10,
+		"W" : 10,
 		"threshold" : 1,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
-	       "tau_ori" : 20 
+	       "tau_ori" : 20  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks" : 23, "scale" : 1.5, "positions" : [
-		 [ 0,    0  ],
-		 [ 0.62, 0.78],
-		 [-0.22,  0.97],
-		 [-0.9,   0.43],
-		 [-0.9,  -0.43],
-		 [-0.22, -0.97],
-		 [ 0.62, -0.78],
-		 [ 1,    0  ],
-		 [ 1.83,  0.81],
-		 [ 1.34,  1.49],
-		 [ 0.62,  1.9 ],
-		 [-0.21,  1.99],
-		 [-1 ,   1.73],
-		 [-1.62,  1.18],
-		 [-1.96,  0.42],
-		 [-1.96, -0.42],
-		 [-1.62, -1.18],
-		 [-1,   -1.73],
-		 [-0.21, -1.99],
-		 [ 0.62, -1.9 ],
-		 [ 1.34, -1.49],
-		 [ 1.83, -0.81],
-		 [ 2,   0  ]
-	]}}, 
+        "landmarks" : {"num_lmarks"  : 61, "positions" : "random"}	
+    }, 
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,
         "generations" : 200,
-        "evaluation_steps" : 3000,
+        "evaluation_steps" : 1,
         "num_evaluations" : 1,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
@@ -138,12 +141,12 @@
 		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}},
 	    "comm_ann:nodes:bias:all" : {
-		"normalization" : {"type": "linear", "min_val" : -8, "max_val" : 8},
-		"initialization" : {"type" : "gaussian", "sigma" : 2},
+		"normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
+		"initialization" : {"type" : "gaussian", "sigma" : 1},
 		"mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}}
 	},
 	"alg_params" :{ 
-	    "p_weight_mut" : 0.7, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
+	    "p_weight_mut" : 0.5, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
 	    "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
 	}
     }

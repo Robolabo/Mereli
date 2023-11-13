@@ -19,8 +19,11 @@ def get_formation_neighbors(formation,node_id, max_dist=0.7):
 
 def get_formation(formation_name):
     return { 
-        'formationA' : {'nodes' : np.array([[0, .5], [-.25, 0], [.25,0], [-.5, -.5], [.5, -.5], [0,-.5]]),
-                      'edges' : [[1,2], [0,2,3,5], [0,2,4,5], [1,5], [2,5], [1,2,3,4]]},
+        'formationPent' : {'nodes' : 1.*np.array([[0,0],[0,1],[-0.951,  0.309],[-0.587, -0.809],[ 0.587, -0.809],[ 0.951,  0.309]])},
+        'formationSquare10' : {'nodes' : 1.*np.array([[0,0],[1,1], [0,1], [-1,1], [1,0], [-1,0], [-1,-1],[0,-1], [1,-1] ])},
+        'formationSquare9' : {'nodes' : .75*np.array([[1,1], [0,1], [-1,1], [1,0], [0,0], [-1,0], [-1,-1],[0,-1], [1,-1] ])},
+        'formationRombo' : {'nodes' : .75*np.array([ [1,0],[0,0], [-1,0], [0,1], [0,-1], [0.5,0.5], [0.5, -0.5], [-0.5, 0.5], [-0.5,-0.5]  ])},
+        'formationA' : {'nodes' : 1.5*np.array([[0, .5], [-.25, 0], [.25,0], [-.5, -.5], [.5, -.5], [0,-.5]])},
         'formationB' : {'leader' : 0, 'nodes' : 0.75*np.array([[0, .25], [-.25, 0], [.25,0], [-.5, -.5], 
                                                              [.5, -.5], [-1,-1], [-0.25, -1],[.25,-1],[1,-1], [0,-0.5] ]), 
                       'edges' : [[0,1,2], [1,0,2,3,9], [2,0,1,4,9], [3,1,5,6,9], [4,2,7,8,9], [5,3,6], [6,3,5,7,9], [7,4,6,8], [8,4,7], [9,1,2,3,4,6,7]]},
@@ -87,28 +90,28 @@ class BasicGOTOCoords(RobotController):
             self.target_coords = np.zeros(2)
             return
         state = self.controller_owner.virtual_particle.state
-        # form_triangle = {'nodes' : .5 * np.array([[-1, 0],[1,0],[0,1]]), 'edges' : [(0)]}
 
-        # plt.scatter(formationB[:,0], formationB[:,1])
-        # plt.show()
-        # __import__('pdb').set_trace()
-
-        neigh_positions = [epk.position[:2] for epk in self.controller_owner.neighbors]
+        neigh_positions = np.vstack([epk.position[:2] for epk in self.controller_owner.neighbors])
         center = np.mean(neigh_positions,0)
-
+        # if self.t > 500:
+        #     center[0] += 0.1
+        # if self.t > 5000:
+        #     self.formation_name = 'formationC'
+        # if self.t > 10000:
+        #     self.formation_name = 'formationRombo'
         # fneighs = get_formation_neighbors(self.formation,lmark , max_dist=15)
         # center = np.zeros(2)
         # n = 0
         # for lm in range(len(self.formation['nodes'])):
-        #     if lm not in fneighs:
-        #         continue
+        #     if lm not in fneighs: #         continue
         #     lm_agents = [nn.position[:2] for nn in self.robot.neighbors if nn.virtual_particle.lmark == lm]
         #     if len(lm_agents) == 0:
         #         continue
         #     center += lm_agents[0]
         #     n += 1
         # center /= n
-
+        if self.formation_name == 'formationA':
+            center[1] += 0.25
         self.target_coords = self.formation['nodes'][lmark] if lmark is not None else np.zeros(2)
         self.target_coords += center
         return 
@@ -205,9 +208,8 @@ class BasicGOTOCoords(RobotController):
         # A = 1 / (1 + np.exp(-alp * (dist_tar - .05)))
         A = 1 / (1 + np.exp(-5* (dist_tar - .6)))
         if dist_tar<= 0.05: A = 0
-        print(dist_tar, A)
-        if dist_tar < 0.2:
-            A = 0.4
+        # if dist_tar < 0.2:
+        #     A = 0.4
         B = np.cos(a1 - a2)
         lmark = self.controller_owner.virtual_particle.lmark
         # if self.formation.get('leader', -1) == lmark and  dist_tar < 1 :
@@ -218,7 +220,7 @@ class BasicGOTOCoords(RobotController):
             if angle <= 0.3:
                 action = 0.4*np.array([1, 1])
             elif np.abs(angle - np.pi) <= 0.3:
-                action = 0.1*np.array([-1,-1])
+                action = 1*np.array([-1,-1])
             elif a1 > a2:
                 if a1 - a2 > np.pi:
                     action =  .3*np.array([-1., 1])
@@ -231,27 +233,26 @@ class BasicGOTOCoords(RobotController):
                     action =  .3*np.array([-1., 1])
         else:
             angle = angle_diff(a1,a2)
-            # a1 = a1 % (2*np.pi)
-            # a2 = a2 % (2*np.pi)
             if angle <= 0.5:
-                action = A * np.array([1, 1])
-            # elif np.abs(angle - np.pi) <= 0.3:
-            #     action = A*np.array([-1,-1])
+                action = A*np.array([1, 1])
+            elif np.abs(angle - np.pi) <= 0.3:
+                action = np.array([-1,-1])
             elif a1 > a2:
                 if a1 - a2 > np.pi:
-                    action =  .3*np.array([-1., 1])
+                    action =  .5*np.array([-1., 1])
                 else:
-                    action =  .3* np.array([1., -1])
+                    action =  .5* np.array([1., -1])
             else:
                 if a2-a1 >np.pi:
-                    action =  .3* np.array([1., -1])
+                    action =  .5* np.array([1., -1])
                 else:
-                    action =  .3*np.array([-1., 1])
+                    action =  .5*np.array([-1., 1])
+
         
         # if np.linalg.norm(self.target_coords - curr_pos) < 0.1:
         #     action = np.array([0,0])
         self.flag = True
-        self.get_actuator('joint_velocity_actuator').action = action / 3
+        self.get_actuator('joint_velocity_actuator').action = action
 
     def reset(self):
         self.flag = False

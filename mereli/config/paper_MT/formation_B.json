@@ -1,7 +1,7 @@
 {
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "generaliz_v4_20",
+	"file" : "formationB",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
        	"robotA:virtual_particle@orientation", "virtual_space@landmarks", 

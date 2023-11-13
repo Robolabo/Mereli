@@ -123,7 +123,7 @@ class World(object):
 
     def update_neighbor_matrix(self):
         rad = 50 
-        # rad = 1.5 
+        # rad = 1 
         if self.virtual_space is not None:
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 

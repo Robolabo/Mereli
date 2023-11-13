@@ -1,7 +1,7 @@
 {
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "foraging_20",
+	"file" : "foraging_100",
 	"data": [
 	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
 	"robotA:virtual_particle@lmark",

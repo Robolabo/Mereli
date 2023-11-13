@@ -17,26 +17,17 @@ class ForageCommSpace(RobotController):
     
     def select_role(self):
         lmk = self.controller_owner.virtual_particle.lmark
-        self.curr_role = self.roles[int(lmk)]
-        # if lmk == 0: 
-        #     self.curr_role = 'NEST'
-        # elif lmk == 1: 
-        #     self.curr_role = 'NEST'
-        # elif lmk == 2: 
-        #     self.curr_role = 'FOOD_1'
-        # elif lmk== 3: 
-        #     self.curr_role = 'FOOD_2'
-        # elif lmk== 4: 
-        #     self.curr_role = 'LOAD_BAT'
-        # else:
-        #     self.curr_role = 'FOOD_2'
+        try:
+            self.curr_role = self.roles[int(lmk)]
+        except:
+            __import__('pdb').set_trace()
 
     def load_battery(self, state):
         bat_lv = self.get_sensor_reading('battery_sensor') 
         action = np.array([0,0])
         # self.flags['load'] = False 
         ls_read = self.get_sensor_reading('red_light_sensor') 
-        if np.max(ls_read) > 0.85:
+        if np.max(ls_read) > 0.8:
             self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
             return 
 
@@ -52,6 +43,7 @@ class ForageCommSpace(RobotController):
         self.get_actuator('joint_velocity_actuator').action = action 
 
     def step(self, state, reward=0.0):
+        # if self.t > 1:
         if self.t < 100:#500:
             return
 
@@ -59,7 +51,7 @@ class ForageCommSpace(RobotController):
         curr_pos = self.get_sensor_reading('own_position_sensor')[:2]
         bat = self.get_sensor_reading('battery_sensor')
         if bat < 0.5 or (self.waiting_bat and bat < 0.9):
-            print('BATTERY')
+            # print('BATTERY')
             self.waiting_bat = True
             self.controller_owner.virtual_particle.disabled_lmarks = []
             self.robot.virtual_particle.lmark_priorities[-1] = 0
@@ -71,8 +63,9 @@ class ForageCommSpace(RobotController):
             self.robot.virtual_particle.lmark_priorities[-1] = 3
             # self.controller_owner.virtual_particle.disabled_lmarks = [len(self.priorities)-1]
             
-        nest_pos = np.array([0,0])
-        food_pos = 5 * np.array([[-1, 0],[1, 0]])
+        nest_pos = [*self.robot.physics_client.ground_areas.values()][0]['center']
+        food_pos = np.vstack(([*self.robot.physics_client.ground_areas.values()][2]['center'], 
+                             [*self.robot.physics_client.ground_areas.values()][1]['center']))
         self.select_role()
         # if self.robot.id %2 ==0:
         #     self.curr_role = 'FOOD_1'
