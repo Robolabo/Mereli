@@ -253,9 +253,9 @@ class World(object):
                         self.animated_layout.update(target_robot)
         if global_states.LOG:
             if self.is_done:
+                self.data_logger.set_log_file()
                 self.data_logger.save_pickle()
-                __import__('pdb').set_trace()
-            # Collect data when Logging mode is enabled.
+                print('Logs saved!')
             else:
                 self.data_logger.update()
         self.t += 1

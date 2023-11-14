@@ -69,8 +69,9 @@ class Evaluator:
         # Set the same seed for every geno eval in generation (seed=generation) 
         # Seed before trial loop so that every trial is different
         seed = generation #* self.num_evaluations
-        global_states.set_seed(seed)
-        np.random.seed(seed)            
+        if not global_states.EVAL:
+            global_states.set_seed(seed)
+            np.random.seed(seed)            
         for trial in range(self.num_evaluations):
             # seed += 1
             survival_time = 0

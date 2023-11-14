@@ -1,16 +1,29 @@
 import os
 import pickle
 import numpy as np
+from datetime import datetime
 from mereli.globals import global_states
 
 class DataLogger:
     def __init__(self):
-        self.path = global_states.log_info['path'] 
+        self.path = None #global_states.log_info['path'] 
         self.data = {}
         self.info = []
         self.target_object = None 
         self.last_row = {}
         self.num_rows = 0
+        self.logs_folder = None
+
+    def set_log_file(self, logs_folder=None):
+        if logs_folder is not None:
+            self.logs_folder = logs_folder
+        logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', self.logs_folder)
+        if not os.path.isdir(logs_path):
+            os.mkdir(logs_path)
+        now = datetime.now()
+        logs_path = os.path.join(logs_path, self.logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
+        global_states.set_data_logging(logs_path)
+        self.path = global_states.log_info['path']
     
     def get_last_row(self):
         if self.num_rows == 0:

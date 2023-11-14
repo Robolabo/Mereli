@@ -1,12 +1,4 @@
 _HiStOrY_V2_
-self.weights.dot(np.r_[inn,\040[1,1,0,0]])
-self.weights.dot(np.r_[inn,\040[0,0,1,1]])
-self.weights.dot(np.r_[np.zeros(8),\040[0,0,1,1]])
-self.weights[0]
-self
-self.get_connection('s1_0')
-self.get_connection('s1_0').parameters
-phenotypes
 phenotypes['robotA:controller@neural_network']
 phenotypes['robotA:controller@neural_network'].weights
 phenotypes['robotA:controller@neural_network'].graph['synapses']['s1_0']
@@ -499,3 +491,11 @@ logs_path
 \040os.path.isdir(logs_path)
 logs_path
 logs_folder
+self.priorities
+len(self.priorities)
+self.landmarks
+seed
+self.global_states
+global_states
+global_states.EVAL
+self.landmarks

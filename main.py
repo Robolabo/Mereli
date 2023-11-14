@@ -101,16 +101,15 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     
     #* Parse JSON
     cfg_dict = json_parser(cfg)
-    if log:
-        logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
-        logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
-        if not os.path.isdir(logs_path):
-            os.mkdir(logs_path)
-        now = datetime.now()
-        logs_path = os.path.join(logs_path, logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
-        global_states.set_data_logging(logs_path)
-        # if not os.path.isdir(logs_path):
-        #     os.mkdir(logs_path)
+    
+    # if log:
+    #     logs_folder = cfg_dict.get('logging', {}).get('file', cfg)
+    #     logs_path = os.path.join(os.getcwd(), 'mereli', 'logs', logs_folder)
+    #     if not os.path.isdir(logs_path):
+    #         os.mkdir(logs_path)
+    #     now = datetime.now()
+    #     logs_path = os.path.join(logs_path, logs_folder + now.strftime("_%d-%m-%Y_%H:%M:%S")) 
+    #     global_states.set_data_logging(logs_path)
 
     # Set loggings
     # if log:
@@ -131,6 +130,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}))
     if log:
         world.config_data_logger(cfg_dict['logging']['data'])
+        world.data_logger.set_log_file(cfg_dict.get('logging', {}).get('file', cfg))
     if render:
         simulation_config = cfg_dict.get('simulation', {})
         world.start_paused = simulation_config.get('start_paused', False)
