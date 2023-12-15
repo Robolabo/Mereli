@@ -262,6 +262,13 @@ class World(object):
         # print('Simulation step elapsed ', time.time() - t0)
         return states, actions
 
+    def focused_robot(self):
+        isfocus = self.physics_engine.camera_options['focus']
+        if isfocus:
+            focus_id = self.physics_engine.camera_options['focus_target']
+            target_robot = list(self.robots.values())[focus_id]
+            return target_robot
+
     def register_entity(self, name, obj, group=None):
         """ 
         Adds an object to the world registry. Assigns a unique identifier to the object.
@@ -604,8 +611,8 @@ class World(object):
         ps.print_stats()
         profile.dump_stats('profile.prof')
 
-    def create_animated_layout(self):
-        self.animated_layout = AnimatedLayout()
+    def create_animated_layout(self, **kwargs):
+        self.animated_layout = AnimatedLayout(**kwargs)
 
 
 @world_registry(name='flat_world')
@@ -705,68 +712,6 @@ class CustomWorld(World):
         self.map_file = map_file
         self.register_entity('map', Map(self.map_file, np.zeros(3), np.zeros(3)), group='maps')
 
-
-import matplotlib.pyplot as plt
-class AnimatedPlots:
-    def __init__(self):
-        x = np.arange(0, 500)
-        self.x = x
-        self.y = np.zeros([1, x.shape[0]]) 
-        self.y2 = np.zeros([8, x.shape[0]]) 
-        self.fig = plt.figure(figsize=(5,10))
-        self.axes = []
-        self.axes.append(plt.subplot(211))
-        self.axes.append(plt.subplot(212, projection='polar'))
-        # self.fig, self.axes = plt.subplots(nrows=2, ncols=1, figsize=(5,10))
-        self.axes[0].set_ylim([0,1])
-        self.axes[1].set_ylim([0,1])
-        self.axes[1].set_rorigin(-0.1)
-        ln = self.axes[1].plot([0,0], [0,0], color='k')
-        self.axes[1].plot([0,0.0],[0.,0.0],linewidth=5, color='k')
-        for i in range(8):
-            ln = self.axes[1].plot([0,0], [0,0], color='r')
-         
-        self.lines = [self.axes[0].plot(x, self.y[i], animated=True)[0] for i in range(len(self.y))]
-        # plt.legend([f'DS{i}' for i in range(8)])
-        plt.show(block=False)
-        plt.pause(0.1)
-        self.bg = self.fig.canvas.copy_from_bbox(self.fig.bbox)
-        for i in range(len(self.y)):
-            self.axes[0].draw_artist(self.lines[i])
-        self.fig.canvas.blit(self.fig.bbox)
-    
-    def update(self, robot):
-        new_y = robot.sensors['distance_sensor'].reading
-        head_ori = robot.orientation[-1]
-        sensor_dirs = robot.sensors['distance_sensor'].directions(head_ori)
-        for i in range(len(self.y)):
-            self.y[i] = np.r_[self.y[i,1:], new_y[i]]
-        self.fig.canvas.restore_region(self.bg)
-        for i in range(len(self.y)):
-            self.axes[0].get_lines()[i].set_ydata(self.y[i])
-            # re-render the artist, updating the canvas state, but not the screen
-            self.axes[0].draw_artist(self.axes[0].get_lines()[i])
-        for i in range(8):
-            self.axes[1].lines[0].set_ydata(np.r_[new_y, new_y[0]])
-            # self.axes[1].lines[0].set_xdata(np.r_[np.linspace(head_ori, head_ori + 2*np.pi, 8), head_ori])
-            self.axes[1].lines[0].set_xdata(np.r_[sensor_dirs, sensor_dirs[0]])
-            self.axes[1].lines[2+i].set_xdata([sensor_dirs[i], sensor_dirs[i]])
-            self.axes[1].lines[2+i].set_ydata([0, 1])
-            self.axes[1].draw_artist(self.axes[1].lines[0])
-            self.axes[1].draw_artist(self.axes[1].lines[2+i])
-
-            
-        self.axes[1].lines[1].set_xdata(np.array([head_ori, head_ori]))
-        self.axes[1].lines[1].set_ydata(np.array([0,0.1]))
-        self.axes[1].draw_artist(self.axes[1].lines[1])
-            
-
-        # copy the image to the GUI state, but screen might not be changed yet
-        self.fig.canvas.blit(self.fig.bbox)
-        # flush any pending GUI events, re-painting the screen if needed
-        self.fig.canvas.flush_events()
-        # you can put a pause in if you want to slow things down
-        # plt.pause(.1)
 
 
 

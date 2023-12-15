@@ -6,10 +6,13 @@ from mereli.register import sensor_registry
 from mereli.objects import Robot
 from mereli.utils import compute_angle, angle_diff, issubclass_of_any, circle_distance
 from .utils.propagation import ExpDecayPropagation
-from mereli.communication import IRFrame
+from mereli.communication import IRFrame, EmptyFrame
 from mereli.globals import global_states
 
-@sensor_registry(name='IR_receiver')
+
+
+
+@sensor_registry(name='IRCommRX')
 class IRCommunicationReceiver(DirectionalSensor):
     """ Communication Receiver based on IR technology.
     The sensor is partitioned into multiple sectors that provide measurements
@@ -30,9 +33,7 @@ class IRCommunicationReceiver(DirectionalSensor):
     :param Robot sensor_owner: robot object owning and reading from the sensor.
     :param float range: range of coverage of the sensor.
     :param float noise_sigma: std. dev. of the white noise attached to the measurement.
-    :param int n_sectors: number of sectors of the sensor.
-    :param int msg_length: number of components of the message. Must be the
-        same as in the Transmitter definition.
+    :param int n_sectors: number of sectors of the sensor.  :param int msg_length: number of components of the message. Must be the same as in the Transmitter definition.
     :param int max_hops: maximum number of hops before frame discard.
     :param str selection_scheme: As only one frame can be perceived by the sensor at each time step
         from all directions, a frame selection scheme is required. This parameter indicates the
@@ -50,8 +51,12 @@ class IRCommunicationReceiver(DirectionalSensor):
         self.max_hops = max_hops
         self.selection_scheme = selection_scheme
         self.current_direction = 0 # Used by the cyclic selection
-        self.aperture = 0.5
-        self.propagation = ExpDecayPropagation(rho_att=3, phi_att=3.)
+
+        self.aperture = 0.55 #1.5 * np.pi / self.n_sectors
+        dist_coef = -np.log(0.01)/(self.range)
+        phi_coef = 0  # -np.log(0.01)/ 2 * self.aperture 
+        self.propagation = ExpDecayPropagation(rho_att=dist_coef, phi_att=phi_coef) # DS=
+
         self.contact_points = None
         self.reading = np.zeros(8)
         self.t = 0
@@ -71,7 +76,7 @@ class IRCommunicationReceiver(DirectionalSensor):
             it may return a list of python dictionaries (see ``CommunicationReceiver``).
         """
         #* Ids of all robots (used later)
-        robot_ids = [ent.id for ent in neighborhood if self.target_filter(ent)]
+        # robot_ids = [ent.id for ent in neighborhood if self.target_filter(ent)]
         frames = [self.empty_frame for _ in range(self.n_sectors)]
         signal_strengths = np.zeros(8)
         g_ids = [self.sensor_owner.physics_client.physical_sensors['distance_sensor'][i]['ghost_link_idx'] for i in range(8)]
@@ -96,6 +101,7 @@ class IRCommunicationReceiver(DirectionalSensor):
                     #* Seize the sensor execution and compute the distance sensor reading as well.
                     signal_strength_ds = np.mean([self.propagation(rho, phi) for rho, phi in zip(rhos, phis)])
                     #* Only if there are robots.
+                    robot_ids = self.physics_client.robot_ids
                     comm_conditions = [True if idx in robot_ids else False for idx in ray_res if idx != -1]
                     if any(comm_conditions):
                         rhos = np.array(rhos)[comm_conditions]
@@ -103,49 +109,43 @@ class IRCommunicationReceiver(DirectionalSensor):
                         # Compute the sector from where the frame was transmitted by the sender.
                         tmp_idx = np.argmin(rhos)
                         tx_idx = ray_res[np.where(comm_conditions)[0][tmp_idx]]
-                        rx_sensor_pos = self.get_sensor_position(i)
-                        tx_sensors_positions = np.vstack([self.sensor_owner.physics_client.get_sensor_position(tx_idx,
-                                sensor_name='IR_receiver', sector=j)[0] for j in range(self.n_sectors)])
-                        tx_rx_distances = np.linalg.norm(tx_sensors_positions - rx_sensor_pos, axis=1)
-                        tx_sector = np.argmin(tx_rx_distances)
-                        tx_sensor_pos = tx_sensors_positions[tx_sector]
-                        comm_rho = tx_rx_distances[tx_sector]
-                        comm_phi = angle_diff(compute_angle(tx_sensor_pos[:2] - rx_sensor_pos[:2]), ori)
-                        #* Compute both signal strength of distance sensor and communication reception (to optimize simulation).
-                        signal_strength_comm = self.propagation(comm_rho, comm_phi)
+                        if tx_idx not in self.physics_client.link_parameters:
+                            continue
+                        rx_sensor_pos = self.physics_client.get_sensor_position(self.sensor_owner.id, sensor_name='IRCommRX', sector=0)[0]
+                        tx_sector_dists = [np.linalg.norm(rx_sensor_pos - self.physics_client.get_sensor_position(tx_idx, sensor_name='IRCommRX', sector=i)[0]) for i in range(8)]
+                        tx_sector = np.argmin(tx_sector_dists)
+                        # comm_rho = 
 
-                        #* Get the received frame. Update the rx dependent info.
-                        #! Provisional implementation. The idea would be to code a comm. medium or queue shared by all the tx and rx of
-                        #! the robots.
-                        sender_entities = [*filter(lambda ent: ent.id == tx_idx , neighborhood)]
-                        if len(sender_entities):
-                            received_frame = sender_entities[0].actuators['IR_transmitter'].frame
-                            sending_direction = tx_sector #! prov
-                            received_frame.rx_sector = i
-                            received_frame.tx_sector = tx_sector
-                            received_frame.tx_ori = self.directions(0.)[sending_direction] #!
-                            received_frame.rx_ori = self.directions(0.)[i]
-                            received_frame.receiver = self.sensor_owner.id
-                            received_frame.signal_strength = signal_strength_comm
-                            frames[i] = received_frame
+                        comm_rho = tx_sector_dists[tx_sector]
+                        # comm_phi = angle_diff(compute_angle(tx_sensor_pos[:2] - rx_sensor_pos[:2]), ori)
+
+                        #* Compute both signal strength of distance sensor and communication reception (to optimize simulation).
+                        # signal_strength_comm = self.propagation(comm_rho, comm_phi)
+                        sector_id = self.physics_client.physical_sensors['distance_sensor'][tx_sector]['idx']
+                        rx_frame = self.physics_client.link_parameters[tx_idx][sector_id]['frame']
+                        rx_frame.rx_sector = i
+                        rx_frame.tx_sector = tx_sector
+                        rx_frame.tx_ori = self.directions(0.)[tx_sector] 
+                        rx_frame.rx_ori = self.directions(0.)[i] 
+                        rx_frame.signal_strength = signal_strength_ds
+                        rx_frame.receiver =  self.sensor_owner.id
+                        frames[i] = rx_frame
+                        # print('Actual frame detected!')
             signal_strengths[i] += signal_strength_ds
-        #!frames = super().step(*args, **kwargs)
         # self.reading += (0.2) * (np.array(signal_strengths) - self.reading)
+        # if any(not fr.is_null for fr in frames):
+        #     __import__('pdb').set_trace()
         #* Select a single frame from all possible sectors according to the given selection scheme.
         selected_frame = {
             'cyclic' : self.cyclic_selection(frames),
             'random' : self.random_selection(frames),
             'full' : self.full_selection(frames)
         }[self.selection_scheme]
-        #* IF RENDER mode and led actuator is enabled, activate led of the sector from where the
-        #* message was received.
-        # if global_states.RENDER and 'led_actuator' in self.sensor_owner.actuators:
-        #     leds = np.zeros(self.n_sectors)
-        #     leds[selected_frame.rx_sector] = int(selected_frame.msg > 0.05)
-        #     self.sensor_owner.actuators['led_actuator'].step(leds)
-        self.t += 1
-        #* To optimize execution, return both received frame and DS reading.
-        return selected_frame, np.array(signal_strengths)
+
+        self.reading = selected_frame
+        # If enabled, update also the distance_sensor
+        if 'distance_sensor' in self.sensor_owner.sensors:
+            self.sensor_owner['distance_sensor'].reading = np.array(signal_strengths)
 
     def random_selection(self, frames):
         """ Random selection scheme that selects a single frame from all possible frames.
@@ -161,17 +161,34 @@ class IRCommunicationReceiver(DirectionalSensor):
         # Discard very old frames (max 10 hops) or empty frames
         # frames = [frame if frame.n_hops < self.max_hops and frame.sender is not None else self.empty_frame for frame in frames ]
         #* Select only a direction
-        signal_strengths = np.hstack([frame.signal_strength for frame in frames])
-        senders = np.hstack([frame.sender for frame in frames])
-        selected_direction = np.argmax(signal_strengths)
-        selection_condition = np.logical_and(senders != self.sensor_owner.id, senders != None, signal_strengths > 0)
-        if any(selection_condition):
-            elements = np.where(selection_condition)[0]
-            selected_direction = np.random.choice(elements,)
-        else:
-            selected_direction = 0
-            frames = [self.empty_frame]
-        return frames[selected_direction]
+        signal_strengths = np.zeros(len(frames)).astype(float)
+        null_frames = [False] * len(frames)
+        n_hops = np.zeros_like(signal_strengths)
+        senders = np.zeros_like(n_hops)
+        for i in range(len(frames)):
+            fr = frames[i]
+            signal_strengths[i] = fr.signal_strength
+            null_frames[i] = fr.is_null
+            n_hops[i] = fr.n_hops
+            senders[i] = fr.sender
+        if all(null_frames): 
+            return frames[0]
+        candidates = np.logical_and(~np.array(null_frames), n_hops < 10, senders != self.sensor_owner.id)
+        sel_idx= np.argmax(signal_strengths[candidates])
+        selected = np.r_[frames][candidates][sel_idx] 
+        return selected 
+
+        # signal_strengths = np.hstack([frame.signal_strength for frame in frames])
+        # senders = np.hstack([frame.sender for frame in frames])
+        # selected_direction = np.argmax(signal_strengths)
+        # selection_condition = np.logical_and(senders != self.sensor_owner.id, senders != None, signal_strengths > 0)
+        # if any(selection_condition):
+        #     elements = np.where(selection_condition)[0]
+        #     selected_direction = np.random.choice(elements,)
+        # else:
+        #     selected_direction = 0
+        #     frames = [self.empty_frame]
+        # return frames[selected_direction]
 
     def cyclic_selection(self, frames):
         """ Cyclic selection scheme that selects a single frame from all possible frames.
@@ -218,7 +235,7 @@ class IRCommunicationReceiver(DirectionalSensor):
     @property
     def empty_frame(self):
         """ Returns an empty frame ``dict``. """
-        return IRFrame(msg_len=self.msg_length)
+        return EmptyFrame(msg_len=self.msg_length)
 
     def target_filter(self, obj):
         """ Method devoted to filtering the world objects that should be targeted for a particular sensor.

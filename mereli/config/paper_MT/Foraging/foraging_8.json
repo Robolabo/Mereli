@@ -14,7 +14,7 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : false, 
+		"enabled" : true, 
 		"grid" : "A;B;C",
 	 	"plots" : [
 			{"plot_type" : "general_info",  "name" : "A"},
@@ -133,7 +133,7 @@
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 10,
-        "num_evaluations" : 10,
+        "num_evaluations" : 50,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {

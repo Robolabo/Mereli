@@ -70,7 +70,7 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 24,
+                "num_instances" : 8,
 		"positions" : {"type" : "random", "low" : [-1,-1], "high" : [1,1]}, 
 		"orientations" : "random",
                 "controller" : {

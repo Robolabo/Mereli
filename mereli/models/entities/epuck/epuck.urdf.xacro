@@ -682,7 +682,7 @@
         </sector>
     </sensor>
 
-    <sensor name="IR_receiver">
+    <sensor name="IRCommRX">
         <sector index="0">
             <parent link="IR0"/>
             <origin xyz="0 0 0" rpy="0 0 0.26179"/>

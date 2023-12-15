@@ -29,12 +29,14 @@ class Braitenberg2A(RobotController):
         :param float reward: reward (if any). Not used in this controller.
         """
         action = np.zeros(2)
-        ls = state['red_light_sensor']
-        action[0] = 0.5 + (ls[0] / 2)
-        action[1] = 0.5 + (ls[7] / 2)
-        if np.max(state['red_light_sensor']) == 0.0:
+        ls = self.get_sensor_reading('red_light_sensor')
+        action[0] = np.max([ls[4], ls[5], ls[6], ls[7]])
+        action[1] = np.max([ls[0], ls[1], ls[2], ls[3]])
+        # action[0] = 0.5 + (ls[0] / 2)
+        # action[1] = 0.5 + (ls[7] / 2)
+        if np.max(ls) == 0.0:
             action = np.array([1., 1.])
-        return {'joint_velocity_actuator' : np.clip(action, a_min=-1, a_max=1)}
+        self.get_actuator('joint_velocity_actuator').action = np.clip(action, a_min=-1, a_max=1)
 
 @controller_registry(name='braitenberg2b')
 class Braitenberg2B(RobotController):
@@ -63,12 +65,12 @@ class Braitenberg2B(RobotController):
         :param float reward: reward (if any). Not used in this controller.
         """
         action = np.zeros(2)
-        ls = state['red_light_sensor']
+        ls = self.get_sensor_reading('red_light_sensor')
         action[0] = 0.5 + (ls[7] / 2)
         action[1] = 0.5 + (ls[0] / 2)
-        if np.max(state['red_light_sensor']) == 0.0: # 
+        if np.max(ls) == 0.0: # 
             action = np.array([.2, .2])
-        return {'joint_velocity_actuator' : np.clip(action, a_min=-1, a_max=1)}
+        self.get_actuator('joint_velocity_actuator').action = np.clip(action, a_min=-1, a_max=1)
 
 @controller_registry(name='braitenberg3c')
 class Braitenberg3C(RobotController):
@@ -77,9 +79,9 @@ class Braitenberg3C(RobotController):
 
     def step(self, state, reward=0.0):
         action = np.zeros(2)
-        ls = state['red_light_sensor']
+        ls = self.get_sensor_reading('red_light_sensor')
         action[1] = 1 - np.mean(ls[[0,1,2,3]])
         action[0] = 1 - np.mean(ls[[7,6,5,4]])
         # if np.max(state['red_light_sensor']) == 0.0: # 
         #     action = np.array([.2, .2])
-        return {'joint_velocity_actuator' : np.clip(action, a_min=-1, a_max=1)}
+        self.get_actuator('joint_velocity_actuator').action = np.clip(action, a_min=-1, a_max=1)

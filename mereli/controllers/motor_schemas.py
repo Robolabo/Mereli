@@ -1,13 +1,95 @@
 import numpy as np
 from mereli.controllers import RobotController
-from mereli.register import controller_registry
+from mereli.register import controller_registry, controllers
 from mereli.utils import compute_angle, angle_diff
+
+
+@controller_registry(name='motor_schemas')
+class MotorSchemasController(RobotController):
+    """
+    """
+    def __init__(self, *args, routines={'navigate' : 1}, **kwargs):
+        super(MotorSchemasController, self).__init__(*args, **kwargs)
+        self.routines = {}
+        self.activations = {}
+        self.weights = {}
+        self.forces = {}
+        for rt, w in routines.items(): 
+            rt_params = w.get('params', {}) if isinstance(w, dict) else {}
+            weight = w if isinstance(w, float) else w['weight']
+            self.weights[rt] = weight 
+            self.routines[rt] =  controllers[rt](**rt_params)
+            self.activations[rt] = np.zeros(2)
+            self.forces[rt] = np.zeros(2).astype(float)
+
+    def step(self, state, reward=0.0):
+        for k, routine in self.routines.items():
+            action = routine.step(state)
+            self.activations[k] = self.get_actuator('joint_velocity_actuator').action
+        return self.coordinate()
+
+    def coordinate(self):
+        v_force = np.array([0., 0.])
+        for k, rt in self.routines.items():
+            if rt.flag:
+                weight = self.weights[k] 
+                if hasattr(rt, 'vforce'):
+                    vf = rt.vforce
+                else:
+                    dPos, dTh = self.compute_force(4*self.activations[k])
+                    ori = self.robot.orientation[-1]
+                    vf = dPos +  np.r_[np.cos(ori + dTh), np.sin(ori + dTh)]
+                self.forces[k] = weight * vf
+                v_force += weight * vf 
+        fmod = np.linalg.norm(v_force)
+        v_force = v_force /fmod 
+        v_head = np.r_[np.cos(self.controller_owner.orientation[-1]), np.sin(self.controller_owner.orientation[-1])]
+        a1 = compute_angle(v_force)
+        a2 = compute_angle(v_head)
+        angle = angle_diff(a1,a2)
+        if angle <= 0.1:
+            action = 0.5*np.array([1, 1])
+        elif a1 > a2:
+            if a1 - a2 > np.pi:
+                action =  .1*np.array([-1., 1])
+            else:
+                action =  .1* np.array([1., -1])
+        else:
+            if a2-a1 >np.pi:
+                action =  .1* np.array([1., -1])
+            else:
+                action =  .1*np.array([-1., 1])
+
+        self.get_actuator('joint_velocity_actuator').action = 0.4*np.array(action)
+
+    def compute_force(self, action):
+        b = 0.12 # Dist between wheels
+        R = 0.0390625 # Wheel radius
+        dt = 10 * self.robot.physics_client.dt
+        dUl = R * action[1] * dt
+        dUr = R * action[0] * dt
+        w = (dUr - dUl) / b
+        V = (dUr + dUl) / 2
+        dx = np.cos(self.robot.orientation[-1]) * V
+        dy = np.sin(self.robot.orientation[-1]) * V
+        dTh = w 
+        # Update new estimates
+        deltaPos = np.r_[dx, dy]
+        print(dTh)
+        return deltaPos,dTh 
+
+    def reset(self):
+        for rt in self.routines.values():
+            rt.controller_owner = self.controller_owner
+            rt.reset()
+
+
 
 @controller_registry(name='motor_schemas2')
 class MotorSchemas2Controller(RobotController):
     """
     """
-    def __init__(self, *args,  **kwargs):
+    def __init__(self, *args, routines={'navigate' : 1}, **kwargs):
         super(MotorSchemas2Controller, self).__init__(*args, **kwargs)
         self.routines = ['nav', 'load', 'avoid']
         self.activations = {'nav' : np.array([1., 1.]), 'load' : np.zeros(2), 'avoid' : np.zeros(2)} 

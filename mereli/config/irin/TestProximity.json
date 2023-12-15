@@ -5,6 +5,7 @@
 	 "start_paused" : true, 
 	 "animated_layout" : {
 		"enabled" : true,
+		"figsize" : [7,10],
 		"grid" : "A;B",
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "sectors" : [0,1,2,3,4,5,6,7], "name" : "A"},
@@ -26,7 +27,7 @@
 		"orientations" : 0.0,
                 "controller" : "test_proximity",
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.8}
+                    "distance_sensor" : {"noise_sigma" : 0.1, "use_filter" : true}
 		},
                 "actuators" : {
                     "joint_velocity_actuator" : {},

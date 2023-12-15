@@ -26,7 +26,7 @@ class GroundSensor(Sensor):
         """
         self.reading = np.array([0.0]) 
         ground_areas = self.physics_client.ground_areas
-        for ground_area in ground_areas.items():
+        for idx, ground_area in ground_areas.items():
             if np.linalg.norm(self.sensor_owner.position[:2] - ground_area['center']) <= ground_area['radius']:
                 self.reading = np.array([self.coding.get(ground_area['color'], 0.0)])
 

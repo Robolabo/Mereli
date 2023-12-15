@@ -16,7 +16,6 @@ class NavigateController(RobotController):
 
 @controller_registry(name="load_battery")
 class LoadBatteryController(RobotController):
-
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(LoadBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
@@ -35,14 +34,15 @@ class LoadBatteryController(RobotController):
             ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
+                self.flag = True
             elif ls_read[0] * ls_read[7] == 0:
                 self.flag = True 
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
-                    action = 0.25*np.array([-1, 1]) 
+                    action = 0.2*np.array([-1, 1]) 
                 else: 
-                    action = 0.25*np.array([1, -1]) 
+                    action = 0.2*np.array([1, -1]) 
         self.get_actuator('joint_velocity_actuator').action = action
 
 
@@ -82,7 +82,30 @@ class SubsumptionController(RobotController):
             rt.controller_owner = self.controller_owner
             rt.reset()
 
+@controller_registry(name="simple_forage")
+class SimpleForageController(RobotController):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
+        super(SimpleForageController, self).__init__(*args, **kwargs)
+        self.flag = False
 
+    def step(self, state, reward=0):
+        mgs_read = self.get_sensor_reading('memory_ground_sensor')
+        self.flag = False 
+        if mgs_read == 1: # Garbage collected
+            ls_read = self.get_sensor_reading('red_light_sensor')
+            if ls_read[0] * ls_read[7] == 0:
+                self.flag = True
+                light_left= np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                action = np.array([0., 0.])
+                if light_right > light_left:
+                    action = .1*np.array([-1, 1]) 
+                else: 
+                    action = .1*np.array([1, -1]) 
+                self.get_actuator('joint_velocity_actuator').action = action
+
+
+        
 @controller_registry(name='subsumption_garbage')
 class SubsumptionGarbageController(RobotController):
     """
@@ -131,50 +154,4 @@ class SubsumptionGarbageController(RobotController):
                     self.activations['forage'] = np.array([1, -1]) 
 
 
-    def load_battery(self, state):
-        bat_lv = state['battery_sensor']
-        self.flags['load'] = False 
-        if bat_lv <= self.bat_threshold:
-            ls_read = state['blue_light_sensor']
-            if ls_read[0] * ls_read[7] == 0:
-                self.flags['load'] = True
-                light_left= np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                if light_right > light_left:
-                    self.activations['load'] = np.array([-1, 1]) 
-                else: 
-                    self.activations['load'] = np.array([1, -1]) 
 
-    def avoid_obstacles(self, state):
-        st_ds = state['distance_sensor']
-        self.flags['avoid'] = False
-        prox_thresh = 0.5
-        if any(st_ds[[0,1]] > prox_thresh):
-            # print('Turn Left')
-            self.activations['avoid'] = np.array([1, -1])
-            self.flags['avoid'] = True 
-        elif any(st_ds[[6,7]] > prox_thresh):
-            # print('Turn Right')
-            self.activations['avoid'] = np.array([-1, 1])
-            self.flags['avoid'] = True 
-
-    def avoid_obstacles2(self, state):
-        prox_read = state['distance_sensor']
-        oris = self.controller_owner.sensors['distance_sensor'].directions(self.controller_owner.orientation[-1])
-        max_prox = np.max(prox_read) 
-        if max_prox > 0.3:
-            v_repel = np.sum([prox_read[i] * np.r_[np.cos(oris[i]), np.sin(oris[i])] for i in range(8)], 0)
-            f_repel = np.arctan2(v_repel[0], v_repel[0]) - np.pi
-            while (f_repel > np.pi):
-                f_repel -= 2*np.pi
-            while (f_repel < -np.pi):
-                f_repel += 2*np.pi
-            fc1 = 1 / np.pi
-            fc_linear = 1 
-            fc_angular = 1
-            fv_linear = fc_linear * np.cos(f_repel / 2)
-            fv_angular = f_repel 
-            self.activations['avoid'] = np.array([fv_linear + fc1 * fv_angular, fv_linear - fc1 * fv_angular])
-            self.flags['avoid'] = True
-        else:
-            self.flags['avoid'] = False 

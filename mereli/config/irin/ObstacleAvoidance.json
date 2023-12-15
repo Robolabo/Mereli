@@ -1,11 +1,12 @@
 {
     "simulation" : {
 	 "seed" : 112,
-	 "timesteps" : 1000,
+	 "timesteps" : 10000,
 	 "trials" : 3,
 	 "start_paused" : true, 
 	 "animated_layout" : {
 		"enabled" : true,
+		"figsize" : [7,10],
 		"grid" : "A;B",
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor",  "name" : "A"},

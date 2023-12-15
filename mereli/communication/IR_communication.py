@@ -61,7 +61,22 @@ class IRFrame:
         self.destination = None
         self.original_sender = None
         self.priority = None
+        self.is_null = False
         self.n_hops = 0
+     
+    def set_sender(self, sender_id):
+        self.sender = sender_id 
+        return self 
+
+    def set_msg(self, new_msg, force_dim_change=False):
+        len_new = 1 if isinstance(new_msg, float) or isinstance(new_msg, int) else len(new_msg) 
+        if len_new != self.msg_len:
+            if not force_dim_change:
+                print("New message could not be set because it has wrong dimension.")
+                return self 
+        self.msg = np.array([new_msg]) if len_new == 1 else np.array(new_msg)
+        self.msg = self.msg.astype(float)
+        return self
 
     @property
     def encoded_tx_ori(self):
@@ -117,8 +132,12 @@ class IRFrame:
         :returns: copied ``IRFrame`` object.
         """
         return copy.deepcopy(self)
+    
 
-
+class EmptyFrame(IRFrame):
+    def __init__(self, *args,  **kwargs):
+        super(EmptyFrame, self).__init__(*args, **kwargs)
+        self.is_null = True
 
 @communication_registry(name='IR_comm')
 class IRCommunication:

@@ -24,6 +24,11 @@ class GroundArea(WorldObject):
         super().render()
         self.physics_client.ground_areas.update({self.id : {'center' : self.position[:2], 'color' : self.color, 'radius' :self.radius}})
 
+    
+    def initialize_state(self):
+        super().initialize_state()
+        self.physics_client.ground_areas.update({self.id : {'center' : self.position[:2], 'color' : self.color, 'radius' :self.radius}})
+
     def step(self):
         pass
 

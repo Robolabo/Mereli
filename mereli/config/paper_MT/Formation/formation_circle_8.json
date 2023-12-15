@@ -91,15 +91,15 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 2,
-		"W" : 2,
+		"H" : 4,
+		"W" : 4,
 		"threshold" : 1,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
 	       "tau_ori" : 20 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks" : 8, "scale" : 0.75, "positions" : [
+        "landmarks" : {"num_lmarks" : 8, "scale" : 1.5, "positions" : [
 		[1.0, 0.0], [0.71, 0.71], [0.0, 1.0], [-0.71, 0.71], [-1.0, 0.0], [-0.71, -0.71], [-0.0, -1.0], [0.71, -0.71]
 	]}}, 
     "algorithm" : {

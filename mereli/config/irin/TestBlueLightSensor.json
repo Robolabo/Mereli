@@ -5,6 +5,7 @@
 	 "start_paused" : true,  
 	 "animated_layout" : {
 		"enabled" : true,
+		"figsize" : [7,10],
 		"grid" : "A;C",
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "blue_light_sensor", "name" : "A", "sectors" : [0,1,2,3,4,5,6,7]}, 

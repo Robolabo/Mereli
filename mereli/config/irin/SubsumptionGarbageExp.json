@@ -4,13 +4,16 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"grid" : "AB;CD;EE",
+		 "enabled" : true, 
+		"grid" : "ABD;EFF;ZFF;GGG",
 	 	"plots" : [
-			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7]}, 
-			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "B", "sectors" : [0,7]},
-			{"plot_type" : "sensor_lineplot", "sensor" : "blue_light_sensor", "name" : "C", "sectors" : [0,7]},
-			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "D"},
-			{"plot_type" : "epuck_polar", "sensors": ["distance_sensor", "red_light_sensor", "blue_light_sensor"], "name" : "E"}
+			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7], "plot_buffer" : 100}, 
+			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "B", "sectors" : [0,7], "plot_buffer" : 100},
+			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "D", "plot_buffer" : 300},
+			{"plot_type" : "sensor_lineplot", "sensor" : "memory_ground_sensor", "name" : "E", "plot_buffer" : 100},
+			{"plot_type" : "sensor_lineplot", "sensor" : "ground_sensor", "name" : "Z", "plot_buffer" : 100},
+			{"plot_type" : "epuck_polar",  "name" : "F"},
+			{"plot_type" : "animated_event_plot", "name" : "G"}
 		] 
 	 }
     },
@@ -29,15 +32,17 @@
                 "num_instances" : 1,
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
-                "controller" : "subsumption_garbage",
+		"battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
+                "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
 		    "battery_sensor" : {},
-		    "memory_ground_sensor" : {}
+		    "memory_ground_sensor" : {},
+		    "ground_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {}
                 }
             },
             "light_red" : {

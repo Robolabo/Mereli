@@ -99,7 +99,25 @@ class Robot(WorldObject):
         self.static_neighbors = []
         self.awaken = False
         self.is_focussed = False
-        
+    
+    def add_sensor(self, sensor_name, **kwargs): 
+        if sensor_name in self.sensors or self.controller.is_sensor_enabled(sensor_name):
+            # Sensor already enabled
+            return
+
+        self.controller.add_sensor(sensor_name, kwargs)
+        sensor = sensors[sensor_name](self, **kwargs)
+        self.sensors.update({sensor_name : sensor})
+    def add_actuator(self, actuator_name, **kwargs): 
+        if actuator_name in self.actuators or self.controller.is_actuator_enabled(actuator_name):
+            # Actuator already enabled
+            return
+
+        self.controller.add_actuator(actuator_name, kwargs)
+        actuator = actuators[actuator_name](self, **kwargs)
+        self.actuators.update({actuator_name : actuator})
+
+
     def step(self):
         """ Step method of the robots. 
         It is composed by the following main steps:
@@ -173,21 +191,16 @@ class Robot(WorldObject):
         
         :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
-        readings = {}
-        # IR receiver reads both the received frame and the distance sensor measurement to 
-        # optimize the simulation.
-        if 'IR_receiver' in self.sensors:
-            ir_reading = self.sensors['IR_receiver'].step()
-            readings.update({'IR_receiver' : ir_reading[0], 'distance_sensor' : ir_reading[1]})
         for sensor_name, sensor in self.sensors.items():
-            if sensor_name == 'IR_receiver':
+            # IRCommRX updates distance_sensor too 
+            if 'IRCommRX' in self.sensors and sensor_name == 'distance_sensor':
                 continue
-            reading = sensor.step()
-            if isinstance(reading, dict):
-                readings.update(reading)
-            else:
-                readings[sensor_name] = reading
-        return readings
+            sensor.step()
+            # if isinstance(reading, dict):
+            #     readings.update(reading)
+            # else:
+            #     readings[sensor_name] = reading
+        # return readings
 
 
     def reset(self, seed=None):
@@ -249,6 +262,7 @@ class Robot(WorldObject):
         self.battery_enabled = True 
         self.battery = Battery(self, **battery_kw)
     
+
 
     def remove_battery(self):
         self.battery_enabled = False

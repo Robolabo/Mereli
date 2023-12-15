@@ -1,13 +1,25 @@
 
 {
     "simulation" : {
-	 "timesteps" : 10000,
+	 "timesteps" : 100000,
 	 "trials" : 1,
-	 "start_paused" : true  
+	 "start_paused" : false,
+	 "animated_layout" : {
+		 "enabled" : true, 
+		"grid" : "ABD;EEE;EEE;FFF",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7], "plot_buffer" : 100}, 
+			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "B", "sectors" : [0,7],"plot_buffer" : 100 },
+			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "D", "plot_buffer" : 300 },
+			{"plot_type" : "epuck_polar",  "name" : "E"},
+			{"plot_type" : "animated_virtual_forces",  "name" : "F"}
+		] 
+	 }
     },
     "world": {
         "name" : "arena",
         "arena_params" : {
+		"arena_size" : 8,
 		"map_file" : "map.txt"
         },
         "engine" : "pybullet",
@@ -17,16 +29,17 @@
             "swarm" : {
                 "type" : "epuck",
                 "num_instances" : 1,
-                "controller" : "motor_schemas2",
+                "controller" : {"name" : "motor_schemas", "params" : {"routines" : { "basic_obstacle_avoider" : {"weight" : 5, "params" : {"sensitivity" : 0.5}}, "load_battery" : 5.0, "navigate" : 0.1}}},
 		"positions" : [0,0,0],
 		"orientations" : "random",
+		"battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
                 "sensors" : {
                     "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
 		    "battery_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {}
                 }
 
             },

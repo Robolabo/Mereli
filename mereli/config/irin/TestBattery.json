@@ -6,6 +6,7 @@
 	 "animated_layout" : {
 		"enabled" : true,
 		"grid" : "AB;CC",
+		"figsize" : [7,10],
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "A", "sectors" : [0,1,2,3,4,5,6,7]}, 
 			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "B"},

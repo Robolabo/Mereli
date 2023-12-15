@@ -19,3 +19,7 @@ build/*
 *.swp
 */**/*.swp
 *.svg
+scancel 
+job
+*.prof
+*.json

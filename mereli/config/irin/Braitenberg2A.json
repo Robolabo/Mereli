@@ -1,6 +1,6 @@
 {
     "simulation" : {
-	 "timesteps" : 1000,
+	 "timesteps" : 5000,
 	 "trials" : 1,
 	 "start_paused" : true  
     },
@@ -15,14 +15,14 @@
             "swarm" : {
                 "type" : "epuck",
                 "num_instances" : 1,
-                "controller" : "braitenberg3c",
+                "controller" : "braitenberg2a",
 		"positions" : [0,0,0], 
 		"orientations" : 0.0,
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 3}
+                    "light_sensor" : {"n_sectors" : 8, "range" : 5}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 4}
+                    "joint_velocity_actuator" : {}
                 }
             },
             "light_red" : {

@@ -50,6 +50,7 @@ class PybulletEngine(BaseEngine):
         super(PybulletEngine, self).__init__('3D', *args, **kwargs)
         self.physical_sensors = {}
         self.physical_actuators = {}
+        self.link_parameters = {}
         self.luminous_objects = {}
         self.ground_areas = {}
         self.gui_params = {}
@@ -649,6 +650,14 @@ class PybulletEngine(BaseEngine):
     def change_dynamics(self, obj_id, **kwargs):
         p.changeDynamics(obj_id, -1,  physicsClientId=self.client, **kwargs)
 
+    def set_link_params(self, obj_id, link_id, **params):
+        if obj_id in self.link_parameters: 
+            self.link_parameters[obj_id].update({link_id : params})
+        else:
+            self.link_parameters.update({obj_id : {link_id : params}})
+
+         
+        
     def set_color(self, obj_id, link_id, color, opacity=1.0):
         """ Sets the color and opacity of a link of an entity. 
         

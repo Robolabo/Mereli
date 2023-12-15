@@ -110,12 +110,14 @@ class EpuckObstacleAvoid(RobotController):
         self.sensitivity = sensitivity
         self.no_obstacle_action = no_obstacle_action
         self.flag = False # True if obstacle detected
+        self.vforce = np.zeros(2).astype(float)
 
     def step(self, state, reward=0.0):
         prox_read = state['distance_sensor']
         oris = self.controller_owner.sensors['distance_sensor'].directions(self.controller_owner.orientation[-1])
         max_prox = np.max(prox_read) 
         action = np.array(self.no_obstacle_action)
+        self.vforce = np.zeros(2).astype(float)
         self.flag = False
         if max_prox > self.sensitivity:
             v_repel = np.sum([prox_read[i] * np.r_[np.cos(oris[i]), np.sin(oris[i])] for i in range(8)], 0)
@@ -125,6 +127,7 @@ class EpuckObstacleAvoid(RobotController):
             fc_angular = 1
             fv_linear = fc_linear * np.cos(f_repel / 2)
             fv_angular = f_repel 
+            self.vforce = -v_repel
             action = np.array([fv_linear + fc1 * fv_angular, fv_linear - fc1 * fv_angular])
             self.flag = True 
         return {'joint_velocity_actuator' : action}

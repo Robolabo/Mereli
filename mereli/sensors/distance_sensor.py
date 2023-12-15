@@ -27,14 +27,16 @@ class DistanceSensor(DirectionalSensor):
     :var ExpDecayPropagation propagation: propagation model to map ``rho`` and ``phi`` into the 
         distance estimation bounded in [0, 1]. 
     """ 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, use_filter=False, **kwargs):
         super(DistanceSensor, self).__init__(*args, **kwargs)
+        self.filter = use_filter
         self.aperture = 0.55 #1.5 * np.pi / self.n_sectors
         dist_coef = -np.log(0.01)/(self.range)
         phi_coef = 0  # -np.log(0.01)/ 2 * self.aperture 
         self.propagation = ExpDecayPropagation(rho_att=dist_coef, phi_att=phi_coef) # DS=
         self.contact_points = None
         self.reading = np.zeros(8)
+        
         self.t = 0
 
     def step(self):
@@ -117,8 +119,16 @@ class DistanceSensor(DirectionalSensor):
                     signal_strength /= nvalid
             reading[i] += signal_strength #+ np.random.randn() * 0.05
         self.t += 1
-        self.reading = np.array(reading)
-        # self.reading += (0.2) * (np.array(reading) - self.reading)
+        if self.noise_sigma > 0.0:
+            noise = np.random.randn(len(reading)) * self.noise_sigma 
+            if self.filter:
+                self.reading += 0.2 * (np.array(reading) - self.reading + noise)
+            else:
+                reading += noise 
+                self.reading = np.array(reading) 
+        else:
+            self.reading = np.array(reading) 
+
         # if self.t > 171:import pdb; pdb.set_trace()
         # print(f'Time elapsed ', time.time()- t0)
 

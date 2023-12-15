@@ -16,5 +16,6 @@ from .camera import Camera
 from .reward_sensor import GroupRewardSensor
 from .stateful_comm_rx import *
 from .battery_sensor import BatterySensor
+from .odometry import OdometrySensor
 from .goal_coordinates_sensor import GoalCoordinatesSensor 
 from .utils import *

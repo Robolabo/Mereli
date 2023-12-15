@@ -62,7 +62,7 @@
         "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 10000,
+            "total_duration" : 5005,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "comm_formation", "params" : {"threshold" : 2}}]
@@ -70,14 +70,14 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 40,
+                "num_instances" : 16,
 		"positions" : {"type" : "random", "low" : [-2,-2], "high" : [2,2]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "subsumption",
                     "params" : {"routines" : {
 			    "basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
-			    "comm_space_group_agg" : {"priority" : 1, "params" : {}}}}
+			    "comm_space_group_agg" : {"priority" : 1, "params" : {"ngroups" : 4}}}}
 		},
                 "sensors" : {
                     "distance_sensor" : {"n_sectors" : 8},
@@ -92,22 +92,22 @@
     "virtual_space" : {
 	"name" : "torus2D",
 	"params" : {
-		"H" : 4,
-		"W" : 4,
+		"H" : 3,
+		"W" : 3,
 		"threshold" : 0.5,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
 	       "tau_ori" : 20 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks" : 20, "positions" : "random"}
+        "landmarks" : {"num_lmarks" : 16, "positions" : "random"}
 	},
     "algorithm" : {
         "name" : "NEAT",
         "population_size" : 50,
         "generations" : 200,
         "evaluation_steps" : 3000,
-        "num_evaluations" : 1,
+        "num_evaluations" : 10,
         "fitness_function" : "reward_integration",
 	"targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
 	"gene_info" : {

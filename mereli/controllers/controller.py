@@ -78,7 +78,9 @@ class RobotController(Controller):
 
         >>> robot_sensors = {'distance_sensor' : {'n_sectors' : 8, 'range' : 1}}
         """
-        self.enabled_sensors = {sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
+        for sensor, sensor_config in robot_sensors.items():
+            self.add_sensor(sensor, sensor_config)
+        # self.enabled_sensors = {sensor : sensor_config for sensor, sensor_config in robot_sensors.items()}
     
     def add_actuators_from_dict(self, robot_actuators):
         """ Add the actuators that the controller can make use of in the form of a python dict. 
@@ -95,7 +97,8 @@ class RobotController(Controller):
 
         >>> robot_actuators = {'joint_velocity_actuator' : {'joint_ids' : [0,1], 'max_velocity' : 10}}
         """
-        self.enabled_actuators = {actuator : actuator_config for actuator, actuator_config in robot_actuators.items()}
+        for actuator, actuator_config in robot_actuators.items():
+            self.add_actuator(actuator, actuator_config)
 
 
     def add_sensor(self, sensor_name, sensor_params):

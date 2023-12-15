@@ -2,12 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import matplotlib.patches as patches
+from mereli.utils import compute_angle
 
 
 
 class AnimatedPlot:
-    def __init__(self, name):
+    def __init__(self, name, plot_buffer=500):
         self.name = name 
+        self.plot_buffer = plot_buffer
         self.axis = None
         self.t = 0
         self.yData = []
@@ -16,7 +18,7 @@ class AnimatedPlot:
     def update(self, robot):
         pass
 
-    def initialize(self):
+    def initialize(self, world):
         pass
 
     def set_xlim(self, xmin, xmax):
@@ -58,7 +60,7 @@ class GeneralInformation(AnimatedPlot):
     def update(self, robot):
         pass
 
-    def initialize(self):
+    def initialize(self,world):
         for var in range(len(self.variables)):
                 self.axis.text(0.1, 0.9 - 0.1*var, self.variables[var], weight="bold")
         self.set_ylim(0,1)
@@ -87,12 +89,14 @@ class AnimatedSensorLineplot(AnimatedPlot):
             # re-render the artist, updating the canvas state, but not the screen
             self.axis.draw_artist(self.axis.lines[i])
 
-    def initialize(self):
+    def initialize(self, world):
         self.set_ylim(-.1, 1.1)
-        self.xData = np.arange(500) 
+        self.xData = np.arange(self.plot_buffer) 
         self.yData = np.zeros([len(self.sectors), self.xData.shape[0]]) 
         for i in range(len(self.sectors)):
             ln = self.axis.plot(self.xData, self.yData[i], animated=True)
+        self.axis.set_title(f'{self.target_sensor} {self.sectors}')
+        self.axis.get_xaxis().set_visible(False)
 
 class AnimatedPolarEpuck(AnimatedPlot):
     def __init__(self, *args, sensors=['distance_sensor'], **kwargs):
@@ -123,7 +127,7 @@ class AnimatedPolarEpuck(AnimatedPlot):
         for ln in self.axis.lines:
             self.axis.draw_artist(ln)
 
-    def initialize(self):
+    def initialize(self, world):
         self.axis.set_rorigin(-0.1)
         self.set_ylim(0,1)
         for sensor in self.sensors:
@@ -144,6 +148,12 @@ class AnimatedCustomLineplot(AnimatedPlot):
         self.variables = variables or []#['virtual_particle@dist_clst_lmark', 'virtual_particle@dist_clst_neighbor', 'virtual_particle@dist_clst_lmark_av']
   
     def get_variable(self, robot, varcode):
+        """
+        : -> route jump 
+        @ -> resource definition
+        () -> resource conditions
+
+        """
         aux = varcode.split('@')
         varpath = aux[0]
         aux_obj = robot
@@ -154,36 +164,52 @@ class AnimatedCustomLineplot(AnimatedPlot):
                 if isinstance(aux_obj, dict) and vp in aux_obj:
                     aux_obj = aux_obj[vp]
         varname = aux[1]
+        varaux = varname.split('?')
+        varname = varaux[0]
+        if len(varaux) == 1: 
+            return getattr(aux_obj, varname)
+        vargs = varaux[1]
+        import re
+        regex_keys = r'\{.+?\}|".+?"|\w+'
+        regex_par = r'\(.+?\)|".+?"|\w+'
+        varname_splt = re.findall(regex_par, vargs)
+        indexing = re.findall(r'\(.*?\)', vargs)
+        params = re.findall(r'\{.*?\}', vargs)
+        if len(indexing) > 0:
+            indexing = indexing[0][1:-1]
+            if ',' in indexing:
+                ivec = np.array([int(i) for i in indexing.split(',') ]) 
+            else:
+                ivec = int(indexing)
+            return getattr(aux_obj, varname)[ivec] if not isinstance(ivec, int) else np.array([getattr(aux_obj, varname)[ivec]])    
         return getattr(aux_obj, varname)
 
         
     def update(self, robot):
         new_y = [] 
+        j = 0
         for i in range(len(self.variables)):
-            new_y.append(self.get_variable(robot, self.variables[i])[3])
-        # new_y = np.array(new_y)
-        if isinstance(new_y, float):
-            self.yData[0] = np.r_[self.yData[0,1:], new_y]
-        else:
-            for i in range(len(self.variables)):
-                self.yData[i] = np.r_[self.yData[i,1:], new_y[i]]
+            y = self.get_variable(robot, self.variables[i])
+            if isinstance(y, float) or isinstance(y, int):
+                new_y.append(y)
+                self.yData[j] = np.r_[self.yData[j,1:], y]
+                j += 1
+            else:
+                self.yData[j:j+len(y)] = np.hstack((self.yData[j:j+len(y),1:], np.expand_dims(y, 1)))
+                j += len(y)
         for i in range(len(self.yData)):
             self.axis.lines[i].set_ydata(self.yData[i])
-            # if self.t >= 500:
-            #     self.axis.lines[i].set_xdata(np.arange(self.t-500, self.t))
-            #     # self.set_xlim(self.t-500, self.t)
-            # else:
-            #     self.axis.lines[i].set_xdata(np.arange(self.t, self.t+500))
-            #     self.set_xlim(self.t, self.t+500)
             # re-render the artist, updating the canvas state, but not the screen
             self.axis.draw_artist(self.axis.lines[i])
         self.t += 1
 
-    def initialize(self):
+    def initialize(self, world):
         self.set_ylim(0,2)
-        self.xData = np.arange(500) 
-        self.yData = np.zeros([len(self.variables), self.xData.shape[0]]) 
-        for i in range(len(self.variables)):
+        self.xData = np.arange(self.plot_buffer)
+        robot = world.focused_robot()
+        size = np.sum([self.get_variable(robot, vv).shape[0] for vv in self.variables]).astype(int)
+        self.yData = np.zeros([size, self.xData.shape[0]]) 
+        for i in range(self.yData.shape[0]):
             ln = self.axis.plot(self.xData, self.yData[i], animated=True)
 
 class AnimatedCommunicationSpace(AnimatedPlot):
@@ -217,7 +243,7 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         for ln in self.axis.collections:
             self.axis.draw_artist(ln)
 
-    def initialize(self):
+    def initialize(self, world):
         h, w =self.H, self.W 
         self.set_ylim(-h/2-.1,h/2+.1)
         self.set_xlim(-w/2-.1,w/2+.1)
@@ -239,7 +265,7 @@ class AnimatedImage(AnimatedPlot):
         self.axis.get_children()[0].set_data(img)
         self.axis.draw_artist(self.axis.get_children()[0])
 
-    def initialize(self):
+    def initialize(self, world):
         self.axis.imshow(np.zeros((50,50)))
         self.axis.get_xaxis().set_visible(False)
         self.axis.get_yaxis().set_visible(False)
@@ -422,31 +448,119 @@ class AnimatedNeuralNetwork(AnimatedPlot):
             self.axis.lines[-ii].set_ydata(ydat)
         
 
-    def initialize(self):
+    def initialize(self, world):
         self.axis.scatter([], [], color='k', s=103, ) # Own state
         self.axis.get_xaxis().set_visible(False)
         self.axis.get_yaxis().set_visible(False)
         # self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         # self.axis.scatter([], [], edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
 
+class AnimatedEventPlot(AnimatedPlot):
+    def __init__(self, *args, **kwargs):
+        super(AnimatedEventPlot, self).__init__(*args, **kwargs)
+    
+    def update(self, robot): 
+        robot_ctrl = robot.controller
+        names = [*robot_ctrl.priorities.keys()]
+        names.sort(key=robot_ctrl.priorities.get)
+        for i, k in enumerate(names):
+            if robot_ctrl.routines[k].flag:
+                ecl = self.axis.collections[i]
+                data = ecl.get_positions()
+                data.append(robot.t)
+                ecl.set_positions(data[-self.plot_buffer:])
+                break
+
+        self.axis.set_xlim(robot.t-self.plot_buffer-10, robot.t + 10)
+        for coll in self.axis.collections:
+            self.axis.draw_artist(coll)
+        self.axis.draw_artist(self.axis.yaxis)
+
+    def initialize(self, world):
+        robot = world.focused_robot()
+        ctrl = robot.controller 
+        n_ev = len(ctrl.routines)
+        lineoffsets = np.arange(1, n_ev * 2,2).tolist()
+        self.axis.eventplot(np.array([[-10]* n_ev]).T, colors=[f'C{i}' for i in range(n_ev)], lineoffsets=lineoffsets, linelength=1, linewidth=10)
+        self.axis.get_xaxis().set_visible(False)
+        # self.axis.get_yaxis().set_visible(False)
+        self.axis.set_xlim(0, self.plot_buffer)
+        self.axis.set_yticks(lineoffsets, ctrl.routines.keys()) 
+
+class AnimatedVirtualForces(AnimatedPlot):
+    def __init__(self, *args, sensors=['distance_sensor'], **kwargs):
+        super(AnimatedVirtualForces, self).__init__(*args, **kwargs)
+
+    def update(self, robot):
+        head_ori = robot.orientation[-1]
+        # arrow = self.axis.get_children()[0]
+        # arrow.set_data(x=0, y=0, dx=np.cos(head_ori), dy=np.sin(head_ori))
+        # aux_s = 'distance_sensor' if 'distance_sensor' in self.sensors else 'light_sensor'
+        # sensor_dirs = robot.sensors[aux_s].directions(head_ori)
+        # for j in range(len(self.sensors)):
+        #     sensor = self.sensors[j]
+        #     for i in range(8):
+        #         if 'light_sensor' in sensor: 
+        #             new_y = robot.sensors['light_sensor'].reading[sensor]
+        #         else:
+        #             new_y = robot.sensors[self.sensors[j]].reading
+        #         self.axis.lines[j].set_ydata(np.r_[new_y, new_y[0]])
+        #         self.axis.lines[j].set_xdata(np.r_[sensor_dirs, sensor_dirs[0]])
+        # for i in range(8):
+        self.axis.lines[0].set_xdata([head_ori, head_ori])
+        self.axis.lines[0].set_ydata([0, 1])
+        ctrl = robot.controller 
+        nforces = len(ctrl.routines)
+        for i, force in enumerate(ctrl.forces.values()):
+            fangle = compute_angle(force)
+            self.axis.lines[i+1].set_xdata([fangle, fangle])
+            self.axis.lines[i+1].set_ydata([0, 1])
+
+
+            
+        # self.axis.lines[len(self.sensors)].set_xdata(np.array([head_ori, head_ori]))
+        # self.axis.lines[len(self.sensors)].set_ydata(np.array([0,0.1]))
+        for ln in self.axis.lines:
+            self.axis.draw_artist(ln)
+
+    def initialize(self, world):
+        robot = world.focused_robot()
+        ctrl = robot.controller 
+        nforces = len(ctrl.routines)
+        
+        self.axis.set_rorigin(-0.1)
+        self.set_ylim(0,1)
+        self.axis.plot([0,0], [0,0], color='k', lw=2)
+        for i in range(nforces):
+            self.axis.plot([0,0], [0,0], color=f'C{i}', lw=2)
+
+    @property
+    def subplot_kw(self):
+        return {self.name : {'projection' : 'polar'}}
 
 class AnimatedLayout:
 
-    def __init__(self):
+    def __init__(self, figsize=None):
         self.plots = []
-        self.figsize = (7,10)
+        self.figsize = figsize 
+        self.px_col = 3 
+        self.px_row =2.8 
         self.fig = None # plt.figure(figsize=self.figsize)
         self.grid = None #"AA;BC"
     
-    def initialize(self):
+    def initialize(self, world):
         from mereli.utils import merge_dicts
         subplot_kw = merge_dicts([p.subplot_kw for p in self.plots])
-        self.fig, axes = plt.subplot_mosaic(self.grid, per_subplot_kw=subplot_kw, figsize=self.figsize)
-        plt.subplots_adjust(top=0.97, bottom=0.08, left=0.10, right=0.97, hspace=0.1, wspace=0.15)
+        if self.figsize is None:
+            ncols = len(self.grid.split(';'))
+            nrows = len(self.grid.split(';')[0])
+            self.figsize = (nrows * self.px_row, ncols* self.px_col) 
+        self.fig, axes = plt.subplot_mosaic(self.grid, per_subplot_kw=subplot_kw, figsize=self.figsize,)
+        plt.subplots_adjust(top=0.97, bottom=0.08, left=0.1, right=0.97, hspace=0.3, wspace=0.2)
         for p in self.plots:
             p.axis = axes[p.name]
             # p.(self.fig, self.gs)
-            p.initialize()
+            p.initialize(world)
 
         plt.show(block=False)
         plt.pause(0.1)
@@ -470,6 +584,10 @@ class AnimatedLayout:
             new_plot = AnimatedNeuralNetwork(name, **kwargs)
         elif plot_type == 'animated_image':
             new_plot = AnimatedImage(name, **kwargs)
+        elif plot_type == 'animated_event_plot':
+            new_plot = AnimatedEventPlot(name, **kwargs)
+        elif plot_type == 'animated_virtual_forces':
+            new_plot = AnimatedVirtualForces(name, **kwargs)
         elif plot_type == 'general_info':
             new_plot = GeneralInformation(name, **kwargs)
         else:
@@ -494,8 +612,5 @@ class AnimatedLayout:
         self.fig.canvas.flush_events()
         # you can put a pause in if you want to slow things down
         # plt.pause(.1)
-
-
-
     def reset(self): 
         pass

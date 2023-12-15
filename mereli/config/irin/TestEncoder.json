@@ -2,7 +2,14 @@
     "simulation" : {
 	 "timesteps" : 100000,
 	 "trials" : 1,
-	 "start_paused" : true  
+	 "start_paused" : true,
+	 "animated_layout" : {
+		"enabled" : true,
+		"grid" : "A",
+	 	"plots" : [
+			{"plot_type" : "custom_lineplot", "variables" : ["controller@error_position"], "name" : "A"}
+		] 
+	 }
     },
     "world": {
         "name" : "flat_world",
