@@ -18,4 +18,5 @@ from .stateful_comm_rx import *
 from .battery_sensor import BatterySensor
 from .odometry import OdometrySensor
 from .goal_coordinates_sensor import GoalCoordinatesSensor 
+from .object_sensor import ObjectSensor
 from .utils import *

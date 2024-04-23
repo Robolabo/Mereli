@@ -11,9 +11,9 @@
     "simulation" : {
 	 "timesteps" : 10000,
 	 "trials" : 1,
-	 "start_paused" : false,
+	 "start_paused" : true,
 	 "animated_layout" : {
-		"enabled" : false, 
+		"enabled" : true, 
 		"grid" : "A;.",
 	 	"plots" : [
 			{"plot_type" : "comm_space",  "name" : "A", "H" : 8, "W" : 8 }

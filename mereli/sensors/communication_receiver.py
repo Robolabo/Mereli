@@ -144,6 +144,7 @@ class IRCommunicationReceiver(DirectionalSensor):
 
         self.reading = selected_frame
         # If enabled, update also the distance_sensor
+        # OJO FULL
         if 'distance_sensor' in self.sensor_owner.sensors:
             self.sensor_owner['distance_sensor'].reading = np.array(signal_strengths)
 
@@ -217,10 +218,11 @@ class IRCommunicationReceiver(DirectionalSensor):
 
         :returns: a single selected frame.
         """
-        selected_frame = IRFrame(msg_len=frames[0].msg_len)
-        selected_frame.msg = np.hstack([fr.msg for fr in frames])
-        selected_frame.signal_strength = np.hstack([fr.signal_strength for fr in frames])
-        return selected_frame
+        return [fr for fr in frames if not fr.is_null]
+        # selected_frame = IRFrame(msg_len=frames[0].msg_len)
+        # selected_frame.msg = np.hstack([fr.msg for fr in frames])
+        # selected_frame.signal_strength = np.hstack([fr.signal_strength for fr in frames])
+        # return selected_frame
 
 
     def reset(self):

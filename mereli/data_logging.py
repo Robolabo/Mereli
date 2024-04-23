@@ -59,7 +59,14 @@ class DataLogger:
         if '?t=' in asset:
             asset, time = asset.split('?t=')
         return path_items, asset, time
-        
+    
+    def data_as_numpy(self, data):
+        if isinstance(data, list):
+            return np.array(data)
+        elif not isinstance(data,np.ndarray):
+            return np.array([data])
+        else:
+            return data
         
     def update(self):
         self.num_rows += 1
@@ -76,14 +83,18 @@ class DataLogger:
                 else:
                     aux_pointer = getattr(aux_pointer, path_item) if not isinstance(aux_pointer, dict) else aux_pointer[path_item]
             data = getattr(aux_pointer, asset)
-            try:
-                if len(self.data[variable]) == 0:
-                    self.data[variable] = data if isinstance(data, np.ndarray) else np.array([data])
-                else:
-                    self.data[variable] = np.vstack((self.data[variable], data)) 
-            except:
-                self.data[variable] = data if isinstance(data, list) else [data]
-                pass
+            if len(self.data[variable]) == 0:
+                # self.data[variable] = data if isinstance(data, np.ndarray) else np.array([data])
+                self.data[variable] = [self.data_as_numpy(data)]
+            else:
+                # if not isinstance(self.data[variable], list):
+                #     self.data[variable] = [self.data[variable]] + [np.array(data).copy()] 
+                # else:
+                np_data = self.data_as_numpy(data)
+                self.data[variable].append(np_data)
+                # if 'robotA_0' in variable and '@words' in variable:
+                #     print(np_data)
+                #     __import__('pdb').set_trace()
 
     def save_pickle(self):
         save_path = self.path + '.pickle'

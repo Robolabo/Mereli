@@ -27,7 +27,7 @@ class Camera(Sensor):
         ori = self.sensor_owner.orientation[2]
         vcam = np.r_[np.cos(ori), np.sin(ori), camPos[-1]]
         tarPos = camPos + 2 * vcam
-        camPos += 0.05 * vcam 
+        camPos += 0.1 * vcam 
 
         viewMatrix = p.computeViewMatrix(camPos, tarPos, (0,0,1),physicsClientId=self.sensor_owner.physics_client.client)
         projectionMatrix = p.computeProjectionMatrixFOV(fov=45, aspect=1, nearVal=.05, farVal=5.1)

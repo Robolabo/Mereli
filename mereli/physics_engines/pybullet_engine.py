@@ -53,6 +53,7 @@ class PybulletEngine(BaseEngine):
         self.link_parameters = {}
         self.luminous_objects = {}
         self.ground_areas = {}
+        self.geometry_objects = {}
         self.gui_params = {}
         self.robot_ids = []
         self.camera_options = {
@@ -65,6 +66,7 @@ class PybulletEngine(BaseEngine):
         }
         self.fps = 240
         self.paused = False 
+        self.paused_step = False
         self.debug = False 
         self.savedState = None 
 
@@ -74,6 +76,7 @@ class PybulletEngine(BaseEngine):
             p.resetBaseVelocity(i,linearVelocity=(0,0,0), angularVelocity=(0,0,0), physicsClientId=self.client)
         # if self.savedState is not None:
         #     p.restoreState(self.savedState, physicsClientId=self.client)
+        self.paused_step = False
 
     def connect(self, objects):
         """ Connects to the pybullet based physics and render engines. It starts the pybullet 
@@ -170,14 +173,22 @@ class PybulletEngine(BaseEngine):
         aKey = ord('a') 
         sKey = ord('s') 
         dKey = ord('d') 
+        rightKey =65296
+        leftKey =65295 
         keys = p.getKeyboardEvents()
+        self.paused_step = False
+        # print(keys)
         if len(keys) > 0:
             if pKey in keys and keys[pKey]&p.KEY_WAS_TRIGGERED:
                 self.paused = True
                 print('KEY P PRESSED!')
+                # elif leftKey in keys:
             if rKey in keys and keys[rKey]&p.KEY_WAS_TRIGGERED:
                 self.paused = False
                 print('KEY R PRESSED!')
+            if rightKey in keys and keys[rightKey]&p.KEY_WAS_TRIGGERED:
+                self.paused_step = True
+                print('One step')
             if tabKey in keys and keys[tabKey]&p.KEY_WAS_TRIGGERED:
                 print('KEY Tab PRESSED!')
                 if self.debug and self.camera_options['focus']:

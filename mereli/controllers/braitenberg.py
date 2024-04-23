@@ -30,10 +30,12 @@ class Braitenberg2A(RobotController):
         """
         action = np.zeros(2)
         ls = self.get_sensor_reading('red_light_sensor')
-        action[0] = np.max([ls[4], ls[5], ls[6], ls[7]])
-        action[1] = np.max([ls[0], ls[1], ls[2], ls[3]])
-        # action[0] = 0.5 + (ls[0] / 2)
-        # action[1] = 0.5 + (ls[7] / 2)
+        # action[0] = np.max([ls[4], ls[5], ls[6], ls[7]])
+        # action[1] = np.max([ls[0], ls[1], ls[2], ls[3]])
+        action[0] = np.max([ls[5], ls[6], ls[7]])
+        action[1] = np.max([ls[0], ls[1], ls[2]])
+        # action[1] = 0.5 + (np.max([ls[0], ls[1]]) / 2)
+        # action[0] = 0.5 + (np.max([ls[7], ls[6]]) / 2)
         if np.max(ls) == 0.0:
             action = np.array([1., 1.])
         self.get_actuator('joint_velocity_actuator').action = np.clip(action, a_min=-1, a_max=1)
@@ -78,10 +80,19 @@ class Braitenberg3C(RobotController):
         super(Braitenberg3C, self).__init__(*args, **kwargs)
 
     def step(self, state, reward=0.0):
-        action = np.zeros(2)
+        action = np.ones(2)
         ls = self.get_sensor_reading('red_light_sensor')
-        action[1] = 1 - np.mean(ls[[0,1,2,3]])
-        action[0] = 1 - np.mean(ls[[7,6,5,4]])
-        # if np.max(state['red_light_sensor']) == 0.0: # 
-        #     action = np.array([.2, .2])
+        max_l = np.max(ls[[0,1,2,3]])
+        max_r = np.max(ls[[7,6,5,4]])
+        lmd = 1 
+
+        # action[1] = np.exp(-lmd*(max_l - 0.5)**2) 
+        # action[0] = np.exp(-lmd*(max_r - 0.5)**2) 
+        thresh = 0.3
+        if max_l > thresh:
+            action[0] = 2 * thresh - max_l 
+        
+        if max_r > thresh: 
+            action[1] = 2 * thresh - max_r 
+
         self.get_actuator('joint_velocity_actuator').action = np.clip(action, a_min=-1, a_max=1)

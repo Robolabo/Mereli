@@ -296,6 +296,8 @@ class TestIRComm(RobotController):
     """
     def __init__(self, *args,  **kwargs):
         super(TestIRComm, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.counter = 0
 
     def rotate_clockwise(self, w=0.3):
         self.get_actuator('joint_velocity_actuator').action = w * np.array([-1, 1])
@@ -314,13 +316,70 @@ class TestIRComm(RobotController):
         # adiff = angle_diff(fr.tx_ori, fr.rx_ori)
         utx = np.r_[np.cos(fr.tx_ori), np.sin(fr.tx_ori)]
         urx = np.r_[np.cos(fr.rx_ori), np.sin(fr.rx_ori)]
+
         a1 = compute_angle(utx)
         a2 = compute_angle(urx)
         angle = angle_diff(a1,a2)
-        print(self.robot.id, fr.sender)
-        w = 0.05 if angle <0.5 else 0.1
-        if angle <= 0.5:
-            return
+        w = 0.02 if angle < 0.5 else 0.1
+        self.flag = True 
+        if np.abs(angle-np.pi) <= 0.4:
+            # self.flag = False 
+            self.counter += 1
+            if self.counter >= 5:
+                self.get_actuator('joint_velocity_actuator').action = 0.1 * np.array([1, 1])
+            else:
+                self.get_actuator('joint_velocity_actuator').action = 0.1 * np.array([0, 0])
+            # return
+        elif a1 > a2:
+            self.counter = 0
+            if a1 - a2 > np.pi:
+                self.rotate_clockwise(w=w)
+            else:
+                self.rotate_counterclockwise(w=w)
+        else:
+            self.counter = 0
+            if a2-a1 >np.pi:
+                self.rotate_counterclockwise(w=w)
+            else:
+                self.rotate_clockwise(w=w)
+
+@controller_registry(name='testIRcommV2')
+class TestIRCommV2(RobotController):
+    """
+    """
+    def __init__(self, *args,  **kwargs):
+        super(TestIRCommV2, self).__init__(*args, **kwargs)
+        self.flag = False
+
+    def rotate_clockwise(self, w=0.3):
+        self.get_actuator('joint_velocity_actuator').action = w * np.array([1, -1])
+
+    def rotate_counterclockwise(self, w=0.3):
+        self.get_actuator('joint_velocity_actuator').action = w * np.array([-1, 1])
+
+    def step(self, state, reward=0.0):
+        # Send frame
+        self.get_actuator('IRCommTX').action = IRFrame(1).set_msg(1.).set_sender(self.robot.id)
+
+        frames = self.get_sensor_reading('IRCommRX')
+        if len(frames) == 0:
+            print('OMGGG')
+            return 
+
+        # adiff = angle_diff(fr.tx_ori, (fr.rx_ori + np.pi) % (2*np.pi))
+        # adiff = angle_diff(fr.tx_ori, fr.rx_ori)
+        utx = np.r_[np.cos(fr.tx_ori), np.sin(fr.tx_ori)]
+        urx = np.r_[np.cos(fr.rx_ori), np.sin(fr.rx_ori)]
+
+        a1 = compute_angle(utx)
+        a2 = compute_angle(urx)
+        angle = angle_diff(a1,a2)
+        w = 0.1 if angle < 0.5 else 0.1
+        self.flag = True 
+        if np.abs(angle-np.pi) <= 0.2 and self.t > 1000:
+            # self.flag = False 
+            self.get_actuator('joint_velocity_actuator').action = 0.1 * np.array([1, 1])
+            # return
         elif a1 > a2:
             if a1 - a2 > np.pi:
                 self.rotate_clockwise(w=w)
@@ -331,20 +390,6 @@ class TestIRComm(RobotController):
                 self.rotate_counterclockwise(w=w)
             else:
                 self.rotate_clockwise(w=w)
-        # if np.abs(adiff - np.pi) < 0.05:
-        #     return
-        # elif adiff > np.pi:
-        #     w = 0.1 if adiff > np.pi/4 else 0.05 #np.clip(adiff / np.pi, a_min=0, a_max=0.1)
-        #     if fr.tx_ori > fr.rx_ori:
-        #         self.rotate_counterclockwise(w=w)
-        #     else:
-        #         self.rotate_clockwise(w=w)
-        # else:
-        #     __import__('pdb').set_trace()
-        #     w = 0.1 if adiff > np.pi/4 else 0.05 #np.clip(adiff / np.pi, a_min=0, a_max=0.1)
-        #     if fr.tx_ori-np.pi < fr.rx_ori:
-        #         self.rotate_clockwise(w=w)
-        #     else:
-        #         self.rotate_counterclockwise(w=w)
+
 
 

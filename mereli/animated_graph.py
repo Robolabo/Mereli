@@ -1,4 +1,5 @@
 import numpy as np
+import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import matplotlib.patches as patches
@@ -222,20 +223,22 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         own_state = robot.virtual_particle.state 
         # print(robot.virtual_particle.)
         neigh_states = [vv.state for vv in robot.virtual_particle.neighbors]
-        lmarks = robot.virtual_particle.landmarks
+        # lmarks = robot.virtual_particle.landmarks # OLD IMPL
+        lmarks = [lm.state for lm in robot.virtual_particle.landmarks] # PHYSICS BASED IMPL
         disabled = robot.virtual_particle.disabled_lmarks
         self.axis.collections[0].set_offsets(own_state)
         if len(neigh_states) > 0:
             self.axis.collections[1].set_offsets(neigh_states)
         self.axis.collections[2].set_offsets(lmarks)
         lm_colors = []
-        priorities = robot.virtual_particle.lmark_priorities
+        # priorities = robot.virtual_particle.lmark_priorities
         for i in range(len(lmarks)):
             lm_color = 'red'
             if i in disabled:
                 lm_color = 'grey'
             else:
-                lm_color = ['red', 'yellow', 'blue', 'green'][int(priorities[i])]
+                lm_color='blue'
+                # lm_color = ['red', 'yellow', 'blue', 'green'][int(priorities[i])]
             lm_colors.append(lm_color)
         # lm_colors = [('grey', 'red')[i not in disabled] for i in range(len(lmarks))] 
         self.axis.collections[2].set_facecolor(lm_colors)
@@ -250,28 +253,50 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         self.axis.scatter([], [], color='r',zorder=102, s=102, animated=True) # Own state
         self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
         self.axis.scatter([], [], marker='*', edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
-    
+
+
+import string
 class AnimatedImage(AnimatedPlot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, source=None, **kwargs):
         super(AnimatedImage, self).__init__(*args, **kwargs)
+        assert source is not None
+        self.source = source
     
     def update(self, robot):
-        img = robot.sensors['camera'].reading
-        # print(robot.virtual_particle.)
-        # self.axis.collections[0].set_offsets(own_state)
-        # self.axis.collections[1].set_offsets(neigh_states)
-        # self.axis.collections[2].set_offsets(lmarks)
-        # self.axis.collections[2].set_facecolor(lm_colors)
+        # img = robot.sensors['camera'].reading
+        img = robot.controller.pattern_detector.pattern_mat
+        if img.shape[0] == 0:
+            img = np.zeros((1, img.shape[1])).astype(float)
+        
+        # else:
+        #     __import__('pdb').set_trace()
+        img = img * 255
+        # img = np.random.random((5,7)) * 255
         self.axis.get_children()[0].set_data(img)
+        # self.axis.get_children()[0].set_extent((0, 7, len(img), 0))
+        self.axis.grid( color='k', linestyle='-', linewidth=2)
+        ylabels = [string.ascii_uppercase[i] for i in range(img.shape[0])]
+        self.axis.set_yticklabels(ylabels)
+        
         self.axis.draw_artist(self.axis.get_children()[0])
+        self.axis.draw_artist(self.axis.get_yaxis())
+        # for ch in self.axis.lines:
+        #     self.axis.draw_artist(ch)
 
     def initialize(self, world):
-        self.axis.imshow(np.zeros((50,50)))
-        self.axis.get_xaxis().set_visible(False)
+        img = np.zeros((2,7)).astype(float)#
+        img = np.random.random((2,7)) * 255
+        self.axis.imshow(img, cmap='Reds',) 
+        # self.axis.grid( color='k', linestyle='-', linewidth=2)
+        # self.axis.get_xaxis().set_visible(False)
         self.axis.get_yaxis().set_visible(False)
-        # self.axis.scatter([], [], color='b',zorder=100, s=102, animated=True) # Own state
+        self.axis.set_xticklabels(['R', 'G', 'B', 'Size', 'Shape(0)', 'Shape(1)', 'Shape(2)'])
+        self.axis.set_xticks(np.arange(7) -0.5)
+
+
+
+
         
-import networkx as nx
 class AnimatedNeuralNetwork(AnimatedPlot):
     def __init__(self, *args, **kwargs):
         super(AnimatedNeuralNetwork, self).__init__(*args, **kwargs)
@@ -487,6 +512,90 @@ class AnimatedEventPlot(AnimatedPlot):
         self.axis.set_xlim(0, self.plot_buffer)
         self.axis.set_yticks(lineoffsets, ctrl.routines.keys()) 
 
+class AnimatedGraph(AnimatedPlot):
+    def __init__(self, *args, **kwargs):
+        super(AnimatedGraph, self).__init__(*args, **kwargs)
+        self.graph_plotted = False
+        self.interactive = True
+
+    def plot_graph(self, G, robot):
+        if len(G.nodes) == 0:
+            return
+        H, W = 5, 2.6 
+        pos = nx.multipartite_layout(G, subset_key="layer")
+        for i in pos.keys():
+            pos[i] *= 10 
+        pos_np = np.stack([*pos.values()])
+        self.axis.set_ylim(pos_np[:,1].min() - 5, pos_np[:,1].max()+6)
+        self.axis.set_xlim(pos_np[:,0].min() - 3, pos_np[:,0].max()+3)
+        for v in self.axis.patches + self.axis.lines + self.axis.texts:
+            v.remove()
+        n_patches = len(self.axis.patches)
+        n_nodes = len(pos)
+        for i in range(n_nodes):
+            pi = pos[i+1]
+            text = nx.get_node_attributes(G, "lab")[i+1]
+            self.axis.text(pi[0], pi[1]+H/2, text, fontweight='bold',fontsize='large')
+            st = robot.controller.lexicon.words[i].copy().round(2)
+            self.axis.text(pi[0], pi[1]+H/2-2, f"({st[0]}, {st[1]})", fontweight='bold',fontsize='large')
+            rect = patches.Rectangle(pi, W, H, fc=(1,1,1, 1), ec=(0,0,0,1), lw=2, zorder=99)
+            self.axis.add_patch(rect)
+        n_edges = len(G.edges)
+        if n_edges == 0:
+            return
+        for i in range(n_edges):
+            edge = [*G.edges][i]
+            p1, p2 = pos[edge[0]], pos[edge[1]] 
+            self.axis.plot([p1[0] +   2, p2[0]], [p1[1] + H/2, p2[1]+ H/2], lw=2, color='k')
+
+    def update(self, robot):
+        graph = robot.controller.lexicon.nx_tree
+        if not self.graph_plotted:
+            self.plot_graph(graph, robot)
+        for v in self.axis.patches + self.axis.lines + self.axis.texts:
+            self.axis.draw_artist(v)
+
+    def initialize(self, world):
+        # self.axis.scatter([], [], color='k', s=103, ) # Own state
+        self.axis.get_xaxis().set_visible(False)
+        self.axis.get_yaxis().set_visible(False)
+        self.axis.set_xlim(-4,8)
+        self.axis.set_ylim(-8,8)
+        # self.axis.scatter([], [], color='k',zorder=100, s=102, animated=True) # Neigh states
+        # self.axis.scatter([], [], edgecolors='k', s=250, zorder=101, color='r', animated=True) # Lmarks
+
+class AnimatedEventPlot(AnimatedPlot):
+    def __init__(self, *args, **kwargs):
+        super(AnimatedEventPlot, self).__init__(*args, **kwargs)
+    
+    def update(self, robot): 
+        robot_ctrl = robot.controller
+        names = [*robot_ctrl.priorities.keys()]
+        names.sort(key=robot_ctrl.priorities.get)
+        for i, k in enumerate(names):
+            if robot_ctrl.routines[k].flag:
+                ecl = self.axis.collections[i]
+                data = ecl.get_positions()
+                data.append(robot.t)
+                ecl.set_positions(data[-self.plot_buffer:])
+                break
+
+        self.axis.set_xlim(robot.t-self.plot_buffer-10, robot.t + 10)
+        for coll in self.axis.collections:
+            self.axis.draw_artist(coll)
+        self.axis.draw_artist(self.axis.yaxis)
+
+    def initialize(self, world):
+        robot = world.focused_robot()
+        ctrl = robot.controller 
+        n_ev = len(ctrl.routines)
+        lineoffsets = np.arange(1, n_ev * 2,2).tolist()
+        self.axis.eventplot(np.array([[-10]* n_ev]).T, colors=[f'C{i}' for i in range(n_ev)], lineoffsets=lineoffsets, linelength=1, linewidth=10)
+        self.axis.get_xaxis().set_visible(False)
+        # self.axis.get_yaxis().set_visible(False)
+        self.axis.set_xlim(0, self.plot_buffer)
+        self.axis.set_yticks(lineoffsets, ctrl.routines.keys()) 
+
 class AnimatedVirtualForces(AnimatedPlot):
     def __init__(self, *args, sensors=['distance_sensor'], **kwargs):
         super(AnimatedVirtualForces, self).__init__(*args, **kwargs)
@@ -555,6 +664,8 @@ class AnimatedLayout:
             ncols = len(self.grid.split(';'))
             nrows = len(self.grid.split(';')[0])
             self.figsize = (nrows * self.px_row, ncols* self.px_col) 
+            if nrows == 1 and ncols == 1:
+                self.figsize = (7,7)
         self.fig, axes = plt.subplot_mosaic(self.grid, per_subplot_kw=subplot_kw, figsize=self.figsize,)
         plt.subplots_adjust(top=0.97, bottom=0.08, left=0.1, right=0.97, hspace=0.3, wspace=0.2)
         for p in self.plots:
@@ -582,6 +693,8 @@ class AnimatedLayout:
             new_plot = AnimatedCustomLineplot(name, **kwargs)
         elif plot_type == 'animated_ann':
             new_plot = AnimatedNeuralNetwork(name, **kwargs)
+        elif plot_type == 'animated_graph':
+            new_plot = AnimatedGraph(name, **kwargs)
         elif plot_type == 'animated_image':
             new_plot = AnimatedImage(name, **kwargs)
         elif plot_type == 'animated_event_plot':

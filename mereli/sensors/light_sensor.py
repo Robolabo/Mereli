@@ -31,7 +31,7 @@ class LightSensor(DirectionalSensor):
     def __init__(self, *args, color='red', **kwargs):
         super(LightSensor, self).__init__(*args, **kwargs)
         self.color = color
-        self.aperture = 0.785 + .2
+        self.aperture =1 
         phi_coef = 0 # 0.5
         rho_coef = -np.log(0.01)/self.range
         self.propagation = ExpDecayPropagation(rho_att=rho_coef, phi_att=0)# TFM

@@ -13,8 +13,9 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : false, 
-		"grid" : "A;.",
+		"enabled" : true, 
+		"grid" : "A",
+		"figsize" : [7,7],
 	 	"plots" : [
 			{"plot_type" : "comm_space",  "name" : "A", "H" : 8, "W" : 8 }
 		]  
@@ -78,7 +79,7 @@
                     "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
 			    		 	"basic_goto_coords" : {"priority" : 1, "params" : {"formation" : "formation_circle_8"}}}}},
                 "sensors" : {
-                    "distance_sensor" : {"n_sectors" : 8},
+                    "distance_sensor" : {"n_sectors" : 8, "range": 10},
                     "ground_sensor" : {},
                     "own_position_sensor" : {}
                 },
@@ -95,7 +96,7 @@
 		"W" : 4,
 		"threshold" : 1,
 		"randomize_neighbors" : false,  
-		"tau_st" : 20,
+		"tau_st" : 30,
 	       "tau_ori" : 20 
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},

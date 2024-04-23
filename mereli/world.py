@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-from mereli.objects import  Robot, Wall, Map
+from mereli.objects import  Robot, Wall, Map, GroundArea
 from mereli.physics_engines.pybullet_engine import PybulletEngine
 from mereli.register import (controllers, world_objects, initializers, dones, rewards, 
     env_perturbations, communication_systems, world_registry, done_registry)
@@ -31,6 +31,56 @@ def map_parser():
     import pdb; pdb.set_trace()
 
 
+class GlobalMap(object):
+    def __init__(self, *args, **kwargs):
+        self.Nx = 200
+        self.Ny = 200
+        self.dx = 0.05 #metres 
+        self.dy = 0.05 #metres
+        self._map = np.zeros((self.Nx, self.Ny)).astype(int) 
+
+    def get_tile(self, position):
+        """  Returns the value of the discrete map and the (i,j) indices correspoding to position (x,y). """
+        i = int(position[0] // self.dx + self.Nx // 2)
+        j = int(position[1] // self.dy + self.Ny // 2)
+
+        return (i, j), self.map[i, j]
+    
+    def set_tile(self, position, value):
+        """ Updats the value of the discrete map at the (i,j) indices correspoding to position (x,y). """
+        i = int(position[0] // self.dx + self.Nx // 2)
+        j = int(position[1] // self.dy + self.Ny // 2)
+        self._map[i,j] = value
+    
+    def build_map(self, entities):
+        pass
+        # for name, entity in entities.items():
+        #     if 'wall' in name:
+        #         # self.paint_wall(entity)
+        #     elif isinstance(entity, GroundArea):
+        #         self.paint_ground_area(entity)
+            
+        # __import__('pdb').set_trace() 
+    
+    def paint_ground_area(self, ground_area):
+        pos = ground_area.position[:2]
+        R = ground_area.radius
+        for x in np.linspace(pos[0]-R, pos[0]+R, num=int((2*R)//self.dx)):
+            for y in np.linspace(pos[1]-R, pos[1]+R, num=int((2*R)//self.dy)):
+                if np.linalg.norm(np.r_[x, y] - pos) < R:
+                    self.set_tile((x,y),2)
+
+    def paint_wall(self, wall):
+        pos = wall.position[:2]
+        ori = wall.orientation[-1]
+        W = wall.width
+        H = wall.height
+        for x in np.linspace(pos[0]-W/2, pos[0]+W/2, num=int(W//self.dx)):
+            for y in np.linspace(pos[1]-H/2, pos[1]+H/2, num=int(H//self.dx)):
+                self.set_tile((x, y), 1)
+
+        
+
 class World(object):
     # language=rst
     """ Base class of the world or environment. This class is never used directly in an experiment but 
@@ -45,8 +95,7 @@ class World(object):
     :param float height: height in metres of the square arena.
     :param float width: width in metres of the square arena.
     :param float world_delay: deprecated, to be removed in next ver.
-
-    :var dict hierarchy: dictionary storing all the entities instantiated in the world.
+:var dict hierarchy: dictionary storing all the entities instantiated in the world.
     :var dict initializers: dictionary mapping groups of entities to initializers of the positions 
             and orientations
     :var dict env_perturbations: dictionary mapping object groups to environmental perturbations (``EnvironmentalPerturbation``) applied 
@@ -119,12 +168,15 @@ class World(object):
         self.dashboard_conn = DashboardConnection() if global_states.INTERACTIVE else None 
         self.animated_layout = None
         self.__robots = {} 
+        self._is_done = False
+        self.global_map = GlobalMap()
         
 
     def update_neighbor_matrix(self):
-        rad = 50 
+        rad = 1 
         # rad = 1 
         if self.virtual_space is not None:
+            rad = 2 
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
@@ -183,15 +235,10 @@ class World(object):
         :returns: A tuple with state and action numpy arrays of length equal to the number of robots. 
                   Each of these arrays contain python ``dict`` objects representing the states and actions of each controllable entity.
         """
-        if self.physics_engine.paused:
+        if self.physics_engine.paused and not self.physics_engine.paused_step:
             if self.render:
                 self.physics_engine.step_render()
             return {}, {}
-        if global_states.INTERACTIVE:
-            self.paused = self.dashboard_conn.process(self.t, len(self.robots), self.data_logger)
-            if self.paused:
-                return {}, {}
-            print(f'Simulating step {self.t}')
         t0 = time.time() 
         states = deque()
         actions = deque()
@@ -260,6 +307,7 @@ class World(object):
                 self.data_logger.update()
         self.t += 1
         # print('Simulation step elapsed ', time.time() - t0)
+        # self.global_map.build_map(self.hierarchy)
         return states, actions
 
     def focused_robot(self):
@@ -337,11 +385,17 @@ class World(object):
         self.virtual_space = comm_space_cls(**vspace_cfg.get('params', {}))
         for robot_name, robot in self.robots.items():
             self.virtual_space.add_particle(robot_name, robot)
-            self.virtual_space.particles[robot_name].set_controller(topology=topology)
-        for lmk in range(vspace_cfg['landmarks']['num_lmarks']):
-            pos = vspace_cfg['landmarks']['positions'] 
-            lm_pos = vspace_cfg['landmarks'].get('scale',1)*np.array(pos[lmk]) if pos != "random" else None
-            self.virtual_space.add_landmark(lm_pos)
+            if vspace_cfg['name'] != "VirtualPhysicsCommSpace":
+                self.virtual_space.particles[robot_name].set_controller(topology=topology)
+        if isinstance(vspace_cfg['landmarks'], list):
+            for lmk in vspace_cfg['landmarks']:
+                self.virtual_space.add_landmark(lmk['state'], mass=lmk['mass'])
+        else:
+            if vspace_cfg['landmarks']['num_lmarks'] > 0:
+                for lmk in range(vspace_cfg['landmarks']['num_lmarks']):
+                    pos = vspace_cfg['landmarks']['positions'] 
+                    lm_pos = vspace_cfg['landmarks'].get('scale',1)*np.array(pos[lmk]) if pos != "random" else None
+                    self.virtual_space.add_landmark(lm_pos)
 
     def config_data_logger(self, log_info):
         self.data_logger = DataLogger()
@@ -382,7 +436,7 @@ class World(object):
             if issubclass(object_cls, Robot):# or issubclass(object_cls, Robot3D):
                 for i in range(num_entities):
                     controller = None
-                    if obj['controller'] is not None:
+                    if obj.get('controller', False):
                         #* Create Controller and add sensors and actuators
                         controller_cls = controllers[obj['controller'] if not isinstance(obj['controller'], dict) else obj['controller']['name']]
                         params = obj['controller']['params'] if isinstance(obj['controller'], dict) else {}
@@ -391,6 +445,11 @@ class World(object):
                         controller.add_actuators_from_dict(obj['actuators'])
                         if issubclass(controller_cls, controllers['neural_controller']):
                             controller.add_ann_from_dict(ann_topology[obj['controller']['topology']])
+                    else:
+                        controller = controllers['dummy_controller']()
+                        # controller.add_sensors_from_dict({})
+                        # controller.add_actuators_from_dict({})
+
                     positions = obj['positions']
                     orientations = obj['orientations']
                     pos_i = [0,0,0]
@@ -457,6 +516,7 @@ class World(object):
                 argument to be fed must be None
         """
         self.t = 0
+        self._is_done = False
         self.physics_engine.paused = self.start_paused
         if self.task_manager is not None:
             self.task_manager.reset(seed=seed)
@@ -550,10 +610,13 @@ class World(object):
 
     @property
     def is_done(self):
-        if self.task_manager is None:
-            return False
-        else:
-            return self.task_manager.is_done
+        if self.task_manager is not  None:
+            self._is_done = self.task_manager.is_done
+        return self._is_done
+    
+    @is_done.setter
+    def is_done(self, is_done):
+        self._is_done = is_done
 
     @property
     def lights(self):

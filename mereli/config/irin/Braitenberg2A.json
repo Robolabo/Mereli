@@ -19,7 +19,7 @@
 		"positions" : [0,0,0], 
 		"orientations" : 0.0,
                 "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 5}
+                    "light_sensor" : {"range" : 4}
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {}

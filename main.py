@@ -17,14 +17,14 @@ from mereli.register import algorithms, worlds, physics_engines
 from mereli.globals import global_states
 
 def get_irin_exp(num):
-    experiments = ["irin/TestWheels.json", "irin/TestContact.json", "irin/TestProximity.json", "irin/TestRedLightSensor.json",
+    experiments = ["irin/HelloWorld.json", "irin/TestWheels.json", "irin/TestContact.json", "irin/TestProximity.json", "irin/TestRedLightSensor.json",
      "irin/TestBlueLightSensor.json", "irin/TestGreenLightSensor.json", "irin/TestLED.json", "irin/TestBattery.json", 
      "irin/TestEncoder.json", "irin/ObstacleAvoidance.json", "irin/SubsumptionLightExp.json", "irin/SubsumptionGarbageExp.json", 
      "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json"] 
     if num > len(experiments):
         print('Experiment Code does not exist!')
         exit(0)
-    return experiments[num-1]
+    return experiments[num]
 
 def print_welcome():
     print("")
@@ -40,6 +40,8 @@ def print_welcome():
     print("                          BASIC IRIN EXAMPLES                                   ")
     print("+----------------------+------+------------------------------------------------+") 
     print("| EXPERIMENT           | CODE |      CONFIG FILE LOCATION                      |")
+    print("+----------------------+------+------------------------------------------------+") 
+    print("| HELLO WORLD          |  0   | mereli/config/irin/HelloWorld.json             |")
     print("+----------------------+------+------------------------------------------------+") 
     print("| TEST WHEELS          |  1   | mereli/config/irin/TestWheels.json             |")
     print("+----------------------+------+------------------------------------------------+") 
@@ -149,9 +151,10 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
 
     # Create virtual space (if any)
     if 'virtual_space' in cfg_dict:
+
         # is_neural_ctlr = cfg_dict['virtual_space']['controller']['name'] == 'neural_controller'
-        topology_name = cfg_dict['virtual_space']['controller'].get('topology')
-        world.create_virtual_space(**cfg_dict['virtual_space'], topology=cfg_dict['topology'].get(topology_name))
+        topology_name = cfg_dict['virtual_space'].get('controller',{}).get('topology')
+        world.create_virtual_space(**cfg_dict['virtual_space'], topology=cfg_dict.get('topology',{}).get(topology_name))
 
     # import copy
     # world2 = copy.deepcopy(world)
@@ -221,9 +224,11 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             world.reset()
             t0 = time.time()
             while (world.t < timesteps):
+                if world.t == timesteps - 1:
+                    world.is_done = True
                 state, action = world.step()
             time_elapsed = time.time() - t0 
-            print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
-            print(f'Simulation of trial {tr} ended in {time_elapsed}')
+            # print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
+            print(f'Simulation of trial {tr} ended in {time_elapsed} after {timesteps} cycles. ')
 if __name__ == "__main__":
     main()

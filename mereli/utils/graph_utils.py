@@ -4,6 +4,15 @@ import networkx as nx
 from .activations import tanh
 from .alg_utils import compute_angle
 
+
+# class DirectedGraph:
+#     def __init__(self):
+#         pass
+
+#     def add_node(self, name):
+
+
+
 def convert2graph(points, max_dist=75):
     import matplotlib.pyplot as plt
     G = nx.Graph()

@@ -10,7 +10,6 @@ class VirtualParticle:
         self.controller = None
         self.real_robot = None
         self.control = None
-        self.neighbors = []
         self.dist_clst_neighbor = None 
         self.dist_clst_lmark = None
         self.dist_clst_lmark_av = None 
@@ -42,14 +41,19 @@ class VirtualParticle:
         self.real_robot = real_robot
         self.real_robot.virtual_particle = self
 
+    @property
+    def neighbors(self):
+        return [robot.virtual_particle for robot in self.real_robot.neighbors]
+
     def set_controller(self, topology):
         self.controller = NeuralNetwork(topology['dt'], time_scale=topology['time_scale'],\
                 neuron_model=topology['neuron_model'], synapse_model=topology['synapse_model'])
         self.controller.build_from_dict(topology)
     
     def reset(self):
-        self.neighbors = []
-        self.controller.reset()
+        # self.neighbors = []
+        if self.controller is not None:
+            self.controller.reset()
         self.control = None
         self.dist_clst_neighbor = None
         self.dist_clst_lmark = None
@@ -62,6 +66,7 @@ class VirtualParticle:
         self.trace_matrix  = None 
 
     def step_control(self, stimuli):
+        # CTRNN
         control = self.controller.step(stimuli)
         self.control = np.array(control['out'])
         
@@ -279,8 +284,32 @@ class Torus2dSpace(CommunicationSpace):
         self.W = W 
         self.tau_st = tau_st 
         self.tau_ori = tau_ori 
-
+        
     def step_dynamics(self):
+        """ Virtual-Physics approach """
+        for i, pi in enumerate(self.particles.values()):
+            Ftot = np.zeros(2).astype(float)
+            for j, pj in enumerate(self.particles.values()):
+                if pi.id != pj.id:
+                    r = np.linalg.norm(pi.state - pj.state)
+                    Fmod = 0.2 / ((r+0.05) ** 2) 
+                    Fdir = (pi.state - pj.state) / r 
+                    # phi = self.angle(pi, clst_lmark_av)
+                    Ftot += Fmod * Fdir 
+
+            for lm in self.landmarks:
+                r = np.linalg.norm(pi.state - lm)
+                Fmod = 0.1 / ((r + 0.05) ** 2) 
+                Fdir = (lm - pi.state) / r 
+                # phi = self.angle(pi, clst_lmark_av)
+                Ftot += Fmod * Fdir 
+            pi.state += (self.dt / self.tau_st) * Ftot 
+            # __import__('pdb').set_trace()
+            pi.state[0] = np.clip(pi.state[0], a_min=-self.H/2, a_max=self.H/2)
+            pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)
+
+
+    def step_dynamics_true(self):
         for particle in self.particles.values():
             # if not particle.real_robot.awaken:
             #     continue
@@ -400,6 +429,76 @@ class Ring1dSpace(CommunicationSpace):
                     points.append(new_candidate)
         self.landmarks = np.vstack(points)
 
+@comm_space_registry(name='none')
+class VirtualPhysicsCommSpace(CommunicationSpace):
+    def __init__(self, H=2, W=2, tau_st=10, **kwargs):
+        super(VirtualPhysicsCommSpace, self).__init__(**kwargs)
+        self.H = H 
+        self.W = W 
+        self.tau_st = tau_st 
+
+    def step(self):
+        for particle in self.particles.values():
+            self.update_matrices(particle)
+        # stimuli_all = np.repeat({}, len(self.particles)) 
+        # for particle in self.particles.values():
+        #     # if not particle.real_robot.awaken:
+        #     #     continue
+        #     stimuli_all[particle.id] = self.perceive(particle)
+        # # for particle in self.particles.values():
+        #     particle.step_control(stimuli_all[particle.id])
+        self.step_dynamics()
+        self.t += 1
+        
+    def step_dynamics(self):
+        """ Virtual-Physics approach """
+        for i, pi in enumerate(self.particles.values()):
+            Ftot = np.zeros(2).astype(float)
+            for j, pj in enumerate(self.particles.values()):
+                if pi.id != pj.id:
+                    r = np.linalg.norm(pi.state - pj.state)
+                    Fmod = 0.2 / ((r+0.05) ** 2) 
+                    Fdir = (pi.state - pj.state) / r 
+                    # phi = self.angle(pi, clst_lmark_av)
+                    Ftot += Fmod * Fdir 
+
+            for lm in self.landmarks:
+                r = np.linalg.norm(pi.state - lm)
+                Fmod = 0.1 / ((r + 0.05) ** 2) 
+                Fdir = (lm - pi.state) / r 
+                # phi = self.angle(pi, clst_lmark_av)
+                Ftot += Fmod * Fdir 
+            pi.state += (self.dt / self.tau_st) * Ftot 
+            # __import__('pdb').set_trace()
+            pi.state[0] = np.clip(pi.state[0], a_min=-self.H/2, a_max=self.H/2)
+            pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)
+
+    def initialize_particle(self, particle, seed=None):
+            particle.state = np.random.uniform(low=(-0.5*self.W / 2, -0.5*self.H / 2), high=(0.5*self.W / 2, 0.5*self.H / 2))
+            particle.orientation = np.random.uniform(low=0, high=2*np.pi)
+
+    def distance(self, pointA, pointB):
+        return np.linalg.norm(pointA - pointB)
+   
+    def angle(self, particle, pointB):
+       return torus_angle(particle.state, pointB, ref_vec=particle.heading_vector, H=self.H, W=self.W) 
+
+    def generate_rnd_lmarks(self, n_lmarks, min_dist):
+        spc_dim = 2
+        points = []
+        while len(points) < n_lmarks:
+            new_candidate = np.random.uniform(low=-self.H / 2, high=self.H / 2, size=spc_dim)
+            if len(points) == 0:
+                points.append(new_candidate)
+            else:
+                distances = np.array([self.distance(pt, new_candidate) for pt in points])
+                if all(distances > min_dist):
+                    points.append(new_candidate)
+
+        self.landmarks = np.vstack(points)
+        order = np.argsort([self.distance(self.landmarks[0], lm) for lm in self.landmarks])
+        self.landmarks = self.landmarks[order]
+        self.lmarks_enabled = [True for _ in range(len(self.landmarks))]
 
 
 @comm_space_registry(name='CPPNSpace')

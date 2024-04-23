@@ -1,3 +1,6 @@
+
+""" OLD, to be removed """
+
 import numpy as np
 from mereli.controllers import RobotController
 from mereli.register import controller_registry

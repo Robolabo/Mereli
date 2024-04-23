@@ -52,6 +52,16 @@ class Battery:
         self.level = self.init_level 
 
 
+class Map:
+    def __init__(self):
+        self.data = None
+        self.current_tile = None
+        self.symbols = {'O' : 1, 'F' : 0, 'B' : 2, 'G' : 3}
+
+    def reset(self): 
+        pass
+
+
 
 @world_object_registry(name='robot')
 class Robot(WorldObject):
@@ -74,14 +84,18 @@ class Robot(WorldObject):
         self.battery = None
         self.battery_enabled = False
         self._food = False
+        self.sensors = {}
+        self.actuators = {}
         if self.controllable:
             #* Initialize sensors and actuators according to controller requirements
-            self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
-                                for k, s in sensors.items()\
-                                if k in self.controller.enabled_sensors.keys()}
-            self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
-                                for k, a in actuators.items()\
-                                if k in self.controller.enabled_actuators.keys()}
+            if len(self.controller.enabled_sensors) > 0:
+                self.sensors = {k : s(self, **self.controller.enabled_sensors[k])\
+                                    for k, s in sensors.items()\
+                                    if k in self.controller.enabled_sensors.keys()}
+            if len(self.controller.enabled_actuators) > 0:
+                self.actuators = {k : a(self, **self.controller.enabled_actuators[k])\
+                                    for k, a in actuators.items()\
+                                    if k in self.controller.enabled_actuators.keys()}
         #* Communication system. Only used if receiver and transmitter sensors are used.
         self.comm_sys = None
         #* Storage for actions selected by the controllers to be fed to actuators
@@ -191,6 +205,8 @@ class Robot(WorldObject):
         
         :returns: a ``dict`` with each sensor name as key and the sensor readings as value.
         """
+        if len(self.controller.enabled_sensors) == 0:
+            return
         for sensor_name, sensor in self.sensors.items():
             # IRCommRX updates distance_sensor too 
             if 'IRCommRX' in self.sensors and sensor_name == 'distance_sensor':

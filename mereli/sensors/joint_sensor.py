@@ -30,7 +30,7 @@ class JointPositionSensor(Sensor):
 
 @sensor_registry(name='encoder')
 class Encoder(Sensor):
-    """ Sensor of the position (in radians/s) of the joints of the robot.
+    """ Sensor of the vel (in radians/s) of the joints of the robot.
 
     :param list joints: list of joints to be read.
     """

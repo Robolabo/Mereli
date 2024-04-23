@@ -2,7 +2,7 @@ import numpy as np
 from mereli.controllers import RobotController
 from mereli.register import controller_registry
 from mereli.utils import compute_angle, angle_diff
-
+from mereli.communication import RobotMolecule
 
 def get_formation_neighbors(formation,node_id, max_dist=0.7):
     neighs = [node_id]
@@ -19,6 +19,7 @@ def get_formation_neighbors(formation,node_id, max_dist=0.7):
 
 def get_formation(formation_name):
     return { 
+        'formationSci1' : {'nodes' : 0.5* np.array([[0,-1],[0,1],[1,  0],[-1, 0.]])},
         'formationPent' : {'nodes' : 1.*np.array([[0,0],[0,1],[-0.951,  0.309],[-0.587, -0.809],[ 0.587, -0.809],[ 0.951,  0.309]])},
         'formationSquare10' : {'nodes' : 1.*np.array([[0,0],[1,1], [0,1], [-1,1], [1,0], [-1,0], [-1,-1],[0,-1], [1,-1] ])},
         'formationSquare9' : {'nodes' : .75*np.array([[1,1], [0,1], [-1,1], [1,0], [0,0], [-1,0], [-1,-1],[0,-1], [1,-1] ])},
@@ -68,6 +69,23 @@ class BasicGOTOCoords(RobotController):
         self.formation_name = formation
         print(formation)
         self.flag = False
+        self.init_center = None
+
+    def plan_navigation(self, center):
+        """ Only controlling the CoM estimate """
+        com_eps = 0.15
+        print(self.t)
+    
+        if self.t < 500: # Still converging to formation
+            self.init_center = center # No problem with odom
+        # elif center[0] - self.init_center[0] < 2:
+        #     center[0] += com_eps
+        # elif center[1] - self.init_center[1] < 2:
+        #     center[1] += com_eps
+        else:
+            center[0] += 0.1
+            center[1] = np.sin(2*np.pi*0.2*center[0]- self.init_center[0])
+        return center
 
     def select_coords_lmark_formation(self):
         # import matplotlib.pyplot as plt
@@ -81,6 +99,8 @@ class BasicGOTOCoords(RobotController):
 
         neigh_positions = np.vstack([epk.position[:2] for epk in self.controller_owner.neighbors])
         center = np.mean(neigh_positions,0)
+
+        # center = self.plan_navigation(center)
         # if self.t > 500:
         #     center[0] += 0.1
         # if self.t > 5000:
