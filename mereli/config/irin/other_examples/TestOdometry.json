@@ -1,0 +1,34 @@
+{
+    "simulation" : {
+	 "timesteps" : 100000,
+	 "trials" : 1,
+	 "start_paused" : true,
+	 "animated_layout" : {
+		"enabled" : false,
+		"grid" : "B;.",
+	 	"plots" : [
+			{"plot_type" : "custom_lineplot", "variables" : ["sensors@?(0,1){t=10}"], "name" : "B"}
+		] 
+	 }
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {},
+        "engine" : "pybullet",
+        "physics_dt" : 0.01,
+        "T_control" : 0.01,
+        "objects" : {
+            "swarm" : {
+                "type" : "epuck",
+                "num_instances" : 1,
+		"positions" : [0,0,0],
+		"orientations" : 0.0,
+                "controller" : "test_odometry",
+                "sensors" : {"encoder" : {}, "odometry" : {}},
+                "actuators" : {
+                    "joint_velocity_actuator" : {}
+                }
+            }
+        }
+    }
+}

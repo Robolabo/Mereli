@@ -1,0 +1,76 @@
+{
+    "checkpoint_file" : "chk_generaliz_v5",
+    "logging" : {
+	"file" : "paperSci_test1",
+	"data": [
+	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks", 
+	"robotA:virtual_particle@lmark", "robotA:controller:routines:basic_goto_coords@target_coords" 
+	]
+    },
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : false,
+	 "animated_layout" : {
+		"enabled" : true, 
+		"grid" : "A",
+		"figsize" : [7,7],
+	 	"plots" : [
+			{"plot_type" : "comm_space",  "name" : "A", "H" : 8, "W" : 8 }
+		]  
+	 }
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 20000,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [{"name" : "dummy", "params" : {}}]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 20,
+		"positions" : {"type" : "random", "low" : [-1,-1], "high" : [1,1]}, 
+		"orientations" : "random",
+                "controller" : {
+                    "name" : "subsumption",
+                    "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
+			    		 	"ellipse_formation" : {"priority" : 1, "params" : {}}}}},
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range": 1},
+                    "ground_sensor" : {},
+                    "own_position_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6}
+                }
+	    } 
+        }
+    },
+    "virtual_space" : {
+	"name" : "VirtualPhysicsCommSpace",
+	"params" : {
+		"H" : 2,
+		"W" : 2,
+		"tau_st" : 40
+	},
+        "landmarks" : [
+		{"state" : [0,-1.0], "mass" : 1},	
+		{"state" : [0.0, 1], "mass" : 1},
+		{"state" : [1.0, 1], "mass" : 1},	
+		{"state" : [1.0, 1], "mass" : 1},	
+		{"state" : [1.0, 1], "mass" : 1},	
+		{"state" : [1.0, 1], "mass" : 1},	
+		{"state" : [1.0, 1], "mass" : 1},	
+		{"state" : [1.0, 1], "mass" : 1}	
+	]
+	}
+}

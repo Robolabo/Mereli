@@ -1,0 +1,44 @@
+{
+    "logging" : {
+	"file" : "paper_flocking",
+	"data": ["robotA@position", "robotA@orientation"]
+    },
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 5,
+	 "start_paused" : true, 
+	 "animated_layout" : {
+		"enabled" : false,
+		"figsize" : [7,10],
+		"grid" : "A;B",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor",  "name" : "A"},
+			{"plot_type" : "epuck_polar",  "name" : "B"}
+		] 
+	 }
+    },
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.02,
+        "T_control" : 0.02,
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 6,
+		"controller" : "testIRcomm",
+		"positions" : {"type" : "random", "low" : [-0.5, -0.5], "high" : [0.5, 0.5]},
+		"orientations" : "random",
+                "sensors" : {
+                    "IRCommRX" : {"n_sectors" : 8, "range" : 5, "selection_scheme" : "random"}
+                },
+                "actuators" : {
+		    "joint_velocity_actuator": {"max_velocity" : 3},
+                    "IRCommTX" : {}
+                }
+            }
+        }
+    }
+}
