@@ -259,7 +259,7 @@ import string
 class AnimatedImage(AnimatedPlot):
     def __init__(self, *args, source=None, **kwargs):
         super(AnimatedImage, self).__init__(*args, **kwargs)
-        assert source is not None
+        # assert source is not None
         self.source = source
     
     def update(self, robot):
@@ -292,6 +292,21 @@ class AnimatedImage(AnimatedPlot):
         self.axis.get_yaxis().set_visible(False)
         self.axis.set_xticklabels(['R', 'G', 'B', 'Size', 'Shape(0)', 'Shape(1)', 'Shape(2)'])
         self.axis.set_xticks(np.arange(7) -0.5)
+
+class AnimatedCamera(AnimatedPlot):
+    def update(self, robot):
+        img = robot.sensors['camera'].reading
+        img = img #* 255
+        self.axis.get_children()[0].set_data(img)
+        self.axis.draw_artist(self.axis.get_children()[0])
+
+    def initialize(self, world):
+        img = np.zeros((200,200)).astype(float)#
+        # img = np.random.random((2,7)) * 255
+        self.axis.imshow(img) 
+        # self.axis.get_yaxis().set_visible(False)
+        # self.axis.get_xaxis().set_visible(False)
+        
 
 
 
@@ -697,6 +712,8 @@ class AnimatedLayout:
             new_plot = AnimatedGraph(name, **kwargs)
         elif plot_type == 'animated_image':
             new_plot = AnimatedImage(name, **kwargs)
+        elif plot_type == 'animated_camera':
+            new_plot = AnimatedCamera(name, **kwargs)
         elif plot_type == 'animated_event_plot':
             new_plot = AnimatedEventPlot(name, **kwargs)
         elif plot_type == 'animated_virtual_forces':

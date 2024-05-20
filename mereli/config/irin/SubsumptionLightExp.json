@@ -5,7 +5,8 @@
 	 "trials" : 3,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		 "enabled" : true, 
+		"enabled" : true, 
+		"figsize" : [5,7],
 		"grid" : "ABD;EEE;EEE;FFF",
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7], "plot_buffer" : 100}, 
@@ -19,7 +20,7 @@
     "world": {
         "name" : "arena",
         "arena_params" : {
-		"arena_size" : 8,
+		"arena_size" : 10,
 		"map_file" : "map.txt"
         },
         "engine" : "pybullet",

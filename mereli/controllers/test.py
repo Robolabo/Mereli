@@ -189,29 +189,30 @@ class TestOdometryController(RobotController):
         # print(f'Orientation Estimation {self.estim_ori}, real={real_ori} and  error={error_ori}' )
         pos = estim_pos
         ori = estim_ori
-        if np.linalg.norm(pos - np.r_[1,0]) < 2e-2:
+        eps = 5e-2
+        if np.linalg.norm(pos - np.r_[1,0]) < eps:#2e-2:
             if np.abs(ori - np.pi / 2) > 0.05:
                 action_wheels = (1,-1)
             else:
                 action_wheels = (1,1)
-        elif np.linalg.norm(pos - np.r_[1,1]) < 3e-2:
+        elif np.linalg.norm(pos - np.r_[1,1]) < eps:# 3e-2:
             if np.abs(ori - np.pi) > 0.05:
                 action_wheels = (1,-1)
             else:
                 action_wheels = (1,1)
-        elif np.linalg.norm(pos - np.r_[0,1]) < 3e-2:
+        elif np.linalg.norm(pos - np.r_[0,1]) < eps:#3e-2:
             if np.abs(ori - 1.5*np.pi) > 0.05:
                 action_wheels = (1,-1)
             else:
                 action_wheels = (1,1)
-        elif np.linalg.norm(pos - np.r_[0,0]) < 3e-2:
+        elif np.linalg.norm(pos - np.r_[0,0]) < eps:#3e-2:
             if min(np.abs(ori), 2*np.pi - np.abs(ori)) > 0.1:
                 action_wheels = (1,-1)
             else:
                 action_wheels = (1,1)
         else:
             action_wheels = (1,1)
-        red = 0.2
+        red = 0.1
         self.get_actuator('joint_velocity_actuator').action = red * np.array(action_wheels)
 
 @controller_registry(name='test_battery')

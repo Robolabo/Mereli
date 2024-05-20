@@ -6,7 +6,7 @@
 	 "start_paused" : true, 
 	 "animated_layout" : {
 		"enabled" : true,
-		"figsize" : [7,10],
+		"figsize" : [5,7],
 		"grid" : "A;B",
 	 	"plots" : [
 			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor",  "name" : "A"},
@@ -35,7 +35,7 @@
                 },
                 "actuators" : {
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
-                }
+                } 
             }
         }
     }
