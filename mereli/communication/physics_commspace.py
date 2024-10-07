@@ -71,7 +71,7 @@ class LandmarkMolecule:
 
 
 
-@comm_space_registry(name='VirtualPhysicsCommSpace')
+@comm_space_registry(name='VirtualPhysicsCommSpaceB')
 class VirtualPhysicsCommSpace:
     """ Class that represents the overall virtual space. """
     def __init__(self, H=2, W=2, tau_st=10):

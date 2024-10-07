@@ -3,11 +3,13 @@
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
 	"file" : "paperLexicon_o5_a75",
+	"logging_period" : 10,
 	"data": [
-	"robotA@position","robotA@orientation", 
-       	"robotA:controller:lexicon@words", "robotA:controller:lexicon@n_words", 
-       	"robotA:controller:lexicon@thoughts", "robotA:controller:lexicon@n_words", 
-       	"robotA:controller:lexicon@patt_word_dict", "robotA:controller:pattern_detector@pattern_mat"]
+       	"robotA:controller:lexicon@elementary_words",
+       	"robotA:controller:lexicon@composed_words",
+       	"robotA:controller:lexicon@assoc_list",
+       	"robotA:controller:lexicon@words", 
+	"robotA:controller:pattern_detector@pattern_mat"]
     },
     "simulation" : {
 	 "timesteps" : 50000,

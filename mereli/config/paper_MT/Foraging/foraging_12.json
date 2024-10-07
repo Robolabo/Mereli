@@ -15,9 +15,8 @@
 	 "start_paused" : false,
 	 "animated_layout" : {
 		"enabled" : true, 
-		"grid" : "A;B;C",
+		"grid" : "B",
 	 	"plots" : [
-			{"plot_type" : "general_info",  "name" : "A"},
 			{"plot_type" : "comm_space", "H" :3, "W": 3,"name" : "B"}
 		] 
 	 } },
@@ -84,9 +83,10 @@
 		    "memory_ground_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {}
+                    "joint_velocity_actuator" : {},
+		    "led" : {}
                 },
-		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01, "charge_range" :  1} 
+		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",

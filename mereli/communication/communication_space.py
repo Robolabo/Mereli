@@ -92,6 +92,7 @@ class VirtualParticle:
     def id(self):
         return self.real_robot.gid
 
+@comm_space_registry(name='VirtualPhysicsCommSpace')
 class CommunicationSpace: 
     def __init__(self, threshold=0.2, randomize_neighbors=False, a=1, b=1): 
         self.num_lmarks = 0 
@@ -142,7 +143,10 @@ class CommunicationSpace:
         pidx = particle.id
         neigh_mask_vec = np.repeat(False, len(self.particles.keys()))
         neigh_mask_vec[pidx] = True
-        particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+        # try:
+        #     particle.neighbors = [neigh.virtual_particle for neigh in particle.real_robot.neighbors]
+        # except:
+        #     __import__('pdb').set_trace()
         for ngh in particle.neighbors:
             neigh_mask_vec[ngh.id] = True
             neigh_states.append(ngh.state.copy())

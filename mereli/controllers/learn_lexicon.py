@@ -52,6 +52,35 @@ class Lexicon:
         if True: #global_states.DEBUG:
             self.nx_tree = nx.DiGraph()
 
+    @property
+    def elementary_words(self):
+        ewords = []
+        inv_word_mean_dict = {v : k for k, v in self.word_thought_dict.items()}
+        for i in range(len(self.nx_tree.nodes)):
+            node = self.nx_tree.nodes[i+1]
+            if node['layer'] == 0:
+               ewords.append(inv_word_mean_dict[i]) 
+        return ewords
+            
+    @property
+    def composed_words(self):
+        cwords = []
+        inv_word_mean_dict = {v : k for k, v in self.word_thought_dict.items()}
+        for i in range(len(self.nx_tree.nodes)):
+            node = self.nx_tree.nodes[i+1]
+            if node['layer'] > 0:
+               cwords.append(inv_word_mean_dict[i]) 
+        return cwords
+
+    @property
+    def assoc_list(self):
+        alist = []
+        for word in self.words:
+            parents = self.parents(word)
+            if parents[0] is not None and  parents[1] is not None:
+                alist.append((parents[0], parents[1], word))
+        return alist
+
     def step(self):
         if len(self.word_traces) == 0:
             return
@@ -116,10 +145,8 @@ class Lexicon:
                         elif j not in input_indices:
                             new_word = words_vector[j]
                             self.set_thought(j, new_word)
-
             vector[input_indices] = 1
             i += 1
-    
 
     def backpropagate_tree(self, word_idx):
         vector = np.zeros(self.word_tree.shape[0])
@@ -423,7 +450,9 @@ class BuildLexiconControllerB(RobotController):
         self.lexicon.step()
         self.receive_lexicon()
         self.transmit_lexicon()
-        if False and  self.t > 17989 :
+        if False and  self.t > 17989:
+        # if True and  self.t > 5989:
+            __import__('pdb').set_trace()
             pp = self.lexicon.parents(self.lexicon.words[-1])
             print(" CULTURAL EVOLUTION OF ROBOT ", self.robot.id)
             print(self.pattern_detector.pattern_mat.round(3))

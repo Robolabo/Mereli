@@ -80,7 +80,7 @@
                     "params" : {}},
                 "sensors" : {
                     "distance_sensor" : {"range" : 0.8},
-                    "light_sensor" : {"range" : 4},
+                    "light_sensor" : {"range" : 5},
 		    "own_position_sensor" : {},
 		    "battery_sensor" : {},
 		    "memory_ground_sensor" : {}
@@ -89,7 +89,7 @@
 		    "led" : {},
                     "joint_velocity_actuator" : {}
                 },
-		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01, "charge_range" :  1} 
+		"battery" : {"discharge_coef" : 0.0005, "charge_coef" : 0.02, "charge_range" :  1} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",

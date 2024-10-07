@@ -223,8 +223,8 @@ class AnimatedCommunicationSpace(AnimatedPlot):
         own_state = robot.virtual_particle.state 
         # print(robot.virtual_particle.)
         neigh_states = [vv.state for vv in robot.virtual_particle.neighbors]
-        # lmarks = robot.virtual_particle.landmarks # OLD IMPL
-        lmarks = [lm.state for lm in robot.virtual_particle.landmarks] # PHYSICS BASED IMPL
+        lmarks = robot.virtual_particle.landmarks # OLD IMPL
+        # lmarks = [lm.state for lm in robot.virtual_particle.landmarks] # PHYSICS BASED IMPL
         disabled = robot.virtual_particle.disabled_lmarks
         self.axis.collections[0].set_offsets(own_state)
         if len(neigh_states) > 0:

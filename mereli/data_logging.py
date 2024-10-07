@@ -13,6 +13,8 @@ class DataLogger:
         self.last_row = {}
         self.num_rows = 0
         self.logs_folder = None
+        self.logging_period = 10
+        self.t = 0
 
     def set_log_file(self, logs_folder=None):
         if logs_folder is not None:
@@ -70,6 +72,8 @@ class DataLogger:
         
     def update(self):
         self.num_rows += 1
+        if self.target_object.t % self.logging_period != 0:
+            return
         for variable in self.data:
             path_items, asset, time = self.decode_variable(variable)
             aux_pointer = self.target_object

@@ -10,7 +10,7 @@ class ForageCommSpace(RobotController):
         super(ForageCommSpace, self).__init__(*args, **kwargs)
         self.flag = False
         self.roles = ['NEST', 'FOOD_1', 'FOOD_2', 'LOAD_BAT']
-        self.priorities = [2, 2, 1, 1, 3]
+        self.priorities = [2, 2, 1, 1, 5]
         self.curr_role = None
         self.waiting_bat = False
         self.obstacle_avoider = controllers['basic_obstacle_avoider'](sensitivity=0.3)
@@ -50,8 +50,9 @@ class ForageCommSpace(RobotController):
         area_read = self.get_sensor_reading('memory_ground_sensor')
         curr_pos = self.get_sensor_reading('own_position_sensor')[:2]
         bat = self.get_sensor_reading('battery_sensor')
+
+        print(self.robot.virtual_particle.lmark_priorities)
         if bat < 0.5 or (self.waiting_bat and bat < 0.9):
-            # print('BATTERY')
             self.waiting_bat = True
             self.controller_owner.virtual_particle.disabled_lmarks = []
             self.robot.virtual_particle.lmark_priorities[-1] = 0

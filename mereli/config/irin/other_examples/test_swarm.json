@@ -1,0 +1,42 @@
+{
+    "simulation" : {
+	 "seed" : 112,
+	 "timesteps" : 10000,
+	 "trials" : 3,
+	 "start_paused" : true, 
+	 "animated_layout" : {
+		"enabled" : false,
+		"figsize" : [5,7],
+		"grid" : "A;B",
+	 	"plots" : [
+			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor",  "name" : "A"},
+			{"plot_type" : "epuck_polar",  "name" : "B"}
+		] 
+	 }
+    },
+    "world": {
+        "name" : "square_arena",
+        "arena_params" : {
+	    "height" : 8,
+	    "width" : 8
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 40,
+                "controller" : "basic_obstacle_avoider",
+		"positions" : {"type" : "random", "low" : [-4, -4], "high" : [4, 4]},
+		"orientations" : "random",
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.8}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
+                } 
+            }
+        }
+    }
+}
