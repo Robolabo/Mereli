@@ -14,7 +14,7 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : true, 
+		"enabled" : false, 
 		"grid" : "B",
 	 	"plots" : [
 			{"plot_type" : "comm_space", "H" :3, "W": 3,"name" : "B"}
@@ -86,7 +86,7 @@
                     "joint_velocity_actuator" : {},
 		    "led" : {}
                 },
-		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01} 
+		"battery" : {"discharge_coef" : 0.01, "charge_coef" : 0.025, "charge_range" :  1.5} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",

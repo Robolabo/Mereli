@@ -16,7 +16,8 @@ class Battery:
         self.discharge_coef = discharge_coef 
         self.charge_coef = charge_coef 
         self.charge_range = charge_range 
-        self.init_level = init_level
+        self.init_level = init_level if init_level != "random" else np.round(np.random.uniform(low=0.7, high=1.0),3)
+        print(self.init_level)
         self.level = init_level 
         self.discharge_only_moving = discharge_only_moving 
         self.stop_wheels = stop_wheels 

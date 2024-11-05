@@ -67,6 +67,7 @@ class VirtualParticle:
 
     def step_control(self, stimuli):
         # CTRNN
+        # __import__('pdb').set_trace()
         control = self.controller.step(stimuli)
         self.control = np.array(control['out'])
         
@@ -175,6 +176,7 @@ class CommunicationSpace:
         for i in np.unique(particle.lmark_priorities):
             sorted_lm_priorities = np.array(particle.lmark_priorities)[sorted_lmarks]
             new_sorted.append(sorted_lmarks[sorted_lm_priorities == i])
+        # print(particle.lmark_priorities)
         sorted_lmarks = np.hstack(new_sorted)
         for lm_idx in sorted_lmarks:
             # if lm_idx in particle.disabled_lmarks:
@@ -199,12 +201,14 @@ class CommunicationSpace:
                 break
         if clst_lmark_av is None: 
             clst_lmark_av = clst_lmark.copy()
+
         # print('New : ', time.time() - t0)
 
         # OJO
         clst_lmark = clst_lmark_av.copy()
         #####
         # print(clst_lmark, clst_lmark_av, self.landmarks[lm_idx])
+        # print(lm_idx)
        
         phi_clst_st = self.angle(particle, clst_state)
         if np.isnan(phi_clst_st):
@@ -289,7 +293,7 @@ class Torus2dSpace(CommunicationSpace):
         self.tau_st = tau_st 
         self.tau_ori = tau_ori 
         
-    def step_dynamics(self):
+    def step_dynamics_true(self):
         """ Virtual-Physics approach """
         for i, pi in enumerate(self.particles.values()):
             Ftot = np.zeros(2).astype(float)
@@ -313,7 +317,7 @@ class Torus2dSpace(CommunicationSpace):
             pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)
 
 
-    def step_dynamics_true(self):
+    def step_dynamics(self):
         for particle in self.particles.values():
             # if not particle.real_robot.awaken:
             #     continue

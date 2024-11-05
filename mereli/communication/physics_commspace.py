@@ -134,6 +134,7 @@ class VirtualPhysicsCommSpace:
             pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)
             
             pi.update_current_lmark()
+            # __import__('pdb').set_trace()
 
     def initialize_particle(self, particle, seed=None):
             # Intialize the state of particles randomly in [-0.1W/2, 0.1W/2]x[-0.1H/2, 0.1H/2]. 

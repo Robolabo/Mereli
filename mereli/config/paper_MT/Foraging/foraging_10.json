@@ -10,9 +10,10 @@
 	]
     },
     "simulation" : {
+	 "seed" : 123,
 	 "timesteps" : 1000,
 	 "trials" : 1,
-	 "start_paused" : false,
+	 "start_paused" : true,
 	 "animated_layout" : {
 		"enabled" : false, 
 		"grid" : "B",
@@ -22,8 +23,7 @@
 	 } },
     "topology" : {
         "comm_ann" : {
-            "dt" : 0.1,
-            "time_scale" : 1,
+            "dt" : 0.1, "time_scale" : 1,
             "stimuli": {
                 "I1" : {"n" : 1, "sensor" : "dist_clst_st"},
                 "I2" : {"n" : 1, "sensor" : "phi_clst_st"},
@@ -58,8 +58,8 @@
         "name" : "flat_world",
         "arena_params" : {},
         "engine" : "pybullet",
-        "physics_dt" : 0.05,
-        "T_control" : 0.05,
+        "physics_dt" : 0.04,
+        "T_control" : 0.04,
         "task_manager" : {
             "total_duration" : 10000,
             "num_slots" : 1,
@@ -69,8 +69,8 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 8,
-		"positions" : {"type" : "random", "low" : [-2, -2], "high" : [2, 2]}, 
+                "num_instances" : 12,
+		"positions" : {"type" : "random", "low" : [-3, -3], "high" : [3, 3]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "forage_comm_space",
@@ -86,19 +86,19 @@
 		    "led" : {},
                     "joint_velocity_actuator" : {}
                 },
-		"battery" : {"discharge_coef" : 0.005, "charge_coef" : 0.02, "charge_range" :  1} 
+		"battery" : {"discharge_coef" : 0.005, "charge_coef" : 0.05, "charge_range" :  1, "init_level" : "random"} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",
                 "num_instances" : 3,
 		"positions" :[[-3,2,0.5],[3,2,0.5], [0,2,0.5]],
-		"params" : {"range" : 3, "color" : "red"}
+		"params" : {"range" : 6, "color" : "red"}
 	    },
 	    "green_light" : {
                 "type" : "light_source",
                 "num_instances" : 1,
 		"positions" : [0,0,0.5],
-		"params" : {"range" : 0.1, "color" : "green"}
+		"params" : {"range" : 1, "color" : "green"}
 	    },
 	    "nest" : {
                 "type" : "ground_area",
@@ -119,13 +119,13 @@
 	"params" : {
 		"H" : 2,
 		"W" : 2,
-		"threshold" : 0.5,
+		"threshold" : 0.3,
 		"randomize_neighbors" : false,  
 		"tau_st" : 20,
 	       "tau_ori" : 20  
 	},
 	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
-        "landmarks" : {"num_lmarks"  : 9, "positions" : "random"}	
+        "landmarks" : {"num_lmarks"  :13, "positions" : "random"}	
     }, 
     "algorithm" : {
         "name" : "NEAT",

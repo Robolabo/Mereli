@@ -13,7 +13,7 @@
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : true, 
+		"enabled" : false, 
 		"grid" : "A;B",
 	 	"plots" : [
 			{"plot_type" : "general_info",  "name" : "A"},
@@ -71,47 +71,48 @@
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 40,
-		"positions" : {"type" : "random", "low" : [-2, -2], "high" : [2, 2]}, 
+		"positions" : {"type" : "random", "low" : [-8, -4], "high" : [8, 4]}, 
 		"orientations" : "random",
                 "controller" : {
-                    "name" : "forage_comm_space",
-                    "params" : {}},
+                    "name" : "subsumption",
+                    "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.6}}, 
+			    		 	"forage_comm_space": {"priority" : 1, "params" : {}}}}},
                 "sensors" : {
                     "distance_sensor" : {"range" : 0.8},
-                    "light_sensor" : {"range" : 4},
+                    "light_sensor" : {"range" : 10},
 		    "own_position_sensor" : {},
 		    "battery_sensor" : {},
 		    "memory_ground_sensor" : {}
                 },
                 "actuators" : {
 		    "led" : {},
-                    "joint_velocity_actuator" : {}
+                    "joint_velocity_actuator" : {"max_velocity" : 10}
                 },
-		"battery" : {"discharge_coef" : 0.001, "charge_coef" : 0.01, "charge_range" :  1} 
+		"battery" : {"discharge_coef" : 0.02, "charge_coef" : 0.07, "charge_range" :  1.5} 
 	    },
 	    "red_light" : {
                 "type" : "light_source",
                 "num_instances" : 3,
-		"positions" :[[-5,2,0.5],[5,2,0.5], [0,2,0.5]],
-		"params" : {"range" : 6, "color" : "red"}
+		"positions" :[[-6,4,0.5],[6,4,0.5], [0,5,0.5]],
+		"params" : {"range" : 10, "color" : "red"}
 	    },
 	    "green_light" : {
                 "type" : "light_source",
                 "num_instances" : 1,
-		"positions" : [0,0,0.5],
+		"positions" : [0,0,1],
 		"params" : {"range" : 1, "color" : "green"}
 	    },
 	    "nest" : {
                 "type" : "ground_area",
                 "num_instances" : 1,
 		"positions" : [0,0,0],
-		"params" : {"radius" : 1, "color" : "black"}
+		"params" : {"radius" : 2, "color" : "black"}
 	    },
 	    "food" : {
                 "type" : "ground_area",
                 "num_instances" : 2,
-		"positions" : [[5,0,0], [-5,0,0]],
-		"params" : {"radius" : 0.5, "color" : "grey"}
+		"positions" : [[6,0,0], [-6,0,0]],
+		"params" : {"radius" : 1.5, "color" : "grey"}
 	    }
         }
     },
