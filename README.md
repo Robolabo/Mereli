@@ -17,23 +17,13 @@ Download the simulator requirements:
 pip3 install -r requirements.txt
 ```
 
-Additionally, if working MPI is installed in your system:
+Optionally, if working MPI is installed in your system:
 ```
 pip3 install mpi4py==3.0.3
 ```
 
 The simulator can be cleanly executed without MPI installed. However, MPI parallelization functionalities 
 (for example parallel evaluation in genetic algorithms) cannot be harnessed.
-
-In order to execute the examples or to use the simulator outside the Mereli directory, run the following 
-command:
-
-```
-python setup.py install
-```
-
-Momentarily, the in-process documentation of the simulator can be checked by running the html file in 
-`docs/_build/html/index.html` locally through a web browser of your choice.
 
 
 ## Basic Usage
