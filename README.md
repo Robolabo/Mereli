@@ -6,6 +6,12 @@
 </p>
 
 
+## Description of this Branch (VCommModule)
+This branch is focused on the paper submitted to IEEE Transactions on Cybernetics, entitled as Evolution of transferable and self-organized communication modules for solving multiple swarm robotics tasks, and authored by R. Sendra-Arranz, A. Gutierrez, and A. L. Christensen. This README file exclusively serves as general guidelines and instructions that the readers can use to reproduce the experiments exposed in the paper. 
+MERELI is a general robotics simulation tool that is used in more scenarios and experiments beyond the ones in the paper. 
+Therefore, there are multiple modules, classes and functions that are not relenvant in the context of the paper. 
+Thus, below, we provide the reader with the files and modules that are more relevant to execute the tasks of the paper.      
+
 ## Installation
 Clone this repository:
 ```
@@ -59,83 +65,67 @@ The configuration file is composed by the following main blocks:
 
 - `world`: configuration of the environment/world.
 
-Firstly, an example of ANN declaration through the `topology` field is shown below. It exemplifies the use of rate neuron 
-models as building blocks of CTRNNs:
+Subsequently, the example configuration file in mereli/config/IEEE\_TCybPaper is explained step by step.
+
+Firstly, the following extract of code shows the `checkpoint_file`, located in the mereli/checkpoints directory, that containes a previously evolved ANN model.  
+Additionally, it shows some configuration related to the logging and recording of data during the simulation. Specifically, the storage file (inside the mereli/logs directory
+), and the data variables to be recorded (e.g. robot positions, communication states, virtual landmarks) are fixed.  
 ```python
-"topology" : {
-    "dt" : 0.1, # Euler step of the ANN.
-    "time_scale" : 20, # Ratio between neuronal and environment time scales (neurons are 20 times faster).
-    "stimuli": { # Declaration of stimuli fed to the ANN. 
-        "I1" : {"n" : 2, "sensor" : "wireless_receiver:msg"}, # 2D message of IR communication receiver.
-        "I2" : {"n" : 2, "sensor" : "wireless_receiver:receiving_direction"}, # 2D message orientation msg.
-        "I3" : {"n" : 1, "sensor" : "wireless_receiver:signal"}, # Signal strength
-        "I4" : {"n" : 1, "sensor" : "wireless_receiver:state"}, # State of the communication.
-        "I5" : {"n" : 6, "sensor" : "light_sensor"} # Light sensor (6 sectors).
-    },
-    # Encoding of the above stimuli. Mainly used when spiking neuron models are employed, to map stimulus 
-    # to spike trains. As it is not the case of this example, identity encoding is fixed as a placeholder.
-    # In this case, the encoding field could have been completely removed (as it is not used). 
-    "encoding" : {
-        "I1" :{"scheme" : "IdentityEncoding"},
-        "I2" :{"scheme" : "IdentityEncoding"},
-        "I3" :{"scheme" : "IdentityEncoding"},
-        "I4" :{"scheme" : "IdentityEncoding"},
-        "I5" :{"scheme" : "IdentityEncoding"}
-    },
-    # Neuron model from mereli.neural_networks.neuron_models.
-    "neuron_model" : "rate_model",
-    # Synapse model from mereli.neural_networks.synapses. Currently, it can be either static for 
-    # non-spiking neurons and dynamic for spiking neurons.
-    "synapse_model" : "static_synapse",
-    # Set of neuron ensembles or layers. 
-    "ensembles": {
-        "H1" : {"n" : 10, "params" : {}},
-        "H2" : {"n" : 10, "params" : {}},
-        "OUT_COMM" : {"n" : 2, "params" : {}},
-        "OUT_COMM_ST" : {"n" : 1, "params" : {}},
-        "OUT_MOT" : {"n" : 2, "params" : {}}
-    },
-    # Set of ouputs, linking actuators to motor ensembles or neurons.
-    "outputs" : {
-        # OUT_COMM_ST generates the action of the IR communication state (RELAY or SEND).
-        "outC" : {"ensemble" : "OUT_COMM_ST", "actuator" : "IR_transmitter:state", "enc": "cat"},
-        # OUT_COMM generates the action of the IR communication 3D message.
-        "outA" : {"ensemble" : "OUT_COMM", "actuator" : "IR_transmitter", "enc": "real"},
-        # OUT_MOT generates the action of the wheel actuator (2D).
-        "outB" : {"ensemble" : "OUT_MOT", "actuator" : "wheel_actuator", "enc": "real"}
-    },
-    # Set of ANN synapses, specifying the pre and post synaptic ensembles, the probability of 
-    # pairwise neuron connection (p) and whether the connection is trainable or not.
-    "synapses" :  {
-        "I1-H1" : {"pre":"I1","post":"H1", "trainable":true, "p":1.0},
-        "I2-H1" : {"pre":"I2","post":"H1", "trainable":true, "p":1.0},
-        "I3-H1" : {"pre":"I3","post":"H1", "trainable":true, "p":1.0},
-        "I4-H1" : {"pre":"I4","post":"H1", "trainable":true, "p":1.0},
-        "I5-H1" : {"pre":"I5","post":"H1", "trainable":true, "p":1.0},
-        "H1-H1" : {"pre":"H1","post":"H1", "trainable":true, "p":0.7},
-        "H2-H2" : {"pre":"H2","post":"H2", "trainable":true, "p":0.7},
-        "H1-H2" : {"pre":"H1","post":"H2", "trainable":true, "p":1.0},
-        "H1-MOT" : {"pre":"H1","post":"OUT_MOT", "trainable":true, "p":1.0},
-        "H2-COM" : {"pre":"H2","post":"OUT_COMM", "trainable":true, "p":1.0},
-        "H2-ST" : {"pre":"H2","post":"OUT_COMM_ST", "trainable":true, "p":1.0},
-        "COMM-H1" : {"pre":"OUT_COMM","post":"H1", "trainable":true, "p":0.85},
-        "MOT-H1" : {"pre":"OUT_MOT","post":"H1", "trainable":true, "p":0.85},
-        "ST-H1" : {"pre":"OUT_COMM_ST","post":"H1", "trainable":true, "p":0.85},
-        "MOT-MOT" : {"pre":"OUT_MOT", "post":"OUT_MOT", "trainable":true, "p":1.0},
-        "COMM-COMM" : {"pre":"OUT_COMM", "post":"OUT_COMM", "trainable":true, "p":1.0},
-        "COMM-ST" : {"pre":"OUT_COMM", "post":"OUT_COMM_ST", "trainable":true, "p":1.0},
-        "ST-COMM" : {"pre":"OUT_COMM_ST","post":"OUT_COMM", "trainable":true, "p":1.0}
-    },
-    # Decoding of the output. In this case, it decodes firing rates into actions, but in the 
-    # case of spiking neurons it maps spike trains into actions. 
-    "decoding" : {
-        # Threshold decoding applies Heaviside mapping of the neurons' output to create binary actions.
-        "outC" : {"scheme" : "ThresholdDecoding", "params" : {"is_cat" : true}},
-        "outA" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}},
-        "outB" : {"scheme" : "IdentityDecoding", "params" : {"is_cat" : false}}
-    } 
+"checkpoint_file" : "chk_generaliz_v5",
+"logging" : {
+	"file" : "foraging_8",
+	"data": ["robotA@position", "robotA@orientation", "robotA:virtual_particle@state",
+	"robotA:virtual_particle@lmark", "robotA:virtual_particle@orientation", "virtual_space@landmarks"]
 }
 ```
+Additionally, the following extract of code shows some general configuration of the simulation:
+```python
+"simulation" : {
+	 "timesteps" : 1000,
+	 "trials" : 1,
+	 "start_paused" : false,
+},
+```
+
+The `topology` field fixes the ANN architecture to be used in the robot controller or in the communication controller:
+```python
+"topology" : {
+    "comm_ann" : {
+        "dt" : 0.1,
+        "time_scale" : 1,
+        "stimuli": {
+            "I1" : {"n" : 1, "sensor" : "dist_clst_st"},
+            "I2" : {"n" : 1, "sensor" : "phi_clst_st"},
+            "I3" : {"n" : 1, "sensor" : "dist_clst_lmark"},
+            "I4" : {"n" : 1, "sensor" : "phi_clst_lmark"},
+            "I5" : {"n" : 1, "sensor" : "dist_clst_lmark_av"},
+            "I6" : {"n" : 1, "sensor" : "phi_clst_lmark_av"}
+    },
+    "neuron_model" : "rate_model",
+    "synapse_model" : "static_synapse",
+    "ensembles": { "CONTROL" : {"n" : 2, "params" : {"activation" : "tanh", "gain" : 1, "tau" : 1}}},
+    "outputs" : {"out" : {"ensemble" : "CONTROL", "actuator" : "control", "enc": "real"}},
+    "synapses" :  {
+        "I1-CONTROL" : {"pre":"I1","post":"CONTROL", "trainable":true, "p":1.0},
+        "I2-CONTROL" : {"pre":"I2","post":"CONTROL", "trainable":true, "p":1.0},
+        "I3-CONTROL" : {"pre":"I3","post":"CONTROL", "trainable":true, "p":1.0},
+        "I4-CONTROL" : {"pre":"I4","post":"CONTROL", "trainable":true, "p":1.0},
+        "I5-CONTROL" : {"pre":"I5","post":"CONTROL", "trainable":true, "p":1.0},
+        "I6-CONTROL" : {"pre":"I6","post":"CONTROL", "trainable":true, "p":1.0}}
+    } 
+},
+```
+In this case, the ANN is called ``comm_ann`` (many ANNs are allowed), and it is based on the rate neuron model (used in the CTRNN). 
+It has six one-dimensional stimulus signals that are injected as input nodes of the ANN. These signals are specified in the `stimuli` field, 
+where the sensor that provides such signal is also specified. In this case, the sensors are all of them variables generated by the communication module 
+(see paper for more details). In more convential robotics experiments, `sensor` would be, for instance, `distance_sensor` or `light_sensor`.  
+The extract of code also shows the neuron ensembles or layers, which, in this experiment, are just a single ouput layer with 2 neurons. 
+Finally, connections between input nodes and neurons are fixed in the `synapses` field.
+An important disclaimer when using pre-evolved ANNs is that the configuration in `topology` must match the configuration  of the previously saved 
+model stored in `checkpoint_file`.
+
+
+The world configuration is composed by all the 
 
 An example of `world` configuration is the following:
 
@@ -187,6 +177,7 @@ An example of `world` configuration is the following:
     }
 }
 ```
+
 An example of `algorithm` configuration is the following (using CTRNN):
 ```python
 "algorithm" : {
