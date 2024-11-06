@@ -59,11 +59,50 @@ using the command line argument `--cfg` (or `-f`).
 The configuration file is composed by the following main blocks:
 - `checkpoint_file`: name of the file where optimization checkpoints are stored.
 
+- `logging` : stores configuration variables related to runtime recording of simulation data.
+
+- `simulation` : general configuration and customization of the simulation. 
+
 - `topology`: configuration of the artificial neural network.
 
 - `algorithm`: configuration of the algorithm that optimizes the previously specified ANN parameters. 
 
 - `world`: configuration of the environment/world.
+
+- `virtual_space`: configuration related to the communication module based on virtual state spaces. Only required when the communication module is used  
+
+The configuration files that can be used to reproduce the experiments of the IEEE Transactions of Cybernetics paper are the following:
+
+- Aggregation task:
+
+    * `config/IEEE_TCybPaper/Aggregation/aggregation_8.json` : 
+
+- Formation task:
+
+    * `config/IEEE_TCybPaper/Formation/formation_triangle_6.json` : 
+
+    * `config/IEEE_TCybPaper/Formation/formation_circle_9.json` : formation task with filled circle topology of 9 robots.  
+
+    * `config/IEEE_TCybPaper/Formation/formation_square_9.json` : formation task with filled square topology of 9 robots.  
+
+    * `config/IEEE_TCybPaper/Formation/formation_rhombus_9.json` : formation task with rhombus topology of 9 robots.  
+
+    * `config/IEEE_TCybPaper/Formation/formation_circle_25.json` : formation task with filled circle topology of 25 robots.  
+
+- Foraging task:
+
+    * `config/IEEE_TCybPaper/Foraging/foraging_8.json` : foraging task with 8 robots 
+
+    * `config/IEEE_TCybPaper/Foraging/foraging_12.json` : foraging task with 8 robots 
+
+    * `config/IEEE_TCybPaper/Foraging/foraging_20.json` : foraging task with 20 robots 
+
+    * `config/IEEE_TCybPaper/Foraging/foraging_40.json` : foraging task with 40 robots 
+ 
+
+These experiments can be executed as follows: 
+
+`python main.py -f config/IEEE_TCybPaper/Foraging/foraging_8.json -Rer`
 
 Subsequently, the example configuration file in mereli/config/IEEE\_TCybPaper is explained step by step.
 
@@ -130,121 +169,132 @@ The world configuration is composed by all the
 An example of `world` configuration is the following:
 
 ```python
-"world":{
-    "world_delay" : 1, # Delay of the simulation in visual/render mode.
-    "render_connections" :true, # Whether to draw an edge when two agents can communicate.
-    "height":1000, # Height of the world.
-    "width": 1000, # Width of the world.
-    # Set of objects to be instantiated.
+"world": {
+    "name" : "flat_world",
+    "arena_params" : {},
+    "engine" : "pybullet",
+    "physics_dt" : 0.05,
+    "T_control" : 0.05,
     "objects" : {
-        # Robots 
         "robotA" : {
-            "type" : "robot",# object type
-            "num_instances" : 10,# number of instances
-            "controller" : "neural_controller",# Name of the controller. 
-            # Set of sensors with their parameters (unspecified parameters are autocompleted with defaults). 
+            "type" : "epuck",
+            "num_instances" : 8,
+            "positions" : {"type" : "random", "low" : [-2, -2], "high" : [2, 2]}, 
+            "orientations" : "random",
+            "controller" : {"name" : "forage_comm_space", "params" : {}},
             "sensors" : {
-                "wireless_receiver" : {"n_sectors":4, "range" : 150,  "msg_length" : 3}, 
-                "light_sensor" : {"n_sectors" : 6}
+                "distance_sensor" : {"range" : 0.8},
+                "light_sensor" : {"range" : 5},
+                "own_position_sensor" : {},
+                "battery_sensor" : {},
+                "memory_ground_sensor" : {}
             },
-            # Set of actuators with their parameters (unspecified parameters are autocompleted with defaults).
             "actuators" : {
-                "wheel_actuator" : {}, 
-                "IR_transmitter" : {"quantize":true, "range" : 150, "msg_length" : 3}
+                "led" : {},
+                "joint_velocity_actuator" : {}
             },
-            # Initialization of robots within the environment.
-            "initializers" : {
-                "positions" : {"name" : "random_uniform", "params" : {"low":400, "high" : 600, "size" : 2}},
-                "orientations" : {"name" : "random_uniform",  "params" : {"low":0, "high" : 6.28, "size" : 1}}
-            },
-            # Perturbations applied to the robots at runtime. In this case light sensor stimuli of 
-            # 8 out of 10 robots is inhibited, so that only 2 robots can sense the light.
-            "perturbations" : {"stimuli_inhibition" : {"affected_robots": 8, "stimuli" : "light_sensor"}},
-            # Additional parameters.
-            "params" : {"trainable" : true}
+            "battery" : {"discharge_coef" : 0.005, "charge_coef" : 0.02, "charge_range" :  1} 
         },
-        # Light source
-        "light_red" : {
+        "red_light" : {
             "type" : "light_source",
-            "num_instances": 1,
-            "controller" : "light_orbit_controller",
-            "positions" : "random",
-            "initializers" : {
-                "positions" : {"name" : "random_circumference", "params" : {"radius": 1, "center" : [500, 500]}}
-            },
-            "params" : {"range" : 80, "color" : "red"}
+            "num_instances" : 3,
+            "positions" :[[-3,2,0.5],[3,2,0.5], [0,2,0.5]],
+            "params" : {"range" : 3, "color" : "red"}
+        },
+        "green_light" : {
+            "type" : "light_source",
+            "num_instances" : 1,
+            "positions" : [0,0,0.5],
+            "params" : {"range" : 0.1, "color" : "green"}
+        },
+        "nest" : {
+            "type" : "ground_area",
+            "num_instances" : 1,
+            "positions" : [0,0,0],
+            "params" : {"radius" : 1, "color" : "black"}
+        },
+        "food" : {
+            "type" : "ground_area",
+            "num_instances" : 2,
+            "positions" : [[3,0,0], [-3,0,0]],
+            "params" : {"radius" : 0.5, "color" : "grey"}
         }
     }
 }
 ```
 
-An example of `algorithm` configuration is the following (using CTRNN):
+It contains the list of objects/entities that will be instantiated in the world (in this case 8 robots, 3 red lights, 1 green light,  a nest ground area, and 
+two food ground areas). For object it specifies some relevant configuration, such as the initial positions and orientations (for the robots). In the case of 
+the robots, it is also set the type of robot, the sensors, actuators, controller, and battery.  
+
+Additionally, the field `virtual_space` collects all the configuration needed for those experiments harnessing the communication module of the paper. 
+An example is shown below:
+
 ```python
-"algorithm" : {
-    "name" : "GA", # Name of the algorithm (Genetic Algorithm in this case).
-    "evolvable_object" : "robotA", # Reference to the entity to be evolved.
-    "population_size" : 100, # Population size
-    "generations" : 1000, # Number of generations.
-    "evaluation_steps" : 1000, # Evaluation steps of each simulation trial.
-    "num_evaluations" : 5, # Number of trials to estimate the fitness.
-    "fitness_function" : "goto_light", # Name of the fitness function.
-    # Set of populations. In this case there is only one population, but 
-    # multiple population implementing cooperative coevolution are supported.
-    "populations" : {
-        "p1" : {
-            # Parts of the ANN to be evolved.
-            "objects" : ["synapses:weights:all", "neurons:bias:all",  "neurons:tau:all", "neurons:gain:all"],
-            # Maximum search space bounds.
-            "max_vals" : [3,  1.5, 0.75, 5],
-            # Minimum search space bounds.
-            "min_vals" : [-3, -1.5, -1, 0.05],
-            # Algorithm dependend parameters
-            "params": {
-                "encoding" : "real", 
-                "selection_operator" : "nonlin_rank",
-                "crossover_operator" : "blxalpha",
-                "mutation_operator" : "gaussian",
-                "mating_operator" : "random",
-                "mutation_prob" : 0.05,
-                "crossover_prob" : 0.9,
-                "num_elite" : 3
-            }
-        }
-    }
-} 
+"virtual_space" : {
+	"name" : "torus2D",
+	"params" : {
+		"H" : 2,
+		"W" : 2,
+		"threshold" : 0.5,
+		"tau_st" : 20,
+	    "tau_ori" : 20  
+	},
+	"controller" : {"name" : "neural_controller", "topology" : "comm_ann"},
+    "landmarks" : {"num_lmarks"  : 9, "positions" : "random"}	
+}, 
 ```
 
-Note that, in each population, the `objects` field settles the parts of the ANN specified in `topology` to be 
-evolved. The parts of the ANN are configured using a query system that is used in the simulator to address certain 
-parts of the ANN. Currently implemented queries are: 
+The `virtual_space` configuration field sets the type of communication space used (e.g. 1D or 2D), some general parameters, the communication controller (notice that it points to the ANN, `comm_ann` defined above), 
+and the configuration of the landmarks. In this case the landmarks are randomly positioned, but specific positions are also allowed 
+(see e.g. `config/IEEE_TCybPaper/Formation/formation_triangle_6.json`).  
 
-| Query | Target | Description |
-| :---:  | :---:  | :--- |
-| `synapses:weights` | `all` | Weights of all the synapses.|
-|  | `synapse_name` | Weights of synapse with name `synapse_name`. |
-|  | `sensory` |  Weights of synapses with a sensory presynaptic neurons. |
-|  | `hidden` | Weights of synapses with a hidden presynaptic neurons. |
-|  | `motor` | Weights of synapses with a motor presynaptic neurons. |
-| `neurons:tau` | `all` | Neuron membrane time constants of all neurons (only rate_model). |
-| `neurons:gain` | `all` | Neuron gain of all neurons (only rate_model). |
-| `neurons:bias` | `all` | Neuron biases of all neurons (only rate_model). |
-| `decoding:weights` | `all` | Decoding weights if using LinearPopulationDecoding in spiking neural nets. |
 
-<br/><br/>
-In the directory `mereli/config` there are the following configuration files stored as examples:
+Finally, `algorithm` collects all the configuration needed for the evolutionary algorithm used. In this case, it is a NEAT algorithm that optimizes 
+the CTRNN of the robots:  
+```python
+"algorithm" : {
+    "name" : "NEAT",
+    "population_size" : 50,
+    "generations" : 200,
+    "evaluation_steps" : 10,
+    "num_evaluations" : 50,
+    "fitness_function" : "reward_integration",
+    "targets" : [{"topology" : "comm_ann", "object" :"robotA:virtual_particle@controller"}],
+    "gene_info" : {
+        "comm_ann:connections:weight:all" : {
+            "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5}, 
+            "initialization" : {"type" : "gaussian", "sigma" : 1},
+            "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}
+        },
+        "comm_ann:nodes:bias:all" : {
+            "normalization" : {"type": "linear", "min_val" : -5, "max_val" : 5},
+            "initialization" : {"type" : "gaussian", "sigma" : 1},
+            "mutation" : {"type" : "gaussian", "mutation_prob": 0.1, "sigma" : 0.05}
+        }
+    },
+    "alg_params" :{ 
+        "p_weight_mut" : 0.5, "p_node_mut" : 0.1, "p_conn_mut" : 0.2, "compatib_thresh" : 4,
+        "c1" : 0.5, "c2" : 0.5, "c3" : 2, "species_elites" : 2
+    }
+}
+```
 
-- `experimentA_GA_ctrnn`: Experiment of selecting a leader of a swarm using homogeneous CTRNN controllers. 
-    Optimization is carried out using a Genetic Algorithm (GA).
-- `experimentA_SNES_ctrnn`: Experiment of selecting a leader of a swarm using homogeneous CTRNN controllers. 
-    Optimization is carried out using a Separable Natural Evolution Strategy (SNES).
-- `experimentB_GA_ctrnn`: Experiment of detecting the borderline or frontier members of swarm, using homogeneous CTRNN controllers. 
-    Optimization is carried out using a Genetic Algorithm (GA).
-- `experimentB_SNES_ctrnn`: Experiment of detecting the borderline or frontier members of swarm, using homogeneous CTRNN controllers. 
-    Optimization is carried out using a Separable Natural Evolution Strategy (SNES).
-- `experimentC_GA_ctrnn`: Experiment of orientation consensus of the swarm (reach same heading orientation), using homogeneous CTRNN    controllers. Optimization is carried out using a Genetic Algorithm (GA).
-- `experimentC_SNES_ctrnn`: Experiment of orientation consensus of the swarm (reach same heading orientation), using homogeneous CTRNN    controllers. Optimization is carried out using a Separable Natural Evolution Strategy (SNES).
 
-- `experimentD_GA_ctrnn`: Experiment of following a mobile light that can only be perceived by 2 robots, using homogeneous CTRNN    controllers. Optimization is carried out using a Genetic Algorithm (GA).
-- `experimentD_SNES_ctrnn`:Experiment of following a mobile light that can only be perceived by 2 robots, using homogeneous CTRNN    controllers. Optimization is carried out using a Separable Natural Evolution Strategy (SNES).
+
+## Other modules relevant to the paper 
+
+- `mereli/communication/communication_space.py`
+
+- `mereli/controllers/forage.py`
+
+- `mereli/controllers/formation_controller.py`
+
+- `mereli/controllers/aggregation_controller.py`
+
+- `mereli/neural_networks/`
+
+
+
 
 <br/><br/>

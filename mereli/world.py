@@ -176,7 +176,7 @@ class World(object):
         rad = 1 
         # rad = 1 
         if self.virtual_space is not None:
-            rad = 30 
+            rad = 20 
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
