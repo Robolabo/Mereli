@@ -551,7 +551,7 @@ class AnimatedGraph(AnimatedPlot):
             pi = pos[i+1]
             text = nx.get_node_attributes(G, "lab")[i+1]
             self.axis.text(pi[0], pi[1]+H/2, text, fontweight='bold',fontsize='large')
-            st = robot.controller.lexicon.words[i].copy().round(2)
+            st = robot.controller.lexicon.words[i]
             self.axis.text(pi[0], pi[1]+H/2-2, f"({st[0]}, {st[1]})", fontweight='bold',fontsize='large')
             rect = patches.Rectangle(pi, W, H, fc=(1,1,1, 1), ec=(0,0,0,1), lw=2, zorder=99)
             self.axis.add_patch(rect)

@@ -16,7 +16,7 @@
 	 "trials" : 1,
 	 "start_paused" : true,
 	 "animated_layout" : {
-		"enabled" : false, 
+		"enabled" : true, 
 		"grid" : "A;A;B",
 		"figsize" : [10,10],
 	 	"plots" : [
