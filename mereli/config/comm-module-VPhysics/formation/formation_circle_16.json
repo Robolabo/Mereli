@@ -1,0 +1,70 @@
+{
+    "checkpoint_file" : "chk_generaliz_v5",
+    "logging" : {
+	"file" : "VPhy_formation_circ_16",
+	"data": [
+	"robotA@position","robotA@orientation", "robotA:virtual_particle@state",
+       	"robotA:virtual_particle@orientation", "virtual_space@landmarks", 
+	"robotA:virtual_particle@lmark", "robotA:controller:routines:basic_goto_coords@target_coords" 
+	]
+    },
+    "simulation" : {
+	 "timesteps" : 10000,
+	 "trials" : 1,
+	 "start_paused" : false,
+	 "animated_layout" : {
+		"enabled" : true, 
+		"grid" : "A",
+		"figsize" : [7,7],
+	 	"plots" : [
+			{"plot_type" : "comm_space",  "name" : "A", "H" : 9, "W" : 9}
+		]  
+	 }
+    },
+    "topology" : {},
+    "world": {
+        "name" : "flat_world",
+        "arena_params" : {
+        },
+        "engine" : "pybullet",
+        "physics_dt" : 0.05,
+        "T_control" : 0.05,
+        "task_manager" : {
+            "total_duration" : 20000,
+            "num_slots" : 1,
+            "use_done" : false,
+            "tasks" : [{"name" : "dummy", "params" : {}}]
+        },
+        "objects" : {
+            "robotA" : {
+                "type" : "epuck",
+                "num_instances" : 40,
+		"positions" : {"type" : "random", "low" : [-4,-4], "high" : [4,4]}, 
+		"orientations" : "random",
+                "controller" : {
+                    "name" : "subsumption",
+                    "params" : {"routines" : {"basic_obstacle_avoider" : {"priority" : 0, "params" : {"sensitivity" : 0.8}}, 
+			    		 	"basic_goto_coords" : {"priority" : 1, "params" : {"formation" : "formation_circle_40"}}}}},
+                "sensors" : {
+                    "distance_sensor" : {"n_sectors" : 8},
+                    "ground_sensor" : {},
+                    "own_position_sensor" : {}
+                },
+                "actuators" : {
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 7}
+                }
+	    } 
+        }
+    },
+    "virtual_space" : {
+	"name" : "VirtualPhysicsCommSpace",
+	"params" : {
+		"H" : 8,
+		"W" : 8,
+		"tau_st" : 60
+	},
+        "landmarks" : {"num_lmarks" : 40, "scale" : 2, "positions" : [
+[1.0, 0.0],[0.99, 0.16],[0.95, 0.32],[0.89, 0.46],[0.8, 0.6],[0.69, 0.72],[0.57, 0.82],[0.43, 0.9],[0.28, 0.96],[0.12, 0.99],[-0.04, 1.0],[-0.2, 0.98],[-0.35, 0.94],[-0.5, 0.87],[-0.63, 0.77],[-0.75, 0.66],[-0.85, 0.53],[-0.92, 0.39],[-0.97, 0.24],[-1.0, 0.08],[-1.0, -0.08],[-0.97, -0.24],[-0.92, -0.39],[-0.85, -0.53],[-0.75, -0.66],[-0.63, -0.77],[-0.5, -0.87],[-0.35, -0.94],[-0.2, -0.98],[-0.04, -1.0],[0.12, -0.99],[0.28, -0.96],[0.43, -0.9],[0.57, -0.82],[0.69, -0.72],[0.8, -0.6],[0.89, -0.46],[0.95, -0.32],[0.99, -0.16],[1.0, -0.0]]
+	}}, 
+    "algorithm" : {}
+}

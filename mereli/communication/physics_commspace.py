@@ -2,11 +2,15 @@ import numpy as np
 from mereli.utils.alg_utils import torus_distance, torus_angle, ring_distance, ring_angle
 from mereli.register import comm_space_registry
 
+MASS_LMARK = 1
+MASS_ROBOT  = 1
+FWALL = 0.5
+
 class RobotMolecule:
     """ Class that represents a robot as a particle inside the virtual space """
     def __init__(self):
         self.state = None # Coordiantes or state
-        self._mass = 2. # Mass of the particle
+        self._mass = MASS_ROBOT # Mass of the particle
         self._interaction = 'R' # R repeller, A attractor
         self.real_robot = None # Instance of the real robot associated to the particle
         self.lmark = None # Current landmark or virtual region to where the particle currently belongs
@@ -48,12 +52,11 @@ class RobotMolecule:
         """ States of all the landmarks. """
         return np.array([lmk.state for lmk in self.landmarks])
 
-
 class LandmarkMolecule:
     """ Class that represents a landmark particle. """
     def __init__(self):
         self.state = None
-        self._mass = 0.5 
+        self._mass = MASS_LMARK 
         self._interaction = 'A' # R repeller, A attractor
         self._real_robot = None
 
@@ -71,7 +74,7 @@ class LandmarkMolecule:
 
 
 
-@comm_space_registry(name='VirtualPhysicsCommSpaceB')
+@comm_space_registry(name='VirtualPhysicsCommSpace')
 class VirtualPhysicsCommSpace:
     """ Class that represents the overall virtual space. """
     def __init__(self, H=2, W=2, tau_st=10):
@@ -112,23 +115,66 @@ class VirtualPhysicsCommSpace:
             r = np.linalg.norm(pi.state - origin)
             Fmod = (0.1 * pi.mass * 1) / (r ** 2 + 0.05) 
             Fmod = min(Fmod, 100)
-            Fdir = (pi.state - origin) / (r+0.05)
-            Ftot = 0*Fmod * Fdir
+            Fdir = (pi.state - origin) / (r + 0.05)
+            Ftot = 0* Fmod * Fdir
+
             # Compute forces from other particles
-            # Remark: using in this case all particles for debugging. This should be changed to the neighbors 
-            # using only the messages from other robots. 
-            for j, pj in enumerate(self.particles.values()):
+            # Compute neighbors 
+            neighbor_particles = [robot.virtual_particle for robot in pi.real_robot.neighbors]
+            # Only tesiting and debugging: using all particles full range (UNCOMMENT TO USE)
+            # neighbor_particles = self.particles.values()
+            for j, pj in enumerate(neighbor_particles):
                 if pi.id != pj.id:
                     Fij = self.compute_force(pi, pj, ftype='R')
                     Ftot += Fij 
 
             # Compute forces that all the landmarks apply to the particle
             for lm in pi.landmarks:
-                r = np.linalg.norm(pi.state - lm.state)
+                # r = np.linalg.norm(pi.state - lm.state)
                 Fij = self.compute_force(pi, lm, ftype='A')
                 Ftot += Fij 
-            pi.state += (self.dt / self.tau_st) * Ftot 
              
+            # Rotational dynamics when a wall is close by
+            #### TEST CODE ####### 
+            ### DISABLED. TO ENABLE: Fwall =FWALL
+            eps = 0.8 
+            Fwall = 0 # FWALL  
+            if pi.state[0] - eps <= -self.W / 2:
+                if pi.state[1] - eps < -self.H / 2:
+                    # Drive Right 
+                    Ftot[0] += Fwall 
+                else:
+                    # Drive Up 
+                    Ftot[1] -= Fwall 
+                    
+            elif pi.state[0] + eps >= self.W / 2:
+                if pi.state[1] + eps >= self.H / 2:
+                    # Drive Left 
+                    Ftot[0] -= Fwall 
+                else:
+                    # Drive Down 
+                    Ftot[1] += Fwall                 
+
+            if pi.state[1] - eps <= -self.H / 2:
+                if pi.state[0] + eps <= self.W / 2 and pi.state[0] - eps <= -self.W / 2:
+                    # Drive Down 
+                    Ftot[1] += Fwall                   
+                else:
+                    # Drive Left 
+                    Ftot[0] -= Fwall                     
+            elif pi.state[1] + eps >= self.H / 2:
+                if pi.state[0] + eps >= self.W / 2:
+                    # Drive Up 
+                    Ftot[1] -= Fwall                     
+                else:
+                    # Drive Right 
+                    Ftot[0] += Fwall                     
+            #### END OF TEST CODE ####### 
+            #####################
+
+            ### UPDATE STATE DYNAMICS
+            pi.state += (self.dt / self.tau_st) * Ftot 
+
             # Constrain the states to the considering the H and W of the virtual space. 
             pi.state[0] = np.clip(pi.state[0], a_min=-self.H/2, a_max=self.H/2)
             pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)
@@ -136,10 +182,11 @@ class VirtualPhysicsCommSpace:
             pi.update_current_lmark()
 
     def initialize_particle(self, particle, seed=None):
-            # Intialize the state of particles randomly in [-0.1W/2, 0.1W/2]x[-0.1H/2, 0.1H/2]. 
-            particle.state = np.random.uniform(low=(-0.1*self.W / 2, -0.1*self.H / 2), high=(0.1*self.W / 2, 0.1*self.H / 2))
-            # ANother option would be to initialize as zeros. 
-            # particle.state = np.zeros(2).astype(float)
+        # Intialize the state of particles randomly in [-0.1W/2, 0.1W/2]x[-0.1H/2, 0.1H/2]. 
+        scale = .1 #0.1
+        particle.state = np.random.uniform(low=(-scale*self.W / 2, -scale*self.H / 2), high=(scale*self.W / 2, scale*self.H / 2))
+        # ANother option would be to initialize as zeros. 
+        # particle.state = np.zeros(2).astype(float)
 
     def add_particle(self, robot_name, real_robot):
         particle = RobotMolecule()

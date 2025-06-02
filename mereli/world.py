@@ -176,7 +176,7 @@ class World(object):
         rad = 1 
         # rad = 1 
         if self.virtual_space is not None:
-            rad = 20 
+            rad = 200 
             if self.virtual_space.randomize_neighbors: 
                 rad = 2 
         positions = np.vstack([robot.position[:2] for robot in self.robots.values()])
@@ -191,6 +191,7 @@ class World(object):
     def schedule_workload(self):
         num_robots = len(self.robots)
         Ts = 10 # Control loop executed every 10 times the sim dt.
+        # Ts=1
         t_iter = int(self.t % Ts)
         niter = np.floor(num_robots / Ts)
         nremaining = num_robots % Ts

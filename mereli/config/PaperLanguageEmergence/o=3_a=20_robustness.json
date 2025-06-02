@@ -2,7 +2,7 @@
 {
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "paperLexicon_o3_a20",
+	"file" : "paperLexicon_o3_a20_Q1",
 	"logging_period" : 10,
 	"data": [
        	"robotA:controller:lexicon@elementary_words",
@@ -62,13 +62,13 @@
 	    "CG" : {
 	    	"type" : "cube",
 		"num_instances" : 4,
-		"positions" : {"type" : "random", "low" : [-2,-2,0], "high" : [2,2,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "green", "side_len" : 0.2}
 	    }, 
 	    "CR" : {
 	    	"type" : "cube",
 		"num_instances" : 4,
-		"positions" : {"type" : "random", "low" : [-2,-2,0], "high" : [2,2,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "red", "side_len" : 0.2}
 	    },
 	    "BG" : {

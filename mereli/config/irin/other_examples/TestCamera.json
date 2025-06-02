@@ -16,16 +16,16 @@
         "arena_params" : {"map_file" : "map.txt", "arena_size" : 6},
         "engine" : "pybullet",
         "physics_dt" : 0.05,
-        "T_control" : 0.05,
+        "T_control" : 0.1,
         "objects" : {
             "swarm" : {
                 "type" : "epuck",
                 "num_instances" : 1,
-		"positions" : {"type": "random", "low" : [-0.2,-0.2], "high" : [0.2,0.2]},
+		"positions" : {"type": "random", "low" : [-2,-2], "high" : [2,2]},
 		"orientations" : 0.0,
                 "controller" : "test_camera",
                 "sensors" : {
-			"camera" : {"hpx" : 200, "wpx" : 200},
+			"camera" : {"hpx" : 100, "wpx" : 100},
 			"distance_sensor" : {"range" : 0.8}
 		},
                 "actuators" : {

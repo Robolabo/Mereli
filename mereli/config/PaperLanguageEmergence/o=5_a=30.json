@@ -2,7 +2,7 @@
 {
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
-	"file" : "paperLexicon_o5_a50",
+	"file" : "paperLexicon_o5_a30",
 	"logging_period" : 10,
 	"data": [
        	"robotA:controller:lexicon@elementary_words",
@@ -28,10 +28,11 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-		"height" : 12,
-		"width" : 12 
+		"height" : 8,
+		"width" : 8 
         },
-        "engine" : "pybullet", "physics_dt" : 0.05,
+        "engine" : "pybullet", 
+	"physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
             "total_duration" : 50000,
@@ -42,8 +43,8 @@
         "objects" : {
             "robotA" : {
                 "type" : "epuck",
-                "num_instances" : 50,
-		"positions" : {"type" : "random", "low" : [-6,-6], "high" : [6,6]}, 
+                "num_instances" : 30,
+		"positions" : {"type" : "random", "low" : [-3,-3], "high" : [3,3]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "build_lexicon_B",
@@ -62,31 +63,31 @@
 	    "CG" : {
 	    	"type" : "cube",
 		"num_instances" : 3,
-		"positions" : {"type" : "random", "low" : [-6,-6,0], "high" : [6,6,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "green", "side_len" : 0.2}
 	    }, 
 	    "CR" : {
 	    	"type" : "cube",
 		"num_instances" : 3,
-		"positions" : {"type" : "random", "low" : [-5,-5,0], "high" : [5,5,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "red", "side_len" : 0.2}
 	    },
 	    "BG" : {
 	    	"type" : "ball",
 		"num_instances" : 3,
-		"positions" : {"type" : "random", "low" : [-5,-5,0], "high" : [5,5,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "green", "radius" : 0.1}
 	    }, 
 	    "BR" : {
 	    	"type" : "ball",
 		"num_instances" : 3,
-		"positions" : {"type" : "random", "low" : [-5,-5,0], "high" : [5,5,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "red", "radius" : 0.1}
 	    },
 	    "PR" : {
 	    	"type" : "pyramid",
 		"num_instances" : 3,
-		"positions" : {"type" : "random", "low" : [-4,-4,0], "high" : [4,4,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "red", "size" : 0.2}
 	    }
         }

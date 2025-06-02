@@ -108,6 +108,8 @@ class PybulletEngine(BaseEngine):
         plane_id = p.loadURDF("plane.urdf", #, globalScaling=5)
                                # flags= p.URDF_ENABLE_SLEEPING | p.URDF_ENABLE_WAKEUP,# | p.URDF_ENABLE_CACHED_GRAPHICS_SHAPES,
                                physicsClientId=self.client)
+        # p.changeVisualShape(plane_id, -1, rgbaColor=[0.2, 0.2, 0.2, 1], physicsClientId=self.client)
+        # p.changeVisualShape(plane_id, -1, rgbaColor=[0.1, 0.1, 0.1, 1])
         p.setCollisionFilterGroupMask(plane_id, -1, 0b0, 0b0, physicsClientId=self.client)
 
         # self.engine.changeDynamics(planeId, linkInde1, lateralFriction=0.9)

@@ -14,7 +14,6 @@ from mereli.controllers.find_sensor_pattern import PatternDetector
 CONSTANTS = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'r', 'l', 'm', 'n', 'p', 'q', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z', 'ch', 'xh', 'zh', 'wh']
 VOWELS = ['a', 'e', 'i', 'o', 'u']
 
-
 def create_random_word(num_syllables=3, uppercase=False):
     new_word = ''
     for i in range(num_syllables):
@@ -25,6 +24,13 @@ def create_random_word(num_syllables=3, uppercase=False):
     if uppercase:
         new_word.upper()
     return new_word
+
+
+# class SemioticSymbol:
+#     def __init__(self):
+#         self._type = None # Elementary or composed
+#         self.word = None # Three syllable word
+#         self.meaning = None # real vector
 
 class Lexicon:
     def __init__(self, dim=3, h=4, w=4):
@@ -410,6 +416,30 @@ class BuildLexiconControllerB(RobotController):
                             if w_tr[widx1] == 0 or w_tr[widx2] == 0:
                                 __import__('pdb').set_trace()
                         self.lexicon.create_relation(widx1, widx2, word=word)
+    
+
+    def get_color(self, color, distorted_perception=False):
+        num_color = None
+        if isinstance(color, str):
+            num_color= np.array({'red' : [0.8,0,0], 'green' : [0,0.8,0], 'blue' : [0,0,0.8]}.get(color))
+            if distorted_perception: 
+                num_color = np.array({'red' : [0.5, 0, 0.5], 'green' : [0,0.8,0], 'blue' : [0,0,0.8]}.get(color))
+            num_color = np.clip(np.random.normal(num_color, 0.05), a_min=0, a_max=1)
+        else:
+            num_color = np.array(color)
+        return num_color
+
+    def get_shape(self, shape, perspective_noise=False, distorted_perception=False):
+        if perspective_noise:
+            rnd_aux = np.random.random() < 0.5
+            num_shape = {'cube' : (np.array([0,1,0]), np.array([0.25,0,0.75]))[rnd_aux], 
+                         'ball' : np.array([1,0,0]), 'pyramid' : np.array([0,0,1])}.get(shape)
+        elif distorted_perception: 
+            num_shape = {'cube' : np.array([0,0,1]),  'ball' : np.array([1,0,0]), 'pyramid' : np.array([0,0.5,0.5])}.get(shape)
+        else:
+            num_shape = {'ball' : np.array([1,0,0]), 'cube' : np.array([0,1,0]), 'pyramid' : np.array([0,0,1])}.get(shape)
+        num_shape = np.clip(np.random.normal(num_shape, 0.05), a_min=0, a_max=1)
+        return num_shape
 
     def step(self, *args, **kwargs):
         obj = self.get_sensor_reading('object_sensor')
@@ -420,17 +450,12 @@ class BuildLexiconControllerB(RobotController):
         #     self.pattern_traces = self.pattern_traces - (1 / 100) * self.pattern_traces
         self.lexicon.reset_visible_words()
         if obj is not None:
+            #### --- PERCEPTION --- #### 
             size = np.round(obj['size'],2)
             MIN_SIZE, MAX_SIZE = 0.05, 0.5 
             size = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)
-            # size = np.exp(2*size ) -1  + .1 
-            shape = {'ball' : np.array([1,0,0]), 'cube' : np.array([0,1,0]), 'pyramid' : np.array([0,0,1])}.get(obj['shape'])
-            shape = np.clip(np.random.normal(shape, 0.05), a_min=0, a_max=1)
-            if isinstance(obj['color'], str):
-                color = np.array({'red' : [0.8,0,0], 'green' : [0,0.8,0], 'blue' : [0,0,0.8]}.get(obj['color']))
-                color = np.clip(np.random.normal(color, 0.05), a_min=0, a_max=1)
-            else:
-                color = np.array(obj['color'])
+            color = self.get_color(obj['color'])#, distorted_perception=self.robot.id in [22,23,24])
+            shape = self.get_shape(obj['shape'], perspective_noise=True)#, distorted_perception=self.robot.id in [25,26])
             score = {'green' : 1, 'red' : -1}.get(obj['color'], 0)
             score_val = np.clip(np.random.normal(score,0.05), a_min=-1, a_max=1)
                
@@ -441,6 +466,7 @@ class BuildLexiconControllerB(RobotController):
                 stim = np.hstack([(v, np.zeros_like(v))[i!=j] for j, v in enumerate(variables)])
                 stimuli.append(stim)
 
+            #### --- DISCRIMINATION --- #### 
             for phi in stimuli:
                 pattern_detected, pattern = self.pattern_detector.step(phi)
                 if not pattern_detected: 

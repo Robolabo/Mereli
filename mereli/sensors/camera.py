@@ -35,7 +35,9 @@ class Camera(Sensor):
                                self.h,
                                viewMatrix=viewMatrix,
                                projectionMatrix=projectionMatrix,
-                               shadow=1,
+                               shadow=0,
+                               flags=p.ER_NO_SEGMENTATION_MASK, 
+                              renderer=p.ER_TINY_RENDERER,
                                lightDirection=[1, 1, 1], physicsClientId=self.sensor_owner.physics_client.client)
         self.reading = img_arr[2] 
     
