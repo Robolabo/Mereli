@@ -26,3 +26,5 @@ from .formation import EllipseFormationController
 from .irin_controllers import *
 from .find_sensor_pattern import *  
 from .learn_lexicon import * 
+
+from .test_llm_control import TrajectoryByLLM 

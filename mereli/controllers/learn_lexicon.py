@@ -414,6 +414,7 @@ class BuildLexiconControllerB(RobotController):
                         if word in self.lexicon.words:
                             w_tr = self.lexicon.word_tree[self.lexicon.word_thought_dict[word]]
                             if w_tr[widx1] == 0 or w_tr[widx2] == 0:
+                                break
                                 __import__('pdb').set_trace()
                         self.lexicon.create_relation(widx1, widx2, word=word)
     
@@ -455,7 +456,7 @@ class BuildLexiconControllerB(RobotController):
             MIN_SIZE, MAX_SIZE = 0.05, 0.5 
             size = (size - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)
             color = self.get_color(obj['color'])#, distorted_perception=self.robot.id in [22,23,24])
-            shape = self.get_shape(obj['shape'], perspective_noise=True)#, distorted_perception=self.robot.id in [25,26])
+            shape = self.get_shape(obj['shape'], perspective_noise=False)#, distorted_perception=self.robot.id in [25,26])
             score = {'green' : 1, 'red' : -1}.get(obj['color'], 0)
             score_val = np.clip(np.random.normal(score,0.05), a_min=-1, a_max=1)
                
@@ -476,18 +477,19 @@ class BuildLexiconControllerB(RobotController):
         self.lexicon.step()
         self.receive_lexicon()
         self.transmit_lexicon()
-        if False and  self.t > 17989:
-        # if True and  self.t > 5989:
-            __import__('pdb').set_trace()
+        # if False and  self.t > 17989:
+
+        if False and self.t > 10000:
             pp = self.lexicon.parents(self.lexicon.words[-1])
             print(" CULTURAL EVOLUTION OF ROBOT ", self.robot.id)
             print(self.pattern_detector.pattern_mat.round(3))
             print(self.lexicon.word_tree)
+            __import__('pdb').set_trace()
             # print(self.pattern_relation_mat.shape)
             if self.lexicon.n_words > 0:
                 print(self.lexicon.words)
             # self.plot_concept_tree()
-            if self.lexicon.nx_tree is not None:
+            if False and self.lexicon.nx_tree is not None:
                 G = self.lexicon.nx_tree
                 pos = nx.multipartite_layout(G, subset_key="layer")
                 # for k, v in pos.items():
@@ -505,6 +507,7 @@ class BuildLexiconControllerB(RobotController):
                 __import__('pdb').set_trace()
         # if self.robot.id == 5:
         self.obstacle_avoider.step(*args,**kwargs)
+        # print(self.t)
 
     def lexicon_error(self):
         pass

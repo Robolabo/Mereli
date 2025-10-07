@@ -14,7 +14,6 @@ scripts
 *.log
 tmp/*
 dist/*
-mereli.egg-info/*
 build/*
 *.swp
 */**/*.swp
@@ -24,3 +23,13 @@ job
 *.prof
 # *.json
 .pdb-pyhist
+build/
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+Thumbs.db
+.vscode/
+.idea/
+venv/
+.env/
+.venv/

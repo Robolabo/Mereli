@@ -2,8 +2,8 @@ import numpy as np
 from mereli.utils.alg_utils import torus_distance, torus_angle, ring_distance, ring_angle
 from mereli.register import comm_space_registry
 
-MASS_LMARK = 1
-MASS_ROBOT  = 1
+MASS_LMARK = 9 
+MASS_ROBOT  =1 
 FWALL = 0.5
 
 class RobotMolecule:
@@ -93,12 +93,15 @@ class VirtualPhysicsCommSpace:
         self.step_dynamics()
         self.t += 1
         
-    def compute_force(self, pi, pj, ftype='R', Fmax=100):
+    def compute_force(self, pi, pj, ftype='R', Fmax=100, threshold=None):
         """ Calculates the force applied by particle pj to particle pi.
         It is based on the masses and the distances according to molecular physics. 
         """
         G = 0.3
         r = np.linalg.norm(pi.state - pj.state) + 1e-3
+        if threshold is not None:
+            if r > threshold:
+                return 0.0
         Fmod = (G * pi.mass * pj.mass) / (r ** 2) 
         Fmod = min(Fmod, Fmax) # Module of the force vector
         # Phase or direction of the force vector. Depends the nature of the particles (attractor or repellers).
@@ -125,13 +128,13 @@ class VirtualPhysicsCommSpace:
             # neighbor_particles = self.particles.values()
             for j, pj in enumerate(neighbor_particles):
                 if pi.id != pj.id:
-                    Fij = self.compute_force(pi, pj, ftype='R')
+                    Fij = self.compute_force(pi, pj, ftype='R', threshold=None)
                     Ftot += Fij 
 
             # Compute forces that all the landmarks apply to the particle
             for lm in pi.landmarks:
                 # r = np.linalg.norm(pi.state - lm.state)
-                Fij = self.compute_force(pi, lm, ftype='A')
+                Fij = self.compute_force(pi, lm, ftype='A', threshold=None)
                 Ftot += Fij 
              
             # Rotational dynamics when a wall is close by
@@ -174,7 +177,7 @@ class VirtualPhysicsCommSpace:
 
             ### UPDATE STATE DYNAMICS
             pi.state += (self.dt / self.tau_st) * Ftot 
-
+            pi.state += np.random.randn(2)*0.02
             # Constrain the states to the considering the H and W of the virtual space. 
             pi.state[0] = np.clip(pi.state[0], a_min=-self.H/2, a_max=self.H/2)
             pi.state[1] = np.clip(pi.state[1], a_min=-self.H/2, a_max=self.H/2)

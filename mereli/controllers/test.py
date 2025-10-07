@@ -19,6 +19,7 @@ class TestLEDController(RobotController):
         action = np.zeros(8)
         action[(self.t // 50) % 8] = 1 # Control the individual leds
         # action *= i % 7 # Iterate colors every 100 ticks
+        # action = np.array([0,1,2,3,4,5,6,1]) # Multiple static colors
         self.get_actuator('led').action = action 
         
 @controller_registry(name='test_contact')
@@ -85,8 +86,6 @@ class TestSwitchLight(RobotController):
             # if self.t > 500:
             action = 1
         self.get_actuator('switch_light').action = np.array(action)
-
-
 
 
 @controller_registry(name='test_switch_light_color')

@@ -3,7 +3,7 @@
     "checkpoint_file" : "chk_generaliz_v5",
     "logging" : {
 	"file" : "paperLexicon_o3_a20",
-	"logging_period" : 10,
+	"logging_period" : 50,
 	"data": [
        	"robotA:controller:lexicon@elementary_words",
        	"robotA:controller:lexicon@composed_words",
@@ -12,11 +12,11 @@
 	"robotA:controller:pattern_detector@pattern_mat"]
     },
     "simulation" : {
-	 "timesteps" : 30000,
+	 "timesteps" : 15000,
 	 "trials" : 1,
 	 "start_paused" : true,
 	 "animated_layout" : {
-		"enabled" : true, 
+		"enabled" : false, 
 		"grid" : "A;A;B",
 		"figsize" : [10,10],
 	 	"plots" : [
@@ -28,13 +28,13 @@
     "world": {
         "name" : "square_arena",
         "arena_params" : {
-		"height" : 7,
-		"width" : 7 
+		"height" : 6.5,
+		"width" : 6.5 
         },
         "engine" : "pybullet", "physics_dt" : 0.05,
         "T_control" : 0.05,
         "task_manager" : {
-            "total_duration" : 30000,
+            "total_duration" : 15000,
             "num_slots" : 1,
             "use_done" : false,
             "tasks" : [{"name" : "dummy", "params" : {}}]
@@ -43,7 +43,7 @@
             "robotA" : {
                 "type" : "epuck",
                 "num_instances" : 20,
-		"positions" : {"type" : "random", "low" : [-3,-3], "high" : [3,3]}, 
+		"positions" : {"type" : "random", "low" : [-2,-2], "high" : [2,2]}, 
 		"orientations" : "random",
                 "controller" : {
                     "name" : "build_lexicon_B",
@@ -56,26 +56,26 @@
                     "own_position_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6}
+                    "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 8}
                 }
 	    },
 	    "CG" : {
 	    	"type" : "cube",
 		"num_instances" : 4,
-		"positions" : {"type" : "random", "low" : [-2,-2,0], "high" : [2,2,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "green", "side_len" : 0.2}
 	    }, 
 	    "CR" : {
 	    	"type" : "cube",
 		"num_instances" : 4,
-		"positions" : {"type" : "random", "low" : [-2,-2,0], "high" : [2,2,0]},
+		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
 		"params" : {"color" : "red", "side_len" : 0.2}
 	    },
 	    "BG" : {
 	    	"type" : "ball",
 		"num_instances" : 4,
 		"positions" : {"type" : "random", "low" : [-3,-3,0], "high" : [3,3,0]},
-		"params" : {"color" : "green", "radius" : 0.1}
+		"params" : {"color" : "blue", "radius" : 0.1}
 	    }
         }
     }
