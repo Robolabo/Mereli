@@ -17,7 +17,7 @@ class TrajectoryByLLM(RobotController):
         """
         super(TrajectoryByLLM, self).__init__(*args, **kwargs)
         self.template_var = 0.0
-        self.client = genai.Client(api_key="AIzaSyBtddr1pj2IBpYu8xPbtMadDtrF5-Mp-Vg")
+        self.client = genai.Client(api_key="")
         self.prev_action = ""
         self.duration = 0 
         self.planned_actions = [0,0]

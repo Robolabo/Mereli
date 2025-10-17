@@ -37,6 +37,7 @@
                     "joint_velocity_actuator" : {"joint_ids" : [0, 1], "max_velocity" : 6.28}
                 } 
             }
+
         }
     }
 }

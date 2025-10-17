@@ -88,6 +88,27 @@ class TestSwitchLight(RobotController):
         self.get_actuator('switch_light').action = np.array(action)
 
 
+
+@controller_registry(name='test_switch_light')
+class TestSwitchLight(RobotController):
+    """
+    """
+    def __init__(self, *args,  **kwargs):
+        super(TestSwitchLight, self).__init__(*args, **kwargs)
+
+    def step(self, state, reward=0.0):
+        action = 0
+        ls_st = self.get_sensor_reading('red_light_sensor')
+        # print(f'Light Sensor reading is {ls_st}')
+        # print(self.t )
+        
+        if self.t % 150 == 0:
+            # if self.t > 500:
+            action = 1
+        self.get_actuator('switch_light').action = np.array(action)
+
+
+
 @controller_registry(name='test_switch_light_color')
 class TestSwitchLightColor(RobotController):
     """

@@ -15,7 +15,7 @@
     },
     "world": {
         "name" : "square_arena",
-        "arena_params" : {},
+        "arena_params" : {"width" : 7, "height": 7},
         "engine" : "pybullet",
         "physics_dt" : 0.01,
         "T_control" : 0.01,
