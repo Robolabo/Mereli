@@ -171,10 +171,11 @@ class PybulletEngine(BaseEngine):
         hKey = ord('h') 
         kKey = ord('k') 
         lKey = ord('l') 
-        wKey = ord('w') 
-        aKey = ord('a') 
-        sKey = ord('s') 
-        dKey = ord('d') 
+        # wKey = ord('w') 
+        # aKey = ord('a') 
+        # sKey = ord('s') 
+        # dKey = ord('d') 
+        wKey, aKey, sKey, dKey = 87, 65, 83, 68
         rightKey =65296
         leftKey =65295 
         keys = p.getKeyboardEvents()
