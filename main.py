@@ -20,7 +20,7 @@ def get_irin_exp(num):
     experiments = ["irin/HelloWorld.json", "irin/TestWheels.json", "irin/TestContact.json", "irin/TestProximity.json", "irin/TestRedLightSensor.json",
      "irin/TestBlueLightSensor.json", "irin/TestGreenLightSensor.json", "irin/TestLED.json", "irin/TestBattery.json", 
      "irin/TestEncoder.json", "irin/ObstacleAvoidance.json", "irin/SubsumptionLightExp.json", "irin/SubsumptionGarbageExp.json", 
-     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json"] 
+     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json", "irin/AStorekeeperExp.json"] 
     if num > len(experiments):
         print('Experiment Code does not exist!')
         exit(0)
@@ -76,10 +76,13 @@ def print_welcome():
     print("| MOTOR SCHEMAS        | 14   |  mereli/config/irin/MotorSchemas2Exp.json      |")
     print("|   GARBAGE            |      |                                                |")
     print("+----------------------+------+------------------------------------------------+") 
-    print("| EVOLVED OBSTACLE     | 13   |  mereli/config/irin/NeuronEvoAvoidExp.json     |")
+    print("| EVOLVED OBSTACLE     | 15   |  mereli/config/irin/NeuronEvoAvoidExp.json     |")
     print("|   AVOIDANCE          |      |                                                |")
     print("+----------------------+------+------------------------------------------------+") 
+    print("| A STOREKEEPER        | 16   |  mereli/config/irin/AStorekeeperExp.json       |")
+    print("+----------------------+------+------------------------------------------------+")
     print("")
+
 
 
 @click.command()
