@@ -166,7 +166,8 @@ class PybulletEngine(BaseEngine):
         plusKey = 93
         minusKey = 47 
         ctrlKey = 65307 
-        delKey = 8 
+        # delKey = 8 
+        delKey = 65305 
         jKey = ord('j') 
         hKey = ord('h') 
         kKey = ord('k') 
@@ -175,7 +176,7 @@ class PybulletEngine(BaseEngine):
         # aKey = ord('a') 
         # sKey = ord('s') 
         # dKey = ord('d') 
-        wKey, aKey, sKey, dKey = 87, 65, 83, 68
+        wKey, aKey, sKey, dKey = 119, 97, 115, 100
         rightKey =65296
         leftKey =65295 
         keys = p.getKeyboardEvents()
