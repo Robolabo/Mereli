@@ -163,8 +163,10 @@ class PybulletEngine(BaseEngine):
         pKey = ord('p')
         rKey = ord('r')
         tabKey = ord('\t')
-        plusKey = 93
-        minusKey = 47 
+        # plusKey = 93
+        # minusKey = 47 
+        plusKey = 65297 # key 1 specifically for lucia
+        minusKey =65298 # key 2 specifically for lucia 
         ctrlKey = 65307 
         # delKey = 8 
         delKey = 65305 
