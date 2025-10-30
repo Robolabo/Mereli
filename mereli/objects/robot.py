@@ -9,7 +9,7 @@ from mereli.globals import global_states
 
 
 class Battery:
-    def __init__(self, robot, discharge_coef=0.001, charge_coef=0.005, 
+    def __init__(self, robot, color='red',discharge_coef=0.001, charge_coef=0.005, 
                  charge_range=0.3, init_level=1.0, discharge_only_moving=True, stop_wheels=False):
         self.robot = robot
         self.color = None 
@@ -17,7 +17,9 @@ class Battery:
         self.charge_coef = charge_coef 
         self.charge_range = charge_range 
         self.init_level = init_level
-        self.level = init_level 
+
+        #self.level = init_level  ahora self.robot.battery_level
+        
         self.discharge_only_moving = discharge_only_moving 
         self.stop_wheels = stop_wheels 
 
@@ -42,14 +44,14 @@ class Battery:
         # print('BATTERY LEVEL: ', self.level)
 
 
-    def charge(self):
-        self.level +=  self.charge_coef * (1 - self.level ** 2)
+    def charge(self,mask):
+        self.robot.battery_level[mask] +=  self.charge_coef * (1 - self.robot.battery_level[mask] ** 2)
 
-    def discharge(self):
-        self.level = max(self.level - self.discharge_coef, 0)  
+    def discharge(self,mask):
+        self.robot.battery_level[mask] = max(self.robot.battery_level[mask] - self.discharge_coef, 0)  
 
     def reset(self):
-        self.level = self.init_level 
+        self.robot.battery_level[:] = self.init_level 
 
 
 class Map:
@@ -81,6 +83,11 @@ class Robot(WorldObject):
                         static=False, luminous=False, tangible=True, \
                         *args, **kwargs)
         self.t = 0
+
+        self.n=0  #número de baterias de cualquier color
+        self.color = [] #lista con los colores 
+        self.battery_level = np.array([])  #lista de floats con los niveles de las n baterias
+       
         self.battery = None
         self.battery_enabled = False
         self._food = False
@@ -274,9 +281,19 @@ class Robot(WorldObject):
         #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
         self.comm_sys = comm_sys
         
-    def add_battery(self, **battery_kw):
-        self.battery_enabled = True 
-        self.battery = Battery(self, **battery_kw)
+    def add_battery(self, color='red', init_level= 1.0, **battery_kw):
+
+        if not self.battery_enabled:
+            self.battery_enabled = True 
+            self.battery = Battery(self,init_level ,**battery_kw)
+
+        #Añadir una batería más
+        self.color.append(color)
+        self.n = len(self.color)
+        self.battery_level = np.append(self.battery_level, init_level)
+
+
+
     
 
 
