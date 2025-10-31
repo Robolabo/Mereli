@@ -162,7 +162,8 @@ class PybulletEngine(BaseEngine):
         """ Iterates the graphics visualization at given FPS. """
         pKey = ord('p')
         rKey = ord('r')
-        tabKey = ord('\t')
+        # tabKey = ord('\t')
+        tabKey = 65309
         # plusKey = 93
         # minusKey = 47 
         plusKey = 65297 # key 1 specifically for lucia
