@@ -472,7 +472,7 @@ class World(object):
                             if obj['battery']:
                                 robot.add_battery()
                         else:
-                            robot.add_battery(**obj['battery'])
+                            robot.add_battery(battery_conf=obj['battery'])
                     #* If any, initialize robot's reward generator
                     # robot.reward_generator = rewards.get(obj.get('reward'))()
                     #* Add communication system (if any)

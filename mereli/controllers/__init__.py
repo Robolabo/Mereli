@@ -23,6 +23,9 @@ from .movement_patterns import *
 # from .cascade_controller import  CascadeController
 from .formation import EllipseFormationController 
 
+#Lucia Controllers
+from .astorekeeper import AStoreKeeperController
+
 from .irin_controllers import *
 from .find_sensor_pattern import *  
 from .learn_lexicon import * 

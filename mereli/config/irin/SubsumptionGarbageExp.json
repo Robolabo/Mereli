@@ -1,74 +1,74 @@
-{
-    "simulation" : {
-	 "timesteps" : 10000,
-	 "trials" : 1,
-	 "start_paused" : false,
-	 "animated_layout" : {
-		 "enabled" : true, 
-		"grid" : "ABD;EFF;ZFF;GGG",
-	 	"plots" : [
-			{"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7], "plot_buffer" : 100}, 
-			{"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "B", "sectors" : [0,7], "plot_buffer" : 100},
-			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "D", "plot_buffer" : 300},
-			{"plot_type" : "sensor_lineplot", "sensor" : "memory_ground_sensor", "name" : "E", "plot_buffer" : 100},
-			{"plot_type" : "sensor_lineplot", "sensor" : "ground_sensor", "name" : "Z", "plot_buffer" : 100},
-			{"plot_type" : "epuck_polar",  "name" : "F"},
-			{"plot_type" : "animated_event_plot", "name" : "G"}
-		] 
-	 }
-    },
-    "world": {
-        "name" : "square_arena",
-        "arena_params" : {
-		"height" : 4, 
-		"width" : 4
+    {
+        "simulation" : {
+        "timesteps" : 10000,
+        "trials" : 1,
+        "start_paused" : false,
+        "animated_layout" : {
+            "enabled" : true, 
+            "grid" : "ABD;EFF;ZFF;GGG",
+            "plots" : [
+                {"plot_type" : "sensor_lineplot", "sensor" : "distance_sensor", "name" : "A", "sectors" : [0,7], "plot_buffer" : 100}, 
+                {"plot_type" : "sensor_lineplot", "sensor" : "red_light_sensor", "name" : "B", "sectors" : [0,7], "plot_buffer" : 100},
+                {"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "D", "plot_buffer" : 300},
+                {"plot_type" : "sensor_lineplot", "sensor" : "memory_ground_sensor", "name" : "E", "plot_buffer" : 100},
+                {"plot_type" : "sensor_lineplot", "sensor" : "ground_sensor", "name" : "Z", "plot_buffer" : 100},
+                {"plot_type" : "epuck_polar",  "name" : "F"},
+                {"plot_type" : "animated_event_plot", "name" : "G"}
+            ] 
+        }
         },
-        "engine" : "pybullet",
-        "physics_dt" : 0.05,
-        "T_control" : 0.05,
-        "objects" : {
-            "epucks" : {
-                "type" : "epuck",
-                "num_instances" : 1,
-		"positions" : [0,0,0],
-		"orientations" : 0.0,
-		"battery" : {"color":"red","charge_coef" : 0.01, "discharge_coef" : 0.001},
-                "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
-                "sensors" : {
-                    "light_sensor" : {"n_sectors" : 8, "range" : 5},
-                    "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
-		    "battery_sensor" : {},
-		    "memory_ground_sensor" : {},
-		    "ground_sensor" : {}
+        "world": {
+            "name" : "square_arena",
+            "arena_params" : {
+            "height" : 4, 
+            "width" : 4
+            },
+            "engine" : "pybullet",
+            "physics_dt" : 0.05,
+            "T_control" : 0.05,
+            "objects" : {
+                "epucks" : {
+                    "type" : "epuck",
+                    "num_instances" : 1,
+            "positions" : [0,0,0],
+            "orientations" : 0.0,
+            "battery" : {"color":"red","charge_coef" : 0.01, "discharge_coef" : 0.001},
+                    "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
+                    "sensors" : {
+                        "light_sensor" : {"n_sectors" : 8, "range" : 5},
+                        "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
+                "battery_sensor" : {},
+                "memory_ground_sensor" : {},
+                "ground_sensor" : {}
+                    },
+                    "actuators" : {
+                        "joint_velocity_actuator" : {}
+                    }
                 },
-                "actuators" : {
-                    "joint_velocity_actuator" : {}
-                }
+                "light_red" : {
+                    "type" : "light_source",
+                    "num_instances": 1,
+            "positions" : [1,0,0.5],
+                    "params" : {"range" : 5, "color" : "red"}
+                },
+                "light_blue" : {
+                    "type" : "light_source",
+                    "num_instances": 1,
+            "positions" : [0,1,0.5],
+                    "params" : {"range" : 5, "color" : "blue"}
+                },
+            "black_area" : {
+                    "type" : "ground_area",
+                    "num_instances": 1,
+            "positions" : [1,0,0],
+                    "params" : {"radius" : 0.5, "color" : "black"}
             },
-            "light_red" : {
-                "type" : "light_source",
-                "num_instances": 1,
-		"positions" : [1,0,0.5],
-                "params" : {"range" : 5, "color" : "red"}
-            },
-            "light_blue" : {
-                "type" : "light_source",
-                "num_instances": 1,
-		"positions" : [0,1,0.5],
-                "params" : {"range" : 5, "color" : "blue"}
-            },
-	    "black_area" : {
-                "type" : "ground_area",
-                "num_instances": 1,
-		"positions" : [1,0,0],
-                "params" : {"radius" : 0.5, "color" : "black"}
-	    },
-	    "grey_area" : {
-                "type" : "ground_area",
-                "num_instances": 4,
-		"positions" : {"type" : "random", "low" : [-2, -2], "high" : [0, 2]}, 
-                "params" : {"radius" : 0.2, "color" : "grey"}
-	    }
+            "grey_area" : {
+                    "type" : "ground_area",
+                    "num_instances": 4,
+            "positions" : {"type" : "random", "low" : [-2, -2], "high" : [0, 2]}, 
+                    "params" : {"radius" : 0.2, "color" : "grey"}
+            }
+            }
         }
     }
-}

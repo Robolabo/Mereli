@@ -14,8 +14,8 @@
             {"plot_type" : "sensor_lineplot", "sensor" : "blue_light_sensor", "name" : "3", "sectors" : [0,7],"plot_buffer" : 100 },
 
             {"plot_type" : "sensor_lineplot", "sensor" : "yellow_light_sensor", "name" : "4", "sectors" : [0,7],"plot_buffer" : 100 },
-			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "5", "plot_buffer" : 300 },
-            {"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "6", "plot_buffer" : 1000 },
+			{"plot_type" : "sensor_lineplot", "sensor" : "yellow_battery_sensor", "name" : "5", "plot_buffer" : 300 },
+            {"plot_type" : "sensor_lineplot", "sensor" : "blue_battery_sensor", "name" : "6", "plot_buffer" : 1000 },
 
 			{"plot_type" : "epuck_polar",  "name" : "E"},
 			{"plot_type" : "animated_event_plot", "name" : "F"}
@@ -37,12 +37,16 @@
                 "num_instances" : 1,
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
-		"battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
-                "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
+		"battery" : [
+        { "color": "blue", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 },
+        { "color": "yellow", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 }
+        ],
+                "controller" : {"name" : "astorekeeper", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
                 "sensors" : {
                   "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
-		    "battery_sensor" : {},
+		    "blue_battery_sensor" : {},
+            "yellow_battery_sensor" : {},
 		    "memory_ground_sensor" : {},
 		    "ground_sensor" : {}
                 },

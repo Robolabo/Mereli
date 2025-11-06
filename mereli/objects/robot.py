@@ -17,14 +17,15 @@ class Battery:
         self.charge_range = charge_range 
         self.init_level = init_level
 
-        self.level = self.robot.battery_level
-        
+        self.level= np.full(len(self.robot.battery_colors), init_level)
+
         self.discharge_only_moving = discharge_only_moving 
         self.stop_wheels = stop_wheels 
+     
+
 
     def step(self, lights):
          
-
         if len(lights) == 0:
             # Sin luces → todas descargan
             mask = np.ones(self.robot.n, dtype=bool)
@@ -47,6 +48,9 @@ class Battery:
                 self.discharge()
         # print('BATTERY LEVEL: ', self.level)"""
 
+        #Imprimir baterías 
+        print("Battery colors:", self.robot.battery_colors)
+        
        # Para cada color de luz busca las baterías que se cargan
         lights = list(lights.values())
         for light in lights:
@@ -56,10 +60,9 @@ class Battery:
             dist = np.linalg.norm(clst_light.position[:2] - self.robot.position[:2])
             mask = np.array(self.robot.battery_colors) == light.color
 
-            # --- Depuración: imprime colores y máscara ---
-            print("Battery colors:", self.robot.battery_colors)
+            # Imprimir colores y máscara ---
+           
             print("Light color:", light.color)
-            mask = np.array(self.robot.battery_colors) == light.color
             print("Mask:", mask)
 
             # Si hay alguna batería de ese color
@@ -77,13 +80,15 @@ class Battery:
 
 
     def charge(self,mask):
-        self.robot.battery_level[mask] +=  self.charge_coef * (1 - self.robot.battery_level[mask] ** 2)
+        self.level[mask] +=  self.charge_coef * (1 - self.level[mask] ** 2)
 
     def discharge(self,mask):
-        self.robot.battery_level[mask] = np.maximum(self.robot.battery_level[mask] - self.discharge_coef, 0)  
+        self.level[mask] = np.maximum(self.level[mask] - self.discharge_coef, 0)  
 
     def reset(self):
-        self.robot.battery_level[:] = self.init_level 
+        self.level = np.full(len(self.robot.battery_colors), self.init_level)
+
+ 
 
 
 class Map:
@@ -119,7 +124,6 @@ class Robot(WorldObject):
 
         self.n=0  #número de baterias de cualquier color
         self.battery_colors = [] #lista con los colores 
-        self.battery_level = np.array([])  #lista de floats con los niveles de las n baterias
        
         self.battery = None
         self.battery_enabled = False
@@ -153,6 +157,7 @@ class Robot(WorldObject):
         self.static_neighbors = []
         self.awaken = False
         self.is_focussed = False
+      
     
     def add_sensor(self, sensor_name, **kwargs): 
         if sensor_name in self.sensors or self.controller.is_sensor_enabled(sensor_name):
@@ -192,6 +197,7 @@ class Robot(WorldObject):
         state['reward'] = np.array([self.reward]).flatten()
         state['task'] = self.task
 
+        print("Sensores del robot:", list(self.sensors.keys()))
         #* Apply communication system pre step (previous to controller) 
         if self.comm_sys is not None:
             state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
@@ -217,7 +223,7 @@ class Robot(WorldObject):
         self.t += 1
         if self.battery_enabled:
             self.battery.step(self.static_neighbors)
-            if np.all(self.battery_level == 0) and self.battery.stop_wheels and 'joint_velocity_actuator' in self.actuators:
+            if np.all(self.battery.level == 0) and self.battery.stop_wheels and 'joint_velocity_actuator' in self.actuators:
                 self.actuators['joint_velocity_actuator'].action = np.zeros(2)
 
     def plan_actions(self):
@@ -314,7 +320,7 @@ class Robot(WorldObject):
         #         '{} has not been enabled.'.format(type(comm_sys).__name__, comm_sys.rx_name)))
         self.comm_sys = comm_sys
         
-    def add_battery(self, color='red', init_level= 1.0, **battery_kw):
+    """def add_battery(self, color='red', init_level= 1.0, **battery_kw):
 
         if not self.battery_enabled:  #inicializa si no esta activa
             self.battery_enabled = True 
@@ -323,7 +329,27 @@ class Robot(WorldObject):
         #Añadir una batería más
         self.battery_colors.append(color)
         self.n = len(self.battery_colors)
-        self.battery_level = np.append(self.battery_level, init_level)
+        self.battery_level = np.append(self.battery_level, init_level)"""
+    
+    def add_battery(self, battery_conf=None, color='red', init_level=1.0, **battery_kw):
+        """
+        Permite añadir una o varias baterías. Si recibe una lista, itera sobre cada configuración.
+        """
+        # Si le llega una lista de baterías
+        if isinstance(battery_conf, list):
+            for b in battery_conf:
+             self.add_battery(**b)
+            return
+
+        # Si le llega una batería suelta o los parámetros por separado
+        if not self.battery_enabled:
+            self.battery_enabled = True
+            self.battery = Battery(self, **battery_kw)
+
+        self.battery_colors.append(color)
+        self.n = len(self.battery_colors)
+        self.battery.level = np.full(len(self.battery_colors), self.battery.init_level)
+
 
 
 
