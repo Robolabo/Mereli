@@ -14,7 +14,7 @@ class NavigateController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
 
 
-@controller_registry(name="load_blue_battery")
+@controller_registry(name="load_battery")
 class LoadBatteryController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(LoadBatteryController, self).__init__(*args, **kwargs)
@@ -24,17 +24,15 @@ class LoadBatteryController(RobotController):
         self.charging = False
 
     def step(self, state, reward=0):
-        bat_lv_array = self.get_sensor_reading('blue_battery_sensor')
-        bat_lv = bat_lv_array[0]
-        print("Battery level array:", bat_lv_array)
-        print("Blue battery level:", bat_lv)
+        bat_lv_array = self.get_sensor_reading('battery_sensor')
+        bat_lv = bat_lv_array[0] #extrae la roja
         action = np.array([0,0])
         self.flag = False 
         if self.wait_full_load and bat_lv >= 0.95:
             self.charging = False
         if bat_lv <= self.bat_threshold or self.charging and bat_lv < 0.95:
             self.charging = self.wait_full_load 
-            ls_read = self.get_sensor_reading('blue_light_sensor')
+            ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
                 self.flag = True
@@ -49,12 +47,12 @@ class LoadBatteryController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = action
 
 
-@controller_registry(name='astorekeeper')
-class AStoreKeeperController(RobotController):
+@controller_registry(name='subsumptionlucia')
+class SubsumptionLuciaController(RobotController):
     """
     """
     def __init__(self, *args, routines={'navigate' : 0}, **kwargs):
-        super(AStoreKeeperController, self).__init__(*args, **kwargs)
+        super(SubsumptionLuciaController, self).__init__(*args, **kwargs)
         self.routines = {}
         self.priorities = {}
         self.activations = {}
@@ -156,18 +154,5 @@ class SubsumptionGarbageController(RobotController):
                 else: 
                     self.activations['forage'] = np.array([1, -1]) 
 
-"""
-@controller_registry(name="turn_red_ligts_ON")
-class TurnRedLightsONController(RobotController):
-    def __init__(self, *args,  **kwargs):
-        super(TurnRedLightsONController, self).__init__(*args, **kwargs)
-        self.flag = True #so it is the first thing the robot does
-
-    def step(self, state, reward=0):
-        if self.flag:
-            self.get_actuator('red_light_actuator').action = 1.0
-            self.flag = False #desactivate after turning on all ligthts
-
-"""
 
 

@@ -14,13 +14,13 @@ class LightSource(WorldObject):
     :param float range: coverage range of the light.
     :param int z_offset: offset of the z-axis position of the point light.  
     """
-    def __init__(self, position, orientation, *args, color='red', range=1., z_offset=0., **kwargs):
+    def __init__(self, position, orientation, *args, color='red', is_on = True, range=1., z_offset=0., **kwargs):
         super(LightSource, self).__init__('entities/light_source/light', position, orientation, z_offset=z_offset,\
                         static=False, luminous=True, tangible=False, *args, **kwargs)
         self.range = range
         self.color = color
         self.scaling = 0.25
-        self.is_on = True 
+        self.is_on = is_on
         # self.reset()
     def render(self):
         super().render()

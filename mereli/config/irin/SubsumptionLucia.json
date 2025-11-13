@@ -32,8 +32,8 @@
                     "num_instances" : 1,
             "positions" : [0,0,0],
             "orientations" : 0.0,
-            "battery" : {"charge_coef" : 0.01, "discharge_coef" : 0.001},
-                    "controller" : {"name" : "subsumption", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
+            "battery" : {"color":"red","charge_coef" : 0.01, "discharge_coef" : 0.001},
+                    "controller" : {"name" : "subsumptionlucia", "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_battery" : 1, "simple_forage" : 2, "navigate" : 3}}},
                     "sensors" : {
                         "light_sensor" : {"n_sectors" : 8, "range" : 5},
                         "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},

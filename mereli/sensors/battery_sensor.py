@@ -21,12 +21,13 @@ class BatterySensor(Sensor):
 """
     def __init__(self, *args, color='red', **kwargs):
         super(BatterySensor, self).__init__(*args, **kwargs)
-        self.reading = np.zeros(len(self.sensor_owner.battery_colors))
+        self.reading = np.zeros(len(self.sensor_owner.battery_colors)) #num readings = num battery colors
 
     def step(self):
-        for idx, color in enumerate(self.sensor_owner.battery_colors):
-            self.reading[idx] = self.sensor_owner.battery.level[idx]        
-        return self.reading
+
+        for idx, color in enumerate(self.sensor_owner.battery_colors): #update reading for each battery color
+            self.reading[idx] = self.sensor_owner.battery.level[idx]       
+        
 
     def reset(self):
        self.reading = np.zeros(len(self.sensor_owner.battery_colors))
@@ -34,31 +35,46 @@ class BatterySensor(Sensor):
 @sensor_registry(name='blue_battery_sensor')
 class BlueBatterySensor(BatterySensor):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(BlueBatterySensor,self).__init__(*args, **kwargs)
+        
+        self.blue_idx = None
+    
+    def step(self, *args):
 
-        if 'blue' in self.sensor_owner.battery_colors:
+        super().step(*args)  # Llamar al método step de la clase base para actualizar self.reading
+
+        if 'blue' in self.sensor_owner.battery_colors: #retrieve index of blue battery
             self.blue_idx = self.sensor_owner.battery_colors.index('blue')
         else:
             self.blue_idx = None
-    
-    def step(self, *args):
+
         if self.blue_idx is not None:
-            return np.array([self.reading[self.blue_idx]])
+            blue_value = self.reading[self.blue_idx]
+            print("VALOR BATERÍA AZUL:", blue_value)
+            return blue_value #extracts only the blue battery level
+        
         else:
             # Si no hay batería azul, devolvemos 1.0 por defecto
             return np.array([1.0])
+        
 
 
 @sensor_registry(name='yellow_battery_sensor')
 class YellowBatterySensor(BatterySensor):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, color='yellow', **kwargs)
+        super(YellowBatterySensor,self).__init__(*args, color='yellow', **kwargs)
+
+        self.yellow_idx = None
+
+    def step(self, *args):
+        
+        super().step(*args)  # Llamar al método step de la clase base para actualizar self.reading
+
         if 'yellow' in self.sensor_owner.battery_colors:
             self.yellow_idx = self.sensor_owner.battery_colors.index('yellow')
         else:
             self.yellow_idx = None
 
-    def step(self, *args):
         if self.yellow_idx is not None:
             return np.array([self.reading[self.yellow_idx]])
         else:

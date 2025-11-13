@@ -10,7 +10,7 @@ from mereli.globals import global_states
 
 class Battery:
     def __init__(self, robot , color = 'red', discharge_coef=0.001, charge_coef=0.005, 
-                 charge_range=0.01, init_level=1.0, discharge_only_moving=True, stop_wheels=False):
+                 charge_range=0.3, init_level=1.0, discharge_only_moving=True, stop_wheels=False):
         self.robot = robot
         self.discharge_coef = discharge_coef 
         self.charge_coef = charge_coef 
@@ -32,7 +32,11 @@ class Battery:
             self.discharge(mask)
             return
         
-        """ lights = list(lights.values())
+        """  def step(self, lights):
+        if len(lights) == 0:
+            self.discharge()
+            return
+        lights = list(lights.values())
         clst_light_idx = np.argmin([np.linalg.norm(ent.position[:2] - self.robot.position[:2]) for ent in lights])
         clst_light = lights[clst_light_idx] 
         if np.linalg.norm(clst_light.position[:2] - self.robot.position[:2]) <= self.charge_range:
@@ -46,18 +50,29 @@ class Battery:
                 # if wheels[0] > 0.1 or np.anwheels[]
             else:
                 self.discharge()
-        # print('BATTERY LEVEL: ', self.level)"""
+        # print('BATTERY LEVEL: ', self.level)
+
+
+    def charge(self):
+        self.level +=  self.charge_coef * (1 - self.level ** 2)
+
+    def discharge(self):
+        self.level = max(self.level - self.discharge_coef, 0)  
+
+    def reset(self):
+        self.level = self.init_level """
 
         #Imprimir baterías 
         print("Battery colors:", self.robot.battery_colors)
         
        # Para cada color de luz busca las baterías que se cargan
         lights = list(lights.values())
+
         for light in lights:
             # Calcula distancia a la luz
-            clst_light_idx = np.argmin([np.linalg.norm(ent.position[:2] - self.robot.position[:2]) for ent in lights])
-            clst_light = lights[clst_light_idx] 
-            dist = np.linalg.norm(clst_light.position[:2] - self.robot.position[:2])
+            #clst_light_idx = np.argmin([np.linalg.norm(ent.position[:2] - self.robot.position[:2]) for ent in lights])
+            #clst_light = lights[clst_light_idx] 
+            dist = np.linalg.norm(light.position[:2] - self.robot.position[:2])
             mask = np.array(self.robot.battery_colors) == light.color
 
             # Imprimir colores y máscara ---
@@ -69,12 +84,13 @@ class Battery:
             if np.any(mask):
                 if dist <= self.charge_range:
                     self.charge(mask)
+                    print(f'Charging {light.color} battery')
                 else:
                     # Si solo al moverse
                     if self.discharge_only_moving:
                         wheels = self.robot.actuators['joint_velocity_actuator'].action
                         if wheels is not None and (abs(wheels[0]) > 0.1 or abs(wheels[1]) > 0.1):
-                            self.discharge(mask)
+                            self.discharge(mask) 
                     else:
                         self.discharge(mask)
 
@@ -83,7 +99,7 @@ class Battery:
         self.level[mask] +=  self.charge_coef * (1 - self.level[mask] ** 2)
 
     def discharge(self,mask):
-        self.level[mask] = np.maximum(self.level[mask] - self.discharge_coef, 0)  
+        self.level[mask] = max(self.level[mask] - self.discharge_coef, 0)  
 
     def reset(self):
         self.level = np.full(len(self.robot.battery_colors), self.init_level)
@@ -167,6 +183,7 @@ class Robot(WorldObject):
         self.controller.add_sensor(sensor_name, kwargs)
         sensor = sensors[sensor_name](self, **kwargs)
         self.sensors.update({sensor_name : sensor})
+
     def add_actuator(self, actuator_name, **kwargs): 
         if actuator_name in self.actuators or self.controller.is_actuator_enabled(actuator_name):
             # Actuator already enabled
