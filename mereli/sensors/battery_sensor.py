@@ -38,24 +38,29 @@ class BlueBatterySensor(BatterySensor):
         super(BlueBatterySensor,self).__init__(*args, **kwargs)
         
         self.blue_idx = None
+        # Sobreescribir la lectura para que sea tamaño 1
+        self.reading = np.array([1.0])
     
     def step(self, *args):
 
-        super().step(*args)  # Llamar al método step de la clase base para actualizar self.reading
+        # Ahora que hemos reducido el tamaño de self.reading
+        # Leer los niveles de batería completos directamente del robot.
+        all_battery_levels = self.sensor_owner.battery.level
 
         if 'blue' in self.sensor_owner.battery_colors: #retrieve index of blue battery
             self.blue_idx = self.sensor_owner.battery_colors.index('blue')
+            print("ÍNDICE BATERÍA AZUL:", self.blue_idx)
         else:
-            self.blue_idx = None
+            self.blue_idx = None    
 
         if self.blue_idx is not None:
-            blue_value = self.reading[self.blue_idx]
+            blue_value = all_battery_levels[self.blue_idx]
             print("VALOR BATERÍA AZUL:", blue_value)
-            return blue_value #extracts only the blue battery level
+            self.reading[0] = blue_value #extracts only the blue battery level
         
         else:
             # Si no hay batería azul, devolvemos 1.0 por defecto
-            return np.array([1.0])
+            self.reading[0] = 1.0
         
 
 
@@ -66,9 +71,11 @@ class YellowBatterySensor(BatterySensor):
 
         self.yellow_idx = None
 
+        self.reading = np.array([1.0])
+
     def step(self, *args):
         
-        super().step(*args)  # Llamar al método step de la clase base para actualizar self.reading
+        all_battery_levels = self.sensor_owner.battery.level
 
         if 'yellow' in self.sensor_owner.battery_colors:
             self.yellow_idx = self.sensor_owner.battery_colors.index('yellow')
@@ -76,6 +83,6 @@ class YellowBatterySensor(BatterySensor):
             self.yellow_idx = None
 
         if self.yellow_idx is not None:
-            return np.array([self.reading[self.yellow_idx]])
+            self.reading[0] = all_battery_levels[self.yellow_idx]
         else:
-            return np.array([1.0])
+            self.reading[0] = 1.0

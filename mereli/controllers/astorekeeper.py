@@ -26,8 +26,7 @@ class LoadBatteryController(RobotController):
     def step(self, state, reward=0):
         bat_lv_array = self.get_sensor_reading('blue_battery_sensor')
         bat_lv = bat_lv_array[0]
-        print("Battery level array:", bat_lv_array)
-        print("Blue battery level:", bat_lv)
+
         action = np.array([0,0])
         self.flag = False 
         if self.wait_full_load and bat_lv >= 0.95:
@@ -155,19 +154,42 @@ class SubsumptionGarbageController(RobotController):
                     self.activations['forage'] = np.array([-1, 1]) 
                 else: 
                     self.activations['forage'] = np.array([1, -1]) 
-
 """
-@controller_registry(name="turn_red_ligts_ON")
+
+@controller_registry(name="turn_red_lights_ON")
 class TurnRedLightsONController(RobotController):
     def __init__(self, *args,  **kwargs):
         super(TurnRedLightsONController, self).__init__(*args, **kwargs)
         self.flag = True #so it is the first thing the robot does
+        self.lights_on = 0
+        self.target_lights = 3
 
     def step(self, state, reward=0):
-        if self.flag:
-            self.get_actuator('red_light_actuator').action = 1.0
-            self.flag = False #desactivate after turning on all ligthts
-
-"""
-
+        if self.lights_on >= self.target_lights:
+            self.flag = False #desactivar rutina al encender todas las luces rojas
+            action_wheels = np.array([0., 0.])
+            return action_wheels
+              
+        action_wheels = np.array([1., 1.]) # Moverse hacia adelante (Exploración)
+       
+        distance_read = self.get_sensor_reading('distance_sensor')
+       
+        if np.max(distance_read) > 0:
+            action_light = 1.0
+            if distance_read[0] > distance_read[7]:
+                action_wheels = 0.5 * np.array([-1, 1])  # Girar a la izquierda
+            else:
+                action_wheels = 0.5 * np.array([1, -1])  # Girar a la derecha
+        else:
+            action_light = 0.0
+            action_wheels = np.array([1., 1.])  # Moverse hacia adelante
+        
+        if action_light == 1.0 and np.max(distance_read) > 0.5: # Si el robot está cerca y activa la luz
+            self.lights_on += 1
+        
+        self.get_actuator('switch_light').action = action_light
+        self.get_actuator('joint_velocity_actuator').action = action_wheels
+        
+        return action_wheels
+    """""
 
