@@ -5,7 +5,7 @@ from .base_actuator import Actuator
 
 @actuator_registry(name='switch_light')
 class SwitchLightActuator(Actuator):
-    def __init__(self, *args, action_range=0.5, **kwargs):
+    def __init__(self, *args, action_range=0.35, **kwargs):
         super(SwitchLightActuator, self).__init__(*args, **kwargs)
         self.action_range = action_range
 
@@ -17,7 +17,9 @@ class SwitchLightActuator(Actuator):
         if self.action == 1:
             if np.linalg.norm(clst_light.position[:2] - self.actuator_owner.position[:2]) <= self.action_range:
                 clst_light.switch()
+                print("SE HA EJECUTADO SWITCH LIGHT ACTUATOR")
 
+        
     def reset(self):
         self.action = 1
 

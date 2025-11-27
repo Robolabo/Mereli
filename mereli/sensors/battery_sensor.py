@@ -86,3 +86,26 @@ class YellowBatterySensor(BatterySensor):
             self.reading[0] = all_battery_levels[self.yellow_idx]
         else:
             self.reading[0] = 1.0
+
+@sensor_registry(name='red_battery_sensor')
+class RedBatterySensor(BatterySensor):
+    def __init__(self, *args, **kwargs):
+        super(RedBatterySensor,self).__init__(*args, color='red', **kwargs)
+
+        self.red_idx = None
+
+        self.reading = np.array([1.0])
+
+    def step(self, *args):
+        
+        all_battery_levels = self.sensor_owner.battery.level
+
+        if 'red' in self.sensor_owner.battery_colors:
+            self.red_idx = self.sensor_owner.battery_colors.index('red')
+        else:
+            self.red_idx = None
+
+        if self.red_idx is not None:
+            self.reading[0] = all_battery_levels[self.red_idx]
+        else:
+            self.reading[0] = 1.0

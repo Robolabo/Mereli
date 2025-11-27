@@ -14,7 +14,7 @@
             {"plot_type" : "sensor_lineplot", "sensor" : "blue_light_sensor", "name" : "3", "sectors" : [0,7],"plot_buffer" : 100 },
 
             {"plot_type" : "sensor_lineplot", "sensor" : "yellow_light_sensor", "name" : "4", "sectors" : [0,7],"plot_buffer" : 100 },
-			{"plot_type" : "sensor_lineplot", "sensor" : "battery_sensor", "name" : "5", "plot_buffer" : 300 },
+			{"plot_type" : "sensor_lineplot", "sensor" : "red_battery_sensor", "name" : "5", "plot_buffer" : 300 },
             {"plot_type" : "sensor_lineplot", "sensor" : "blue_battery_sensor", "name" : "6", "plot_buffer" : 1000 },
 
 			{"plot_type" : "epuck_polar",  "name" : "E"},
@@ -41,17 +41,19 @@
         { "color": "blue", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 },
         { "color": "red", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 }
         ],
-                "controller" : {"name" : "astorekeeper",  "params" : {"routines" : { "basic_obstacle_avoider" : 0,  "load_blue_battery" : 1, "simple_forage" : 2, "navigate" : 2}}},
+                "controller" : {"name" : "astorekeeper",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "load_blue_battery" : 2, "simple_forage" : 3, "navigate" : 4}}},
                 "sensors" : {
                   "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
 		    "blue_battery_sensor" : {},
-            "battery_sensor" : {},
+            "red_battery_sensor" : {},
 		    "memory_ground_sensor" : {},
+            "gps" : {},
 		    "ground_sensor" : {}
                 },
                 "actuators" : {
-                    "joint_velocity_actuator" : {}
+                    "joint_velocity_actuator" : {},
+                    "switch_light" : {}
                 }
             },
             "light_red" : {
@@ -69,8 +71,8 @@
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 3,
-                "positions" : {"type" : "random", "low" : [-2, -2, 0.5], "high" : [2, 2, 0.5]},
-                "params" : {"range" : 5, "color" : "yellow", "is_on" : false}
+                "positions" : {"type" : "random", "low" : [-1.9, -1.9, 0.5], "high" : [1.9, 1.9, 0.5]},
+                "params" : {"range" : 5, "color" : "yellow"}
             },
 	    "black_area" : {
                 "type" : "ground_area",
