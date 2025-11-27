@@ -11,7 +11,9 @@ class NavigateController(RobotController):
         self.flag = True 
 
     def step(self, state, reward=0):
+        print("ENTRO EN NAVIGATE")
         self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
+
 
 
 @controller_registry(name="load_blue_battery")
@@ -24,6 +26,7 @@ class LoadBatteryController(RobotController):
         self.charging = False
 
     def step(self, state, reward=0):
+        print("ENTRO EN LOAD BLUE BATTERY")
         bat_lv_array = self.get_sensor_reading('blue_battery_sensor')
         bat_lv = bat_lv_array[0]
 
@@ -91,6 +94,7 @@ class SimpleForageController(RobotController):
         self.flag = False
 
     def step(self, state, reward=0):
+        print("ENTRO EN SIMPLE FORAGE")
         mgs_read = self.get_sensor_reading('memory_ground_sensor')
         self.flag = False 
         if mgs_read == 1: # Garbage collected
@@ -191,5 +195,5 @@ class TurnRedLightsONController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = action_wheels
         
         return action_wheels
-    """""
+    """
 

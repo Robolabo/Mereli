@@ -26,6 +26,7 @@ class LoadBatteryController(RobotController):
     def step(self, state, reward=0):
         bat_lv_array = self.get_sensor_reading('battery_sensor')
         bat_lv = bat_lv_array[0] #extrae la roja
+
         action = np.array([0,0])
         self.flag = False 
         if self.wait_full_load and bat_lv >= 0.95:

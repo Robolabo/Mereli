@@ -64,8 +64,10 @@ class LightSource(WorldObject):
 
     def reset(self, seed=None):
         super().reset(seed=seed)
-        self.is_on = True
-        self.turn_on()
+        if self.is_on:
+            self.turn_on()
+        else:
+            self.turn_off()
         if self.controller is not None:
             self.controller.reset()
         # self.physics_client.get_contact_points(2, ghost_ids=[-1])
