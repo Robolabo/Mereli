@@ -17,11 +17,11 @@ class NavigateController(RobotController):
 
 
 @controller_registry(name="load_blue_battery")
-class LoadBatteryController(RobotController):
+class LoadBlueBatteryController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
-        super(LoadBatteryController, self).__init__(*args, **kwargs)
+        super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
-        self.bat_threshold = 0.5
+        self.bat_threshold = 0.7
         self.wait_full_load = True
         self.charging = False
 
@@ -37,6 +37,40 @@ class LoadBatteryController(RobotController):
         if bat_lv <= self.bat_threshold or self.charging and bat_lv < 0.95:
             self.charging = self.wait_full_load 
             ls_read = self.get_sensor_reading('blue_light_sensor')
+            if np.max(ls_read) > 0.9:
+                action = np.zeros(2)
+                self.flag = True
+            elif ls_read[0] * ls_read[7] == 0:
+                self.flag = True 
+                light_left = np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                if light_right > light_left:
+                    action = 0.2*np.array([-1, 1]) 
+                else: 
+                    action = 0.2*np.array([1, -1]) 
+        self.get_actuator('joint_velocity_actuator').action = action
+
+@controller_registry(name="load_red_battery")
+class LoadRedBatteryController(RobotController):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
+        super(LoadRedBatteryController, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.bat_threshold = 0.6
+        self.wait_full_load = True
+        self.charging = False
+
+    def step(self, state, reward=0):
+        print("ENTRO EN LOAD RED BATTERY")
+        bat_lv_array = self.get_sensor_reading('red_battery_sensor')
+        bat_lv = bat_lv_array[0]
+
+        action = np.array([0,0])
+        self.flag = False 
+        if self.wait_full_load and bat_lv >= 0.95:
+            self.charging = False
+        if bat_lv <= self.bat_threshold or self.charging and bat_lv < 0.95:
+            self.charging = self.wait_full_load 
+            ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
                 self.flag = True
@@ -67,12 +101,50 @@ class AStoreKeeperController(RobotController):
             self.routines[rt] =  controllers[rt](**rt_params)
             self.activations[rt] = np.zeros(2)
 
+        #Memoria
+        self.memory_positions = []      
+        self.red_battery_done = False   
+        self.battery_was_low = False # Para detectar que la bateria ha llegado por debajo del theshold
+
     def step(self, state, reward=0.0):
         for k, routine in self.routines.items():
             action = routine.step(state)
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action
-        return self.coordinate()
+        
+        off_routine = self.routines.get('turn_yellow_lights_OFF')
+        on_routine = self.routines.get('turn_yellow_lights_ON')
+        bat_level = self.get_sensor_reading('red_battery_sensor')[0]
 
+        # 1º Guardar posiciones cuando off termine
+        if off_routine and not off_routine.flag and len(off_routine.recorded_positions) > 0 and not self.memory_positions:
+            self.memory_positions = off_routine.recorded_positions[:] 
+            print(f"STOREKEEPER: Fase 1 terminada. Posiciones guardadas: {len(self.memory_positions)}")
+        
+        # 2º: Fin de carga de batería roja
+        # 1. Comprobar si la batería está baja (< 0.65)
+        if bat_level < 0.65:
+            if not self.battery_was_low:
+                print(f"MAIN: Detectada batería baja ({bat_level:.2f}). Esperando ciclo de carga...")
+            self.battery_was_low = True
+
+        # 2. Comprobar si se ha cargado al completo (DISPARAMOS)
+        if self.battery_was_low and bat_level > 0.95:
+            self.red_battery_done = True
+            self.battery_was_low = False # Reseteamos para que no se dispare mas
+            print(f"MAIN: >>> CICLO COMPLETADO (Estaba baja -> Ahora {bat_level:.2f}). ACTIVANDO FASE FINAL. <<<")
+    
+        # 3º: Transferir posiciones a rutina on si batería roja cargada
+        if on_routine:
+            if self.red_battery_done and self.memory_positions:
+                if not on_routine.targets:
+                    print("MAIN: Transfiriendo objetivos a Rutina ON...")
+                    on_routine.set_targets(self.memory_positions) 
+                    on_routine.flag = True
+            else:
+                on_routine.flag = False
+
+        return self.coordinate()
+    
     def coordinate(self):
         names = [*self.priorities.keys()]
         names.sort(key=self.priorities.get)
@@ -237,4 +309,70 @@ class TurnYellowLightsOFFController(RobotController):
         if self.lights_off < self.target_lights and max_light < self.light_threshold:
             self.get_actuator('joint_velocity_actuator').action = np.array([1., 1.]) # Explorar si no hay luz
             self.flag = True
+
+            
 """
+
+@controller_registry(name="turn_yellow_lights_ON")
+class TurnYellowLightsONController(RobotController):
+    def __init__(self, *args, **kwargs):
+        super(TurnYellowLightsONController, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.targets = [] # posiciones de las luces a encender
+        self.proximity_threshold = 0.15
+        self.current_target_idx = 0
+   
+
+    def set_targets(self, positions):
+        self.targets = positions
+        self.current_target_idx = 0
+        print(f"Recibidas {len(self.targets)} posiciones para encender.")
+
+    def step(self, state, reward=0):
+        
+        if self.current_target_idx >= len(self.targets):
+             self.flag = False
+             return
+        
+
+        self.flag = True
+        current_pos = self.get_sensor_reading('gps')
+        current_theta = self.get_sensor_reading('compass') * 2 * np.pi # Corregir escala 
+        
+        target_pos = self.targets[self.current_target_idx]
+
+        # Calcular vector hacia el objetivo
+        diff = target_pos - current_pos
+        dist = np.linalg.norm(diff)
+
+        # Lógica de navegación simple hacia coordenada
+        action_wheels = np.array([1., 1.])
+        action_light = 0.0
+
+        if dist < self.proximity_threshold:
+            # Hemos llegado: Encender luz y pasar a la siguiente
+            action_wheels = np.zeros(2) # Parar
+            action_light = 1.0 # Encender (asumiendo 1.0 es ON)
+            print(f"Luz {self.current_target_idx + 1} ENCENDIDA.")
+            # Pasar al siguiente objetivo
+            self.current_target_idx += 1
+
+            if self.current_target_idx >= len(self.targets):
+                print("Misión de encendido completada.")
+                self.flag = False       
+        else:
+            target_angle = np.arctan2(diff[1], diff[0])
+            alpha = target_angle - current_theta
+            alpha = (alpha + np.pi) % (2 * np.pi) - np.pi
+            if abs(alpha) < 0.2: 
+                action_wheels = np.array([1.0, 1.0]) * 0.5
+            else:
+                if alpha > 0:
+                    action_wheels = np.array([-0.5, 0.5]) * 0.5 # Girar Izquierda
+                else:
+                    action_wheels = np.array([0.5, -0.5]) * 0.5
+            action_light = 0.0
+
+        self.get_actuator('joint_velocity_actuator').action = action_wheels
+        self.get_actuator('switch_light').action = action_light
+            

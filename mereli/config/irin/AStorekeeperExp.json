@@ -38,10 +38,10 @@
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
 		"battery" : [
-        { "color": "blue", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 },
+        { "color": "blue", "init_level": 1.0, "charge_coef": 0.02, "discharge_coef": 0.0015 },
         { "color": "red", "init_level": 1.0, "charge_coef": 0.01, "discharge_coef": 0.001 }
         ],
-                "controller" : {"name" : "astorekeeper",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "load_blue_battery" : 2, "simple_forage" : 3, "navigate" : 4}}},
+                "controller" : {"name" : "astorekeeper",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "turn_yellow_lights_ON":2,  "simple_forage" : 3, "load_red_battery": 4, "load_blue_battery" : 5, "navigate" : 6}}},
                 "sensors" : {
                   "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
@@ -49,6 +49,7 @@
             "red_battery_sensor" : {},
 		    "memory_ground_sensor" : {},
             "gps" : {},
+            "compass"  : {},
 		    "ground_sensor" : {}
                 },
                 "actuators" : {
