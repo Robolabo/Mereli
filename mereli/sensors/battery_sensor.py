@@ -49,13 +49,14 @@ class BlueBatterySensor(BatterySensor):
 
         if 'blue' in self.sensor_owner.battery_colors: #retrieve index of blue battery
             self.blue_idx = self.sensor_owner.battery_colors.index('blue')
-            print("ÍNDICE BATERÍA AZUL:", self.blue_idx)
         else:
             self.blue_idx = None    
 
         if self.blue_idx is not None:
             blue_value = all_battery_levels[self.blue_idx]
-            print("VALOR BATERÍA AZUL:", blue_value)
+            if self.sensor_owner.t % 100 == 0:
+                pos = self.sensor_owner.position
+                print(f"Step: {self.sensor_owner.t} | Bat_Azul: {blue_value:.3f} | Pos: ({pos[0]:.2f}, {pos[1]:.2f})")
             self.reading[0] = blue_value #extracts only the blue battery level
         
         else:

@@ -26,7 +26,7 @@ class LoadBlueBatteryController(RobotController):
         self.charging = False
 
     def step(self, state, reward=0):
-        print("ENTRO EN LOAD BLUE BATTERY")
+
         bat_lv_array = self.get_sensor_reading('blue_battery_sensor')
         bat_lv = bat_lv_array[0]
 
@@ -60,7 +60,7 @@ class LoadRedBatteryController(RobotController):
         self.charging = False
 
     def step(self, state, reward=0):
-        print("ENTRO EN LOAD RED BATTERY")
+        #print("ENTRO EN LOAD RED BATTERY")
         bat_lv_array = self.get_sensor_reading('red_battery_sensor')
         bat_lv = bat_lv_array[0]
 
@@ -106,7 +106,26 @@ class AStoreKeeperController(RobotController):
         self.red_battery_done = False   
         self.battery_was_low = False # Para detectar que la bateria ha llegado por debajo del theshold
 
+        # --- Crear archivo de log ---
+        self.log_name = "recorrido_robot.csv"
+        with open(self.log_name, "w") as f:
+            f.write("step,x,y,bat_azul\n")
+
     def step(self, state, reward=0.0):
+        
+        # Obtener datos actuales
+        t = self.controller_owner.t 
+        # La posición es un array [x, y, z]
+        x, y = self.controller_owner.position[0], self.controller_owner.position[1]
+        # El sensor de batería azul devuelve un array, cogemos el primer valor
+        val_azul = state['blue_battery_sensor'][0] 
+        
+        # 2. Guardar en el CSV cada 10 pasos
+        if t % 10 == 0:
+            with open(self.log_name, "a") as f:
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f}\n")
+
+
         for k, routine in self.routines.items():
             action = routine.step(state)
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action

@@ -63,7 +63,8 @@ class Battery:
         self.level = self.init_level """
 
         #Imprimir baterías 
-        print("Battery colors:", self.robot.battery_colors)
+        #print("Battery colors:", self.robot.battery_colors)
+        
         
        # Para cada color de luz busca las baterías que se cargan
         lights = list(lights.values())
@@ -77,8 +78,8 @@ class Battery:
 
             # Imprimir colores y máscara ---
            
-            print("Light color:", light.color)
-            print("Mask:", mask)
+            #print("Light color:", light.color)
+            #print("Mask:", mask)
 
             # Si hay alguna batería de ese color
             if np.any(mask):
@@ -214,7 +215,7 @@ class Robot(WorldObject):
         state['reward'] = np.array([self.reward]).flatten()
         state['task'] = self.task
 
-        print("Sensores del robot:", list(self.sensors.keys()))
+        #print("Sensores del robot:", list(self.sensors.keys()))
         #* Apply communication system pre step (previous to controller) 
         if self.comm_sys is not None:
             state[self.comm_sys.rx_name] = self.comm_sys.step_pre(state[self.comm_sys.rx_name])
