@@ -92,7 +92,8 @@ class PybulletEngine(BaseEngine):
 
         # options = options + 
         with HidePrintf():
-            self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT, options=options)
+            # NO RENDERIZAR self.engine = bc.BulletClient(connection_mode=p.GUI if self.render else p.DIRECT, options=options)
+            self.engine = bc.BulletClient(connection_mode=p.DIRECT, options=options)
         self.engine.resetSimulation(physicsClientId=self.client)
 
         # p.resetSimulation(physicsClientId=self.client)

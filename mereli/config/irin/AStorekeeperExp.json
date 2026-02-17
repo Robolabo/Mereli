@@ -3,9 +3,9 @@
     "simulation" : {
 	 "timesteps" : 10000,
 	 "trials" : 1,
-	 "start_paused" : true,
+	 "start_paused" : false,
 	 "animated_layout" : {
-		"enabled" : true, 
+		"enabled" : false, 
 		"figsize" : [8,9],
 		"grid" : "123;456;EEE;EEE;FFF",
 	 	"plots" : [
