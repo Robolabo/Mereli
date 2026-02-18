@@ -33,3 +33,9 @@ Thumbs.db
 venv/
 .env/
 .venv/
+outputs/
+*.png
+*.csv
+consola.log
+__pycache__/
+venv/
