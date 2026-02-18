@@ -3,6 +3,8 @@ from mereli.controllers import RobotController
 from mereli.register import controller_registry, controllers
 from mereli.utils import compute_angle
 
+import datetime
+import os
 
 @controller_registry(name="navigate")
 class NavigateController(RobotController):
@@ -106,10 +108,15 @@ class AStoreKeeperController(RobotController):
         self.red_battery_done = False   
         self.battery_was_low = False # Para detectar que la bateria ha llegado por debajo del theshold
 
-        # --- Crear archivo de log ---
-        self.log_name = "recorrido_robot.csv"
-        with open(self.log_name, "w") as f:
-            f.write("step,x,y,bat_azul\n")
+        # --- CARPETAS POR FECHA ---
+        self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
+
+        if not os.path.exists(self.log_name):
+            with open(self.log_name, "w") as f:
+                f.write("step,x,y,bat_azul\n")
+
+        print(f"📁 Guardando experimento en: {self.output_dir}")
 
     def step(self, state, reward=0.0):
         

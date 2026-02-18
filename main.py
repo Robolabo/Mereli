@@ -4,6 +4,10 @@ import subprocess
 import logging
 import time
 from datetime import datetime
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
 import numpy as np
 try:
     from mpi4py import MPI
@@ -85,7 +89,31 @@ def print_welcome():
     print("+----------------------+------+------------------------------------------------+")
     print("")
 
+def generate_plots(folder):
+    """ Función interna para generar las gráficas tras la simulación """
+    csv_path = os.path.join(folder, "recorrido_robot.csv")
+    if not os.path.exists(csv_path):
+        return
+    
+    df = pd.read_csv(csv_path)
+    # Gráfica Trayectoria
+    plt.figure(figsize=(8, 8))
+    plt.plot(df['x'], df['y'], color='green', alpha=0.6)
+    # Punto de inicio en rojo
+    plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color='red', s=100, label='Inicio', zorder=5)
+    # Punto de fin en azul
+    plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='blue', s=100, label='Fin', zorder=5)
+    plt.title(f'Trayectoria - {os.path.basename(folder)}')
+    plt.savefig(os.path.join(folder, "trayectoria.png"))
+    plt.close()
 
+    # Gráfica Batería
+    plt.figure(figsize=(10, 5))
+    plt.plot(df['step'], df['bat_azul'], color='blue')
+    plt.title(f'Batería - {os.path.basename(folder)}')
+    plt.savefig(os.path.join(folder, "bateria.png"))
+    plt.close()
+    print(f"✅ Gráficas generadas automáticamente en {folder}")
 
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')
@@ -133,6 +161,34 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     #         os.mkdir(logs_path)
 
     # __import__('pdb').set_trace()
+
+    # --- MODIFICACIÓN: Crear carpeta de experimento ---
+    now = datetime.now().strftime("%d%m_%H%M%S")
+    exp_folder = os.path.join("outputs", f"run_{now}")
+    if not os.path.exists(exp_folder):
+        os.makedirs(exp_folder)
+    
+    # Guardamos la ruta en global_states o una variable para que el controlador la use
+    # Por ahora, la pasaremos de forma sencilla
+    os.environ["CURRENT_EXP_FOLDER"] = exp_folder 
+    print(f"📁 Iniciando experimento en: {exp_folder}")
+
+    # --- Redirigir consola a un archivo log ---
+    import sys
+    class Logger(object):
+        def __init__(self, filename):
+            self.terminal = sys.stdout
+            self.log = open(filename, "w")
+        def write(self, message):
+            self.terminal.write(message)
+            self.log.write(message)
+        def flush(self):
+            pass
+
+        def fileno(self):
+            return self.terminal.fileno()
+
+    sys.stdout = Logger(os.path.join(exp_folder, "consola.log"))
 
     #* Create World
     physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
@@ -225,15 +281,22 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                 world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
                 world.animated_layout.initialize(world)
         np.random.seed(seed)
-        for tr in range(trials):
-            world.reset()
-            t0 = time.time()
-            while (world.t < timesteps):
-                if world.t == timesteps - 1:
-                    world.is_done = True
-                state, action = world.step()
-            time_elapsed = time.time() - t0 
-            # print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
-            print(f'Simulation of trial {tr} ended in {time_elapsed} after {timesteps} cycles. ')
+        try: 
+            for tr in range(trials):
+                world.reset()
+                t0 = time.time()
+                while (world.t < timesteps):
+                    if world.t == timesteps - 1:
+                        world.is_done = True
+                    state, action = world.step()
+                time_elapsed = time.time() - t0 
+                # print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
+                print(f'Simulation of trial {tr} ended in {time_elapsed} after {timesteps} cycles. ')
+        except KeyboardInterrupt:
+            print("\n🛑 Simulación interrumpida.")
+        finally:
+            # Esto se ejecuta SIEMPRE al terminar o al pulsar Ctrl+C
+            generate_plots(exp_folder)
 if __name__ == "__main__":
     main()
+
