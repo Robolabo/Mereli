@@ -15,9 +15,8 @@ class Battery:
         self.discharge_coef = discharge_coef 
         self.charge_coef = charge_coef 
         self.charge_range = charge_range 
-        self.init_level = init_level
-
-        self.level= np.full(len(self.robot.battery_colors), init_level)
+        self.init_level = []
+        self.level= np.full(len(self.robot.battery_colors), init_level) 
 
         self.discharge_only_moving = discharge_only_moving 
         self.stop_wheels = stop_wheels 
@@ -365,9 +364,11 @@ class Robot(WorldObject):
             self.battery = Battery(self, **battery_kw)
 
         self.battery_colors.append(color)
+        self.battery.init_level.append(init_level)
         self.n = len(self.battery_colors)
         self.battery.level = np.full(len(self.battery_colors), self.battery.init_level)
 
+        print(f"✅ Batería añadida: Color={color} | Nivel Inicial={init_level}")
 
 
 

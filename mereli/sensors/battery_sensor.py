@@ -39,19 +39,18 @@ class BlueBatterySensor(BatterySensor):
         
         self.blue_idx = None
         # Sobreescribir la lectura para que sea tamaño 1
-        self.reading = np.array([1.0])
+        self.reading = np.array([0.0])
     
     def step(self, *args):
 
         # Ahora que hemos reducido el tamaño de self.reading
         # Leer los niveles de batería completos directamente del robot.
         all_battery_levels = self.sensor_owner.battery.level
-
         if 'blue' in self.sensor_owner.battery_colors: #retrieve index of blue battery
             self.blue_idx = self.sensor_owner.battery_colors.index('blue')
         else:
             self.blue_idx = None    
-
+            
         if self.blue_idx is not None:
             blue_value = all_battery_levels[self.blue_idx]
             if self.sensor_owner.t % 100 == 0:
