@@ -36,24 +36,30 @@ class LoadBlueBatteryController(RobotController):
         # Si JSON manda, activamos el modo carga 
         if force_mission:
             self.charging = True
-            self.flag = True
         # Carga completa si llegamos al 98% 
         if bat_lv >= 0.98:
             self.charging = False
             self.flag = False
-            return action   
+            print("Blue battery fully charged")
+            print (f"Nivel batería azul: {bat_lv:.3f}. Desactivando rutina de carga.")
+            print("Flag de carga BLUE DESACTIVADA. Esperando nueva orden...")
+            return np.zeros(2)
+
         if self.charging:
             ls_read = self.get_sensor_reading('blue_light_sensor')
             if np.max(ls_read) > 0.9:  #Estamos debajo
                 action = np.zeros(2)
-            elif ls_read[0] * ls_read[7] == 0:
-                self.flag = True 
+            else:
+                # Lógica original que te funcionaba
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
                     action = 0.2*np.array([-1, 1]) 
                 else: 
-                    action = 0.2*np.array([1, -1]) 
+                    action = 0.2*np.array([1, -1])
+                # Si ve algo de luz delante, avanza
+                if ls_read[0] > 0 or ls_read[7] > 0:
+                    action = np.array([0.5, 0.5])
         self.get_actuator('joint_velocity_actuator').action = action
 
 @controller_registry(name="load_red_battery")
@@ -72,7 +78,6 @@ class LoadRedBatteryController(RobotController):
 
         if force_mission:
             self.charging = True
-            self.flag = True
 
         if bat_lv >= 0.98:
             self.charging = False
@@ -145,6 +150,8 @@ class AStoreKeeperLLMController(RobotController):
                         if self.external_routine != nueva_orden:
                             print(f" [LLM-BRIDGE] Nueva tarea: {nueva_orden}")
                             self.external_routine = nueva_orden
+                            # Activamos el flag de la rutina elegida solo al recibirla
+                            self.routines[self.external_routine].flag = True
             except Exception as e:
                 print(f"Error leyendo brain_decision.json: {e}")
 
@@ -192,19 +199,17 @@ class AStoreKeeperLLMController(RobotController):
                 on_routine.flag = False   """
      # 3. Ejeutar rutinas
         for k, routine in self.routines.items():
-            if self.external_routine:
-               # Si el JSON manda, solo esa rutina existe
-                is_active = (k == self.external_routine)
+            if self.external_routine == k:
                 # Pasamos 'force_mission' para que ignore umbrales internos
                 if "load" in k:
-                    routine.step(state, force_mission=is_active)
+                    routine.step(state, force_mission=True)
                 else:
                     routine.step(state)
-                routine.flag = is_active
             else:
                 routine.step(state)
+                routine.flag = False # Desactivamos las rutinas que no son la orden externa
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action
-
+         
         # 4. LÓGICA DE FINALIZACIÓN (Autodestrucción)
         if self.external_routine and t>20: # evitar glitches iniciales
             rt_obj = self.routines[self.external_routine]
@@ -212,7 +217,7 @@ class AStoreKeeperLLMController(RobotController):
             if not rt_obj.flag:
                 print(f"🏁 TAREA FINALIZADA: {self.external_routine}. Cerrando simulación...")
                 # Forzamos el cierre del programa
-                sys.exit(0) 
+                raise KeyboardInterrupt 
 
         return self.coordinate()
     
