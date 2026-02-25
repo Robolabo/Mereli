@@ -106,6 +106,10 @@ class RedBatterySensor(BatterySensor):
             self.red_idx = None
 
         if self.red_idx is not None:
-            self.reading[0] = all_battery_levels[self.red_idx]
+            red_value = all_battery_levels[self.red_idx]
+            if self.sensor_owner.t % 100 == 0:
+                pos = self.sensor_owner.position
+                print(f"Step: {self.sensor_owner.t} | Bat_Roja: {red_value:.3f} | Pos: ({pos[0]:.2f}, {pos[1]:.2f})")
+            self.reading[0] = red_value #extracts only the red battery level
         else:
             self.reading[0] = 1.0

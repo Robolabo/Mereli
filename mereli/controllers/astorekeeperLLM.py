@@ -15,7 +15,6 @@ class NavigateController(RobotController):
         self.flag = True 
 
     def step(self, state, reward=0):
-        print("ENTRO EN NAVIGATE")
         self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
 
 
@@ -47,10 +46,9 @@ class LoadBlueBatteryController(RobotController):
 
         if self.charging:
             ls_read = self.get_sensor_reading('blue_light_sensor')
-            if np.max(ls_read) > 0.9:  #Estamos debajo
+            if np.max(ls_read) > 0.9:  #Estamos debajo de la luz
                 action = np.zeros(2)
             else:
-                # Lógica original que te funcionaba
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
@@ -82,17 +80,25 @@ class LoadRedBatteryController(RobotController):
         if bat_lv >= 0.98:
             self.charging = False
             self.flag = False
-            return action
+            print("Red battery fully charged")
+            print (f"Nivel batería roja: {bat_lv:.3f}. Desactivando rutina de carga.")
+            print("Flag de carga RED DESACTIVADA. Esperando nueva orden...")
+            return np.zeros(2)
         if self.charging:
-                    ls_read = self.get_sensor_reading('red_light_sensor')
-                    if np.max(ls_read) > 0.9:
-                        action = np.zeros(2)
-                    else:
-                        light_left = np.sum(ls_read[[7,6,5,4]])
-                        light_right = np.sum(ls_read[[0,1,2,3]])
-                        action = 0.2*np.array([-1, 1]) if light_right > light_left else 0.2*np.array([1, -1])
-                        if ls_read[0] > 0.05 or ls_read[7] > 0.05: action = np.array([0.5, 0.5])
-       
+            ls_read = self.get_sensor_reading('red_light_sensor')
+            if np.max(ls_read) > 0.9:
+                action = np.zeros(2)
+            else:
+                light_left = np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                if light_right > light_left:
+                    action = 0.2*np.array([-1, 1]) 
+                else: 
+                    action = 0.2*np.array([1, -1])
+                # Si ve algo de luz delante, avanza
+                if ls_read[0] > 0 or ls_read[7] > 0:
+                    action = np.array([0.5, 0.5])
+
         self.get_actuator('joint_velocity_actuator').action = action
 
 
@@ -126,7 +132,7 @@ class AStoreKeeperLLMController(RobotController):
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,rutina\n")
+                f.write("step,x,y,bat_azul,bat_roja\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
 
@@ -138,7 +144,8 @@ class AStoreKeeperLLMController(RobotController):
         x, y = self.controller_owner.position[0], self.controller_owner.position[1]
         # El sensor de batería azul devuelve un array, cogemos el primer valor
         val_azul = state['blue_battery_sensor'][0] 
-        
+        v_roja = state['red_battery_sensor'][0]
+
         #1º Leer el JSON
         if t % 50 == 0:
             try:
@@ -159,7 +166,7 @@ class AStoreKeeperLLMController(RobotController):
         # 2. Guardar en el CSV cada 10 pasos
         if t % 10 == 0:
             with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{self.current_routine}\n")
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f}\n")
 
         """ # Comportamiento secuencial
         for k, routine in self.routines.items():

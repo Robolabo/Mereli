@@ -109,12 +109,21 @@ def generate_plots(folder):
     plt.savefig(os.path.join(folder, "trayectoria.png"))
     plt.close()
 
-    # Gráfica Batería
-    plt.figure(figsize=(10, 5))
-    plt.plot(df['step'], df['bat_azul'], color='blue')
-    plt.title(f'Batería - {os.path.basename(folder)}')
-    plt.savefig(os.path.join(folder, "bateria.png"))
-    plt.close()
+    # Gráfica Batería AZUL
+    if 'bat_azul' in df.columns:
+        plt.figure(figsize=(10, 5))
+        plt.plot(df['step'], df['bat_azul'], color='blue')
+        plt.title(f'Batería Azul - {os.path.basename(folder)}')
+        plt.savefig(os.path.join(folder, "bateria_azul.png"))
+        plt.close()
+
+    # Gráfica Batería ROJA
+    if 'bat_roja' in df.columns:
+        plt.figure(figsize=(10, 5))
+        plt.plot(df['step'], df['bat_roja'], color='red')
+        plt.title(f'Batería Roja - {os.path.basename(folder)}')
+        plt.savefig(os.path.join(folder, "bateria_roja.png"))
+        plt.close()
     print(f"✅ Gráficas generadas automáticamente en {folder}")
 
 @click.command()
