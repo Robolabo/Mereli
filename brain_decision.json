@@ -1,4 +1,4 @@
 {
-    "active_routine": "load_red_battery",
+    "active_routine": "turn_yellow_lights_OFF",
     "reasoning": "Probando el sistema de carga dirigida."
 }

@@ -338,7 +338,7 @@ class SubsumptionGarbageController(RobotController):
 class TurnYellowLightsOFFController(RobotController):
     def __init__(self, *args,  **kwargs):
         super(TurnYellowLightsOFFController, self).__init__(*args, **kwargs)
-        self.flag = True #so it is the first thing the robot does
+        self.flag = False
         self.lights_off = 0
         self.target_lights = 3
         self.light_threshold = 0.1  #distance to consider the light is reached
@@ -349,7 +349,9 @@ class TurnYellowLightsOFFController(RobotController):
     def step(self, state, reward=0):
 
         if self.lights_off >= self.target_lights:
-            self.flag = False #desactivar rutina al apagar todas las luces amarillas
+            if self.flag:
+                print(f"Objetivo alcanzado: {self.lights_off} luces amarillas apagadas. Deteniendo rutina.")
+                self.flag = False #desactivar rutina al apagar todas las luces amarillas
             action_wheels = np.array([0., 0.])
             action_light = 0.0
 
@@ -421,7 +423,7 @@ class TurnYellowLightsONController(RobotController):
         super(TurnYellowLightsONController, self).__init__(*args, **kwargs)
         self.flag = False
         self.targets = [] # posiciones de las luces a encender
-        self.proximity_threshold = 0.15
+        self.proximity_threshold = 0.2
         self.current_target_idx = 0
    
 

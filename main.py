@@ -174,7 +174,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     # __import__('pdb').set_trace()
 
     # --- MODIFICACIÓN: Crear carpeta de experimento ---
-    now = datetime.now().strftime("%d%m_%H%M%S")
+    now = datetime.now().strftime("%m%d_%H%M%S")
     exp_folder = os.path.join("outputs", f"run_{now}")
     if not os.path.exists(exp_folder):
         os.makedirs(exp_folder)

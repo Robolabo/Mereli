@@ -60,13 +60,13 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-		"positions" : [1,0,0.5],
+		        "positions" : {"type" : "random", "low" : [-1.5, -1.5, 0.5], "high" : [1.5, 1.5, 0.5]},
                 "params" : {"range" : 5, "color" : "red"}
             },
             "light_blue" : {
                 "type" : "light_source",
                 "num_instances": 1,
-		"positions" : [1,1,0.5],
+		        "positions" : {"type" : "random", "low" : [-1.5, -1.5, 0.5], "high" : [1.5, 1.5, 0.5]},
                 "params" : {"range" : 5, "color" : "blue"}
             },
             "light_yellow" : {
