@@ -84,7 +84,6 @@ class Battery:
             if np.any(mask):
                 if dist <= self.charge_range:
                     self.charge(mask)
-                    print(f'Charging {light.color} battery')
                 else:
                     # Si solo al moverse
                     if self.discharge_only_moving:

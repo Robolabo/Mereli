@@ -77,14 +77,15 @@ class LoadRedBatteryController(RobotController):
         if force_mission:
             self.charging = True
 
-        if bat_lv >= 0.98:
+        if bat_lv >= 0.98 and self.flag:
             self.charging = False
             self.flag = False
             print("Red battery fully charged")
             print (f"Nivel batería roja: {bat_lv:.3f}. Desactivando rutina de carga.")
             print("Flag de carga RED DESACTIVADA. Esperando nueva orden...")
             return np.zeros(2)
-        if self.charging:
+            
+        if self.charging and self.flag :
             ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
@@ -215,8 +216,8 @@ class AStoreKeeperLLMController(RobotController):
             else:
                 routine.step(state)
                 routine.flag = False # Desactivamos las rutinas que no son la orden externa
-            self.activations[k] = self.get_actuator('joint_velocity_actuator').action
-         
+            self.activations[k] = self.get_actuator('joint_velocity_actuator').action 
+
         # 4. LÓGICA DE FINALIZACIÓN (Autodestrucción)
         if self.external_routine and t>20: # evitar glitches iniciales
             rt_obj = self.routines[self.external_routine]
@@ -266,13 +267,49 @@ class SimpleForageController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(SimpleForageController, self).__init__(*args, **kwargs)
         self.flag = False
+        self.limit_steps = 4000
+        #incluimos logica para evitar obstaculos
+        self.sensitivity = 0.4
+        self.carrying = False
+        
 
     def step(self, state, reward=0):
-        print("ENTRO EN SIMPLE FORAGE")
-        mgs_read = self.get_sensor_reading('memory_ground_sensor')
-        self.flag = False 
-        if mgs_read == 1: # Garbage collected
-            ls_read = self.get_sensor_reading('red_light_sensor')
+        # Obtener el tiempo actual de la simulación
+        t = self.controller_owner.t
+        # Lógica de finalización propia
+        if t >= self.limit_steps:
+            if self.flag: # Solo imprimimos una vez al terminar
+                print(f"⏱️ Rutina Simple Forage: Límite de {self.limit_steps} pasos alcanzado. Bajando flag.")
+            self.flag = False
+            self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
+            return
+        self.flag = True
+        #Sensores
+        st_ds = self.get_sensor_reading('distance_sensor') # Proximidad
+        gs_read = self.get_sensor_reading('ground_sensor')
+        ls_read = self.get_sensor_reading('red_light_sensor') # Luz roja
+        
+        if gs_read == 1.0 and not self.carrying: #zona gris
+            self.carrying = True
+            print(f"📦 [STEP {t}] ¡OBJETO RECOGIDO! Buscando zona de depósito...")
+
+        if gs_read == 0.0 and self.carrying: #zona negra
+            self.carrying = False
+            print(f"🗑️ [STEP {t}] ¡OBJETO DEPOSITADO! (Zona negra pisada). Volviendo a patrullar.")
+            # Pequeña maniobra de escape para alejarse de la luz
+
+        if np.max(st_ds) > self.sensitivity:  # Obstáculo detectado, lógica de evasión
+            if any(st_ds[[0,1]] > self.sensitivity):
+                # print('Turn Left')
+                action = np.array([1., -1])
+            elif any(st_ds[[6,7]] > self.sensitivity):
+                # print('Turn Right')
+                action = np.array([-1, 1.])
+            else:
+            # print('GO straight over')
+                action = np.array([1.,1.])
+
+        elif self.carrying: # Garbage collected
             if ls_read[0] * ls_read[7] == 0:
                 self.flag = True
                 light_left= np.sum(ls_read[[7,6,5,4]])
@@ -282,7 +319,12 @@ class SimpleForageController(RobotController):
                     action = .1*np.array([-1, 1]) 
                 else: 
                     action = .1*np.array([1, -1]) 
-                self.get_actuator('joint_velocity_actuator').action = action
+            else:
+                action = np.array([0.7, 0.7]) #navigate
+                print("Luz roja detectada, pero centrada. Avanzando hacia ella.")
+        else:
+            action = np.array([0.7, 0.7]) #navigate
+        self.get_actuator('joint_velocity_actuator').action = action
 
 
         
@@ -363,7 +405,7 @@ class TurnYellowLightsOFFController(RobotController):
         action_light = 0.0  # Por defecto: No intentar apagar
 
         # Si la luz es muy intensa (estamos muy cerca), paramos para asegurar el apagado y registramos.
-        if max_light > 0.9: 
+        if max_light > 0.9 and self.flag: 
             
             action_wheels = np.array([0., 0.]) 
             action_light = 1.0 

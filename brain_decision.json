@@ -1,4 +1,4 @@
 {
-    "active_routine": "turn_yellow_lights_OFF",
+    "active_routine": "simple_forage",
     "reasoning": "Probando el sistema de carga dirigida."
 }
