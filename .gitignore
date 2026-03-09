@@ -34,6 +34,7 @@ venv/
 .env/
 .venv/
 outputs/
+outputsMal/
 *.png
 *.csv
 consola.log
