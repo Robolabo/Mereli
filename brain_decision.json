@@ -1,4 +1,1 @@
-{
-    "active_routine": "simple_forage",
-    "reasoning": "Probando el sistema de carga dirigida."
-}
+{"active_routine": "load_red_battery"}

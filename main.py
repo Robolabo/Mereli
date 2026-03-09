@@ -87,7 +87,7 @@ def print_welcome():
     print("+----------------------+------+------------------------------------------------+")
     print("| SUBSUMPTION LUCIA    | 17   |  mereli/config/irin/SubsumptionLucia.json      |")
     print("+----------------------+------+------------------------------------------------+")
-    print("| STOREKEEPER JSON     | 18   |  mereli/config/irin/AStorekeeperExpLLM.json   |")
+    print("| ASTOREKEEPERLLM JSON | 18   |  mereli/config/irin/AStorekeeperExpLLM.json   |")
     print("+----------------------+------+------------------------------------------------+")
     print("")
 
