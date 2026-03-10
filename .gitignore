@@ -40,3 +40,4 @@ outputsMal/
 consola.log
 __pycache__/
 venv/
+.env
