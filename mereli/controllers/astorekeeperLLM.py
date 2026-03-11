@@ -124,8 +124,10 @@ class AStoreKeeperLLMController(RobotController):
         self.red_battery_done = False   
         self.battery_was_low = False # Para detectar que la bateria ha llegado por debajo del theshold
         
-        self.current_routine = "none"
-        self.external_routine = None # la orden del JSON
+        #Cambiar tarea con cambio de orden
+        self.last_timestamp = 0  # Para saber si la orden es nueva
+        self.current_routine = "simple_forage" # Estado inicial por defecto
+        self.external_routine = "simple_forage" # la orden del JSON
 
         # --- CARPETAS POR FECHA ---
         self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
@@ -147,19 +149,22 @@ class AStoreKeeperLLMController(RobotController):
         val_azul = state['blue_battery_sensor'][0] 
         v_roja = state['red_battery_sensor'][0]
 
-        #1º Leer el JSON
+        #1º Leer el JSON 
         if t % 50 == 0:
             try:
                 if os.path.exists('brain_decision.json'):
                     with open('brain_decision.json', 'r') as f:
                         decision = json.load(f)
+                    nuevo_timestamp = decision.get("timestamp", 0)
                     nueva_orden = decision.get("active_routine")
-                    if nueva_orden in self.routines:
-                        if self.external_routine != nueva_orden:
-                            print(f" [LLM-BRIDGE] Nueva tarea: {nueva_orden}")
-                            self.external_routine = nueva_orden
-                            # Activamos el flag de la rutina elegida solo al recibirla
-                            self.routines[self.external_routine].flag = True
+                    if nuevo_timestamp > self.last_timestamp:
+                        if nueva_orden in self.routines:
+                            if self.external_routine != nueva_orden:
+                                print(f" [LLM-BRIDGE] Nueva tarea: {nueva_orden}")
+                                self.external_routine = nueva_orden
+                                self.last_timestamp = nuevo_timestamp
+                                # Activamos el flag de la rutina elegida solo al recibirla
+                                self.routines[self.external_routine].flag = True
             except Exception as e:
                 print(f"Error leyendo brain_decision.json: {e}")
 
@@ -218,14 +223,13 @@ class AStoreKeeperLLMController(RobotController):
                 routine.flag = False # Desactivamos las rutinas que no son la orden externa
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action 
 
-        # 4. LÓGICA DE FINALIZACIÓN (Autodestrucción)
-        if self.external_routine and t>20: # evitar glitches iniciales
-            rt_obj = self.routines[self.external_routine]
-            # Si la rutina seleccionada baja su propio flag, es que ha terminado
-            if not rt_obj.flag:
-                print(f"🏁 TAREA FINALIZADA: {self.external_routine}. Cerrando simulación...")
-                # Forzamos el cierre del programa
-                raise KeyboardInterrupt 
+    # 4. Lógica de continuidad (Evitar el cierre de simulación)
+        rt_obj = self.routines.get(self.external_routine)
+        if rt_obj and not rt_obj.flag:
+            if self.external_routine != "simple_forage":
+                print(f"✅ Tarea {self.external_routine} completada. Volviendo a simple_forage...")
+                self.external_routine = "simple_forage"
+                self.routines["simple_forage"].flag = True
 
         return self.coordinate()
     
@@ -267,7 +271,6 @@ class SimpleForageController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(SimpleForageController, self).__init__(*args, **kwargs)
         self.flag = False
-        self.limit_steps = 4000
         #incluimos logica para evitar obstaculos
         self.sensitivity = 0.4
         self.carrying = False
@@ -276,14 +279,6 @@ class SimpleForageController(RobotController):
     def step(self, state, reward=0):
         # Obtener el tiempo actual de la simulación
         t = self.controller_owner.t
-        # Lógica de finalización propia
-        if t >= self.limit_steps:
-            if self.flag: # Solo imprimimos una vez al terminar
-                print(f"⏱️ Rutina Simple Forage: Límite de {self.limit_steps} pasos alcanzado. Bajando flag.")
-            self.flag = False
-            self.get_actuator('joint_velocity_actuator').action = np.zeros(2)
-            return
-        self.flag = True
         #Sensores
         st_ds = self.get_sensor_reading('distance_sensor') # Proximidad
         gs_read = self.get_sensor_reading('ground_sensor')

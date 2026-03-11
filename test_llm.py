@@ -87,5 +87,5 @@ while True:
     
     # Frecuencia de realimentación (Punto 17 de tu anteproyecto)
     # Esperamos 5 segundos entre decisiones para no saturar
-    time.sleep(5)
+    time.sleep(15)
         
