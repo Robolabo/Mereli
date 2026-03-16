@@ -3,16 +3,15 @@ import json
 import glob
 import time
 import pandas as pd
-from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 from langchain_core.messages import HumanMessage, SystemMessage
 
-# 1. Configura llave
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
-
-# 2. Inicializa el modelo
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+# 1. Configuración del modelo local en Calculon
+llm = ChatOllama(
+    model="gpt-oss:20b",
+    temperature=0,
+    base_url="http://127.0.0.1:11434"
+)
 
 # 3. Define las reglas del sistema
 system_rules = SystemMessage(content="""
@@ -87,5 +86,5 @@ while True:
     
     # Frecuencia de realimentación (Punto 17 de tu anteproyecto)
     # Esperamos 5 segundos entre decisiones para no saturar
-    time.sleep(15)
+    time.sleep(3)
         
