@@ -135,7 +135,7 @@ class AStoreKeeperLLMController(RobotController):
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,bat_roja\n")
+                f.write("step,x,y,bat_azul,bat_roja,num_luces\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
 
@@ -168,11 +168,12 @@ class AStoreKeeperLLMController(RobotController):
             except Exception as e:
                 print(f"Error leyendo brain_decision.json: {e}")
 
-
+        # Contador de luces apagadas para la rutina turn_yellow_lights_OFF
+        n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
         # 2. Guardar en el CSV cada 10 pasos
         if t % 10 == 0:
             with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f}\n")
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
 
         """ # Comportamiento secuencial
         for k, routine in self.routines.items():
