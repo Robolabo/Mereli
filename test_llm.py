@@ -115,7 +115,7 @@ while True:
         except Exception as e:
             print(f"❌ Error en LLM: {e}")
     
-    # Frecuencia de realimentación (Punto 17 de tu anteproyecto)
-    # Esperamos 5 segundos entre decisiones para no saturar
+    # Frecuencia de realimentación 
+    # Esperamos 3 segundos entre decisiones para no saturar
     time.sleep(3)
         

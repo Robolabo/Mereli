@@ -1,0 +1,499 @@
+import numpy as np
+from mereli.controllers import RobotController
+from mereli.register import controller_registry, controllers
+from mereli.utils import compute_angle
+
+import datetime
+import os
+import json 
+import sys
+
+#LLM API imports
+import json
+import time
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+
+
+@controller_registry(name="navigate")
+class NavigateController(RobotController):
+    def __init__(self, *args,  **kwargs):
+        super(NavigateController, self).__init__(*args, **kwargs)
+        self.flag = True 
+
+    def step(self, state, reward=0):
+        self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
+
+
+@controller_registry(name="load_blue_battery")
+class LoadBlueBatteryController(RobotController):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
+        super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
+        self.flag = False
+
+    def step(self, state, reward=0, force_mission=False):
+        # LLM manda, solo calculamos la orientación hacia la luz
+        action = np.array([0,0])
+        if self.flag:
+            ls_read = self.get_sensor_reading('blue_light_sensor')
+            if np.max(ls_read) > 0.9:  #Estamos debajo de la luz
+                action = np.zeros(2)
+            else:
+                light_left = np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+            if light_right > light_left:
+                action = 0.2*np.array([-1, 1]) 
+            else: 
+                action = 0.2*np.array([1, -1])
+            # Si ve algo de luz delante, avanza
+            if ls_read[0] > 0 or ls_read[7] > 0:
+                action = np.array([0.5, 0.5])
+        self.get_actuator('joint_velocity_actuator').action = action
+
+@controller_registry(name="load_red_battery")
+class LoadRedBatteryController(RobotController):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
+        super(LoadRedBatteryController, self).__init__(*args, **kwargs)
+        self.flag = False
+
+    def step(self, state, reward=0, force_mission=False):   
+        action = np.array([0,0])
+        if self.flag :
+            ls_read = self.get_sensor_reading('red_light_sensor')
+            if np.max(ls_read) > 0.9:
+                action = np.zeros(2)
+            else:
+                light_left = np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                if light_right > light_left:
+                    action = 0.2*np.array([-1, 1]) 
+                else: 
+                    action = 0.2*np.array([1, -1])
+                # Si ve algo de luz delante, avanza
+                if ls_read[0] > 0 or ls_read[7] > 0:
+                    action = np.array([0.5, 0.5])
+
+        self.get_actuator('joint_velocity_actuator').action = action
+
+
+@controller_registry(name='astorekeeperLLM2')
+class AStoreKeeperLLM2Controller(RobotController):
+    """
+    """
+    def __init__(self, *args, routines={'navigate' : 0}, **kwargs):
+        super(AStoreKeeperLLM2Controller, self).__init__(*args, **kwargs)
+        self.routines = {}
+        self.priorities = {}
+        self.activations = {}
+        for rt, pr in routines.items(): 
+            priority = pr if isinstance(pr, int) else pr['priority']
+            rt_params = pr.get('params', {}) if isinstance(pr, dict) else {}
+            self.priorities[rt] = priority
+            self.routines[rt] =  controllers[rt](**rt_params)
+            self.activations[rt] = np.zeros(2)
+
+        ## INICIALIZAR OLLAMA
+        self.llm = ChatOllama(
+        model="gpt-oss:20b",
+        temperature=0,
+        base_url="http://127.0.0.1:11434",
+        keep_alive="5m" # Para que no se duerma
+        )
+
+        self.system_rules = SystemMessage(content="""
+        Eres el cerebro de un robot e-puck.
+        Tu objetivo es elegir la rutina técnica correcta basada en los sensores y el historial.
+        Sabiendo que el robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0, y puede realizar cuatro rutinas:
+        "simple_forage", en la encuentra objetos y los deposita en una zona especifica,
+        "turn_yellow_lights_OFF", que apaga las tres luces amarillas, y
+        "load_blue_battery" y "load_red_battery",  que recargan las respectivas baterías.
+
+        REGLA: Responde SOLO el nombre de la rutina: [simple_forage, load_red_battery, load_blue_battery, turn_yellow_lights_OFF].
+
+        JERARQUÍA DE DECISIÓN (Sigue este orden):
+        1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.9, DEBES seguir respondiendo esa misma rutina de carga.
+        2. EMERGENCIA: Si no estabas cargando y una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
+        3. MISIÓN LUCES: Si 'forages' >= 3 y 'mision_luces' es 'No', manda 'turn_yellow_lights_OFF' hasta que 'num_luces' sea 3.
+        4. FORAGE: En cualquier otro caso, manda 'simple_forage'.
+
+        Escribe simple_forage solo si ambas baterías están por encima de 0.3.
+
+        ### EJEMPLO DE COMPORTAMIENTO (One-shot):
+        Usuario: "Sensores: {'bat_azul': 0.10, 'bat_roja': 0.90}"
+        Respuesta: "load_blue_battery"
+        """)
+        
+        #Variables de Memoria
+        self.contador_forage = 0
+        self.ultima_rutina = "ninguna"
+        self.mision_luces_completada = False # Para que solo se ordene UNA vez en la vida
+        #Cambiar tarea con cambio de orden
+        self.current_routine = "simple_forage" # Estado inicial por defecto
+        self.external_routine = "simple_forage" # la orden del JSON
+
+        # --- CARPETAS POR FECHA ---
+        self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
+
+        if not os.path.exists(self.log_name):
+            with open(self.log_name, "w") as f:
+                f.write("step,x,y,bat_azul,bat_roja,num_luces\n")
+
+        print(f"📁 Guardando experimento en: {self.output_dir}")
+
+
+    def step(self, state, reward=0.0):
+        
+        # Obtener datos actuales
+        t = self.controller_owner.t 
+        # La posición es un array [x, y, z]
+        x, y = self.controller_owner.position[0], self.controller_owner.position[1]
+        # El sensor de batería azul devuelve un array, cogemos el primer valor
+        val_azul = state['blue_battery_sensor'][0] 
+        v_roja = state['red_battery_sensor'][0]
+        #Contador de luces apagadas para la rutina turn_yellow_lights_OFF
+        n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
+
+        # SUSTITUIMOS LA LECTURA DEL JSON POR ESTO:
+        if t % 200 == 0: # Preguntar al LLM cada X pasos
+
+            if n_luces >= 3:
+                self.mision_luces_completada = True
+
+            # Preparar el "Diccionario de Sensores"
+            robot_state = {
+                "bat_azul": round(float(val_azul), 2),
+                "bat_roja": round(float(v_roja), 2),
+                "num_luces": n_luces
+            }
+
+            # Construir mensaje para la IA
+            contexto = (f"Sensores: {robot_state}. "
+                       f"Rutina actual: {self.ultima_rutina}. "
+                       f"Historial: {self.contador_forage} forages realizados. "
+                       f"¿Luces terminadas?: {'Sí' if self.mision_luces_completada else 'No'}.")
+
+            try:
+                # C. LLAMADA DIRECTA (Aquí el simulador se pausará unos segundos)
+                response = self.llm.invoke([self.system_rules, HumanMessage(content=contexto)])
+                nueva_orden = response.content.strip()
+
+                # D. Actualizar lógica de contadores
+                if nueva_orden == "simple_forage" and not self.mision_luces_completada:
+                    self.contador_forage += 1
+
+                self.ultima_rutina = nueva_orden
+
+                # E. Aplicar la orden
+                if nueva_orden in self.routines:
+                    if self.external_routine != nueva_orden:
+                        print(f"🧠 [LLM-INTEGRADO] t:{t} | Decisión: {nueva_orden} | F:{self.contador_forage}")
+                    self.external_routine = nueva_orden
+                    self.routines[self.external_routine].flag = True
+                else:
+                    print(f"⚠️ ¡Ojo! El LLM ha dicho una tontería: {nueva_orden}")
+            except Exception as e:
+                print(f"❌ Error en LLM integrado: {e}")
+        
+        # 2. Guardar en el CSV cada 10 pasos
+        if t % 10 == 0:
+            with open(self.log_name, "a") as f:
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
+
+        # 3. Ejeutar rutinas
+        for k, routine in self.routines.items():
+            routine.flag = (self.external_routine == k)
+            routine.step(state)
+            self.activations[k] = self.get_actuator('joint_velocity_actuator').action 
+
+        # 4. Lógica de continuidad (Evitar el cierre de simulación)
+        rt_obj = self.routines.get(self.external_routine)
+        if rt_obj and not rt_obj.flag:
+            if self.external_routine != "simple_forage":
+                print(f"✅ Tarea {self.external_routine} completada. Volviendo a simple_forage...")
+                self.external_routine = "simple_forage"
+                self.routines["simple_forage"].flag = True
+
+        return self.coordinate()
+    
+    def coordinate(self):
+
+        """Mira qué rutina ha elegido el LLM (self.external_routine).
+        Ignora los cálculos de todas las demás.
+        Conecta la salida de la rutina elegida directamente a los motores (joint_velocity_actuator)."""
+
+        # Prioridad absoluta a la orden externa
+        if self.external_routine and self.external_routine in self.routines:
+            self.current_routine = self.external_routine
+            action_wheels = self.activations[self.external_routine]
+        else:
+            # Comportamiento secuencial si no hay orden
+            names = [*self.priorities.keys()]
+            names.sort(key=self.priorities.get)
+            self.current_routine = "none"
+            action_wheels = np.zeros(2)
+            for k in names:   
+                if self.routines[k].flag:
+                    self.current_routine = k
+                    action_wheels = self.activations[k]
+                    break
+        
+        self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
+        return {'joint_velocity_actuator' : self.get_actuator('joint_velocity_actuator').action}
+
+    def reset(self):
+        for rt in self.routines.values():
+            rt.controller_owner = self.controller_owner
+            rt.reset()
+
+@controller_registry(name="simple_forage")
+class SimpleForageController(RobotController):
+    def __init__(self, *args,  wait_full_load=True, **kwargs):
+        super(SimpleForageController, self).__init__(*args, **kwargs)
+        self.flag = False
+        #incluimos logica para evitar obstaculos
+        self.sensitivity = 0.4
+        self.carrying = False
+        
+
+    def step(self, state, reward=0):
+        # Obtener el tiempo actual de la simulación
+        t = self.controller_owner.t
+        #Sensores
+        st_ds = self.get_sensor_reading('distance_sensor') # Proximidad
+        gs_read = self.get_sensor_reading('ground_sensor')
+        ls_read = self.get_sensor_reading('red_light_sensor') # Luz roja
+        
+        if gs_read == 1.0 and not self.carrying: #zona gris
+            self.carrying = True
+            print(f"📦 [STEP {t}] ¡OBJETO RECOGIDO! Buscando zona de depósito...")
+
+        if gs_read == 0.0 and self.carrying: #zona negra
+            self.carrying = False
+            print(f"🗑️ [STEP {t}] ¡OBJETO DEPOSITADO! (Zona negra pisada). Volviendo a patrullar.")
+            # Pequeña maniobra de escape para alejarse de la luz
+
+        if np.max(st_ds) > self.sensitivity:  # Obstáculo detectado, lógica de evasión
+            if any(st_ds[[0,1]] > self.sensitivity):
+                # print('Turn Left')
+                action = np.array([1., -1])
+            elif any(st_ds[[6,7]] > self.sensitivity):
+                # print('Turn Right')
+                action = np.array([-1, 1.])
+            else:
+            # print('GO straight over')
+                action = np.array([1.,1.])
+
+        elif self.carrying: # Garbage collected
+            if ls_read[0] * ls_read[7] == 0:
+                self.flag = True
+                light_left= np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                action = np.array([0., 0.])
+                if light_right > light_left:
+                    action = .1*np.array([-1, 1]) 
+                else: 
+                    action = .1*np.array([1, -1]) 
+            else:
+                action = np.array([0.7, 0.7]) #navigate
+                print("Luz roja detectada, pero centrada. Avanzando hacia ella.")
+        else:
+            action = np.array([0.7, 0.7]) #navigate
+        self.get_actuator('joint_velocity_actuator').action = action
+
+
+        
+@controller_registry(name='subsumption_garbage')
+class SubsumptionGarbageController(RobotController):
+    """
+    """
+    def __init__(self, *args,  **kwargs):
+        super(SubsumptionGarbageController, self).__init__(*args, **kwargs)
+        self.routines = ['forage', 'nav', 'load', 'avoid']
+        self.activations = {'forage' : np.zeros(2), 'nav' : np.array([1., 1.]), 'load' : np.zeros(2), 'avoid' : np.zeros(2)} 
+        self.flags = {k : False for k in self.routines} 
+        self.bat_threshold = .5
+
+    def step(self, state, reward=0.0):
+        self.avoid_obstacles(state)
+        self.load_battery(state)
+        self.navigate(state)
+        self.forage(state)
+        return self.coordinate()
+
+
+    def coordinate(self):
+        if self.flags['avoid']:
+            action_wheels = self.activations['avoid']
+        elif self.flags['load']:
+            action_wheels = self.activations['load']
+        elif self.flags['forage']:
+            action_wheels = self.activations['forage']
+        else: 
+            action_wheels = self.activations['nav']
+        return {'joint_velocity_actuator' : np.array(action_wheels)}
+
+    def navigate(self, state):
+        pass
+
+    def forage(self, state):
+        mgs_read = state['memory_ground_sensor']
+        self.flags['forage'] = False 
+        if mgs_read == 1: # Garbage collected
+            ls_read = state['red_light_sensor']
+            if ls_read[0] * ls_read[7] == 0:
+                self.flags['forage'] = True
+                light_left= np.sum(ls_read[[7,6,5,4]])
+                light_right = np.sum(ls_read[[0,1,2,3]])
+                if light_right > light_left:
+                    self.activations['forage'] = np.array([-1, 1]) 
+                else: 
+                    self.activations['forage'] = np.array([1, -1]) 
+
+
+@controller_registry(name="turn_yellow_lights_OFF")
+class TurnYellowLightsOFFController(RobotController):
+    def __init__(self, *args,  **kwargs):
+        super(TurnYellowLightsOFFController, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.lights_off = 0
+        self.target_lights = 3
+        self.light_threshold = 0.1  #distance to consider the light is reached
+
+        self.recorded_positions = []
+
+        
+    def step(self, state, reward=0):
+
+        if self.lights_off >= self.target_lights:
+            if self.flag:
+                print(f"Objetivo alcanzado: {self.lights_off} luces amarillas apagadas. Deteniendo rutina.")
+                self.flag = False #desactivar rutina al apagar todas las luces amarillas
+            action_wheels = np.array([0., 0.])
+            action_light = 0.0
+
+
+        ls_read = self.get_sensor_reading('yellow_light_sensor')
+        max_light = np.max(ls_read)  #Luz más cercana
+
+        action_wheels = np.array([1., 1.]) # Moverse hacia adelante (Exploración)
+        action_light = 0.0  # Por defecto: No intentar apagar
+
+        # Si la luz es muy intensa (estamos muy cerca), paramos para asegurar el apagado y registramos.
+        if max_light > 0.9 and self.flag: 
+            
+            action_wheels = np.array([0., 0.]) 
+            action_light = 1.0 
+
+            # Registro
+            current_pos = self.get_sensor_reading('gps') 
+            is_new_light = True
+            for pos in self.recorded_positions:
+                if np.linalg.norm(current_pos - pos) < 0.5:  #chechk if the light position is new
+                    is_new_light = False
+                    break
+            
+            if is_new_light:
+                self.recorded_positions.append(current_pos)
+                self.lights_off += 1
+                print(f"Luz amarilla APAGADA/REGISTRADA. Contador: {self.lights_off}. Posición: {current_pos}")
+            else:
+                action_wheels = 1.0 * np.array([1., 1.]) 
+                action_light = 0.0
+                print("Luz amarilla ya registrada previamente. No se incrementa el contador.")
+        
+        # Orientación y Búsqueda
+        elif max_light > self.light_threshold: 
+
+            # Si no estamos en proximidad máxima, alineamos y avanzamos.
+            if ls_read[0] * ls_read[7] == 0:
+                # Lógica de Giro: Luz descentrada (Sectores 0 y 7 no leen a la vez)
+                light_left = np.sum(ls_read[[7, 6, 5, 4]])
+                light_right = np.sum(ls_read[[0, 1, 2, 3]])
+                
+                # Velocidad de giro (usa un valor más alto que 0.1, por ejemplo 0.5)
+                turn_speed = 0.2
+                
+                if light_right > light_left:
+                    action_wheels = turn_speed * np.array([-1, 1])  # Girar izquierda
+                else: 
+                    action_wheels = turn_speed * np.array([1, -1])  # Girar derecha
+            else:# Luz centrada
+                 action_wheels = 0.7 * np.array([1, 1]) # ¡AVANZAR HACIA ELLA!
+            pass
+        
+        # 3. Aplicar acciones
+        self.get_actuator('switch_light').action = action_light
+        self.get_actuator('joint_velocity_actuator').action = action_wheels
+"""
+        # Si la rutina llega al final sin un 'return' y sin encontrar luz, debería seguir con la exploración por defecto ([1., 1.])
+        if self.lights_off < self.target_lights and max_light < self.light_threshold:
+            self.get_actuator('joint_velocity_actuator').action = np.array([1., 1.]) # Explorar si no hay luz
+            self.flag = True
+
+            
+"""
+
+@controller_registry(name="turn_yellow_lights_ON")
+class TurnYellowLightsONController(RobotController):
+    def __init__(self, *args, **kwargs):
+        super(TurnYellowLightsONController, self).__init__(*args, **kwargs)
+        self.flag = False
+        self.targets = [] # posiciones de las luces a encender
+        self.proximity_threshold = 0.2
+        self.current_target_idx = 0
+   
+
+    def set_targets(self, positions):
+        self.targets = positions
+        self.current_target_idx = 0
+        print(f"Recibidas {len(self.targets)} posiciones para encender.")
+
+    def step(self, state, reward=0):
+        
+        if self.current_target_idx >= len(self.targets):
+             self.flag = False
+             return
+        
+
+        self.flag = True
+        current_pos = self.get_sensor_reading('gps')
+        current_theta = self.get_sensor_reading('compass') * 2 * np.pi # Corregir escala 
+        
+        target_pos = self.targets[self.current_target_idx]
+
+        # Calcular vector hacia el objetivo
+        diff = target_pos - current_pos
+        dist = np.linalg.norm(diff)
+
+        # Lógica de navegación simple hacia coordenada
+        action_wheels = np.array([1., 1.])
+        action_light = 0.0
+
+        if dist < self.proximity_threshold:
+            # Hemos llegado: Encender luz y pasar a la siguiente
+            action_wheels = np.zeros(2) # Parar
+            action_light = 1.0 # Encender (asumiendo 1.0 es ON)
+            print(f"Luz {self.current_target_idx + 1} ENCENDIDA.")
+            # Pasar al siguiente objetivo
+            self.current_target_idx += 1
+
+            if self.current_target_idx >= len(self.targets):
+                print("Misión de encendido completada.")
+                self.flag = False       
+        else:
+            target_angle = np.arctan2(diff[1], diff[0])
+            alpha = target_angle - current_theta
+            alpha = (alpha + np.pi) % (2 * np.pi) - np.pi
+            if abs(alpha) < 0.2: 
+                action_wheels = np.array([1.0, 1.0]) * 0.5
+            else:
+                if alpha > 0:
+                    action_wheels = np.array([-0.5, 0.5]) * 0.5 # Girar Izquierda
+                else:
+                    action_wheels = np.array([0.5, -0.5]) * 0.5
+            action_light = 0.0
+
+        self.get_actuator('joint_velocity_actuator').action = action_wheels
+        self.get_actuator('switch_light').action = action_light
+            
