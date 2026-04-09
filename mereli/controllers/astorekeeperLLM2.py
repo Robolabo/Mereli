@@ -108,25 +108,33 @@ class AStoreKeeperLLM2Controller(RobotController):
         "turn_yellow_lights_OFF", que apaga las tres luces amarillas, y
         "load_blue_battery" y "load_red_battery",  que recargan las respectivas baterías.
 
-        REGLA: Responde SOLO el nombre de la rutina: [simple_forage, load_red_battery, load_blue_battery, turn_yellow_lights_OFF].
+        ESTRUCTURA DE RESPUESTA (JSON):
+        {
+        "razonamiento": "Tu análisis de los sensores y por qué eliges la acción.",
+        "memoria_interna": "Tu diario. Aquí guarda contadores y decisiones (ej: 'He ordenado forage 2 veces. Todavía no he completado la misión de apagar luces').",
+        "decision": "Nombre de la rutina [simple_forage, load_red_battery, load_blue_battery, turn_yellow_lights_OFF]"
+        }
+
+        REGLAS DE MEMORIA:
+        1. Lee siempre tu 'Memoria anterior' para saber qué estabas haciendo.
+        2. Actualiza tu 'memoria_interna' en cada respuesta.
 
         JERARQUÍA DE DECISIÓN (Sigue este orden):
         1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.9, DEBES seguir respondiendo esa misma rutina de carga.
         2. EMERGENCIA: Si no estabas cargando y una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
-        3. MISIÓN LUCES: Si 'forages' >= 3 y 'mision_luces' es 'No', manda 'turn_yellow_lights_OFF' hasta que 'num_luces' sea 3.
-        4. FORAGE: En cualquier otro caso, manda 'simple_forage'.
-
-        Escribe simple_forage solo si ambas baterías están por encima de 0.3.
+        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia la rutina a 'turn_yellow_lights_OFF' hasta que 'num_luces' sea 3.
+        4. FORAGE: En cualquier otro caso, manda 'simple_forage'
 
         ### EJEMPLO DE COMPORTAMIENTO (One-shot):
-        Usuario: "Sensores: {'bat_azul': 0.10, 'bat_roja': 0.90}"
-        Respuesta: "load_blue_battery"
+        Usuario: "Sensores: {'bat_azul': 0.80, 'bat_roja': 0.25, 'num_luces': 3}.
+        Respuesta: {
+                    "razonamiento": "La batería roja está al 0.25, lo cual es crítico.",
+                    "memoria_interna": "He hecho 5 forages. Ya completé la mision de apagar luces amarillas. Interrumpo para cargar roja.",
+                    "decision": "load_red_battery"
+                    }
         """)
         
-        #Variables de Memoria
-        self.contador_forage = 0
-        self.ultima_rutina = "ninguna"
-        self.mision_luces_completada = False # Para que solo se ordene UNA vez en la vida
+        self.external_memory = "Inicio de misión. No hay registros previos."
         #Cambiar tarea con cambio de orden
         self.current_routine = "simple_forage" # Estado inicial por defecto
         self.external_routine = "simple_forage" # la orden del JSON
@@ -157,9 +165,6 @@ class AStoreKeeperLLM2Controller(RobotController):
         # SUSTITUIMOS LA LECTURA DEL JSON POR ESTO:
         if t % 200 == 0: # Preguntar al LLM cada X pasos
 
-            if n_luces >= 3:
-                self.mision_luces_completada = True
-
             # Preparar el "Diccionario de Sensores"
             robot_state = {
                 "bat_azul": round(float(val_azul), 2),
@@ -168,26 +173,34 @@ class AStoreKeeperLLM2Controller(RobotController):
             }
 
             # Construir mensaje para la IA
-            contexto = (f"Sensores: {robot_state}. "
-                       f"Rutina actual: {self.ultima_rutina}. "
-                       f"Historial: {self.contador_forage} forages realizados. "
-                       f"¿Luces terminadas?: {'Sí' if self.mision_luces_completada else 'No'}.")
+            contexto = (f"SENSORES: {robot_state}. "
+                       f"MEMORIA ANTERIOR: {self.external_memory}. ")
 
             try:
                 # C. LLAMADA DIRECTA (Aquí el simulador se pausará unos segundos)
                 response = self.llm.invoke([self.system_rules, HumanMessage(content=contexto)])
-                nueva_orden = response.content.strip()
+                raw_content = response.content.strip()
 
-                # D. Actualizar lógica de contadores
-                if nueva_orden == "simple_forage" and not self.mision_luces_completada:
-                    self.contador_forage += 1
+                # Limpieza de posibles etiquetas de código markdown (```json ... ```)
+                if "```json" in raw_content:
+                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
 
-                self.ultima_rutina = nueva_orden
+                # 3. Parseamos el JSON
+                data = json.loads(raw_content)
+                
+                # 4. ACTUALIZAMOS EL ESTADO INTERNO DE LA IA
+                self.external_memory = data.get("memoria_interna", "")
+                nueva_orden = data.get("decision", "simple_forage")
+                razon = data.get("razonamiento", "")
+
+                print(f"\n🧠 [PENSAMIENTO]: {razon}")
+                print(f"📖 [MEMORIA]: {self.external_memory}")
+                print(f"🎯 [ACCIÓN]: {nueva_orden}\n")
 
                 # E. Aplicar la orden
                 if nueva_orden in self.routines:
                     if self.external_routine != nueva_orden:
-                        print(f"🧠 [LLM-INTEGRADO] t:{t} | Decisión: {nueva_orden} | F:{self.contador_forage}")
+                        print(f"🧠 [SISTEMA] t:{t} | Tarea Activa: {self.external_routine}")
                     self.external_routine = nueva_orden
                     self.routines[self.external_routine].flag = True
                 else:

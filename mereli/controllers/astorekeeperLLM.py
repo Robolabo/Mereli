@@ -205,7 +205,7 @@ class AStoreKeeperLLMController(RobotController):
         # 3º: Transferir posiciones a rutina on si batería roja cargada
         if on_routine:
             if self.red_battery_done and self.memory_positions:
-                if not on_routine.targets:
+                 if not on_routine.targets:
                     print("MAIN: Transfiriendo objetivos a Rutina ON...")
                     on_routine.set_targets(self.memory_positions) 
                     on_routine.flag = True
