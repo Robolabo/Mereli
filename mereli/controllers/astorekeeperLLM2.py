@@ -7,6 +7,7 @@ import datetime
 import os
 import json 
 import sys
+from multiprocessing import Process, Manager
 
 #LLM API imports
 import json
@@ -41,13 +42,13 @@ class LoadBlueBatteryController(RobotController):
             else:
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
-            if light_right > light_left:
-                action = 0.2*np.array([-1, 1]) 
-            else: 
-                action = 0.2*np.array([1, -1])
-            # Si ve algo de luz delante, avanza
-            if ls_read[0] > 0 or ls_read[7] > 0:
-                action = np.array([0.5, 0.5])
+                if light_right > light_left:
+                    action = 0.2*np.array([-1, 1]) 
+                else: 
+                    action = 0.2*np.array([1, -1])
+                # Si ve algo de luz delante, avanza
+                if ls_read[0] > 0 or ls_read[7] > 0:
+                    action = np.array([0.5, 0.5])
         self.get_actuator('joint_velocity_actuator').action = action
 
 @controller_registry(name="load_red_battery")
@@ -75,6 +76,71 @@ class LoadRedBatteryController(RobotController):
 
         self.get_actuator('joint_velocity_actuator').action = action
 
+def llm_brain_loop(shared_data, system_rules_content, base_url):
+    """
+    PROCESO INDEPENDIENTE: El Cerebro.
+    Este bucle corre en un núcleo de CPU distinto al del robot.
+    """
+    from langchain_ollama import ChatOllama
+    from langchain_core.messages import HumanMessage, SystemMessage
+    import json
+    import time
+
+    print(f"🧠 [CEREBRO]: Iniciando proceso hijo. Conectando...")
+
+    try:
+        # Inicialización del modelo dentro del proceso hijo
+        llm = ChatOllama(
+            model="gpt-oss:20b",
+            temperature=0,
+            base_url= base_url,
+            keep_alive="5m"
+        )
+    
+        sys_msg = SystemMessage(content=system_rules_content)
+
+        print("🧠 [CEREBRO]: Proceso de IA iniciado y listo.")
+    except Exception as e:
+        print(f"❌ [CEREBRO ERROR FATAL]: No se pudo inicializar ChatOllama: {e}")
+        return
+
+    last_processed_sensor_ts = 0
+    while True:
+        current_sensor_ts = shared_data.get('sensor_ts', 0)
+        processing = shared_data.get('processing', False)
+
+        if not processing and current_sensor_ts > last_processed_sensor_ts:
+            shared_data['processing'] = True
+            contexto = shared_data.get('contexto', '')
+            try:
+                response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
+                raw_content = response.content.strip()
+
+                # Limpieza de JSON
+                if "```json" in raw_content:
+                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
+                
+                data = json.loads(raw_content)
+
+                # 3. Escribir la decisión en la pizarra para que el robot la lea
+                decision = data.get('decision', 'simple_forage')
+                memoria = data.get('memoria_interna', '')
+                razonamiento = data.get('razonamiento', '')
+
+                shared_data['decision'] = decision
+                shared_data['memoria_interna'] = memoria
+                shared_data['razonamiento'] = razonamiento
+                shared_data['decision_ts'] = current_sensor_ts
+                last_processed_sensor_ts = current_sensor_ts
+
+                print(f"🧠 [CEREBRO]: t={shared_data.get('last_t')} | Decisión registrada\n")
+            except Exception as e:
+                print(f"❌ [CEREBRO ERROR]: {e}")
+            finally:
+                shared_data['processing'] = False
+
+        # Evitar consumo excesivo de CPU en el bucle de espera
+        time.sleep(0.05)
 
 @controller_registry(name='astorekeeperLLM2')
 class AStoreKeeperLLM2Controller(RobotController):
@@ -85,22 +151,23 @@ class AStoreKeeperLLM2Controller(RobotController):
         self.routines = {}
         self.priorities = {}
         self.activations = {}
-        for rt, pr in routines.items(): 
-            priority = pr if isinstance(pr, int) else pr['priority']
-            rt_params = pr.get('params', {}) if isinstance(pr, dict) else {}
-            self.priorities[rt] = priority
-            self.routines[rt] =  controllers[rt](**rt_params)
-            self.activations[rt] = np.zeros(2)
 
-        ## INICIALIZAR OLLAMA
-        self.llm = ChatOllama(
-        model="gpt-oss:20b",
-        temperature=0,
-        base_url="http://127.0.0.1:11434",
-        keep_alive="5m" # Para que no se duerma
-        )
+        # --- CONFIGURACIÓN DE MULTIPROCESSING (BLACKBOARD) ---
+        self.manager = Manager()
+        self.shared_data = self.manager.dict()
+        
+        # Estado inicial de la pizarra compartido con el proceso IA
+        self.shared_data['decision'] = 'simple_forage'
+        self.shared_data['memoria_interna'] = 'Inicio de misión.'
+        self.shared_data['razonamiento'] = 'Inicializando...'
+        self.shared_data['contexto'] = ''
+        self.shared_data['last_t'] = 0
+        self.shared_data['sensor_ts'] = 0
+        self.shared_data['decision_ts'] = 0
+        self.shared_data['processing'] = False
+        self.last_decision_ts = 0
 
-        self.system_rules = SystemMessage(content="""
+        self.rules = """
         Eres el cerebro de un robot e-puck.
         Tu objetivo es elegir la rutina técnica correcta basada en los sensores y el historial.
         Sabiendo que el robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0, y puede realizar cuatro rutinas:
@@ -120,23 +187,36 @@ class AStoreKeeperLLM2Controller(RobotController):
         2. Actualiza tu 'memoria_interna' en cada respuesta.
 
         JERARQUÍA DE DECISIÓN (Sigue este orden):
-        1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.9, DEBES seguir respondiendo esa misma rutina de carga.
-        2. EMERGENCIA: Si no estabas cargando y una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
-        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia la rutina a 'turn_yellow_lights_OFF' hasta que 'num_luces' sea 3.
+        1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.7, DEBES seguir respondiendo esa misma rutina de carga.
+        2. EMERGENCIA: Si una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
+        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia la rutina a 'turn_yellow_lights_OFF' y no la cambies hasta que 'luces_amarillas_APAGADAS_actualmente' sea 3.
         4. FORAGE: En cualquier otro caso, manda 'simple_forage'
 
         ### EJEMPLO DE COMPORTAMIENTO (One-shot):
-        Usuario: "Sensores: {'bat_azul': 0.80, 'bat_roja': 0.25, 'num_luces': 3}.
+        Usuario: "Sensores: {'bat_azul': 0.80, 'bat_roja': 0.25, 'luces_amarillas_APAGADAS_actualmente': 3}.
         Respuesta: {
                     "razonamiento": "La batería roja está al 0.25, lo cual es crítico.",
-                    "memoria_interna": "He hecho 5 forages. Ya completé la mision de apagar luces amarillas. Interrumpo para cargar roja.",
+                    "memoria_interna": "He ordenado hacer forage 4 veces. Ya completé la mision de apagar luces amarillas. Interrumpo para cargar roja.",
                     "decision": "load_red_battery"
                     }
-        """)
-        
-        self.external_memory = "Inicio de misión. No hay registros previos."
+        """
+
+        # Lanzar el proceso del cerebro
+        self.brain_process = Process(
+            target=llm_brain_loop, 
+            args=(self.shared_data, self.rules, "http://127.0.0.1:11434"),
+            daemon=True
+        )
+        self.brain_process.start()
+
+        for rt, pr in routines.items(): 
+            priority = pr if isinstance(pr, int) else pr['priority']
+            rt_params = pr.get('params', {}) if isinstance(pr, dict) else {}
+            self.priorities[rt] = priority
+            self.routines[rt] =  controllers[rt](**rt_params)
+            self.activations[rt] = np.zeros(2)
+
         #Cambiar tarea con cambio de orden
-        self.current_routine = "simple_forage" # Estado inicial por defecto
         self.external_routine = "simple_forage" # la orden del JSON
 
         # --- CARPETAS POR FECHA ---
@@ -162,52 +242,58 @@ class AStoreKeeperLLM2Controller(RobotController):
         #Contador de luces apagadas para la rutina turn_yellow_lights_OFF
         n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
 
-        # SUSTITUIMOS LA LECTURA DEL JSON POR ESTO:
-        if t % 200 == 0: # Preguntar al LLM cada X pasos
+        # 1. ACTUALIZAR SENSORES EN LA PIZARRA CONSTANTEMENTE
+        robot_state = {
+            "t": t,
+            "bat_azul": round(float(val_azul), 2),
+            "bat_roja": round(float(v_roja), 2),
+            "luces_apagadas": n_luces
+        }
+        self.shared_data['contexto'] = f"SENSORS: {robot_state}. MEM: {self.shared_data['memoria_interna']}"
+        self.shared_data['last_t'] = t
+        self.shared_data['sensor_ts'] = t
 
-            # Preparar el "Diccionario de Sensores"
-            robot_state = {
-                "bat_azul": round(float(val_azul), 2),
-                "bat_roja": round(float(v_roja), 2),
-                "num_luces": n_luces
-            }
+        # 2. LEER LA ÚLTIMA DECISIÓN (Comportamiento por defecto)
+        nueva_orden = self.shared_data['decision']
+        razon = self.shared_data.get('razonamiento', '')
+        memoria = self.shared_data.get('memoria_interna', '')
+        decision_ts = self.shared_data.get('decision_ts', 0)
+        sensor_ts = self.shared_data.get('sensor_ts', 0)
 
-            # Construir mensaje para la IA
-            contexto = (f"SENSORES: {robot_state}. "
-                       f"MEMORIA ANTERIOR: {self.external_memory}. ")
+        self.external_memory = memoria
+        self.llm_reasoning = razon
+        self.llm_decision = nueva_orden
 
-            try:
-                # C. LLAMADA DIRECTA (Aquí el simulador se pausará unos segundos)
-                response = self.llm.invoke([self.system_rules, HumanMessage(content=contexto)])
-                raw_content = response.content.strip()
-
-                # Limpieza de posibles etiquetas de código markdown (```json ... ```)
-                if "```json" in raw_content:
-                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
-
-                # 3. Parseamos el JSON
-                data = json.loads(raw_content)
-                
-                # 4. ACTUALIZAMOS EL ESTADO INTERNO DE LA IA
-                self.external_memory = data.get("memoria_interna", "")
-                nueva_orden = data.get("decision", "simple_forage")
-                razon = data.get("razonamiento", "")
-
-                print(f"\n🧠 [PENSAMIENTO]: {razon}")
+        if decision_ts != self.last_decision_ts:
+            self.last_decision_ts = decision_ts
+            stale_decision = (sensor_ts - decision_ts) > 500
+            if stale_decision:
+                print(f"\n⚠️ [DECISIÓN ANTIGUA] step actual {sensor_ts}, decisión de {decision_ts} ignorada")
+            else:
+                print(f"\n🧠 [PENSAMIENTO | step {decision_ts}]: {self.llm_reasoning}")
                 print(f"📖 [MEMORIA]: {self.external_memory}")
-                print(f"🎯 [ACCIÓN]: {nueva_orden}\n")
-
-                # E. Aplicar la orden
+                print(f"🎯 [ACCIÓN]: {self.llm_decision}\n")
                 if nueva_orden in self.routines:
-                    if self.external_routine != nueva_orden:
-                        print(f"🧠 [SISTEMA] t:{t} | Tarea Activa: {self.external_routine}")
-                    self.external_routine = nueva_orden
-                    self.routines[self.external_routine].flag = True
-                else:
-                    print(f"⚠️ ¡Ojo! El LLM ha dicho una tontería: {nueva_orden}")
-            except Exception as e:
-                print(f"❌ Error en LLM integrado: {e}")
-        
+                    if (nueva_orden == 'load_blue_battery' and val_azul >= 0.98) or (nueva_orden == 'load_red_battery' and v_roja >= 0.98):
+                        print(f"⚠️ [DECISIÓN NO VÁLIDA] {nueva_orden} ignorada porque la batería ya está casi llena.")
+                    else:
+                        self.external_routine = nueva_orden
+
+        if self.external_routine == "load_blue_battery" and val_azul >= 0.98:
+            print(f"⚠️ [SEGURIDAD] Batería azul cargada. Volviendo a simple_forage.")
+            self.external_routine = "simple_forage"
+            self.routines["simple_forage"].flag = True
+
+        if self.external_routine == "load_red_battery" and v_roja >= 0.98:
+            print(f"⚠️ [SEGURIDAD] Batería roja cargada. Volviendo a simple_forage.")
+            self.external_routine = "simple_forage"
+            self.routines["simple_forage"].flag = True
+
+        if self.external_routine != "load_red_battery" and v_roja < 0.30:
+            print(f"⚠️ [EMERGENCIA LOCAL] Batería roja crítica ({v_roja:.3f}). Cambiando a load_red_battery.")
+            self.external_routine = "load_red_battery"
+            self.routines["load_red_battery"].flag = True
+
         # 2. Guardar en el CSV cada 10 pasos
         if t % 10 == 0:
             with open(self.log_name, "a") as f:
@@ -432,7 +518,7 @@ class TurnYellowLightsOFFController(RobotController):
                 else: 
                     action_wheels = turn_speed * np.array([1, -1])  # Girar derecha
             else:# Luz centrada
-                 action_wheels = 0.7 * np.array([1, 1]) # ¡AVANZAR HACIA ELLA!
+                action_wheels = 0.7 * np.array([1, 1]) # ¡AVANZAR HACIA ELLA!
             pass
         
         # 3. Aplicar acciones
@@ -455,7 +541,7 @@ class TurnYellowLightsONController(RobotController):
         self.targets = [] # posiciones de las luces a encender
         self.proximity_threshold = 0.2
         self.current_target_idx = 0
-   
+
 
     def set_targets(self, positions):
         self.targets = positions
@@ -465,8 +551,8 @@ class TurnYellowLightsONController(RobotController):
     def step(self, state, reward=0):
         
         if self.current_target_idx >= len(self.targets):
-             self.flag = False
-             return
+            self.flag = False
+            return
         
 
         self.flag = True
