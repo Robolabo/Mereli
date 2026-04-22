@@ -1,7 +1,7 @@
 
 {
     "simulation" : {
-	 "timesteps" : 15000,
+	 "timesteps" : 35000,
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
@@ -25,8 +25,8 @@
     "world": {
       "name" : "square_arena",
         "arena_params" : {
-		"height" : 4, 
-		"width" : 4
+		"height" : 5, 
+		"width" : 5
         },
         "engine" : "pybullet",
         "physics_dt" : 0.05,
@@ -38,8 +38,8 @@
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
 		"battery" : [
-        { "color": "blue", "init_level": 0.75, "charge_coef": 0.02, "discharge_coef": 0.001 },
-        { "color": "red", "init_level": 0.5, "charge_coef": 0.01, "discharge_coef": 0.001 }
+        { "color": "blue", "init_level": 0.75, "charge_coef": 0.004, "discharge_coef": 0.0002 },
+        { "color": "red", "init_level": 0.5, "charge_coef": 0.002, "discharge_coef": 0.0002 }
         ],
                 "controller" : {"name" : "astorekeeperLLM2",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "turn_yellow_lights_ON":2,  "simple_forage" : 3, "load_red_battery": 4, "load_blue_battery" : 5, "navigate" : 6}}},
                 "sensors" : {

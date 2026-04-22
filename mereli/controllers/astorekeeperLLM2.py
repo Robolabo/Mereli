@@ -189,7 +189,7 @@ class AStoreKeeperLLM2Controller(RobotController):
         JERARQUÍA DE DECISIÓN (Sigue este orden):
         1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.7, DEBES seguir respondiendo esa misma rutina de carga.
         2. EMERGENCIA: Si una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
-        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia la rutina a 'turn_yellow_lights_OFF' y no la cambies hasta que 'luces_amarillas_APAGADAS_actualmente' sea 3.
+        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia a 'turn_yellow_lights_OFF'. PERO: Si 'luces_amarillas_APAGADAS_actualmente' ya es 3, escribe en memoria "Misión completada" y cambia a 'simple_forage'.
         4. FORAGE: En cualquier otro caso, manda 'simple_forage'
 
         ### EJEMPLO DE COMPORTAMIENTO (One-shot):
@@ -225,7 +225,7 @@ class AStoreKeeperLLM2Controller(RobotController):
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,bat_roja,num_luces\n")
+                f.write("step,x,y,bat_azul,bat_roja,num_luces,decision,decision_ts\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
 
@@ -245,8 +245,8 @@ class AStoreKeeperLLM2Controller(RobotController):
         # 1. ACTUALIZAR SENSORES EN LA PIZARRA CONSTANTEMENTE
         robot_state = {
             "t": t,
-            "bat_azul": round(float(val_azul), 2),
-            "bat_roja": round(float(v_roja), 2),
+            "bat_azul": round(float(val_azul), 3),
+            "bat_roja": round(float(v_roja), 3),
             "luces_apagadas": n_luces
         }
         self.shared_data['contexto'] = f"SENSORS: {robot_state}. MEM: {self.shared_data['memoria_interna']}"
@@ -258,7 +258,6 @@ class AStoreKeeperLLM2Controller(RobotController):
         razon = self.shared_data.get('razonamiento', '')
         memoria = self.shared_data.get('memoria_interna', '')
         decision_ts = self.shared_data.get('decision_ts', 0)
-        sensor_ts = self.shared_data.get('sensor_ts', 0)
 
         self.external_memory = memoria
         self.llm_reasoning = razon
@@ -266,38 +265,16 @@ class AStoreKeeperLLM2Controller(RobotController):
 
         if decision_ts != self.last_decision_ts:
             self.last_decision_ts = decision_ts
-            stale_decision = (sensor_ts - decision_ts) > 500
-            if stale_decision:
-                print(f"\n⚠️ [DECISIÓN ANTIGUA] step actual {sensor_ts}, decisión de {decision_ts} ignorada")
-            else:
-                print(f"\n🧠 [PENSAMIENTO | step {decision_ts}]: {self.llm_reasoning}")
-                print(f"📖 [MEMORIA]: {self.external_memory}")
-                print(f"🎯 [ACCIÓN]: {self.llm_decision}\n")
-                if nueva_orden in self.routines:
-                    if (nueva_orden == 'load_blue_battery' and val_azul >= 0.98) or (nueva_orden == 'load_red_battery' and v_roja >= 0.98):
-                        print(f"⚠️ [DECISIÓN NO VÁLIDA] {nueva_orden} ignorada porque la batería ya está casi llena.")
-                    else:
-                        self.external_routine = nueva_orden
-
-        if self.external_routine == "load_blue_battery" and val_azul >= 0.98:
-            print(f"⚠️ [SEGURIDAD] Batería azul cargada. Volviendo a simple_forage.")
-            self.external_routine = "simple_forage"
-            self.routines["simple_forage"].flag = True
-
-        if self.external_routine == "load_red_battery" and v_roja >= 0.98:
-            print(f"⚠️ [SEGURIDAD] Batería roja cargada. Volviendo a simple_forage.")
-            self.external_routine = "simple_forage"
-            self.routines["simple_forage"].flag = True
-
-        if self.external_routine != "load_red_battery" and v_roja < 0.30:
-            print(f"⚠️ [EMERGENCIA LOCAL] Batería roja crítica ({v_roja:.3f}). Cambiando a load_red_battery.")
-            self.external_routine = "load_red_battery"
-            self.routines["load_red_battery"].flag = True
+            print(f"\n🧠 [PENSAMIENTO | step {decision_ts}]: {self.llm_reasoning}")
+            print(f"📖 [MEMORIA]: {self.external_memory}")
+            print(f"🎯 [ACCIÓN]: {self.llm_decision}\n")
+            if nueva_orden in self.routines:
+                self.external_routine = nueva_orden
 
         # 2. Guardar en el CSV cada 10 pasos
         if t % 10 == 0:
             with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces},{self.llm_decision},{decision_ts}\n")
 
         # 3. Ejeutar rutinas
         for k, routine in self.routines.items():
