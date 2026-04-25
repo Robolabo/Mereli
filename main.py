@@ -98,38 +98,73 @@ def print_welcome():
 
 def generate_plots(folder):
     """ Función interna para generar las gráficas tras la simulación """
-    csv_path = os.path.join(folder, "recorrido_robot.csv")
-    if not os.path.exists(csv_path):
-        return
-    
-    df = pd.read_csv(csv_path)
-    # Gráfica Trayectoria
-    plt.figure(figsize=(8, 8))
-    plt.plot(df['x'], df['y'], color='green', alpha=0.6)
-    # Punto de inicio en rojo
-    plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color='red', s=100, label='Inicio', zorder=5)
-    # Punto de fin en azul
-    plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='blue', s=100, label='Fin', zorder=5)
-    plt.title(f'Trayectoria - {os.path.basename(folder)}')
-    plt.savefig(os.path.join(folder, "trayectoria.png"))
-    plt.close()
+    import glob
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
 
-    # Gráfica Batería AZUL
-    if 'bat_azul' in df.columns:
+    # 1. Buscar todos los CSV (0, 1, y 2)
+    csv_files = glob.glob(os.path.join(folder, "recorrido_robot_*.csv"))
+    if not csv_files:
+        print(f"⚠️ No se encontraron archivos CSV en {folder}")
+        return
+
+    colores = ['green', 'orange', 'purple', 'cyan', 'brown']
+
+    try:
+        # --- Gráfica Trayectoria Superpuesta ---
+        plt.figure(figsize=(8, 8))
+        for i, csv_path in enumerate(csv_files):
+            df = pd.read_csv(csv_path)
+            if len(df) == 0: continue # Evitar error si Ctrl+C cortó el archivo vacío
+            
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+            color = colores[i % len(colores)]
+            
+            plt.plot(df['x'], df['y'], color=color, alpha=0.6, label=f'Robot {robot_id}')
+            plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color=color, marker='o', s=100, zorder=5) # Inicio
+            plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='red', marker='X', s=100, zorder=5) # Fin
+
+        plt.title(f'Trayectorias Superpuestas - {os.path.basename(folder)}')
+        plt.legend()
+        plt.savefig(os.path.join(folder, "trayectorias.png"))
+        plt.close()
+
+        # --- Gráfica Batería AZUL Superpuesta ---
         plt.figure(figsize=(10, 5))
-        plt.plot(df['step'], df['bat_azul'], color='blue')
+        for i, csv_path in enumerate(csv_files):
+            df = pd.read_csv(csv_path)
+            if len(df) == 0 or 'bat_azul' not in df.columns: continue
+            
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+            plt.plot(df['step'], df['bat_azul'], color=colores[i % len(colores)], label=f'Robot {robot_id}')
+
         plt.title(f'Batería Azul - {os.path.basename(folder)}')
+        plt.legend()
         plt.savefig(os.path.join(folder, "bateria_azul.png"))
         plt.close()
 
-    # Gráfica Batería ROJA
-    if 'bat_roja' in df.columns:
+        # --- Gráfica Batería ROJA Superpuesta ---
         plt.figure(figsize=(10, 5))
-        plt.plot(df['step'], df['bat_roja'], color='red')
+        for i, csv_path in enumerate(csv_files):
+            df = pd.read_csv(csv_path)
+            if len(df) == 0 or 'bat_roja' not in df.columns: continue
+            
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+            plt.plot(df['step'], df['bat_roja'], color=colores[i % len(colores)], label=f'Robot {robot_id}')
+
         plt.title(f'Batería Roja - {os.path.basename(folder)}')
+        plt.legend()
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
         plt.close()
-    print(f"✅ Gráficas generadas automáticamente en {folder}")
+
+        # Forzar el print a la consola original para que lo veas sí o sí
+        import sys
+        sys.__stdout__.write(f"✅ Gráficas generadas automáticamente en {folder}\n")
+
+    except Exception as e:
+        import sys
+        sys.__stdout__.write(f"❌ Error al pintar (probablemente por Ctrl+C a medias): {e}\n")
 
 @click.command()
 @click.option('-R', '--render', default=False, is_flag=True, help='Execute in render mode.')

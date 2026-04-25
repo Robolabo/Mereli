@@ -28,6 +28,7 @@ from .astorekeeper import AStoreKeeperController
 from .subsumptionlucia import SubsumptionLuciaController
 from .astorekeeperLLM import AStoreKeeperLLMController
 from .astorekeeperLLM2 import AStoreKeeperLLM2Controller
+from .astorekeeperLLMcentral import AStoreKeeperLLMcentralController
 
 from .irin_controllers import *
 from .find_sensor_pattern import *  

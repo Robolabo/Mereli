@@ -103,8 +103,8 @@ class LoadRedBatteryController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = action
 
 
-@controller_registry(name='astorekeeperLLM')
-class AStoreKeeperLLMController(RobotController):
+@controller_registry(name='astorekeeperLLMcentral')
+class AStoreKeeperLLMcentralController(RobotController):
     """
     """
     def __init__(self, *args, routines={'navigate' : 0}, **kwargs):
@@ -131,90 +131,47 @@ class AStoreKeeperLLMController(RobotController):
 
         # --- CARPETAS POR FECHA ---
         self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        # Inicializar con nombre genérico, se actualiza en step()
         self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
-
-        if not os.path.exists(self.log_name):
-            with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,bat_roja,num_luces\n")
-
-        print(f"📁 Guardando experimento en: {self.output_dir}")
+        self._log_initialized = False
 
     def step(self, state, reward=0.0):
         
+        # Inicializar nombre de archivo individual para cada robot
+        if not self._log_initialized and hasattr(self, 'controller_owner') and self.controller_owner is not None:
+            robot_id = self.controller_owner.name.split('_')[-1] if '_' in self.controller_owner.name else '0'
+            self.log_name = os.path.join(self.output_dir, f"recorrido_robot_{robot_id}.csv")
+            if not os.path.exists(self.log_name):
+                with open(self.log_name, "w") as f:
+                    f.write("step,robot,x,y,bat_azul,bat_roja,num_luces\n")
+            self._log_initialized = True
+        
         # Obtener datos actuales
         t = self.controller_owner.t 
-        # La posición es un array [x, y, z]
         x, y = self.controller_owner.position[0], self.controller_owner.position[1]
-        # El sensor de batería azul devuelve un array, cogemos el primer valor
         val_azul = state['blue_battery_sensor'][0] 
         v_roja = state['red_battery_sensor'][0]
 
-        #1º Leer el JSON 
+        # 1º Leer orden del LLM central
         if t % 50 == 0:
-            try:
-                if os.path.exists('brain_decision.json'):
-                    with open('brain_decision.json', 'r') as f:
-                        decision = json.load(f)
-                    nuevo_timestamp = decision.get("timestamp", 0)
-                    nueva_orden = decision.get("active_routine")
-                    if nuevo_timestamp > self.last_timestamp:
-                        if nueva_orden in self.routines:
-                            if self.external_routine != nueva_orden:
-                                print(f" [LLM-BRIDGE] Nueva tarea: {nueva_orden}")
-                                self.external_routine = nueva_orden
-                                self.last_timestamp = nuevo_timestamp
-                                # Activamos el flag de la rutina elegida solo al recibirla
-                                self.routines[self.external_routine].flag = True
-            except Exception as e:
-                print(f"Error leyendo brain_decision.json: {e}")
+            nueva_orden = self.controller_owner.world.llm_orders.get(self.controller_owner.name, "simple_forage")
+            if nueva_orden != self.external_routine:
+                if nueva_orden in self.routines:
+                    print(f" [LLM-CENTRAL] Nueva tarea para {self.controller_owner.name}: {nueva_orden}")
+                    self.external_routine = nueva_orden
+                    self.last_timestamp = t
+                    self.routines[self.external_routine].flag = True
 
         # Contador de luces apagadas para la rutina turn_yellow_lights_OFF
         n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
-        # 2. Guardar en el CSV cada 10 pasos
-        if t % 10 == 0:
-            with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
-
-        """ # Comportamiento secuencial
-        for k, routine in self.routines.items():
-            action = routine.step(state)
-            self.activations[k] = self.get_actuator('joint_velocity_actuator').action
         
-        off_routine = self.routines.get('turn_yellow_lights_OFF')
-        on_routine = self.routines.get('turn_yellow_lights_ON')
-        bat_level = self.get_sensor_reading('red_battery_sensor')[0]
+        # 2. Guardar en el CSV SIEMPRE (sin el if t % 10 == 0) para que todos guarden
+        with open(self.log_name, "a") as f:
+            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
 
-        # 1º Guardar posiciones cuando off termine
-        if off_routine and not off_routine.flag and len(off_routine.recorded_positions) > 0 and not self.memory_positions:
-            self.memory_positions = off_routine.recorded_positions[:] 
-            print(f"STOREKEEPER: Fase 1 terminada. Posiciones guardadas: {len(self.memory_positions)}")
-        
-        # 2º: Fin de carga de batería roja
-        # 1. Comprobar si la batería está baja (< 0.65)
-        if bat_level < 0.65:
-            if not self.battery_was_low:
-                print(f"MAIN: Detectada batería baja ({bat_level:.2f}). Esperando ciclo de carga...")
-            self.battery_was_low = True
-
-        # 2. Comprobar si se ha cargado al completo (DISPARAMOS)
-        if self.battery_was_low and bat_level > 0.95:
-            self.red_battery_done = True
-            self.battery_was_low = False # Reseteamos para que no se dispare mas
-            print(f"MAIN: >>> CICLO COMPLETADO (Estaba baja -> Ahora {bat_level:.2f}). ACTIVANDO FASE FINAL. <<<")
-    
-        # 3º: Transferir posiciones a rutina on si batería roja cargada
-        if on_routine:
-            if self.red_battery_done and self.memory_positions:
-                 if not on_routine.targets:
-                    print("MAIN: Transfiriendo objetivos a Rutina ON...")
-                    on_routine.set_targets(self.memory_positions) 
-                    on_routine.flag = True
-            else:
-                on_routine.flag = False   """
-     # 3. Ejeutar rutinas
+        # 3. Ejecutar rutinas
         for k, routine in self.routines.items():
             if self.external_routine == k:
-                # Pasamos 'force_mission' para que ignore umbrales internos
                 if "load" in k:
                     routine.step(state, force_mission=True)
                 else:
@@ -224,7 +181,7 @@ class AStoreKeeperLLMController(RobotController):
                 routine.flag = False # Desactivamos las rutinas que no son la orden externa
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action 
 
-    # 4. Lógica de continuidad (Evitar el cierre de simulación)
+        # 4. Lógica de continuidad (Evitar el cierre de simulación)
         rt_obj = self.routines.get(self.external_routine)
         if rt_obj and not rt_obj.flag:
             if self.external_routine != "simple_forage":
@@ -235,14 +192,6 @@ class AStoreKeeperLLMController(RobotController):
         return self.coordinate()
     
     def coordinate(self):
-        """ # Comportamiento secuencial
-        names = [*self.priorities.keys()]
-        names.sort(key=self.priorities.get)
-        for k in names:   
-            if self.routines[k].flag:
-                action_wheels = self.activations[k]
-                self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
-                break"""
         # Prioridad absoluta a la orden externa
         if self.external_routine and self.external_routine in self.routines:
             self.current_routine = self.external_routine
@@ -266,7 +215,7 @@ class AStoreKeeperLLMController(RobotController):
         for rt in self.routines.values():
             rt.controller_owner = self.controller_owner
             rt.reset()
-
+            
 @controller_registry(name="simple_forage")
 class SimpleForageController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
