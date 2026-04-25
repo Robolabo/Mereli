@@ -24,7 +24,7 @@ def get_irin_exp(num):
     experiments = ["irin/HelloWorld.json", "irin/TestWheels.json", "irin/TestContact.json", "irin/TestProximity.json", "irin/TestRedLightSensor.json",
      "irin/TestBlueLightSensor.json", "irin/TestGreenLightSensor.json", "irin/TestLED.json", "irin/TestBattery.json", 
      "irin/TestEncoder.json", "irin/ObstacleAvoidance.json", "irin/SubsumptionLightExp.json", "irin/SubsumptionGarbageExp.json", 
-     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json", "irin/AStorekeeperExp.json", "irin/SubsumptionLucia.json", "irin/AStorekeeperExpLLM", "irin/AStorekeeperExpLLM2"] 
+     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json", "irin/AStorekeeperExp.json", "irin/SubsumptionLucia.json", "irin/AStorekeeperExpLLM", "irin/AStorekeeperExpLLM2", "irin/AStoreKeeperLLMcentral"]
     if num > len(experiments):
         print('Experiment Code does not exist!')
         exit(0)
@@ -90,6 +90,8 @@ def print_welcome():
     print("| ASTOREKEEPERLLM JSON | 18   |  mereli/config/irin/AStorekeeperExpLLM.json   |")
     print("+----------------------+------+------------------------------------------------+")
     print("| ASTOREKEEPERLLM2 DICT| 19   |  mereli/config/irin/AStorekeeperExpLLM2.json  |")
+    print("+----------------------+------+------------------------------------------------+")
+    print("| ASTOREKEEPERLLMCENTRAL| 20  |  mereli/config/irin/AStoreKeeperLLMcentral.json|")
     print("+----------------------+------+------------------------------------------------+")
 
     print("")
@@ -212,6 +214,17 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
     world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}))
+    
+    # Interacción inicial con LLM si es el experimento central
+    if hasattr(world, 'llm_shared_data') and world.llm_shared_data is not None:
+        print("🧠 [CEREBRO CENTRAL]: Ingresa instrucciones iniciales para el LLM (ej: 'Manda 2 robots a cargar batería y otro a apagar luces'): ")
+        user_instructions = input().strip()
+        if user_instructions == "":
+            user_instructions = "No hay instrucciones específicas. Asigna tareas por defecto."
+        # Actualizar el prompt
+        world.llm_rules = world.llm_rules.replace("{user_instructions}", user_instructions)
+        print(f"🧠 [CEREBRO CENTRAL]: Instrucciones registradas: {user_instructions}")
+    
     if log:
         world.config_data_logger(cfg_dict['logging']['data'])
         world.data_logger.set_log_file(cfg_dict.get('logging', {}).get('file', cfg))
@@ -295,6 +308,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                 world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
                 world.animated_layout.initialize(world)
         np.random.seed(seed)
+        # Interacción inicial con LLM ya se hizo antes
         try: 
             for tr in range(trials):
                 world.reset()

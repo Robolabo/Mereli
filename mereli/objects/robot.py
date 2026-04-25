@@ -350,12 +350,25 @@ class Robot(WorldObject):
     def add_battery(self, battery_conf=None, color='red', init_level=1.0, **battery_kw):
         """
         Permite añadir una o varias baterías. Si recibe una lista, itera sobre cada configuración.
+        Soporta init_level como número o string "random:min:max" para nivel aleatorio.
         """
         # Si le llega una lista de baterías
         if isinstance(battery_conf, list):
             for b in battery_conf:
              self.add_battery(**b)
             return
+
+        # Procesar init_level si es string random
+        if isinstance(init_level, str) and init_level.startswith('random:'):
+            parts = init_level.split(':')
+            if len(parts) == 3:
+                try:
+                    low = float(parts[1])
+                    high = float(parts[2])
+                    init_level = np.random.uniform(low, high)
+                    print(f"🎲 Batería {color} nivel aleatorio: {init_level:.2f} (rango [{low}, {high}])")
+                except:
+                    init_level = 1.0
 
         # Si le llega una batería suelta o los parámetros por separado
         if not self.battery_enabled:
@@ -367,7 +380,7 @@ class Robot(WorldObject):
         self.n = len(self.battery_colors)
         self.battery.level = np.full(len(self.battery_colors), self.battery.init_level)
 
-        print(f"✅ Batería añadida: Color={color} | Nivel Inicial={init_level}")
+        print(f"✅ Batería añadida: Color={color} | Nivel Inicial={init_level:.3f}")
 
 
 

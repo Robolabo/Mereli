@@ -3,6 +3,7 @@ import time
 import copy
 from collections import deque
 import numpy as np
+import os
     
 
 
@@ -23,6 +24,80 @@ try:
     from mereli.dashboard.connection import DashboardConnection
 except:
     pass
+
+# LLM imports
+import json
+import time
+from multiprocessing import Process, Manager
+from langchain_ollama import ChatOllama
+from langchain_core.messages import HumanMessage, SystemMessage
+
+
+def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
+    """
+    PROCESO INDEPENDIENTE: El Cerebro Central.
+    Este bucle corre en un núcleo de CPU distinto al del robot.
+    """
+    from langchain_ollama import ChatOllama
+    from langchain_core.messages import HumanMessage, SystemMessage
+    import json
+    import time
+
+    print(f"🧠 [CEREBRO CENTRAL]: Iniciando proceso hijo. Conectando...")
+
+    try:
+        # Inicialización del modelo dentro del proceso hijo
+        llm = ChatOllama(
+            model="gpt-oss:20b",
+            temperature=0,
+            base_url= base_url,
+            keep_alive="5m"
+        )
+    
+        sys_msg = SystemMessage(content=system_rules_content)
+
+        print("🧠 [CEREBRO CENTRAL]: Proceso de IA iniciado y listo.")
+    except Exception as e:
+        print(f"❌ [CEREBRO CENTRAL ERROR FATAL]: No se pudo inicializar ChatOllama: {e}")
+        return
+
+    last_processed_sensor_ts = 0
+    while True:
+        current_sensor_ts = shared_data.get('sensor_ts', 0)
+        processing = shared_data.get('processing', False)
+
+        if not processing and current_sensor_ts > last_processed_sensor_ts:
+            shared_data['processing'] = True
+            contexto = shared_data.get('contexto', '')
+            try:
+                response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
+                raw_content = response.content.strip()
+
+                # Limpieza de JSON
+                if "```json" in raw_content:
+                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
+                
+                data = json.loads(raw_content)
+
+                # 3. Escribir las decisiones en la pizarra para que los robots las lean
+                decisions = data.get('decisions', ['simple_forage'] * num_robots)
+                memoria = data.get('memoria_interna', '')
+                razonamiento = data.get('razonamiento', '')
+
+                shared_data['decisions'] = decisions
+                shared_data['memoria_interna'] = memoria
+                shared_data['razonamiento'] = razonamiento
+                shared_data['decision_ts'] = current_sensor_ts
+                last_processed_sensor_ts = current_sensor_ts
+
+                print(f"🧠 [CEREBRO CENTRAL]: t={shared_data.get('last_t')} | Decisiones registradas: {decisions}\n")
+            except Exception as e:
+                print(f"❌ [CEREBRO CENTRAL ERROR]: {e}")
+            finally:
+                shared_data['processing'] = False
+
+        # Evitar consumo excesivo de CPU en el bucle de espera
+        time.sleep(0.05)
 
 def map_parser():
     file = 'mereli/models/maps/map1.txt'
@@ -171,6 +246,12 @@ class World(object):
         self._is_done = False
         self.global_map = GlobalMap()
         
+        # LLM Central attributes
+        self.llm_manager = None
+        self.llm_shared_data = None
+        self.llm_process = None
+        self.llm_orders = {}  # dict of robot_name -> routine
+        
 
     def update_neighbor_matrix(self):
         rad = 1 
@@ -289,6 +370,27 @@ class World(object):
         if self.virtual_space is not None:
             self.virtual_space.step()
 
+        # Actualizar LLM central si existe
+        if self.llm_shared_data is not None:
+            if self.t % 50 == 0:
+                # Recopilar estado global
+                contexto = f"t={self.t}\n"
+                for i, (robot_name, robot) in enumerate(self.robots.items()):
+                    bat_azul = robot.state.get('blue_battery_sensor', [0])[0]
+                    bat_roja = robot.state.get('red_battery_sensor', [0])[0]
+                    n_luces = getattr(robot.controller.routines.get('turn_yellow_lights_OFF'), 'lights_off', 0) if hasattr(robot.controller, 'routines') else 0
+                    contexto += f"Robot {i} ({robot_name}): bat_azul={bat_azul:.2f}, bat_roja={bat_roja:.2f}, luces_apagadas={n_luces}\n"
+                self.llm_shared_data['contexto'] = contexto
+                self.llm_shared_data['sensor_ts'] = self.t
+                self.llm_shared_data['last_t'] = self.t
+                # Leer decisiones
+                if self.llm_shared_data['decision_ts'] > self.t - 50:
+                    decisions = self.llm_shared_data['decision']
+                    for i, robot_name in enumerate(self.robots.keys()):
+                        if i < len(decisions):
+                            self.llm_orders[robot_name] = decisions[i]
+                    print(f"🧠 [CEREBRO CENTRAL]: Decisiones actualizadas: {decisions}")
+
         #* Render and physics step.
         self.physics_engine.step_physics()
         if self.render:
@@ -331,6 +433,8 @@ class World(object):
         self.hierarchy.update({name : obj})
         if issubclass(type(obj), Robot):
             self.__robots.update({name : obj})
+            obj.world = self  # Referencia al world para controladores
+            obj.name = name  # Nombre del robot para controladores
         #* Register group element
         if group is None:
             group = name
@@ -508,6 +612,72 @@ class World(object):
                     world_obj.group = obj_name
                     if isinstance(positions, dict):
                         world_obj.pos_init_method = positions
+
+        # Inicializar LLM central si hay robots con controlador astorekeeperLLMcentral
+        has_central_llm = any(robot.controller.__class__.__name__ == 'AStoreKeeperLLMcentralController' for robot in self.robots.values())
+        if has_central_llm:
+            self.initialize_central_llm(len(self.robots))
+
+    def initialize_central_llm(self, num_robots):
+        """ Inicializa el LLM central para controlar múltiples robots. """
+        self.llm_manager = Manager()
+        self.llm_shared_data = self.llm_manager.dict()
+        
+        # Estado inicial
+        self.llm_shared_data['decision'] = ['simple_forage'] * num_robots
+        self.llm_shared_data['memoria_interna'] = 'Inicio de misión con múltiples robots.'
+        self.llm_shared_data['razonamiento'] = 'Inicializando...'
+        self.llm_shared_data['contexto'] = ''
+        self.llm_shared_data['last_t'] = 0
+        self.llm_shared_data['sensor_ts'] = 0
+        self.llm_shared_data['decision_ts'] = 0
+        self.llm_shared_data['processing'] = False
+
+        self.llm_rules = """
+        Eres el cerebro central de un equipo de robots e-puck en una misión de recolección y mantenimiento.
+        Tu objetivo es asignar tareas a cada robot basado en las instrucciones iniciales del usuario y el estado actual de cada robot.
+        
+        ROBOTS Y BATERÍAS:
+        Cada robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0. Puedes realizar estas rutinas:
+        - "simple_forage": encuentra objetos y los deposita en zona específica (mejor para robots con batería roja ALTA)
+        - "turn_yellow_lights_OFF": apaga las luces amarillas (hay 3 en total, mejor para robots con batería roja ALTA)
+        - "load_blue_battery": recarga batería azul
+        - "load_red_battery": recarga batería roja (para robots con batería roja BAJA < 0.3)
+
+        INSTRUCCIONES DEL USUARIO: {user_instructions}
+
+        ESTRUCTURA DE RESPUESTA (JSON):
+        {{
+        "razonamiento": "Análisis detallado: qué nivel de batería roja tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
+        "memoria_interna": "Diario mental actualizado con: contadores globales (objetos recolectados, luces apagadas), estado de batería de cada robot, tareas asignadas, e historial de decisiones.",
+        "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"]  // UNA tarea por robot
+        }}
+
+        REGLAS DE DECISIÓN:
+        1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria roja mas alta.
+
+        EJEMPLO 1 - Sensor data: Robot0: bat_roja=0.8, Robot1: bat_roja=0.2, Robot2: bat_roja=0.65
+        Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"
+        Respuesta: {{
+                    "razonamiento": "Robot0 tiene bat_roja=0.8 (ALTO) -> ideal para apagar luces. Robot1 tiene bat_roja=0.2 (EMERGENCIA) -> debe cargar. Robot2 tiene bat_roja=0.65 (ALTO) -> puede apagar luces también.",
+                    "memoria_interna": "t=100. Instrucciones: 2 luces, 1 carga. Batería roja: [0.8, 0.2, 0.65]. Asignaciones: Robot0->luces (alto), Robot1->carga (emergencia), Robot2->luces (alto). Contadores: luces_apagadas=2, cargas=1.",
+                    "decisions": ["turn_yellow_lights_OFF", "load_red_battery", "turn_yellow_lights_OFF"]
+                    }}
+        """
+
+        # Lanzar el proceso del cerebro
+        self.llm_process = Process(
+            target=llm_brain_loop, 
+            args=(self.llm_shared_data, self.llm_rules, "http://127.0.0.1:11434", num_robots),
+            daemon=True
+        )
+        self.llm_process.start()
+
+        # Inicializar órdenes
+        for i, robot_name in enumerate(self.robots.keys()):
+            self.llm_orders[robot_name] = "simple_forage"
+
+        print(f"📁 Guardando experimento en: {os.environ.get('CURRENT_EXP_FOLDER', 'outputs')}")
 
     def reset(self, seed=None):
         """ Resets the world and all its objects. It also initializes

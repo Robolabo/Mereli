@@ -1,7 +1,7 @@
 
 {
     "simulation" : {
-	 "timesteps" : 35000,
+	 "timesteps" : 15000,
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
@@ -34,14 +34,14 @@
         "objects" : {
             "epucks" : {
                 "type" : "epuck",
-                "num_instances" : 1,
+                "num_instances" : 3,
 		"positions" : [0,0,0],
 		"orientations" : 0.0,
 		"battery" : [
         { "color": "blue", "init_level": 0.75, "charge_coef": 0.004, "discharge_coef": 0.0002 },
-        { "color": "red", "init_level": 0.5, "charge_coef": 0.002, "discharge_coef": 0.0002 }
+        { "color": "red", "init_level": "random:0.2:0.9", "charge_coef": 0.002, "discharge_coef": 0.0002 }
         ],
-                "controller" : {"name" : "astorekeeperLLM2",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "turn_yellow_lights_ON":2,  "simple_forage" : 3, "load_red_battery": 4, "load_blue_battery" : 5, "navigate" : 6}}},
+                "controller" : {"name" : "astorekeeperLLMcentral",  "params" : {"routines" : { "basic_obstacle_avoider" : 0, "turn_yellow_lights_OFF":1, "turn_yellow_lights_ON":2,  "simple_forage" : 3, "load_red_battery": 4, "load_blue_battery" : 5, "navigate" : 6}}},
                 "sensors" : {
                   "light_sensor" : {"n_sectors" : 8, "range" : 5},
                     "distance_sensor" : {"n_sectors" : 8, "range" : 0.8},
@@ -60,20 +60,20 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-		        "positions" : {"type" : "random", "low" : [-3, -3, 0.5], "high" : [3, 3, 0.5]},
-                "params" : {"range" : 7, "color" : "red"}
+		        "positions" : {"type" : "random", "low" : [-1.5, -1.5, 0.5], "high" : [1.5, 1.5, 0.5]},
+                "params" : {"range" : 5, "color" : "red"}
             },
             "light_blue" : {
                 "type" : "light_source",
                 "num_instances": 1,
 		        "positions" : {"type" : "random", "low" : [-1.5, -1.5, 0.5], "high" : [1.5, 1.5, 0.5]},
-                "params" : {"range" : 7, "color" : "blue"}
+                "params" : {"range" : 5, "color" : "blue"}
             },
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 3,
                 "positions" : {"type" : "random", "low" : [-1.9, -1.9, 0.5], "high" : [1.9, 1.9, 0.5]},
-                "params" : {"range" : 7, "color" : "yellow"}
+                "params" : {"range" : 5, "color" : "yellow"}
             },
 	    "black_area" : {
                 "type" : "ground_area",

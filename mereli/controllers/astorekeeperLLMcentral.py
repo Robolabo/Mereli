@@ -7,14 +7,6 @@ import datetime
 import os
 import json 
 import sys
-from multiprocessing import Process, Manager
-
-#LLM API imports
-import json
-import time
-from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage, SystemMessage
-
 
 @controller_registry(name="navigate")
 class NavigateController(RobotController):
@@ -26,16 +18,33 @@ class NavigateController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
 
 
+
 @controller_registry(name="load_blue_battery")
 class LoadBlueBatteryController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
+        self.charging = False
 
     def step(self, state, reward=0, force_mission=False):
-        # LLM manda, solo calculamos la orientación hacia la luz
+
+        bat_lv_array = self.get_sensor_reading('blue_battery_sensor')
+        bat_lv = bat_lv_array[0]
+
         action = np.array([0,0])
-        if self.flag:
+        # Si JSON manda, activamos el modo carga 
+        if force_mission:
+            self.charging = True
+        # Carga completa si llegamos al 98% 
+        if bat_lv >= 0.98:
+            self.charging = False
+            self.flag = False
+            print("Blue battery fully charged")
+            print (f"Nivel batería azul: {bat_lv:.3f}. Desactivando rutina de carga.")
+            print("Flag de carga BLUE DESACTIVADA. Esperando nueva orden...")
+            return np.zeros(2)
+
+        if self.charging:
             ls_read = self.get_sensor_reading('blue_light_sensor')
             if np.max(ls_read) > 0.9:  #Estamos debajo de la luz
                 action = np.zeros(2)
@@ -56,10 +65,27 @@ class LoadRedBatteryController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
         super(LoadRedBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
+        self.charging = False
 
-    def step(self, state, reward=0, force_mission=False):   
+    def step(self, state, reward=0, force_mission=False):
+        #print("ENTRO EN LOAD RED BATTERY")
+        bat_lv_array = self.get_sensor_reading('red_battery_sensor')
+        bat_lv = bat_lv_array[0]
+
         action = np.array([0,0])
-        if self.flag :
+
+        if force_mission:
+            self.charging = True
+
+        if bat_lv >= 0.98 and self.flag:
+            self.charging = False
+            self.flag = False
+            print("Red battery fully charged")
+            print (f"Nivel batería roja: {bat_lv:.3f}. Desactivando rutina de carga.")
+            print("Flag de carga RED DESACTIVADA. Esperando nueva orden...")
+            return np.zeros(2)
+            
+        if self.charging and self.flag :
             ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
@@ -76,139 +102,16 @@ class LoadRedBatteryController(RobotController):
 
         self.get_actuator('joint_velocity_actuator').action = action
 
-def llm_brain_loop(shared_data, system_rules_content, base_url):
-    """
-    PROCESO INDEPENDIENTE: El Cerebro.
-    Este bucle corre en un núcleo de CPU distinto al del robot.
-    """
-    from langchain_ollama import ChatOllama
-    from langchain_core.messages import HumanMessage, SystemMessage
-    import json
-    import time
 
-    print(f"🧠 [CEREBRO]: Iniciando proceso hijo. Conectando...")
-
-    try:
-        # Inicialización del modelo dentro del proceso hijo
-        llm = ChatOllama(
-            model="gpt-oss:20b",
-            temperature=0,
-            base_url= base_url,
-            keep_alive="5m"
-        )
-    
-        sys_msg = SystemMessage(content=system_rules_content)
-
-        print("🧠 [CEREBRO]: Proceso de IA iniciado y listo.")
-    except Exception as e:
-        print(f"❌ [CEREBRO ERROR FATAL]: No se pudo inicializar ChatOllama: {e}")
-        return
-
-    last_processed_sensor_ts = 0
-    while True:
-        current_sensor_ts = shared_data.get('sensor_ts', 0)
-        processing = shared_data.get('processing', False)
-
-        if not processing and current_sensor_ts > last_processed_sensor_ts:
-            shared_data['processing'] = True
-            contexto = shared_data.get('contexto', '')
-            try:
-                response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
-                raw_content = response.content.strip()
-
-                # Limpieza de JSON
-                if "```json" in raw_content:
-                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
-                
-                data = json.loads(raw_content)
-
-                # 3. Escribir la decisión en la pizarra para que el robot la lea
-                decision = data.get('decision', 'simple_forage')
-                memoria = data.get('memoria_interna', '')
-                razonamiento = data.get('razonamiento', '')
-
-                shared_data['decision'] = decision
-                shared_data['memoria_interna'] = memoria
-                shared_data['razonamiento'] = razonamiento
-                shared_data['decision_ts'] = current_sensor_ts
-                last_processed_sensor_ts = current_sensor_ts
-
-                print(f"🧠 [CEREBRO]: t={shared_data.get('last_t')} | Decisión registrada\n")
-            except Exception as e:
-                print(f"❌ [CEREBRO ERROR]: {e}")
-            finally:
-                shared_data['processing'] = False
-
-        # Evitar consumo excesivo de CPU en el bucle de espera
-        time.sleep(0.05)
-
-@controller_registry(name='astorekeeperLLM2')
-class AStoreKeeperLLM2Controller(RobotController):
+@controller_registry(name='astorekeeperLLM')
+class AStoreKeeperLLMController(RobotController):
     """
     """
     def __init__(self, *args, routines={'navigate' : 0}, **kwargs):
-        super(AStoreKeeperLLM2Controller, self).__init__(*args, **kwargs)
+        super(AStoreKeeperLLMcentralController, self).__init__(*args, **kwargs)
         self.routines = {}
         self.priorities = {}
         self.activations = {}
-
-        # --- CONFIGURACIÓN DE MULTIPROCESSING (BLACKBOARD) ---
-        self.manager = Manager()
-        self.shared_data = self.manager.dict()
-        
-        # Estado inicial de la pizarra compartido con el proceso IA
-        self.shared_data['decision'] = 'simple_forage'
-        self.shared_data['memoria_interna'] = 'Inicio de misión.'
-        self.shared_data['razonamiento'] = 'Inicializando...'
-        self.shared_data['contexto'] = ''
-        self.shared_data['last_t'] = 0
-        self.shared_data['sensor_ts'] = 0
-        self.shared_data['decision_ts'] = 0
-        self.shared_data['processing'] = False
-        self.last_decision_ts = 0
-
-        self.rules = """
-        Eres el cerebro de un robot e-puck.
-        Tu objetivo es elegir la rutina técnica correcta basada en los sensores y el historial.
-        Sabiendo que el robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0, y puede realizar cuatro rutinas:
-        "simple_forage", en la encuentra objetos y los deposita en una zona especifica,
-        "turn_yellow_lights_OFF", que apaga las tres luces amarillas, y
-        "load_blue_battery" y "load_red_battery",  que recargan las respectivas baterías.
-
-        ESTRUCTURA DE RESPUESTA (JSON):
-        {
-        "razonamiento": "Tu análisis de los sensores y por qué eliges la acción.",
-        "memoria_interna": "Tu diario. Aquí guarda contadores y decisiones (ej: 'He ordenado forage 2 veces. Todavía no he completado la misión de apagar luces').",
-        "decision": "Nombre de la rutina [simple_forage, load_red_battery, load_blue_battery, turn_yellow_lights_OFF]"
-        }
-
-        REGLAS DE MEMORIA:
-        1. Lee siempre tu 'Memoria anterior' para saber qué estabas haciendo.
-        2. Actualiza tu 'memoria_interna' en cada respuesta.
-
-        JERARQUÍA DE DECISIÓN (Sigue este orden):
-        1. PERSISTENCIA DE CARGA: Si tu 'Rutina actual' es una de carga (load) y la batería NO ha llegado a 0.7, DEBES seguir respondiendo esa misma rutina de carga.
-        2. EMERGENCIA: Si una batería baja de 0.3, manda cargarla. PRIORIZA carga (Red > Blue).
-        3. MISIÓN LUCES: Cuando en tu 'memoria_interna' anotes que has hecho forage 3 veces, cambia a 'turn_yellow_lights_OFF'. PERO: Si 'luces_amarillas_APAGADAS_actualmente' ya es 3, escribe en memoria "Misión completada" y cambia a 'simple_forage'.
-        4. FORAGE: En cualquier otro caso, manda 'simple_forage'
-
-        ### EJEMPLO DE COMPORTAMIENTO (One-shot):
-        Usuario: "Sensores: {'bat_azul': 0.80, 'bat_roja': 0.25, 'luces_amarillas_APAGADAS_actualmente': 3}.
-        Respuesta: {
-                    "razonamiento": "La batería roja está al 0.25, lo cual es crítico.",
-                    "memoria_interna": "He ordenado hacer forage 4 veces. Ya completé la mision de apagar luces amarillas. Interrumpo para cargar roja.",
-                    "decision": "load_red_battery"
-                    }
-        """
-
-        # Lanzar el proceso del cerebro
-        self.brain_process = Process(
-            target=llm_brain_loop, 
-            args=(self.shared_data, self.rules, "http://127.0.0.1:11434"),
-            daemon=True
-        )
-        self.brain_process.start()
-
         for rt, pr in routines.items(): 
             priority = pr if isinstance(pr, int) else pr['priority']
             rt_params = pr.get('params', {}) if isinstance(pr, dict) else {}
@@ -216,7 +119,14 @@ class AStoreKeeperLLM2Controller(RobotController):
             self.routines[rt] =  controllers[rt](**rt_params)
             self.activations[rt] = np.zeros(2)
 
+        #Memoria
+        self.memory_positions = []      
+        self.red_battery_done = False   
+        self.battery_was_low = False # Para detectar que la bateria ha llegado por debajo del theshold
+        
         #Cambiar tarea con cambio de orden
+        self.last_timestamp = 0  # Para saber si la orden es nueva
+        self.current_routine = "simple_forage" # Estado inicial por defecto
         self.external_routine = "simple_forage" # la orden del JSON
 
         # --- CARPETAS POR FECHA ---
@@ -225,10 +135,9 @@ class AStoreKeeperLLM2Controller(RobotController):
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,bat_roja,num_luces,decision,decision_ts\n")
+                f.write("step,x,y,bat_azul,bat_roja,num_luces\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
-
 
     def step(self, state, reward=0.0):
         
@@ -239,50 +148,83 @@ class AStoreKeeperLLM2Controller(RobotController):
         # El sensor de batería azul devuelve un array, cogemos el primer valor
         val_azul = state['blue_battery_sensor'][0] 
         v_roja = state['red_battery_sensor'][0]
-        #Contador de luces apagadas para la rutina turn_yellow_lights_OFF
+
+        #1º Leer el JSON 
+        if t % 50 == 0:
+            try:
+                if os.path.exists('brain_decision.json'):
+                    with open('brain_decision.json', 'r') as f:
+                        decision = json.load(f)
+                    nuevo_timestamp = decision.get("timestamp", 0)
+                    nueva_orden = decision.get("active_routine")
+                    if nuevo_timestamp > self.last_timestamp:
+                        if nueva_orden in self.routines:
+                            if self.external_routine != nueva_orden:
+                                print(f" [LLM-BRIDGE] Nueva tarea: {nueva_orden}")
+                                self.external_routine = nueva_orden
+                                self.last_timestamp = nuevo_timestamp
+                                # Activamos el flag de la rutina elegida solo al recibirla
+                                self.routines[self.external_routine].flag = True
+            except Exception as e:
+                print(f"Error leyendo brain_decision.json: {e}")
+
+        # Contador de luces apagadas para la rutina turn_yellow_lights_OFF
         n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
-
-        # 1. ACTUALIZAR SENSORES EN LA PIZARRA CONSTANTEMENTE
-        robot_state = {
-            "t": t,
-            "bat_azul": round(float(val_azul), 2),
-            "bat_roja": round(float(v_roja), 2),
-            "luces_apagadas": n_luces
-        }
-        self.shared_data['contexto'] = f"SENSORS: {robot_state}. MEM: {self.shared_data['memoria_interna']}"
-        self.shared_data['last_t'] = t
-        self.shared_data['sensor_ts'] = t
-
-        # 2. LEER LA ÚLTIMA DECISIÓN (Comportamiento por defecto)
-        nueva_orden = self.shared_data['decision']
-        razon = self.shared_data.get('razonamiento', '')
-        memoria = self.shared_data.get('memoria_interna', '')
-        decision_ts = self.shared_data.get('decision_ts', 0)
-
-        self.external_memory = memoria
-        self.llm_reasoning = razon
-        self.llm_decision = nueva_orden
-
-        if decision_ts != self.last_decision_ts:
-            self.last_decision_ts = decision_ts
-            print(f"\n🧠 [PENSAMIENTO | step {decision_ts}]: {self.llm_reasoning}")
-            print(f"📖 [MEMORIA]: {self.external_memory}")
-            print(f"🎯 [ACCIÓN]: {self.llm_decision}\n")
-            if nueva_orden in self.routines:
-                self.external_routine = nueva_orden
-
         # 2. Guardar en el CSV cada 10 pasos
         if t % 10 == 0:
             with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces},{self.llm_decision},{decision_ts}\n")
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
 
-        # 3. Ejeutar rutinas
+        """ # Comportamiento secuencial
         for k, routine in self.routines.items():
-            routine.flag = (self.external_routine == k)
-            routine.step(state)
+            action = routine.step(state)
+            self.activations[k] = self.get_actuator('joint_velocity_actuator').action
+        
+        off_routine = self.routines.get('turn_yellow_lights_OFF')
+        on_routine = self.routines.get('turn_yellow_lights_ON')
+        bat_level = self.get_sensor_reading('red_battery_sensor')[0]
+
+        # 1º Guardar posiciones cuando off termine
+        if off_routine and not off_routine.flag and len(off_routine.recorded_positions) > 0 and not self.memory_positions:
+            self.memory_positions = off_routine.recorded_positions[:] 
+            print(f"STOREKEEPER: Fase 1 terminada. Posiciones guardadas: {len(self.memory_positions)}")
+        
+        # 2º: Fin de carga de batería roja
+        # 1. Comprobar si la batería está baja (< 0.65)
+        if bat_level < 0.65:
+            if not self.battery_was_low:
+                print(f"MAIN: Detectada batería baja ({bat_level:.2f}). Esperando ciclo de carga...")
+            self.battery_was_low = True
+
+        # 2. Comprobar si se ha cargado al completo (DISPARAMOS)
+        if self.battery_was_low and bat_level > 0.95:
+            self.red_battery_done = True
+            self.battery_was_low = False # Reseteamos para que no se dispare mas
+            print(f"MAIN: >>> CICLO COMPLETADO (Estaba baja -> Ahora {bat_level:.2f}). ACTIVANDO FASE FINAL. <<<")
+    
+        # 3º: Transferir posiciones a rutina on si batería roja cargada
+        if on_routine:
+            if self.red_battery_done and self.memory_positions:
+                 if not on_routine.targets:
+                    print("MAIN: Transfiriendo objetivos a Rutina ON...")
+                    on_routine.set_targets(self.memory_positions) 
+                    on_routine.flag = True
+            else:
+                on_routine.flag = False   """
+     # 3. Ejeutar rutinas
+        for k, routine in self.routines.items():
+            if self.external_routine == k:
+                # Pasamos 'force_mission' para que ignore umbrales internos
+                if "load" in k:
+                    routine.step(state, force_mission=True)
+                else:
+                    routine.step(state)
+            else:
+                routine.step(state)
+                routine.flag = False # Desactivamos las rutinas que no son la orden externa
             self.activations[k] = self.get_actuator('joint_velocity_actuator').action 
 
-        # 4. Lógica de continuidad (Evitar el cierre de simulación)
+    # 4. Lógica de continuidad (Evitar el cierre de simulación)
         rt_obj = self.routines.get(self.external_routine)
         if rt_obj and not rt_obj.flag:
             if self.external_routine != "simple_forage":
@@ -293,11 +235,14 @@ class AStoreKeeperLLM2Controller(RobotController):
         return self.coordinate()
     
     def coordinate(self):
-
-        """Mira qué rutina ha elegido el LLM (self.external_routine).
-        Ignora los cálculos de todas las demás.
-        Conecta la salida de la rutina elegida directamente a los motores (joint_velocity_actuator)."""
-
+        """ # Comportamiento secuencial
+        names = [*self.priorities.keys()]
+        names.sort(key=self.priorities.get)
+        for k in names:   
+            if self.routines[k].flag:
+                action_wheels = self.activations[k]
+                self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
+                break"""
         # Prioridad absoluta a la orden externa
         if self.external_routine and self.external_routine in self.routines:
             self.current_routine = self.external_routine
@@ -495,7 +440,7 @@ class TurnYellowLightsOFFController(RobotController):
                 else: 
                     action_wheels = turn_speed * np.array([1, -1])  # Girar derecha
             else:# Luz centrada
-                action_wheels = 0.7 * np.array([1, 1]) # ¡AVANZAR HACIA ELLA!
+                 action_wheels = 0.7 * np.array([1, 1]) # ¡AVANZAR HACIA ELLA!
             pass
         
         # 3. Aplicar acciones
@@ -518,7 +463,7 @@ class TurnYellowLightsONController(RobotController):
         self.targets = [] # posiciones de las luces a encender
         self.proximity_threshold = 0.2
         self.current_target_idx = 0
-
+   
 
     def set_targets(self, positions):
         self.targets = positions
@@ -528,8 +473,8 @@ class TurnYellowLightsONController(RobotController):
     def step(self, state, reward=0):
         
         if self.current_target_idx >= len(self.targets):
-            self.flag = False
-            return
+             self.flag = False
+             return
         
 
         self.flag = True
