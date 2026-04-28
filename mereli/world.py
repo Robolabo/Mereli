@@ -42,6 +42,7 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
     from langchain_core.messages import HumanMessage, SystemMessage
     import json
     import time
+    import re
 
     print(f"🧠 [CEREBRO CENTRAL]: Iniciando proceso hijo. Conectando...")
 
@@ -55,13 +56,13 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
         )
     
         sys_msg = SystemMessage(content=system_rules_content)
-
         print("🧠 [CEREBRO CENTRAL]: Proceso de IA iniciado y listo.")
+    
     except Exception as e:
         print(f"❌ [CEREBRO CENTRAL ERROR FATAL]: No se pudo inicializar ChatOllama: {e}")
         return
 
-    last_processed_sensor_ts = 0
+    last_processed_sensor_ts = -1
     while True:
         current_sensor_ts = shared_data.get('sensor_ts', 0)
         processing = shared_data.get('processing', False)
@@ -90,7 +91,7 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 shared_data['decision_ts'] = current_sensor_ts
                 last_processed_sensor_ts = current_sensor_ts
 
-                print(f"🧠 [CEREBRO CENTRAL]: t={shared_data.get('last_t')} | Decisiones registradas: {decisions}\n")
+            
             except Exception as e:
                 print(f"❌ [CEREBRO CENTRAL ERROR]: {e}")
             finally:
@@ -383,13 +384,22 @@ class World(object):
                 self.llm_shared_data['contexto'] = contexto
                 self.llm_shared_data['sensor_ts'] = self.t
                 self.llm_shared_data['last_t'] = self.t
-                # Leer decisiones
-                if self.llm_shared_data['decision_ts'] > self.t - 50:
-                    decisions = self.llm_shared_data['decision']
-                    for i, robot_name in enumerate(self.robots.keys()):
-                        if i < len(decisions):
-                            self.llm_orders[robot_name] = decisions[i]
-                    print(f"🧠 [CEREBRO CENTRAL]: Decisiones actualizadas: {decisions}")
+                
+            if not hasattr(self, 'last_read_ts'):
+                self.last_read_ts = -1
+                
+            current_decision_ts = self.llm_shared_data.get('decision_ts', 0)
+            if current_decision_ts > self.last_read_ts:
+                decisions = self.llm_shared_data.get('decisions', [])
+                razonamiento = self.llm_shared_data.get('razonamiento', '')
+                memoria = self.llm_shared_data.get('memoria_interna', '')
+                for i, robot_name in enumerate(self.robots.keys()):
+                    if i < len(decisions):
+                        self.llm_orders[robot_name] = decisions[i]
+                self.last_read_ts = current_decision_ts
+                print(f"\n🧠 [RAZONAMIENTO CENTRAL]: {razonamiento}")
+                print(f"📖 [MEMORIA GLOBAL]: {memoria}")
+                print(f"🎯 [DECISIONES | t={self.t}]: {decisions}\n")
 
         #* Render and physics step.
         self.physics_engine.step_physics()
@@ -511,7 +521,7 @@ class World(object):
     #     robot = Epuck()
 
 
-    def build_from_dict(self, world_dict, ann_topology=None):
+    def build_from_dict(self, world_dict, ann_topology=None, user_instructions=""):
         """ 
         Initializes all the entities and adds them to the world/environment using a ``dict`` structure as input.
         The ``world_dict`` fully defines the environment and the instatiated robots and the ``ann_topology`` 
@@ -616,9 +626,9 @@ class World(object):
         # Inicializar LLM central si hay robots con controlador astorekeeperLLMcentral
         has_central_llm = any(robot.controller.__class__.__name__ == 'AStoreKeeperLLMcentralController' for robot in self.robots.values())
         if has_central_llm:
-            self.initialize_central_llm(len(self.robots))
+            self.initialize_central_llm(len(self.robots), user_instructions)
 
-    def initialize_central_llm(self, num_robots):
+    def initialize_central_llm(self, num_robots, user_instructions):
         """ Inicializa el LLM central para controlar múltiples robots. """
         self.llm_manager = Manager()
         self.llm_shared_data = self.llm_manager.dict()
@@ -633,28 +643,31 @@ class World(object):
         self.llm_shared_data['decision_ts'] = 0
         self.llm_shared_data['processing'] = False
 
-        self.llm_rules = """
-        Eres el cerebro central de un equipo de robots e-puck en una misión de recolección y mantenimiento.
+        self.llm_rules = f"""
+        Eres el cerebro central de un equipo de {num_robots} robots e-puck en una misión de recolección y mantenimiento.
         Tu objetivo es asignar tareas a cada robot basado en las instrucciones iniciales del usuario y el estado actual de cada robot.
         
         ROBOTS Y BATERÍAS:
-        Cada robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0. Puedes realizar estas rutinas:
-        - "simple_forage": encuentra objetos y los deposita en zona específica (mejor para robots con batería roja ALTA)
-        - "turn_yellow_lights_OFF": apaga las luces amarillas (hay 3 en total, mejor para robots con batería roja ALTA)
-        - "load_blue_battery": recarga batería azul
-        - "load_red_battery": recarga batería roja (para robots con batería roja BAJA < 0.3)
+        Cada robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0.
+        
+        RUTINAS PERMITIDAS (¡PROHIBIDO USAR OTRAS!)
+        - "simple_forage": encuentra objetos y los deposita en zona específica (modo patrulla por defecto).
+        - "turn_yellow_lights_OFF": apaga las luces amarillas.
+        - "load_blue_battery": recarga batería azul.
+        - "load_red_battery": recarga batería roja.
 
         INSTRUCCIONES DEL USUARIO: {user_instructions}
 
         ESTRUCTURA DE RESPUESTA (JSON):
         {{
         "razonamiento": "Análisis detallado: qué nivel de batería roja tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
-        "memoria_interna": "Diario mental actualizado con: contadores globales (objetos recolectados, luces apagadas), estado de batería de cada robot, tareas asignadas, e historial de decisiones.",
+        "memoria_interna": "Diario mental actualizado con contadores e historial.",
         "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"]  // UNA tarea por robot
         }}
 
         REGLAS DE DECISIÓN:
         1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria roja mas alta.
+        2.El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA.
 
         EJEMPLO 1 - Sensor data: Robot0: bat_roja=0.8, Robot1: bat_roja=0.2, Robot2: bat_roja=0.65
         Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"

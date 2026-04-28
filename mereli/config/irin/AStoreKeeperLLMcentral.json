@@ -1,7 +1,7 @@
 
 {
     "simulation" : {
-	 "timesteps" : 15000,
+	 "timesteps" : 30000,
 	 "trials" : 1,
 	 "start_paused" : false,
 	 "animated_layout" : {
@@ -35,8 +35,8 @@
             "epucks" : {
                 "type" : "epuck",
                 "num_instances" : 3,
-		"positions" : [0,0,0],
-		"orientations" : 0.0,
+		        "positions" : {"type": "random", "low": [-4.0, -4.0, 0.0], "high": [4.0, 4.0, 0.0]},
+                "orientations" : "random",
 		"battery" : [
         { "color": "blue", "init_level": 0.75, "charge_coef": 0.004, "discharge_coef": 0.0002 },
         { "color": "red", "init_level": "random:0.2:0.9", "charge_coef": 0.002, "discharge_coef": 0.0002 }

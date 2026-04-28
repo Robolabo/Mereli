@@ -153,21 +153,20 @@ class AStoreKeeperLLMcentralController(RobotController):
         v_roja = state['red_battery_sensor'][0]
 
         # 1º Leer orden del LLM central
-        if t % 50 == 0:
-            nueva_orden = self.controller_owner.world.llm_orders.get(self.controller_owner.name, "simple_forage")
-            if nueva_orden != self.external_routine:
-                if nueva_orden in self.routines:
-                    print(f" [LLM-CENTRAL] Nueva tarea para {self.controller_owner.name}: {nueva_orden}")
-                    self.external_routine = nueva_orden
-                    self.last_timestamp = t
-                    self.routines[self.external_routine].flag = True
+        nueva_orden = self.controller_owner.world.llm_orders.get(self.controller_owner.name, "simple_forage")
+        if nueva_orden != self.external_routine:
+            if nueva_orden in self.routines:
+                print(f" [LLM-CENTRAL] Nueva tarea para {self.controller_owner.name}: {nueva_orden}")
+                self.external_routine = nueva_orden
+                self.last_timestamp = t
+                self.routines[self.external_routine].flag = True
 
         # Contador de luces apagadas para la rutina turn_yellow_lights_OFF
         n_luces = self.routines['turn_yellow_lights_OFF'].lights_off
         
         # 2. Guardar en el CSV SIEMPRE (sin el if t % 10 == 0) para que todos guarden
         with open(self.log_name, "a") as f:
-            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces}\n")
+            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{val_azul:.6f},{v_roja:.6f},{n_luces}\n")
 
         # 3. Ejecutar rutinas
         for k, routine in self.routines.items():

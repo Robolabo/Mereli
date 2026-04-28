@@ -125,8 +125,18 @@ def generate_plots(folder):
             plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color=color, marker='o', s=100, zorder=5) # Inicio
             plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='red', marker='X', s=100, zorder=5) # Fin
 
+        luces_path = os.path.join(folder, "luces.csv")
+        if os.path.exists(luces_path):
+            df_luces = pd.read_csv(luces_path)
+            for _, luz in df_luces.iterrows():
+                # Determinar el color de la estrella según el nombre de la luz
+                luz_color = 'red' if 'red' in luz['name'].lower() else 'blue' if 'blue' in luz['name'].lower() else 'yellow'
+                plt.scatter(luz['x'], luz['y'], color=luz_color, marker='*', s=400, edgecolor='black', label=f'Luz {luz_color.capitalize()}', zorder=10)
+
         plt.title(f'Trayectorias Superpuestas - {os.path.basename(folder)}')
-        plt.legend()
+        handles, labels = plt.gca().get_legend_handles_labels()
+        by_label = dict(zip(labels, handles))
+        plt.legend(by_label.values(), by_label.keys())
         plt.savefig(os.path.join(folder, "trayectorias.png"))
         plt.close()
 
@@ -248,17 +258,18 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
-    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}))
+        
+    # --- PREGUNTAR AL USUARIO SOLO PARA EL EXP 20 ---
+    instrucciones = "No hay instrucciones específicas. Asigna tareas por defecto."
+    if "AStoreKeeperLLMcentral" in cfg:
+        print("\n🧠 [CEREBRO CENTRAL]: Ingresa instrucciones iniciales para el LLM (ej: 'Manda 2 robots a cargar batería...'): ")
+        entrada = input().strip()
+        if entrada != "":
+            instrucciones = entrada
+        print(f"🧠 [CEREBRO CENTRAL]: Instrucciones enviadas a la IA: {instrucciones}\n")
     
-    # Interacción inicial con LLM si es el experimento central
-    if hasattr(world, 'llm_shared_data') and world.llm_shared_data is not None:
-        print("🧠 [CEREBRO CENTRAL]: Ingresa instrucciones iniciales para el LLM (ej: 'Manda 2 robots a cargar batería y otro a apagar luces'): ")
-        user_instructions = input().strip()
-        if user_instructions == "":
-            user_instructions = "No hay instrucciones específicas. Asigna tareas por defecto."
-        # Actualizar el prompt
-        world.llm_rules = world.llm_rules.replace("{user_instructions}", user_instructions)
-        print(f"🧠 [CEREBRO CENTRAL]: Instrucciones registradas: {user_instructions}")
+    # Pasamos las instrucciones al mundo al construirlo
+    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}), user_instructions=instrucciones)
     
     if log:
         world.config_data_logger(cfg_dict['logging']['data'])
@@ -347,6 +358,19 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         try: 
             for tr in range(trials):
                 world.reset()
+                # --- NUEVO: GUARDAR POSICIÓN DE LAS LUCES TRAS INICIALIZAR ---
+                try:
+                    exp_folder = os.environ.get('CURRENT_EXP_FOLDER', 'outputs')
+                    with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
+                        f.write("name,x,y\n")
+                        # Buscamos en world.hierarchy, que es donde están todos los objetos
+                        for light_name, light_obj in world.hierarchy.items():
+                            if type(light_obj).__name__ == 'LightSource':
+                                # Guardar rojas y azules
+                                if "red" in light_obj.color or "blue" in light_obj.color:  
+                                    f.write(f"{light_name},{light_obj.position[0]:.3f},{light_obj.position[1]:.3f}\n")
+                except Exception as e:
+                    print(f"Error guardando luces: {e}")
                 t0 = time.time()
                 while (world.t < timesteps):
                     if world.t == timesteps - 1:
