@@ -667,7 +667,7 @@ class World(object):
 
         REGLAS DE DECISIÓN:
         1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria roja mas alta.
-        2.El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA.
+        2. El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA. Si después de aplicar los porcentajes o cantidades solicitadas por el usuario quedan robots sin tarea asignada (por ejemplo, por decimales o redondeos): Bajo ninguna circunstancia puedes asignar una rutina que no haya sido solicitada explícitamente en las instrucciones del usuario solo para rellenar huecos.
 
         EJEMPLO 1 - Sensor data: Robot0: bat_roja=0.8, Robot1: bat_roja=0.2, Robot2: bat_roja=0.65
         Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"

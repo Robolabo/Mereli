@@ -96,7 +96,48 @@ def print_welcome():
 
     print("")
 
-def generate_plots(folder):
+def generate_plots_classic(folder):
+    """ Función original para los experimentos antiguos (Ej: 19) """
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    csv_path = os.path.join(folder, "recorrido_robot.csv")
+    if not os.path.exists(csv_path):
+        print(f"⚠️ No se encontró {csv_path}")
+        return
+    
+    df = pd.read_csv(csv_path)
+    
+    # Gráfica Trayectoria
+    plt.figure(figsize=(8, 8))
+    plt.plot(df['x'], df['y'], color='green', alpha=0.6)
+    plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color='red', s=100, label='Inicio', zorder=5)
+    plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='blue', s=100, label='Fin', zorder=5)
+    plt.title(f'Trayectoria - {os.path.basename(folder)}')
+    plt.legend()
+    plt.savefig(os.path.join(folder, "trayectoria.png"))
+    plt.close()
+
+    # Gráfica Batería AZUL
+    if 'bat_azul' in df.columns:
+        plt.figure(figsize=(10, 5))
+        plt.plot(df['step'], df['bat_azul'], color='blue')
+        plt.title(f'Batería Azul - {os.path.basename(folder)}')
+        plt.savefig(os.path.join(folder, "bateria_azul.png"))
+        plt.close()
+
+    # Gráfica Batería ROJA
+    if 'bat_roja' in df.columns:
+        plt.figure(figsize=(10, 5))
+        plt.plot(df['step'], df['bat_roja'], color='red')
+        plt.title(f'Batería Roja - {os.path.basename(folder)}')
+        plt.savefig(os.path.join(folder, "bateria_roja.png"))
+        plt.close()
+        
+    print(f"✅ Gráficas clásicas generadas en {folder}")
+
+def generate_plots_centralized(folder):
     """ Función interna para generar las gráficas tras la simulación """
     import glob
     import os
@@ -129,9 +170,17 @@ def generate_plots(folder):
         if os.path.exists(luces_path):
             df_luces = pd.read_csv(luces_path)
             for _, luz in df_luces.iterrows():
-                # Determinar el color de la estrella según el nombre de la luz
-                luz_color = 'red' if 'red' in luz['name'].lower() else 'blue' if 'blue' in luz['name'].lower() else 'yellow'
-                plt.scatter(luz['x'], luz['y'], color=luz_color, marker='*', s=400, edgecolor='black', label=f'Luz {luz_color.capitalize()}', zorder=10)
+                name_lower = luz['name'].lower()
+                # Pintar luces rojas y azules
+                if 'red' in name_lower:
+                    l_color = 'red'
+                elif 'blue' in name_lower:
+                    l_color = 'blue'
+                elif 'yellow' in name_lower:
+                    l_color = 'gold'
+                else:
+                    continue
+                plt.scatter(luz['x'], luz['y'], color=l_color, marker='*', s=400, edgecolor='black', label=f'Luz {l_color.capitalize()}', zorder=10)
 
         plt.title(f'Trayectorias Superpuestas - {os.path.basename(folder)}')
         handles, labels = plt.gca().get_legend_handles_labels()
@@ -166,6 +215,71 @@ def generate_plots(folder):
         plt.title(f'Batería Roja - {os.path.basename(folder)}')
         plt.legend()
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
+        plt.close()
+
+        # EVOLUCIÓN DE TAREAS ---
+        plt.figure(figsize=(12, 4))
+        
+        # Diccionario de colores fijos para que tenga sentido visual
+        colores_tareas = {
+            'simple_forage': 'mediumseagreen',    # Verde para patrullar/buscar
+            'load_red_battery': 'tomato',         # Rojo para la batería roja
+            'load_blue_battery': 'royalblue',     # Azul para la batería azul
+            'turn_yellow_lights_OFF': 'gold',     # Amarillo para las luces
+            'none': 'lightgrey'
+        }
+        colores_extra = ['purple', 'orange', 'cyan', 'pink', 'brown'] # Por si hay tareas nuevas
+        
+        tareas_legend = set()
+        nombres_robots = []
+        
+        # Ordenamos los archivos para que salgan Robot 0, 1, 2 en orden
+        for i, csv_path in enumerate(sorted(csv_files)): 
+            df = pd.read_csv(csv_path)
+            if len(df) == 0 or 'tarea' not in df.columns: continue
+            
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+            nombres_robots.append(f"Robot {robot_id}")
+            y_pos = i  # Altura en el eje Y para este robot
+            
+            # Agrupar tiempos donde la tarea no cambia para dibujar un solo bloque
+            df['cambio_tarea'] = (df['tarea'] != df['tarea'].shift(1)).cumsum()
+            bloques = df.groupby(['cambio_tarea', 'tarea']).agg(
+                inicio=('step', 'min'),
+                fin=('step', 'max')
+            ).reset_index()
+            
+            for _, bloque in bloques.iterrows():
+                tarea = bloque['tarea']
+                inicio = bloque['inicio']
+                # Le sumamos 1 al fin para que los bloques se toquen perfectamente
+                duracion = (bloque['fin'] - inicio) + 1 
+                
+                # Asignar color
+                if tarea not in colores_tareas:
+                    colores_tareas[tarea] = colores_extra.pop(0) if colores_extra else 'black'
+                
+                color_barra = colores_tareas[tarea]
+                
+                # Dibujar el rectángulo. Solo le ponemos 'label' la primera vez para la leyenda
+                if tarea not in tareas_legend:
+                    plt.barh(y_pos, duracion, left=inicio, height=0.6, color=color_barra, 
+                             label=tarea, edgecolor='black', linewidth=0.5)
+                    tareas_legend.add(tarea)
+                else:
+                    plt.barh(y_pos, duracion, left=inicio, height=0.6, color=color_barra, 
+                             edgecolor='black', linewidth=0.5)
+
+        # Configurar ejes y aspecto
+        plt.yticks(range(len(nombres_robots)), nombres_robots)
+        plt.title(f'Diagrama de Gantt: Asignación de Tareas - {os.path.basename(folder)}')
+        plt.xlabel('Step de Simulación')
+        plt.grid(True, axis='x', linestyle='--', alpha=0.7)
+        
+        # Leyenda bonita fuera de la gráfica
+        plt.legend(title="Rutinas Ejecutadas", loc='center left', bbox_to_anchor=(1, 0.5))
+        plt.tight_layout()
+        plt.savefig(os.path.join(folder, "gantt_tareas.png"))
         plt.close()
 
         # Forzar el print a la consola original para que lo veas sí o sí
@@ -358,19 +472,41 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         try: 
             for tr in range(trials):
                 world.reset()
-                # --- NUEVO: GUARDAR POSICIÓN DE LAS LUCES TRAS INICIALIZAR ---
-                try:
-                    exp_folder = os.environ.get('CURRENT_EXP_FOLDER', 'outputs')
-                    with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
-                        f.write("name,x,y\n")
-                        # Buscamos en world.hierarchy, que es donde están todos los objetos
-                        for light_name, light_obj in world.hierarchy.items():
-                            if type(light_obj).__name__ == 'LightSource':
-                                # Guardar rojas y azules
-                                if "red" in light_obj.color or "blue" in light_obj.color:  
-                                    f.write(f"{light_name},{light_obj.position[0]:.3f},{light_obj.position[1]:.3f}\n")
-                except Exception as e:
-                    print(f"Error guardando luces: {e}")
+                if "AStoreKeeperLLMcentral" in cfg:
+                    # --- NUEVO: GUARDAR POSICIÓN DE LAS LUCES TRAS INICIALIZAR ---
+                    try:
+                        with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
+                            f.write("name,x,y\n")
+                            # Buscamos en world.hierarchy, que es donde están todos los objetos
+                            for light_name, light_obj in world.hierarchy.items():
+                                f.write(f"{light_name},{light_obj.position[0]:.3f},{light_obj.position[1]:.3f}\n")
+                    except Exception as e:
+                        print(f"Error guardando luces: {e}")
+                    #2. Mandar estado inicial a la IA y esperar su respuesta antes de arrancar la simulación
+                    if world.llm_shared_data is not None:
+                        print("\n⏳ [SISTEMA]: Sincronizando con el Cerebro Central...")
+                        
+                        # Generamos el contexto inicial manualmente para que la IA tenga qué leer
+                        contexto_ini = f"t=0 (INICIO DE MISIÓN)\n"
+                        for i, (name, rob) in enumerate(world.robots.items()):
+                            b_azul = rob.state.get('blue_battery_sensor', [0])[0]
+                            b_roja = rob.state.get('red_battery_sensor', [0])[0]
+                            contexto_ini += f"Robot {i} ({name}): bat_azul={b_azul:.2f}, bat_roja={b_roja:.2f}, luces_apagadas=0\n"
+                        
+                        world.llm_shared_data['contexto'] = contexto_ini
+                        world.llm_shared_data['sensor_ts'] = 1 # Activamos la IA
+                        
+                        print("... IA pensando ...")
+                        while len(world.llm_shared_data.get('decisions', [])) == 0:
+                            time.sleep(0.5)
+                        
+                        # Forzamos la lectura de la primera orden antes del primer paso
+                        decisions = world.llm_shared_data.get('decisions', [])
+                        for i, robot_name in enumerate(world.robots.keys()):
+                            if i < len(decisions):
+                                world.llm_orders[robot_name] = decisions[i]
+                        print("🚀 [SISTEMA]: Órdenes recibidas. ¡Arrancando simulación!\n")
+                
                 t0 = time.time()
                 while (world.t < timesteps):
                     if world.t == timesteps - 1:
@@ -382,8 +518,11 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         except KeyboardInterrupt:
             print("\n🛑 Simulación interrumpida.")
         finally:
-            # Esto se ejecuta SIEMPRE al terminar o al pulsar Ctrl+C
-            generate_plots(exp_folder)
+            # EL MAIN DECIDE QUÉ GRÁFICA USAR SEGÚN EL EXPERIMENTO
+            if "AStoreKeeperLLMcentral" in cfg:
+                generate_plots_centralized(exp_folder)
+            else:
+                generate_plots_classic(exp_folder)
 if __name__ == "__main__":
     main()
 

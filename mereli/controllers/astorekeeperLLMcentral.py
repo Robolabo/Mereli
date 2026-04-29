@@ -143,7 +143,7 @@ class AStoreKeeperLLMcentralController(RobotController):
             self.log_name = os.path.join(self.output_dir, f"recorrido_robot_{robot_id}.csv")
             if not os.path.exists(self.log_name):
                 with open(self.log_name, "w") as f:
-                    f.write("step,robot,x,y,bat_azul,bat_roja,num_luces\n")
+                    f.write("step,robot,x,y,bat_azul,bat_roja,num_luces,tarea\n")
             self._log_initialized = True
         
         # Obtener datos actuales
@@ -166,7 +166,7 @@ class AStoreKeeperLLMcentralController(RobotController):
         
         # 2. Guardar en el CSV SIEMPRE (sin el if t % 10 == 0) para que todos guarden
         with open(self.log_name, "a") as f:
-            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{val_azul:.6f},{v_roja:.6f},{n_luces}\n")
+            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{val_azul:.6f},{v_roja:.6f},{n_luces},{self.external_routine}\n")
 
         # 3. Ejecutar rutinas
         for k, routine in self.routines.items():
