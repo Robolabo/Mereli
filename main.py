@@ -143,6 +143,7 @@ def generate_plots_centralized(folder):
     import os
     import pandas as pd
     import matplotlib.pyplot as plt
+    import matplotlib.cm as cm # Añadimos esta importación para los colores dinámicos
 
     # 1. Buscar todos los CSV (0, 1, y 2)
     csv_files = glob.glob(os.path.join(folder, "recorrido_robot_*.csv"))
@@ -150,7 +151,12 @@ def generate_plots_centralized(folder):
         print(f"⚠️ No se encontraron archivos CSV en {folder}")
         return
 
-    colores = ['green', 'orange', 'purple', 'cyan', 'brown']
+    num_robots = len(csv_files)
+    # Si tienes hasta 20 robots usa 'tab20' (colores muy distinguibles), si tienes más, usa 'hsv'
+    if num_robots <= 20:
+        mapa_colores = cm.get_cmap('tab20', num_robots)
+    else:
+        mapa_colores = cm.get_cmap('hsv', num_robots)
 
     try:
         # --- Gráfica Trayectoria Superpuesta ---
@@ -160,7 +166,7 @@ def generate_plots_centralized(folder):
             if len(df) == 0: continue # Evitar error si Ctrl+C cortó el archivo vacío
             
             robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
-            color = colores[i % len(colores)]
+            color = mapa_colores(i)
             
             plt.plot(df['x'], df['y'], color=color, alpha=0.6, label=f'Robot {robot_id}')
             plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color=color, marker='o', s=100, zorder=5) # Inicio
@@ -196,10 +202,11 @@ def generate_plots_centralized(folder):
             if len(df) == 0 or 'bat_azul' not in df.columns: continue
             
             robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
-            plt.plot(df['step'], df['bat_azul'], color=colores[i % len(colores)], label=f'Robot {robot_id}')
+            plt.plot(df['step'], df['bat_azul'], color=mapa_colores(i), label=f'Robot {robot_id}')
 
         plt.title(f'Batería Azul - {os.path.basename(folder)}')
-        plt.legend()
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
         plt.savefig(os.path.join(folder, "bateria_azul.png"))
         plt.close()
 
@@ -210,10 +217,11 @@ def generate_plots_centralized(folder):
             if len(df) == 0 or 'bat_roja' not in df.columns: continue
             
             robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
-            plt.plot(df['step'], df['bat_roja'], color=colores[i % len(colores)], label=f'Robot {robot_id}')
+            plt.plot(df['step'], df['bat_roja'], color=mapa_colores(i), label=f'Robot {robot_id}')
 
         plt.title(f'Batería Roja - {os.path.basename(folder)}')
-        plt.legend()
+        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+        plt.tight_layout()
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
         plt.close()
 

@@ -660,21 +660,21 @@ class World(object):
 
         ESTRUCTURA DE RESPUESTA (JSON):
         {{
-        "razonamiento": "Análisis detallado: qué nivel de batería roja tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
+        "razonamiento": "Análisis detallado: qué nivel de batería azul y roja  tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
         "memoria_interna": "Diario mental actualizado con contadores e historial.",
         "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"]  // UNA tarea por robot
         }}
 
         REGLAS DE DECISIÓN:
-        1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria roja mas alta.
+        1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria azul mas alta.
         2. El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA. Si después de aplicar los porcentajes o cantidades solicitadas por el usuario quedan robots sin tarea asignada (por ejemplo, por decimales o redondeos): Bajo ninguna circunstancia puedes asignar una rutina que no haya sido solicitada explícitamente en las instrucciones del usuario solo para rellenar huecos.
 
-        EJEMPLO 1 - Sensor data: Robot0: bat_roja=0.8, Robot1: bat_roja=0.2, Robot2: bat_roja=0.65
+        EJEMPLO 1 - Sensor data: Robot0: bat_azul=0.8, Robot1: bat_azul=0.2, Robot2: bat_azul=0.65
         Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"
         Respuesta: {{
-                    "razonamiento": "Robot0 tiene bat_roja=0.8 (ALTO) -> ideal para apagar luces. Robot1 tiene bat_roja=0.2 (EMERGENCIA) -> debe cargar. Robot2 tiene bat_roja=0.65 (ALTO) -> puede apagar luces también.",
-                    "memoria_interna": "t=100. Instrucciones: 2 luces, 1 carga. Batería roja: [0.8, 0.2, 0.65]. Asignaciones: Robot0->luces (alto), Robot1->carga (emergencia), Robot2->luces (alto). Contadores: luces_apagadas=2, cargas=1.",
-                    "decisions": ["turn_yellow_lights_OFF", "load_red_battery", "turn_yellow_lights_OFF"]
+                    "razonamiento": "Robot0 tiene bat_azul=0.8 (ALTO) -> ideal para apagar luces. Robot1 tiene bat_azul=0.2 (EMERGENCIA) -> debe cargar. Robot2 tiene bat_azul=0.65 (ALTO) -> puede apagar luces también.",
+                    "memoria_interna": "t=100. Instrucciones: 2 luces, 1 carga. Batería azul: [0.8, 0.2, 0.65]. Asignaciones: Robot0->luces (alto), Robot1->carga (emergencia), Robot2->luces (alto). Contadores: luces_apagadas=2, cargas=1.",
+                    "decisions": ["turn_yellow_lights_OFF", "load_blue_battery", "turn_yellow_lights_OFF"]
                     }}
         """
 

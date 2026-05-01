@@ -25,6 +25,7 @@ class LoadBlueBatteryController(RobotController):
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
         self.charging = False
+        self.sensitivity = 0.4
 
     def step(self, state, reward=0, force_mission=False):
 
@@ -44,20 +45,31 @@ class LoadBlueBatteryController(RobotController):
             print("Flag de carga BLUE DESACTIVADA. Esperando nueva orden...")
             return np.zeros(2)
 
-        if self.charging:
+        if self.charging and self.flag :
+            st_ds = self.get_sensor_reading('distance_sensor')
             ls_read = self.get_sensor_reading('blue_light_sensor')
-            if np.max(ls_read) > 0.9:  #Estamos debajo de la luz
+            if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
-            else:
+            elif np.max(st_ds) > self.sensitivity:
+                if any(st_ds[[0,1]] > self.sensitivity):
+                    action = np.array([1., -1.])  # Gira izquierda
+                elif any(st_ds[[6,7]] > self.sensitivity):
+                    action = np.array([-1., 1.])  # Gira derecha
+                else:
+                    action = np.array([-1., -1.])
+            elif np.max(ls_read) > 0.0:
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
                     action = 0.2*np.array([-1, 1]) 
-                else: 
-                    action = 0.2*np.array([1, -1])
-                # Si ve algo de luz delante, avanza
-                if ls_read[0] > 0 or ls_read[7] > 0:
-                    action = np.array([0.5, 0.5])
+                elif light_left > light_right:
+                    action = 0.2*np.array([1, -1])  # Curva a la izquierda
+                else:
+                    action = np.array([0.7, 0.7])
+            else:
+                # No ve la luz y no hay obstáculos, avanza buscando
+                action = np.array([0.7, 0.7])
+
         self.get_actuator('joint_velocity_actuator').action = action
 
 @controller_registry(name="load_red_battery")
@@ -66,12 +78,13 @@ class LoadRedBatteryController(RobotController):
         super(LoadRedBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
         self.charging = False
+        self.sensitivity = 0.4
 
     def step(self, state, reward=0, force_mission=False):
         #print("ENTRO EN LOAD RED BATTERY")
         bat_lv_array = self.get_sensor_reading('red_battery_sensor')
         bat_lv = bat_lv_array[0]
-
+        
         action = np.array([0,0])
 
         if force_mission:
@@ -86,19 +99,29 @@ class LoadRedBatteryController(RobotController):
             return np.zeros(2)
             
         if self.charging and self.flag :
+            st_ds = self.get_sensor_reading('distance_sensor')
             ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
                 action = np.zeros(2)
-            else:
+            elif np.max(st_ds) > self.sensitivity:
+                if any(st_ds[[0,1]] > self.sensitivity):
+                    action = np.array([1., -1.])  # Gira izquierda
+                elif any(st_ds[[6,7]] > self.sensitivity):
+                    action = np.array([-1., 1.])  # Gira derecha
+                else:
+                    action = np.array([-1., -1.])
+            elif np.max(ls_read) > 0.0:
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
                 if light_right > light_left:
                     action = 0.2*np.array([-1, 1]) 
-                else: 
-                    action = 0.2*np.array([1, -1])
-                # Si ve algo de luz delante, avanza
-                if ls_read[0] > 0 or ls_read[7] > 0:
-                    action = np.array([0.5, 0.5])
+                elif light_left > light_right:
+                    action = 0.2*np.array([1, -1])  # Curva a la izquierda
+                else:
+                    action = np.array([0.7, 0.7])
+            else:
+                # No ve la luz y no hay obstáculos, avanza buscando
+                action = np.array([0.7, 0.7])
 
         self.get_actuator('joint_velocity_actuator').action = action
 
