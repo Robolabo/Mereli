@@ -490,30 +490,43 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                                 f.write(f"{light_name},{light_obj.position[0]:.3f},{light_obj.position[1]:.3f}\n")
                     except Exception as e:
                         print(f"Error guardando luces: {e}")
-                    #2. Mandar estado inicial a la IA y esperar su respuesta antes de arrancar la simulación
+                     #2. Mandar estado inicial a la IA y esperar su respuesta antes de arrancar la simulación
                     if world.llm_shared_data is not None:
                         print("\n⏳ [SISTEMA]: Sincronizando con el Cerebro Central...")
-                        
-                        # Generamos el contexto inicial manualmente para que la IA tenga qué leer
-                        contexto_ini = f"t=0 (INICIO DE MISIÓN)\n"
-                        for i, (name, rob) in enumerate(world.robots.items()):
-                            b_azul = rob.state.get('blue_battery_sensor', [0])[0]
-                            b_roja = rob.state.get('red_battery_sensor', [0])[0]
+                       
+                        # --- GENERAMOS EL CONTEXTO LEYENDO TUS CLASES REALES ---
+                        contexto_ini = f"t=0 (INICIO DE MISIÓN CON DATOS REALES)\n"
+                        nombres_ordenados = sorted(world.robots.keys())
+                        for i, name in enumerate(nombres_ordenados):
+                            rob = world.robots[name]
+                           
+                            b_azul = 0.0
+                            b_roja = 0.0
+                            # Magia pura: Leemos las variables exactas que me has pasado
+                            if getattr(rob, 'battery_enabled', False) and rob.battery is not None:
+                                for color_bat, nivel in zip(rob.battery_colors, rob.battery.level):
+                                    if color_bat == 'blue': b_azul = nivel
+                                    if color_bat == 'red': b_roja = nivel
+                           
                             contexto_ini += f"Robot {i} ({name}): bat_azul={b_azul:.2f}, bat_roja={b_roja:.2f}, luces_apagadas=0\n"
-                        
+                       
+                        # Enviamos el contexto y "despertamos" a la IA
                         world.llm_shared_data['contexto'] = contexto_ini
-                        world.llm_shared_data['sensor_ts'] = 1 # Activamos la IA
-                        
-                        print("... IA pensando ...")
-                        while len(world.llm_shared_data.get('decisions', [])) == 0:
+                        world.llm_shared_data['sensor_ts'] = 1
+                       
+                        print("... IA pensando con datos reales ...")
+                       
+                        # --- BUCLE DE ESPERA SEGURO ---
+                        while world.llm_shared_data.get('decision_ts', 0) == 0:
                             time.sleep(0.5)
-                        
-                        # Forzamos la lectura de la primera orden antes del primer paso
+                       
+                        # --- APLICAMOS LAS DECISIONES AL MUNDO ---
                         decisions = world.llm_shared_data.get('decisions', [])
-                        for i, robot_name in enumerate(world.robots.keys()):
+                        for i, robot_name in enumerate(nombres_ordenados):
                             if i < len(decisions):
                                 world.llm_orders[robot_name] = decisions[i]
-                        print("🚀 [SISTEMA]: Órdenes recibidas. ¡Arrancando simulación!\n")
+                               
+                        print("🚀 [SISTEMA]: Órdenes recibidas. ¡Arrancando simulación!\n") 
                 
                 t0 = time.time()
                 while (world.t < timesteps):

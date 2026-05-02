@@ -62,7 +62,7 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
         print(f"❌ [CEREBRO CENTRAL ERROR FATAL]: No se pudo inicializar ChatOllama: {e}")
         return
 
-    last_processed_sensor_ts = -1
+    last_processed_sensor_ts = 0
     while True:
         current_sensor_ts = shared_data.get('sensor_ts', 0)
         processing = shared_data.get('processing', False)

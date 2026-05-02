@@ -45,7 +45,7 @@ class LoadBlueBatteryController(RobotController):
             print("Flag de carga BLUE DESACTIVADA. Esperando nueva orden...")
             return np.zeros(2)
 
-        if self.charging and self.flag :
+        if self.charging:
             st_ds = self.get_sensor_reading('distance_sensor')
             ls_read = self.get_sensor_reading('blue_light_sensor')
             if np.max(ls_read) > 0.9:
@@ -56,18 +56,20 @@ class LoadBlueBatteryController(RobotController):
                 elif any(st_ds[[6,7]] > self.sensitivity):
                     action = np.array([-1., 1.])  # Gira derecha
                 else:
-                    action = np.array([-1., -1.])
+                    action = np.array([1., 1.])
             elif np.max(ls_read) > 0.0:
-                light_left = np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                if light_right > light_left:
-                    action = 0.2*np.array([-1, 1]) 
-                elif light_left > light_right:
-                    action = 0.2*np.array([1, -1])  # Curva a la izquierda
+                if ls_read[0] * ls_read[7] == 0: # Si la luz no está centrada en ambos ojos frontales
+                    light_left = np.sum(ls_read[[7,6,5,4]])
+                    light_right = np.sum(ls_read[[0,1,2,3]])
+                    if light_right > light_left:
+                        action = 0.1 * np.array([-1., 1.]) 
+                    else: 
+                        action = 0.1 * np.array([1., -1.]) 
                 else:
+                    # Luz centrada, ¡A por ella!
                     action = np.array([0.7, 0.7])
             else:
-                # No ve la luz y no hay obstáculos, avanza buscando
+                # Exploración: Búsqueda en arco para barrer el mapa
                 action = np.array([0.7, 0.7])
 
         self.get_actuator('joint_velocity_actuator').action = action
@@ -98,7 +100,7 @@ class LoadRedBatteryController(RobotController):
             print("Flag de carga RED DESACTIVADA. Esperando nueva orden...")
             return np.zeros(2)
             
-        if self.charging and self.flag :
+        if self.charging :
             st_ds = self.get_sensor_reading('distance_sensor')
             ls_read = self.get_sensor_reading('red_light_sensor')
             if np.max(ls_read) > 0.9:
@@ -109,7 +111,7 @@ class LoadRedBatteryController(RobotController):
                 elif any(st_ds[[6,7]] > self.sensitivity):
                     action = np.array([-1., 1.])  # Gira derecha
                 else:
-                    action = np.array([-1., -1.])
+                    action = np.array([1., 1.])
             elif np.max(ls_read) > 0.0:
                 light_left = np.sum(ls_read[[7,6,5,4]])
                 light_right = np.sum(ls_read[[0,1,2,3]])
