@@ -113,17 +113,20 @@ class LoadRedBatteryController(RobotController):
                 else:
                     action = np.array([1., 1.])
             elif np.max(ls_read) > 0.0:
-                light_left = np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                if light_right > light_left:
-                    action = 0.2*np.array([-1, 1]) 
-                elif light_left > light_right:
-                    action = 0.2*np.array([1, -1])  # Curva a la izquierda
+                if ls_read[0] * ls_read[7] == 0: # Si la luz no está centrada en ambos ojos frontales
+                    light_left = np.sum(ls_read[[7,6,5,4]])
+                    light_right = np.sum(ls_read[[0,1,2,3]])
+                    if light_right > light_left:
+                        action = 0.1 * np.array([-1., 1.]) 
+                    else: 
+                        action = 0.1 * np.array([1., -1.]) 
                 else:
+                    # Luz centrada, ¡A por ella!
                     action = np.array([0.7, 0.7])
             else:
-                # No ve la luz y no hay obstáculos, avanza buscando
+                # Exploración: Búsqueda en arco para barrer el mapa
                 action = np.array([0.7, 0.7])
+
 
         self.get_actuator('joint_velocity_actuator').action = action
 
