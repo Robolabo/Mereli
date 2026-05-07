@@ -6,6 +6,18 @@ from mereli.controllers import RobotController
 from mereli.register import controller_registry, controllers
 
 
+@controller_registry(name="stop")
+class StopController(RobotController):
+    """Skill basica: detener el robot mientras espera una orden."""
+
+    def __init__(self, *args, **kwargs):
+        super(StopController, self).__init__(*args, **kwargs)
+        self.flag = True
+
+    def step(self, state, reward=0.0):
+        self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
+
+
 @controller_registry(name="exploration_group")
 class ExplorationGroupController(RobotController):
     """Controller de subsumpcion para la futura arquitectura jerarquica.
@@ -15,15 +27,8 @@ class ExplorationGroupController(RobotController):
     ruedas cuando no hay obstaculos cerca.
     """
 
-    def __init__(
-        self,
-        *args,
-        survival_task="basic_obstacle_avoider",
-        secondary_task="navigate",
-        survival_params=None,
-        secondary_params=None,
-        **kwargs
-    ):
+    def __init__(self, *args, survival_task="basic_obstacle_avoider",
+        secondary_task="navigate", survival_params=None, secondary_params=None, **kwargs):
         super(ExplorationGroupController, self).__init__(*args, **kwargs)
 
         # Permitimos configurar las dos capas desde el JSON 

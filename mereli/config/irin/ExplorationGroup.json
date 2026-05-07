@@ -32,7 +32,7 @@
                     "name": "exploration_group",
                     "params": {
                         "survival_task": "basic_obstacle_avoider",
-                        "secondary_task": "navigate",
+                        "secondary_task": "stop",
                         "survival_params": {
                             "sensitivity": 0.4,
                             "no_obstacle_action": [1.0, 1.0]
