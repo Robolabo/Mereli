@@ -59,6 +59,32 @@ class OrientRedLightController(RobotController):
         self.get_actuator("joint_velocity_actuator").action = action
 
 
+@controller_registry(name="approach_red_light")
+class ApproachRedLightController(RobotController):
+    """Skill basica: avanzar recto hasta quedar cerca de una luz roja."""
+
+    def __init__(self, *args, forward_speed=0.5, near_threshold=0.9, **kwargs):
+        super(ApproachRedLightController, self).__init__(*args, **kwargs)
+        self.forward_speed = forward_speed
+        self.near_threshold = near_threshold
+        self.flag = True
+        self.light_found = False
+
+    def step(self, state, reward=0.0):
+        ls_read = self.get_sensor_reading("red_light_sensor")
+
+        if np.max(ls_read) >= self.near_threshold: # Si la luz roja es lo suficientemente intensa, consideramos que estamos cerca y paramos.
+            action = np.array([0.0, 0.0])
+            if not self.light_found:
+                print(f"[approach_red_light] Luz encontrada en step {self.controller_owner.t}")
+            self.light_found = True
+        else: # Si no estamos cerca, avanzamos recto para acercarnos a la luz.
+            action = self.forward_speed * np.array([1.0, 1.0])
+            self.light_found = False
+
+        self.get_actuator("joint_velocity_actuator").action = action
+
+
 @controller_registry(name="exploration_group")
 class ExplorationGroupController(RobotController):
     """Controller de subsumpcion para la futura arquitectura jerarquica.

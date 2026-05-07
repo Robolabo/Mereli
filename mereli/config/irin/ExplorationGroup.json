@@ -28,12 +28,12 @@
                 "type": "epuck",
                 "num_instances": 1,
                 "positions": [0, 0, 0],
-                "orientations": "random",
+                "orientations": 0.0,
                 "controller": {
                     "name": "exploration_group",
                     "params": {
                         "survival_task": "basic_obstacle_avoider",
-                        "secondary_task": "orient_red_light",
+                        "secondary_task": "approach_red_light",
                         "survival_params": {
                             "sensitivity": 0.4,
                             "no_obstacle_action": [1.0, 1.0]
@@ -51,7 +51,7 @@
             "light_red": {
                 "type": "light_source",
                 "num_instances": 1,
-                "positions": {"type": "random", "low": [-1.5, -1.5, 0.5], "high": [1.5, 1.5, 0.5]},
+                "positions": {"type": "random", "low": [0.8, 0.0, 0.5], "high": [1.6, 0.0, 0.5]},
                 "params": {"range": 5, "color": "red"}
             }
         }
