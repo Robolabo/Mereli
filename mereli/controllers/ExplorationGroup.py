@@ -18,6 +18,47 @@ class StopController(RobotController):
         self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
 
 
+@controller_registry(name="orient_red_light")
+class OrientRedLightController(RobotController):
+    """Skill basica: rotar en el sitio hasta mirar hacia una luz roja."""
+
+    def __init__(self, *args, angular_speed=0.2, alignment_tolerance=0.05, **kwargs):
+        super(OrientRedLightController, self).__init__(*args, **kwargs)
+        self.angular_speed = angular_speed
+        self.alignment_tolerance = alignment_tolerance
+        self.flag = True
+        self.centered = False
+
+    def step(self, state, reward=0.0):
+        ls_read = self.get_sensor_reading("red_light_sensor")
+        action = np.array([0.0, 0.0])
+        light_centered = False
+
+        if np.max(ls_read) == 0.0: # Si no ve luz roja, gira en el sitio para buscarla.
+            action = self.angular_speed * np.array([1.0, -1.0])
+        else: # Si ve luz roja, calcula si esta centrada o si tiene que girar a la izquierda o derecha para centrarla.
+            light_left = np.sum(ls_read[[7, 6, 5, 4]])
+            light_right = np.sum(ls_read[[0, 1, 2, 3]])
+            front_light = np.sum(ls_read[[0, 7]])
+
+            if front_light >= max(light_left, light_right): # Si la luz frontal es la mas intensa, consideramos que esta centrada aunque haya algo de ruido en los laterales.
+                action = np.array([0.0, 0.0])
+                light_centered = True
+            elif abs(light_right - light_left) <= self.alignment_tolerance: # Si la diferencia entre luz izquierda y derecha es pequeña, consideramos que esta centrada aunque no haya mucha luz frontal.
+                action = np.array([0.0, 0.0])
+                light_centered = True
+            elif light_right > light_left: # Si la luz es mas intensa a la derecha, gira a la derecha para centrarla.
+                action = self.angular_speed * np.array([-1.0, 1.0])
+            else:
+                action = self.angular_speed * np.array([1.0, -1.0])
+
+        if light_centered and not self.centered: # Solo imprimimos el mensaje la primera vez que detectamos que la luz esta centrada, para no spamear la consola.
+            print(f"[orient_red_light] Luz roja centrada en step {self.controller_owner.t}")
+        self.centered = light_centered
+
+        self.get_actuator("joint_velocity_actuator").action = action
+
+
 @controller_registry(name="exploration_group")
 class ExplorationGroupController(RobotController):
     """Controller de subsumpcion para la futura arquitectura jerarquica.

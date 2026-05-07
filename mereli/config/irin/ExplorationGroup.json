@@ -6,10 +6,11 @@
         "animated_layout": {
             "enabled": true,
             "figsize": [5, 7],
-            "grid": "A;B",
+            "grid": "A;B;C",
             "plots": [
                 {"plot_type": "sensor_lineplot", "sensor": "distance_sensor", "name": "A", "sectors": [0, 7], "plot_buffer": 100},
-                {"plot_type": "epuck_polar", "name": "B"}
+                {"plot_type": "sensor_lineplot", "sensor": "red_light_sensor", "name": "B", "sectors": [0, 7], "plot_buffer": 100},
+                {"plot_type": "epuck_polar", "name": "C"}
             ]
         }
     },
@@ -26,13 +27,13 @@
             "epucks": {
                 "type": "epuck",
                 "num_instances": 1,
-                "positions": {"type": "random", "low": [-2.0, -2.0], "high": [2.0, 2.0]},
+                "positions": [0, 0, 0],
                 "orientations": "random",
                 "controller": {
                     "name": "exploration_group",
                     "params": {
                         "survival_task": "basic_obstacle_avoider",
-                        "secondary_task": "stop",
+                        "secondary_task": "orient_red_light",
                         "survival_params": {
                             "sensitivity": 0.4,
                             "no_obstacle_action": [1.0, 1.0]
@@ -40,11 +41,18 @@
                     }
                 },
                 "sensors": {
+                    "light_sensor": {"n_sectors": 8, "range": 5},
                     "distance_sensor": {"n_sectors": 8, "range": 0.8}
                 },
                 "actuators": {
                     "joint_velocity_actuator": {"joint_ids": [0, 1], "max_velocity": 6.28}
                 }
+            },
+            "light_red": {
+                "type": "light_source",
+                "num_instances": 1,
+                "positions": {"type": "random", "low": [-1.5, -1.5, 0.5], "high": [1.5, 1.5, 0.5]},
+                "params": {"range": 5, "color": "red"}
             }
         }
     }
