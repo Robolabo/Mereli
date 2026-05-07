@@ -24,7 +24,7 @@ def get_irin_exp(num):
     experiments = ["irin/HelloWorld.json", "irin/TestWheels.json", "irin/TestContact.json", "irin/TestProximity.json", "irin/TestRedLightSensor.json",
      "irin/TestBlueLightSensor.json", "irin/TestGreenLightSensor.json", "irin/TestLED.json", "irin/TestBattery.json", 
      "irin/TestEncoder.json", "irin/ObstacleAvoidance.json", "irin/SubsumptionLightExp.json", "irin/SubsumptionGarbageExp.json", 
-     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json", "irin/AStorekeeperExp.json", "irin/SubsumptionLucia.json", "irin/AStorekeeperExpLLM", "irin/AStorekeeperExpLLM2", "irin/AStoreKeeperLLMcentral"]
+     "irin/MotorSchemas1Exp.json", "irin/MotorSchemas2Exp.json", "irin/NeuronEvoAvoidExp.json", "irin/AStorekeeperExp.json", "irin/SubsumptionLucia.json", "irin/AStorekeeperExpLLM", "irin/AStorekeeperExpLLM2", "irin/AStoreKeeperLLMcentral", "irin/ExplorationGroup.json"]
     if num > len(experiments):
         print('Experiment Code does not exist!')
         exit(0)
@@ -92,6 +92,8 @@ def print_welcome():
     print("| ASTOREKEEPERLLM2 DICT| 19   |  mereli/config/irin/AStorekeeperExpLLM2.json  |")
     print("+----------------------+------+------------------------------------------------+")
     print("| ASTOREKEEPERLLMCENTRAL| 20  |  mereli/config/irin/AStoreKeeperLLMcentral.json|")
+    print("+----------------------+------+------------------------------------------------+")
+    print("| EXPLORATION GROUP    | 21   |  mereli/config/irin/ExplorationGroup.json     |")
     print("+----------------------+------+------------------------------------------------+")
 
     print("")
