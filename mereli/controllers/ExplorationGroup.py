@@ -85,6 +85,28 @@ class ApproachRedLightController(RobotController):
         self.get_actuator("joint_velocity_actuator").action = action
 
 
+@controller_registry(name="load_blue_battery")
+class LoadBlueBatteryController(RobotController):
+    """Skill basica: esperar quieto hasta cargar la bateria azul."""
+
+    def __init__(self, *args, charge_threshold=0.9, **kwargs):
+        super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
+        self.charge_threshold = charge_threshold
+        self.flag = True
+        self.charged = False
+
+    def step(self, state, reward=0.0):
+        bat_lv = self.get_sensor_reading("blue_battery_sensor")[0]
+        self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
+
+        if bat_lv >= self.charge_threshold:
+            if not self.charged:
+                print("Bateria cargada")
+            self.charged = True
+        else:
+            self.charged = False
+
+
 @controller_registry(name="exploration_group")
 class ExplorationGroupController(RobotController):
     """Controller de subsumpcion para la futura arquitectura jerarquica.

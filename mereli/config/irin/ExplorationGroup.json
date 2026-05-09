@@ -9,7 +9,7 @@
             "grid": "A;B;C",
             "plots": [
                 {"plot_type": "sensor_lineplot", "sensor": "distance_sensor", "name": "A", "sectors": [0, 7], "plot_buffer": 100},
-                {"plot_type": "sensor_lineplot", "sensor": "red_light_sensor", "name": "B", "sectors": [0, 7], "plot_buffer": 100},
+                {"plot_type": "sensor_lineplot", "sensor": "blue_light_sensor", "name": "B", "sectors": [0, 7], "plot_buffer": 100},
                 {"plot_type": "epuck_polar", "name": "C"}
             ]
         }
@@ -29,11 +29,14 @@
                 "num_instances": 1,
                 "positions": [0, 0, 0],
                 "orientations": 0.0,
+                "battery": [
+                    {"color": "blue", "init_level": 0.65, "charge_coef": 0.004, "discharge_coef": 0.0002}
+                ],
                 "controller": {
                     "name": "exploration_group",
                     "params": {
                         "survival_task": "basic_obstacle_avoider",
-                        "secondary_task": "approach_red_light",
+                        "secondary_task": "load_blue_battery",
                         "survival_params": {
                             "sensitivity": 0.4,
                             "no_obstacle_action": [1.0, 1.0]
@@ -42,17 +45,18 @@
                 },
                 "sensors": {
                     "light_sensor": {"n_sectors": 8, "range": 5},
-                    "distance_sensor": {"n_sectors": 8, "range": 0.8}
+                    "distance_sensor": {"n_sectors": 8, "range": 0.8},
+                    "blue_battery_sensor": {}
                 },
                 "actuators": {
                     "joint_velocity_actuator": {"joint_ids": [0, 1], "max_velocity": 6.28}
                 }
             },
-            "light_red": {
+            "light_blue": {
                 "type": "light_source",
                 "num_instances": 1,
-                "positions": {"type": "random", "low": [0.8, 0.0, 0.5], "high": [1.6, 0.0, 0.5]},
-                "params": {"range": 5, "color": "red"}
+                "positions": {"type": "random", "low": [-0.2, -0.2, 0.5], "high": [0.2, 0.2, 0.5]},
+                "params": {"range": 5, "color": "blue"}
             }
         }
     }
