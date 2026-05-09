@@ -107,6 +107,56 @@ class LoadBlueBatteryController(RobotController):
             self.charged = False
 
 
+@controller_registry(name="annotate_red_light_position")
+class AnnotateRedLightPositionController(RobotController):
+    """Skill basica: anotar desde donde se percibe una luz roja cercana."""
+
+    def __init__(self, *args, detection_threshold=0.9, **kwargs):
+        super(AnnotateRedLightPositionController, self).__init__(*args, **kwargs)
+        self.detection_threshold = detection_threshold
+        self.flag = True
+        self.light_position_printed = False
+        self.annotation_printed = False
+
+    def step(self, state, reward=0.0):
+        self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
+        self.print_red_light_position_once()
+
+        ls_read = self.get_sensor_reading("red_light_sensor")
+        intensity = float(np.max(ls_read))
+        if intensity < self.detection_threshold or self.annotation_printed:
+            return
+
+        sector = int(np.argmax(ls_read))
+        robot_pos = self.controller_owner.position
+        sensor = self.controller_owner.sensors["light_sensor"]
+        global_angle = sensor.directions(self.controller_owner.orientation[-1])[sector]
+        global_angle_deg = np.degrees(global_angle)
+
+        print(
+            "[annotate_red_light_position] "
+            f"Posicion vision=({robot_pos[0]:.3f}, {robot_pos[1]:.3f}), "
+            f"intensidad={intensity:.3f}, "
+            f"sector={sector}, "
+            f"angulo_global={global_angle:.3f} rad ({global_angle_deg:.1f} deg)"
+        )
+        self.annotation_printed = True
+
+    def print_red_light_position_once(self):
+        if self.light_position_printed:
+            return
+
+        for light_id, light_data in self.controller_owner.physics_client.luminous_objects.items():
+            if light_data.get("color") == "red":
+                light_pos = self.controller_owner.physics_client.get_body_position(light_id, 0)
+                print(
+                    "[annotate_red_light_position] "
+                    f"Posicion inicial luz roja=({light_pos[0]:.3f}, {light_pos[1]:.3f}, {light_pos[2]:.3f})"
+                )
+                self.light_position_printed = True
+                return
+
+
 @controller_registry(name="exploration_group")
 class ExplorationGroupController(RobotController):
     """Controller de subsumpcion para la futura arquitectura jerarquica.
