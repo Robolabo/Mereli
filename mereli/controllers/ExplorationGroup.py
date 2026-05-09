@@ -111,7 +111,7 @@ class LoadBlueBatteryController(RobotController):
 class AnnotateRedLightPositionController(RobotController):
     """Skill basica: anotar desde donde se percibe una luz roja cercana."""
 
-    def __init__(self, *args, detection_threshold=0.9, **kwargs):
+    def __init__(self, *args, detection_threshold=0.75, **kwargs):
         super(AnnotateRedLightPositionController, self).__init__(*args, **kwargs)
         self.detection_threshold = detection_threshold
         self.flag = True

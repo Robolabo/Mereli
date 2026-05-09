@@ -51,8 +51,15 @@
             "light_red": {
                 "type": "light_source",
                 "num_instances": 1,
-                "positions": {"type": "random", "low": [-0.15, -0.15, 0.5], "high": [0.15, 0.15, 0.5]},
+                "positions": [0.5, 0.0, 0.5],
                 "params": {"range": 5, "color": "red"}
+            },
+            "wall_between_robot_and_light": {
+                "type": "wall",
+                "num_instances": 1,
+                "positions": [0.25, 0.0, 0.1],
+                "orientations": 0.0,
+                "params": {"height": 0.6, "width": 0.05, "depth": 0.2}
             }
         }
     }
