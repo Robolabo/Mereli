@@ -98,7 +98,7 @@ def print_welcome():
 
     print("")
 
-def generate_plots_classic(folder):
+def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
     import os
     import pandas as pd
@@ -116,8 +116,32 @@ def generate_plots_classic(folder):
     plt.plot(df['x'], df['y'], color='green', alpha=0.6)
     plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color='red', s=100, label='Inicio', zorder=5)
     plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='blue', s=100, label='Fin', zorder=5)
+    luces_path = os.path.join(folder, "luces.csv")
+    if os.path.exists(luces_path):
+        df_luces = pd.read_csv(luces_path)
+        for _, luz in df_luces.iterrows():
+            name_lower = luz['name'].lower()
+            if 'red' in name_lower:
+                plt.scatter(luz['x'], luz['y'], color='red', marker='*', s=400,
+                            edgecolor='black', label='Luz roja', zorder=10)
+            elif 'blue' in name_lower:
+                plt.scatter(luz['x'], luz['y'], color='blue', marker='*', s=400,
+                            edgecolor='black', label='Luz azul', zorder=10)
+            elif 'yellow' in name_lower:
+                plt.scatter(luz['x'], luz['y'], color='gold', marker='*', s=400,
+                            edgecolor='black', label='Luz amarilla', zorder=10)
     plt.title(f'Trayectoria - {os.path.basename(folder)}')
-    plt.legend()
+    if arena_params:
+        width = arena_params.get('width')
+        height = arena_params.get('height')
+        if width is not None and height is not None:
+            plt.xlim(-width / 2, width / 2)
+            plt.ylim(-height / 2, height / 2)
+    plt.gca().set_aspect('equal', adjustable='box')
+    plt.grid(True, linestyle='--', alpha=0.3)
+    handles, labels = plt.gca().get_legend_handles_labels()
+    by_label = dict(zip(labels, handles))
+    plt.legend(by_label.values(), by_label.keys())
     plt.savefig(os.path.join(folder, "trayectoria.png"))
     plt.close()
 
@@ -135,6 +159,49 @@ def generate_plots_classic(folder):
         plt.plot(df['step'], df['bat_roja'], color='red')
         plt.title(f'Batería Roja - {os.path.basename(folder)}')
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
+        plt.close()
+
+    if 'tarea' in df.columns:
+        plt.figure(figsize=(12, 3))
+        colores_tareas = {
+            'basic_obstacle_avoider': 'tomato',
+            'stop': 'lightgrey',
+            'navigate': 'mediumseagreen',
+            'orient_red_light': 'orange',
+            'approach_red_light': 'gold',
+            'load_blue_battery': 'royalblue',
+            'annotate_red_light_position': 'purple',
+            'none': 'lightgrey'
+        }
+        colores_extra = ['cyan', 'pink', 'brown', 'olive', 'black']
+        tareas_legend = set()
+
+        df['cambio_tarea'] = (df['tarea'] != df['tarea'].shift(1)).cumsum()
+        bloques = df.groupby(['cambio_tarea', 'tarea']).agg(
+            inicio=('step', 'min'),
+            fin=('step', 'max')
+        ).reset_index()
+
+        for _, bloque in bloques.iterrows():
+            tarea = bloque['tarea']
+            inicio = bloque['inicio']
+            duracion = (bloque['fin'] - inicio) + 1
+            if tarea not in colores_tareas:
+                colores_tareas[tarea] = colores_extra.pop(0) if colores_extra else 'black'
+
+            label = tarea if tarea not in tareas_legend else None
+            plt.barh(0, duracion, left=inicio, height=0.55,
+                     color=colores_tareas[tarea], label=label,
+                     edgecolor='black', linewidth=0.5)
+            tareas_legend.add(tarea)
+
+        plt.yticks([0], ['Robot 0'])
+        plt.title(f'Diagrama de Gantt: Tareas - {os.path.basename(folder)}')
+        plt.xlabel('Step de Simulación')
+        plt.grid(True, axis='x', linestyle='--', alpha=0.7)
+        plt.legend(title="Rutinas Ejecutadas", loc='center left', bbox_to_anchor=(1, 0.5))
+        plt.tight_layout()
+        plt.savefig(os.path.join(folder, "gantt_tareas.png"))
         plt.close()
         
     print(f"✅ Gráficas clásicas generadas en {folder}")
@@ -482,6 +549,15 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         try: 
             for tr in range(trials):
                 world.reset()
+                try:
+                    with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
+                        f.write("name,x,y\n")
+                        for light_name, light_obj in world.hierarchy.items():
+                            if 'light' in light_name.lower() and hasattr(light_obj, 'position'):
+                                f.write(f"{light_name},{light_obj.position[0]:.3f},{light_obj.position[1]:.3f}\n")
+                except Exception as e:
+                    print(f"Error guardando luces: {e}")
+
                 if "AStoreKeeperLLMcentral" in cfg:
                     # --- NUEVO: GUARDAR POSICIÓN DE LAS LUCES TRAS INICIALIZAR ---
                     try:
@@ -545,7 +621,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             if "AStoreKeeperLLMcentral" in cfg:
                 generate_plots_centralized(exp_folder)
             else:
-                generate_plots_classic(exp_folder)
+                generate_plots_classic(exp_folder, arena_params=arena_params)
 if __name__ == "__main__":
     main()
 
