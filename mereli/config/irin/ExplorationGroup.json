@@ -1,6 +1,6 @@
 {
     "simulation": {
-        "timesteps": 10000,
+        "timesteps": 20000,
         "trials": 1,
         "start_paused": false,
         "animated_layout": {
@@ -51,8 +51,12 @@
             },
             "light_red": {
                 "type": "light_source",
-                "num_instances": 1,
-                "positions": {"type": "random", "low": [-3, -3, 0.5], "high": [3, 3, 0.5]},
+                "num_instances": 3,
+                "positions": [
+                    [-2.7, -2.7, 0.5],
+                    [2.7, -2.7, 0.5],
+                    [2.7, 2.7, 0.5]
+                ],
                 "params": {"range": 5, "color": "red"}
             }
         }

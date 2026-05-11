@@ -100,9 +100,11 @@ def print_welcome():
 
 def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
+    import ast
     import os
     import pandas as pd
     import matplotlib.pyplot as plt
+    import re
 
     csv_path = os.path.join(folder, "recorrido_robot.csv")
     if not os.path.exists(csv_path):
@@ -130,6 +132,32 @@ def generate_plots_classic(folder, arena_params=None):
             elif 'yellow' in name_lower:
                 plt.scatter(luz['x'], luz['y'], color='gold', marker='*', s=400,
                             edgecolor='black', label='Luz amarilla', zorder=10)
+
+    consola_path = os.path.join(folder, "consola.log")
+    if os.path.exists(consola_path):
+        found_pattern = re.compile(r"\[found_red_lights\]\s+([^:]+):\s+(\{.*\})")
+        with open(consola_path, "r") as f:
+            for line in f:
+                match = found_pattern.search(line)
+                if not match:
+                    continue
+                try:
+                    found_light = ast.literal_eval(match.group(2))
+                except (SyntaxError, ValueError):
+                    continue
+                light_position = found_light.get("light_position")
+                if light_position is None:
+                    continue
+                plt.scatter(
+                    light_position[0],
+                    light_position[1],
+                    color='deeppink',
+                    marker='o',
+                    s=120,
+                    edgecolor='black',
+                    label='Luz ubicada por robot',
+                    zorder=11,
+                )
     plt.title(f'Trayectoria - {os.path.basename(folder)}')
     if arena_params:
         width = arena_params.get('width')

@@ -1,7 +1,5 @@
 import os
 import json
-import time
-from multiprocessing import Process, Manager
 
 import numpy as np
 
@@ -9,66 +7,17 @@ from mereli.controllers import RobotController
 from mereli.register import controller_registry, controllers
 
 
-def exploration_llm_loop(shared_data, system_rules_content, base_url, model_name):
-    """Proceso local del LLM individual.
+def angle_difference(a, b):
+    """Diferencia angular minima entre dos angulos en radianes."""
+    return (a - b + np.pi) % (2 * np.pi) - np.pi
 
-    Sigue el patron de astorekeeperLLM2: el controller principal escribe el
-    contexto en una pizarra compartida y este proceso responde con un JSON
-    que contiene thought + action.
-    """
-    try:
-        from langchain_ollama import ChatOllama
-        from langchain_core.messages import HumanMessage, SystemMessage
 
-        # El LLM vive en un proceso aparte para no bloquear cada step fisico del
-        # simulador mientras razona.
-        llm = ChatOllama(
-            model=model_name,
-            temperature=0,
-            base_url=base_url,
-            keep_alive="5m"
-        )
-        sys_msg = SystemMessage(content=system_rules_content)
-        print("[LLM LOCAL]: Proceso iniciado.")
-    except Exception as exc:
-        print(f"[LLM LOCAL ERROR FATAL]: No se pudo inicializar el LLM: {exc}")
-        return
-
-    last_processed_sensor_ts = 0
-    while True:
-        # sensor_ts funciona como reloj/logical timestamp: si cambia, hay una
-        # nueva observacion que el LLM debe procesar.
-        current_sensor_ts = shared_data.get("sensor_ts", 0)
-        processing = shared_data.get("processing", False)
-
-        if not processing and current_sensor_ts > last_processed_sensor_ts:
-            shared_data["processing"] = True
-            contexto = shared_data.get("contexto", "")
-            try:
-                response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
-                raw_content = response.content.strip()
-
-                # Algunos modelos devuelven JSON dentro de un bloque markdown.
-                # Lo limpiamos para poder llamar a json.loads().
-                if "```json" in raw_content:
-                    raw_content = raw_content.split("```json")[1].split("```")[0].strip()
-
-                data = json.loads(raw_content)
-                thought = data.get("thought", "")
-                action = data.get("action", "stop")
-
-                shared_data["thought"] = thought
-                shared_data["action"] = action
-                shared_data["action_ts"] = current_sensor_ts
-                last_processed_sensor_ts = current_sensor_ts
-                print(f"[LLM LOCAL]: decision lista para obs_step={current_sensor_ts}")
-            except Exception as exc:
-                print(f"[LLM LOCAL ERROR]: {exc}")
-            finally:
-                shared_data["processing"] = False
-
-        # Evita que el proceso hijo consuma CPU girando en vacio.
-        time.sleep(0.05)
+def get_unexplored_red_light_reading(controller):
+    """Lectura roja filtrada por luces ya exploradas, si el controller padre la ofrece."""
+    main_controller = getattr(getattr(controller, "controller_owner", None), "controller", None)
+    if main_controller is not controller and hasattr(main_controller, "filtered_red_light_reading"):
+        return main_controller.filtered_red_light_reading()[0]
+    return controller.get_sensor_reading("red_light_sensor")
 
 
 @controller_registry(name="stop")
@@ -85,27 +34,37 @@ class StopController(RobotController):
 
 @controller_registry(name="navigate")
 class NavigateController(RobotController):
-    """Skill basica: explorar hasta recibir cualquier senal de luz roja."""
+    """Skill basica: explorar hasta ver una luz roja nueva."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, red_seen_threshold=0.05, **kwargs):
         super(NavigateController, self).__init__(*args, **kwargs)
         self.flag = True
+        self.red_seen_threshold = red_seen_threshold
+        self.reset()
+
+    def reset(self):
         self.done = False
+        self.done_success = False
+        self.done_reason = ""
 
     def step(self, state, reward=0.0):
-        ls_read = self.get_sensor_reading("red_light_sensor")
-        red_light_detected = np.max(ls_read) > 0.0
+        ls_read = get_unexplored_red_light_reading(self)
+        max_red = float(np.max(ls_read))
 
-        if red_light_detected:
-            action = np.array([0.0, 0.0])
-            if not self.done:
-                print(f"[navigate] Luz roja detectada en step {self.controller_owner.t}")
+        if max_red >= self.red_seen_threshold:
             self.done = True
-        else:
-            action = np.ones(2)
-            self.done = False
+            self.done_success = True
+            self.done_reason = (
+                f"luz roja nueva detectada durante navegacion "
+                f"(max_red={max_red:.3f} >= {self.red_seen_threshold:.3f})."
+            )
+            self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
+            return
 
-        self.get_actuator("joint_velocity_actuator").action = action
+        self.done = False
+        self.done_success = False
+        self.done_reason = ""
+        self.get_actuator("joint_velocity_actuator").action = np.ones(2)
 
 
 @controller_registry(name="orient_red_light")
@@ -129,7 +88,7 @@ class OrientRedLightController(RobotController):
         self.done = False
 
     def step(self, state, reward=0.0):
-        ls_read = self.get_sensor_reading("red_light_sensor")
+        ls_read = get_unexplored_red_light_reading(self)
         action = np.array([0.0, 0.0])
         light_centered = False
 
@@ -187,7 +146,7 @@ class ApproachRedLightController(RobotController):
         self.done_success = False
 
     def step(self, state, reward=0.0):
-        ls_read = self.get_sensor_reading("red_light_sensor")
+        ls_read = get_unexplored_red_light_reading(self)
         max_red = float(np.max(ls_read))
         if max_red > self.best_red:
             self.best_red = max_red
@@ -262,15 +221,21 @@ class AnnotateRedLightPositionController(RobotController):
         super(AnnotateRedLightPositionController, self).__init__(*args, **kwargs)
         self.detection_threshold = detection_threshold
         self.flag = True
+        self.reset()
+
+    def reset(self):
         self.light_position_printed = False
         self.annotation_printed = False
         self.done = False
+        self.done_success = False
+        self.done_reason = ""
+        self.annotation_data = None
 
     def step(self, state, reward=0.0):
         self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
         self.print_red_light_position_once()
 
-        ls_read = self.get_sensor_reading("red_light_sensor")
+        ls_read = get_unexplored_red_light_reading(self)
         intensity = float(np.max(ls_read))
         if intensity < self.detection_threshold or self.annotation_printed:
             return
@@ -280,6 +245,7 @@ class AnnotateRedLightPositionController(RobotController):
         sensor = self.controller_owner.sensors["light_sensor"]
         global_angle = sensor.directions(self.controller_owner.orientation[-1])[sector]
         global_angle_deg = np.degrees(global_angle)
+        light_id, _ = self.nearest_red_light_position(robot_pos, global_angle)
 
         print(
             "[annotate_red_light_position] "
@@ -288,8 +254,49 @@ class AnnotateRedLightPositionController(RobotController):
             f"sector={sector}, "
             f"angulo_global={global_angle:.3f} rad ({global_angle_deg:.1f} deg)"
         )
+        self.annotation_data = {
+            "step": int(self.controller_owner.t),
+            "light_id": str(light_id) if light_id is not None else None,
+            "light_position": self.round_position(robot_pos),
+            "robot_position": self.round_position(robot_pos),
+            "intensity": round(intensity, 3),
+            "sector": sector,
+            "global_angle_rad": round(float(global_angle), 3),
+            "global_angle_deg": round(float(global_angle_deg), 1),
+        }
         self.annotation_printed = True
         self.done = True
+        self.done_success = True
+        self.done_reason = (
+            f"luz registrada en tabla de exploradas: {self.annotation_data}"
+        )
+
+    def nearest_red_light_position(self, robot_pos, target_angle=None):
+        nearest_id = None
+        nearest_pos = None
+        nearest_score = np.inf
+        robot_xy = np.array(robot_pos[:2], dtype=float)
+        for light_id, light_data in self.controller_owner.physics_client.luminous_objects.items():
+            if light_data.get("color") != "red":
+                continue
+            light_pos = self.controller_owner.physics_client.get_body_position(light_id, 0)
+            light_vector = np.array(light_pos[:2], dtype=float) - robot_xy
+            distance = float(np.linalg.norm(light_vector))
+            if target_angle is None:
+                score = distance
+            else:
+                light_angle = float(np.arctan2(light_vector[1], light_vector[0]))
+                score = abs(angle_difference(light_angle, target_angle)) + 0.01 * distance
+            if score < nearest_score:
+                nearest_id = light_id
+                nearest_pos = light_pos
+                nearest_score = score
+        return nearest_id, nearest_pos
+
+    def round_position(self, pos):
+        if pos is None:
+            return None
+        return [round(float(pos[0]), 3), round(float(pos[1]), 3)]
 
     def print_red_light_position_once(self):
         if self.light_position_printed:
@@ -343,7 +350,9 @@ class ExplorationGroupController(RobotController):
         self.current_task = secondary_task  # CUIDADO: mas adelante que no ponga avoid aqui y el llm se ralle
         self.use_llm = use_llm
         self.macro_task = macro_task
-        self.decision_interval = decision_interval #cada cuantos steps se le pide al LLM una nueva decision, para que pueda reaccionar a cambios en sensores durante skills largas como navigate.
+        self.decision_interval = decision_interval # Compatibilidad con JSON antiguos; el modo LLM actual solo decide al terminar una skill.
+        self.found_red_lights = {}
+        self.known_light_angle_tolerance = 0.45
         self.allowed_actions = [
             "stop",
             "navigate",
@@ -385,21 +394,8 @@ class ExplorationGroupController(RobotController):
             self.setup_llm(llm_model, llm_base_url)
 
     def setup_llm(self, llm_model, llm_base_url):
-        # Pizarra compartida con el proceso del LLM. El controller escribe
-        # observaciones/contexto; el LLM escribe thought/action.
-        self.manager = Manager()
-        self.shared_data = self.manager.dict()
-        self.shared_data["thought"] = "Inicializando controlador tactico."
-        self.shared_data["action"] = "stop"
-        self.shared_data["contexto"] = ""
-        self.shared_data["last_t"] = 0
-        self.shared_data["sensor_ts"] = 0
-        self.shared_data["action_ts"] = 0
-        self.shared_data["processing"] = False
-
-        self.llm_thought = self.shared_data["thought"]
+        self.llm_thought = "Inicializando controlador tactico."
         self.llm_action = "stop"
-        self.last_action_ts = 0
         self.waiting_for_llm = True
         self.pending_observation = "Inicio. No hay subtarea completada todavia."
         self.memory_history = []
@@ -414,16 +410,27 @@ class ExplorationGroupController(RobotController):
 
         ACCIONES PERMITIDAS:
         - "stop": Detiene los motores. Usala para quedarse quieto o esperar.
-        - "navigate": Avanza/explora el mapa en busqueda de una luz roja. Termina cuando red_light_sensor recibe cualquier valor mayor que 0.
+        - "navigate": Recorre el mapa sin rumbo. Se detiene sola cuando detecta una luz roja NO explorada.
         - "orient_red_light": Gira para centrar una luz roja detectada.
         - "approach_red_light": Avanza recto hacia una luz roja ya centrada.
         - "load_blue_battery": Se queda quieto esperando hasta que la bateria azul llegue al umbral.
-        - "annotate_red_light_position": Anota la posicion desde la que ve una luz roja cercana para registrarla y darla por encontrada.
+        - "annotate_red_light_position": Anota la posicion de la luz roja para registrarla y darla por encontrada.
+
+        SIGNIFICADO DE LA OBSERVACION:
+        - found_red_lights: tabla de luces rojas ya exploradas por este robot.
+        - red_light_sensor_unexplored: lectura roja filtrada por el robot. Los sectores que apuntan a luces ya registradas se ponen a 0.
+        - max_unexplored_red_light_sensor: maximo de red_light_sensor_unexplored. Es el valor principal para decidir si queda una luz roja nueva visible.
+        - Si max_unexplored_red_light_sensor > 0, el robot percibe una senal roja que todavia considera no explorada.
+        - Una luz roja solo queda explorada despues de que annotate_red_light_position termine con exito.
 
         POLITICA DE DECISION:
-        - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. En ese caso NO vuelvas a usar "orient_red_light" en la siguiente accion.
-        - Si en la memoria aparece que "approach_red_light" termino con exito porque alcanzo el umbral de cercania, significa que el robot ya esta muy cerca de la luz".
+        - Usa max_unexplored_red_light_sensor y red_light_sensor_unexplored para decidir si hay una luz roja nueva hacia la que ir.
+        - Si max_unexplored_red_light_sensor == 0, no hay luz roja nueva visible. Puedes continuar recorriendo el mapa. 
+        - Si max_unexplored_red_light_sensor > 0 y no acabas de completar "orient_red_light", significa que hay una luz roja nueva visible pero no centrada.
+        - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
+        - Si en la memoria aparece que "approach_red_light" termino con exito porque alcanzo el umbral de cercania, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
         - Si en la memoria aparece que "approach_red_light" fue detenida sin exito porque max_red bajo despues de un pico, la aproximacion falló y debes volver orientarte hacia la luz antes de intentar acercarte otra vez.
+        - Si "annotate_red_light_position" termina con exito, esa luz queda marcada como explorada en found_red_lights. Debes continuar buscando otras luces nuevas.
         - Usa la secuencia de ultimas tareas completadas como memoria de progreso. No repitas una subtarea ya completada salvo que una observacion posterior diga explicitamente que su condicion se perdio.
 
         Responde UNICAMENTE con este JSON:
@@ -432,15 +439,98 @@ class ExplorationGroupController(RobotController):
         "action": "Una de las acciones permitidas."
         }
         """
+        try:
+            from langchain_ollama import ChatOllama
+            from langchain_core.messages import HumanMessage, SystemMessage
 
-        # Arrancamos el LLM local. La integracion completa aun requiere que
-        # step() escriba contexto y lea la action devuelta.
-        self.brain_process = Process(
-            target=exploration_llm_loop,
-            args=(self.shared_data, self.llm_rules, llm_base_url, llm_model),
-            daemon=True
-        )
-        self.brain_process.start()
+            self.HumanMessage = HumanMessage
+            self.llm_system_message = SystemMessage(content=self.llm_rules)
+            self.llm = ChatOllama(
+                model=llm_model,
+                temperature=0,
+                base_url=llm_base_url,
+                keep_alive="5m"
+            )
+            print("[LLM LOCAL]: Cliente sincronico iniciado.")
+        except Exception as exc:
+            self.llm = None
+            self.HumanMessage = None
+            self.llm_system_message = None
+            print(f"[LLM LOCAL ERROR FATAL]: No se pudo inicializar el LLM: {exc}")
+
+    def filtered_red_light_reading(self, raw_reading=None):
+        raw_reading = self.get_sensor_reading("red_light_sensor") if raw_reading is None else raw_reading
+        filtered = np.array(raw_reading, dtype=float).copy()
+        ignored_lights = []
+        if not self.found_red_lights or filtered.size == 0:
+            return filtered, ignored_lights
+
+        robot_pos = np.array(self.controller_owner.position[:2], dtype=float)
+        robot_heading = self.controller_owner.orientation[-1]
+        sensor = self.controller_owner.sensors["light_sensor"]
+        sensor_angles = np.array(sensor.directions(robot_heading), dtype=float)
+
+        for light_key, light_info in self.found_red_lights.items():
+            light_pos = None
+            light_id = light_info.get("light_id")
+            if light_id is not None:
+                try:
+                    light_pos = self.controller_owner.physics_client.get_body_position(int(light_id), 0)
+                except (TypeError, ValueError, KeyError):
+                    light_pos = None
+            if light_pos is None:
+                light_pos = light_info.get("light_position")
+            if light_pos is None:
+                continue
+
+            light_vector = np.array(light_pos[:2], dtype=float) - robot_pos
+            distance = float(np.linalg.norm(light_vector))
+            if distance < 1e-9:
+                continue
+
+            light_angle = float(np.arctan2(light_vector[1], light_vector[0]))
+            angle_diffs = np.abs(np.array([angle_difference(light_angle, angle) for angle in sensor_angles]))
+            sectors = np.where(angle_diffs <= self.known_light_angle_tolerance)[0].astype(int).tolist()
+            if not sectors:
+                sectors = [int(np.argmin(angle_diffs))]
+
+            for sector in sectors:
+                filtered[sector] = 0.0
+
+            ignored_lights.append({
+                "id": light_key,
+                "light_position": light_info.get("light_position"),
+                "current_angle_rad": round(light_angle, 3),
+                "distance": round(distance, 3),
+                "ignored_sectors": sectors,
+            })
+
+        return filtered, ignored_lights
+
+    def register_found_red_light(self, annotation_data):
+        if not annotation_data:
+            return False
+
+        annotation_data = dict(annotation_data)
+        robot_id = str(getattr(self.controller_owner, "name", None) or id(self.controller_owner))
+        annotation_data["robot_id"] = robot_id
+
+        light_id = annotation_data.get("light_id")
+        light_position = annotation_data.get("light_position")
+        if light_id is not None:
+            light_key = f"{robot_id}_red_light_{light_id}"
+        elif light_position is None:
+            light_key = f"{robot_id}_red_light_unknown_{len(self.found_red_lights)}"
+        else:
+            light_key = f"{robot_id}_red_light_{light_position[0]:.2f}_{light_position[1]:.2f}"
+
+        if light_key in self.found_red_lights:
+            print(f"[found_red_lights] linea duplicada ignorada: {light_key}")
+            return False
+
+        self.found_red_lights[light_key] = annotation_data
+        print(f"[found_red_lights] {light_key}: {annotation_data}")
+        return True
 
     def build_observation(self, state):
         # Resumen compacto para el LLM. Evitamos pasar objetos complejos y nos
@@ -454,9 +544,13 @@ class ExplorationGroupController(RobotController):
             "current_task": self.current_task,
             "last_observation": self.pending_observation,
         }
-        red_light_reading = self.get_sensor_reading("red_light_sensor")
-        obs["red_light_sensor"] = np.round(red_light_reading.astype(float), 3).tolist()
-        obs["max_red_light_sensor"] = round(float(np.max(red_light_reading)), 3)
+        raw_red_light_reading = self.get_sensor_reading("red_light_sensor")
+        unexplored_red_light_reading, ignored_lights = self.filtered_red_light_reading(raw_red_light_reading)
+        obs["found_red_lights"] = self.found_red_lights
+        obs["red_light_sensor_unexplored"] = np.round(unexplored_red_light_reading.astype(float), 3).tolist()
+        obs["max_unexplored_red_light_sensor"] = round(float(np.max(unexplored_red_light_reading)), 3) # valor clave que el LLM debe usar para decidir si hay una luz roja nueva que explorar.
+        obs["red_light_sensor"] = obs["red_light_sensor_unexplored"]
+        obs["max_red_light_sensor"] = obs["max_unexplored_red_light_sensor"]
         for sensor_name in [
             "distance_sensor",
             "blue_battery_sensor",
@@ -470,22 +564,21 @@ class ExplorationGroupController(RobotController):
                     obs[sensor_name] = value
         return obs
 
-    """ sirve para pedirle una nueva decisión al LLM.
-    No llama directamente al modelo. Lo que hace es escribir en la “pizarra compartida”
-    (self.shared_data) el contexto actual del robot. Luego el proceso separado del LLM
-    (exploration_llm_loop) detecta que hay una observación nueva y responde con una acción"""
-
     def request_llm_decision(self, state):
-        # Escribe el estado actual en la pizarra. El proceso del LLM detecta el
-        # cambio en sensor_ts y responde con thought + action.
-        if self.shared_data.get("processing", False):
+        if self.llm is None:
+            print("[LLM LOCAL ERROR]: LLM no inicializado. Usando stop.")
+            self.apply_llm_action(
+                "LLM no inicializado; se mantiene detenido.",
+                "stop",
+                int(self.controller_owner.t),
+            )
             return
 
-        t = self.controller_owner.t
+        t = int(self.controller_owner.t)
         memoria_historial = "\n".join(self.memory_history[-10:]) or "Sin acciones previas."
         ultimas_tareas = self.completed_task_summary()
         observacion = self.build_observation(state)
-        self.shared_data["contexto"] = f"""
+        contexto = f"""
         ESTADO ACTUAL:
         - Macro-tarea asignada: {self.macro_task}
         - Observacion actual de los sensores: {observacion}
@@ -494,8 +587,25 @@ class ExplorationGroupController(RobotController):
         - Diario de memoria con thought/action/observation:
         {memoria_historial}
         """
-        self.shared_data["last_t"] = t
-        self.shared_data["sensor_ts"] = t
+
+        try:
+            response = self.llm.invoke([
+                self.llm_system_message,
+                self.HumanMessage(content=contexto),
+            ])
+            raw_content = response.content.strip()
+            if "```json" in raw_content:
+                raw_content = raw_content.split("```json")[1].split("```")[0].strip()
+
+            data = json.loads(raw_content)
+            thought = data.get("thought", "")
+            action = data.get("action", "stop")
+        except Exception as exc:
+            print(f"[LLM LOCAL ERROR]: {exc}")
+            thought = f"Error consultando el LLM: {exc}"
+            action = "stop"
+
+        self.apply_llm_action(thought, action, t)
 
     def completed_task_summary(self):
         recent_tasks = self.completed_task_sequence[-10:]
@@ -506,15 +616,7 @@ class ExplorationGroupController(RobotController):
             for idx, item in enumerate(recent_tasks, start=1)
         )
 
-    def read_llm_action(self):
-        # Lee una decision nueva si el proceso del LLM ya ha contestado.
-        action_ts = self.shared_data.get("action_ts", 0)
-        if action_ts == self.last_action_ts:
-            return
-
-        self.last_action_ts = action_ts
-        thought = self.shared_data.get("thought", "")
-        action = self.shared_data.get("action", "stop")
+    def apply_llm_action(self, thought, action, obs_step):
         if action not in self.allowed_actions:
             print(f"[LLM LOCAL] Accion no permitida '{action}'. Usando stop.")
             action = "stop"
@@ -531,8 +633,8 @@ class ExplorationGroupController(RobotController):
         self.waiting_for_llm = False
 
         action_step = int(self.controller_owner.t)
-        elapsed_steps = action_step - int(action_ts)
-        print(f"\n[LLM LOCAL | obs_step {action_ts} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
+        elapsed_steps = action_step - int(obs_step)
+        print(f"\n[LLM LOCAL | obs_step {obs_step} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
         print(f"[LLM LOCAL | action_step {action_step}] action: {action}\n")
 
     def notify_task_done(self, skill_name):
@@ -540,6 +642,8 @@ class ExplorationGroupController(RobotController):
         # robot y se deja preparado el siguiente ciclo de decision.
         done_reason = getattr(self.secondary_controller, "done_reason", "")
         done_success = getattr(self.secondary_controller, "done_success", True)
+        if skill_name == "annotate_red_light_position" and done_success:
+            self.register_found_red_light(getattr(self.secondary_controller, "annotation_data", None))
         if done_success:
             observation = f"Subtarea '{skill_name}' completada con exito."
         else:
@@ -581,19 +685,11 @@ class ExplorationGroupController(RobotController):
         return action
 
     def step_with_llm(self, state):
-        # Si estamos esperando una orden, pedimos contexto al LLM. Tambien se
-        # vuelve a pedir periodicamente, para que pueda reaccionar a sensores
-        # nuevos durante skills largas como navigate.
-        t = self.controller_owner.t
-        if self.waiting_for_llm or t % self.decision_interval == 0:
-            self.request_llm_decision(state)
-        self.read_llm_action()
-
-        # Mientras el LLM piensa, el robot queda quieto salvo que obstacle avoid
-        # tome control por seguridad.
+        # El robot solo consulta al LLM cuando necesita una nueva mision:
+        # al inicio o justo despues de que una skill declare done=True.
+        # La llamada es sincronica; no hay decisiones retrasadas con sensores viejos.
         if self.waiting_for_llm:
-            self.secondary_task = "stop"
-            self.secondary_controller = self.routines["stop"]
+            self.request_llm_decision(state)
 
         self.secondary_controller.step(state)
         self.activations["secondary"] = np.array(
@@ -640,6 +736,7 @@ class ExplorationGroupController(RobotController):
         # Las rutinas hijas se crean antes de que el robot exista por completo.
         # En reset les conectamos el owner real para que puedan leer sensores,
         # actuadores, posicion y tiempo de simulacion.
+        self.found_red_lights = {}
         self.survival_controller.controller_owner = self.controller_owner
         for skill_controller in self.routines.values():
             skill_controller.controller_owner = self.controller_owner
