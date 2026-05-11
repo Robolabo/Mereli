@@ -61,7 +61,7 @@ def exploration_llm_loop(shared_data, system_rules_content, base_url, model_name
                 shared_data["action"] = action
                 shared_data["action_ts"] = current_sensor_ts
                 last_processed_sensor_ts = current_sensor_ts
-                print(f"[LLM LOCAL]: decision registrada en t={shared_data.get('last_t')}")
+                print(f"[LLM LOCAL]: decision lista para obs_step={current_sensor_ts}")
             except Exception as exc:
                 print(f"[LLM LOCAL ERROR]: {exc}")
             finally:
@@ -172,7 +172,7 @@ class OrientRedLightController(RobotController):
 class ApproachRedLightController(RobotController):
     """Skill basica: avanzar recto hasta quedar cerca de una luz roja."""
 
-    def __init__(self, *args, forward_speed=0.5, near_threshold=0.9, **kwargs):
+    def __init__(self, *args, forward_speed=0.5, near_threshold=0.92, **kwargs):
         super(ApproachRedLightController, self).__init__(*args, **kwargs)
         self.forward_speed = forward_speed
         self.near_threshold = near_threshold
@@ -184,6 +184,7 @@ class ApproachRedLightController(RobotController):
         self.done = False
         self.best_red = 0.0
         self.done_reason = ""
+        self.done_success = False
 
     def step(self, state, reward=0.0):
         ls_read = self.get_sensor_reading("red_light_sensor")
@@ -203,6 +204,7 @@ class ApproachRedLightController(RobotController):
                 print(f"[approach_red_light] Luz encontrada en step {self.controller_owner.t}")
             self.light_found = True
             self.done = True
+            self.done_success = True
             self.done_reason = f"max_red={max_red:.3f} alcanzo threshold={self.near_threshold:.3f}."
         elif self.best_red > 0.5 and max_red < self.best_red - 0.03:
             action = np.array([0.0, 0.0])
@@ -212,6 +214,7 @@ class ApproachRedLightController(RobotController):
             )
             self.light_found = True
             self.done = True
+            self.done_success = False
             self.done_reason = (
                 f"max_red subio hasta {self.best_red:.3f} y despues bajo a {max_red:.3f}; "
                 "probablemente paso cerca de la luz sin alcanzar el umbral."
@@ -221,6 +224,7 @@ class ApproachRedLightController(RobotController):
             self.light_found = False
             self.done = False
             self.done_reason = ""
+            self.done_success = False
 
         self.get_actuator("joint_velocity_actuator").action = action
 
@@ -418,7 +422,8 @@ class ExplorationGroupController(RobotController):
 
         POLITICA DE DECISION:
         - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. En ese caso NO vuelvas a usar "orient_red_light" en la siguiente accion.
-        - Si en la memoria aparece que "approach_red_light" termino con exito, significa que el robot ya esta cerca de la luz. 
+        - Si en la memoria aparece que "approach_red_light" termino con exito porque alcanzo el umbral de cercania, significa que el robot ya esta muy cerca de la luz".
+        - Si en la memoria aparece que "approach_red_light" fue detenida sin exito porque max_red bajo despues de un pico, la aproximacion falló y debes volver orientarte hacia la luz antes de intentar acercarte otra vez.
         - Usa la secuencia de ultimas tareas completadas como memoria de progreso. No repitas una subtarea ya completada salvo que una observacion posterior diga explicitamente que su condicion se perdio.
 
         Responde UNICAMENTE con este JSON:
@@ -525,14 +530,20 @@ class ExplorationGroupController(RobotController):
             self.secondary_controller.done = False
         self.waiting_for_llm = False
 
-        print(f"\n[LLM LOCAL | step {action_ts}] thought: {thought}")
-        print(f"[LLM LOCAL] action: {action}\n")
+        action_step = int(self.controller_owner.t)
+        elapsed_steps = action_step - int(action_ts)
+        print(f"\n[LLM LOCAL | obs_step {action_ts} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
+        print(f"[LLM LOCAL | action_step {action_step}] action: {action}\n")
 
     def notify_task_done(self, skill_name):
         # Cuando una skill declara done=True, se registra observation, se para el
         # robot y se deja preparado el siguiente ciclo de decision.
-        observation = f"Subtarea '{skill_name}' completada con exito."
         done_reason = getattr(self.secondary_controller, "done_reason", "")
+        done_success = getattr(self.secondary_controller, "done_success", True)
+        if done_success:
+            observation = f"Subtarea '{skill_name}' completada con exito."
+        else:
+            observation = f"Subtarea '{skill_name}' detenida sin exito."
         if done_reason:
             observation = f"{observation} Motivo: {done_reason}"
         self.pending_observation = observation
