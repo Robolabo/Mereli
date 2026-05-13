@@ -29,6 +29,9 @@
                 "num_instances": 1,
                 "positions": [0, 0, 0],
                 "orientations": 0.0,
+                "battery": [
+                    {"color": "blue", "init_level": 0.5, "charge_coef": 0.004, "discharge_coef": 0.0002}
+                ],
                 "controller": {
                     "name": "exploration_group",
                     "params": {
@@ -43,7 +46,8 @@
                 },
                 "sensors": {
                     "light_sensor": {"n_sectors": 8, "range": 10},
-                    "distance_sensor": {"n_sectors": 8, "range": 0.8}
+                    "distance_sensor": {"n_sectors": 8, "range": 0.8},
+                    "blue_battery_sensor": {}
                 },
                 "actuators": {
                     "joint_velocity_actuator": {"joint_ids": [0, 1], "max_velocity": 6.28}
