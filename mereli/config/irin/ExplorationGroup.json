@@ -17,8 +17,8 @@
     "world": {
         "name": "square_arena",
         "arena_params": {
-            "height": 6,
-            "width": 6
+            "height": 10,
+            "width": 10
         },
         "engine": "pybullet",
         "physics_dt": 0.05,
@@ -26,11 +26,17 @@
         "objects": {
             "epucks": {
                 "type": "epuck",
-                "num_instances": 1,
-                "positions": [0, 0, 0],
+                "num_instances": 5,
+                "positions": [
+                    [-4.0, -2.0, 0.0],
+                    [-4.0, -1.0, 0.0],
+                    [-4.0, 0.0, 0.0],
+                    [-4.0, 1.0, 0.0],
+                    [-4.0, 2.0, 0.0]
+                ],
                 "orientations": 0.0,
                 "battery": [
-                    {"color": "blue", "init_level": 0.5, "charge_coef": 0.004, "discharge_coef": 0.0002}
+                    {"color": "blue", "init_level": "random:0.2:0.9", "charge_coef": 0.004, "discharge_coef": 0.0002}
                 ],
                 "controller": {
                     "name": "exploration_group",
@@ -56,8 +62,18 @@
             "light_blue": {
                 "type": "light_source",
                 "num_instances": 1,
-                "positions": {"type": "random", "low": [-2.7, -2.7, 0.5], "high": [2.7, 2.7, 0.5]},
+                "positions": [-4.5, -4.5, 0.5],
                 "params": {"range": 5, "color": "blue"}
+            },
+            "light_red": {
+                "type": "light_source",
+                "num_instances": 3,
+                "positions": [
+                    [-4.5, 4.5, 0.5],
+                    [4.5, -4.5, 0.5],
+                    [4.5, 4.5, 0.5]
+                ],
+                "params": {"range": 5, "color": "red"}
             }
         }
     }

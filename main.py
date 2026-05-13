@@ -234,13 +234,15 @@ def generate_plots_classic(folder, arena_params=None):
         
     print(f"✅ Gráficas clásicas generadas en {folder}")
 
-def generate_plots_centralized(folder):
+def generate_plots_centralized(folder, arena_params=None):
     """ Función interna para generar las gráficas tras la simulación """
+    import ast
     import glob
     import os
     import pandas as pd
     import matplotlib.pyplot as plt
     import matplotlib.cm as cm # Añadimos esta importación para los colores dinámicos
+    import re
 
     # 1. Buscar todos los CSV (0, 1, y 2)
     csv_files = glob.glob(os.path.join(folder, "recorrido_robot_*.csv"))
@@ -258,12 +260,14 @@ def generate_plots_centralized(folder):
     try:
         # --- Gráfica Trayectoria Superpuesta ---
         plt.figure(figsize=(8, 8))
+        robot_colors = {}
         for i, csv_path in enumerate(csv_files):
             df = pd.read_csv(csv_path)
             if len(df) == 0: continue # Evitar error si Ctrl+C cortó el archivo vacío
             
             robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
             color = mapa_colores(i)
+            robot_colors[robot_id] = color
             
             plt.plot(df['x'], df['y'], color=color, alpha=0.6, label=f'Robot {robot_id}')
             plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color=color, marker='o', s=100, zorder=5) # Inicio
@@ -285,7 +289,46 @@ def generate_plots_centralized(folder):
                     continue
                 plt.scatter(luz['x'], luz['y'], color=l_color, marker='*', s=400, edgecolor='black', label=f'Luz {l_color.capitalize()}', zorder=10)
 
+        consola_path = os.path.join(folder, "consola.log")
+        if os.path.exists(consola_path):
+            found_pattern = re.compile(r"\[found_red_lights\]\s+([^:]+):\s+(\{.*\})")
+            with open(consola_path, "r") as f:
+                for line in f:
+                    match = found_pattern.search(line)
+                    if not match:
+                        continue
+                    try:
+                        found_light = ast.literal_eval(match.group(2))
+                    except (SyntaxError, ValueError):
+                        continue
+
+                    light_position = found_light.get("light_position") or found_light.get("light_pos")
+                    if light_position is None:
+                        continue
+
+                    robot_name = str(found_light.get("robot_id") or match.group(1).split("_red_light_")[0])
+                    robot_id = robot_name.split("_")[-1] if "_" in robot_name else robot_name
+                    color = robot_colors.get(robot_id, "deeppink")
+                    plt.scatter(
+                        light_position[0],
+                        light_position[1],
+                        color=color,
+                        marker='P',
+                        s=140,
+                        edgecolor='black',
+                        label=f'Luz encontrada Robot {robot_id}',
+                        zorder=11,
+                    )
+
         plt.title(f'Trayectorias Superpuestas - {os.path.basename(folder)}')
+        if arena_params:
+            width = arena_params.get('width')
+            height = arena_params.get('height')
+            if width is not None and height is not None:
+                plt.xlim(-width / 2, width / 2)
+                plt.ylim(-height / 2, height / 2)
+        plt.gca().set_aspect('equal', adjustable='box')
+        plt.grid(True, linestyle='--', alpha=0.3)
         handles, labels = plt.gca().get_legend_handles_labels()
         by_label = dict(zip(labels, handles))
         plt.legend(by_label.values(), by_label.keys())
@@ -331,6 +374,13 @@ def generate_plots_centralized(folder):
             'load_red_battery': 'tomato',         # Rojo para la batería roja
             'load_blue_battery': 'royalblue',     # Azul para la batería azul
             'turn_yellow_lights_OFF': 'gold',     # Amarillo para las luces
+            'go_to_coordenadas': 'darkviolet',
+            'navigate': 'mediumseagreen',
+            'orient_red_light': 'darkorange',
+            'approach_red_light': 'crimson',
+            'annotate_red_light_position': 'deeppink',
+            'basic_obstacle_avoider': 'black',
+            'stop': 'lightgrey',
             'none': 'lightgrey'
         }
         colores_extra = ['purple', 'orange', 'cyan', 'pink', 'brown'] # Por si hay tareas nuevas
@@ -463,7 +513,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             self.terminal.write(message)
             self.log.write(message)
         def flush(self):
-            pass
+            self.terminal.flush()
+            self.log.flush()
 
         def fileno(self):
             return self.terminal.fileno()
@@ -478,9 +529,9 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     arena_params = cfg_dict['world'].get('arena_params', {})
     world = world_cls(physics_engine, **arena_params)
         
-    # --- PREGUNTAR AL USUARIO SOLO PARA EL EXP 20 ---
+    # --- PREGUNTAR AL USUARIO PARA LOS EXPERIMENTOS CON LLM CENTRAL ---
     instrucciones = "No hay instrucciones específicas. Asigna tareas por defecto."
-    if "AStoreKeeperLLMcentral" in cfg:
+    if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
         print("\n🧠 [CEREBRO CENTRAL]: Ingresa instrucciones iniciales para el LLM (ej: 'Manda 2 robots a cargar batería...'): ")
         entrada = input().strip()
         if entrada != "":
@@ -646,8 +697,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             print("\n🛑 Simulación interrumpida.")
         finally:
             # EL MAIN DECIDE QUÉ GRÁFICA USAR SEGÚN EL EXPERIMENTO
-            if "AStoreKeeperLLMcentral" in cfg:
-                generate_plots_centralized(exp_folder)
+            if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
+                generate_plots_centralized(exp_folder, arena_params=arena_params)
             else:
                 generate_plots_classic(exp_folder, arena_params=arena_params)
 if __name__ == "__main__":

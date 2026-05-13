@@ -475,10 +475,7 @@ class ExplorationGroupController(RobotController):
         # CURRENT_EXP_FOLDER y despues genera trayectoria.png leyendo este CSV.
         self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
         self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
-
-        if not os.path.exists(self.log_name):
-            with open(self.log_name, "w") as f:
-                f.write("step,x,y,tarea\n")
+        self._log_initialized = False
 
         # Instanciamos los controllers reales desde el registro global de Mereli.
         self.survival_controller = controllers[survival_task](**survival_params)
@@ -512,22 +509,24 @@ class ExplorationGroupController(RobotController):
         Para lograrlo, debes elegir paso a paso que habilidad ejecutar.
 
         ACCIONES PERMITIDAS:
-        - "stop": Detiene los motores. Usala para quedarse quieto o esperar.
+        - "stop": Detiene los motores, . Usala para quedarse quieto o ESPERAR.
         - "navigate": Recorre el mapa sin rumbo. Se detiene sola cuando detecta una luz roja NO explorada.
         - "orient_red_light": Gira para centrar una luz roja detectada.
         - "approach_red_light": Avanza recto hacia una luz roja ya centrada.
-        - "load_blue_battery": Se queda quieto esperando hasta que la bateria azul llegue al umbral.
         - "go_to_coordenadas": Va por GPS a las coordenadas que indiques en target_coords.
+        - "load_blue_battery": Se queda quieto mientras se carga la bateria azul. Esta habilidad no mueve al robot; solo es util cuando el robot ya esta en la zona de carga azul.
         - "annotate_red_light_position": Anota la posicion de la luz roja para registrarla y darla por encontrada.
 
         SIGNIFICADO DE LA OBSERVACION:
         - found_red_lights: tabla de luces rojas ya exploradas por este robot.
+        - blue_light_position: coordenadas de la zona/fuente de carga azul. Los robots pueden empezar lejos de esa posicion.
         - red_light_sensor_unexplored: lectura roja filtrada por el robot. Los sectores que apuntan a luces ya registradas se ponen a 0.
         - max_unexplored_red_light_sensor: maximo de red_light_sensor_unexplored. Es el valor principal para decidir si queda una luz roja nueva visible.
         - Si max_unexplored_red_light_sensor > 0, el robot percibe una senal roja que todavia considera no explorada.
         - Una luz roja solo queda explorada despues de que annotate_red_light_position termine con exito.
 
         POLITICA DE DECISION:
+        - IMPORTANTE: La MACRO-TAREA asignada por el Cerebro Central manda sobre cualquier sensor local, da igual que percibas luz roja.
         - Usa max_unexplored_red_light_sensor y red_light_sensor_unexplored para decidir si hay una luz roja nueva hacia la que ir.
         - Si max_unexplored_red_light_sensor == 0, no hay luz roja nueva visible. Puedes continuar recorriendo el mapa. 
         - Si max_unexplored_red_light_sensor > 0 y no acabas de completar "orient_red_light", significa que hay una luz roja nueva visible pero no centrada.
@@ -547,6 +546,8 @@ class ExplorationGroupController(RobotController):
         }
         Usa "target_coords" solo cuando action sea "go_to_coordenadas"; en el resto de acciones puedes omitirlo.
         """
+        self.pending_macro_task = None
+
         try:
             from langchain_ollama import ChatOllama
             from langchain_core.messages import HumanMessage, SystemMessage
@@ -561,10 +562,10 @@ class ExplorationGroupController(RobotController):
             )
             print("[LLM LOCAL]: Cliente sincronico iniciado.")
         except Exception as exc:
-            self.llm = None
             self.HumanMessage = None
             self.llm_system_message = None
-            print(f"[LLM LOCAL ERROR FATAL]: No se pudo inicializar el LLM: {exc}")
+            self.llm = None
+            print(f"[LLM LOCAL]: No se pudo inicializar el cliente sincronico: {exc}")
 
     def filtered_red_light_reading(self, raw_reading=None):
         """Pone a cero sectores que apuntan a luces rojas ya registradas."""
@@ -685,17 +686,9 @@ class ExplorationGroupController(RobotController):
         return obs
 
     def request_llm_decision(self, state):
-        """Consulta al LLM la siguiente skill a ejecutar usando estado y memoria."""
-        if self.llm is None:
-            print("[LLM LOCAL ERROR]: LLM no inicializado. Usando stop.")
-            self.apply_llm_action(
-                "LLM no inicializado; se mantiene detenido.",
-                "stop",
-                int(self.controller_owner.t),
-            )
-            return
-
+        """Consulta al LLM local con la macro-tarea actual y aplica su accion."""
         t = int(self.controller_owner.t)
+        robot_name = getattr(self.controller_owner, "name", "robot")
         memoria_historial = "\n".join(self.memory_history[-10:]) or "Sin acciones previas."
         ultimas_tareas = self.completed_task_summary()
         observacion = self.build_observation(state)
@@ -709,6 +702,16 @@ class ExplorationGroupController(RobotController):
         {memoria_historial}
         """
 
+        if self.llm is None:
+            self.apply_llm_action(
+                "Cliente LLM local no inicializado; el robot queda detenido.",
+                "stop",
+                t,
+                None,
+            )
+            return False
+
+        print(f"[LLM LOCAL | {robot_name} | request_step {t}] Consultando mini-tarea.")
         try:
             response = self.llm.invoke([
                 self.llm_system_message,
@@ -717,18 +720,25 @@ class ExplorationGroupController(RobotController):
             raw_content = response.content.strip()
             if "```json" in raw_content:
                 raw_content = raw_content.split("```json")[1].split("```")[0].strip()
+            elif "```" in raw_content:
+                raw_content = raw_content.split("```")[1].strip()
 
             data = json.loads(raw_content)
-            thought = data.get("thought", "")
-            action = data.get("action", "stop")
-            target_coords = data.get("target_coords")
+            self.apply_llm_action(
+                data.get("thought", ""),
+                data.get("action", "stop"),
+                t,
+                data.get("target_coords"),
+            )
+            return True
         except Exception as exc:
-            print(f"[LLM LOCAL ERROR]: {exc}")
-            thought = f"Error consultando el LLM: {exc}"
-            action = "stop"
-            target_coords = None
-
-        self.apply_llm_action(thought, action, t, target_coords)
+            self.apply_llm_action(
+                f"Error consultando el LLM local: {exc}",
+                "stop",
+                t,
+                None,
+            )
+            return False
 
     def completed_task_summary(self):
         """Devuelve un resumen textual de las ultimas subtareas terminadas."""
@@ -742,8 +752,9 @@ class ExplorationGroupController(RobotController):
 
     def apply_llm_action(self, thought, action, obs_step, target_coords=None):
         """Aplica la accion elegida por el LLM y activa la skill correspondiente."""
+        robot_name = getattr(self.controller_owner, "name", "robot")
         if action not in self.allowed_actions:
-            print(f"[LLM LOCAL] Accion no permitida '{action}'. Usando stop.")
+            print(f"[LLM LOCAL | {robot_name}] Accion no permitida '{action}'. Usando stop.")
             action = "stop"
 
         previous_task = self.secondary_task
@@ -765,14 +776,14 @@ class ExplorationGroupController(RobotController):
                         raise ValueError
                     self.secondary_controller.target_coords = parsed_target
                 except (TypeError, ValueError):
-                    print(f"[LLM LOCAL] Coordenadas invalidas para go_to_coordenadas: {target_coords}")
+                    print(f"[LLM LOCAL | {robot_name}] Coordenadas invalidas para go_to_coordenadas: {target_coords}")
                     self.secondary_controller.target_coords = None
         self.waiting_for_llm = False
 
         action_step = int(self.controller_owner.t)
         elapsed_steps = action_step - int(obs_step)
-        print(f"\n[LLM LOCAL | obs_step {obs_step} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
-        print(f"[LLM LOCAL | action_step {action_step}] action: {action}\n")
+        print(f"\n[LLM LOCAL | {robot_name} | obs_step {obs_step} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
+        print(f"[LLM LOCAL | {robot_name} | action_step {action_step}] action: {action}\n")
 
     def notify_task_done(self, skill_name):
         """Registra el resultado de una skill terminada y prepara otra decision."""
@@ -797,13 +808,16 @@ class ExplorationGroupController(RobotController):
         self.memory_history.append(
             f"thought={self.llm_thought} | action={skill_name} | observation={observation}"
         )
-        print(f"[LLM LOCAL] observation: {observation}")
+        robot_name = getattr(self.controller_owner, "name", "robot")
+        print(f"[LLM LOCAL | {robot_name}] observation: {observation}")
         self.secondary_task = "stop"
         self.secondary_controller = self.routines["stop"]
         self.waiting_for_llm = True
 
     def step(self, state, reward=0.0):
         """Ejecuta un ciclo de control con o sin LLM segun la configuracion."""
+        self.log_robot_state()
+
         # 1. Ejecutar siempre la capa inconsciente de seguridad.
         self.survival_controller.step(state)
         self.activations["survival"] = np.array(
@@ -820,16 +834,35 @@ class ExplorationGroupController(RobotController):
         )
 
         action = self.coordinate()
-        self.log_robot_state()
         return action
 
     def step_with_llm(self, state):
         """Ejecuta la capa secundaria en modo LLM y detecta fin de skill."""
-        # El robot solo consulta al LLM cuando necesita una nueva mision:
-        # al inicio o justo despues de que una skill declare done=True.
-        # La llamada es sincronica; no hay decisiones retrasadas con sensores viejos.
+        # El robot solo consulta al LLM cuando necesita una nueva mini-tarea:
+        # al inicio, cuando el central cambia la macro-tarea o justo despues de
+        # que una skill declare done=True.
+        central_orders = getattr(getattr(self.controller_owner, "world", None), "llm_orders", {})
+        central_macro_task = central_orders.get(self.controller_owner.name)
+        if central_macro_task is not None and central_macro_task != self.macro_task:
+            self.pending_macro_task = central_macro_task
+            self.waiting_for_llm = True
+
         if self.waiting_for_llm:
+            pending_macro_task = getattr(self, "pending_macro_task", None)
+            if pending_macro_task is not None and pending_macro_task != self.macro_task:
+                self.macro_task = pending_macro_task
+                self.pending_observation = f"Macro-tarea central asignada: {pending_macro_task}"
+                self.pending_macro_task = None
+                print(f"[LLM CENTRAL -> LOCAL] {self.controller_owner.name}: {self.macro_task}")
+
             self.request_llm_decision(state)
+            if self.waiting_for_llm:
+                self.routines["stop"].step(state)
+                self.secondary_task = "stop"
+                self.secondary_controller = self.routines["stop"]
+                self.activations["secondary"] = np.zeros(2)
+                action = self.coordinate()
+                return action
 
         self.secondary_controller.step(state)
         self.activations["secondary"] = np.array(
@@ -843,20 +876,30 @@ class ExplorationGroupController(RobotController):
             self.activations["secondary"] = np.zeros(2)
 
         action = self.coordinate()
-        self.log_robot_state()
         return action
 
     def log_robot_state(self):
-        """Guarda cada diez pasos la posicion y la tarea activa en el CSV."""
+        """Guarda la posicion y la tarea activa en el CSV propio de cada robot."""
         # Guardamos solo lo minimo para que main.py pueda pintar la trayectoria.
         # La columna tarea permite ver cuando manda avoid obstacle y cuando manda
         # la skill secundaria.
+        if not self._log_initialized and self.controller_owner is not None:
+            robot_id = self.controller_owner.name.split("_")[-1] if "_" in self.controller_owner.name else "0"
+            self.log_name = os.path.join(self.output_dir, f"recorrido_robot_{robot_id}.csv")
+            if not os.path.exists(self.log_name):
+                with open(self.log_name, "w") as f:
+                    f.write("step,robot,x,y,bat_azul,tarea\n")
+            self._log_initialized = True
+
         t = self.controller_owner.t
         x, y = self.controller_owner.position[0], self.controller_owner.position[1]
+        try:
+            bat_azul = float(self.get_sensor_reading("blue_battery_sensor")[0])
+        except (KeyError, IndexError, TypeError):
+            bat_azul = np.nan
 
-        if t % 10 == 0:
-            with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{self.current_task}\n")
+        with open(self.log_name, "a") as f:
+            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{bat_azul:.6f},{self.current_task}\n")
 
     def coordinate(self):
         """Elige entre supervivencia y skill secundaria segun la prioridad."""

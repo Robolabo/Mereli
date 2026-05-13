@@ -81,7 +81,8 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 data = json.loads(raw_content)
 
                 # 3. Escribir las decisiones en la pizarra para que los robots las lean
-                decisions = data.get('decisions', ['simple_forage'] * num_robots)
+                default_decision = shared_data.get('default_decision', 'simple_forage')
+                decisions = data.get('decisions', [default_decision] * num_robots)
                 memoria = data.get('memoria_interna', '')
                 razonamiento = data.get('razonamiento', '')
 
@@ -252,6 +253,9 @@ class World(object):
         self.llm_shared_data = None
         self.llm_process = None
         self.llm_orders = {}  # dict of robot_name -> routine
+        self.central_llm_initial_request_sent = False
+        self.central_llm_decision_ready = False
+        self.last_read_ts = 0
         
 
     def update_neighbor_matrix(self):
@@ -371,9 +375,10 @@ class World(object):
         if self.virtual_space is not None:
             self.virtual_space.step()
 
-        # Actualizar LLM central si existe
+        # Actualizar LLM central si existe. El central solo planifica una vez al
+        # inicio; despues los robots locales gestionan sus subtareas.
         if self.llm_shared_data is not None:
-            if self.t % 50 == 0:
+            if not self.central_llm_initial_request_sent:
                 # Recopilar estado global
                 contexto = f"t={self.t}\n"
                 for i, (robot_name, robot) in enumerate(self.robots.items()):
@@ -382,11 +387,9 @@ class World(object):
                     n_luces = getattr(robot.controller.routines.get('turn_yellow_lights_OFF'), 'lights_off', 0) if hasattr(robot.controller, 'routines') else 0
                     contexto += f"Robot {i} ({robot_name}): bat_azul={bat_azul:.2f}, bat_roja={bat_roja:.2f}, luces_apagadas={n_luces}\n"
                 self.llm_shared_data['contexto'] = contexto
-                self.llm_shared_data['sensor_ts'] = self.t
+                self.llm_shared_data['sensor_ts'] = max(1, int(self.t))
                 self.llm_shared_data['last_t'] = self.t
-                
-            if not hasattr(self, 'last_read_ts'):
-                self.last_read_ts = -1
+                self.central_llm_initial_request_sent = True
                 
             current_decision_ts = self.llm_shared_data.get('decision_ts', 0)
             if current_decision_ts > self.last_read_ts:
@@ -396,6 +399,7 @@ class World(object):
                 for i, robot_name in enumerate(self.robots.keys()):
                     if i < len(decisions):
                         self.llm_orders[robot_name] = decisions[i]
+                self.central_llm_decision_ready = True
                 self.last_read_ts = current_decision_ts
                 print(f"\n🧠 [RAZONAMIENTO CENTRAL]: {razonamiento}")
                 print(f"📖 [MEMORIA GLOBAL]: {memoria}")
@@ -625,16 +629,20 @@ class World(object):
 
         # Inicializar LLM central si hay robots con controlador astorekeeperLLMcentral
         has_central_llm = any(robot.controller.__class__.__name__ == 'AStoreKeeperLLMcentralController' for robot in self.robots.values())
+        has_exploration_llm = any(robot.controller.__class__.__name__ == 'ExplorationGroupController' for robot in self.robots.values())
         if has_central_llm:
-            self.initialize_central_llm(len(self.robots), user_instructions)
+            self.initialize_central_llm(len(self.robots), user_instructions, mode="astorekeeper")
+        elif has_exploration_llm:
+            self.initialize_central_llm(len(self.robots), user_instructions, mode="exploration_group")
 
-    def initialize_central_llm(self, num_robots, user_instructions):
+    def initialize_central_llm(self, num_robots, user_instructions, mode="astorekeeper"):
         """ Inicializa el LLM central para controlar múltiples robots. """
         self.llm_manager = Manager()
         self.llm_shared_data = self.llm_manager.dict()
         
+        default_decision = "Espera" if mode == "exploration_group" else "simple_forage"
         # Estado inicial
-        self.llm_shared_data['decision'] = ['simple_forage'] * num_robots
+        self.llm_shared_data['decision'] = [default_decision] * num_robots
         self.llm_shared_data['memoria_interna'] = 'Inicio de misión con múltiples robots.'
         self.llm_shared_data['razonamiento'] = 'Inicializando...'
         self.llm_shared_data['contexto'] = ''
@@ -642,41 +650,72 @@ class World(object):
         self.llm_shared_data['sensor_ts'] = 0
         self.llm_shared_data['decision_ts'] = 0
         self.llm_shared_data['processing'] = False
+        self.llm_shared_data['default_decision'] = default_decision
+        self.central_llm_initial_request_sent = False
+        self.central_llm_decision_ready = False
+        self.last_read_ts = 0
 
-        self.llm_rules = f"""
-        Eres el cerebro central de un equipo de {num_robots} robots e-puck en una misión de recolección y mantenimiento.
-        Tu objetivo es asignar tareas a cada robot basado en las instrucciones iniciales del usuario y el estado actual de cada robot.
-        
-        ROBOTS Y BATERÍAS:
-        Cada robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0.
-        
-        RUTINAS PERMITIDAS (¡PROHIBIDO USAR OTRAS!)
-        - "simple_forage": encuentra objetos y los deposita en zona específica (modo patrulla por defecto).
-        - "turn_yellow_lights_OFF": apaga las luces amarillas.
-        - "load_blue_battery": recarga batería azul.
-        - "load_red_battery": recarga batería roja.
+        if mode == "exploration_group":
+            self.llm_rules = f"""
+            Eres el cerebro central de un equipo de {num_robots} robots e-puck.
+            Tu objetivo es asignar una misión a cada robot segun las instrucciones del usuario y el estado global.
 
-        INSTRUCCIONES DEL USUARIO: {user_instructions}
+            MACRO-TAREAS PERMITIDAS:
+            - Puedes enviar al robot en busqueda de luces rojas para que las registre.
+            - Puedes mantener al robot en espera hasta que le quieras asignar una nueva tarea.
+            - Puedes enviar al robot a cargar su batería azul.
 
-        ESTRUCTURA DE RESPUESTA (JSON):
-        {{
-        "razonamiento": "Análisis detallado: qué nivel de batería azul y roja  tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
-        "memoria_interna": "Diario mental actualizado con contadores e historial.",
-        "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"]  // UNA tarea por robot
-        }}
+            INSTRUCCIONES DEL USUARIO: {user_instructions}
 
-        REGLAS DE DECISIÓN:
-        1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria azul mas alta.
-        2. El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA. Si después de aplicar los porcentajes o cantidades solicitadas por el usuario quedan robots sin tarea asignada (por ejemplo, por decimales o redondeos): Bajo ninguna circunstancia puedes asignar una rutina que no haya sido solicitada explícitamente en las instrucciones del usuario solo para rellenar huecos.
+            ESTRUCTURA DE RESPUESTA (JSON):
+            {{
+            "razonamiento": "Explica que robots eliges para cada misión y por que.",
+            "memoria_interna": "Diario global breve con las asignaciones realizadas.",
+            "decisions": ["mision_robot0", "mision_robot1", "mision_robot2"] // UNA tarea por robot
+            }}
 
-        EJEMPLO 1 - Sensor data: Robot0: bat_azul=0.8, Robot1: bat_azul=0.2, Robot2: bat_azul=0.65
-        Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"
-        Respuesta: {{
-                    "razonamiento": "Robot0 tiene bat_azul=0.8 (ALTO) -> ideal para apagar luces. Robot1 tiene bat_azul=0.2 (EMERGENCIA) -> debe cargar. Robot2 tiene bat_azul=0.65 (ALTO) -> puede apagar luces también.",
-                    "memoria_interna": "t=100. Instrucciones: 2 luces, 1 carga. Batería azul: [0.8, 0.2, 0.65]. Asignaciones: Robot0->luces (alto), Robot1->carga (emergencia), Robot2->luces (alto). Contadores: luces_apagadas=2, cargas=1.",
-                    "decisions": ["turn_yellow_lights_OFF", "load_blue_battery", "turn_yellow_lights_OFF"]
-                    }}
-        """
+            REGLAS:
+            1. El array "decisions" DEBE tener exactamente {num_robots} elementos.
+            2. Cada elemento de "decisions" DEBE ser exactamente una de las misiones permitidas.
+            3. Si el usuario pide que N robots hagan algo, asigna esa mision a N robots y asigna "Espera" al resto por defecto.
+            4. Para cargar bateria azul, prioriza los robots con bat_azul mas baja.
+            5. Para explorar, prioriza los robots con bat_azul mas alta.
+            """
+        else:
+            self.llm_rules = f"""
+            Eres el cerebro central de un equipo de {num_robots} robots e-puck en una misión de recolección y mantenimiento.
+            Tu objetivo es asignar tareas a cada robot basado en las instrucciones iniciales del usuario y el estado actual de cada robot.
+            
+            ROBOTS Y BATERÍAS:
+            Cada robot tiene dos baterías (azul y roja), con valores de 0.0 a 1.0.
+            
+            RUTINAS PERMITIDAS (¡PROHIBIDO USAR OTRAS!)
+            - "simple_forage": encuentra objetos y los deposita en zona específica (modo patrulla por defecto).
+            - "turn_yellow_lights_OFF": apaga las luces amarillas.
+            - "load_blue_battery": recarga batería azul.
+            - "load_red_battery": recarga batería roja.
+
+            INSTRUCCIONES DEL USUARIO: {user_instructions}
+
+            ESTRUCTURA DE RESPUESTA (JSON):
+            {{
+            "razonamiento": "Análisis detallado: qué nivel de batería azul y roja  tiene cada robot, cuáles están altos, cuáles bajos, y por qué asignas esas tareas.",
+            "memoria_interna": "Diario mental actualizado con contadores e historial.",
+            "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"]  // UNA tarea por robot
+            }}
+
+            REGLAS DE DECISIÓN:
+            1. Asigna rutinas como simple_forage o turn_yellow_lights_OFF a los robots con la bateria azul mas alta.
+            2. El array "decisions" DEBE tener exactamente {num_robots} elementos y SOLO puede contener rutinas de la lista PERMITIDA. Si después de aplicar los porcentajes o cantidades solicitadas por el usuario quedan robots sin tarea asignada (por ejemplo, por decimales o redondeos): Bajo ninguna circunstancia puedes asignar una rutina que no haya sido solicitada explícitamente en las instrucciones del usuario solo para rellenar huecos.
+
+            EJEMPLO 1 - Sensor data: Robot0: bat_azul=0.8, Robot1: bat_azul=0.2, Robot2: bat_azul=0.65
+            Usuario: "Manda 2 robots a apagar luces y uno a cargar batería"
+            Respuesta: {{
+                        "razonamiento": "Robot0 tiene bat_azul=0.8 (ALTO) -> ideal para apagar luces. Robot1 tiene bat_azul=0.2 (EMERGENCIA) -> debe cargar. Robot2 tiene bat_azul=0.65 (ALTO) -> puede apagar luces también.",
+                        "memoria_interna": "t=100. Instrucciones: 2 luces, 1 carga. Batería azul: [0.8, 0.2, 0.65]. Asignaciones: Robot0->luces (alto), Robot1->carga (emergencia), Robot2->luces (alto). Contadores: luces_apagadas=2, cargas=1.",
+                        "decisions": ["turn_yellow_lights_OFF", "load_blue_battery", "turn_yellow_lights_OFF"]
+                        }}
+            """
 
         # Lanzar el proceso del cerebro
         self.llm_process = Process(
@@ -688,7 +727,7 @@ class World(object):
 
         # Inicializar órdenes
         for i, robot_name in enumerate(self.robots.keys()):
-            self.llm_orders[robot_name] = "simple_forage"
+            self.llm_orders[robot_name] = default_decision
 
         print(f"📁 Guardando experimento en: {os.environ.get('CURRENT_EXP_FOLDER', 'outputs')}")
 
