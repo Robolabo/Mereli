@@ -203,17 +203,29 @@ class ApproachRedLightController(RobotController):
 class LoadBlueBatteryController(RobotController):
     """Skill basica: esperar quieto hasta cargar la bateria azul."""
 
-    def __init__(self, *args, charge_threshold=0.97, **kwargs):
+    def __init__(self, *args, charge_threshold=0.97, light_drop_tolerance=0.10, **kwargs):
         """Guarda el umbral de carga azul que completa la skill."""
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.charge_threshold = charge_threshold
+        self.light_drop_tolerance = light_drop_tolerance
         self.flag = True
+        self.reset()
+
+    def reset(self):
+        """Reinicia el seguimiento del maximo de luz azul observado."""
         self.charged = False
         self.done = False
+        self.best_blue_light = 0.0
+        self.done_reason = ""
+        self.done_success = False
 
     def step(self, state, reward=0.0):
-        """Mantiene el robot parado hasta que el sensor azul supera el umbral."""
-        bat_lv = self.get_sensor_reading("blue_battery_sensor")[0]
+        """Mantiene el robot parado hasta cargar o detectar que se alejo de la luz."""
+        bat_lv = float(self.get_sensor_reading("blue_battery_sensor")[0])
+        blue_read = self.get_sensor_reading("blue_light_sensor")
+        max_blue = float(np.max(blue_read))
+        if max_blue > self.best_blue_light:
+            self.best_blue_light = max_blue
         self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
 
         if bat_lv >= self.charge_threshold:
@@ -221,9 +233,25 @@ class LoadBlueBatteryController(RobotController):
                 print("Bateria cargada")
             self.charged = True
             self.done = True
+            self.done_success = True
+            self.done_reason = f"bat_azul={bat_lv:.3f} alcanzo threshold={self.charge_threshold:.3f}."
+        elif self.best_blue_light > 0.5 and max_blue < self.best_blue_light - self.light_drop_tolerance:
+            print(
+                f"[load_blue_battery] Maximo de luz azul perdido: "
+                f"best_blue={self.best_blue_light:.3f}, max_blue={max_blue:.3f}. Deteniendo."
+            )
+            self.charged = False
+            self.done = True
+            self.done_success = False
+            self.done_reason = (
+                f"max_blue subio hasta {self.best_blue_light:.3f} y despues bajo a {max_blue:.3f}; "
+                "probablemente el robot se alejo de la zona de carga azul."
+            )
         else:
             self.charged = False
             self.done = False
+            self.done_success = False
+            self.done_reason = ""
 
 
 @controller_registry(name="go_to_coordenadas")
@@ -533,6 +561,7 @@ class ExplorationGroupController(RobotController):
         - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
         - Si en la memoria aparece que "approach_red_light" termino con exito porque alcanzo el umbral de cercania, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
         - Si en la memoria aparece que "approach_red_light" fue detenida sin exito porque max_red bajo despues de un pico, la aproximacion falló y debes volver orientarte hacia la luz antes de intentar acercarte otra vez.
+        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito porque max_blue bajo despues de un pico, la carga fallo porque el robot se alejo de la zona azul.
         - Si quieres ir a un punto concreto del mapa, elige "go_to_coordenadas" e incluye "target_coords": [x, y].
         - Si "go_to_coordenadas" termina con exito, el robot ya esta sobre la posicion objetivo.
         - Si "annotate_red_light_position" termina con exito, esa luz queda marcada como explorada en found_red_lights. Debes continuar buscando otras luces nuevas.

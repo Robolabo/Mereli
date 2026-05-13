@@ -62,7 +62,7 @@
             "light_blue": {
                 "type": "light_source",
                 "num_instances": 1,
-                "positions": [-4.5, -4.5, 0.5],
+                "positions": [0, 0, 0.5],
                 "params": {"range": 5, "color": "blue"}
             },
             "light_red": {
