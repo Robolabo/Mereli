@@ -17,8 +17,8 @@
     "world": {
         "name": "square_arena",
         "arena_params": {
-            "height": 10,
-            "width": 10
+            "height": 12,
+            "width": 12
         },
         "engine": "pybullet",
         "physics_dt": 0.05,
@@ -42,7 +42,7 @@
                     "name": "exploration_group",
                     "params": {
                         "survival_task": "basic_obstacle_avoider",
-                        "secondary_task": "annotate_red_light_position",
+                        "secondary_task": "stop",
                         "use_llm": true,
                         "survival_params": {
                             "sensitivity": 0.4,
@@ -69,9 +69,9 @@
                 "type": "light_source",
                 "num_instances": 3,
                 "positions": [
-                    [-4.5, 4.5, 0.5],
-                    [4.5, -4.5, 0.5],
-                    [4.5, 4.5, 0.5]
+                    [-4.4, 4.4, 0.5],
+                    [4.4, -4.4, 0.5],
+                    [4.4, 4.4, 0.5]
                 ],
                 "params": {"range": 5, "color": "red"}
             }

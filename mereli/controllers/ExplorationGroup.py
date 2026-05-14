@@ -39,11 +39,12 @@ class StopController(RobotController):
 class NavigateController(RobotController):
     """Skill basica: explorar hasta ver una luz roja nueva."""
 
-    def __init__(self, *args, red_seen_threshold=0.05, **kwargs):
+    def __init__(self, *args, red_seen_threshold=0.1, min_done_steps=100, **kwargs):
         """Guarda el umbral de deteccion roja que termina la navegacion."""
         super(NavigateController, self).__init__(*args, **kwargs)
         self.flag = True
         self.red_seen_threshold = red_seen_threshold
+        self.min_done_steps = min_done_steps
         self.reset()
 
     def reset(self):
@@ -51,18 +52,33 @@ class NavigateController(RobotController):
         self.done = False
         self.done_success = False
         self.done_reason = ""
+        self.start_step = None
 
     def step(self, state, reward=0.0):
         """Avanza mientras no haya una luz roja nueva por encima del umbral."""
-        ls_read = get_unexplored_red_light_reading(self)
-        max_red = float(np.max(ls_read))
+        if self.start_step is None:
+            self.start_step = self.controller_owner.t
 
-        if max_red >= self.red_seen_threshold:
+        main_controller = getattr(getattr(self, "controller_owner", None), "controller", None)
+        raw_read = self.get_sensor_reading("red_light_sensor")
+        max_red = float(np.max(raw_read))
+
+        if main_controller is not self and hasattr(main_controller, "red_light_candidate_from_reading"):
+            candidate = main_controller.red_light_candidate_from_reading(raw_read)
+            new_red_light_visible = candidate is not None and candidate["actionable_by_this_robot"]
+        else:
+            ls_read = get_unexplored_red_light_reading(self)
+            max_red = float(np.max(ls_read))
+            new_red_light_visible = max_red >= self.red_seen_threshold
+
+        elapsed_steps = self.controller_owner.t - self.start_step
+        if new_red_light_visible and elapsed_steps >= self.min_done_steps:
             self.done = True
             self.done_success = True
             self.done_reason = (
                 f"luz roja nueva detectada durante navegacion "
-                f"(max_red={max_red:.3f} >= {self.red_seen_threshold:.3f})."
+                f"(max_red={max_red:.3f} >= {self.red_seen_threshold:.3f}; "
+                f"elapsed_steps={elapsed_steps})."
             )
             self.get_actuator("joint_velocity_actuator").action = np.array([0.0, 0.0])
             return
@@ -83,6 +99,7 @@ class OrientRedLightController(RobotController):
         angular_speed=0.2,
         fine_angular_speed=0.08,
         front_balance_tolerance=0.08,
+        max_steps=800,
         **kwargs
     ):
         """Configura las velocidades de giro y la tolerancia de centrado frontal."""
@@ -90,12 +107,23 @@ class OrientRedLightController(RobotController):
         self.angular_speed = angular_speed
         self.fine_angular_speed = fine_angular_speed
         self.front_balance_tolerance = front_balance_tolerance
+        self.max_steps = max_steps
         self.flag = True
+        self.reset()
+
+    def reset(self):
+        """Reinicia el estado de orientacion."""
         self.centered = False
         self.done = False
+        self.done_success = False
+        self.done_reason = ""
+        self.start_step = None
 
     def step(self, state, reward=0.0):
         """Gira el robot hasta equilibrar la lectura roja en los sensores frontales."""
+        if self.start_step is None:
+            self.start_step = self.controller_owner.t
+
         ls_read = get_unexplored_red_light_reading(self)
         action = np.array([0.0, 0.0])
         light_centered = False
@@ -131,13 +159,23 @@ class OrientRedLightController(RobotController):
             print(f"[orient_red_light] Luz roja centrada en step {self.controller_owner.t}")
         self.centered = light_centered
         self.done = light_centered
+        self.done_success = light_centered
+        self.done_reason = ""
+
+        if not light_centered and self.controller_owner.t - self.start_step >= self.max_steps:
+            self.done = True
+            self.done_success = False
+            self.done_reason = (
+                f"no pudo centrar la luz roja tras {self.max_steps} steps."
+            )
+            action = np.array([0.0, 0.0])
 
         self.get_actuator("joint_velocity_actuator").action = action
 
 
 @controller_registry(name="approach_red_light")
 class ApproachRedLightController(RobotController):
-    """Skill basica: avanzar recto hasta quedar cerca de una luz roja."""
+    """Skill basica: seguir una luz roja hasta quedar cerca."""
 
     def __init__(self, *args, forward_speed=0.5, near_threshold=0.92, **kwargs):
         """Configura la velocidad de avance y el umbral de cercania a la luz."""
@@ -148,16 +186,19 @@ class ApproachRedLightController(RobotController):
         self.reset()
 
     def reset(self):
-        """Reinicia el seguimiento del maximo de intensidad roja observado."""
+        """Reinicia el seguimiento de la aproximacion."""
         self.light_found = False
         self.done = False
         self.best_red = 0.0
         self.done_reason = ""
         self.done_success = False
+        self.last_turn_action = np.array([1.0, -1.0])
 
     def step(self, state, reward=0.0):
-        """Avanza hacia la luz roja hasta alcanzar el umbral o detectar que la ha pasado."""
-        ls_read = get_unexplored_red_light_reading(self)
+        """Avanza hacia la luz roja hasta alcanzar el umbral."""
+        # En approach ya estamos persiguiendo una luz concreta; usar la lectura
+        # filtrada puede apagar artificialmente la señal si la memoria la aplaza.
+        ls_read = self.get_sensor_reading("red_light_sensor")
         max_red = float(np.max(ls_read))
         if max_red > self.best_red:
             self.best_red = max_red
@@ -176,21 +217,21 @@ class ApproachRedLightController(RobotController):
             self.done = True
             self.done_success = True
             self.done_reason = f"max_red={max_red:.3f} alcanzo threshold={self.near_threshold:.3f}."
-        elif self.best_red > 0.5 and max_red < self.best_red - 0.03:
-            action = np.array([0.0, 0.0])
-            print(
-                f"[approach_red_light] Maximo de luz pasado: "
-                f"best_red={self.best_red:.3f}, max_red={max_red:.3f}. Deteniendo."
-            )
-            self.light_found = True
-            self.done = True
-            self.done_success = False
-            self.done_reason = (
-                f"max_red subio hasta {self.best_red:.3f} y despues bajo a {max_red:.3f}; "
-                "probablemente paso cerca de la luz sin alcanzar el umbral."
-            )
-        else: # Si no estamos cerca, avanzamos recto para acercarnos a la luz.
-            action = self.forward_speed * np.array([1.0, 1.0])
+        else: # Si no estamos cerca, seguimos la luz corrigiendo la orientacion.
+            front_right = float(ls_read[0])
+            front_left = float(ls_read[7])
+            if max_red == 0.0:
+                action = 0.2 * self.last_turn_action
+            elif front_right * front_left == 0.0:
+                light_left = np.sum(ls_read[[7, 6, 5, 4]])
+                light_right = np.sum(ls_read[[0, 1, 2, 3]])
+                if light_right > light_left:
+                    action = 0.2 * np.array([-1.0, 1.0])
+                else:
+                    action = 0.2 * np.array([1.0, -1.0])
+                self.last_turn_action = np.sign(action)
+            else:
+                action = self.forward_speed * np.array([1.0, 1.0])
             self.light_found = False
             self.done = False
             self.done_reason = ""
@@ -481,7 +522,11 @@ class ExplorationGroupController(RobotController):
         self.macro_task = macro_task
         self.decision_interval = decision_interval # Compatibilidad con JSON antiguos; el modo LLM actual solo decide al terminar una skill.
         self.found_red_lights = {}
+        self.red_light_memory = {}
         self.known_light_angle_tolerance = 0.45
+        self.red_visible_threshold = 0.05
+        self.red_retry_reposition_distance = 0.8
+        self.red_retry_reposition_steps = 500
         self.allowed_actions = [
             "stop",
             "navigate",
@@ -540,7 +585,7 @@ class ExplorationGroupController(RobotController):
         - "stop": Detiene los motores, . Usala para quedarse quieto o ESPERAR.
         - "navigate": Recorre el mapa sin rumbo. Se detiene sola cuando detecta una luz roja NO explorada.
         - "orient_red_light": Gira para centrar una luz roja detectada.
-        - "approach_red_light": Avanza recto hacia una luz roja ya centrada.
+        - "approach_red_light": Avanza hacia una luz roja ya centrada. Internamente puede corregir un poco la orientacion, pero el LLM debe usarla despues de orientar.
         - "go_to_coordenadas": Va por GPS a las coordenadas que indiques en target_coords.
         - "load_blue_battery": Se queda quieto mientras se carga la bateria azul. Esta habilidad no mueve al robot; solo es util cuando el robot ya esta en la zona de carga azul.
         - "annotate_red_light_position": Anota la posicion de la luz roja para registrarla y darla por encontrada.
@@ -549,18 +594,19 @@ class ExplorationGroupController(RobotController):
         - found_red_lights: tabla de luces rojas ya exploradas por este robot.
         - blue_light_position: coordenadas de la zona/fuente de carga azul. Los robots pueden empezar lejos de esa posicion.
         - red_light_sensor_unexplored: lectura roja filtrada por el robot. Los sectores que apuntan a luces ya registradas se ponen a 0.
-        - max_unexplored_red_light_sensor: maximo de red_light_sensor_unexplored. Es el valor principal para decidir si queda una luz roja nueva visible.
-        - Si max_unexplored_red_light_sensor > 0, el robot percibe una senal roja que todavia considera no explorada.
+        - new_red_light_visible: valor booleano calculado por el controlador. Es la referencia principal para saber si hay una luz roja nueva accionable ahora.
+        - visible_red_light_candidate: luz roja real mas probable asociada a la lectura actual, si hay una senal roja clara. Incluye status_for_this_robot y actionable_by_this_robot.
+        - max_unexplored_red_light_sensor: maximo de red_light_sensor_unexplored. Usalo como intensidad, no como prueba principal de novedad.
         - Una luz roja solo queda explorada despues de que annotate_red_light_position termine con exito.
 
         POLITICA DE DECISION:
         - IMPORTANTE: La MACRO-TAREA asignada por el Cerebro Central manda sobre cualquier sensor local, da igual que percibas luz roja.
-        - Usa max_unexplored_red_light_sensor y red_light_sensor_unexplored para decidir si hay una luz roja nueva hacia la que ir.
-        - Si max_unexplored_red_light_sensor == 0, no hay luz roja nueva visible. Puedes continuar recorriendo el mapa. 
-        - Si max_unexplored_red_light_sensor > 0 y no acabas de completar "orient_red_light", significa que hay una luz roja nueva visible pero no centrada.
+        - Usa new_red_light_visible para decidir si hay una luz roja nueva hacia la que ir.
+        - Si new_red_light_visible es false, no hay luz roja nueva accionable ahora. Puedes continuar recorriendo el mapa. 
+        - Si new_red_light_visible es true y no acabas de completar "orient_red_light", significa que hay una luz roja nueva accionable pero no centrada.
         - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
-        - Si en la memoria aparece que "approach_red_light" termino con exito porque alcanzo el umbral de cercania, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
-        - Si en la memoria aparece que "approach_red_light" fue detenida sin exito porque max_red bajo despues de un pico, la aproximacion falló y debes volver orientarte hacia la luz antes de intentar acercarte otra vez.
+        - Si en la memoria aparece que "orient_red_light" fue detenida sin exito por no poder centrar la luz tras demasiados steps, ejecuta "navigate" una vez para cambiar de posicion. Despues de una subtarea "navigate" completada, si new_red_light_visible vuelve a ser true, puedes volver a intentar "orient_red_light".
+        - "approach_red_light" solo termina cuando alcanza el umbral de cercania. Si termina con exito, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
         - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito porque max_blue bajo despues de un pico, la carga fallo porque el robot se alejo de la zona azul.
         - Si quieres ir a un punto concreto del mapa, elige "go_to_coordenadas" e incluye "target_coords": [x, y].
         - Si "go_to_coordenadas" termina con exito, el robot ya esta sobre la posicion objetivo.
@@ -596,11 +642,161 @@ class ExplorationGroupController(RobotController):
             self.llm = None
             print(f"[LLM LOCAL]: No se pudo inicializar el cliente sincronico: {exc}")
 
+    def visited_red_light_ids(self):
+        """Devuelve los light_id de luces rojas ya registradas por este robot."""
+        return {
+            str(light_info.get("light_id"))
+            for light_info in self.found_red_lights.values()
+            if light_info.get("light_id") is not None
+        }
+
+    def red_light_memory_record(self, light_id):
+        """Devuelve el registro local de una luz roja, creandolo si falta."""
+        light_id = str(light_id)
+        if light_id not in self.red_light_memory:
+            self.red_light_memory[light_id] = {
+                "status": "unvisited",
+                "last_seen_step": None,
+                "last_robot_position": None,
+                "failed_orient_count": 0,
+            }
+        return self.red_light_memory[light_id]
+
+    def red_light_status(self, light_id):
+        """Estado local accionable de una luz roja para este robot."""
+        light_id = str(light_id)
+        if light_id in self.visited_red_light_ids():
+            record = self.red_light_memory_record(light_id)
+            record["status"] = "visited"
+            return "visited"
+
+        record = self.red_light_memory_record(light_id)
+        if record.get("status") != "failed_orient":
+            return record.get("status", "unvisited")
+
+        last_pos = record.get("last_robot_position")
+        last_step = record.get("last_seen_step")
+        if last_pos is None or last_step is None:
+            record["status"] = "unvisited"
+            return "unvisited"
+
+        current_pos = np.array(self.controller_owner.position[:2], dtype=float)
+        moved = float(np.linalg.norm(current_pos - np.array(last_pos, dtype=float)))
+        elapsed = int(self.controller_owner.t) - int(last_step)
+        if moved >= self.red_retry_reposition_distance or elapsed >= self.red_retry_reposition_steps:
+            record["status"] = "unvisited"
+            return "unvisited"
+
+        return "failed_orient"
+
+    def mark_red_light_seen(self, candidate):
+        """Actualiza la memoria ligera de una luz visible."""
+        if not candidate or candidate.get("light_id") is None:
+            return
+        record = self.red_light_memory_record(candidate["light_id"])
+        record["last_seen_step"] = int(self.controller_owner.t)
+        record["last_robot_position"] = [
+            float(self.controller_owner.position[0]),
+            float(self.controller_owner.position[1]),
+        ]
+        record["last_intensity"] = candidate.get("intensity")
+
+    def mark_red_light_failed_orient(self, candidate):
+        """Marca una luz como vista pero no accionable hasta recolocar el robot."""
+        if not candidate or candidate.get("light_id") is None:
+            return
+        record = self.red_light_memory_record(candidate["light_id"])
+        record["status"] = "failed_orient"
+        record["last_seen_step"] = int(self.controller_owner.t)
+        record["last_robot_position"] = [
+            float(self.controller_owner.position[0]),
+            float(self.controller_owner.position[1]),
+        ]
+        record["last_intensity"] = candidate.get("intensity")
+        record["failed_orient_count"] = int(record.get("failed_orient_count", 0)) + 1
+        print(
+            f"[red_light_memory] {self.controller_owner.name}: "
+            f"light_id={candidate['light_id']} status=failed_orient; "
+            f"navigate debe recolocar antes de volver a parar por esta luz."
+        )
+
+    def mark_red_light_visited(self, light_id):
+        """Marca una luz como visitada por este robot."""
+        if light_id is None:
+            return
+        record = self.red_light_memory_record(light_id)
+        record["status"] = "visited"
+        record["visited_step"] = int(self.controller_owner.t)
+        record["last_robot_position"] = [
+            float(self.controller_owner.position[0]),
+            float(self.controller_owner.position[1]),
+        ]
+
+    def red_light_candidate_from_reading(self, raw_reading=None):
+        """Asocia la lectura roja dominante con la luz roja real mas probable."""
+        raw_reading = self.get_sensor_reading("red_light_sensor") if raw_reading is None else raw_reading
+        raw_reading = np.array(raw_reading, dtype=float)
+        if raw_reading.size == 0:
+            return None
+
+        max_red = float(np.max(raw_reading))
+        if max_red <= self.red_visible_threshold:
+            return None
+
+        sector = int(np.argmax(raw_reading))
+        sensor = self.controller_owner.sensors["light_sensor"]
+        target_angle = float(sensor.directions(self.controller_owner.orientation[-1])[sector])
+        robot_xy = np.array(self.controller_owner.position[:2], dtype=float)
+
+        best_id = None
+        best_pos = None
+        best_score = np.inf
+        for light_id, light_data in self.controller_owner.physics_client.luminous_objects.items():
+            if light_data.get("color") != "red":
+                continue
+            light_pos = self.controller_owner.physics_client.get_body_position(light_id, 0)
+            light_vector = np.array(light_pos[:2], dtype=float) - robot_xy
+            distance = float(np.linalg.norm(light_vector))
+            light_angle = float(np.arctan2(light_vector[1], light_vector[0]))
+            score = abs(angle_difference(light_angle, target_angle)) + 0.01 * distance
+            if score < best_score:
+                best_id = str(light_id)
+                best_pos = light_pos
+                best_score = score
+
+        if best_id is None:
+            return None
+        status = self.red_light_status(best_id)
+        visited = status == "visited"
+        actionable = status not in {"visited", "failed_orient"}
+
+        return {
+            "light_id": best_id,
+            "light_position": [round(float(best_pos[0]), 3), round(float(best_pos[1]), 3)],
+            "intensity": round(max_red, 3),
+            "sector": sector,
+            "status_for_this_robot": status,
+            "visited_by_this_robot": visited,
+            "actionable_by_this_robot": actionable,
+        }
+
     def filtered_red_light_reading(self, raw_reading=None):
         """Pone a cero sectores que apuntan a luces rojas ya registradas."""
         raw_reading = self.get_sensor_reading("red_light_sensor") if raw_reading is None else raw_reading
         filtered = np.array(raw_reading, dtype=float).copy()
         ignored_lights = []
+
+        candidate = self.red_light_candidate_from_reading(raw_reading)
+        if candidate is not None and not candidate["actionable_by_this_robot"]:
+            filtered[:] = 0.0
+            ignored_lights.append({
+                "id": candidate["light_id"],
+                "light_position": candidate["light_position"],
+                "reason": f"dominant_red_signal_status_{candidate['status_for_this_robot']}",
+                "ignored_sectors": list(range(filtered.size)),
+            })
+            return filtered, ignored_lights
+
         if not self.found_red_lights or filtered.size == 0:
             return filtered, ignored_lights
 
@@ -669,6 +865,7 @@ class ExplorationGroupController(RobotController):
             return False
 
         self.found_red_lights[light_key] = annotation_data
+        self.mark_red_light_visited(light_id)
         print(f"[found_red_lights] {light_key}: {annotation_data}")
         return True
 
@@ -686,10 +883,16 @@ class ExplorationGroupController(RobotController):
             "last_observation": self.pending_observation,
         }
         raw_red_light_reading = self.get_sensor_reading("red_light_sensor")
+        red_light_candidate = self.red_light_candidate_from_reading(raw_red_light_reading)
         unexplored_red_light_reading, ignored_lights = self.filtered_red_light_reading(raw_red_light_reading)
         obs["found_red_lights"] = self.found_red_lights
+        obs["visible_red_light_candidate"] = red_light_candidate
+        obs["new_red_light_visible"] = (
+            red_light_candidate is not None
+            and red_light_candidate["actionable_by_this_robot"]
+        )
         obs["red_light_sensor_unexplored"] = np.round(unexplored_red_light_reading.astype(float), 3).tolist()
-        obs["max_unexplored_red_light_sensor"] = round(float(np.max(unexplored_red_light_reading)), 3) # valor clave que el LLM debe usar para decidir si hay una luz roja nueva que explorar.
+        obs["max_unexplored_red_light_sensor"] = round(float(np.max(unexplored_red_light_reading)), 3)
         obs["red_light_sensor"] = obs["red_light_sensor_unexplored"]
         obs["max_red_light_sensor"] = obs["max_unexplored_red_light_sensor"]
         for sensor_name in [
@@ -822,6 +1025,8 @@ class ExplorationGroupController(RobotController):
         done_success = getattr(self.secondary_controller, "done_success", True)
         if skill_name == "annotate_red_light_position" and done_success:
             self.register_found_red_light(getattr(self.secondary_controller, "annotation_data", None))
+        elif skill_name == "orient_red_light" and not done_success:
+            self.mark_red_light_failed_orient(self.red_light_candidate_from_reading())
         if done_success:
             observation = f"Subtarea '{skill_name}' completada con exito."
         else:
