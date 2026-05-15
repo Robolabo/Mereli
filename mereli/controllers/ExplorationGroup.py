@@ -63,6 +63,9 @@ class NavigateController(RobotController):
         raw_read = self.get_sensor_reading("red_light_sensor")
         max_red = float(np.max(raw_read))
 
+        # Si la skill vive dentro de ExplorationGroupController, delegamos en su
+        # memoria de luces: no basta con ver rojo, tiene que ser una luz nueva y
+        # accionable para este robot.
         if main_controller is not self and hasattr(main_controller, "red_light_candidate_from_reading"):
             candidate = main_controller.red_light_candidate_from_reading(raw_read)
             new_red_light_visible = candidate is not None and candidate["actionable_by_this_robot"]
@@ -71,6 +74,8 @@ class NavigateController(RobotController):
             max_red = float(np.max(ls_read))
             new_red_light_visible = max_red >= self.red_seen_threshold
 
+        # Damos un margen minimo de exploracion para no terminar navigate por una
+        # lectura roja residual justo al arrancar o al cambiar de skill.
         elapsed_steps = self.controller_owner.t - self.start_step
         if new_red_light_visible and elapsed_steps >= self.min_done_steps:
             self.done = True
@@ -220,8 +225,12 @@ class ApproachRedLightController(RobotController):
         else: # Si no estamos cerca, seguimos la luz corrigiendo la orientacion.
             front_right = float(ls_read[0])
             front_left = float(ls_read[7])
+            # Si perdemos la luz, repetimos el ultimo giro corto para intentar
+            # recuperarla sin avanzar a ciegas.
             if max_red == 0.0:
                 action = 0.2 * self.last_turn_action
+            # Cuando solo un frontal ve rojo, giramos hacia el lado con mas
+            # intensidad para volver a centrar antes de avanzar recto.
             elif front_right * front_left == 0.0:
                 light_left = np.sum(ls_read[[7, 6, 5, 4]])
                 light_right = np.sum(ls_read[[0, 1, 2, 3]])
@@ -244,7 +253,7 @@ class ApproachRedLightController(RobotController):
 class LoadBlueBatteryController(RobotController):
     """Skill basica: esperar quieto hasta cargar la bateria azul."""
 
-    def __init__(self, *args, charge_threshold=0.97, light_drop_tolerance=0.10, **kwargs):
+    def __init__(self, *args, charge_threshold=0.95, light_drop_tolerance=0.10, **kwargs):
         """Guarda el umbral de carga azul que completa la skill."""
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.charge_threshold = charge_threshold
@@ -522,6 +531,8 @@ class ExplorationGroupController(RobotController):
         self.macro_task = macro_task
         self.decision_interval = decision_interval # Compatibilidad con JSON antiguos; el modo LLM actual solo decide al terminar una skill.
         self.found_red_lights = {}
+        # Memoria tactica por luz roja real. Evita volver a perseguir luces ya
+        # visitadas o luces que no se pudieron centrar desde la posicion actual.
         self.red_light_memory = {}
         self.known_light_angle_tolerance = 0.45
         self.red_visible_threshold = 0.05
@@ -573,6 +584,7 @@ class ExplorationGroupController(RobotController):
         self.pending_observation = "Inicio. No hay subtarea completada todavia."
         self.memory_history = []
         self.completed_task_sequence = []
+        self.esperando_central = False
 
         # Estas reglas usan los nombres reales de skills que ya existen en este
         # fichero. La macro_task concreta se pasara en el contexto dinamico.
@@ -607,7 +619,7 @@ class ExplorationGroupController(RobotController):
         - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
         - Si en la memoria aparece que "orient_red_light" fue detenida sin exito por no poder centrar la luz tras demasiados steps, ejecuta "navigate" una vez para cambiar de posicion. Despues de una subtarea "navigate" completada, si new_red_light_visible vuelve a ser true, puedes volver a intentar "orient_red_light".
         - "approach_red_light" solo termina cuando alcanza el umbral de cercania. Si termina con exito, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
-        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito porque max_blue bajo despues de un pico, la carga fallo porque el robot se alejo de la zona azul.
+        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito porque max_blue bajo despues de un pico, la carga fallo porque el robot se alejo de la zona azul. El robot debe volver a dirigirse hacia ella
         - Si quieres ir a un punto concreto del mapa, elige "go_to_coordenadas" e incluye "target_coords": [x, y].
         - Si "go_to_coordenadas" termina con exito, el robot ya esta sobre la posicion objetivo.
         - Si "annotate_red_light_position" termina con exito, esa luz queda marcada como explorada en found_red_lights. Debes continuar buscando otras luces nuevas.
@@ -674,6 +686,9 @@ class ExplorationGroupController(RobotController):
         if record.get("status") != "failed_orient":
             return record.get("status", "unvisited")
 
+        # Un fallo de orientacion no bloquea la luz para siempre: cuando el robot
+        # se recoloca lo suficiente, o pasa bastante tiempo, puede intentarla de
+        # nuevo como si estuviera sin visitar.
         last_pos = record.get("last_robot_position")
         last_step = record.get("last_seen_step")
         if last_pos is None or last_step is None:
@@ -748,6 +763,8 @@ class ExplorationGroupController(RobotController):
         target_angle = float(sensor.directions(self.controller_owner.orientation[-1])[sector])
         robot_xy = np.array(self.controller_owner.position[:2], dtype=float)
 
+        # Asociamos el sector dominante del sensor con el objeto luminoso rojo
+        # mas coherente por angulo, usando la distancia solo como desempate suave.
         best_id = None
         best_pos = None
         best_score = np.inf
@@ -788,6 +805,9 @@ class ExplorationGroupController(RobotController):
 
         candidate = self.red_light_candidate_from_reading(raw_reading)
         if candidate is not None and not candidate["actionable_by_this_robot"]:
+            # Si la senal dominante corresponde a una luz visitada o bloqueada
+            # por fallo de orientacion, ocultamos toda la lectura roja al LLM.
+            # Asi navigate no se queda parando una y otra vez por la misma luz.
             filtered[:] = 0.0
             ignored_lights.append({
                 "id": candidate["light_id"],
@@ -886,6 +906,8 @@ class ExplorationGroupController(RobotController):
         red_light_candidate = self.red_light_candidate_from_reading(raw_red_light_reading)
         unexplored_red_light_reading, ignored_lights = self.filtered_red_light_reading(raw_red_light_reading)
         obs["found_red_lights"] = self.found_red_lights
+        # Pasamos al LLM tanto el candidato real como el booleano ya interpretado.
+        # El booleano debe mandar sobre el maximo crudo del sensor.
         obs["visible_red_light_candidate"] = red_light_candidate
         obs["new_red_light_visible"] = (
             red_light_candidate is not None
@@ -1025,7 +1047,15 @@ class ExplorationGroupController(RobotController):
         done_success = getattr(self.secondary_controller, "done_success", True)
         if skill_name == "annotate_red_light_position" and done_success:
             self.register_found_red_light(getattr(self.secondary_controller, "annotation_data", None))
+        elif skill_name == "load_blue_battery" and done_success:
+            # Al terminar de cargar, avisa al central.
+            world = getattr(self.controller_owner, "world", None)
+            if world is not None and hasattr(world, "avisar_central"):
+                world.avisar_central(getattr(self.controller_owner, "name", "robot"), "carga azul completada")
+                self.esperando_central = True
         elif skill_name == "orient_red_light" and not done_success:
+            # Si no se pudo centrar, la luz queda aplazada hasta que navigate
+            # mueva el robot y cambie la geometria de percepcion.
             self.mark_red_light_failed_orient(self.red_light_candidate_from_reading())
         if done_success:
             observation = f"Subtarea '{skill_name}' completada con exito."
@@ -1078,8 +1108,19 @@ class ExplorationGroupController(RobotController):
         central_orders = getattr(getattr(self.controller_owner, "world", None), "llm_orders", {})
         central_macro_task = central_orders.get(self.controller_owner.name)
         if central_macro_task is not None and central_macro_task != self.macro_task:
+            # Nueva orden central: deja de esperar.
             self.pending_macro_task = central_macro_task
+            self.esperando_central = False
             self.waiting_for_llm = True
+
+        if self.esperando_central:
+            # Espera quieto hasta nueva orden central.
+            self.routines["stop"].step(state)
+            self.secondary_task = "stop"
+            self.secondary_controller = self.routines["stop"]
+            self.activations["secondary"] = np.zeros(2)
+            action = self.coordinate()
+            return action
 
         if self.waiting_for_llm:
             pending_macro_task = getattr(self, "pending_macro_task", None)

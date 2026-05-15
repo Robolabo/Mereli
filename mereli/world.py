@@ -258,6 +258,43 @@ class World(object):
         self.last_read_ts = 0
         
 
+    def avisar_central(self, robot_name, mensaje):
+        # Aviso de un robot al LLM central.
+        if self.llm_shared_data is None:
+            return
+        ordenes = [
+            self.llm_orders.get(name, self.llm_shared_data.get('default_decision', 'Espera'))
+            for name in self.robots.keys()
+        ]
+        memoria = self.llm_shared_data.get('memoria_interna', '')
+        ready_robots = []
+        charging_robots = []
+        for name, robot in self.robots.items():
+            bat_azul = robot.state.get('blue_battery_sensor', [0])[0]
+            order = self.llm_orders.get(name, self.llm_shared_data.get('default_decision', 'Espera'))
+            # Si este robot acaba de terminar de cargar, se considera LISTO
+            # independientemente del orden anterior.
+            if name == robot_name and "carga" in mensaje.lower() and "completada" in mensaje.lower():
+                ready_robots.append(name)
+            elif "cargar" in order.lower():
+                charging_robots.append(name)
+            elif bat_azul >= 0.90 and order == 'Espera':
+                ready_robots.append(name)
+        # El central decide con el aviso, no con sensores nuevos.
+        self.llm_shared_data['contexto'] = (
+            f"t={self.t}\n"
+            f"AVISO LOCAL: {robot_name}: {mensaje}\n"
+            f"Ordenes actuales: {ordenes}\n"
+            f"Robots en espera listos para explorar: {ready_robots}\n"
+            f"Robots actualmente cargando: {charging_robots}\n"
+            f"Memoria previa: {memoria}\n"
+            "Replanifica usando este aviso local. No mires baterias actuales para retirar robots que ya estaban explorando.\n"
+        )
+        self.llm_shared_data['sensor_ts'] = max(int(self.t), int(self.llm_shared_data.get('sensor_ts', 0)) + 1)
+        self.llm_shared_data['last_t'] = self.t
+        print(f"📨 [LOCAL -> CENTRAL] {robot_name}: {mensaje}")
+
+
     def update_neighbor_matrix(self):
         rad = 1 
         # rad = 1 
@@ -669,17 +706,23 @@ class World(object):
 
             ESTRUCTURA DE RESPUESTA (JSON):
             {{
-            "razonamiento": "Explica que robots eliges para cada misión y por que.",
-            "memoria_interna": "Diario global breve con las asignaciones realizadas.",
-            "decisions": ["mision_robot0", "mision_robot1", "mision_robot2"] // UNA tarea por robot
+            "razonamiento": "OBLIGATORIO usar esta fórmula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusión: [Explica a quién asignas en base a Z].",
+            "memoria_interna": "Diario global breve indicando específicamente qué robots están en 'Espera' (listos) y cuáles están en cargando la bateria azul.",
+            "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"] // UNA tarea permitida por robot. Exactamente {num_robots} elementos.
             }}
 
-            REGLAS:
-            1. El array "decisions" DEBE tener exactamente {num_robots} elementos.
-            2. Cada elemento de "decisions" DEBE ser exactamente una de las misiones permitidas.
-            3. Si el usuario pide que N robots hagan algo, asigna esa mision a N robots y asigna "Espera" al resto por defecto.
-            4. Para cargar bateria azul, prioriza los robots con bat_azul mas baja.
-            5. Para explorar, prioriza los robots con bat_azul mas alta.
+            REGLAS ESTRICTAS DE COORDINACIÓN Y ASIGNACIÓN:
+            1. REGLA DE BATERÍA MÍNIMA: Para salir a "explorar_luces_rojas", un robot DEBE tener bat_azul >= 0.90.
+            2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera".
+            3. CÁLCULO DE RECLUTAMIENTO (¡CRÍTICO!):
+            - LISTOS: Robots con bat_azul >= 0.90.
+            - CARGANDO: Robots cuya tarea *actual* ya es cargar la bateria azul.
+            - FALTAN: N - (LISTOS + CARGANDO).
+            4. REGLA DE PACIENCIA: 
+            - Si FALTAN > 0: Deben ir a cargar la batería azul SOLO al número exacto de robots que faltan (elige los que tengan la bat_azul más alta).
+            - Si FALTAN == 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los que están cargando la bateria azul en dicha tarea, a los listos en "Espera", y ten paciencia hasta que los que cargan lleguen a 0.90.
+            5. REGLA DE DESPLIEGUE: Cuando LISTOS == N, asigna INMEDIATAMENTE "explorar_luces_rojas" a esos N robots en la misma decisión.
+            6. FORMATO ESTRICTO: El array "decisions" DEBE tener exactamente {num_robots} elementos.
             """
         else:
             self.llm_rules = f"""
