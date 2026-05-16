@@ -85,10 +85,12 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 decisions = data.get('decisions', [default_decision] * num_robots)
                 memoria = data.get('memoria_interna', '')
                 razonamiento = data.get('razonamiento', '')
+                luces_trianguladas = data.get('luces_trianguladas', [])
 
                 shared_data['decisions'] = decisions
                 shared_data['memoria_interna'] = memoria
                 shared_data['razonamiento'] = razonamiento
+                shared_data['luces_trianguladas'] = luces_trianguladas
                 shared_data['decision_ts'] = current_sensor_ts
                 last_processed_sensor_ts = current_sensor_ts
 
@@ -269,8 +271,10 @@ class World(object):
         memoria = self.llm_shared_data.get('memoria_interna', '')
         ready_robots = []
         charging_robots = []
+        estado_baterias = ""
         for name, robot in self.robots.items():
             bat_azul = robot.state.get('blue_battery_sensor', [0])[0]
+            estado_baterias += f"- {name}: bat_azul={bat_azul:.2f}\n"
             order = self.llm_orders.get(name, self.llm_shared_data.get('default_decision', 'Espera'))
             # Si este robot acaba de terminar de cargar, se considera LISTO
             # independientemente del orden anterior.
@@ -285,6 +289,7 @@ class World(object):
             f"t={self.t}\n"
             f"AVISO LOCAL: {robot_name}: {mensaje}\n"
             f"Ordenes actuales: {ordenes}\n"
+            f"--- ESTADO REAL DE LAS BATERÍAS ---\n{estado_baterias}\n"
             f"Robots en espera listos para explorar: {ready_robots}\n"
             f"Robots actualmente cargando: {charging_robots}\n"
             f"Memoria previa: {memoria}\n"
@@ -415,6 +420,44 @@ class World(object):
         # Actualizar LLM central si existe. El central solo planifica una vez al
         # inicio; despues los robots locales gestionan sus subtareas.
         if self.llm_shared_data is not None:
+
+            # --- LÓGICA DE TRIANGULACIÓN AL FINAL DE LA SIMULACIÓN ---
+            if self.is_done and not getattr(self, 'triangulacion_completada', False):
+                self.triangulacion_completada = True
+                todas_luces_encontradas = []
+                
+                # Recopilamos las memorias de todos los robots
+                for robot_name, robot in self.robots.items():
+                    if hasattr(robot.controller, 'found_red_lights'):
+                        for info in robot.controller.found_red_lights.values():
+                            if info.get('light_position') is not None:
+                                todas_luces_encontradas.append((robot_name, info['light_position']))
+                
+                msg_luces = "¡SIMULACIÓN TERMINADA! Aquí tienes los reportes de luces exploradas por todos los robots:\n"
+                for r_name, pos in todas_luces_encontradas:
+                    msg_luces += f"- {r_name} reporta luz roja en {pos}\n"
+                msg_luces += "\nCRUZA LOS DATOS, DESCARTA DUPLICADOS Y DEDUCE LAS COORDENADAS REALES DE LAS LUCES EN EL JSON."
+                
+                print(f"\n🌍 [MUNDO]: Fin de simulación (Step {self.t}). Disparando triangulación al Cerebro Central...")
+                
+                # Guardamos el timestamp actual del LLM para saber cuándo ha respondido
+                ts_espera = self.llm_shared_data.get('decision_ts', 0)
+                
+                self.avisar_central("SISTEMA", msg_luces)
+                
+                print("⏳ Esperando el veredicto final de triangulación del LLM...")
+                # Bucle que congela el cierre de la simulación hasta que el LLM responda
+                while self.llm_shared_data.get('decision_ts', 0) <= ts_espera:
+                    time.sleep(0.5)
+                
+                # Imprimimos el resultado glorioso
+                print("\n" + "="*60)
+                print("🎯 [VEREDICTO FINAL - TRIANGULACIÓN DE LUCES]")
+                print("="*60)
+                print(f"🧠 RAZONAMIENTO:\n{self.llm_shared_data.get('razonamiento', '')}")
+                print(f"\n📍 LUCES TRIANGULADAS (JSON):\n{json.dumps(self.llm_shared_data.get('luces_trianguladas', []), indent=2)}")
+                print("="*60 + "\n")
+
             if not self.central_llm_initial_request_sent:
                 # Recopilar estado global
                 contexto = f"t={self.t}\n"
@@ -706,13 +749,16 @@ class World(object):
 
             ESTRUCTURA DE RESPUESTA (JSON):
             {{
-            "razonamiento": "OBLIGATORIO usar esta fórmula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusión: [Explica a quién asignas en base a Z].",
+            "razonamiento": "OBLIGATORIO usar esta fórmula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusión: [Explica a quién asignas en base a Z]. || Si recibes el aviso de 'SIMULACIÓN TERMINADA', explica tu razonamiento espacial para deducir cuántas luces únicas hay y dónde están...", Ignora por completo las baterías. Escribe AQUÍ tu análisis espacial.
             "memoria_interna": "Diario global breve indicando específicamente qué robots están en 'Espera' (listos) y cuáles están en cargando la bateria azul.",
             "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"] // UNA tarea permitida por robot. Exactamente {num_robots} elementos.
+            "luces_trianguladas": [
+                {{"coordenada_estimada": [x, y], "observaciones_agrupadas": 2}}
+            ] // AÑADE ESTE CAMPO SOLO SI RECIBES REPORTES DE LUCES. Si no hay reporte aún, envíalo vacío [].
             }}
 
             REGLAS ESTRICTAS DE COORDINACIÓN Y ASIGNACIÓN:
-            1. REGLA DE BATERÍA MÍNIMA: Para salir a "explorar_luces_rojas", un robot DEBE tener bat_azul >= 0.90.
+            1. REGLA DE BATERÍA MÍNIMA: Para salir a explorar luces rojas, un robot DEBE tener bat_azul >= 0.90.
             2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera".
             3. CÁLCULO DE RECLUTAMIENTO (¡CRÍTICO!):
             - LISTOS: Robots con bat_azul >= 0.90.
@@ -721,8 +767,9 @@ class World(object):
             4. REGLA DE PACIENCIA: 
             - Si FALTAN > 0: Deben ir a cargar la batería azul SOLO al número exacto de robots que faltan (elige los que tengan la bat_azul más alta).
             - Si FALTAN == 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los que están cargando la bateria azul en dicha tarea, a los listos en "Espera", y ten paciencia hasta que los que cargan lleguen a 0.90.
-            5. REGLA DE DESPLIEGUE: Cuando LISTOS == N, asigna INMEDIATAMENTE "explorar_luces_rojas" a esos N robots en la misma decisión.
+            5. REGLA DE DESPLIEGUE: Cuando LISTOS >= N, elige exactamente a N de esos robots listos y envialos INMEDIATAMENTE en busqueda de luces rojas en la misma decisión.
             6. FORMATO ESTRICTO: El array "decisions" DEBE tener exactamente {num_robots} elementos.
+            7. TRIANGULACIÓN FINAL: Al final de la simulación, recibirás todas las coordenadas vistas por los robots. Tu tarea es hacer 'clustering': promedia las coordenadas que estén muy juntas para devolver la posición real de las luces.
             """
         else:
             self.llm_rules = f"""

@@ -1,6 +1,6 @@
 {
     "simulation": {
-        "timesteps": 20000,
+        "timesteps": 23000,
         "trials": 1,
         "start_paused": false,
         "animated_layout": {
@@ -36,7 +36,7 @@
                 ],
                 "orientations": 0.0,
                 "battery": [
-                    {"color": "blue", "init_level": "random:0.2:1.0", "charge_coef": 0.004, "discharge_coef": 0.0002}
+                    {"color": "blue", "init_level": "random:0.3:1.0", "charge_coef": 0.004, "discharge_coef": 0.0002}
                 ],
                 "controller": {
                     "name": "exploration_group",

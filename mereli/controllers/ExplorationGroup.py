@@ -253,7 +253,7 @@ class ApproachRedLightController(RobotController):
 class LoadBlueBatteryController(RobotController):
     """Skill basica: esperar quieto hasta cargar la bateria azul."""
 
-    def __init__(self, *args, charge_threshold=0.95, light_drop_tolerance=0.10, **kwargs):
+    def __init__(self, *args, charge_threshold=0.95, light_drop_tolerance=0.30, **kwargs):
         """Guarda el umbral de carga azul que completa la skill."""
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.charge_threshold = charge_threshold
@@ -268,6 +268,9 @@ class LoadBlueBatteryController(RobotController):
         self.best_blue_light = 0.0
         self.done_reason = ""
         self.done_success = False
+
+        self.last_battery_level = 0.0
+        self.stuck_counter = 0
 
     def step(self, state, reward=0.0):
         """Mantiene el robot parado hasta cargar o detectar que se alejo de la luz."""
@@ -297,11 +300,28 @@ class LoadBlueBatteryController(RobotController):
                 f"max_blue subio hasta {self.best_blue_light:.3f} y despues bajo a {max_blue:.3f}; "
                 "probablemente el robot se alejo de la zona de carga azul."
             )
+       # 3. FALLO (NUEVO): Watchdog de batería estancada
         else:
-            self.charged = False
-            self.done = False
-            self.done_success = False
-            self.done_reason = ""
+            # Si el nivel de batería es exactamente igual (o menor) que en el paso anterior, sumamos al contador
+            if bat_lv <= self.last_battery_level:
+                self.stuck_counter += 1
+            else:
+                self.stuck_counter = 0 # Si está subiendo, reseteamos el perro guardián
+                
+            self.last_battery_level = bat_lv
+            
+            # Si pasan 100 pasos (aprox. un par de segundos) sin que la batería suba, abortamos
+            if self.stuck_counter > 100:
+                print(f"[load_blue_battery] ¡Batería atascada en {bat_lv:.3f}! El robot no está cargando. Abortando.")
+                self.charged = False
+                self.done = True
+                self.done_success = False
+                self.done_reason = "Batería atascada sin subir. El robot probablemente fue empujado fuera del radio efectivo de carga."
+            else:
+                self.charged = False
+                self.done = False
+                self.done_success = False
+                self.done_reason = ""
 
 
 @controller_registry(name="go_to_coordenadas")
@@ -619,7 +639,7 @@ class ExplorationGroupController(RobotController):
         - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
         - Si en la memoria aparece que "orient_red_light" fue detenida sin exito por no poder centrar la luz tras demasiados steps, ejecuta "navigate" una vez para cambiar de posicion. Despues de una subtarea "navigate" completada, si new_red_light_visible vuelve a ser true, puedes volver a intentar "orient_red_light".
         - "approach_red_light" solo termina cuando alcanza el umbral de cercania. Si termina con exito, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
-        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito porque max_blue bajo despues de un pico, la carga fallo porque el robot se alejo de la zona azul. El robot debe volver a dirigirse hacia ella
+        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito significa que te han empujado fuera del cargador. El robot debe obligatoriamente dirigirse hacia ella
         - Si quieres ir a un punto concreto del mapa, elige "go_to_coordenadas" e incluye "target_coords": [x, y].
         - Si "go_to_coordenadas" termina con exito, el robot ya esta sobre la posicion objetivo.
         - Si "annotate_red_light_position" termina con exito, esa luz queda marcada como explorada en found_red_lights. Debes continuar buscando otras luces nuevas.
