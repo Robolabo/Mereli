@@ -41,7 +41,7 @@ class StopController(RobotController):
 class NavigateController(RobotController):
     """Skill basica: explorar hasta ver una luz roja nueva."""
 
-    def __init__(self, *args, red_seen_threshold=0.1, min_done_steps=100, **kwargs):
+    def __init__(self, *args, red_seen_threshold=0.15, min_done_steps=100, **kwargs):
         """Guarda el umbral de deteccion roja que termina la navegacion."""
         super(NavigateController, self).__init__(*args, **kwargs)
         self.flag = True
@@ -255,7 +255,7 @@ class ApproachRedLightController(RobotController):
 class LoadBlueBatteryController(RobotController):
     """Skill basica: esperar quieto hasta cargar la bateria azul."""
 
-    def __init__(self, *args, charge_threshold=0.95, light_drop_tolerance=0.30, **kwargs):
+    def __init__(self, *args, charge_threshold=0.9, light_drop_tolerance=0.30, **kwargs):
         """Guarda el umbral de carga azul que completa la skill."""
         super(LoadBlueBatteryController, self).__init__(*args, **kwargs)
         self.charge_threshold = charge_threshold
@@ -313,7 +313,7 @@ class LoadBlueBatteryController(RobotController):
             self.last_battery_level = bat_lv
             
             # Si pasan 100 pasos (aprox. un par de segundos) sin que la batería suba, abortamos
-            if self.stuck_counter > 100:
+            if self.stuck_counter > 100 and max_blue < self.charge_threshold: # Solo activamos el watchdog si antes se detectó una luz azul fuerte, para no falsear por lecturas bajas al principio.
                 print(f"[load_blue_battery] ¡Batería atascada en {bat_lv:.3f}! El robot no está cargando. Abortando.")
                 self.charged = False
                 self.done = True

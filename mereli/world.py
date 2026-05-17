@@ -284,6 +284,125 @@ class World(object):
                 blind_steps, f"{latency_s:.6f}", f"{async_ratio:.6f}", json.dumps(decision)
             ])
 
+    def euclidean_2d(self, a, b):
+        return float(np.linalg.norm(np.array(a[:2], dtype=float) - np.array(b[:2], dtype=float)))
+
+    def collect_real_red_lights(self):
+        real_lights = []
+        for name, obj in self.hierarchy.items():
+            if getattr(obj, "color", None) != "red" or not hasattr(obj, "position"):
+                continue
+            real_lights.append({
+                "name": name,
+                "position": [float(obj.position[0]), float(obj.position[1])],
+            })
+        return real_lights
+
+    def nearest_real_light(self, source_position, real_lights):
+        if not real_lights:
+            return None, float("nan")
+        best_light = min(real_lights, key=lambda light: self.euclidean_2d(source_position, light["position"]))
+        return best_light, self.euclidean_2d(source_position, best_light["position"])
+
+    def save_spatial_light_errors(self):
+        if self.llm_shared_data is None:
+            return
+
+        real_lights = self.collect_real_red_lights()
+        if not real_lights:
+            return
+
+        rows = []
+        triangulated = self.llm_shared_data.get('luces_trianguladas', [])
+        for idx, item in enumerate(triangulated):
+            source_position = item.get('coordenada_estimada') or item.get('position') or item.get('pos')
+            if source_position is None or len(source_position) < 2:
+                continue
+            source_position = [float(source_position[0]), float(source_position[1])]
+            real_light, error = self.nearest_real_light(source_position, real_lights)
+            if real_light is None:
+                continue
+            rows.append({
+                "metric_type": "central_triangulated",
+                "highlight": "CENTRAL_LLM",
+                "real_light_name": real_light["name"],
+                "real_x": real_light["position"][0],
+                "real_y": real_light["position"][1],
+                "source": f"triangulated_{idx}",
+                "source_x": source_position[0],
+                "source_y": source_position[1],
+                "error_euclidean": error,
+                "matched_by": "nearest_real",
+            })
+
+        for robot_name, robot in self.robots.items():
+            controller = getattr(robot, "controller", None)
+            found_red_lights = getattr(controller, "found_red_lights", {})
+            for key, info in found_red_lights.items():
+                source_position = info.get("light_position")
+                if source_position is None or len(source_position) < 2:
+                    continue
+                source_position = [float(source_position[0]), float(source_position[1])]
+                real_light, error = self.nearest_real_light(source_position, real_lights)
+                if real_light is None:
+                    continue
+                rows.append({
+                    "metric_type": "robot_registered",
+                    "highlight": "",
+                    "real_light_name": real_light["name"],
+                    "real_x": real_light["position"][0],
+                    "real_y": real_light["position"][1],
+                    "source": robot_name,
+                    "source_x": source_position[0],
+                    "source_y": source_position[1],
+                    "error_euclidean": error,
+                    "matched_by": "nearest_real",
+                })
+
+        if not rows:
+            return
+
+        output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        csv_path = os.path.join(output_dir, "spatial_light_errors.csv")
+        fieldnames = [
+            "metric_type", "highlight", "real_light_name", "real_x", "real_y",
+            "source", "source_x", "source_y", "error_euclidean", "matched_by"
+        ]
+        rows.sort(key=lambda row: (row["metric_type"] != "central_triangulated", row["real_light_name"], row["source"]))
+        with open(csv_path, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in rows:
+                formatted = dict(row)
+                for col in ["real_x", "real_y", "source_x", "source_y", "error_euclidean"]:
+                    formatted[col] = f"{float(formatted[col]):.6f}"
+                writer.writerow(formatted)
+
+        table_path = os.path.join(output_dir, "spatial_light_errors_table.txt")
+        with open(table_path, "w") as f:
+            f.write("SPATIAL LIGHT ERRORS\n")
+            f.write("====================\n\n")
+            for metric_type, title in [
+                ("central_triangulated", "CENTRAL TRIANGULATED"),
+                ("robot_registered", "ROBOT REGISTERED"),
+            ]:
+                metric_rows = [row for row in rows if row["metric_type"] == metric_type]
+                if not metric_rows:
+                    continue
+                f.write(f"{title}\n")
+                f.write("real_light           real_pos             source              estimated_pos        error\n")
+                f.write("----------------------------------------------------------------------------------------\n")
+                for row in metric_rows:
+                    mark = "  <-- CENTRAL_LLM" if row["highlight"] == "CENTRAL_LLM" else ""
+                    real_pos = f"({row['real_x']:.3f},{row['real_y']:.3f})"
+                    source_pos = f"({row['source_x']:.3f},{row['source_y']:.3f})"
+                    f.write(
+                        f"{row['real_light_name']:<20} {real_pos:<20} "
+                        f"{row['source']:<19} {source_pos:<20} "
+                        f"{row['error_euclidean']:.6f}{mark}\n"
+                    )
+                f.write("\n")
+
     def avisar_central(self, robot_name, mensaje):
         # Aviso de un robot al LLM central.
         if self.llm_shared_data is None:
@@ -480,6 +599,7 @@ class World(object):
                 print("="*60)
                 print(f"🧠 RAZONAMIENTO:\n{self.llm_shared_data.get('razonamiento', '')}")
                 print(f"\n📍 LUCES TRIANGULADAS (JSON):\n{json.dumps(self.llm_shared_data.get('luces_trianguladas', []), indent=2)}")
+                self.save_spatial_light_errors()
                 print("="*60 + "\n")
 
             if not self.central_llm_initial_request_sent:
@@ -785,16 +905,14 @@ class World(object):
 
             REGLAS ESTRICTAS DE COORDINACIÓN Y ASIGNACIÓN:
             1. REGLA DE BATERÍA MÍNIMA: Para salir a explorar luces rojas, un robot DEBE tener bat_azul >= 0.90.
-            2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera", hasta que los N puedan salir a explorar.
-            3. CÁLCULO DE RECLUTAMIENTO (¡CRÍTICO!):
+            2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera".
+            3. CALCULO DE RECLUTAMIENTO (¡CRITICO!):
             - LISTOS: Robots con bat_azul >= 0.90.
             - CARGANDO: Robots cuya tarea *actual* ya es cargar la bateria azul.
             - FALTAN: N - (LISTOS + CARGANDO).
             4. REGLA DE PACIENCIA: 
             - Si FALTAN > 0: Deben ir a cargar la batería azul SOLO al número exacto de robots que faltan (elige los que tengan la bat_azul más alta).
-            - Si FALTAN <= 0: NO MANDES A NADIE MÁS A CARGAR.
-                - Si CARGANDO != 0: Mantén a los que están cargando la bateria azul en dicha tarea, a los listos en "Espera", y ten paciencia hasta que los que cargan lleguen a 0.90.
-                - Si CARGANDO == 0: Envía a explorar a los LISTOS con mayor batería azul.
+            - Si FALTAN <= 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los que están cargando en dicha tarea, a los listos en "Espera" y ten paciencia hasta que los que cargan lleguen a 0.90.
             5. REGLA DE DESPLIEGUE: Cuando LISTOS >= N, elige exactamente a N de esos robots listos y envialos INMEDIATAMENTE en busqueda de luces rojas en la misma decisión.
             6. FORMATO ESTRICTO: El array "decisions" DEBE tener exactamente {num_robots} elementos.
             7. TRIANGULACIÓN FINAL: Al final de la simulación, recibirás todas las coordenadas vistas por los robots. Tu tarea es hacer 'clustering': promedia las coordenadas que estén muy juntas para devolver la posición real de las luces.
