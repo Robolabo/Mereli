@@ -180,6 +180,220 @@ def generate_battery_decision_plot(df, output_path, title, robot_label=None, inc
     plt.close(fig)
     return True
 
+def generate_skill_usage(folder):
+    """Calcula el porcentaje de timesteps que cada robot pasa en cada skill."""
+    import glob
+    import os
+    import pandas as pd
+
+    csv_files = sorted(glob.glob(os.path.join(folder, "recorrido_robot_*.csv")))
+    if not csv_files:
+        single_csv = os.path.join(folder, "recorrido_robot.csv")
+        csv_files = [single_csv] if os.path.exists(single_csv) else []
+
+    rows = []
+    for csv_path in csv_files:
+        df = pd.read_csv(csv_path)
+        if df.empty or 'step' not in df.columns:
+            continue
+
+        task_col = 'tarea' if 'tarea' in df.columns else 'decision' if 'decision' in df.columns else None
+        if task_col is None:
+            continue
+
+        if 'robot' in df.columns and df['robot'].notna().any():
+            robot_id = str(df['robot'].dropna().iloc[0])
+        elif os.path.basename(csv_path).startswith("recorrido_robot_"):
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+        else:
+            robot_id = "robot_0"
+
+        work_df = df[['step', task_col]].copy()
+        work_df['step'] = pd.to_numeric(work_df['step'], errors='coerce')
+        work_df = work_df.dropna(subset=['step']).sort_values('step')
+        if work_df.empty:
+            continue
+
+        steps = work_df['step'].to_numpy()
+        deltas = pd.Series(steps).diff().shift(-1)
+        deltas.index = work_df.index
+        positive_deltas = deltas[deltas > 0]
+        default_delta = positive_deltas.median() if not positive_deltas.empty else 1
+        work_df['duration_steps'] = deltas.fillna(default_delta).clip(lower=0)
+        total_steps = float(work_df['duration_steps'].sum())
+        if total_steps <= 0:
+            continue
+
+        grouped = work_df.groupby(task_col)['duration_steps'].sum().reset_index()
+        for _, row in grouped.iterrows():
+            duration = float(row['duration_steps'])
+            rows.append({
+                'robot': robot_id,
+                'skill': row[task_col],
+                'steps': duration,
+                'total_steps': total_steps,
+                'percentage': 100.0 * duration / total_steps,
+            })
+
+    if rows:
+        pd.DataFrame(rows).to_csv(os.path.join(folder, "skill_usage.csv"), index=False)
+
+def generate_llm_timing_plots(folder, separate=False):
+    """Genera graficas de latencia y steps ciegos a partir de llm_tiempos.csv."""
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    csv_path = os.path.join(folder, "llm_tiempos.csv")
+    if not os.path.exists(csv_path):
+        return
+
+    df = pd.read_csv(csv_path)
+    if df.empty:
+        return
+
+    for col in ['request_step', 'latency_s', 'blind_steps']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df = df.dropna(subset=['request_step'])
+    if df.empty:
+        return
+
+    df['serie'] = df['scope'].astype(str) + ':' + df['robot'].astype(str)
+
+    if separate:
+        plt.figure(figsize=(12, 5))
+        for serie, serie_df in df.groupby('serie'):
+            serie_df = serie_df.sort_values('request_step')
+            plt.plot(serie_df['request_step'], serie_df['latency_s'], marker='o', label=serie)
+        plt.title(f'Latencia LLM - {os.path.basename(folder)}')
+        plt.xlabel('Step de solicitud')
+        plt.ylabel('Tiempo de respuesta real (s)')
+        plt.grid(True, linestyle='--', alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(folder, "llm_latencias.png"), dpi=150)
+        plt.close()
+
+        plt.figure(figsize=(12, 5))
+        for serie, serie_df in df.groupby('serie'):
+            serie_df = serie_df.sort_values('request_step')
+            plt.plot(serie_df['request_step'], serie_df['blind_steps'], marker='o', label=serie)
+        plt.title(f'Steps ciegos esperando LLM - {os.path.basename(folder)}')
+        plt.xlabel('Step de solicitud')
+        plt.ylabel('Steps hasta aplicar respuesta')
+        plt.grid(True, linestyle='--', alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(os.path.join(folder, "llm_blind_steps.png"), dpi=150)
+        plt.close()
+        return
+
+    fig, ax_left = plt.subplots(figsize=(12, 5))
+    ax_right = ax_left.twinx()
+    handles = []
+    labels = []
+
+    for serie, serie_df in df.groupby('serie'):
+        serie_df = serie_df.sort_values('request_step')
+        blind_line, = ax_left.plot(
+            serie_df['request_step'],
+            serie_df['blind_steps'],
+            marker='o',
+            linestyle='-',
+            label=f'{serie} blind steps',
+        )
+        latency_line, = ax_right.plot(
+            serie_df['request_step'],
+            serie_df['latency_s'],
+            marker='s',
+            linestyle='--',
+            color=blind_line.get_color(),
+            label=f'{serie} latencia',
+        )
+        handles.extend([blind_line, latency_line])
+        labels.extend([blind_line.get_label(), latency_line.get_label()])
+
+    ax_left.set_title(f'Asincronia y latencia LLM - {os.path.basename(folder)}')
+    ax_left.set_xlabel('Step de solicitud')
+    ax_left.set_ylabel('Blind steps')
+    ax_right.set_ylabel('Latencia real (s)')
+    ax_left.grid(True, linestyle='--', alpha=0.3)
+    ax_left.legend(handles, labels, loc='best')
+    fig.tight_layout()
+    fig.savefig(os.path.join(folder, "llm_tiempos_async.png"), dpi=150)
+    plt.close(fig)
+
+def generate_skill_usage_pies(folder):
+    """Genera graficos de queso con el porcentaje de uso de cada skill."""
+    import os
+    import re
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    csv_path = os.path.join(folder, "skill_usage.csv")
+    if not os.path.exists(csv_path):
+        return
+
+    df = pd.read_csv(csv_path)
+    if df.empty or 'robot' not in df.columns or 'skill' not in df.columns or 'steps' not in df.columns:
+        return
+
+    df['steps'] = pd.to_numeric(df['steps'], errors='coerce')
+    df = df.dropna(subset=['steps'])
+    df = df[df['steps'] > 0]
+    if df.empty:
+        return
+
+    skill_colors = {
+        'simple_forage': 'mediumseagreen',
+        'load_red_battery': 'crimson',
+        'load_blue_battery': 'royalblue',
+        'turn_yellow_lights_OFF': 'goldenrod',
+        'go_to_coordenadas': 'darkviolet',
+        'navigate': 'mediumseagreen',
+        'orient_red_light': 'darkorange',
+        'approach_red_light': 'crimson',
+        'annotate_red_light_position': 'deeppink',
+        'basic_obstacle_avoider': 'black',
+        'stop': 'lightgrey',
+        'none': 'lightgrey',
+    }
+
+    def safe_name(value):
+        return re.sub(r'[^A-Za-z0-9_.-]+', '_', str(value)).strip('_') or 'robot'
+
+    def plot_pie(plot_df, title, output_name):
+        grouped = plot_df.groupby('skill')['steps'].sum().sort_values(ascending=False)
+        if grouped.empty:
+            return
+        colors = [skill_colors.get(skill, None) for skill in grouped.index]
+        plt.figure(figsize=(8, 8))
+        plt.pie(
+            grouped.values,
+            labels=grouped.index,
+            autopct='%1.1f%%',
+            startangle=90,
+            colors=colors,
+        )
+        plt.title(title)
+        plt.tight_layout()
+        plt.savefig(os.path.join(folder, output_name), dpi=150)
+        plt.close()
+
+    for robot, robot_df in df.groupby('robot'):
+        plot_pie(
+            robot_df,
+            f'Uso de skills - {robot} - {os.path.basename(folder)}',
+            f"skill_usage_pie_{safe_name(robot)}.png",
+        )
+
+    if df['robot'].nunique() > 1:
+        plot_pie(
+            df,
+            f'Uso de skills total - {os.path.basename(folder)}',
+            "skill_usage_pie_total.png",
+        )
+
 def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
     import ast
@@ -802,6 +1016,9 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         except KeyboardInterrupt:
             print("\n🛑 Simulación interrumpida.")
         finally:
+            generate_skill_usage(exp_folder)
+            generate_llm_timing_plots(exp_folder, separate=("ExplorationGroup" in cfg))
+            generate_skill_usage_pies(exp_folder)
             # EL MAIN DECIDE QUÉ GRÁFICA USAR SEGÚN EL EXPERIMENTO
             if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
                 generate_plots_centralized(exp_folder, arena_params=arena_params)

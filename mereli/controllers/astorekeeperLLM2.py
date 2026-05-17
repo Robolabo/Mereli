@@ -5,6 +5,7 @@ from mereli.utils import compute_angle
 
 import datetime
 import os
+import csv
 import json 
 import sys
 from multiprocessing import Process, Manager
@@ -112,6 +113,7 @@ def llm_brain_loop(shared_data, system_rules_content, base_url):
         if not processing and current_sensor_ts > last_processed_sensor_ts:
             shared_data['processing'] = True
             contexto = shared_data.get('contexto', '')
+            request_wall_time = time.perf_counter()
             try:
                 response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
                 raw_content = response.content.strip()
@@ -127,10 +129,14 @@ def llm_brain_loop(shared_data, system_rules_content, base_url):
                 memoria = data.get('memoria_interna', '')
                 razonamiento = data.get('razonamiento', '')
 
+                response_wall_time = time.perf_counter()
                 shared_data['decision'] = decision
                 shared_data['memoria_interna'] = memoria
                 shared_data['razonamiento'] = razonamiento
                 shared_data['decision_ts'] = current_sensor_ts
+                shared_data['llm_request_wall_time'] = request_wall_time
+                shared_data['llm_response_wall_time'] = response_wall_time
+                shared_data['llm_latency_s'] = response_wall_time - request_wall_time
                 last_processed_sensor_ts = current_sensor_ts
 
                 print(f"🧠 [CEREBRO]: t={shared_data.get('last_t')} | Decisión registrada\n")
@@ -228,12 +234,30 @@ class AStoreKeeperLLM2Controller(RobotController):
         # --- CARPETAS POR FECHA ---
         self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
         self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
+        self.metrics_log_name = os.path.join(self.output_dir, "llm_tiempos.csv")
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
                 f.write("step,x,y,bat_azul,bat_roja,num_luces,decision,decision_ts\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
+
+    def log_llm_timing(self, request_step, apply_step, latency_s, decision):
+        blind_steps = int(apply_step) - int(request_step)
+        async_ratio = blind_steps / latency_s if latency_s > 0 else 0.0
+        robot_name = getattr(self.controller_owner, "name", "robot_0")
+        file_exists = os.path.exists(self.metrics_log_name)
+        with open(self.metrics_log_name, "a", newline="") as f:
+            writer = csv.writer(f)
+            if not file_exists or os.path.getsize(self.metrics_log_name) == 0:
+                writer.writerow([
+                    "scope", "robot", "request_step", "apply_step",
+                    "blind_steps", "latency_s", "async_ratio", "decision"
+                ])
+            writer.writerow([
+                "local", robot_name, int(request_step), int(apply_step),
+                blind_steps, f"{latency_s:.6f}", f"{async_ratio:.6f}", decision
+            ])
 
 
     def step(self, state, reward=0.0):
@@ -274,6 +298,8 @@ class AStoreKeeperLLM2Controller(RobotController):
             print(f"\n🧠 [PENSAMIENTO | step {decision_ts}]: {self.llm_reasoning}")
             print(f"📖 [MEMORIA]: {self.external_memory}")
             print(f"🎯 [ACCIÓN]: {self.llm_decision}\n")
+            latency_s = float(self.shared_data.get('llm_latency_s', 0.0))
+            self.log_llm_timing(decision_ts, t, latency_s, self.llm_decision)
             if nueva_orden in self.routines:
                 self.external_routine = nueva_orden
 

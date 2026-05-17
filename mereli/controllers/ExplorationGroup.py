@@ -1,5 +1,7 @@
 import os
 import json
+import csv
+import time
 
 import numpy as np
 
@@ -579,6 +581,7 @@ class ExplorationGroupController(RobotController):
         # CURRENT_EXP_FOLDER y despues genera trayectoria.png leyendo este CSV.
         self.output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
         self.log_name = os.path.join(self.output_dir, "recorrido_robot.csv")
+        self.metrics_log_name = os.path.join(self.output_dir, "llm_tiempos.csv")
         self._log_initialized = False
 
         # Instanciamos los controllers reales desde el registro global de Mereli.
@@ -959,6 +962,24 @@ class ExplorationGroupController(RobotController):
                     break
         return obs
 
+    def log_llm_timing(self, request_step, apply_step, latency_s, decision):
+        """Registra latencia real del LLM y steps transcurridos hasta aplicar la accion."""
+        blind_steps = int(apply_step) - int(request_step)
+        async_ratio = blind_steps / latency_s if latency_s > 0 else 0.0
+        robot_name = getattr(self.controller_owner, "name", "robot")
+        file_exists = os.path.exists(self.metrics_log_name)
+        with open(self.metrics_log_name, "a", newline="") as f:
+            writer = csv.writer(f)
+            if not file_exists or os.path.getsize(self.metrics_log_name) == 0:
+                writer.writerow([
+                    "scope", "robot", "request_step", "apply_step",
+                    "blind_steps", "latency_s", "async_ratio", "decision"
+                ])
+            writer.writerow([
+                "local", robot_name, int(request_step), int(apply_step),
+                blind_steps, f"{latency_s:.6f}", f"{async_ratio:.6f}", decision
+            ])
+
     def request_llm_decision(self, state):
         """Consulta al LLM local con la macro-tarea actual y aplica su accion."""
         t = int(self.controller_owner.t)
@@ -986,6 +1007,7 @@ class ExplorationGroupController(RobotController):
             return False
 
         print(f"[LLM LOCAL | {robot_name} | request_step {t}] Consultando mini-tarea.")
+        request_wall_time = time.perf_counter()
         try:
             response = self.llm.invoke([
                 self.llm_system_message,
@@ -998,19 +1020,25 @@ class ExplorationGroupController(RobotController):
                 raw_content = raw_content.split("```")[1].strip()
 
             data = json.loads(raw_content)
+            response_wall_time = time.perf_counter()
             self.apply_llm_action(
                 data.get("thought", ""),
                 data.get("action", "stop"),
                 t,
                 data.get("target_coords"),
+                request_wall_time,
+                response_wall_time,
             )
             return True
         except Exception as exc:
+            response_wall_time = time.perf_counter()
             self.apply_llm_action(
                 f"Error consultando el LLM local: {exc}",
                 "stop",
                 t,
                 None,
+                request_wall_time,
+                response_wall_time,
             )
             return False
 
@@ -1024,7 +1052,7 @@ class ExplorationGroupController(RobotController):
             for idx, item in enumerate(recent_tasks, start=1)
         )
 
-    def apply_llm_action(self, thought, action, obs_step, target_coords=None):
+    def apply_llm_action(self, thought, action, obs_step, target_coords=None, request_wall_time=None, response_wall_time=None):
         """Aplica la accion elegida por el LLM y activa la skill correspondiente."""
         robot_name = getattr(self.controller_owner, "name", "robot")
         if action not in self.allowed_actions:
@@ -1058,6 +1086,8 @@ class ExplorationGroupController(RobotController):
         elapsed_steps = action_step - int(obs_step)
         print(f"\n[LLM LOCAL | {robot_name} | obs_step {obs_step} | action_step {action_step} | delay {elapsed_steps}] thought: {thought}")
         print(f"[LLM LOCAL | {robot_name} | action_step {action_step}] action: {action}\n")
+        if request_wall_time is not None and response_wall_time is not None:
+            self.log_llm_timing(obs_step, action_step, response_wall_time - request_wall_time, action)
 
     def notify_task_done(self, skill_name):
         """Registra el resultado de una skill terminada y prepara otra decision."""

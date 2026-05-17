@@ -1,5 +1,6 @@
 import logging
 import time
+import csv
 import copy
 from collections import deque
 import numpy as np
@@ -70,6 +71,7 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
         if not processing and current_sensor_ts > last_processed_sensor_ts:
             shared_data['processing'] = True
             contexto = shared_data.get('contexto', '')
+            request_wall_time = time.perf_counter()
             try:
                 response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
                 raw_content = response.content.strip()
@@ -87,11 +89,15 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 razonamiento = data.get('razonamiento', '')
                 luces_trianguladas = data.get('luces_trianguladas', [])
 
+                response_wall_time = time.perf_counter()
                 shared_data['decisions'] = decisions
                 shared_data['memoria_interna'] = memoria
                 shared_data['razonamiento'] = razonamiento
                 shared_data['luces_trianguladas'] = luces_trianguladas
                 shared_data['decision_ts'] = current_sensor_ts
+                shared_data['llm_request_wall_time'] = request_wall_time
+                shared_data['llm_response_wall_time'] = response_wall_time
+                shared_data['llm_latency_s'] = response_wall_time - request_wall_time
                 last_processed_sensor_ts = current_sensor_ts
 
             
@@ -260,6 +266,24 @@ class World(object):
         self.last_read_ts = 0
         
 
+    def log_llm_timing(self, request_step, apply_step, latency_s, decision, scope="central", robot="all"):
+        blind_steps = int(apply_step) - int(request_step)
+        async_ratio = blind_steps / latency_s if latency_s > 0 else 0.0
+        output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        metrics_path = os.path.join(output_dir, "llm_tiempos.csv")
+        file_exists = os.path.exists(metrics_path)
+        with open(metrics_path, "a", newline="") as f:
+            writer = csv.writer(f)
+            if not file_exists or os.path.getsize(metrics_path) == 0:
+                writer.writerow([
+                    "scope", "robot", "request_step", "apply_step",
+                    "blind_steps", "latency_s", "async_ratio", "decision"
+                ])
+            writer.writerow([
+                scope, robot, int(request_step), int(apply_step),
+                blind_steps, f"{latency_s:.6f}", f"{async_ratio:.6f}", json.dumps(decision)
+            ])
+
     def avisar_central(self, robot_name, mensaje):
         # Aviso de un robot al LLM central.
         if self.llm_shared_data is None:
@@ -280,7 +304,7 @@ class World(object):
             # independientemente del orden anterior.
             if name == robot_name and "carga" in mensaje.lower() and "completada" in mensaje.lower():
                 ready_robots.append(name)
-            elif "cargar" in order.lower():
+            elif "cargar" in order.lower() or "load" in order.lower():
                 charging_robots.append(name)
             elif bat_azul >= 0.90 and order == 'Espera':
                 ready_robots.append(name)
@@ -480,6 +504,8 @@ class World(object):
                     if i < len(decisions):
                         self.llm_orders[robot_name] = decisions[i]
                 self.central_llm_decision_ready = True
+                latency_s = float(self.llm_shared_data.get('llm_latency_s', 0.0))
+                self.log_llm_timing(current_decision_ts, self.t, latency_s, decisions, scope="central", robot="all")
                 self.last_read_ts = current_decision_ts
                 print(f"\n🧠 [RAZONAMIENTO CENTRAL]: {razonamiento}")
                 print(f"📖 [MEMORIA GLOBAL]: {memoria}")
@@ -759,14 +785,16 @@ class World(object):
 
             REGLAS ESTRICTAS DE COORDINACIÓN Y ASIGNACIÓN:
             1. REGLA DE BATERÍA MÍNIMA: Para salir a explorar luces rojas, un robot DEBE tener bat_azul >= 0.90.
-            2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera".
+            2. REGLA DE SIMULTANEIDAD: Si el usuario pide N robots explorando, NINGÚN robot debe salir a explorar hasta que haya N robots listos SIMULTÁNEAMENTE. Los que ya estén listos (bat_azul >= 0.90) deben recibir la tarea "Espera", hasta que los N puedan salir a explorar.
             3. CÁLCULO DE RECLUTAMIENTO (¡CRÍTICO!):
             - LISTOS: Robots con bat_azul >= 0.90.
             - CARGANDO: Robots cuya tarea *actual* ya es cargar la bateria azul.
             - FALTAN: N - (LISTOS + CARGANDO).
             4. REGLA DE PACIENCIA: 
             - Si FALTAN > 0: Deben ir a cargar la batería azul SOLO al número exacto de robots que faltan (elige los que tengan la bat_azul más alta).
-            - Si FALTAN == 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los que están cargando la bateria azul en dicha tarea, a los listos en "Espera", y ten paciencia hasta que los que cargan lleguen a 0.90.
+            - Si FALTAN <= 0: NO MANDES A NADIE MÁS A CARGAR.
+                - Si CARGANDO != 0: Mantén a los que están cargando la bateria azul en dicha tarea, a los listos en "Espera", y ten paciencia hasta que los que cargan lleguen a 0.90.
+                - Si CARGANDO == 0: Envía a explorar a los LISTOS con mayor batería azul.
             5. REGLA DE DESPLIEGUE: Cuando LISTOS >= N, elige exactamente a N de esos robots listos y envialos INMEDIATAMENTE en busqueda de luces rojas en la misma decisión.
             6. FORMATO ESTRICTO: El array "decisions" DEBE tener exactamente {num_robots} elementos.
             7. TRIANGULACIÓN FINAL: Al final de la simulación, recibirás todas las coordenadas vistas por los robots. Tu tarea es hacer 'clustering': promedia las coordenadas que estén muy juntas para devolver la posición real de las luces.
