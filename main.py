@@ -98,6 +98,88 @@ def print_welcome():
 
     print("")
 
+def generate_battery_decision_plot(df, output_path, title, robot_label=None, include_red=True):
+    """Pinta baterias y cambios de decision/tarea sobre el tiempo."""
+    if df.empty or 'step' not in df.columns or 'bat_azul' not in df.columns:
+        return False
+
+    task_col = None
+    for candidate in ('decision', 'tarea'):
+        if candidate in df.columns:
+            task_col = candidate
+            break
+
+    plot_df = df.copy()
+    plot_df['step'] = pd.to_numeric(plot_df['step'], errors='coerce')
+    plot_df['bat_azul'] = pd.to_numeric(plot_df['bat_azul'], errors='coerce')
+    if 'bat_roja' in plot_df.columns:
+        plot_df['bat_roja'] = pd.to_numeric(plot_df['bat_roja'], errors='coerce')
+    plot_df = plot_df.dropna(subset=['step'])
+    if plot_df.empty:
+        return False
+
+    fig, ax = plt.subplots(figsize=(14, 6))
+    label_suffix = f" {robot_label}" if robot_label else ""
+    ax.plot(plot_df['step'], plot_df['bat_azul'], color='royalblue', linewidth=2, label=f'Bateria azul{label_suffix}')
+
+    if include_red and 'bat_roja' in plot_df.columns and plot_df['bat_roja'].notna().any():
+        ax.plot(plot_df['step'], plot_df['bat_roja'], color='crimson', linewidth=2, label=f'Bateria roja{label_suffix}')
+
+    if task_col is not None:
+        task_colors = {
+            'simple_forage': 'mediumseagreen',
+            'load_red_battery': 'crimson',
+            'load_blue_battery': 'royalblue',
+            'turn_yellow_lights_OFF': 'goldenrod',
+            'go_to_coordenadas': 'darkviolet',
+            'navigate': 'mediumseagreen',
+            'orient_red_light': 'darkorange',
+            'approach_red_light': 'crimson',
+            'annotate_red_light_position': 'deeppink',
+            'basic_obstacle_avoider': 'black',
+            'stop': 'grey',
+            'none': 'lightgrey',
+        }
+        task_series = plot_df[task_col].fillna('none').astype(str)
+        change_mask = task_series.ne(task_series.shift(1))
+        changes = plot_df.loc[change_mask, ['step']].copy()
+        changes[task_col] = task_series.loc[change_mask].values
+        changes = changes[changes[task_col] != 'basic_obstacle_avoider']
+
+        ymin, ymax = ax.get_ylim()
+        text_y = ymax - (ymax - ymin) * 0.04
+        last_label_step = None
+        min_label_gap = max((plot_df['step'].max() - plot_df['step'].min()) * 0.035, 1)
+
+        for _, change in changes.iterrows():
+            step = change['step']
+            task = change[task_col]
+            task_color = task_colors.get(task, 'black')
+            ax.axvline(step, color=task_color, linestyle='--', linewidth=1.1, alpha=0.65)
+            if last_label_step is None or abs(step - last_label_step) >= min_label_gap:
+                ax.text(
+                    step,
+                    text_y,
+                    task,
+                    rotation=90,
+                    va='top',
+                    ha='right',
+                    fontsize=10,
+                    alpha=0.85,
+                )
+                last_label_step = step
+
+    ax.set_title(title)
+    ax.set_xlabel('Timestep')
+    ax.set_ylabel('Nivel de bateria')
+    ax.set_ylim(-0.05, 1.05)
+    ax.grid(True, linestyle='--', alpha=0.3)
+    ax.legend(loc='lower left')
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150)
+    plt.close(fig)
+    return True
+
 def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
     import ast
@@ -188,6 +270,14 @@ def generate_plots_classic(folder, arena_params=None):
         plt.title(f'Batería Roja - {os.path.basename(folder)}')
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
         plt.close()
+
+    generate_battery_decision_plot(
+        df,
+        os.path.join(folder, "bateria_decisiones_robot_0.png"),
+        f'Baterias y decisiones - Robot 0 - {os.path.basename(folder)}',
+        robot_label='0',
+        include_red=True,
+    )
 
     if 'tarea' in df.columns:
         plt.figure(figsize=(12, 3))
@@ -364,6 +454,22 @@ def generate_plots_centralized(folder, arena_params=None):
         plt.tight_layout()
         plt.savefig(os.path.join(folder, "bateria_roja.png"))
         plt.close()
+
+        # --- Gráfica por robot: baterias + tarea asignada ---
+        for csv_path in sorted(csv_files):
+            df = pd.read_csv(csv_path)
+            if len(df) == 0:
+                continue
+
+            robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
+            include_red = 'bat_roja' in df.columns
+            generate_battery_decision_plot(
+                df,
+                os.path.join(folder, f"bateria_decisiones_robot_{robot_id}.png"),
+                f'Baterias y tareas - Robot {robot_id} - {os.path.basename(folder)}',
+                robot_label=robot_id,
+                include_red=include_red,
+            )
 
         # EVOLUCIÓN DE TAREAS ---
         plt.figure(figsize=(12, 4))

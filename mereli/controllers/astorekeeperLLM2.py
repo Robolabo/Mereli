@@ -209,11 +209,17 @@ class AStoreKeeperLLM2Controller(RobotController):
         )
         self.brain_process.start()
 
+        local_routines = {
+            "navigate": NavigateController,
+            "load_blue_battery": LoadBlueBatteryController,
+            "load_red_battery": LoadRedBatteryController,
+        }
         for rt, pr in routines.items(): 
             priority = pr if isinstance(pr, int) else pr['priority']
             rt_params = pr.get('params', {}) if isinstance(pr, dict) else {}
             self.priorities[rt] = priority
-            self.routines[rt] =  controllers[rt](**rt_params)
+            routine_cls = local_routines.get(rt, controllers[rt])
+            self.routines[rt] = routine_cls(**rt_params)
             self.activations[rt] = np.zeros(2)
 
         #Cambiar tarea con cambio de orden
