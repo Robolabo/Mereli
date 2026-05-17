@@ -394,6 +394,193 @@ def generate_skill_usage_pies(folder):
             "skill_usage_pie_total.png",
         )
 
+
+def generate_light_discovery_metrics(folder):
+    """Calcula progreso de descubrimiento de luces rojas frente al tiempo de mision."""
+    import ast
+    import glob
+    import os
+    import re
+    import pandas as pd
+
+    consola_path = os.path.join(folder, "consola.log")
+    luces_path = os.path.join(folder, "luces.csv")
+    if not os.path.exists(consola_path) or not os.path.exists(luces_path):
+        return
+
+    try:
+        lights_df = pd.read_csv(luces_path)
+    except Exception:
+        return
+    if lights_df.empty or 'name' not in lights_df.columns:
+        return
+
+    red_lights = sorted(lights_df[lights_df['name'].astype(str).str.lower().str.contains('red')]['name'].astype(str).tolist())
+    total_red_lights = len(red_lights)
+    if total_red_lights == 0:
+        return
+
+    total_steps = None
+    end_pattern = re.compile(r"after\s+(\d+)\s+cycles")
+    found_pattern = re.compile(r"\[found_red_lights\]\s+([^:]+):\s+(\{.*\})")
+    found_rows = []
+
+    with open(consola_path, "r") as f:
+        for line in f:
+            end_match = end_pattern.search(line)
+            if end_match:
+                total_steps = int(end_match.group(1))
+
+            match = found_pattern.search(line)
+            if not match:
+                continue
+            try:
+                info = ast.literal_eval(match.group(2))
+            except (SyntaxError, ValueError):
+                continue
+
+            step = info.get('step')
+            light_id = info.get('light_id')
+            robot = info.get('robot_id') or match.group(1).split('_red_light_')[0]
+            if step is None or light_id is None or robot is None:
+                continue
+
+            light_name = f"light_red_{light_id}"
+            if light_name not in red_lights:
+                # En algunos logs el id interno no coincide con el indice del nombre real.
+                light_name = str(light_id)
+
+            try:
+                step = int(step)
+            except (TypeError, ValueError):
+                continue
+
+            found_rows.append({
+                'step': step,
+                'robot': str(robot),
+                'light_id': str(light_id),
+                'light_name': light_name,
+            })
+
+    csv_files = sorted(glob.glob(os.path.join(folder, "recorrido_robot_*.csv")))
+    if total_steps is None:
+        max_steps = []
+        for csv_path in csv_files:
+            try:
+                df_steps = pd.read_csv(csv_path, usecols=['step'])
+            except Exception:
+                continue
+            if not df_steps.empty:
+                max_steps.append(pd.to_numeric(df_steps['step'], errors='coerce').max())
+        total_steps = int(max(max_steps)) if max_steps else 0
+
+    if not found_rows:
+        summary = pd.DataFrame([{
+            'scope': 'global',
+            'robot': 'all_active',
+            'red_lights_total': total_red_lights,
+            'active_robots': 0,
+            'discoveries': 0,
+            'expected_discoveries': 0,
+            'unique_lights_discovered': 0,
+            'completed_all_lights': False,
+            'last_discovery_step': '',
+            'total_mission_steps': total_steps,
+            'effective_time_steps': total_steps,
+            'discoveries_per_1000_steps': 0.0,
+            'unique_lights_per_1000_steps': 0.0,
+        }])
+        summary.to_csv(os.path.join(folder, "light_discovery_metrics.csv"), index=False)
+        with open(os.path.join(folder, "light_discovery_metrics_table.txt"), "w") as f:
+            f.write("LIGHT DISCOVERY METRICS\n")
+            f.write("No red lights were registered by robots.\n")
+        return
+
+    found_df = pd.DataFrame(found_rows).drop_duplicates(subset=['robot', 'light_id']).sort_values(['step', 'robot'])
+    active_robots = sorted(found_df['robot'].unique().tolist())
+    active_robot_count = len(active_robots)
+    expected_discoveries = total_red_lights * active_robot_count
+    discoveries = len(found_df)
+    unique_lights_discovered = found_df['light_id'].nunique()
+
+    robot_counts = found_df.groupby('robot')['light_id'].nunique()
+    all_active_complete = bool(active_robot_count > 0 and (robot_counts >= total_red_lights).all())
+    last_discovery_step = int(found_df['step'].max())
+    effective_global_time = last_discovery_step if all_active_complete else total_steps
+    if effective_global_time <= 0:
+        effective_global_time = total_steps or 1
+
+    rows = [{
+        'scope': 'global',
+        'robot': 'all_active',
+        'red_lights_total': total_red_lights,
+        'active_robots': active_robot_count,
+        'discoveries': discoveries,
+        'expected_discoveries': expected_discoveries,
+        'unique_lights_discovered': unique_lights_discovered,
+        'completed_all_lights': all_active_complete,
+        'last_discovery_step': last_discovery_step,
+        'total_mission_steps': total_steps,
+        'effective_time_steps': effective_global_time,
+        'discoveries_per_1000_steps': 1000.0 * discoveries / effective_global_time,
+        'unique_lights_per_1000_steps': 1000.0 * unique_lights_discovered / effective_global_time,
+    }]
+
+    for robot in active_robots:
+        robot_df = found_df[found_df['robot'] == robot]
+        robot_discoveries = int(robot_df['light_id'].nunique())
+        robot_complete = robot_discoveries >= total_red_lights
+        robot_last_step = int(robot_df['step'].max())
+        robot_effective_time = robot_last_step if robot_complete else total_steps
+        if robot_effective_time <= 0:
+            robot_effective_time = total_steps or 1
+        rows.append({
+            'scope': 'robot',
+            'robot': robot,
+            'red_lights_total': total_red_lights,
+            'active_robots': active_robot_count,
+            'discoveries': robot_discoveries,
+            'expected_discoveries': total_red_lights,
+            'unique_lights_discovered': robot_discoveries,
+            'completed_all_lights': robot_complete,
+            'last_discovery_step': robot_last_step,
+            'total_mission_steps': total_steps,
+            'effective_time_steps': robot_effective_time,
+            'discoveries_per_1000_steps': 1000.0 * robot_discoveries / robot_effective_time,
+            'unique_lights_per_1000_steps': 1000.0 * robot_discoveries / robot_effective_time,
+        })
+
+    metrics_path = os.path.join(folder, "light_discovery_metrics.csv")
+    pd.DataFrame(rows).to_csv(metrics_path, index=False)
+
+    events_path = os.path.join(folder, "light_discovery_events.csv")
+    found_df.to_csv(events_path, index=False)
+
+    table_path = os.path.join(folder, "light_discovery_metrics_table.txt")
+    with open(table_path, "w") as f:
+        f.write("LIGHT DISCOVERY METRICS\n")
+        f.write(f"Red lights in world: {total_red_lights}\n")
+        f.write(f"Active robots with at least one registration: {active_robot_count}\n")
+        f.write(f"Total mission steps: {total_steps}\n")
+        f.write(f"Mission complete for all active robots: {all_active_complete}\n")
+        f.write(f"Effective global time used: {effective_global_time}\n")
+        f.write("\nSUMMARY\n")
+        f.write("scope      robot           found/expected   last_step   effective_steps   discoveries_per_1000_steps\n")
+        f.write("-----------------------------------------------------------------------------------------------\n")
+        for row in rows:
+            f.write(
+                f"{row['scope']:<10} {row['robot']:<14} "
+                f"{row['discoveries']}/{row['expected_discoveries']:<12} "
+                f"{str(row['last_discovery_step']):<10} "
+                f"{row['effective_time_steps']:<16} "
+                f"{row['discoveries_per_1000_steps']:.6f}\n"
+            )
+        f.write("\nDISCOVERY EVENTS\n")
+        f.write("step       robot           light_id\n")
+        f.write("-----------------------------------\n")
+        for _, event in found_df.sort_values('step').iterrows():
+            f.write(f"{int(event['step']):<10} {event['robot']:<14} {event['light_id']}\n")
+
 def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
     import ast
@@ -557,9 +744,9 @@ def generate_plots_centralized(folder, arena_params=None):
     num_robots = len(csv_files)
     # Si tienes hasta 20 robots usa 'tab20' (colores muy distinguibles), si tienes más, usa 'hsv'
     if num_robots <= 20:
-        mapa_colores = cm.get_cmap('tab20', num_robots)
+        mapa_colores = plt.colormaps.get_cmap('tab20').resampled(num_robots)
     else:
-        mapa_colores = cm.get_cmap('hsv', num_robots)
+        mapa_colores = plt.colormaps.get_cmap('hsv').resampled(num_robots)
 
     try:
         # --- Gráfica Trayectoria Superpuesta ---
@@ -655,6 +842,7 @@ def generate_plots_centralized(folder, arena_params=None):
         plt.close()
 
         # --- Gráfica Batería ROJA Superpuesta ---
+        red_lines = 0
         plt.figure(figsize=(10, 5))
         for i, csv_path in enumerate(csv_files):
             df = pd.read_csv(csv_path)
@@ -662,11 +850,13 @@ def generate_plots_centralized(folder, arena_params=None):
             
             robot_id = os.path.basename(csv_path).replace("recorrido_robot_", "").replace(".csv", "")
             plt.plot(df['step'], df['bat_roja'], color=mapa_colores(i), label=f'Robot {robot_id}')
+            red_lines += 1
 
-        plt.title(f'Batería Roja - {os.path.basename(folder)}')
-        plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-        plt.tight_layout()
-        plt.savefig(os.path.join(folder, "bateria_roja.png"))
+        if red_lines > 0:
+            plt.title(f'Batería Roja - {os.path.basename(folder)}')
+            plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+            plt.tight_layout()
+            plt.savefig(os.path.join(folder, "bateria_roja.png"))
         plt.close()
 
         # --- Gráfica por robot: baterias + tarea asignada ---
@@ -1019,6 +1209,8 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
             generate_skill_usage(exp_folder)
             generate_llm_timing_plots(exp_folder, separate=("ExplorationGroup" in cfg))
             generate_skill_usage_pies(exp_folder)
+            if "ExplorationGroup" in cfg:
+                generate_light_discovery_metrics(exp_folder)
             # EL MAIN DECIDE QUÉ GRÁFICA USAR SEGÚN EL EXPERIMENTO
             if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
                 generate_plots_centralized(exp_folder, arena_params=arena_params)
