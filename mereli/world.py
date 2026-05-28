@@ -76,9 +76,15 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 response = llm.invoke([sys_msg, HumanMessage(content=contexto)])
                 raw_content = response.content.strip()
 
-                # Limpieza de JSON
+                # Limpieza de JSON: el modelo a veces devuelve markdown o texto extra.
                 if "```json" in raw_content:
                     raw_content = raw_content.split("```json")[1].split("```")[0].strip()
+                elif "```" in raw_content:
+                    raw_content = raw_content.split("```")[1].strip()
+                elif not raw_content.lstrip().startswith("{"):
+                    match = re.search(r"\{.*\}", raw_content, re.DOTALL)
+                    if match:
+                        raw_content = match.group(0).strip()
                 
                 data = json.loads(raw_content)
 
@@ -88,12 +94,14 @@ def llm_brain_loop(shared_data, system_rules_content, base_url, num_robots):
                 memoria = data.get('memoria_interna', '')
                 razonamiento = data.get('razonamiento', '')
                 luces_trianguladas = data.get('luces_trianguladas', [])
+                self_check = data.get('self_check', {})
 
                 response_wall_time = time.perf_counter()
                 shared_data['decisions'] = decisions
                 shared_data['memoria_interna'] = memoria
                 shared_data['razonamiento'] = razonamiento
                 shared_data['luces_trianguladas'] = luces_trianguladas
+                shared_data['self_check'] = self_check
                 shared_data['decision_ts'] = current_sensor_ts
                 shared_data['llm_request_wall_time'] = request_wall_time
                 shared_data['llm_response_wall_time'] = response_wall_time
@@ -284,6 +292,71 @@ class World(object):
                 blind_steps, f"{latency_s:.6f}", f"{async_ratio:.6f}", json.dumps(decision)
             ])
 
+    def is_blue_charge_order(self, order):
+        order = str(order).lower()
+        return ("cargar" in order or "load" in order) and ("azul" in order or "blue" in order or "bateria" in order or "battery" in order)
+
+    def parse_requested_explorers(self, user_instructions):
+        words = {"uno": 1, "una": 1, "un": 1, "dos": 2, "tres": 3, "cuatro": 4, "cinco": 5}
+        for token in str(user_instructions).lower().replace(",", " ").replace(".", " ").split():
+            if token.isdigit():
+                return int(token)
+            if token in words:
+                return words[token]
+        return 1
+
+    def log_central_invalid_action(self, step, reason, decisions, ready_robots, charging_robots, proposed_charging, new_charging, self_check):
+        output_dir = os.environ.get("CURRENT_EXP_FOLDER", "outputs")
+        metrics_path = os.path.join(output_dir, "llm_central_invalid_actions.csv")
+        file_exists = os.path.exists(metrics_path)
+        with open(metrics_path, "a", newline="") as f:
+            writer = csv.writer(f)
+            if not file_exists or os.path.getsize(metrics_path) == 0:
+                writer.writerow(["step", "reason", "raw_decisions", "ready_robots", "current_charging_robots", "proposed_charging_robots", "new_charging_robots", "self_check"])
+            writer.writerow([int(step), reason, json.dumps(list(decisions)), json.dumps(ready_robots), json.dumps(charging_robots), json.dumps(proposed_charging), json.dumps(new_charging), json.dumps(self_check)])
+
+    def evaluate_central_decision(self, decisions, step):
+        target_n = int(self.llm_shared_data.get('target_explorers', 1))
+        robot_names = list(self.robots.keys())
+        ready_robots = []
+        charging_robots = []
+        proposed_charging = []
+        new_charging = []
+
+        for name, robot in self.robots.items():
+            bat_azul = float(robot.state.get('blue_battery_sensor', [0])[0])
+            current_order = self.llm_orders.get(name, self.llm_shared_data.get('default_decision', 'Espera'))
+            if bat_azul >= 0.90:
+                ready_robots.append(name)
+            elif self.is_blue_charge_order(current_order):
+                charging_robots.append(name)
+
+        for i, decision in enumerate(decisions):
+            if i >= len(robot_names) or not self.is_blue_charge_order(decision):
+                continue
+            name = robot_names[i]
+            proposed_charging.append(name)
+            current_order = self.llm_orders.get(name, self.llm_shared_data.get('default_decision', 'Espera'))
+            bat_azul = float(self.robots[name].state.get('blue_battery_sensor', [0])[0])
+            if bat_azul >= 0.90 or not self.is_blue_charge_order(current_order):
+                new_charging.append(name)
+
+        missing = target_n - (len(ready_robots) + len(charging_robots))
+        self_check = self.llm_shared_data.get('self_check', {})
+        reasons = []
+        if missing <= 0 and new_charging:
+            reasons.append("new_charge_order_when_missing_leq_zero")
+        if charging_robots and new_charging:
+            reasons.append("new_charge_order_while_robot_already_charging")
+        if missing > 0 and not charging_robots and len(new_charging) > 1:
+            reasons.append("more_than_one_new_charge_order")
+        if isinstance(self_check, dict) and self_check.get('decision_valida') is False:
+            reasons.append("llm_self_check_marked_invalid")
+        if reasons:
+            reason = "+".join(reasons)
+            self.log_central_invalid_action(step, reason, decisions, ready_robots, charging_robots, proposed_charging, new_charging, self_check)
+            print(f"⚠️ [LLM CENTRAL INVALID ACTION] {reason}: {decisions}")
+
     def euclidean_2d(self, a, b):
         return float(np.linalg.norm(np.array(a[:2], dtype=float) - np.array(b[:2], dtype=float)))
 
@@ -315,7 +388,10 @@ class World(object):
         rows = []
         triangulated = self.llm_shared_data.get('luces_trianguladas', [])
         for idx, item in enumerate(triangulated):
-            source_position = item.get('coordenada_estimada') or item.get('position') or item.get('pos')
+            if isinstance(item, dict):
+                source_position = item.get('coordenada_estimada') or item.get('position') or item.get('pos')
+            else:
+                source_position = item
             if source_position is None or len(source_position) < 2:
                 continue
             source_position = [float(source_position[0]), float(source_position[1])]
@@ -585,13 +661,52 @@ class World(object):
                 
                 # Guardamos el timestamp actual del LLM para saber cuándo ha respondido
                 ts_espera = self.llm_shared_data.get('decision_ts', 0)
+
+                # Al cerrar la simulacion, cancelamos consultas locales pendientes
+                # para que la triangulacion final no compita con LLMs individuales.
+                for robot in self.robots.values():
+                    controller = getattr(robot, "controller", None)
+                    if hasattr(controller, "cleanup_llm_process"):
+                        controller.cleanup_llm_process()
                 
                 self.avisar_central("SISTEMA", msg_luces)
                 
                 print("⏳ Esperando el veredicto final de triangulación del LLM...")
-                # Bucle que congela el cierre de la simulación hasta que el LLM responda
-                while self.llm_shared_data.get('decision_ts', 0) <= ts_espera:
+                timeout_s = float(os.environ.get("FINAL_TRIANGULATION_TIMEOUT_S", "90"))
+                deadline = time.time() + timeout_s
+                while self.llm_shared_data.get('decision_ts', 0) <= ts_espera and time.time() < deadline:
                     time.sleep(0.5)
+
+                if self.llm_shared_data.get('decision_ts', 0) <= ts_espera:
+                    print(
+                        f"⚠️ [MUNDO]: Timeout de triangulación final tras {timeout_s:.1f}s. "
+                        "Usando clustering local de respaldo."
+                    )
+                    clusters = []
+                    for _, pos in todas_luces_encontradas:
+                        point = np.array(pos[:2], dtype=float)
+                        assigned = False
+                        for cluster in clusters:
+                            center = np.mean(cluster, axis=0)
+                            if float(np.linalg.norm(point - center)) <= 0.75:
+                                cluster.append(point)
+                                assigned = True
+                                break
+                        if not assigned:
+                            clusters.append([point])
+
+                    luces_trianguladas = []
+                    for cluster in clusters:
+                        center = np.mean(cluster, axis=0)
+                        luces_trianguladas.append({
+                            "coordenada_estimada": [round(float(center[0]), 3), round(float(center[1]), 3)],
+                            "observaciones_agrupadas": len(cluster),
+                        })
+                    self.llm_shared_data['luces_trianguladas'] = luces_trianguladas
+                    self.llm_shared_data['razonamiento'] = (
+                        "Triangulación local de respaldo: el LLM central no respondió "
+                        "a tiempo, así que se agruparon las observaciones por distancia."
+                    )
                 
                 # Imprimimos el resultado glorioso
                 print("\n" + "="*60)
@@ -620,6 +735,7 @@ class World(object):
                 decisions = self.llm_shared_data.get('decisions', [])
                 razonamiento = self.llm_shared_data.get('razonamiento', '')
                 memoria = self.llm_shared_data.get('memoria_interna', '')
+                self.evaluate_central_decision(decisions, self.t)
                 for i, robot_name in enumerate(self.robots.keys()):
                     if i < len(decisions):
                         self.llm_orders[robot_name] = decisions[i]
@@ -877,6 +993,8 @@ class World(object):
         self.llm_shared_data['decision_ts'] = 0
         self.llm_shared_data['processing'] = False
         self.llm_shared_data['default_decision'] = default_decision
+        self.llm_shared_data['target_explorers'] = self.parse_requested_explorers(user_instructions) if mode == "exploration_group" else 0
+        self.llm_shared_data['self_check'] = {}
         self.central_llm_initial_request_sent = False
         self.central_llm_decision_ready = False
         self.last_read_ts = 0
@@ -893,15 +1011,29 @@ class World(object):
 
             INSTRUCCIONES DEL USUARIO: {user_instructions}
 
-            ESTRUCTURA DE RESPUESTA (JSON):
+            ESTRUCTURA DE RESPUESTA: responde SOLO con JSON valido, sin comentarios ni markdown.
             {{
-            "razonamiento": "OBLIGATORIO usar esta fórmula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusión: [Explica a quién asignas en base a Z]. || Si recibes el aviso de 'SIMULACIÓN TERMINADA', explica tu razonamiento espacial para deducir cuántas luces únicas hay y dónde están...", Ignora por completo las baterías. Escribe AQUÍ tu análisis espacial.
-            "memoria_interna": "Diario global breve indicando específicamente qué robots están en 'Espera' (listos) y cuáles están en cargando la bateria azul.",
+            "razonamiento": "OBLIGATORIO usar esta formula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusion: explica a quien asignas y por que. Si recibes el aviso de SIMULACION TERMINADA, ignora baterias y escribe aqui el analisis espacial.",
+            "memoria_interna": "Diario global breve indicando que robots estan en Espera/listos y cuales estan cargando la bateria azul.",
+            "self_check": {{
+                "listos": 0,
+                "cargando": 0,
+                "faltan": 0,
+                "robots_nuevos_a_cargar": [],
+                "decision_valida": true
+            }},
             "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"] // UNA tarea permitida por robot. Exactamente {num_robots} elementos.
             "luces_trianguladas": [
                 {{"coordenada_estimada": [x, y], "observaciones_agrupadas": 2}}
             ] // AÑADE ESTE CAMPO SOLO SI RECIBES REPORTES DE LUCES. Si no hay reporte aún, envíalo vacío [].
             }}
+
+            AUTOCHECK OBLIGATORIO ANTES DE RESPONDER:
+            - Calcula LISTOS, CARGANDO y FALTAN.
+            - Reclutamiento secuencial: robots_nuevos_a_cargar puede tener COMO MAXIMO 1 robot.
+            - Si ya hay algun robot en CARGANDO, robots_nuevos_a_cargar DEBE ser [] aunque FALTEN > 0. Espera a que termine antes de enviar otro.
+            - Si FALTAN <= 0, robots_nuevos_a_cargar DEBE ser [] y ningun robot nuevo puede recibir "Cargar batería azul".
+            - Si tu array decisions contradice tu razonamiento o self_check, corrigelo antes de enviar JSON.
 
             REGLAS ESTRICTAS DE COORDINACIÓN Y ASIGNACIÓN:
             1. REGLA DE BATERÍA MÍNIMA: Para salir a explorar luces rojas, un robot DEBE tener bat_azul >= 0.90.
@@ -910,9 +1042,10 @@ class World(object):
             - LISTOS: Robots con bat_azul >= 0.90.
             - CARGANDO: Robots cuya tarea *actual* ya es cargar la bateria azul.
             - FALTAN: N - (LISTOS + CARGANDO).
-            4. REGLA DE PACIENCIA: 
-            - Si FALTAN > 0: Deben ir a cargar la batería azul SOLO al número exacto de robots que faltan (elige los que tengan la bat_azul más alta).
-            - Si FALTAN <= 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los que están cargando en dicha tarea, a los listos en "Espera" y ten paciencia hasta que los que cargan lleguen a 0.90.
+            4. REGLA DE PACIENCIA Y RECLUTAMIENTO SECUENCIAL:
+            - Si hay algun robot CARGANDO, NO mandes ningun robot nuevo a cargar. Mantén al que carga en "Cargar batería azul" y espera.
+            - Si FALTAN > 0 y no hay ningun robot CARGANDO: manda a cargar SOLO 1 robot nuevo, el que tenga la bat_azul más alta entre los que no están listos.
+            - Si FALTAN <= 0: NO MANDES A NADIE MÁS A CARGAR. Mantén a los listos en "Espera" y ten paciencia hasta que sea momento de desplegar.
             5. REGLA DE DESPLIEGUE: Cuando LISTOS >= N, elige exactamente a N de esos robots listos y envialos INMEDIATAMENTE en busqueda de luces rojas en la misma decisión.
             6. FORMATO ESTRICTO: El array "decisions" DEBE tener exactamente {num_robots} elementos.
             7. TRIANGULACIÓN FINAL: Al final de la simulación, recibirás todas las coordenadas vistas por los robots. Tu tarea es hacer 'clustering': promedia las coordenadas que estén muy juntas para devolver la posición real de las luces.
