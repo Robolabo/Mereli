@@ -1002,26 +1002,18 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
 
     # __import__('pdb').set_trace()
 
-    # --- MODIFICACIÓN: Crear carpeta de experimento ---
-    now = datetime.now().strftime("%m%d_%H%M%S")
-    exp_folder = os.path.join("outputs", f"run_{now}")
-    if not os.path.exists(exp_folder):
-        os.makedirs(exp_folder)
-    
-    # Guardamos la ruta en global_states o una variable para que el controlador la use
-    # Por ahora, la pasaremos de forma sencilla
-    os.environ["CURRENT_EXP_FOLDER"] = exp_folder 
-    print(f"📁 Iniciando experimento en: {exp_folder}")
-
-    # --- Redirigir consola a un archivo log ---
+    # --- Salidas por trial ---
     import sys
+
     class Logger(object):
-        def __init__(self, filename):
-            self.terminal = sys.stdout
+        def __init__(self, filename, terminal):
+            self.terminal = terminal
             self.log = open(filename, "w")
+
         def write(self, message):
             self.terminal.write(message)
             self.log.write(message)
+
         def flush(self):
             self.terminal.flush()
             self.log.flush()
@@ -1029,16 +1021,71 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         def fileno(self):
             return self.terminal.fileno()
 
-    sys.stdout = Logger(os.path.join(exp_folder, "consola.log"))
+        def close(self):
+            self.log.close()
 
-    #* Create World
-    physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
-                        dt=cfg_dict['world'].get('physics_dt', 0.02), 
-                        T_control=cfg_dict['world'].get('T_control', 0.1))
-    world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
+    terminal_stdout = sys.stdout
+    active_logger = {"logger": None}
+    exp_folder = None
+
+    def create_trial_folder(trial_idx=None):
+        now = datetime.now().strftime("%m%d_%H%M%S_%f")
+        suffix = f"_trial_{trial_idx}" if trial_idx is not None else ""
+        folder = os.path.join("outputs", f"run_{now}{suffix}")
+        os.makedirs(folder, exist_ok=True)
+        return folder
+
+    def set_trial_output_folder(folder):
+        if active_logger["logger"] is not None:
+            active_logger["logger"].flush()
+            active_logger["logger"].close()
+        os.environ["CURRENT_EXP_FOLDER"] = folder
+        active_logger["logger"] = Logger(os.path.join(folder, "consola.log"), terminal_stdout)
+        sys.stdout = active_logger["logger"]
+        print(f"📁 Iniciando trial en: {folder}")
+
+    def update_controller_output_paths(controller, folder):
+        if controller is None:
+            return
+        if hasattr(controller, "output_dir"):
+            controller.output_dir = folder
+        if hasattr(controller, "metrics_log_name"):
+            controller.metrics_log_name = os.path.join(folder, "llm_tiempos.csv")
+        if hasattr(controller, "log_name"):
+            controller.log_name = os.path.join(folder, "recorrido_robot.csv")
+        if hasattr(controller, "_log_initialized"):
+            controller._log_initialized = False
+        for attr in ["survival_controller", "secondary_controller"]:
+            child = getattr(controller, attr, None)
+            if child is not None and child is not controller:
+                update_controller_output_paths(child, folder)
+        routines = getattr(controller, "routines", {})
+        if isinstance(routines, dict):
+            for child in routines.values():
+                if child is not controller:
+                    update_controller_output_paths(child, folder)
+
+    def update_world_output_paths(world_obj, folder):
+        os.environ["CURRENT_EXP_FOLDER"] = folder
+        for robot in world_obj.robots.values():
+            update_controller_output_paths(getattr(robot, "controller", None), folder)
+
+    def finalize_trial_outputs(folder):
+        generate_skill_usage(folder)
+        generate_llm_timing_plots(folder, separate=("ExplorationGroup" in cfg))
+        generate_skill_usage_pies(folder)
+        if "ExplorationGroup" in cfg:
+            generate_light_discovery_metrics(folder)
+        if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
+            generate_plots_centralized(folder, arena_params=arena_params)
+        else:
+            generate_plots_classic(folder, arena_params=arena_params)
+
+    exp_folder = create_trial_folder(0)
+    set_trial_output_folder(exp_folder)
+
     arena_params = cfg_dict['world'].get('arena_params', {})
-    world = world_cls(physics_engine, **arena_params)
-        
+
     # --- PREGUNTAR AL USUARIO PARA LOS EXPERIMENTOS CON LLM CENTRAL ---
     instrucciones = "No hay instrucciones específicas. Asigna tareas por defecto."
     if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
@@ -1047,28 +1094,36 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
         if entrada != "":
             instrucciones = entrada
         print(f"🧠 [CEREBRO CENTRAL]: Instrucciones enviadas a la IA: {instrucciones}\n")
-    
-    # Pasamos las instrucciones al mundo al construirlo
-    world.build_from_dict(cfg_dict['world'], ann_topology=cfg_dict.get('topology', {}), user_instructions=instrucciones)
-    
-    if log:
-        world.config_data_logger(cfg_dict['logging']['data'])
-        world.data_logger.set_log_file(cfg_dict.get('logging', {}).get('file', cfg))
-    if render:
-        simulation_config = cfg_dict.get('simulation', {})
-        world.start_paused = simulation_config.get('start_paused', False)
-    #     if 'animated_layout' in simulation_config:
-    #         anim_config = simulation_config.get('animated_layout')
-    #         world.create_animated_layout()
-    #         world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
-    #         world.animated_layout.initialize()
 
-    # Create virtual space (if any)
-    if 'virtual_space' in cfg_dict:
+    def build_world_instance():
+        physics_engine = physics_engines[cfg_dict['world'].get('engine', 'pybullet')](
+                            dt=cfg_dict['world'].get('physics_dt', 0.02),
+                            T_control=cfg_dict['world'].get('T_control', 0.1))
+        world_cls = worlds[cfg_dict['world'].get('name', 'square_arena')]
+        world_obj = world_cls(physics_engine, **arena_params)
+        world_obj.build_from_dict(
+            cfg_dict['world'],
+            ann_topology=cfg_dict.get('topology', {}),
+            user_instructions=instrucciones,
+        )
 
-        # is_neural_ctlr = cfg_dict['virtual_space']['controller']['name'] == 'neural_controller'
-        topology_name = cfg_dict['virtual_space'].get('controller',{}).get('topology')
-        world.create_virtual_space(**cfg_dict['virtual_space'], topology=cfg_dict.get('topology',{}).get(topology_name))
+        if log:
+            world_obj.config_data_logger(cfg_dict['logging']['data'])
+            world_obj.data_logger.set_log_file(cfg_dict.get('logging', {}).get('file', cfg))
+
+        if render:
+            simulation_config = cfg_dict.get('simulation', {})
+            world_obj.start_paused = simulation_config.get('start_paused', False)
+
+        if 'virtual_space' in cfg_dict:
+            topology_name = cfg_dict['virtual_space'].get('controller', {}).get('topology')
+            world_obj.create_virtual_space(
+                **cfg_dict['virtual_space'],
+                topology=cfg_dict.get('topology', {}).get(topology_name),
+            )
+
+        update_world_output_paths(world_obj, os.environ.get("CURRENT_EXP_FOLDER", "outputs"))
+        return world_obj
 
     # import copy
     # world2 = copy.deepcopy(world)
@@ -1079,6 +1134,7 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     # import pdb; pdb.set_trace()
 
     if cfg_dict.get('algorithm', False) and len(cfg_dict['algorithm']):
+        world = build_world_instance()
         alg_config = cfg_dict['algorithm']
         if alg_config['name'] == 'multi_EA':
             opt_alg = algorithms['multi_EA'](world, alg_config['generations'], alg_config['population_size'], None, 
@@ -1120,23 +1176,35 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
     else: #* Non-optimizable simulation
         simulation_config = cfg_dict.get('simulation', {})
         seed = simulation_config.get('seed', None)
-        world.connect()
-        print('Connected!')
         timesteps = simulation_config.get('timesteps', 10000)
         trials = simulation_config.get('trials', 1)
-        if render:
-            world.start_paused = simulation_config.get('start_paused', False)
-            if 'camera_options' in simulation_config:
-                world.physics_engine.set_camera_options(**simulation_config['camera_options'])
-            if 'animated_layout' in simulation_config and simulation_config['animated_layout'].get('enabled', False):
-                anim_config = simulation_config.get('animated_layout')
-                world.create_animated_layout(figsize=anim_config.get('figsize'))
-                world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
-                world.animated_layout.initialize(world)
         np.random.seed(seed)
         # Interacción inicial con LLM ya se hizo antes
+        current_trial_folder = exp_folder
+        current_trial_finalized = False
+        current_world = None
         try: 
             for tr in range(trials):
+                current_trial_finalized = False
+                if tr == 0:
+                    current_trial_folder = exp_folder
+                else:
+                    current_trial_folder = create_trial_folder(tr)
+                    set_trial_output_folder(current_trial_folder)
+                exp_folder = current_trial_folder
+                world = build_world_instance()
+                current_world = world
+                if render:
+                    world.start_paused = simulation_config.get('start_paused', False)
+                    if 'camera_options' in simulation_config:
+                        world.physics_engine.set_camera_options(**simulation_config['camera_options'])
+                    if 'animated_layout' in simulation_config and simulation_config['animated_layout'].get('enabled', False):
+                        anim_config = simulation_config.get('animated_layout')
+                        world.create_animated_layout(figsize=anim_config.get('figsize'))
+                        world.animated_layout.add_plots(anim_config.get('plots'), grid=anim_config['grid'])
+                        world.animated_layout.initialize(world)
+                world.connect()
+                print(f'Connected trial {tr}!')
                 world.reset()
                 try:
                     with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
@@ -1203,19 +1271,27 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                 time_elapsed = time.time() - t0 
                 # print(np.hstack([rob.position[:2] for rob in world.robots.values()]))
                 print(f'Simulation of trial {tr} ended in {time_elapsed} after {timesteps} cycles. ')
+                finalize_trial_outputs(exp_folder)
+                current_trial_finalized = True
+                if getattr(world, "llm_process", None) is not None and world.llm_process.is_alive():
+                    world.llm_process.terminate()
+                    world.llm_process.join(timeout=1)
+                world.disconnect()
+                current_world = None
         except KeyboardInterrupt:
             print("\n🛑 Simulación interrumpida.")
         finally:
-            generate_skill_usage(exp_folder)
-            generate_llm_timing_plots(exp_folder, separate=("ExplorationGroup" in cfg))
-            generate_skill_usage_pies(exp_folder)
-            if "ExplorationGroup" in cfg:
-                generate_light_discovery_metrics(exp_folder)
-            # EL MAIN DECIDE QUÉ GRÁFICA USAR SEGÚN EL EXPERIMENTO
-            if "AStoreKeeperLLMcentral" in cfg or "ExplorationGroup" in cfg:
-                generate_plots_centralized(exp_folder, arena_params=arena_params)
-            else:
-                generate_plots_classic(exp_folder, arena_params=arena_params)
+            if not current_trial_finalized and exp_folder is not None:
+                finalize_trial_outputs(exp_folder)
+            if current_world is not None:
+                if getattr(current_world, "llm_process", None) is not None and current_world.llm_process.is_alive():
+                    current_world.llm_process.terminate()
+                    current_world.llm_process.join(timeout=1)
+                current_world.disconnect()
+            if active_logger["logger"] is not None:
+                active_logger["logger"].flush()
+                active_logger["logger"].close()
+                sys.stdout = terminal_stdout
 if __name__ == "__main__":
     main()
 
