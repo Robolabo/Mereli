@@ -1,6 +1,6 @@
 {
     "simulation": {
-        "timesteps": 50000,
+        "timesteps": 60000,
         "trials":3,
         "start_paused": false,
         "animated_layout": {

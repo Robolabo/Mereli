@@ -673,8 +673,10 @@ class ExplorationGroupController(RobotController):
         # Estas reglas usan los nombres reales de skills que ya existen en este
         # fichero. La macro_task concreta se pasara en el contexto dinamico.
         self.llm_rules = """
+        ROL:
         Eres el Controlador Tactico de un robot e-puck.
-        Tu objetivo es cumplir la MACRO-TAREA asignada por el Cerebro Central.
+        OBJETIVO:
+        Cumplir la macro-tarea asignada por el Cerebro Central.
         Para lograrlo, debes elegir paso a paso que habilidad ejecutar.
 
         ACCIONES PERMITIDAS:
@@ -685,31 +687,30 @@ class ExplorationGroupController(RobotController):
         - "go_to_coordenadas": Va por GPS a las coordenadas que indiques en target_coords.
         - "load_blue_battery": Se queda quieto mientras se carga la bateria azul. Esta habilidad no mueve al robot; solo es util cuando el robot ya esta en la zona de carga azul.
         - "annotate_red_light_position": Anota la posicion de la luz roja para registrarla y darla por encontrada.
-
+        
         SIGNIFICADO DE LA OBSERVACION:
         - found_red_lights: tabla de luces rojas ya exploradas por este robot.
         - robot_position: posicion actual real del robot en coordenadas [x, y].
         - blue_light_position: coordenadas de la zona/fuente de carga azul. Los robots pueden empezar lejos de esa posicion.
         - red_light_sensor_unexplored: lectura roja filtrada por el robot. Los sectores que apuntan a luces ya registradas se ponen a 0.
-        - new_red_light_visible: valor booleano calculado por el controlador. Es la referencia principal para saber si hay una luz roja nueva accionable ahora.
+        - new_red_light_visible: booleano principal para saber si hay una luz roja nueva accionable ahora.
         - visible_red_light_candidate: luz roja real mas probable asociada a la lectura actual, si hay una senal roja clara. Incluye status_for_this_robot y actionable_by_this_robot.
         - max_unexplored_red_light_sensor: maximo de red_light_sensor_unexplored. Usalo como intensidad, no como prueba principal de novedad.
-        - Una luz roja solo queda explorada despues de que annotate_red_light_position termine con exito.
+        - Una luz roja solo queda explorada despues de que "annotate_red_light_position" termine con exito.
 
         POLITICA DE DECISION:
-        - IMPORTANTE: La MACRO-TAREA asignada por el Cerebro Central manda sobre cualquier sensor local, da igual que percibas luz roja.
-        - Usa new_red_light_visible para decidir si hay una luz roja nueva hacia la que ir.
+        - La macro-tarea asignada por el Cerebro Central manda sobre cualquier sensor local.
         - Si new_red_light_visible es false, no hay luz roja nueva accionable ahora. Puedes continuar recorriendo el mapa. 
         - Si new_red_light_visible es true y no acabas de completar "orient_red_light", significa que hay una luz roja nueva accionable pero no centrada.
-        - Si en la memoria aparece que "orient_red_light" termino con exito, significa que la luz roja esta completamente centrada. 
-        - Si en la memoria aparece que "orient_red_light" fue detenida sin exito por no poder centrar la luz tras demasiados steps, ejecuta "navigate" una vez para cambiar de posicion. Despues de una subtarea "navigate" completada, si new_red_light_visible vuelve a ser true, puedes volver a intentar "orient_red_light".
+        - Si "orient_red_light" termino con exito, la luz roja esta centrada.
+        - Si "orient_red_light" fue detenida sin exito por no poder centrar la luz tras demasiados steps, ejecuta "navigate" una vez para cambiar de posicion. Despues de una subtarea "navigate" completada, si new_red_light_visible vuelve a ser true, puedes volver a intentar "orient_red_light".
         - "approach_red_light" solo termina cuando alcanza el umbral de cercania. Si termina con exito, significa que el robot ya esta muy cerca de una luz roja nueva y debes registrarla.
-        - Si en la memoria aparece que "load_blue_battery" fue detenida sin exito significa que te han empujado fuera del cargador. El robot debe obligatoriamente dirigirse hacia ella
+        - Si "load_blue_battery" fue detenida sin exito significa que te han empujado fuera del cargador. El robot debe dirigirse hacia ella.
         - Si quieres ir a un punto concreto del mapa, elige "go_to_coordenadas" e incluye "target_coords": [x, y].
         - Si "go_to_coordenadas" termina con exito, el robot ya esta sobre la posicion objetivo.
         - Si "annotate_red_light_position" termina con exito, esa luz queda marcada como explorada en found_red_lights. Debes continuar buscando otras luces nuevas.
         - Usa la secuencia de ultimas tareas completadas como memoria de progreso. No repitas una subtarea ya completada salvo que una observacion posterior diga explicitamente que su condicion se perdio.
-
+        
         Responde UNICAMENTE con este JSON:
         {
         "thought": "Tu razonamiento logico basado en la observacion y el historial.",
@@ -717,6 +718,7 @@ class ExplorationGroupController(RobotController):
         "target_coords": [0.0, 0.0]
         }
         Usa "target_coords" solo cuando action sea "go_to_coordenadas"; en el resto de acciones puedes omitirlo.
+
         """
         self.pending_macro_task = None
 

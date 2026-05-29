@@ -745,16 +745,22 @@ def generate_plots_classic(folder, arena_params=None):
     if 'tarea' in df.columns:
         plt.figure(figsize=(12, 3))
         colores_tareas = {
-            'basic_obstacle_avoider': 'tomato',
-            'stop': 'lightgrey',
-            'navigate': 'mediumseagreen',
-            'orient_red_light': 'orange',
-            'approach_red_light': 'gold',
-            'load_blue_battery': 'royalblue',
-            'annotate_red_light_position': 'purple',
-            'none': 'lightgrey'
+            'stop': '#bdbdbd',
+            'Espera': '#bdbdbd',
+            'none': '#bdbdbd',
+            'load_blue_battery': '#1f77b4',
+            'load_red_battery': '#1f77b4',
+            'Cargar batería azul': '#1f77b4',
+            'Cargar bateria azul': '#1f77b4',
+            'simple_forage': '#2ca02c',
+            'navigate': '#2ca02c',
+            'Buscar luces rojas': '#2ca02c',
+            'orient_red_light': '#ff8c00',
+            'approach_red_light': '#ff9999',
+            'annotate_red_light_position': '#9467bd',
+            'basic_obstacle_avoider': '#5c4033',
         }
-        colores_extra = ['cyan', 'pink', 'brown', 'olive', 'black']
+        colores_extra = ['#17becf', '#e377c2', '#bcbd22', '#7f7f7f', '#000000']
         tareas_legend = set()
 
         df['cambio_tarea'] = (df['tarea'] != df['tarea'].shift(1)).cumsum()
@@ -943,20 +949,24 @@ def generate_plots_centralized(folder, arena_params=None):
         
         # Diccionario de colores fijos para que tenga sentido visual
         colores_tareas = {
-            'simple_forage': 'mediumseagreen',    # Verde para patrullar/buscar
-            'load_red_battery': 'tomato',         # Rojo para la batería roja
-            'load_blue_battery': 'royalblue',     # Azul para la batería azul
-            'turn_yellow_lights_OFF': 'gold',     # Amarillo para las luces
-            'go_to_coordenadas': 'darkviolet',
-            'navigate': 'mediumseagreen',
-            'orient_red_light': 'darkorange',
-            'approach_red_light': 'crimson',
-            'annotate_red_light_position': 'deeppink',
-            'basic_obstacle_avoider': 'black',
-            'stop': 'lightgrey',
-            'none': 'lightgrey'
+            'stop': '#bdbdbd',
+            'Espera': '#bdbdbd',
+            'none': '#bdbdbd',
+            'load_blue_battery': '#1f77b4',
+            'load_red_battery': '#1f77b4',
+            'Cargar batería azul': '#1f77b4',
+            'Cargar bateria azul': '#1f77b4',
+            'simple_forage': '#2ca02c',
+            'navigate': '#2ca02c',
+            'Buscar luces rojas': '#2ca02c',
+            'orient_red_light': '#ff8c00',
+            'approach_red_light': '#ff9999',
+            'annotate_red_light_position': '#9467bd',
+            'basic_obstacle_avoider': '#5c4033',
+            'turn_yellow_lights_OFF': '#bcbd22',
+            'go_to_coordenadas': '#17becf',
         }
-        colores_extra = ['purple', 'orange', 'cyan', 'pink', 'brown'] # Por si hay tareas nuevas
+        colores_extra = ['#e377c2', '#8c564b', '#bcbd22', '#7f7f7f', '#000000'] # Por si hay tareas nuevas
         
         tareas_legend = set()
         nombres_robots = []

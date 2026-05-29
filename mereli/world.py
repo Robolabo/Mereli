@@ -1001,8 +1001,11 @@ class World(object):
 
         if mode == "exploration_group":
             self.llm_rules = f"""
+            ROL:
             Eres el cerebro central de un equipo de {num_robots} robots e-puck.
-            Tu objetivo es asignar una misión a cada robot segun las instrucciones del usuario y el estado global.
+
+            OBJETIVO:
+            Asignar una macro-tarea a cada robot segun las instrucciones del usuario, el estado global y los avisos recibidos desde los controladores locales.
 
             MACRO-TAREAS PERMITIDAS:
             - Puedes enviar al robot en busqueda de luces rojas para que las registre.
@@ -1013,7 +1016,7 @@ class World(object):
 
             ESTRUCTURA DE RESPUESTA: responde SOLO con JSON valido, sin comentarios ni markdown.
             {{
-            "razonamiento": "OBLIGATORIO usar esta formula -> Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusion: explica a quien asignas y por que. Si recibes el aviso de SIMULACION TERMINADA, ignora baterias y escribe aqui el analisis espacial.",
+            "razonamiento": "Usa esta formula: Objetivo: N robots. Listos (bat_azul>=0.90): X. Cargando actualmente: Y. Faltan por asignar carga: N - (X+Y) = Z. Conclusion: explica a quien asignas y por que. Si recibes el aviso de SIMULACION TERMINADA, ignora baterias y escribe aqui el analisis espacial.",
             "memoria_interna": "Diario global breve indicando que robots estan en Espera/listos y cuales estan cargando la bateria azul.",
             "self_check": {{
                 "listos": 0,
@@ -1022,7 +1025,7 @@ class World(object):
                 "robots_nuevos_a_cargar": [],
                 "decision_valida": true
             }},
-            "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"] // UNA tarea permitida por robot. Exactamente {num_robots} elementos.
+            "decisions": ["tarea_robot0", "tarea_robot1", "tarea_robot2"], // UNA tarea permitida por robot. Exactamente {num_robots} elementos.
             "luces_trianguladas": [
                 {{"coordenada_estimada": [x, y], "observaciones_agrupadas": 2}}
             ] // AÑADE ESTE CAMPO SOLO SI RECIBES REPORTES DE LUCES. Si no hay reporte aún, envíalo vacío [].
