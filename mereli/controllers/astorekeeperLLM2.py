@@ -27,6 +27,26 @@ class NavigateController(RobotController):
         self.get_actuator('joint_velocity_actuator').action = np.ones(2) 
 
 
+def follow_light_search_strict(controller, sensor_name, turn_speed=0.2, forward_speed=0.5, stop_on_strong=True):
+    ls_read = controller.get_sensor_reading(sensor_name)
+    max_light = np.max(ls_read)
+
+    if stop_on_strong and max_light > 0.9:
+        return np.zeros(2)
+
+    if max_light <= 0.02:
+        return np.array([forward_speed, forward_speed])
+
+    light_left = np.sum(ls_read[[7, 6, 5, 4]])
+    light_right = np.sum(ls_read[[0, 1, 2, 3]])
+
+    if ls_read[0] > 0 and ls_read[7] > 0:
+        return np.array([forward_speed, forward_speed])
+    if light_right > light_left:
+        return turn_speed * np.array([-1, 1])
+    return turn_speed * np.array([1, -1])
+
+
 @controller_registry(name="load_blue_battery")
 class LoadBlueBatteryController(RobotController):
     def __init__(self, *args,  wait_full_load=True, **kwargs):
@@ -34,22 +54,9 @@ class LoadBlueBatteryController(RobotController):
         self.flag = False
 
     def step(self, state, reward=0, force_mission=False):
-        # LLM manda, solo calculamos la orientación hacia la luz
-        action = np.array([0,0])
+        action = np.array([0.0, 0.0])
         if self.flag:
-            ls_read = self.get_sensor_reading('blue_light_sensor')
-            if np.max(ls_read) > 0.9:  #Estamos debajo de la luz
-                action = np.zeros(2)
-            else:
-                light_left = np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                if light_right > light_left:
-                    action = 0.2*np.array([-1, 1]) 
-                else: 
-                    action = 0.2*np.array([1, -1])
-                # Si ve algo de luz delante, avanza
-                if ls_read[0] > 0 or ls_read[7] > 0:
-                    action = np.array([0.5, 0.5])
+            action = follow_light_search_strict(self, 'blue_light_sensor')
         self.get_actuator('joint_velocity_actuator').action = action
 
 @controller_registry(name="load_red_battery")
@@ -58,23 +65,10 @@ class LoadRedBatteryController(RobotController):
         super(LoadRedBatteryController, self).__init__(*args, **kwargs)
         self.flag = False
 
-    def step(self, state, reward=0, force_mission=False):   
-        action = np.array([0,0])
-        if self.flag :
-            ls_read = self.get_sensor_reading('red_light_sensor')
-            if np.max(ls_read) > 0.9:
-                action = np.zeros(2)
-            else:
-                light_left = np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                if light_right > light_left:
-                    action = 0.2*np.array([-1, 1]) 
-                else: 
-                    action = 0.2*np.array([1, -1])
-                # Si ve algo de luz delante, avanza
-                if ls_read[0] > 0 or ls_read[7] > 0:
-                    action = np.array([0.5, 0.5])
-
+    def step(self, state, reward=0, force_mission=False):
+        action = np.array([0.0, 0.0])
+        if self.flag:
+            action = follow_light_search_strict(self, 'red_light_sensor')
         self.get_actuator('joint_velocity_actuator').action = action
 
 def llm_brain_loop(shared_data, system_rules_content, base_url):
@@ -238,7 +232,7 @@ class AStoreKeeperLLM2Controller(RobotController):
 
         if not os.path.exists(self.log_name):
             with open(self.log_name, "w") as f:
-                f.write("step,x,y,bat_azul,bat_roja,num_luces,decision,decision_ts\n")
+                f.write("step,x,y,bat_azul,bat_roja,num_luces,decision,decision_ts,tarea\n")
 
         print(f"📁 Guardando experimento en: {self.output_dir}")
 
@@ -303,11 +297,6 @@ class AStoreKeeperLLM2Controller(RobotController):
             if nueva_orden in self.routines:
                 self.external_routine = nueva_orden
 
-        # 2. Guardar en el CSV cada 10 pasos
-        if t % 10 == 0:
-            with open(self.log_name, "a") as f:
-                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces},{self.llm_decision},{decision_ts}\n")
-
         # 3. Ejeutar rutinas
         for k, routine in self.routines.items():
             routine.flag = (self.external_routine == k)
@@ -322,13 +311,26 @@ class AStoreKeeperLLM2Controller(RobotController):
                 self.external_routine = "simple_forage"
                 self.routines["simple_forage"].flag = True
 
-        return self.coordinate()
+        action = self.coordinate()
+
+        # 5. Guardar en el CSV cada 10 pasos. decision es la orden LLM;
+        # tarea es la capa que finalmente controla las ruedas.
+        if t % 10 == 0:
+            with open(self.log_name, "a") as f:
+                f.write(f"{t},{x:.3f},{y:.3f},{val_azul:.3f},{v_roja:.3f},{n_luces},{self.llm_decision},{decision_ts},{self.current_routine}\n")
+
+        return action
     
     def coordinate(self):
 
-        """Mira qué rutina ha elegido el LLM (self.external_routine).
-        Ignora los cálculos de todas las demás.
-        Conecta la salida de la rutina elegida directamente a los motores (joint_velocity_actuator)."""
+        """Combina la orden del LLM con una capa de seguridad por subsuncion."""
+
+        obstacle_avoider = self.routines.get("basic_obstacle_avoider")
+        if obstacle_avoider is not None and obstacle_avoider.flag:
+            self.current_routine = "basic_obstacle_avoider"
+            action_wheels = self.activations["basic_obstacle_avoider"]
+            self.get_actuator('joint_velocity_actuator').action = np.array(action_wheels)
+            return {'joint_velocity_actuator' : self.get_actuator('joint_velocity_actuator').action}
 
         # Prioridad absoluta a la orden externa
         if self.external_routine and self.external_routine in self.routines:
@@ -393,17 +395,14 @@ class SimpleForageController(RobotController):
                 action = np.array([1.,1.])
 
         elif self.carrying: # Garbage collected
-            if ls_read[0] * ls_read[7] == 0:
-                self.flag = True
-                light_left= np.sum(ls_read[[7,6,5,4]])
-                light_right = np.sum(ls_read[[0,1,2,3]])
-                action = np.array([0., 0.])
-                if light_right > light_left:
-                    action = .1*np.array([-1, 1]) 
-                else: 
-                    action = .1*np.array([1, -1]) 
-            else:
-                action = np.array([0.7, 0.7]) #navigate
+            action = follow_light_search_strict(
+                self,
+                'red_light_sensor',
+                turn_speed=0.1,
+                forward_speed=0.7,
+                stop_on_strong=False,
+            )
+            if ls_read[0] > 0 and ls_read[7] > 0:
                 print("Luz roja detectada, pero centrada. Avanzando hacia ella.")
         else:
             action = np.array([0.7, 0.7]) #navigate

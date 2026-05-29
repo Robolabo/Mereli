@@ -2,7 +2,7 @@
 {
     "simulation" : {
 	 "timesteps" : 35000,
-	 "trials" : 1,
+	 "trials" : 5,
 	 "start_paused" : false,
 	 "animated_layout" : {
 		"enabled" : false, 
@@ -60,19 +60,19 @@
             "light_red" : {
                 "type" : "light_source",
                 "num_instances": 1,
-		        "positions" : {"type" : "random", "low" : [-3, -3, 0.5], "high" : [3, 3, 0.5]},
+		        "positions" : [1, 0, 0.5],
                 "params" : {"range" : 7, "color" : "red"}
             },
             "light_blue" : {
                 "type" : "light_source",
                 "num_instances": 1,
-		        "positions" : {"type" : "random", "low" : [-1.5, -1.5, 0.5], "high" : [1.5, 1.5, 0.5]},
+		        "positions" : {"type" : "random", "low" : [-3.0, -3, 0.5], "high" : [3, 3, 0.5]},
                 "params" : {"range" : 7, "color" : "blue"}
             },
             "light_yellow" : {
                 "type" : "light_source",
                 "num_instances": 3,
-                "positions" : {"type" : "random", "low" : [-1.9, -1.9, 0.5], "high" : [1.9, 1.9, 0.5]},
+                "positions" : {"type" : "random", "low" : [-2.9, -2.9, 0.5], "high" : [2.9, 2.9, 0.5]},
                 "params" : {"range" : 7, "color" : "yellow"}
             },
 	    "black_area" : {
@@ -84,8 +84,8 @@
 	    "grey_area" : {
                 "type" : "ground_area",
                 "num_instances": 3,
-		"positions" : {"type" : "random", "low" : [-2, -2], "high" : [0, 2]}, 
-                "params" : {"radius" : 0.2, "color" : "grey"}
+		"positions" : [[-1.5, 0.0, 0], [2.25, 2.2, 0], [2.25, -2.2, 0]], 
+                "params" : {"radius" : 0.45, "color" : "grey"}
 	    }
         }
     }

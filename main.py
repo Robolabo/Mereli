@@ -140,8 +140,15 @@ def generate_battery_decision_plot(df, output_path, title, robot_label=None, inc
             'stop': 'grey',
             'none': 'lightgrey',
         }
-        task_series = plot_df[task_col].fillna('none').astype(str)
-        change_mask = task_series.ne(task_series.shift(1))
+        if 'decision' in plot_df.columns and 'decision_ts' in plot_df.columns:
+            task_col = 'decision'
+            task_series = plot_df[task_col].fillna('none').astype(str)
+            decision_ts = pd.to_numeric(plot_df['decision_ts'], errors='coerce').fillna(-1)
+            change_mask = decision_ts.gt(0) & decision_ts.ne(decision_ts.shift(1))
+        else:
+            task_series = plot_df[task_col].fillna('none').astype(str)
+            change_mask = task_series.ne(task_series.shift(1))
+
         changes = plot_df.loc[change_mask, ['step']].copy()
         changes[task_col] = task_series.loc[change_mask].values
         changes = changes[changes[task_col] != 'basic_obstacle_avoider']
@@ -581,6 +588,60 @@ def generate_light_discovery_metrics(folder):
         for _, event in found_df.sort_values('step').iterrows():
             f.write(f"{int(event['step']):<10} {event['robot']:<14} {event['light_id']}\n")
 
+def save_ground_areas_csv(world_obj, folder):
+    csv_path = os.path.join(folder, "ground_areas.csv")
+    with open(csv_path, "w") as f:
+        f.write("name,x,y,radius,color,role\n")
+        for area_name, area_obj in world_obj.hierarchy.items():
+            if not (hasattr(area_obj, "radius") and hasattr(area_obj, "color")):
+                continue
+            area_color = str(area_obj.color).lower()
+            if area_color == "grey":
+                role = "recoleccion"
+            elif area_color == "black":
+                role = "depositacion"
+            else:
+                role = area_color
+            f.write(
+                f"{area_name},{area_obj.position[0]:.3f},{area_obj.position[1]:.3f},"
+                f"{area_obj.radius:.3f},{area_obj.color},{role}\n"
+            )
+
+def draw_ground_areas(folder):
+    from matplotlib.patches import Circle
+
+    areas_path = os.path.join(folder, "ground_areas.csv")
+    if not os.path.exists(areas_path):
+        return
+
+    df_areas = pd.read_csv(areas_path)
+    label_seen = set()
+    styles = {
+        "recoleccion": {"facecolor": "#eeeeee", "edgecolor": "#bdbdbd", "label": "Zona de recoleccion"},
+        "depositacion": {"facecolor": "#d0d0d0", "edgecolor": "#9e9e9e", "label": "Zona de depositacion"},
+    }
+
+    ax = plt.gca()
+    for _, area in df_areas.iterrows():
+        role = str(area.get("role", "")).lower()
+        style = styles.get(role)
+        if style is None:
+            continue
+        label = style["label"] if role not in label_seen else None
+        label_seen.add(role)
+        ax.add_patch(
+            Circle(
+                (area["x"], area["y"]),
+                area["radius"],
+                facecolor=style["facecolor"],
+                edgecolor=style["edgecolor"],
+                linewidth=1.0,
+                alpha=0.85,
+                label=label,
+                zorder=0,
+            )
+        )
+
 def generate_plots_classic(folder, arena_params=None):
     """ Función original para los experimentos antiguos (Ej: 19) """
     import ast
@@ -598,6 +659,7 @@ def generate_plots_classic(folder, arena_params=None):
     
     # Gráfica Trayectoria
     plt.figure(figsize=(8, 8))
+    draw_ground_areas(folder)
     plt.plot(df['x'], df['y'], color='green', alpha=0.6)
     plt.scatter(df['x'].iloc[0], df['y'].iloc[0], color='red', s=100, label='Inicio', zorder=5)
     plt.scatter(df['x'].iloc[-1], df['y'].iloc[-1], color='blue', s=100, label='Fin', zorder=5)
@@ -751,6 +813,7 @@ def generate_plots_centralized(folder, arena_params=None):
     try:
         # --- Gráfica Trayectoria Superpuesta ---
         plt.figure(figsize=(8, 8))
+        draw_ground_areas(folder)
         robot_colors = {}
         for i, csv_path in enumerate(csv_files):
             df = pd.read_csv(csv_path)
@@ -1206,6 +1269,10 @@ def main(render, resume, cfg, debug, eval, verbose, log, interactive, ncpu):
                 world.connect()
                 print(f'Connected trial {tr}!')
                 world.reset()
+                try:
+                    save_ground_areas_csv(world, exp_folder)
+                except Exception as e:
+                    print(f"Error guardando zonas de suelo: {e}")
                 try:
                     with open(os.path.join(exp_folder, "luces.csv"), "w") as f:
                         f.write("name,x,y\n")

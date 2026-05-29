@@ -647,6 +647,8 @@ class ExplorationGroupController(RobotController):
             self.routines[secondary_task] = controllers[secondary_task](**secondary_params)
 
         self.secondary_controller = self.routines[secondary_task]
+        self.llm_action = secondary_task
+        self.llm_decision_ts = 0
 
         if self.use_llm:
             self.setup_llm(llm_model, llm_base_url)
@@ -655,6 +657,7 @@ class ExplorationGroupController(RobotController):
         """Inicializa el cliente local del LLM y el prompt tactico fijo."""
         self.llm_thought = "Inicializando controlador tactico."
         self.llm_action = "stop"
+        self.llm_decision_ts = 0
         self.waiting_for_llm = True
         self.pending_observation = "Inicio. No hay subtarea completada todavia."
         self.memory_history = []
@@ -1174,6 +1177,7 @@ class ExplorationGroupController(RobotController):
         previous_task = self.secondary_task
         self.llm_thought = thought
         self.llm_action = action
+        self.llm_decision_ts = int(self.controller_owner.t)
         self.secondary_task = action
         self.secondary_controller = self.routines[action]
         if previous_task != action and hasattr(self.secondary_controller, "reset"):
@@ -1328,7 +1332,7 @@ class ExplorationGroupController(RobotController):
             self.log_name = os.path.join(self.output_dir, f"recorrido_robot_{robot_id}.csv")
             if not os.path.exists(self.log_name):
                 with open(self.log_name, "w") as f:
-                    f.write("step,robot,x,y,bat_azul,tarea\n")
+                    f.write("step,robot,x,y,bat_azul,tarea,decision,decision_ts\n")
             self._log_initialized = True
 
         t = self.controller_owner.t
@@ -1339,7 +1343,10 @@ class ExplorationGroupController(RobotController):
             bat_azul = np.nan
 
         with open(self.log_name, "a") as f:
-            f.write(f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{bat_azul:.6f},{self.current_task}\n")
+            f.write(
+                f"{t},{self.controller_owner.name},{x:.3f},{y:.3f},{bat_azul:.6f},"
+                f"{self.current_task},{self.llm_action},{self.llm_decision_ts}\n"
+            )
 
     def coordinate(self):
         """Elige entre supervivencia y skill secundaria segun la prioridad."""
