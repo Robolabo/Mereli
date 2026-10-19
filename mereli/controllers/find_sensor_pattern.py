@@ -8,81 +8,8 @@ from mereli.controllers import RobotController, BasicObstacleAvoider
 from mereli.register import controller_registry
 from mereli.utils import compute_angle, softmax, sigmoid
 from mereli.globals import global_states 
+from swarm_language.discrimination import PatternDetector  # shared with build_lexicon_B
 
-
-class PatternDetector:
-    def __init__(self, vector_dim):
-        self.vector_dim = vector_dim
-        self.pattern_mat = np.empty((0, vector_dim)).astype(float)
-        self.names = []
-
-    def compute_similarities(self, phi):
-        mod = np.linalg.norm(self.pattern_mat) * np.linalg.norm(phi)
-        if self.pattern_mat.shape[0] == 1:
-            raw_sim = self.pattern_mat.dot(phi) 
-            return raw_sim / mod
-            # return sigmoid(2*raw_sim)
-        else:
-            norm_phi = phi / np.linalg.norm(phi)
-            norm_mat = (self.pattern_mat.T / np.linalg.norm(self.pattern_mat,axis=1)).T
-            raw_sim = norm_mat.dot(norm_phi) 
-            return raw_sim
-            # return softmax(raw_sim/mod, tau=0.2)
-
-    def compute_distance(self, phi):
-        return np.linalg.norm(self.pattern_mat - phi, axis=1)
-    
-    def assign_name(self, idx):
-        """ Only plotting and printing purposes"""
-        return list(map(chr, range(97, 123)))[idx]
-
-    def step(self, phi):
-        pattern_detected = False
-        pattern = None
-        if self.pattern_mat.shape[0] == 0:
-            self.pattern_mat = np.vstack((self.pattern_mat, phi))
-            self.names.append(self.assign_name(0))
-            pattern = 0
-            # self.add_category(replace=True)
-        # elif self.pattern_mat.shape[0] == 1:
-        #     sim = self.compute_similarities(phi)
-        #     if sim < 0.9:
-        #         self.pattern_mat = np.vstack((self.pattern_mat, phi))
-        #         self.names.append(self.assign_name(1))
-        #         pattern = 1
-        #         # self.add_category()
-        #     else:
-        #         pattern_detected = True
-        #         pattern = 1
-        else:
-            sim = self.compute_similarities(phi)
-            dist = self.compute_distance(phi)
-            max_sim = np.argmax(sim)
-            max_sim = np.argmin(dist)
-            max_dist = dist[max_sim]
-            # if sim[max_sim] < 0.9:
-            if max_dist > 0.4:
-                self.pattern_mat = np.vstack((self.pattern_mat, phi))
-                pattern = len(self.pattern_mat) - 1
-                self.names.append(self.assign_name(pattern))
-                # self.add_category()
-            else:
-                self.pattern_mat[max_sim] = 0.75 * self.pattern_mat[max_sim] + 0.25 * phi 
-                # self.curr_patterns.append(max_sim)
-                pattern_detected = True
-                pattern = max_sim
-        return pattern_detected, pattern 
-    
-    def random_pattern(self):
-        i = np.random.choice(self.n_patterns)
-        return self.pattern_mat[i].copy(), i
-
-    @property
-    def n_patterns(self):
-        return self.pattern_mat.shape[0]
-
-    def reset(self):
-        self.pattern_mat = np.empty((0, self.vector_dim)).astype(float)
 
 class Lexicon:
     def __init__(self, dim=3, h=4, w=4):

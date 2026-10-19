@@ -5,6 +5,13 @@
 <img src="./docs/figs/demo_mereli.png" width=50%>
 </p>
 
+## Swarm language (compositional lexicons)
+The lexicon formation system of *Cultural evolution of perceptually grounded compositional lexicons in swarm 
+robotics systems* (Applied Soft Computing, 2026) is available as the standalone package 
+[`swarm_language/`](swarm_language/README.md), which only requires `numpy` and `networkx` and can be used 
+from any simulator. In Mereli it is used by the `build_lexicon_B` controller with the configurations of 
+`mereli/config/PaperLanguageEmergence`.
+
 
 ## Installation
 Clone this repository:
